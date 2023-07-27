@@ -1,15 +1,13 @@
 package xyz.malkki.wifiscannerformls.geosubmit
 
 import com.google.gson.Gson
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
+import okio.BufferedSink
 import xyz.malkki.wifiscannerformls.extensions.executeSuspending
-import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.OutputStreamWriter
 import java.nio.charset.StandardCharsets
@@ -27,15 +25,16 @@ class MLSGeosubmit(private val httpClient: OkHttpClient, private val gson: Gson,
         }
     }
 
-    @Suppress("BlockingMethodInNonBlockingContext")
-    private suspend fun createRequestBody(reports: List<Report>): RequestBody = withContext(Dispatchers.Default) {
-        val byteArrayOutputStream = ByteArrayOutputStream(BUFFER_SIZE)
+    private fun createRequestBody(reports: List<Report>): RequestBody {
+        return object : RequestBody() {
+            override fun contentType(): MediaType = "application/json".toMediaType()
 
-        OutputStreamWriter(GZIPOutputStream(byteArrayOutputStream, BUFFER_SIZE), StandardCharsets.UTF_8).use {
-            gson.toJson(mapOf("items" to reports), it)
+            override fun writeTo(sink: BufferedSink) {
+                OutputStreamWriter(GZIPOutputStream(sink.outputStream(), BUFFER_SIZE), StandardCharsets.UTF_8).use {
+                    gson.toJson(mapOf("items" to reports), it)
+                }
+            }
         }
-
-        return@withContext byteArrayOutputStream.toByteArray().toRequestBody("application/json".toMediaType())
     }
 
     class MLSException(message: String, val httpStatusCode: Int) : IOException(message)
