@@ -3,7 +3,7 @@ package xyz.malkki.wifiscannerformls.db.entities
 import androidx.room.Embedded
 import androidx.room.Relation
 
-data class ReportWithWifiAccessPoints(
+data class ReportWithData(
     @Embedded val report: Report,
     @Relation(
         parentColumn = "id",
@@ -14,5 +14,15 @@ data class ReportWithWifiAccessPoints(
         parentColumn = "id",
         entityColumn = "reportId"
     )
-    val wifiAccessPoints: List<WifiAccessPoint>
+    val wifiAccessPoints: List<WifiAccessPoint>,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "reportId"
+    )
+    val cellTowers: List<CellTower>,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "reportId"
+    )
+    val bluetoothBeacons: List<BluetoothBeacon>
 )

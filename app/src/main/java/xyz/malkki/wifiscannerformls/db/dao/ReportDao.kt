@@ -7,9 +7,9 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import xyz.malkki.wifiscannerformls.db.entities.Report
+import xyz.malkki.wifiscannerformls.db.entities.ReportWithData
 import xyz.malkki.wifiscannerformls.db.entities.ReportWithLocation
-import xyz.malkki.wifiscannerformls.db.entities.ReportWithWifiAccessPointCount
-import xyz.malkki.wifiscannerformls.db.entities.ReportWithWifiAccessPoints
+import xyz.malkki.wifiscannerformls.db.entities.ReportWithStats
 import java.time.Instant
 
 @Dao
@@ -40,19 +40,23 @@ interface ReportDao {
             r.timestamp AS timestamp,
             p.latitude AS latitude,
             p.longitude AS longitude,
-            COUNT(wap.id) AS wifiAccessPointCount
-        FROM Report r, Position p, WifiAccessPoint wap 
+            COALESCE(wap.wifiAccessPointCount, 0) AS wifiAccessPointCount,
+            COALESCE(ct.cellTowerCount, 0) AS cellTowerCount,
+            COALESCE(bb.bluetoothBeaconCount, 0) AS bluetoothBeaconCount
+        FROM Report r, Position p
+        LEFT JOIN (SELECT reportId, COUNT(id) AS wifiAccessPointCount FROM WifiAccessPoint GROUP BY reportId) AS wap ON wap.reportId = r.id
+        LEFT JOIN (SELECT reportId, COUNT(id) AS cellTowerCount FROM CellTower GROUP BY reportId) AS ct ON ct.reportId = r.id
+        LEFT JOIN (SELECT reportId, COUNT(id) AS bluetoothBeaconCount FROM BluetoothBeacon GROUP BY reportId) AS bb ON bb.reportId = r.id
         WHERE r.uploaded = 0 
         AND r.id = p.reportId
-        AND r.id = wap.reportId
         GROUP BY r.id
         ORDER BY r.timestamp DESC
     """)
-    fun getAllReportsWithWifiAccessPointCount(): LiveData<List<ReportWithWifiAccessPointCount>>
+    fun getAllReportsWithWifiAccessPointCount(): LiveData<List<ReportWithStats>>
 
     @Transaction
     @Query("SELECT * FROM Report WHERE uploaded = 0")
-    suspend fun getAllReportsNotUploaded(): List<ReportWithWifiAccessPoints>
+    suspend fun getAllReportsNotUploaded(): List<ReportWithData>
 
     @Query("SELECT r.id, r.timestamp, p.latitude, p.longitude FROM Report r JOIN Position p ON r.id = p.reportId WHERE r.timestamp >= :timestamp")
     suspend fun getReportsNewerThan(timestamp: Instant): List<ReportWithLocation>
