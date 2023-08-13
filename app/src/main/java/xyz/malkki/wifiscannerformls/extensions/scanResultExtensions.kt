@@ -9,3 +9,6 @@ val ScanResult.ssidString: String?
     } else {
         SSID
     }
+
+val ScanResult.timestampMillis: Long
+    get() = timestamp / 1000
