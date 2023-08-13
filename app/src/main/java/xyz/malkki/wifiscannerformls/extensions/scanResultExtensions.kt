@@ -8,7 +8,7 @@ val ScanResult.ssidString: String?
         wifiSsid?.toString()
     } else {
         SSID
-    }
+    }?.replace(Regex("(^\"|\"\$)"), "") //Remove quotation marks from beginning and end
 
 val ScanResult.timestampMillis: Long
     get() = timestamp / 1000
