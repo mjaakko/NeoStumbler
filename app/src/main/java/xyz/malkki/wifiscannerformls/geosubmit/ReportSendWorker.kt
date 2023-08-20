@@ -23,13 +23,13 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
         val db = application.reportDb
 
         val notUploadedReports = db.reportDao().getAllReportsNotUploaded()
-        val geosubmitReports = notUploadedReports.map {
+        val geosubmitReports = notUploadedReports.map { report ->
             Report(
-                it.report.timestamp,
-                Report.Position.fromDbEntity(it.position),
-                it.wifiAccessPoints.map(Report.WifiAccessPoint::fromDbEntity),
-                it.cellTowers.map(Report.CellTower::fromDbEntity),
-                it.bluetoothBeacons.map(Report.BluetoothBeacon::fromDbEntity)
+                report.report.timestamp,
+                Report.Position.fromDbEntity(report.position),
+                report.wifiAccessPoints.map(Report.WifiAccessPoint::fromDbEntity).takeIf { it.isNotEmpty() },
+                report.cellTowers.map(Report.CellTower::fromDbEntity).takeIf { it.isNotEmpty() },
+                report.bluetoothBeacons.map(Report.BluetoothBeacon::fromDbEntity).takeIf { it.isNotEmpty() }
             )
         }
 

@@ -5,9 +5,9 @@ import java.time.Instant
 data class Report(
     val timestamp: Instant,
     val position: Position,
-    val wifiAccessPoints: List<WifiAccessPoint>,
-    val cellTowers: List<CellTower>,
-    val bluetoothBeacons: List<BluetoothBeacon>
+    val wifiAccessPoints: List<WifiAccessPoint>?,
+    val cellTowers: List<CellTower>?,
+    val bluetoothBeacons: List<BluetoothBeacon>?
 ) {
     data class Position(
         val latitude: Double,
