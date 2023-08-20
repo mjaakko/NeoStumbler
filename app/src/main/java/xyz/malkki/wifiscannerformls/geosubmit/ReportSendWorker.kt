@@ -10,11 +10,14 @@ import xyz.malkki.wifiscannerformls.gson.InstantTypeAdapter
 import java.net.SocketTimeoutException
 import java.time.Instant
 import kotlin.time.DurationUnit
-import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
 
-@ExperimentalTime
 class ReportSendWorker(appContext: Context, params: WorkerParameters) : CoroutineWorker(appContext, params) {
+    companion object {
+        const val PERIODIC_WORK_NAME = "report_upload_periodic"
+        const val ONE_TIME_WORK_NAME = "report_upload_one_time"
+    }
+
     override suspend fun doWork(): Result {
         val application = applicationContext as WifiScannerApplication
 
