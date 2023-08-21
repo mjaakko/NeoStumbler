@@ -92,7 +92,7 @@ class ScannerService : Service() {
 
     private lateinit var notificationManager: NotificationManager
 
-    private lateinit var wifiScanReportCreator: WifiScanReportCreator
+    private lateinit var scanReportCreator: ScanReportCreator
 
     private lateinit var coroutineScope: CoroutineScope
 
@@ -119,7 +119,7 @@ class ScannerService : Service() {
 
         notificationManager = getSystemService()!!
 
-        wifiScanReportCreator = WifiScanReportCreator(this)
+        scanReportCreator = ScanReportCreator(this)
 
         coroutineScope = CoroutineScope(Dispatchers.Default)
     }
@@ -186,7 +186,11 @@ class ScannerService : Service() {
             getBeaconFlow(this@ScannerService)
                 .buffer(20.seconds)
                 .map { beacons ->
+                    val now = System.currentTimeMillis()
+
                     beacons.flatten()
+                        //Beacon library seems to sometimes return very old results -> filter them
+                        .filter { (it.lastCycleDetectionTimestamp - now) < 20 * 1000 }
                         .groupBy { it.bluetoothAddress }
                         .mapValues { beacon ->
                             beacon.value.maxBy {
@@ -255,7 +259,7 @@ class ScannerService : Service() {
             }.collect {
                 val (location, reportData) = it
 
-                wifiScanReportCreator.createReport(location.source.name.lowercase(Locale.ROOT), location.location,
+                scanReportCreator.createReport(location.source.name.lowercase(Locale.ROOT), location.location,
                     cellInfo = reportData.first?.value ?: emptyList(),
                     wifiScanResults = reportData.second?.value ?: emptyList(),
                     beacons = reportData.third?.value ?: emptyList()
