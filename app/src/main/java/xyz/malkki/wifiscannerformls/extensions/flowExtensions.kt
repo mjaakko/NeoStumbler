@@ -74,10 +74,8 @@ fun <T> Flow<T>.buffer(window: Duration): Flow<List<T>> = channelFlow {
     while (true) {
         delay(window)
 
-        if (items.isNotEmpty()) {
-            send(items.toList())
-            items.clear()
-        }
+        send(items.toList())
+        items.clear()
 
         if (finished) {
             break
