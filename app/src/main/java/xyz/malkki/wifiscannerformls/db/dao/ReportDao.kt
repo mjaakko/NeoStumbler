@@ -20,6 +20,9 @@ interface ReportDao {
     @Update
     suspend fun update(vararg reports: Report)
 
+    @Query("DELETE FROM Report WHERE timestamp <= :timestamp")
+    suspend fun deleteOlderThan(timestamp: Instant): Int
+
     @Query("SELECT COUNT(*) FROM Report")
     fun getReportCount(): LiveData<Int>
 
