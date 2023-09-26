@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.pm.PackageManager
+import androidx.core.os.LocaleListCompat
+import java.util.Locale
 
 /**
  * Checks which permissions the application is missing
@@ -22,3 +24,9 @@ fun Context.getActivity(): Activity? = when (this) {
     is ContextWrapper -> baseContext.getActivity()
     else -> null
 }
+
+val Context.localeList: LocaleListCompat
+    get() = LocaleListCompat.wrap(resources.configuration.locales)
+
+val Context.defaultLocale: Locale
+    get() = localeList[0]!!
