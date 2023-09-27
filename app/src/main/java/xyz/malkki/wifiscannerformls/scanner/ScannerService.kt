@@ -11,6 +11,7 @@ import android.content.Intent
 import android.net.wifi.ScanResult
 import android.net.wifi.WifiManager
 import android.net.wifi.WifiManager.WifiLock
+import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
@@ -104,6 +105,8 @@ class ScannerService : Service() {
 
     private var reportsCreated = 0
 
+    private val binder = ScannerServiceBinder()
+
     @SuppressLint("WakelockTimeout") //We don't know how long the service runs for -> no timeout
     override fun onCreate() {
         super.onCreate()
@@ -124,8 +127,8 @@ class ScannerService : Service() {
         coroutineScope = CoroutineScope(Dispatchers.Default)
     }
 
-    override fun onBind(intent: Intent): IBinder? {
-        return null
+    override fun onBind(intent: Intent): IBinder {
+        return binder
     }
 
     @SuppressLint("MissingPermission")
@@ -368,4 +371,8 @@ class ScannerService : Service() {
     }
 
     private data class Timestamped<V>(val timestampMillis: Long, val value: V)
+
+    public inner class ScannerServiceBinder : Binder() {
+        fun getService(): ScannerService = this@ScannerService
+    }
 }
