@@ -20,8 +20,10 @@ class RescheduleReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action in ALLOWED_ACTIONS) {
+            val appContext = context.applicationContext as WifiScannerApplication
+
             runBlocking {
-                val autoWifiScanEnabled = (context as WifiScannerApplication).settingsStore.data
+                val autoWifiScanEnabled = appContext.settingsStore.data
                     .map {
                         //TODO: use constant for preference key
                         it[booleanPreferencesKey("autoscan_enabled")]
@@ -33,7 +35,7 @@ class RescheduleReceiver : BroadcastReceiver() {
                 if (autoWifiScanEnabled == true) {
                     Timber.i("Re-enabling activity transition receiver")
 
-                    ActivityTransitionReceiver.enable(context)
+                    ActivityTransitionReceiver.enable(appContext)
                 }
             }
         } else {
