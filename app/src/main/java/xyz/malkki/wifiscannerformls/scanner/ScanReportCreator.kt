@@ -4,6 +4,7 @@ import android.content.Context
 import android.location.Location
 import android.net.wifi.ScanResult
 import android.telephony.CellInfo
+import androidx.room.withTransaction
 import org.altbeacon.beacon.Beacon
 import timber.log.Timber
 import xyz.malkki.wifiscannerformls.WifiScannerApplication
@@ -24,7 +25,7 @@ class ScanReportCreator(context: Context) {
         cellInfo: List<CellInfo>,
         beacons: List<Beacon>,
         reportTimestamp: Instant = Instant.now()
-    ) {
+    ) = reportDb.withTransaction {
         val report = Report(null, reportTimestamp, false, null)
         val reportId = reportDb.reportDao().insert(report)
 
