@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import xyz.malkki.wifiscannerformls.utils.buffer
 import kotlin.time.Duration.Companion.milliseconds
 
 class FlowExtensionsTest {
