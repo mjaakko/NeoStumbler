@@ -16,9 +16,9 @@ import androidx.compose.ui.Modifier
 import kotlinx.coroutines.launch
 
 @Composable
-fun ToggleWithAction(title: String, checked: Boolean, action: suspend (Boolean) -> Unit) {
-    val enabled = remember {
-        mutableStateOf(true)
+fun ToggleWithAction(title: String, enabled: Boolean, checked: Boolean, action: suspend (Boolean) -> Unit) {
+    val changingState = remember {
+        mutableStateOf(false)
     }
     val coroutineScope = rememberCoroutineScope()
 
@@ -32,13 +32,13 @@ fun ToggleWithAction(title: String, checked: Boolean, action: suspend (Boolean) 
         Spacer(modifier = Modifier.weight(1.0f))
         Switch(
             modifier = Modifier.wrapContentSize(),
-            enabled = enabled.value,
+            enabled = enabled && !changingState.value,
             checked = checked,
             onCheckedChange = { checked ->
                 coroutineScope.launch {
-                    enabled.value = false
+                    changingState.value = true
                     action(checked)
-                    enabled.value = true
+                    changingState.value = false
                 }
             }
         )
