@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import timber.log.Timber
-import xyz.malkki.wifiscannerformls.WifiScannerApplication
+import xyz.malkki.wifiscannerformls.StumblerApplication
 import xyz.malkki.wifiscannerformls.extensions.checkMissingPermissions
 import xyz.malkki.wifiscannerformls.extensions.getActivity
 import xyz.malkki.wifiscannerformls.scanner.autoscan.ActivityTransitionReceiver
@@ -60,7 +60,7 @@ fun AutoScanToggle() {
 
     val coroutineScope = rememberCoroutineScope()
 
-    val settingsStore = (context.applicationContext as WifiScannerApplication).settingsStore
+    val settingsStore = (context.applicationContext as StumblerApplication).settingsStore
     val enabled = settingsStore.autoScanEnabled().collectAsState(initial = false)
 
     val missingPermissionsBasic = remember {

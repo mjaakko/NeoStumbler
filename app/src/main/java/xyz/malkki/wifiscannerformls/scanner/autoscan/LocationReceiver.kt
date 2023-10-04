@@ -6,21 +6,18 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.location.Location
-import androidx.compose.material3.ExperimentalMaterial3Api
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingEvent
 import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationAvailability
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import xyz.malkki.wifiscannerformls.scanner.ScannerService
-import xyz.malkki.wifiscannerformls.WifiScannerApplication
+import xyz.malkki.wifiscannerformls.StumblerApplication
 import java.time.Duration
 import java.time.Instant
-import kotlin.time.ExperimentalTime
 
 
 class LocationReceiver : BroadcastReceiver() {
@@ -74,7 +71,7 @@ class LocationReceiver : BroadcastReceiver() {
             .continueWith {
                 Timber.i("Geofences removed")
 
-                val reportDao = (context.applicationContext as WifiScannerApplication).reportDb.reportDao()
+                val reportDao = (context.applicationContext as StumblerApplication).reportDb.reportDao()
 
                 val reportMinTimestamp = Instant.now().minus(Duration.ofDays(30))
                 Timber.d("Querying reports newer than $reportMinTimestamp")

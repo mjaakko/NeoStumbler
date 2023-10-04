@@ -41,7 +41,7 @@ import org.altbeacon.beacon.Beacon
 import timber.log.Timber
 import xyz.malkki.wifiscannerformls.MainActivity
 import xyz.malkki.wifiscannerformls.R
-import xyz.malkki.wifiscannerformls.WifiScannerApplication
+import xyz.malkki.wifiscannerformls.StumblerApplication
 import xyz.malkki.wifiscannerformls.common.LocationWithSource
 import xyz.malkki.wifiscannerformls.extensions.buffer
 import xyz.malkki.wifiscannerformls.extensions.checkMissingPermissions
@@ -341,7 +341,7 @@ class ScannerService : Service() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        return NotificationCompat.Builder(this@ScannerService, WifiScannerApplication.SCAN_NOTIFICATION_CHANNEL_ID)
+        return NotificationCompat.Builder(this@ScannerService, StumblerApplication.SCAN_NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.radar_24)
             .setContentTitle("Scanning wireless devices")
             .setContentText("$reportsCreated reports created")

@@ -5,7 +5,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.google.gson.GsonBuilder
 import timber.log.Timber
-import xyz.malkki.wifiscannerformls.WifiScannerApplication
+import xyz.malkki.wifiscannerformls.StumblerApplication
 import xyz.malkki.wifiscannerformls.gson.InstantTypeAdapter
 import java.net.SocketTimeoutException
 import java.time.Instant
@@ -19,7 +19,7 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
     }
 
     override suspend fun doWork(): Result {
-        val application = applicationContext as WifiScannerApplication
+        val application = applicationContext as StumblerApplication
 
         val geosubmit = MLSGeosubmit(application.httpClient, GsonBuilder().registerTypeAdapter(Instant::class.java, InstantTypeAdapter()).create())
 

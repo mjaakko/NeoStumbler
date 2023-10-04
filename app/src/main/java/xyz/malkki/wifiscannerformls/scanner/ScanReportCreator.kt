@@ -7,7 +7,7 @@ import android.telephony.CellInfo
 import androidx.room.withTransaction
 import org.altbeacon.beacon.Beacon
 import timber.log.Timber
-import xyz.malkki.wifiscannerformls.WifiScannerApplication
+import xyz.malkki.wifiscannerformls.StumblerApplication
 import xyz.malkki.wifiscannerformls.db.entities.BluetoothBeacon
 import xyz.malkki.wifiscannerformls.db.entities.CellTower
 import xyz.malkki.wifiscannerformls.db.entities.Position
@@ -16,7 +16,7 @@ import xyz.malkki.wifiscannerformls.db.entities.WifiAccessPoint
 import java.time.Instant
 
 class ScanReportCreator(context: Context) {
-    private val reportDb = (context.applicationContext as WifiScannerApplication).reportDb
+    private val reportDb = (context.applicationContext as StumblerApplication).reportDb
 
     suspend fun createReport(
         locationSource: String,

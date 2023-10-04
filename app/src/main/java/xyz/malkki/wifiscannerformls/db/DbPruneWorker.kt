@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import timber.log.Timber
-import xyz.malkki.wifiscannerformls.WifiScannerApplication
+import xyz.malkki.wifiscannerformls.StumblerApplication
 import java.time.ZonedDateTime
 import kotlin.time.DurationUnit
 import kotlin.time.measureTimedValue
@@ -21,7 +21,7 @@ class DbPruneWorker(appContext: Context, params: WorkerParameters) : CoroutineWo
     }
 
     override suspend fun doWork(): Result {
-        val db = (applicationContext as WifiScannerApplication).reportDb
+        val db = (applicationContext as StumblerApplication).reportDb
         val reportDao = db.reportDao()
 
         //By default delete reports older than 60 days

@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
-import xyz.malkki.wifiscannerformls.WifiScannerApplication
+import xyz.malkki.wifiscannerformls.StumblerApplication
 
 /**
  * Broadcast received used for rescheduling actions (e.g. activity transition requests) when the app is updated or the device is restarted
@@ -20,7 +20,7 @@ class RescheduleReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action in ALLOWED_ACTIONS) {
-            val appContext = context.applicationContext as WifiScannerApplication
+            val appContext = context.applicationContext as StumblerApplication
 
             runBlocking {
                 val autoWifiScanEnabled = appContext.settingsStore.data
