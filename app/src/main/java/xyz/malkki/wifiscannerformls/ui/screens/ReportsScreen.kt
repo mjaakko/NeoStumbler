@@ -38,7 +38,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import xyz.malkki.wifiscannerformls.R
-import xyz.malkki.wifiscannerformls.ReportsViewModel
 import xyz.malkki.wifiscannerformls.db.entities.ReportWithStats
 import xyz.malkki.wifiscannerformls.extensions.checkMissingPermissions
 import xyz.malkki.wifiscannerformls.extensions.defaultLocale
@@ -47,6 +46,7 @@ import xyz.malkki.wifiscannerformls.ui.composables.PermissionsDialog
 import xyz.malkki.wifiscannerformls.ui.composables.ReportUploadButton
 import xyz.malkki.wifiscannerformls.ui.composables.getAddress
 import xyz.malkki.wifiscannerformls.ui.composables.rememberServiceConnection
+import xyz.malkki.wifiscannerformls.ui.viewmodel.ReportsViewModel
 import xyz.malkki.wifiscannerformls.utils.showMapWithMarkerIntent
 import java.util.Date
 
