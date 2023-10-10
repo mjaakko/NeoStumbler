@@ -69,7 +69,7 @@
             android:enabled="true"
             android:exported="true"
             android:icon="@drawable/radar_24"
-            android:label="Wireless scanning"
+            android:label="@string/wireless_stumbling"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />

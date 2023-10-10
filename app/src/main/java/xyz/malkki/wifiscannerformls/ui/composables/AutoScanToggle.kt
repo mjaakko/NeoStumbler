@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -23,6 +24,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import xyz.malkki.wifiscannerformls.R
 import xyz.malkki.wifiscannerformls.StumblerApplication
 import xyz.malkki.wifiscannerformls.extensions.checkMissingPermissions
 import xyz.malkki.wifiscannerformls.extensions.getActivity
@@ -128,7 +130,7 @@ fun AutoScanToggle() {
                         showAdditionalPermissionsDialog.value = true
                     }
                 } else {
-                    Toast.makeText(context, "Permissions required for autoscanning were not granted", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.permissions_not_granted), Toast.LENGTH_SHORT).show()
                 }
             }
         )
@@ -146,14 +148,14 @@ fun AutoScanToggle() {
                         enableAutoScan()
                     }
                 } else {
-                    Toast.makeText(context, "Permissions required for autoscanning were not granted", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.permissions_not_granted), Toast.LENGTH_SHORT).show()
                 }
             }
         )
     }
 
     ToggleWithAction(
-        title = "Enable automatic scanning",
+        title = stringResource(R.string.autostumble_when_moving),
         enabled = (isGoogleApiAvailable || isGoogleApiAvailabilityUserResolvable),
         checked = enabled.value == true ,
         action = { checked ->

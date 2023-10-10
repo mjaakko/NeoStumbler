@@ -123,8 +123,8 @@ class StumblerApplication : Application() {
         )
 
         val notificationChannel = NotificationChannel(
-            SCAN_NOTIFICATION_CHANNEL_ID,
-            "Wireless scanning status",
+            STUMBLING_NOTIFICATION_CHANNEL_ID,
+            getString(R.string.stumbling_status_notification_channel_name),
             NotificationManager.IMPORTANCE_LOW
         ).apply {
             setShowBadge(false)
@@ -134,6 +134,6 @@ class StumblerApplication : Application() {
     }
 
     companion object {
-        const val SCAN_NOTIFICATION_CHANNEL_ID = "wifi_scan"
+        const val STUMBLING_NOTIFICATION_CHANNEL_ID = "wifi_scan"
     }
 }

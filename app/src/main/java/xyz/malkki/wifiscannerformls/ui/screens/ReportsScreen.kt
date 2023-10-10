@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -79,9 +80,9 @@ private fun ReportStats(reportsViewModel: ReportsViewModel = viewModel()) {
 
     Column(modifier = Modifier
         .wrapContentHeight()) {
-        Text(text = "Reports total: ${reportsTotal.value ?: ""}")
-        Text(text = "Reports not uploaded: ${reportsNotUploaded.value ?: ""}")
-        Text(text = "Reports last uploaded: ${lastUploadedText ?: ""}")
+        Text(text = stringResource(R.string.reports_total, reportsTotal.value ?: ""))
+        Text(text = stringResource(R.string.reports_not_uploaded, reportsNotUploaded.value ?: ""))
+        Text(text = stringResource(R.string.reports_last_uploaded, lastUploadedText ?: ""))
     }
 }
 
@@ -135,7 +136,7 @@ fun ForegroundScanningButton() {
         if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true) {
             context.startForegroundService(ScannerService.startIntent(context))
         } else {
-            Toast.makeText(context, "Cannot start scanning, because location permission was denied", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.permissions_not_granted), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -160,13 +161,13 @@ fun ForegroundScanningButton() {
             }
         }
     ) {
-        val action = if (serviceConnection.value != null) {
-            "Stop"
+        val stringResId = if (serviceConnection.value != null) {
+            R.string.stop_stumbling
         } else {
-            "Start"
+            R.string.start_stumbling
         }
 
-        Text(text = "$action scanning")
+        Text(text = stringResource(stringResId))
     }
 }
 
@@ -180,7 +181,7 @@ private fun Reports(reportsViewModel: ReportsViewModel = viewModel()) {
     }
 
     Column(modifier = Modifier.padding(top = 8.dp)) {
-        Text(text = "Reports:", style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold))
+        Text(text = stringResource(R.string.reports), style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold))
         LazyColumn {
             itemsIndexed(
                 reports.value,
@@ -213,11 +214,11 @@ private fun Report(report: ReportWithStats, geocoder: Geocoder) {
             .wrapContentHeight()) {
             Text(modifier = Modifier.wrapContentSize(), text = dateStr, style = TextStyle(fontSize = 14.sp))
             Spacer(modifier = Modifier.weight(1.0f))
-            StationCount(iconRes = R.drawable.wifi_14sp, iconDescription = "Wi-Fi icon", count = report.wifiAccessPointCount)
+            StationCount(iconRes = R.drawable.wifi_14sp, iconDescription = stringResource(R.string.wifi_icon_description), count = report.wifiAccessPointCount)
             Spacer(modifier = Modifier.width(2.dp))
-            StationCount(iconRes = R.drawable.cell_tower_14sp, iconDescription = "Cell tower icon", count = report.cellTowerCount)
+            StationCount(iconRes = R.drawable.cell_tower_14sp, iconDescription = stringResource(R.string.cell_tower_icon_description), count = report.cellTowerCount)
             Spacer(modifier = Modifier.width(2.dp))
-            StationCount(iconRes = R.drawable.bluetooth_14sp, iconDescription = "Bluetooth icon", count = report.bluetoothBeaconCount)
+            StationCount(iconRes = R.drawable.bluetooth_14sp, iconDescription = stringResource(R.string.bluetooth_icon_description), count = report.bluetoothBeaconCount)
         }
         if (canShowMap) {
             ClickableText(text = AnnotatedString(address.value), style = TextStyle(fontSize = 14.sp, color = Color.Blue), onClick = {

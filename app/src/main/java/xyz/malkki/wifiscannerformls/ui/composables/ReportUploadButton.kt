@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.asFlow
 import androidx.work.Constraints
 import androidx.work.ExistingWorkPolicy
@@ -22,6 +23,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import xyz.malkki.wifiscannerformls.R
 import xyz.malkki.wifiscannerformls.geosubmit.ReportSendWorker
 import kotlin.time.Duration.Companion.seconds
 
@@ -84,6 +86,6 @@ fun ReportUploadButton() {
             }
         }
     ) {
-        Text("Send reports")
+        Text(text = stringResource(R.string.send_reports))
     }
 }

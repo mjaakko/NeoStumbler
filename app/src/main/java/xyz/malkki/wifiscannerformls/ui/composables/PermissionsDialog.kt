@@ -12,9 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.app.ActivityCompat
+import xyz.malkki.wifiscannerformls.R
 import xyz.malkki.wifiscannerformls.extensions.getActivity
 
 @Composable
@@ -44,7 +46,7 @@ fun PermissionsDialog(missingPermissions: List<String>, permissionRationales: Ma
         AlertDialog(
             properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false),
             onDismissRequest = {},
-            title = { Text("Permissions needed") },
+            title = { Text(text = stringResource(R.string.permissions_needed)) },
             text = {
                 Text(permissionRationaleText)
             },
@@ -53,7 +55,7 @@ fun PermissionsDialog(missingPermissions: List<String>, permissionRationales: Ma
                     onClick = {
                         permissionsLauncher.launch(missingPermissions.toTypedArray())
                     }) {
-                    Text("OK")
+                    Text(text = stringResource(R.string.ok))
                 }
             },
             modifier = Modifier

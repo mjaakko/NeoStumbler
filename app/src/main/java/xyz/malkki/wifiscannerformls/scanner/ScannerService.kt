@@ -341,7 +341,7 @@ class ScannerService : Service() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        return NotificationCompat.Builder(this@ScannerService, StumblerApplication.SCAN_NOTIFICATION_CHANNEL_ID)
+        return NotificationCompat.Builder(this@ScannerService, StumblerApplication.STUMBLING_NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.radar_24)
             .setContentTitle("Scanning wireless devices")
             .setContentText("$reportsCreated reports created")

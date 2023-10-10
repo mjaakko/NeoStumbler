@@ -21,6 +21,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.FlowPreview
 import xyz.malkki.wifiscannerformls.ui.screens.ReportsScreen
@@ -54,7 +55,7 @@ class MainActivity : ComponentActivity() {
                         content = {
                             val selectedTabIndex = remember { mutableStateOf(0) }
 
-                            val items = listOf("Reports" to Icons.Filled.List, "Settings" to Icons.Filled.Settings)
+                            val items = listOf(stringResource(R.string.reports_tab_title) to Icons.Filled.List, stringResource(R.string.settings_tab_title)  to Icons.Filled.Settings)
 
                             Column(modifier = Modifier
                                 .fillMaxSize()
