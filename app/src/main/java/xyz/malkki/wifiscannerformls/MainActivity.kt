@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.FlowPreview
 import xyz.malkki.wifiscannerformls.ui.screens.ReportsScreen
 import xyz.malkki.wifiscannerformls.ui.screens.SettingsScreen
-import xyz.malkki.wifiscannerformls.ui.theme.WifiScannerForMLSTheme
+import xyz.malkki.wifiscannerformls.ui.theme.NeoStumblerTheme
 
 @FlowPreview
 class MainActivity : ComponentActivity() {
@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            WifiScannerForMLSTheme {
+            NeoStumblerTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize()
