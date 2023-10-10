@@ -12,5 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "Wifi Scanner for MLS"
+rootProject.name = "NeoStumbler"
 include ':app'
