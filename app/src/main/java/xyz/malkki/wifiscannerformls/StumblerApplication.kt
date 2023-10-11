@@ -42,7 +42,12 @@ class StumblerApplication : Application() {
         //TODO: is this cache actually used for anything?
         val cache = Cache(cacheDir, 10 * 1024 * 1024) // 10MB
 
-        val userAgentInterceptor = UserAgentInterceptor("${BuildConfig.APPLICATION_ID}/${BuildConfig.VERSION_NAME}")
+        val userAgentVersion = if (BuildConfig.DEBUG) {
+            "dev"
+        } else {
+            BuildConfig.VERSION_CODE
+        }
+        val userAgentInterceptor = UserAgentInterceptor("${BuildConfig.APPLICATION_ID}/${userAgentVersion}")
 
         OkHttpClient.Builder()
             .addInterceptor(userAgentInterceptor)
