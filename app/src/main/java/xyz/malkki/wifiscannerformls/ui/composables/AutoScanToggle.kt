@@ -155,7 +155,7 @@ fun AutoScanToggle() {
     }
 
     ToggleWithAction(
-        title = stringResource(R.string.autostumble_when_moving),
+        title = stringResource(R.string.autoscan_when_moving),
         enabled = (isGoogleApiAvailable || isGoogleApiAvailabilityUserResolvable),
         checked = enabled.value == true ,
         action = { checked ->

@@ -162,9 +162,9 @@ fun ForegroundScanningButton() {
         }
     ) {
         val stringResId = if (serviceConnection.value != null) {
-            R.string.stop_stumbling
+            R.string.stop_scanning
         } else {
-            R.string.start_stumbling
+            R.string.start_scanning
         }
 
         Text(text = stringResource(stringResId))

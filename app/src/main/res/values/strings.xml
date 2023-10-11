@@ -10,9 +10,9 @@
     <string name="cell_tower_icon_description">Cell tower icon</string>
     <string name="bluetooth_icon_description">Bluetooth icon</string>
 
-    <string name="stumbling_status_notification_channel_name">Stumbling status</string>
+    <string name="scanner_status_notification_channel_name">Scanning status</string>
 
-    <string name="wireless_stumbling">Wireless stumbling</string>
+    <string name="wireless_scanning">Wireless scanning</string>
 
     <string name="reports_tab_title">Reports</string>
     <string name="settings_tab_title">Settings</string>
@@ -24,10 +24,10 @@
     <string name="reports_not_uploaded">Reports not uploaded: %s</string>
     <string name="reports_last_uploaded">Reports last uploaded: %s</string>
 
-    <string name="start_stumbling">Start stumbling</string>
-    <string name="stop_stumbling">Stop stumbling</string>
+    <string name="start_scanning">Start scanning</string>
+    <string name="stop_scanning">Stop scanning</string>
 
-    <string name="autostumble_when_moving">Automatic stumbling while moving</string>
+    <string name="autoscan_when_moving">Automatic scanning while moving</string>
 
     <string name="notification_wireless_scanning_active">Wireless scanning active</string>
 

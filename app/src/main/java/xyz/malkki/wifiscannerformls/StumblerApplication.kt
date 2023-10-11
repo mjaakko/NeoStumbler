@@ -124,7 +124,7 @@ class StumblerApplication : Application() {
 
         val notificationChannel = NotificationChannel(
             STUMBLING_NOTIFICATION_CHANNEL_ID,
-            getString(R.string.stumbling_status_notification_channel_name),
+            getString(R.string.scanner_status_notification_channel_name),
             NotificationManager.IMPORTANCE_LOW
         ).apply {
             setShowBadge(false)
