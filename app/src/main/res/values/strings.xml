@@ -28,4 +28,8 @@
     <string name="stop_stumbling">Stop stumbling</string>
 
     <string name="autostumble_when_moving">Automatic stumbling while moving</string>
+
+    <string name="notification_wireless_scanning_active">Wireless scanning active</string>
+
+    <string name="notification_reports_created">%d reports created</string>
 </resources>

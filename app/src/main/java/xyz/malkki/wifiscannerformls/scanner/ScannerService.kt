@@ -343,8 +343,8 @@ class ScannerService : Service() {
 
         return NotificationCompat.Builder(this@ScannerService, StumblerApplication.STUMBLING_NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.radar_24)
-            .setContentTitle("Scanning wireless devices")
-            .setContentText("$reportsCreated reports created")
+            .setContentTitle(getString(R.string.notification_wireless_scanning_active))
+            .setContentText(getString(R.string.notification_reports_created, reportsCreated))
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setAllowSystemGeneratedContextualActions(false)
             .setOnlyAlertOnce(true)
