@@ -9,6 +9,7 @@ import android.content.IntentFilter
 import android.net.wifi.ScanResult
 import android.net.wifi.WifiManager
 import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import androidx.core.content.getSystemService
 import kotlinx.coroutines.channels.awaitClose
@@ -28,38 +29,43 @@ fun getWifiScanFlow(context: Context): Flow<List<ScanResult>> {
     val wifiManager = appContext.getSystemService<WifiManager>()!!
 
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        callbackFlow {
-            val callback = object : WifiManager.ScanResultsCallback() {
-                @SuppressLint("MissingPermission")
-                override fun onScanResultsAvailable() {
-                    if (isActive) {
-                        trySendBlocking(wifiManager.scanResults)
-                    }
-                }
-            }
-
-            wifiManager.registerScanResultsCallback(ImmediateExecutor, callback)
-
-            awaitClose {
-                wifiManager.unregisterScanResultsCallback(callback)
-            }
-        }
+        getWifiScanFlowR(wifiManager)
     } else {
-        callbackFlow {
-            val broadcastReceiver = object : BroadcastReceiver() {
-                @SuppressLint("MissingPermission")
-                override fun onReceive(context: Context, intent: Intent) {
-                    if (isActive) {
-                        trySendBlocking(wifiManager.scanResults)
-                    }
-                }
-            }
+        getWifiScanFlowLegacy(appContext, wifiManager)
+    }
+}
 
-            appContext.registerReceiver(broadcastReceiver, IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION))
-
-            awaitClose {
-                appContext.unregisterReceiver(broadcastReceiver)
+@RequiresApi(Build.VERSION_CODES.R)
+private fun getWifiScanFlowR(wifiManager: WifiManager): Flow<List<ScanResult>> = callbackFlow {
+    val callback = object : WifiManager.ScanResultsCallback() {
+        @SuppressLint("MissingPermission")
+        override fun onScanResultsAvailable() {
+            if (isActive) {
+                trySendBlocking(wifiManager.scanResults)
             }
         }
+    }
+
+    wifiManager.registerScanResultsCallback(ImmediateExecutor, callback)
+
+    awaitClose {
+        wifiManager.unregisterScanResultsCallback(callback)
+    }
+}
+
+private fun getWifiScanFlowLegacy(appContext: Context, wifiManager: WifiManager): Flow<List<ScanResult>> = callbackFlow {
+    val broadcastReceiver = object : BroadcastReceiver() {
+        @SuppressLint("MissingPermission")
+        override fun onReceive(context: Context, intent: Intent) {
+            if (isActive) {
+                trySendBlocking(wifiManager.scanResults)
+            }
+        }
+    }
+
+    appContext.registerReceiver(broadcastReceiver, IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION))
+
+    awaitClose {
+        appContext.unregisterReceiver(broadcastReceiver)
     }
 }
