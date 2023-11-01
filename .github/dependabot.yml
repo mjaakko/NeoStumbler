@@ -10,6 +10,10 @@ updates:
       kotlinx:
         patterns:
           - 'org.jetbrains.kotlinx*'
+      kotlin-gradle-plugins:
+        patterns:
+          - 'org.jetbrains.kotlin.android'
+          - 'com.google.devtools.ksp'
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
