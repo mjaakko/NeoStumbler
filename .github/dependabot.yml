@@ -6,6 +6,10 @@ updates:
       interval: "monthly"
     target-branch: "master"
     open-pull-requests-limit: 5
+    groups:
+      kotlinx:
+        patterns:
+          - 'org.jetbrains.kotlinx*'
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
