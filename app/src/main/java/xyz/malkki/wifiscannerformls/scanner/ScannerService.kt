@@ -55,6 +55,7 @@ import xyz.malkki.wifiscannerformls.utils.getLocationFlow
 import xyz.malkki.wifiscannerformls.utils.getWifiScanFlow
 import java.util.Locale
 import kotlin.math.abs
+import kotlin.math.roundToLong
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
 
@@ -185,7 +186,7 @@ class ScannerService : Service() {
             }
             .map {
                 if (it.isNotEmpty()) {
-                    Timestamped(it.maxOf { scanResult -> scanResult.timestampMillis }, it)
+                    Timestamped(it.map { scanResult -> scanResult.timestampMillis }.average().roundToLong(), it)
                 } else {
                     null
                 }
@@ -210,10 +211,10 @@ class ScannerService : Service() {
                 }
                 .map { beacons ->
                     if (beacons.isNotEmpty()) {
-                        val maxTimestamp = beacons.maxOf { it.lastCycleDetectionTimestamp }
-                        val maxTimestampElapsedRealtime = SystemClock.elapsedRealtime() - (System.currentTimeMillis() - maxTimestamp)
+                        val avgTimestamp = beacons.map { it.lastCycleDetectionTimestamp }.average().roundToLong()
+                        val avgTimestampElapsedRealtime = SystemClock.elapsedRealtime() - (System.currentTimeMillis() - avgTimestamp)
 
-                        Timestamped(maxTimestampElapsedRealtime, beacons)
+                        Timestamped(avgTimestampElapsedRealtime, beacons)
                     } else {
                         null
                     }
@@ -254,12 +255,11 @@ class ScannerService : Service() {
                     if (latestReportData != null) {
                         val timestamp = latestReportData.toList()
                             .filterNotNull()
-                            .maxOfOrNull { timestamped ->
-                                timestamped.timestampMillis
-                            }
+                            .map { timestamped -> timestamped.timestampMillis }
+                            .average()
 
-                        if (timestamp != null) {
-                            val location = it.selectBetterLocation(timestamp * 1_000_000_000)
+                        if (!timestamp.isNaN()) {
+                            val location = it.selectBetterLocation(timestamp.roundToLong() * 1_000_000)
 
                             send(location to latestReportData)
                         }
