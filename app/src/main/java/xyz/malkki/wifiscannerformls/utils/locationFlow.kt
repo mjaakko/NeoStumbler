@@ -20,21 +20,22 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 import xyz.malkki.wifiscannerformls.common.LocationWithSource
+import kotlin.time.Duration
 import android.location.LocationRequest as FrameworkLocationRequest
 import com.google.android.gms.location.LocationRequest as GoogleLocationRequest
 
 @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-fun getLocationFlow(context: Context, locationIntervalMillis: Long = 5 * 60 * 1000): Flow<LocationWithSource> {
+fun getLocationFlow(context: Context, locationInterval: Duration): Flow<LocationWithSource> {
     val appContext = context.applicationContext
 
     return if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(appContext) == ConnectionResult.SUCCESS) {
         Timber.d("Using Google Play location provider")
 
-        getGoogleLocationFlow(context, locationIntervalMillis)
+        getGoogleLocationFlow(context, locationInterval.inWholeMilliseconds)
     } else {
         Timber.d("Using framework location provider")
 
-        getFrameworkLocationFlow(context, locationIntervalMillis)
+        getFrameworkLocationFlow(context, locationInterval.inWholeMilliseconds)
     }
 }
 

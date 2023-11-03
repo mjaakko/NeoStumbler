@@ -69,6 +69,12 @@ class ScannerService : Service() {
 
         private const val EXTRA_AUTOSTART = "autostart"
 
+        //Scan devices in slightly less than 20 second windows
+        private val SCAN_BUFFER_PERIOD = 19.5.seconds
+
+        //Try to get new locations every 10 seconds and then choose the one with least time difference
+        private val LOCATION_INTERVAL = 10.seconds
+
         private var _serviceRunning = false
         val serviceRunning: Boolean
             get() = _serviceRunning
@@ -139,13 +145,13 @@ class ScannerService : Service() {
 
         scanning = true
 
-        val locationFlow = getLocationFlow(this@ScannerService, 10 * 1000)
+        val locationFlow = getLocationFlow(this@ScannerService, LOCATION_INTERVAL)
             .runningFold<LocationWithSource, Pair<LocationWithSource?, LocationWithSource?>>(null to null) { pair, newLocation ->
                 pair.second to newLocation
             }
             .filterNotNullPairs()
 
-        val cellInfoFlow = getCellInfoFlow(this@ScannerService, scanInterval = 20.seconds)
+        val cellInfoFlow = getCellInfoFlow(this@ScannerService, scanInterval = SCAN_BUFFER_PERIOD)
             .map {
                 if (it.isNotEmpty()) {
                     Timestamped(it.maxOf { cellInfo -> cellInfo.timestampMillisCompat }, it)
@@ -155,7 +161,7 @@ class ScannerService : Service() {
             }
 
         val wifiScanFlow = getWifiScanFlow(this@ScannerService)
-            .buffer(20.seconds)
+            .buffer(SCAN_BUFFER_PERIOD)
             .map { scanResults ->
                 //Android seems to return multiple batches of scan results in short succession
                 // -> batch them in 30s intervals and group by BSSID to find the latest
@@ -187,7 +193,7 @@ class ScannerService : Service() {
 
         val beaconsFlow = if (hasBluetoothScanPermission()) {
             getBeaconFlow(this@ScannerService)
-                .buffer(20.seconds)
+                .buffer(SCAN_BUFFER_PERIOD)
                 .map { beacons ->
                     val now = System.currentTimeMillis()
 
