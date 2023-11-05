@@ -60,6 +60,8 @@ class StumblerApplication : Application() {
 
     val settingsStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
+    val oneTimeActionsStore: DataStore<Preferences> by preferencesDataStore(name = "one_time_actions")
+
     override fun onCreate() {
         super.onCreate()
 
