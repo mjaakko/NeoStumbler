@@ -65,6 +65,7 @@ import kotlin.time.ExperimentalTime
 class ScannerService : Service() {
     companion object {
         private const val MAIN_ACTIVITY_PENDING_INTENT_REQUEST_CODE = 4321
+        private const val STOP_SCANNER_SERVICE_PENDING_INTENT_REQUEST_CODE = 15415
 
         private const val NOTIFICATION_ID = 6666
 
@@ -347,6 +348,13 @@ class ScannerService : Service() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
+        val stopScanningPendingIntent = PendingIntent.getService(
+            this@ScannerService,
+            STOP_SCANNER_SERVICE_PENDING_INTENT_REQUEST_CODE,
+            stopIntent(this@ScannerService, false),
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
         return NotificationCompat.Builder(this@ScannerService, StumblerApplication.STUMBLING_NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.radar_24)
             .setContentTitle(getString(R.string.notification_wireless_scanning_active))
@@ -361,6 +369,7 @@ class ScannerService : Service() {
             .setShowWhen(true)
             .setWhen(startedAt)
             .setContentIntent(intent)
+            .addAction(NotificationCompat.Action(R.drawable.stop_24, getString(R.string.stop), stopScanningPendingIntent))
             .build()
     }
 

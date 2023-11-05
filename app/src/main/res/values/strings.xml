@@ -3,6 +3,8 @@
 
     <string name="ok">OK</string>
 
+    <string name="stop">Stop</string>
+
     <string name="permissions_needed">Permissions needed</string>
     <string name="permissions_not_granted">Permissions that are required were not granted</string>
 
