@@ -34,4 +34,9 @@
     <string name="notification_wireless_scanning_active">Wireless scanning active</string>
 
     <string name="notification_reports_created">%d reports created</string>
+
+    <string name="ignore_battery_optimizations_title">Ignore battery optimizations</string>
+    <string name="ignore_battery_optimizations_description">For best results, battery optimizations should be disabled. Wireless scanning and location access is significantly throttled when battery optimization is active and the screen is off</string>
+
+    <string name="battery_optimizations_not_disabled_warning">Battery optimizations were not disabled</string>
 </resources>
