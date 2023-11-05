@@ -56,6 +56,7 @@ import xyz.malkki.wifiscannerformls.utils.getWifiScanFlow
 import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.roundToLong
+import kotlin.time.Duration.Companion.nanoseconds
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
 
@@ -76,6 +77,8 @@ class ScannerService : Service() {
 
         //Try to get new locations every 10 seconds and then choose the one with least time difference
         private val LOCATION_INTERVAL = 10.seconds
+
+        private val LOCATION_MAX_AGE = 20.seconds
 
         private var _serviceRunning = false
         val serviceRunning: Boolean
@@ -148,6 +151,9 @@ class ScannerService : Service() {
         scanning = true
 
         val locationFlow = getLocationFlow(this@ScannerService, LOCATION_INTERVAL)
+            .filter {
+                (SystemClock.elapsedRealtimeNanos() - it.location.elapsedRealtimeNanos).nanoseconds < LOCATION_MAX_AGE
+            }
             .runningFold<LocationWithSource, Pair<LocationWithSource?, LocationWithSource?>>(null to null) { pair, newLocation ->
                 pair.second to newLocation
             }
