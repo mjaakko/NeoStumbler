@@ -43,6 +43,7 @@ import xyz.malkki.wifiscannerformls.db.entities.ReportWithStats
 import xyz.malkki.wifiscannerformls.extensions.checkMissingPermissions
 import xyz.malkki.wifiscannerformls.extensions.defaultLocale
 import xyz.malkki.wifiscannerformls.scanner.ScannerService
+import xyz.malkki.wifiscannerformls.ui.composables.BatteryOptimizationsDialog
 import xyz.malkki.wifiscannerformls.ui.composables.PermissionsDialog
 import xyz.malkki.wifiscannerformls.ui.composables.ReportUploadButton
 import xyz.malkki.wifiscannerformls.ui.composables.getAddress
@@ -107,6 +108,10 @@ fun ForegroundScanningButton() {
 
     val serviceConnection = rememberServiceConnection(getService = ScannerService.ScannerServiceBinder::getService)
 
+    val showBatteryOptimizationsDialog = remember {
+        mutableStateOf(false)
+    }
+
     val showPermissionDialog = remember {
         mutableStateOf(false)
     }
@@ -134,7 +139,7 @@ fun ForegroundScanningButton() {
         showPermissionDialog.value = false
 
         if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true) {
-            context.startForegroundService(ScannerService.startIntent(context))
+            showBatteryOptimizationsDialog.value = true
         } else {
             Toast.makeText(context, context.getString(R.string.permissions_not_granted), Toast.LENGTH_SHORT).show()
         }
@@ -148,13 +153,20 @@ fun ForegroundScanningButton() {
         )
     }
 
+    if (showBatteryOptimizationsDialog.value) {
+        BatteryOptimizationsDialog(onBatteryOptimizationsDisabled = {
+            showBatteryOptimizationsDialog.value = false
+            context.startForegroundService(ScannerService.startIntent(context))
+        })
+    }
+
     Button(
         onClick = {
             if (ScannerService.serviceRunning) {
                 context.startService(ScannerService.stopIntent(context))
             } else {
                 if (Manifest.permission.ACCESS_FINE_LOCATION !in missingPermissions) {
-                    context.startForegroundService(ScannerService.startIntent(context))
+                    showBatteryOptimizationsDialog.value = true
                 } else {
                     showPermissionDialog.value = true
                 }
