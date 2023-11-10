@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import xyz.malkki.wifiscannerformls.StumblerApplication
+import xyz.malkki.wifiscannerformls.constants.PreferenceKeys
 
 /**
  * Broadcast received used for rescheduling actions (e.g. activity transition requests) when the app is updated or the device is restarted
@@ -25,8 +26,7 @@ class RescheduleReceiver : BroadcastReceiver() {
             runBlocking {
                 val autoWifiScanEnabled = appContext.settingsStore.data
                     .map {
-                        //TODO: use constant for preference key
-                        it[booleanPreferencesKey("autoscan_enabled")]
+                        it[booleanPreferencesKey(PreferenceKeys.AUTOSCAN_ENABLED)]
                     }
                     .firstOrNull()
 

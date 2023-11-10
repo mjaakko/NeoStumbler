@@ -26,6 +26,7 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 import xyz.malkki.wifiscannerformls.R
 import xyz.malkki.wifiscannerformls.StumblerApplication
+import xyz.malkki.wifiscannerformls.constants.PreferenceKeys
 import xyz.malkki.wifiscannerformls.extensions.checkMissingPermissions
 import xyz.malkki.wifiscannerformls.extensions.getActivity
 import xyz.malkki.wifiscannerformls.scanner.autoscan.ActivityTransitionReceiver
@@ -48,7 +49,9 @@ private val PERMISSION_RATIONALES = mutableMapOf<String, String>().apply {
     }
 }.toMap()
 
-private fun DataStore<Preferences>.autoScanEnabled(): Flow<Boolean?> = data.map { it[booleanPreferencesKey("autoscan_enabled")] }.distinctUntilChanged()
+private fun DataStore<Preferences>.autoScanEnabled(): Flow<Boolean?> = data
+    .map { it[booleanPreferencesKey(PreferenceKeys.AUTOSCAN_ENABLED)] }
+    .distinctUntilChanged()
 
 @Composable
 fun AutoScanToggle() {
@@ -96,14 +99,14 @@ fun AutoScanToggle() {
 
     suspend fun enableAutoScan() {
         ActivityTransitionReceiver.enable(context)
-        settingsStore.edit { it[booleanPreferencesKey("autoscan_enabled")] = true }
+        settingsStore.edit { it[booleanPreferencesKey(PreferenceKeys.AUTOSCAN_ENABLED)] = true }
 
         Timber.i("Enabled activity transition listener")
     }
 
     suspend fun disableAutoScan() {
         ActivityTransitionReceiver.disable(context)
-        settingsStore.edit { it[booleanPreferencesKey("autoscan_enabled")] = false }
+        settingsStore.edit { it[booleanPreferencesKey(PreferenceKeys.AUTOSCAN_ENABLED)] = false }
 
         Timber.i("Disabled activity transition listener")
     }
