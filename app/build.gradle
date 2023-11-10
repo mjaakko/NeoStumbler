@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace 'xyz.malkki.wifiscannerformls'
+    namespace 'xyz.malkki.neostumbler'
     compileSdk 34
 
     defaultConfig {
-        applicationId "xyz.malkki.wifiscannerformls"
+        applicationId "xyz.malkki.neostumbler"
         minSdk 29
         targetSdk 33
         versionCode 1
