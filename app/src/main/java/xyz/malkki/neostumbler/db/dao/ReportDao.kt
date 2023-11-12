@@ -63,4 +63,8 @@ interface ReportDao {
 
     @Query("SELECT r.id, r.timestamp, p.latitude, p.longitude FROM Report r JOIN Position p ON r.id = p.reportId WHERE r.timestamp >= :timestamp")
     suspend fun getReportsNewerThan(timestamp: Instant): List<ReportWithLocation>
+
+    @Transaction
+    @Query("SELECT r.id, r.timestamp, p.latitude, p.longitude FROM Report r JOIN Position p ON r.id = p.reportId")
+    fun getAllReportsWithLocation(): LiveData<List<ReportWithLocation>>
 }
