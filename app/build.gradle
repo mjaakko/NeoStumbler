@@ -121,4 +121,6 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.10.1'
 
     implementation 'org.altbeacon:android-beacon-library:2.19'
+
+    implementation 'org.osmdroid:osmdroid-android:6.1.17'
 }
