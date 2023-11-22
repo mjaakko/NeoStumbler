@@ -80,6 +80,9 @@ class ScannerService : Service() {
 
         private val LOCATION_MAX_AGE = 20.seconds
 
+        //Filter locations where accuracy is higher than 200 meters
+        private const val LOCATION_MAX_ACCURACY = 200
+
         private var _serviceRunning = false
         val serviceRunning: Boolean
             get() = _serviceRunning
@@ -153,6 +156,10 @@ class ScannerService : Service() {
         val locationFlow = getLocationFlow(this@ScannerService, LOCATION_INTERVAL)
             .filter {
                 (SystemClock.elapsedRealtimeNanos() - it.location.elapsedRealtimeNanos).nanoseconds < LOCATION_MAX_AGE
+            }
+            .filter {
+                //Filter too inaccurate locations to avoid sending low quality data to MLS
+                it.location.hasAccuracy() && it.location.accuracy <= LOCATION_MAX_ACCURACY
             }
             .runningFold<LocationWithSource, Pair<LocationWithSource?, LocationWithSource?>>(null to null) { pair, newLocation ->
                 pair.second to newLocation
