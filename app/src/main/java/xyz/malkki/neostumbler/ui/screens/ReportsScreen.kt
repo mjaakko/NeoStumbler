@@ -1,7 +1,6 @@
 package xyz.malkki.neostumbler.ui.screens
 
 import android.Manifest
-import android.location.Geocoder
 import android.os.Build
 import android.text.format.DateFormat
 import android.widget.Toast
@@ -49,8 +48,12 @@ import xyz.malkki.neostumbler.ui.composables.ReportUploadButton
 import xyz.malkki.neostumbler.ui.composables.getAddress
 import xyz.malkki.neostumbler.ui.composables.rememberServiceConnection
 import xyz.malkki.neostumbler.ui.viewmodel.ReportsViewModel
+import xyz.malkki.neostumbler.utils.geocoder.CachingGeocoder
+import xyz.malkki.neostumbler.utils.geocoder.Geocoder
+import xyz.malkki.neostumbler.utils.geocoder.PlatformGeocoder
 import xyz.malkki.neostumbler.utils.showMapWithMarkerIntent
 import java.util.Date
+import android.location.Geocoder as AndroidGeocoder
 
 @Composable
 fun ReportsScreen() {
@@ -189,7 +192,7 @@ private fun Reports(reportsViewModel: ReportsViewModel = viewModel()) {
 
     val context = LocalContext.current
     val geocoder = remember {
-        Geocoder(context, context.defaultLocale)
+        CachingGeocoder(PlatformGeocoder(AndroidGeocoder(context, context.defaultLocale), 1))
     }
 
     Column(modifier = Modifier.padding(top = 8.dp)) {
