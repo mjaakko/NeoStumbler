@@ -1,13 +1,12 @@
 package xyz.malkki.neostumbler.ui.composables
 
 import android.location.Address
-import android.location.Geocoder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.produceState
 import timber.log.Timber
-import xyz.malkki.neostumbler.extensions.getFromLocationSuspending
 import xyz.malkki.neostumbler.extensions.roundToString
+import xyz.malkki.neostumbler.utils.geocoder.Geocoder
 import java.io.IOException
 
 @Composable
@@ -18,7 +17,7 @@ fun getAddress(latitude: Double, longitude: Double, geocoder: Geocoder): State<S
     geocoder,
     producer = {
         val addresses = try {
-            geocoder.getFromLocationSuspending(latitude, longitude, 1)
+            geocoder.getAddresses(latitude, longitude)
         } catch (ioException: IOException) {
             Timber.w(ioException, "Failed to geocode address for location ${latitude}, $longitude")
             emptyList()
