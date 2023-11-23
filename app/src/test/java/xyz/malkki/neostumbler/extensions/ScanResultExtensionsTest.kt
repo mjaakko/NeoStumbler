@@ -24,7 +24,10 @@ class ScanResultExtensionsTest {
             },
             ScanResult().apply {
                 SSID = ""
-            }
+            },
+            ScanResult().apply {
+                SSID = "    "
+            },
         )
 
         val scanResults = valid + invalid
