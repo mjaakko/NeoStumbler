@@ -1,5 +1,6 @@
 package xyz.malkki.neostumbler.db
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
@@ -15,7 +16,14 @@ import xyz.malkki.neostumbler.db.entities.Position
 import xyz.malkki.neostumbler.db.entities.Report
 import xyz.malkki.neostumbler.db.entities.WifiAccessPoint
 
-@Database(exportSchema = true, version = 1, entities = [Report::class, Position::class, WifiAccessPoint::class, CellTower::class, BluetoothBeacon::class,])
+@Database(
+    exportSchema = true,
+    version = 2,
+    entities = [Report::class, Position::class, WifiAccessPoint::class, CellTower::class, BluetoothBeacon::class,],
+    autoMigrations = [
+        AutoMigration(from = 1, to = 2)
+    ]
+)
 @TypeConverters(InstantConverters::class)
 abstract class ReportDatabase : RoomDatabase() {
     abstract fun reportDao(): ReportDao
