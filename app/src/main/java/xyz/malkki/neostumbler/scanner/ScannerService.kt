@@ -19,14 +19,12 @@ import android.os.PowerManager.PARTIAL_WAKE_LOCK
 import android.os.PowerManager.WakeLock
 import android.os.SystemClock
 import android.telephony.CellInfo
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.FOREGROUND_SERVICE_DEFERRED
 import androidx.core.app.NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE
 import androidx.core.content.getSystemService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.channelFlow
@@ -56,13 +54,10 @@ import xyz.malkki.neostumbler.utils.getWifiScanFlow
 import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.roundToLong
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.nanoseconds
 import kotlin.time.Duration.Companion.seconds
-import kotlin.time.ExperimentalTime
 
-@ExperimentalTime
-@ExperimentalMaterial3Api
-@ExperimentalCoroutinesApi
 class ScannerService : Service() {
     companion object {
         private const val MAIN_ACTIVITY_PENDING_INTENT_REQUEST_CODE = 4321
@@ -82,6 +77,9 @@ class ScannerService : Service() {
 
         //Filter locations where accuracy is higher than 200 meters
         private const val LOCATION_MAX_ACCURACY = 200
+
+        //Maximum age for beacons
+        private val BEACON_MAX_AGE = 20.seconds
 
         private var _serviceRunning = false
         val serviceRunning: Boolean
@@ -214,7 +212,7 @@ class ScannerService : Service() {
 
                     beacons.flatten()
                         //Beacon library seems to sometimes return very old results -> filter them
-                        .filter { (it.lastCycleDetectionTimestamp - now) < 20 * 1000 }
+                        .filter { (it.lastCycleDetectionTimestamp - now).milliseconds < BEACON_MAX_AGE }
                         .groupBy { it.bluetoothAddress }
                         .mapValues { beacon ->
                             beacon.value.maxBy {
