@@ -3,6 +3,7 @@ name: Build release APK
 on:
   push:
     tags:
+      - '*'
 
 jobs:
   build:
