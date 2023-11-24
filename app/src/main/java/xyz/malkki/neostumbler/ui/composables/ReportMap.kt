@@ -23,6 +23,7 @@ import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.CopyrightOverlay
 import org.osmdroid.views.overlay.FolderOverlay
 import org.osmdroid.views.overlay.Polygon
+import timber.log.Timber
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.common.LatLng
 import xyz.malkki.neostumbler.db.dao.ReportDao
@@ -97,44 +98,51 @@ fun ReportMap() {
         update = { view ->
             view.lifecycle = lifecycle
 
-            if (view.mapCenter.latitude == 0.0 && view.mapCenter.longitude == 0.0 && latestPosition.value != null) {
-                view.controller.setCenter(GeoPoint(latestPosition.value!!.latitude, latestPosition.value!!.longitude))
-                view.controller.setZoom(10.0)
-            }
-
-            val coordDiff = 10.0.pow(-3)
-
-            val overlay = FolderOverlay()
-            overlay.name = "heatmap"
-
-            heatMapTiles.value
-                .map {
-                    val heatPct = (it.heat.toFloat() / MAX_HEAT).coerceAtMost(1.0f)
-
-                    val color = ColorUtils.blendARGB(HEAT_LOW, HEAT_HIGH, heatPct)
-
-                    val polygon = Polygon(view)
-                    polygon.fillPaint.color = color
-                    polygon.outlinePaint.color = color
-                    polygon.outlinePaint.strokeWidth = 5f
-
-                    polygon.points = listOf(
-                        GeoPoint(it.latitude.toDouble(), it.longitude.toDouble()),
-                        GeoPoint(it.latitude.toDouble() + coordDiff, it.longitude.toDouble()),
-                        GeoPoint(it.latitude.toDouble() + coordDiff, it.longitude.toDouble() + coordDiff),
-                        GeoPoint(it.latitude.toDouble(), it.longitude.toDouble() + coordDiff),
-                    )
-
-                    polygon
+            try {
+                if (view.mapCenter.latitude == 0.0 && view.mapCenter.longitude == 0.0 && latestPosition.value != null) {
+                    view.controller.setCenter(GeoPoint(latestPosition.value!!.latitude, latestPosition.value!!.longitude))
+                    view.controller.setZoom(10.0)
                 }
-                .forEach(overlay::add)
 
-            view.overlayManager.removeIf {
-                it is FolderOverlay && it.name == "heatmap"
+                val coordDiff = 10.0.pow(-3)
+
+                val overlay = FolderOverlay()
+                overlay.name = "heatmap"
+
+                heatMapTiles.value
+                    .map {
+                        val heatPct = (it.heat.toFloat() / MAX_HEAT).coerceAtMost(1.0f)
+
+                        val color = ColorUtils.blendARGB(HEAT_LOW, HEAT_HIGH, heatPct)
+
+                        val polygon = Polygon(view)
+                        polygon.fillPaint.color = color
+                        polygon.outlinePaint.color = color
+                        polygon.outlinePaint.strokeWidth = 5f
+
+                        polygon.points = listOf(
+                            GeoPoint(it.latitude.toDouble(), it.longitude.toDouble()),
+                            GeoPoint(it.latitude.toDouble() + coordDiff, it.longitude.toDouble()),
+                            GeoPoint(it.latitude.toDouble() + coordDiff, it.longitude.toDouble() + coordDiff),
+                            GeoPoint(it.latitude.toDouble(), it.longitude.toDouble() + coordDiff),
+                        )
+
+                        polygon
+                    }
+                    .forEach(overlay::add)
+
+                view.overlayManager.removeIf {
+                    it is FolderOverlay && it.name == "heatmap"
+                }
+                view.overlayManager.add(overlay)
+
+                view.invalidate()
+            } catch (npe: NullPointerException) {
+                //Due to a bug in OSMDroid, updating the map can sometimes throw null pointer exception
+                //To avoid crashing the app, just ignore it
+                //The null pointer exception seems to only happen when the map is being removed from Composable tree
+                Timber.w(npe, "Map update failed due to a NullPointerException")
             }
-            view.overlayManager.add(overlay)
-
-            view.invalidate()
         },
         onRelease = { view ->
             view.lifecycle = null
