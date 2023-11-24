@@ -23,6 +23,9 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.FOREGROUND_SERVICE_DEFERRED
 import androidx.core.app.NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE
 import androidx.core.content.getSystemService
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -30,9 +33,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.runningFold
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.altbeacon.beacon.Beacon
@@ -41,15 +46,18 @@ import xyz.malkki.neostumbler.MainActivity
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.common.LocationWithSource
+import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.extensions.buffer
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.combineAny
 import xyz.malkki.neostumbler.extensions.filterNotNullPairs
+import xyz.malkki.neostumbler.extensions.isGoogleApisAvailable
 import xyz.malkki.neostumbler.extensions.timestampMillis
 import xyz.malkki.neostumbler.extensions.timestampMillisCompat
+import xyz.malkki.neostumbler.location.FusedLocationSource
+import xyz.malkki.neostumbler.location.PlatformLocationSource
 import xyz.malkki.neostumbler.utils.getBeaconFlow
 import xyz.malkki.neostumbler.utils.getCellInfoFlow
-import xyz.malkki.neostumbler.utils.getLocationFlow
 import xyz.malkki.neostumbler.utils.getWifiScanFlow
 import java.util.Locale
 import kotlin.math.abs
@@ -105,6 +113,8 @@ class ScannerService : Service() {
 
     private lateinit var notificationManager: NotificationManager
 
+    private lateinit var settingsStore: DataStore<Preferences>
+
     private lateinit var scanReportCreator: ScanReportCreator
 
     private lateinit var coroutineScope: CoroutineScope
@@ -134,6 +144,8 @@ class ScannerService : Service() {
 
         notificationManager = getSystemService()!!
 
+        settingsStore = (application as StumblerApplication).settingsStore
+
         scanReportCreator = ScanReportCreator(this)
 
         coroutineScope = CoroutineScope(Dispatchers.Default)
@@ -141,6 +153,12 @@ class ScannerService : Service() {
 
     override fun onBind(intent: Intent): IBinder {
         return binder
+    }
+
+    private fun preferFusedLocation(): Boolean = runBlocking {
+        settingsStore.data
+            .map { it[booleanPreferencesKey(PreferenceKeys.PREFER_FUSED_LOCATION)] }
+            .firstOrNull() ?: true
     }
 
     @SuppressLint("MissingPermission")
@@ -151,7 +169,15 @@ class ScannerService : Service() {
 
         scanning = true
 
-        val locationFlow = getLocationFlow(this@ScannerService, LOCATION_INTERVAL)
+        val locationSource = if (preferFusedLocation() && isGoogleApisAvailable()) {
+            Timber.i("Using fused location source")
+            FusedLocationSource(this@ScannerService)
+        } else {
+            Timber.i("Using platform location source")
+            PlatformLocationSource(this@ScannerService)
+        }
+
+        val locationFlow = locationSource.getLocations(LOCATION_INTERVAL)
             .filter {
                 (SystemClock.elapsedRealtimeNanos() - it.location.elapsedRealtimeNanos).nanoseconds < LOCATION_MAX_AGE
             }

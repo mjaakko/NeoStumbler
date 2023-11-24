@@ -9,6 +9,8 @@ import android.os.Build
 import android.provider.Settings
 import androidx.core.content.getSystemService
 import androidx.core.os.LocaleListCompat
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
 import java.util.Locale
 
 /**
@@ -50,4 +52,13 @@ fun Context.isWifiScanThrottled(): Boolean? {
             else -> null
         }
     }
+}
+
+/**
+ * Checks if Google APIs are available
+ *
+ * @return true is Google APIs are available, false if not
+ */
+fun Context.isGoogleApisAvailable(): Boolean {
+    return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(applicationContext) == ConnectionResult.SUCCESS
 }
