@@ -11,7 +11,7 @@ class ReportsViewModel(application: Application) : AndroidViewModel(application)
     val reportsTotal = db.reportDao().getReportCount().distinctUntilChanged()
     val reportsNotUploaded = db.reportDao().getReportCountNotUploaded().distinctUntilChanged()
 
-    val reports = db.reportDao().getAllReportsWithWifiAccessPointCount().distinctUntilChanged()
+    val reports = db.reportDao().getAllReportsWithStats().distinctUntilChanged()
 
     val lastUpload = db.reportDao().getLastUploadTime().distinctUntilChanged()
 }

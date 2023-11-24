@@ -32,10 +32,6 @@ interface ReportDao {
     @Query("SELECT MAX(r.uploadTimestamp) AS timestamp FROM Report r WHERE r.uploaded = 1")
     fun getLastUploadTime(): LiveData<Instant>
 
-    /*@Transaction
-    @Query("SELECT * FROM Report")
-    suspend fun getAllReports(): List<ReportWithWifiAccessPoints>*/
-
     @Transaction
     @Query("""
         SELECT
@@ -55,7 +51,7 @@ interface ReportDao {
         GROUP BY r.id
         ORDER BY r.timestamp DESC
     """)
-    fun getAllReportsWithWifiAccessPointCount(): LiveData<List<ReportWithStats>>
+    fun getAllReportsWithStats(): LiveData<List<ReportWithStats>>
 
     @Transaction
     @Query("SELECT * FROM Report WHERE uploaded = 0")
