@@ -1,0 +1,38 @@
+name: Build release APK
+
+on:
+  push:
+    tags:
+
+jobs:
+  build:
+    name: Build release APK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Set up Gradle build action
+        uses: gradle/gradle-build-action@v2
+      - name: Get version name
+        id: get-version
+        run: echo "VERSION_NAME=$(./gradlew -q printVersionName)" >> $GITHUB_OUTPUT
+      - name: Verify version name equals git tag
+        if: ${{ github.ref != steps.get-version.outputs.VERSION_NAME }}
+        run: exit 1
+      - name: Decode Keystore
+        run: echo ${{ secrets.SIGNING_KEY_STORE_BASE64 }} | base64 -d - > keystore.jks
+      - name: Build release APK
+        env:
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+        run: ./gradlew assembleRelease
+      - name: Upload APK as an asset to the GitHub release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: app/release/app-release.apk
+
