@@ -48,7 +48,7 @@ fun BatteryOptimizationsDialog(onBatteryOptimizationsDisabled: (Boolean) -> Unit
             val batteryOptimizationsDisabled = result.resultCode == Activity.RESULT_OK
 
             onBatteryOptimizationsDisabled(batteryOptimizationsDisabled)
-            if (batteryOptimizationsDisabled) {
+            if (!batteryOptimizationsDisabled) {
                 Toast.makeText(context, context.getString(R.string.battery_optimizations_not_disabled_warning), Toast.LENGTH_SHORT).show()
             }
         }
