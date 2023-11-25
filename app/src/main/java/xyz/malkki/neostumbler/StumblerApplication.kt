@@ -47,7 +47,7 @@ class StumblerApplication : Application() {
         } else {
             BuildConfig.VERSION_CODE
         }
-        val userAgentInterceptor = UserAgentInterceptor("${BuildConfig.APPLICATION_ID}/${userAgentVersion}")
+        val userAgentInterceptor = UserAgentInterceptor("${resources.getString(R.string.app_name)}/${userAgentVersion}")
 
         OkHttpClient.Builder()
             .addInterceptor(userAgentInterceptor)
