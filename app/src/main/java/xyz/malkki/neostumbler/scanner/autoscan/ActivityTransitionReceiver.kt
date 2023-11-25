@@ -1,11 +1,13 @@
 package xyz.malkki.neostumbler.scanner.autoscan
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.SystemClock
+import androidx.annotation.RequiresPermission
 import com.google.android.gms.location.ActivityRecognition
 import com.google.android.gms.location.ActivityTransition
 import com.google.android.gms.location.ActivityTransitionRequest
@@ -15,6 +17,7 @@ import com.google.android.gms.location.Granularity
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 import xyz.malkki.neostumbler.scanner.ScannerService
@@ -34,8 +37,21 @@ class ActivityTransitionReceiver : BroadcastReceiver() {
             )
         }
 
-        @SuppressLint("MissingPermission")
+        /**
+         * @see ActivityTransitionReceiver.enableWithTask
+         */
+        @RequiresPermission(Manifest.permission.ACTIVITY_RECOGNITION)
         suspend fun enable(context: Context) {
+            enableWithTask(context).await()
+        }
+
+        /**
+         * Enables activity transition receiver for automatic scanning
+         *
+         * @return Task which completes when activity transition receiver is enabled
+         */
+        @RequiresPermission(Manifest.permission.ACTIVITY_RECOGNITION)
+        fun enableWithTask(context: Context): Task<Void> {
             val activityRecognitionClient = ActivityRecognition.getClient(context)
 
             val activityTypes = listOf(DetectedActivity.STILL)
@@ -53,7 +69,7 @@ class ActivityTransitionReceiver : BroadcastReceiver() {
             )
             val pendingIntent = getPendingIntent(context)
 
-            activityRecognitionClient.requestActivityTransitionUpdates(activityTransitionRequest, pendingIntent).await()
+            return activityRecognitionClient.requestActivityTransitionUpdates(activityTransitionRequest, pendingIntent)
         }
 
         @SuppressLint("MissingPermission")

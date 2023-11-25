@@ -1,6 +1,7 @@
 package xyz.malkki.neostumbler.ui.composables
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.os.Build
 import android.widget.Toast
 import androidx.compose.runtime.Composable
@@ -53,6 +54,7 @@ private fun DataStore<Preferences>.autoScanEnabled(): Flow<Boolean?> = data
     .map { it[booleanPreferencesKey(PreferenceKeys.AUTOSCAN_ENABLED)] }
     .distinctUntilChanged()
 
+@SuppressLint("MissingPermission")
 @Composable
 fun AutoScanToggle() {
     val context = LocalContext.current

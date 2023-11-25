@@ -1,5 +1,6 @@
 package xyz.malkki.neostumbler.scanner.autoscan
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -19,24 +20,28 @@ class RescheduleReceiver : BroadcastReceiver() {
         private val ALLOWED_ACTIONS = setOf(Intent.ACTION_BOOT_COMPLETED, Intent.ACTION_MY_PACKAGE_REPLACED)
     }
 
+    @SuppressLint("MissingPermission")
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action in ALLOWED_ACTIONS) {
             val appContext = context.applicationContext as StumblerApplication
 
-            runBlocking {
-                val autoWifiScanEnabled = appContext.settingsStore.data
+            val autoWifiScanEnabled = runBlocking {
+                appContext.settingsStore.data
                     .map {
                         it[booleanPreferencesKey(PreferenceKeys.AUTOSCAN_ENABLED)]
                     }
                     .firstOrNull()
+            }
 
-                Timber.d("Received event: ${intent.action}, auto scan enabled: $autoWifiScanEnabled")
+            Timber.d("Received event: ${intent.action}, auto scan enabled: $autoWifiScanEnabled")
 
-                if (autoWifiScanEnabled == true) {
-                    Timber.i("Re-enabling activity transition receiver")
+            if (autoWifiScanEnabled == true) {
+                Timber.i("Re-enabling activity transition receiver")
 
-                    ActivityTransitionReceiver.enable(appContext)
-                }
+                ActivityTransitionReceiver.enableWithTask(appContext)
+                    .addOnCompleteListener { task ->
+                        Timber.i("Activity transition receiver enabled: ${task.isSuccessful}")
+                    }
             }
         } else {
             Timber.w("Received intent with unexpected action: %s", intent.action)
