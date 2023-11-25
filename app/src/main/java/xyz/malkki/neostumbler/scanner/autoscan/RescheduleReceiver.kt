@@ -11,6 +11,7 @@ import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.utils.PermissionHelper
 
 /**
  * Broadcast received used for rescheduling actions (e.g. activity transition requests) when the app is updated or the device is restarted
@@ -25,17 +26,18 @@ class RescheduleReceiver : BroadcastReceiver() {
         if (intent.action in ALLOWED_ACTIONS) {
             val appContext = context.applicationContext as StumblerApplication
 
-            val autoWifiScanEnabled = runBlocking {
+            val autoScanEnabled = runBlocking {
                 appContext.settingsStore.data
                     .map {
                         it[booleanPreferencesKey(PreferenceKeys.AUTOSCAN_ENABLED)]
                     }
                     .firstOrNull()
             }
+            val autoScanPermissionsGranted = PermissionHelper.hasAutoScanPermissions(appContext)
 
-            Timber.d("Received event: ${intent.action}, auto scan enabled: $autoWifiScanEnabled")
+            Timber.d("Received event: ${intent.action}, auto scan enabled: $autoScanEnabled, permissions granted: $autoScanPermissionsGranted")
 
-            if (autoWifiScanEnabled == true) {
+            if (autoScanEnabled == true && autoScanPermissionsGranted) {
                 Timber.i("Re-enabling activity transition receiver")
 
                 ActivityTransitionReceiver.enableWithTask(appContext)
