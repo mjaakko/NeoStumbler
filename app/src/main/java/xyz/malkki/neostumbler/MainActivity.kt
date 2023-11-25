@@ -24,13 +24,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.FlowPreview
 import xyz.malkki.neostumbler.ui.composables.ReportMap
 import xyz.malkki.neostumbler.ui.screens.ReportsScreen
 import xyz.malkki.neostumbler.ui.screens.SettingsScreen
 import xyz.malkki.neostumbler.ui.theme.NeoStumblerTheme
 
-@FlowPreview
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
