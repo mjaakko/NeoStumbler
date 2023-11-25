@@ -7,7 +7,9 @@ import android.os.IBinder
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import timber.log.Timber
+import xyz.malkki.neostumbler.MainActivity
 import xyz.malkki.neostumbler.scanner.ScannerService
+import xyz.malkki.neostumbler.utils.PermissionHelper
 
 class ScannerTileService : TileService() {
     private var scannerService: ScannerService? = null
@@ -58,8 +60,13 @@ class ScannerTileService : TileService() {
 
     override fun onClick() {
         if (!scanningActive) {
-            //TODO: we should check necessary permissions here (and possibly set tile to unavailable state / open an activity to request permissions)
-            startForegroundService(ScannerService.startIntent(this))
+            if (PermissionHelper.hasScanPermissions(this)) {
+                //If we already have required permissions, start scanning
+                startForegroundService(ScannerService.startIntent(this))
+            } else {
+                //Otherwise open main activity where user can start scanning manually
+                startActivity(Intent(this, MainActivity::class.java))
+            }
         } else {
             startService(ScannerService.stopIntent(this))
         }
