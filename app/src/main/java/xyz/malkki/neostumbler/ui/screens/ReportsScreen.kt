@@ -48,6 +48,7 @@ import xyz.malkki.neostumbler.ui.composables.ReportUploadButton
 import xyz.malkki.neostumbler.ui.composables.getAddress
 import xyz.malkki.neostumbler.ui.composables.rememberServiceConnection
 import xyz.malkki.neostumbler.ui.viewmodel.ReportsViewModel
+import xyz.malkki.neostumbler.utils.PermissionHelper
 import xyz.malkki.neostumbler.utils.geocoder.CachingGeocoder
 import xyz.malkki.neostumbler.utils.geocoder.Geocoder
 import xyz.malkki.neostumbler.utils.geocoder.PlatformGeocoder
@@ -123,21 +124,6 @@ fun ForegroundScanningButton() {
         context.checkMissingPermissions(*requiredPermissions)
     }
 
-    val permissionRationales = mutableMapOf<String, String>().apply {
-        put(Manifest.permission.ACCESS_FINE_LOCATION, "Scanning Wi-Fi networks needs access to exact location")
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            put(Manifest.permission.POST_NOTIFICATIONS, "Showing status notification needs notification permission")
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            put(Manifest.permission.BLUETOOTH_SCAN, "Scanning Bluetooth devices needs access to Bluetooth permission")
-        } else {
-            put(Manifest.permission.BLUETOOTH, "Scanning Bluetooth devices needs access to Bluetooth permission")
-            put(Manifest.permission.BLUETOOTH_ADMIN, "Scanning Bluetooth devices needs access to Bluetooth permission")
-        }
-    }.toMap()
-
     val onPermissionsGranted: (Map<String, Boolean>) -> Unit = { permissions ->
         showPermissionDialog.value = false
 
@@ -151,7 +137,7 @@ fun ForegroundScanningButton() {
     if (showPermissionDialog.value) {
         PermissionsDialog(
             missingPermissions = missingPermissions,
-            permissionRationales = permissionRationales,
+            permissionRationales = PermissionHelper.PERMISSION_RATIONALES,
             onPermissionsGranted = onPermissionsGranted
         )
     }

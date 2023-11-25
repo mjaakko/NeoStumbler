@@ -31,24 +31,7 @@ import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.getActivity
 import xyz.malkki.neostumbler.scanner.autoscan.ActivityTransitionReceiver
-
-//TODO: move this somewhere else
-private val PERMISSION_RATIONALES = mutableMapOf<String, String>().apply {
-    put(Manifest.permission.ACCESS_FINE_LOCATION, "Scanning Wi-Fi networks needs access to exact location")
-    put(Manifest.permission.ACTIVITY_RECOGNITION, "Automatically starting scanning needs access to current activity")
-    put(Manifest.permission.ACCESS_BACKGROUND_LOCATION, "Automatically starting scanning needs access to background location")
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        put(Manifest.permission.POST_NOTIFICATIONS, "Showing status notification needs notification permission")
-    }
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        put(Manifest.permission.BLUETOOTH_SCAN, "Scanning Bluetooth devices needs access to Bluetooth permission")
-    } else {
-        put(Manifest.permission.BLUETOOTH, "Scanning Bluetooth devices needs access to Bluetooth permission")
-        put(Manifest.permission.BLUETOOTH_ADMIN, "Scanning Bluetooth devices needs access to Bluetooth permission")
-    }
-}.toMap()
+import xyz.malkki.neostumbler.utils.PermissionHelper
 
 private fun DataStore<Preferences>.autoScanEnabled(): Flow<Boolean?> = data
     .map { it[booleanPreferencesKey(PreferenceKeys.AUTOSCAN_ENABLED)] }
@@ -116,7 +99,7 @@ fun AutoScanToggle() {
     if (showBasicPermissionsDialog.value) {
         PermissionsDialog(
             missingPermissions = missingPermissionsBasic.value,
-            permissionRationales = PERMISSION_RATIONALES,
+            permissionRationales = PermissionHelper.PERMISSION_RATIONALES,
             onPermissionsGranted = { permissions ->
                 showBasicPermissionsDialog.value = false
 
@@ -144,7 +127,7 @@ fun AutoScanToggle() {
     if (showAdditionalPermissionsDialog.value) {
         PermissionsDialog(
             missingPermissions = missingPermissionsAdditional.value,
-            permissionRationales = PERMISSION_RATIONALES,
+            permissionRationales = PermissionHelper.PERMISSION_RATIONALES,
             onPermissionsGranted = { permissions ->
                 showAdditionalPermissionsDialog.value = false
 
