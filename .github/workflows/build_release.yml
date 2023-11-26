@@ -22,7 +22,7 @@ jobs:
         id: get-version
         run: echo "VERSION_NAME=$(./gradlew -q printVersionName)" >> $GITHUB_OUTPUT
       - name: Verify version name equals git tag
-        if: ${{ github.ref != steps.get-version.outputs.VERSION_NAME }}
+        if: ${{ github.ref_name != steps.get-version.outputs.VERSION_NAME }}
         run: exit 1
       - name: Decode Keystore
         run: echo ${{ secrets.SIGNING_KEY_STORE_BASE64 }} | base64 -d - > keystore.jks
