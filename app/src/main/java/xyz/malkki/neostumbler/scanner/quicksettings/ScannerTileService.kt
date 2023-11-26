@@ -1,8 +1,10 @@
 package xyz.malkki.neostumbler.scanner.quicksettings
 
+import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
+import android.os.Build
 import android.os.IBinder
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
@@ -12,6 +14,10 @@ import xyz.malkki.neostumbler.scanner.ScannerService
 import xyz.malkki.neostumbler.utils.PermissionHelper
 
 class ScannerTileService : TileService() {
+    companion object {
+        private const val MAIN_ACTIVITY_REQUEST_CODE = 5436;
+    }
+
     private var scannerService: ScannerService? = null
 
     private val serviceConnection = object : ServiceConnection {
@@ -65,10 +71,24 @@ class ScannerTileService : TileService() {
                 startForegroundService(ScannerService.startIntent(this))
             } else {
                 //Otherwise open main activity where user can start scanning manually
-                startActivity(Intent(this, MainActivity::class.java))
+                startMainActivity()
             }
         } else {
             startService(ScannerService.stopIntent(this))
+        }
+    }
+
+    private fun startMainActivity() {
+        val intent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            val pendingIntent = PendingIntent.getActivity(this, MAIN_ACTIVITY_REQUEST_CODE, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+
+            startActivityAndCollapse(pendingIntent)
+        } else {
+            startActivityAndCollapse(intent)
         }
     }
 }
