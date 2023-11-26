@@ -17,7 +17,7 @@ jobs:
       - name: Build debug APK
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: build
+          arguments: buildDebug
       - name: Upload debug APK as artifact
         uses: actions/upload-artifact@v3
         with:
