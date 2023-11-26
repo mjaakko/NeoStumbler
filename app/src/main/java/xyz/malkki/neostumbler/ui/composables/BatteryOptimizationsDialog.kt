@@ -1,10 +1,8 @@
 package xyz.malkki.neostumbler.ui.composables
 
-import android.app.Activity
 import android.os.PowerManager
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -40,12 +38,13 @@ fun BatteryOptimizationsDialog(onBatteryOptimizationsDisabled: (Boolean) -> Unit
 
     val batteryOptimizationActivityLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
-        onResult = { result: ActivityResult ->
+        onResult = { _ ->
             coroutineScope.launch {
                 oneTimeActionHelper.markActionShown(ACTION_NAME)
             }
 
-            val batteryOptimizationsDisabled = result.resultCode == Activity.RESULT_OK
+            //Check from PowerManager whether battery optimizations were disabled -> activity result code seems to be unreliable here
+            val batteryOptimizationsDisabled = powerManager.isIgnoringBatteryOptimizations(context.packageName)
 
             onBatteryOptimizationsDisabled(batteryOptimizationsDisabled)
             if (!batteryOptimizationsDisabled) {
