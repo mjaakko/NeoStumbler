@@ -35,5 +35,5 @@ jobs:
       - name: Upload APK as an asset to the GitHub release
         uses: softprops/action-gh-release@v1
         with:
-          files: app/release/app-release.apk
+          files: app/build/outputs/apk/release/app-release.apk
 
