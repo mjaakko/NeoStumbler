@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.location.Location
 import com.google.android.gms.location.Geofence
+import com.google.android.gms.location.GeofenceStatusCodes
 import com.google.android.gms.location.GeofencingEvent
 import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationAvailability
@@ -14,8 +15,8 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
-import xyz.malkki.neostumbler.scanner.ScannerService
 import xyz.malkki.neostumbler.StumblerApplication
+import xyz.malkki.neostumbler.scanner.ScannerService
 import java.time.Duration
 import java.time.Instant
 
@@ -116,7 +117,7 @@ class LocationReceiver : BroadcastReceiver() {
 
     private fun handleGeofencingEvent(context: Context, geofencingEvent: GeofencingEvent) {
         if (geofencingEvent.hasError()) {
-            Timber.w("Geofencing event had an error: ${geofencingEvent.errorCode}")
+            Timber.w("Geofencing event had an error: ${GeofenceStatusCodes.getStatusCodeString(geofencingEvent.errorCode)} (${geofencingEvent.errorCode})")
 
             //TODO: disable autoscanning and prompt user to re-enable
             //https://developer.android.com/training/location/geofencing#re-register-geofences-only-when-required
