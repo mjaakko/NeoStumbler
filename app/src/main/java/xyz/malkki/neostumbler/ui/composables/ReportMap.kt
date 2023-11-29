@@ -56,6 +56,16 @@ private fun getHeatMapTiles(reportDao: ReportDao, coordinateScale: Int): LiveDat
             }
     }
 
+/**
+ * Sets map to the specified location if the map has not been moved yet
+ */
+private fun MapView.setPositionIfNotMoved(latLng: LatLng) {
+    if (mapCenter.latitude == 0.0 && mapCenter.longitude == 0.0) {
+        controller.setCenter(GeoPoint(latLng.latitude, latLng.longitude))
+        controller.setZoom(10.0)
+    }
+}
+
 @Composable
 fun ReportMap() {
     val lifecycle = LocalLifecycleOwner.current.lifecycle
@@ -89,7 +99,9 @@ fun ReportMap() {
             //Latitude range is slightly reduced to avoid displaying blank tiles
             map.setScrollableAreaLimitLatitude(MapView.getTileSystem().maxLatitude - 0.3, MapView.getTileSystem().minLatitude + 0.3, 0)
             map.overlays.add(CopyrightOverlay(context));
-            map.post {
+            if (latestPosition.value != null) {
+                map.setPositionIfNotMoved(latestPosition.value!!)
+            } else {
                 map.controller.setZoom(5.0)
             }
 
@@ -99,10 +111,7 @@ fun ReportMap() {
             view.lifecycle = lifecycle
 
             try {
-                if (view.mapCenter.latitude == 0.0 && view.mapCenter.longitude == 0.0 && latestPosition.value != null) {
-                    view.controller.setCenter(GeoPoint(latestPosition.value!!.latitude, latestPosition.value!!.longitude))
-                    view.controller.setZoom(10.0)
-                }
+                latestPosition.value?.let { view.setPositionIfNotMoved(it) }
 
                 val coordDiff = 10.0.pow(-3)
 
