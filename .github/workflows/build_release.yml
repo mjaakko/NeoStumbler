@@ -19,7 +19,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - name: Set up Gradle build action
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v2.10.0
       - name: Get version name
         id: get-version
         run: echo "VERSION_NAME=$(./gradlew -q printVersionName)" >> $GITHUB_OUTPUT
