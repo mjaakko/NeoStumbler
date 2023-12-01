@@ -128,6 +128,8 @@ fun ReportMap() {
                         polygon.fillPaint.color = color
                         polygon.outlinePaint.color = color
                         polygon.outlinePaint.strokeWidth = 5f
+                        //Return with click listener to disable info window
+                        polygon.setOnClickListener { _, _, _ -> false }
 
                         polygon.points = listOf(
                             GeoPoint(it.latitude.toDouble(), it.longitude.toDouble()),
