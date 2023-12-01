@@ -1,13 +1,15 @@
 package xyz.malkki.neostumbler.utils
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import xyz.malkki.neostumbler.StumblerApplication
 
-class OneTimeActionHelper(app: StumblerApplication) {
-    private val oneTimeActionsStore = app.oneTimeActionsStore
+class OneTimeActionHelper(private val oneTimeActionsStore: DataStore<Preferences>) {
+    constructor(app: StumblerApplication) : this(app.oneTimeActionsStore)
 
     /**
      * Checks if the specified action has already been shown to the user
