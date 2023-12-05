@@ -13,10 +13,7 @@ import com.google.android.gms.location.ActivityTransition
 import com.google.android.gms.location.ActivityTransitionRequest
 import com.google.android.gms.location.ActivityTransitionResult
 import com.google.android.gms.location.DetectedActivity
-import com.google.android.gms.location.Granularity
-import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
@@ -81,25 +78,6 @@ class ActivityTransitionReceiver : BroadcastReceiver() {
     }
 
     @SuppressLint("MissingPermission")
-    private fun tryStartAutoscan(context: Context) {
-        val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
-
-        //Request location to check whether user is in a location where reports have not been made
-        val locationRequest = LocationRequest.Builder(0)
-            .setDurationMillis(10 * 60 * 1000)
-            .setGranularity(Granularity.GRANULARITY_PERMISSION_LEVEL)
-            .setPriority(Priority.PRIORITY_BALANCED_POWER_ACCURACY)
-            .setMaxUpdateAgeMillis(30 * 1000)
-            .setMaxUpdates(1)
-            .build()
-
-        Timber.i("Requesting location update to determine if scanning should be started")
-        fusedLocationProviderClient.requestLocationUpdates(
-            locationRequest,
-            LocationReceiver.getPendingIntent(context)
-        )
-    }
-
     private fun handleActivityTransitionResult(context: Context, activityTransitionResult: ActivityTransitionResult) {
         for (event in activityTransitionResult.transitionEvents) {
             val age = Duration.ofNanos(SystemClock.elapsedRealtimeNanos() - event.elapsedRealTimeNanos)
@@ -121,7 +99,7 @@ class ActivityTransitionReceiver : BroadcastReceiver() {
             } else if (event.activityType == DetectedActivity.STILL && event.transitionType == ActivityTransition.ACTIVITY_TRANSITION_EXIT) {
                 Timber.i("User exited STILL activity ${age.seconds}s ago")
 
-                tryStartAutoscan(context)
+                LocationReceiver.requestLocationUpdateToStartAutoscan(context)
             }
         }
     }

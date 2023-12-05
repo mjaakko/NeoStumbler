@@ -1,18 +1,23 @@
 package xyz.malkki.neostumbler.scanner.autoscan
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.location.Location
+import androidx.annotation.RequiresPermission
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofenceStatusCodes
 import com.google.android.gms.location.GeofencingEvent
 import com.google.android.gms.location.GeofencingRequest
+import com.google.android.gms.location.Granularity
 import com.google.android.gms.location.LocationAvailability
+import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import xyz.malkki.neostumbler.StumblerApplication
@@ -40,6 +45,25 @@ class LocationReceiver : BroadcastReceiver() {
                 Intent(context, LocationReceiver::class.java),
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
             )
+        }
+
+        @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+        fun requestLocationUpdateToStartAutoscan(context: Context) {
+            val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
+
+            //Request location to check whether user is in a location where reports have not been made
+            val locationRequest = LocationRequest.Builder(0)
+                .setDurationMillis(10 * 60 * 1000)
+                .setGranularity(Granularity.GRANULARITY_PERMISSION_LEVEL)
+                .setPriority(Priority.PRIORITY_BALANCED_POWER_ACCURACY)
+                .setMaxUpdateAgeMillis(30 * 1000)
+                .setMaxUpdates(1)
+                .build()
+
+            Timber.i("Requesting location update to determine if scanning should be started")
+            fusedLocationProviderClient.requestLocationUpdates(locationRequest, getPendingIntent(context))
+                .addOnSuccessListener { Timber.i("Location update requested") }
+                .addOnFailureListener { e -> Timber.w("Failed to request location update", e) }
         }
     }
 
@@ -114,6 +138,7 @@ class LocationReceiver : BroadcastReceiver() {
         }
     }
 
+    @SuppressLint("MissingPermission")
     private fun handleGeofencingEvent(context: Context, geofencingEvent: GeofencingEvent) {
         if (geofencingEvent.hasError()) {
             Timber.w("Geofencing event had an error: ${GeofenceStatusCodes.getStatusCodeString(geofencingEvent.errorCode)} (${geofencingEvent.errorCode})")
@@ -124,9 +149,15 @@ class LocationReceiver : BroadcastReceiver() {
             if (geofencingEvent.geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT && geofencingEvent.triggeringGeofences?.any { it.requestId == AUTOSCAN_GEOFENCE_REQUEST_ID } == true) {
                 Timber.i("Received geofence exit event")
 
-                val currentLocation = geofencingEvent.triggeringLocation!!
+                val currentLocation = geofencingEvent.triggeringLocation
+                if (currentLocation != null) {
+                    tryStartAutoscan(context, currentLocation)
+                } else {
+                    Timber.i("Geofence did not have a triggering location, requesting a location update...")
 
-                tryStartAutoscan(context, currentLocation)
+                    //If the geofence does not have a triggering location, request a location update to see if we are in an area where scanning should be started
+                    requestLocationUpdateToStartAutoscan(context)
+                }
             } else {
                 Timber.w("Received unexpected geofence event (transition: ${geofencingEvent.geofenceTransition}, request IDs: ${geofencingEvent.triggeringGeofences?.map { it.requestId }})")
             }
