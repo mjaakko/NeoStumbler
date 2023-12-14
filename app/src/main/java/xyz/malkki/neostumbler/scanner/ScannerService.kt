@@ -397,6 +397,7 @@ class ScannerService : Service() {
             .setContentTitle(getString(R.string.notification_wireless_scanning_active))
             .setContentText(getString(R.string.notification_reports_created, reportsCreated))
             .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setOngoing(true)
             .setAllowSystemGeneratedContextualActions(false)
             .setOnlyAlertOnce(true)
             .setLocalOnly(true)
