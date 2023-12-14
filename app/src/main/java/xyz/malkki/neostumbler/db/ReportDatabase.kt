@@ -7,6 +7,7 @@ import androidx.room.TypeConverters
 import xyz.malkki.neostumbler.db.converters.InstantConverters
 import xyz.malkki.neostumbler.db.dao.BluetoothBeaconDao
 import xyz.malkki.neostumbler.db.dao.CellTowerDao
+import xyz.malkki.neostumbler.db.dao.ExportDao
 import xyz.malkki.neostumbler.db.dao.PositionDao
 import xyz.malkki.neostumbler.db.dao.ReportDao
 import xyz.malkki.neostumbler.db.dao.WifiAccessPointDao
@@ -27,10 +28,14 @@ import xyz.malkki.neostumbler.db.entities.WifiAccessPoint
 @TypeConverters(InstantConverters::class)
 abstract class ReportDatabase : RoomDatabase() {
     abstract fun reportDao(): ReportDao
+
     abstract fun positionDao(): PositionDao
+
     abstract fun wifiAccessPointDao(): WifiAccessPointDao
 
     abstract fun cellTowerDao(): CellTowerDao
 
     abstract fun bluetoothBeaconDao(): BluetoothBeaconDao
+
+    abstract fun exportDao(): ExportDao
 }
