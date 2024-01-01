@@ -145,5 +145,5 @@ dependencies {
 
     implementation 'org.altbeacon:android-beacon-library:2.20.3'
 
-    implementation 'org.osmdroid:osmdroid-android:6.1.17'
+    implementation 'org.osmdroid:osmdroid-android:6.1.18'
 }
