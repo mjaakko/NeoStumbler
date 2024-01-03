@@ -20,6 +20,12 @@ import java.util.zip.ZipOutputStream
  * Helper for exporting scan data
  */
 class DataExporter(private val application: StumblerApplication) {
+    companion object {
+        private const val BEACONS_FILE_NAME = "beacons.csv"
+        private const val WIFIS_FILE_NAME = "wifis.csv"
+        private const val CELLS_FILE_NAME = "cells.csv"
+    }
+
     private val exportDao = application.reportDb.exportDao()
 
     /**
@@ -50,11 +56,11 @@ class DataExporter(private val application: StumblerApplication) {
 
     private suspend fun exportToOutputStream(outputStream: OutputStream) = withContext(Dispatchers.IO) {
         ZipOutputStream(outputStream.buffered(), StandardCharsets.UTF_8).use { zipOutputStream ->
-            export(zipOutputStream, "beacons.csv", exportDao.bluetoothExportCursor())
+            export(zipOutputStream, BEACONS_FILE_NAME, exportDao.bluetoothExportCursor())
 
-            export(zipOutputStream, "cells.csv", exportDao.cellExportCursor())
+            export(zipOutputStream, CELLS_FILE_NAME, exportDao.cellExportCursor())
 
-            export(zipOutputStream, "wifis.csv", exportDao.wifiExportCursor())
+            export(zipOutputStream, WIFIS_FILE_NAME, exportDao.wifiExportCursor())
         }
     }
 
