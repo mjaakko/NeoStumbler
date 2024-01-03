@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.SystemClock
 import androidx.annotation.RequiresPermission
 import com.google.android.gms.location.ActivityRecognition
@@ -69,11 +70,18 @@ class ActivityTransitionReceiver : BroadcastReceiver() {
             return activityRecognitionClient.requestActivityTransitionUpdates(activityTransitionRequest, pendingIntent)
         }
 
-        @SuppressLint("MissingPermission")
         suspend fun disable(context: Context) {
-            val activityRecognitionClient = ActivityRecognition.getClient(context)
+            val pendingIntent = getPendingIntent(context)
 
-            activityRecognitionClient.removeActivityTransitionUpdates(getPendingIntent(context)).await()
+            //Removing activity transition updates without the permission causes a crash
+            if (context.checkSelfPermission(Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_GRANTED) {
+                val activityRecognitionClient = ActivityRecognition.getClient(context)
+
+                activityRecognitionClient.removeActivityTransitionUpdates(pendingIntent).await()
+            }
+
+            //Cancel the pending intent to make sure that we don't receive more activity transition updates
+            pendingIntent.cancel()
         }
     }
 
