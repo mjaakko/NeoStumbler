@@ -3,6 +3,7 @@ package xyz.malkki.neostumbler.db.dao
 import android.database.Cursor
 import androidx.room.Dao
 import androidx.room.Query
+import java.time.Instant
 
 @Dao
 interface ExportDao {
@@ -20,8 +21,9 @@ interface ExportDao {
         FROM Report r
         JOIN Position p ON r.id = p.reportId
         JOIN BluetoothBeacon b ON r.id = b.reportId
+        WHERE r.timestamp >= :from AND r.timestamp <= :to
     """)
-    fun bluetoothExportCursor(): Cursor
+    fun bluetoothExportCursor(from: Instant, to: Instant): Cursor
 
     @Query("""
         SELECT
@@ -38,8 +40,9 @@ interface ExportDao {
         FROM Report r
         JOIN Position p ON r.id = p.reportId
         JOIN WifiAccessPoint w ON r.id = w.reportId
+        WHERE r.timestamp >= :from AND r.timestamp <= :to
     """)
-    fun wifiExportCursor(): Cursor
+    fun wifiExportCursor(from: Instant, to: Instant): Cursor
 
     @Query("""
         SELECT
@@ -61,6 +64,7 @@ interface ExportDao {
         FROM Report r
         JOIN Position p ON r.id = p.reportId
         JOIN CellTower c ON r.id = c.reportId
+        WHERE r.timestamp >= :from AND r.timestamp <= :to
     """)
-    fun cellExportCursor(): Cursor
+    fun cellExportCursor(from: Instant, to: Instant): Cursor
 }

@@ -13,6 +13,7 @@ import java.io.IOException
 import java.io.OutputStream
 import java.io.OutputStreamWriter
 import java.nio.charset.StandardCharsets
+import java.time.Instant
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
@@ -56,18 +57,18 @@ class DataExporter(private val application: StumblerApplication) {
 
     private suspend fun exportToOutputStream(outputStream: OutputStream) = withContext(Dispatchers.IO) {
         ZipOutputStream(outputStream.buffered(), StandardCharsets.UTF_8).use { zipOutputStream ->
-            export(zipOutputStream, BEACONS_FILE_NAME, exportDao.bluetoothExportCursor())
+            export(zipOutputStream, BEACONS_FILE_NAME, exportDao.bluetoothExportCursor(Instant.MIN, Instant.MAX))
 
-            export(zipOutputStream, CELLS_FILE_NAME, exportDao.cellExportCursor())
+            export(zipOutputStream, CELLS_FILE_NAME, exportDao.cellExportCursor(Instant.MIN, Instant.MAX))
 
-            export(zipOutputStream, WIFIS_FILE_NAME, exportDao.wifiExportCursor())
+            export(zipOutputStream, WIFIS_FILE_NAME, exportDao.wifiExportCursor(Instant.MIN, Instant.MAX))
         }
     }
 
     /**
      * Exports data to the specified URI (content://)
      */
-    suspend fun exportToFile(uri: Uri) {
+    suspend fun exportToFile(uri: Uri, from: Instant, to: Instant) {
         application.contentResolver.openOutputStream(uri, "wt").use { os ->
             if (os == null) {
                 Timber.w("OutputStream was null, maybe the content provider handling %s crashed", uri.toString())
