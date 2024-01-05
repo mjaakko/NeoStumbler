@@ -2,7 +2,6 @@ package xyz.malkki.neostumbler.export
 
 import android.database.Cursor
 import android.net.Uri
-import androidx.core.database.getStringOrNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.apache.commons.csv.CSVFormat
@@ -13,7 +12,10 @@ import java.io.IOException
 import java.io.OutputStream
 import java.io.OutputStreamWriter
 import java.nio.charset.StandardCharsets
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 import java.time.Instant
+import java.util.Locale
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
@@ -29,6 +31,10 @@ class DataExporter(private val application: StumblerApplication) {
 
     private val exportDao = application.reportDb.exportDao()
 
+    private val decimalFormat = DecimalFormat("0", DecimalFormatSymbols(Locale.ROOT)).apply {
+        maximumFractionDigits = 340
+    }
+
     /**
      * Exports data from the given cursor to the ZIP output stream to an entry with the specified file name
      */
@@ -43,7 +49,7 @@ class DataExporter(private val application: StumblerApplication) {
                 val csvPrinter = CSVPrinter(OutputStreamWriter(zipOutputStream, StandardCharsets.UTF_8), csvFormat)
                 while (cursor.moveToNext()) {
                     val csvRecord = (0 until cursor.columnCount).map {
-                        cursor.getStringOrNull(it)
+                        cursor.getCsvValue(it)
                     }
 
                     csvPrinter.printRecord(csvRecord)
@@ -53,6 +59,17 @@ class DataExporter(private val application: StumblerApplication) {
 
                 zipOutputStream.closeEntry()
             }
+        }
+    }
+
+    private fun Cursor.getCsvValue(columnIndex: Int): String {
+        return when (getType(columnIndex)) {
+            Cursor.FIELD_TYPE_STRING -> getString(columnIndex)
+            Cursor.FIELD_TYPE_FLOAT -> decimalFormat.format(getDouble(columnIndex))
+            Cursor.FIELD_TYPE_INTEGER -> getLong(columnIndex).toString()
+            Cursor.FIELD_TYPE_NULL -> ""
+            //Right now we don't have any blobs in the DB
+            else -> throw IllegalArgumentException("Invalid type")
         }
     }
 
