@@ -40,28 +40,29 @@ class DataExporter(private val application: StumblerApplication) {
                 val csvHeader = (0 until cursor.columnCount).map { cursor.getColumnName(it) }.toTypedArray()
                 val csvFormat = CSVFormat.Builder.create(CSVFormat.RFC4180).setHeader(*csvHeader).setSkipHeaderRecord(false).build()
 
-                CSVPrinter(OutputStreamWriter(zipOutputStream, StandardCharsets.UTF_8), csvFormat).use { csvPrinter ->
-                    while (cursor.moveToNext()) {
-                        val csvRecord = (0 until cursor.columnCount).map {
-                            cursor.getStringOrNull(it)
-                        }
-
-                        csvPrinter.printRecord(csvRecord)
+                val csvPrinter = CSVPrinter(OutputStreamWriter(zipOutputStream, StandardCharsets.UTF_8), csvFormat)
+                while (cursor.moveToNext()) {
+                    val csvRecord = (0 until cursor.columnCount).map {
+                        cursor.getStringOrNull(it)
                     }
+
+                    csvPrinter.printRecord(csvRecord)
                 }
+                //Only flush CSVPrinter. Closing it will close the ZIP output stream and we might still need to write more data to it
+                csvPrinter.flush()
 
                 zipOutputStream.closeEntry()
             }
         }
     }
 
-    private suspend fun exportToOutputStream(outputStream: OutputStream) = withContext(Dispatchers.IO) {
+    private suspend fun exportToOutputStream(outputStream: OutputStream, from: Instant, to: Instant) = withContext(Dispatchers.IO) {
         ZipOutputStream(outputStream.buffered(), StandardCharsets.UTF_8).use { zipOutputStream ->
-            export(zipOutputStream, BEACONS_FILE_NAME, exportDao.bluetoothExportCursor(Instant.MIN, Instant.MAX))
+            export(zipOutputStream, BEACONS_FILE_NAME, exportDao.bluetoothExportCursor(from, to))
 
-            export(zipOutputStream, CELLS_FILE_NAME, exportDao.cellExportCursor(Instant.MIN, Instant.MAX))
+            export(zipOutputStream, CELLS_FILE_NAME, exportDao.cellExportCursor(from, to))
 
-            export(zipOutputStream, WIFIS_FILE_NAME, exportDao.wifiExportCursor(Instant.MIN, Instant.MAX))
+            export(zipOutputStream, WIFIS_FILE_NAME, exportDao.wifiExportCursor(from, to))
         }
     }
 
@@ -76,7 +77,7 @@ class DataExporter(private val application: StumblerApplication) {
                 throw IOException("OutputStream was null")
             }
 
-            exportToOutputStream(os)
+            exportToOutputStream(os, from, to)
         }
     }
 }
