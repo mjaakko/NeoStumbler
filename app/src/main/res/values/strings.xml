@@ -45,4 +45,9 @@
     <string name="export_notification_channel_name">Data export</string>
 
     <string name="notification_exporting_data">Exporting data…</string>
+
+    <string name="export_data">Export data</string>
+
+    <string name="export_no_file_chosen">Cannot export data, because no file was created</string>
+    <string name="export_started">Exporting data from %s to %s</string>
 </resources>
