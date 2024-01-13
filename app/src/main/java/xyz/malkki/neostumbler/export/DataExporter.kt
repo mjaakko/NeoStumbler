@@ -49,7 +49,7 @@ class DataExporter(private val application: StumblerApplication) {
                 val csvPrinter = CSVPrinter(OutputStreamWriter(zipOutputStream, StandardCharsets.UTF_8), csvFormat)
                 while (cursor.moveToNext()) {
                     val csvRecord = (0 until cursor.columnCount).map {
-                        cursor.getCsvValue(it)
+                        cursor.getCsvValue(it).sanitizeNullString()
                     }
 
                     csvPrinter.printRecord(csvRecord)
@@ -59,6 +59,23 @@ class DataExporter(private val application: StumblerApplication) {
 
                 zipOutputStream.closeEntry()
             }
+        }
+    }
+
+    /**
+     * Replaces strings containing only null characters (possibly in quotes) with empty strings
+     */
+    private fun String.sanitizeNullString(): String {
+        val strToCheck = if (isNotEmpty() && get(0) == '\"' && get(length - 1) == '\"') {
+            substring(1, length)
+        } else {
+            this
+        }
+
+        return if (strToCheck.all { it == '\u0000' }) {
+            ""
+        } else {
+            this
         }
     }
 
