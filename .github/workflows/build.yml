@@ -15,11 +15,11 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - name: Build debug APK
-        uses: gradle/gradle-build-action@v2.10.0
+        uses: gradle/gradle-build-action@v2.11.1
         with:
           arguments: buildDebug
       - name: Upload debug APK as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: app-debug.apk
           path: app/build/outputs/apk/debug/app-debug.apk
