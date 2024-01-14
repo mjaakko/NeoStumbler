@@ -11,6 +11,7 @@ import xyz.malkki.neostumbler.db.entities.ReportWithData
 import xyz.malkki.neostumbler.db.entities.ReportWithLocation
 import xyz.malkki.neostumbler.db.entities.ReportWithStats
 import java.time.Instant
+import java.time.LocalDate
 
 @Dao
 interface ReportDao {
@@ -63,4 +64,7 @@ interface ReportDao {
     @Transaction
     @Query("SELECT r.id, r.timestamp, p.latitude, p.longitude FROM Report r JOIN Position p ON r.id = p.reportId")
     fun getAllReportsWithLocation(): LiveData<List<ReportWithLocation>>
+
+    @Query("SELECT DISTINCT DATE(ROUND(r.timestamp / 1000), 'unixepoch') FROM Report r")
+    fun getReportDates(): LiveData<List<LocalDate>>
 }

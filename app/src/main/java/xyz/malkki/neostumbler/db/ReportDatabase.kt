@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import xyz.malkki.neostumbler.db.converters.InstantConverters
+import xyz.malkki.neostumbler.db.converters.LocalDateConverters
 import xyz.malkki.neostumbler.db.dao.BluetoothBeaconDao
 import xyz.malkki.neostumbler.db.dao.CellTowerDao
 import xyz.malkki.neostumbler.db.dao.ExportDao
@@ -25,7 +26,7 @@ import xyz.malkki.neostumbler.db.entities.WifiAccessPoint
         AutoMigration(from = 1, to = 2)
     ]
 )
-@TypeConverters(InstantConverters::class)
+@TypeConverters(InstantConverters::class, LocalDateConverters::class)
 abstract class ReportDatabase : RoomDatabase() {
     abstract fun reportDao(): ReportDao
 
