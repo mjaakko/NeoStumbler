@@ -11,9 +11,5 @@ interface CellTowerDao {
     @Insert
     suspend fun insertAll(vararg cellTowers: CellTower)
 
-    @Query("""
-        SELECT COUNT(*) FROM (SELECT DISTINCT radioType, mobileCountryCode, mobileNetworkCode, locationAreaCode, cellId, primaryScramblingCode FROM CellTower)
-    """)
-    fun countDistinct(): LiveData<Long>
 
 }

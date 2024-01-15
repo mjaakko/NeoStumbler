@@ -11,6 +11,7 @@ import xyz.malkki.neostumbler.db.dao.CellTowerDao
 import xyz.malkki.neostumbler.db.dao.ExportDao
 import xyz.malkki.neostumbler.db.dao.PositionDao
 import xyz.malkki.neostumbler.db.dao.ReportDao
+import xyz.malkki.neostumbler.db.dao.StatisticsDao
 import xyz.malkki.neostumbler.db.dao.WifiAccessPointDao
 import xyz.malkki.neostumbler.db.entities.BluetoothBeacon
 import xyz.malkki.neostumbler.db.entities.CellTower
@@ -39,4 +40,6 @@ abstract class ReportDatabase : RoomDatabase() {
     abstract fun bluetoothBeaconDao(): BluetoothBeaconDao
 
     abstract fun exportDao(): ExportDao
+
+    abstract fun statisticsDao(): StatisticsDao
 }
