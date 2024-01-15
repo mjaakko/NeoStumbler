@@ -53,6 +53,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'gson.pro', 'altbeacon.pro'
         }
     }
+
+    buildFeatures {
+        flavorDimensions += "version"
+    }
+
+    productFlavors {
+        full {
+            dimension "version"
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
