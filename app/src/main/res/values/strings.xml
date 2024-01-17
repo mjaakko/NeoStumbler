@@ -41,4 +41,13 @@
     <string name="ignore_battery_optimizations_description">For best results, battery optimizations should be disabled. Wireless scanning and location access is significantly throttled when battery optimization is active and the screen is off</string>
 
     <string name="battery_optimizations_not_disabled_warning">Battery optimizations were not disabled</string>
+
+    <string name="export_notification_channel_name">Data export</string>
+
+    <string name="notification_exporting_data">Exporting data…</string>
+
+    <string name="export_data">Export data</string>
+
+    <string name="export_no_file_chosen">Cannot export data, because no file was created</string>
+    <string name="export_started">Exporting data from %s to %s</string>
 </resources>
