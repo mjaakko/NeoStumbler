@@ -61,11 +61,18 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
 
             Timber.i("Successfully sent ${geosubmitReports.size} reports to MLS in ${duration.toString(DurationUnit.SECONDS, 2)}")
 
-            //Do not update upload timestamp for reports which were reuploaded
-            if (!reupload) {
-                val now = Instant.now()
-                db.reportDao().update(*reportsToUpload.map { it.report.copy(uploaded = true, uploadTimestamp = now) }.toTypedArray())
-            }
+            val now = Instant.now()
+
+            val updatedReports = reportsToUpload
+                .filter {
+                    //Do not update upload timestamp for reports which were reuploaded
+                    !it.report.uploaded
+                }
+                .map {
+                    it.report.copy(uploaded = true, uploadTimestamp = now)
+                }
+                .toTypedArray()
+            db.reportDao().update(*updatedReports)
 
             Result.success()
         } catch (ex: Exception) {
