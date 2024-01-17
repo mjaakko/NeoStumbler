@@ -129,7 +129,11 @@ class StumblerApplication : Application() {
                 .build()
         )
 
-        val notificationChannel = NotificationChannel(
+        setupNotificationChannels()
+    }
+
+    private fun setupNotificationChannels() {
+        val scannerNotificationChannel = NotificationChannel(
             STUMBLING_NOTIFICATION_CHANNEL_ID,
             getString(R.string.scanner_status_notification_channel_name),
             NotificationManager.IMPORTANCE_LOW
@@ -137,10 +141,22 @@ class StumblerApplication : Application() {
             setShowBadge(false)
             setBypassDnd(false)
         }
-        getSystemService(NotificationManager::class.java).createNotificationChannel(notificationChannel)
+        getSystemService(NotificationManager::class.java).createNotificationChannel(scannerNotificationChannel)
+
+        val exportNotificationChannel = NotificationChannel(
+            EXPORT_NOTIFICATION_CHANNEL_ID,
+            getString(R.string.export_notification_channel_name),
+            NotificationManager.IMPORTANCE_DEFAULT
+        ).apply {
+            setShowBadge(false)
+            setBypassDnd(false)
+        }
+        getSystemService(NotificationManager::class.java).createNotificationChannel(exportNotificationChannel)
     }
 
     companion object {
         const val STUMBLING_NOTIFICATION_CHANNEL_ID = "wifi_scan"
+
+        const val EXPORT_NOTIFICATION_CHANNEL_ID = "data_exports"
     }
 }
