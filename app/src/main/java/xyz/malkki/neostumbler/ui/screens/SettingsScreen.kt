@@ -11,6 +11,7 @@ import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.ui.composables.AutoScanToggle
 import xyz.malkki.neostumbler.ui.composables.ExportDataButton
+import xyz.malkki.neostumbler.ui.composables.ReportReuploadButton
 import xyz.malkki.neostumbler.ui.composables.SettingsToggle
 
 @Composable
@@ -20,5 +21,7 @@ fun SettingsScreen() {
         AutoScanToggle()
         Spacer(modifier = Modifier.height(20.dp))
         ExportDataButton()
+        Spacer(modifier = Modifier.height(8.dp))
+        ReportReuploadButton()
     }
 }
