@@ -40,6 +40,7 @@ import androidx.work.WorkManager
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.export.DataExportWorker
+import xyz.malkki.neostumbler.extensions.selectedDateRange
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -63,16 +64,7 @@ fun ExportDataButton() {
 
     val dateRangePickerState = rememberDateRangePickerState()
     
-    val fromDate = dateRangePickerState.selectedStartDateMillis?.let {
-        Instant.ofEpochMilli(it)
-            .atOffset(ZoneOffset.UTC)
-            .toLocalDate()
-    }
-    val toDate = dateRangePickerState.selectedEndDateMillis?.let {
-        Instant.ofEpochMilli(it)
-            .atOffset(ZoneOffset.UTC)
-            .toLocalDate()
-    }
+    val selectedDates = dateRangePickerState.selectedDateRange()
 
     val activityLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.CreateDocument("application/zip"),
@@ -84,14 +76,14 @@ fun ExportDataButton() {
 
                 val localTimeZone = ZoneId.systemDefault()
 
-                val fromFormatted = dateFormat.format(Date.from(fromDate!!.atStartOfDay(localTimeZone).toInstant()))
-                val toFormatted = dateFormat.format(Date.from(toDate!!.atStartOfDay(localTimeZone).toInstant()))
+                val fromFormatted = dateFormat.format(Date.from(selectedDates!!.start.atStartOfDay(localTimeZone).toInstant()))
+                val toFormatted = dateFormat.format(Date.from(selectedDates.endInclusive.atStartOfDay(localTimeZone).toInstant()))
 
                 Toast.makeText(context, context.getString(R.string.export_started, fromFormatted, toFormatted), Toast.LENGTH_SHORT).show()
 
                 //Convert to local time
-                val from = fromDate.atStartOfDay(localTimeZone).toInstant().toEpochMilli()
-                val to = toDate
+                val from = selectedDates.start.atStartOfDay(localTimeZone).toInstant().toEpochMilli()
+                val to = selectedDates.endInclusive
                     //Add one day to include data for the last day in the selected range
                     .plusDays(1)
                     .atStartOfDay(localTimeZone)
@@ -122,10 +114,10 @@ fun ExportDataButton() {
             },
             confirmButton = {
                 Button(
-                    enabled = fromDate != null && toDate != null,
+                    enabled = selectedDates != null,
                     onClick = {
-                        val fromFormatted = fromDate!!.format(DateTimeFormatter.BASIC_ISO_DATE)
-                        val toFormatted = toDate!!.format(DateTimeFormatter.BASIC_ISO_DATE)
+                        val fromFormatted = selectedDates!!.start.format(DateTimeFormatter.BASIC_ISO_DATE)
+                        val toFormatted = selectedDates.endInclusive.format(DateTimeFormatter.BASIC_ISO_DATE)
 
                         activityLauncher.launch("neostumbler_export_${fromFormatted}_$toFormatted.zip")
                     }
