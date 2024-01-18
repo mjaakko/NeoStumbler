@@ -58,6 +58,10 @@ interface ReportDao {
     @Query("SELECT * FROM Report WHERE uploaded = 0")
     suspend fun getAllReportsNotUploaded(): List<ReportWithData>
 
+    @Transaction
+    @Query("SELECT * FROM Report WHERE timestamp >= :from AND timestamp <= :to")
+    suspend fun getAllReportsForTimerange(from: Instant, to: Instant): List<ReportWithData>
+
     @Query("SELECT r.id, r.timestamp, p.latitude, p.longitude FROM Report r JOIN Position p ON r.id = p.reportId WHERE r.timestamp >= :timestamp")
     suspend fun getReportsNewerThan(timestamp: Instant): List<ReportWithLocation>
 

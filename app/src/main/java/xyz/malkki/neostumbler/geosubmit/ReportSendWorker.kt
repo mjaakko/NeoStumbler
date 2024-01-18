@@ -3,6 +3,7 @@ package xyz.malkki.neostumbler.geosubmit
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import androidx.work.hasKeyWithValueOfType
 import com.google.gson.GsonBuilder
 import timber.log.Timber
 import xyz.malkki.neostumbler.StumblerApplication
@@ -16,6 +17,9 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
     companion object {
         const val PERIODIC_WORK_NAME = "report_upload_periodic"
         const val ONE_TIME_WORK_NAME = "report_upload_one_time"
+
+        const val INPUT_REUPLOAD_FROM = "reupload_from"
+        const val INPUT_REUPLOAD_TO = "reupload_to"
     }
 
     override suspend fun doWork(): Result {
@@ -25,8 +29,17 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
 
         val db = application.reportDb
 
-        val notUploadedReports = db.reportDao().getAllReportsNotUploaded()
-        val geosubmitReports = notUploadedReports.map { report ->
+        val reupload = inputData.hasKeyWithValueOfType<Long>(INPUT_REUPLOAD_FROM) && inputData.hasKeyWithValueOfType<Long>(INPUT_REUPLOAD_TO)
+
+        val reportsToUpload = if (!reupload) {
+            db.reportDao().getAllReportsNotUploaded()
+        } else {
+            val from = Instant.ofEpochMilli(inputData.getLong(INPUT_REUPLOAD_FROM, 0))
+            val to = Instant.ofEpochMilli(inputData.getLong(INPUT_REUPLOAD_TO, 0))
+
+            db.reportDao().getAllReportsForTimerange(from, to)
+        }
+        val geosubmitReports = reportsToUpload.map { report ->
             Report(
                 report.report.timestamp,
                 Report.Position.fromDbEntity(report.position),
@@ -46,10 +59,20 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
                 geosubmit.sendReports(geosubmitReports)
             }
 
-            val now = Instant.now()
-            db.reportDao().update(*notUploadedReports.map { it.report.copy(uploaded = true, uploadTimestamp = now) }.toTypedArray())
-
             Timber.i("Successfully sent ${geosubmitReports.size} reports to MLS in ${duration.toString(DurationUnit.SECONDS, 2)}")
+
+            val now = Instant.now()
+
+            val updatedReports = reportsToUpload
+                .filter {
+                    //Do not update upload timestamp for reports which were reuploaded
+                    !it.report.uploaded
+                }
+                .map {
+                    it.report.copy(uploaded = true, uploadTimestamp = now)
+                }
+                .toTypedArray()
+            db.reportDao().update(*updatedReports)
 
             Result.success()
         } catch (ex: Exception) {
