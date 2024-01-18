@@ -20,8 +20,10 @@ class MLSGeosubmit(private val httpClient: OkHttpClient, private val gson: Gson,
         val request = Request.Builder().url("$baseUrl/v2/geosubmit").post(createRequestBody(reports)).addHeader("Content-Encoding", "gzip").build()
 
         val response = httpClient.newCall(request).executeSuspending()
-        if (response.code !in 200..299) {
-            throw MLSException("HTTP request to ${request.url} failed, status: ${response.code}", response.code)
+        response.use {
+            if (response.code !in 200..299) {
+                throw MLSException("HTTP request to ${request.url} failed, status: ${response.code}", response.code)
+            }
         }
     }
 
