@@ -22,7 +22,7 @@ android {
     defaultConfig {
         applicationId "xyz.malkki.neostumbler"
         minSdk 29
-        targetSdk 33
+        targetSdk 34
         versionCode 4
         versionName "1.1.1"
 
