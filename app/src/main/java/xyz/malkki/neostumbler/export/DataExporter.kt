@@ -11,6 +11,7 @@ import xyz.malkki.neostumbler.StumblerApplication
 import java.io.IOException
 import java.io.OutputStream
 import java.io.OutputStreamWriter
+import java.math.RoundingMode
 import java.nio.charset.StandardCharsets
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
@@ -32,7 +33,8 @@ class DataExporter(private val application: StumblerApplication) {
     private val exportDao = application.reportDb.exportDao()
 
     private val decimalFormat = DecimalFormat("0", DecimalFormatSymbols(Locale.ROOT)).apply {
-        maximumFractionDigits = 340
+        roundingMode = RoundingMode.HALF_UP
+        maximumFractionDigits = 7
     }
 
     /**
