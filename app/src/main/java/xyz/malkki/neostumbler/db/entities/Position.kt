@@ -30,30 +30,30 @@ data class Position(
                 location.latitude,
                 location.longitude,
                 if (location.hasAccuracy()) {
-                    location.accuracy.toDouble()
+                    location.accuracy.toDouble().takeIf { it.isFinite() }
                 } else {
                     null
                 },
                 //Current time is truncated to seconds -> age can be negative by some milliseconds
                 maxOf(0, Instant.ofEpochMilli(location.time).until(currentTime, ChronoUnit.MILLIS)),
                 if (location.hasAltitude()) {
-                    location.altitude
+                    location.altitude.takeIf { it.isFinite() }
                 } else {
                     null
                 },
                 if (location.hasVerticalAccuracy()) {
-                    location.verticalAccuracyMeters.toDouble()
+                    location.verticalAccuracyMeters.toDouble().takeIf { it.isFinite() }
                 } else {
                     null
                 },
                 if (location.hasBearing()) {
-                    location.bearing.toDouble()
+                    location.bearing.toDouble().takeIf { it.isFinite() }
                 } else {
                     null
                 },
                 null,
                 if (location.hasSpeed()) {
-                    location.speed.toDouble()
+                    location.speed.toDouble().takeIf { it.isFinite() }
                 } else {
                     null
                 },
