@@ -14,6 +14,7 @@ APKs of the application can be downloaded from [Releases](https://github.com/mja
   * Currently 5G cell towers are not supported due to the lack of support by MLS
 * Service for collecting data
   * Can be started automatically while moving (if Google Play Services available)
+* Exporting scan data as a .zip
 
  ## Development
 
