@@ -8,6 +8,7 @@ import com.google.gson.GsonBuilder
 import timber.log.Timber
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.gson.InstantTypeAdapter
+import xyz.malkki.neostumbler.gson.OnlyFiniteNumberTypeAdapterFactory
 import java.net.SocketTimeoutException
 import java.time.Instant
 import kotlin.time.DurationUnit
@@ -20,15 +21,20 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
 
         const val INPUT_REUPLOAD_FROM = "reupload_from"
         const val INPUT_REUPLOAD_TO = "reupload_to"
+
+        private val GSON = GsonBuilder()
+            .registerTypeAdapterFactory(OnlyFiniteNumberTypeAdapterFactory())
+            .registerTypeAdapter(Instant::class.java, InstantTypeAdapter())
+            .create()
     }
 
+    private val application = applicationContext as StumblerApplication
+
+    private val geosubmit = MLSGeosubmit(application.httpClient, GSON)
+
+    private val db = application.reportDb
+
     override suspend fun doWork(): Result {
-        val application = applicationContext as StumblerApplication
-
-        val geosubmit = MLSGeosubmit(application.httpClient, GsonBuilder().registerTypeAdapter(Instant::class.java, InstantTypeAdapter()).create())
-
-        val db = application.reportDb
-
         val reupload = inputData.hasKeyWithValueOfType<Long>(INPUT_REUPLOAD_FROM) && inputData.hasKeyWithValueOfType<Long>(INPUT_REUPLOAD_TO)
 
         val reportsToUpload = if (!reupload) {
