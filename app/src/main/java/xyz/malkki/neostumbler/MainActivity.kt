@@ -26,7 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import xyz.malkki.neostumbler.ui.composables.ReportMap
 import xyz.malkki.neostumbler.ui.screens.ReportsScreen
-import xyz.malkki.neostumbler.ui.screens.SettingsScreen
+import xyz.malkki.neostumbler.ui.screens.settings.SettingsScreen
 import xyz.malkki.neostumbler.ui.theme.NeoStumblerTheme
 
 class MainActivity : ComponentActivity() {

@@ -25,7 +25,6 @@ import androidx.core.app.NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE
 import androidx.core.content.getSystemService
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -33,11 +32,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.runningFold
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.altbeacon.beacon.Beacon
@@ -46,16 +43,13 @@ import xyz.malkki.neostumbler.MainActivity
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.common.LocationWithSource
-import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.extensions.buffer
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.combineAny
 import xyz.malkki.neostumbler.extensions.filterNotNullPairs
-import xyz.malkki.neostumbler.extensions.isGoogleApisAvailable
 import xyz.malkki.neostumbler.extensions.timestampMillis
 import xyz.malkki.neostumbler.extensions.timestampMillisCompat
-import xyz.malkki.neostumbler.location.FusedLocationSource
-import xyz.malkki.neostumbler.location.PlatformLocationSource
+import xyz.malkki.neostumbler.location.LocationSourceProvider
 import xyz.malkki.neostumbler.utils.getBeaconFlow
 import xyz.malkki.neostumbler.utils.getCellInfoFlow
 import xyz.malkki.neostumbler.utils.getWifiScanFlow
@@ -155,12 +149,6 @@ class ScannerService : Service() {
         return binder
     }
 
-    private fun preferFusedLocation(): Boolean = runBlocking {
-        settingsStore.data
-            .map { it[booleanPreferencesKey(PreferenceKeys.PREFER_FUSED_LOCATION)] }
-            .firstOrNull() ?: true
-    }
-
     @SuppressLint("MissingPermission")
     private fun startScanning() = coroutineScope.launch {
         if (scanning) {
@@ -169,13 +157,7 @@ class ScannerService : Service() {
 
         scanning = true
 
-        val locationSource = if (preferFusedLocation() && isGoogleApisAvailable()) {
-            Timber.i("Using fused location source")
-            FusedLocationSource(this@ScannerService)
-        } else {
-            Timber.i("Using platform location source")
-            PlatformLocationSource(this@ScannerService)
-        }
+        val locationSource = LocationSourceProvider(this@ScannerService).getLocationSource()
 
         val locationFlow = locationSource.getLocations(LOCATION_INTERVAL)
             .filter {

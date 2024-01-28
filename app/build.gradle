@@ -59,6 +59,9 @@ android {
     }
 
     productFlavors {
+        fdroid {
+            dimension "version"
+        }
         full {
             dimension "version"
         }
@@ -130,7 +133,8 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services'
 
-    implementation 'com.google.android.gms:play-services-location:21.0.1'
+    fullImplementation 'com.google.android.gms:play-services-location:21.0.1'
+
     implementation "androidx.datastore:datastore-preferences:1.0.0"
 
     def room_version = "2.6.1"

@@ -30,9 +30,6 @@
     <string name="start_scanning">Start scanning</string>
     <string name="stop_scanning">Stop scanning</string>
 
-    <string name="prefer_fused_location">Prefer fused location provider</string>
-    <string name="autoscan_when_moving">Automatic scanning while moving</string>
-
     <string name="notification_wireless_scanning_active">Wireless scanning active</string>
 
     <string name="notification_reports_created">%d reports created</string>
