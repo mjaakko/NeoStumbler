@@ -5,8 +5,12 @@ on:
 
 jobs:
   build:
-    name: Build debug APK
+    strategy:
+      matrix:
+        version: [full, fdroid]
+    name: Build debug APK (${{ matrix.version }})
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 17
@@ -17,10 +21,10 @@ jobs:
       - name: Build debug APK
         uses: gradle/gradle-build-action@v2.11.1
         with:
-          arguments: buildDebug
+          arguments: build${{ matrix.version }}Debug
       - name: Upload debug APK as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app-debug.apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: app-${{ matrix.version }}-debug.apk
+          path: app/build/outputs/apk/${{ matrix.version }}/debug/app-${{ matrix.version }}-debug.apk
           retention-days: 1
