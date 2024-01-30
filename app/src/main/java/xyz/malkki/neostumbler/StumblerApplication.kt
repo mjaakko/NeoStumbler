@@ -22,7 +22,6 @@ import timber.log.Timber
 import xyz.malkki.neostumbler.beacons.IBeaconParser
 import xyz.malkki.neostumbler.db.DbPruneWorker
 import xyz.malkki.neostumbler.db.ReportDatabase
-import xyz.malkki.neostumbler.geosubmit.ReportSendWorker
 import xyz.malkki.neostumbler.utils.UserAgentInterceptor
 import java.io.File
 import java.time.Duration
@@ -94,23 +93,6 @@ class StumblerApplication : Application() {
         }
 
         val workManager = WorkManager.getInstance(this)
-
-        //Schedule report uploading to MLS
-        workManager.enqueueUniquePeriodicWork(
-            ReportSendWorker.PERIODIC_WORK_NAME,
-            ExistingPeriodicWorkPolicy.UPDATE,
-            PeriodicWorkRequestBuilder<ReportSendWorker>(Duration.ofHours(8))
-                .setConstraints(
-                    Constraints(
-                        requiredNetworkType = NetworkType.CONNECTED,
-                        requiresCharging = false,
-                        requiresStorageNotLow = false,
-                        requiresDeviceIdle = true,
-                        requiresBatteryNotLow = true
-                    )
-                )
-                .build()
-        )
 
         //Schedule worker for removing old reports
         workManager.enqueueUniquePeriodicWork(

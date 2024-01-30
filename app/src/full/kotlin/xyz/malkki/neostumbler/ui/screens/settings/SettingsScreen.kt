@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.ui.screens
+package xyz.malkki.neostumbler.ui.screens.settings
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,14 +9,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
-import xyz.malkki.neostumbler.ui.composables.AutoScanToggle
 import xyz.malkki.neostumbler.ui.composables.ExportDataButton
 import xyz.malkki.neostumbler.ui.composables.ReportReuploadButton
 import xyz.malkki.neostumbler.ui.composables.SettingsToggle
+import xyz.malkki.neostumbler.ui.composables.autoscan.AutoScanToggle
+import xyz.malkki.neostumbler.ui.composables.settings.AutoUploadToggle
 
 @Composable
 fun SettingsScreen() {
     Column {
+        AutoUploadToggle()
         SettingsToggle(title = stringResource(id = R.string.prefer_fused_location), preferenceKey = PreferenceKeys.PREFER_FUSED_LOCATION, default = true)
         AutoScanToggle()
         Spacer(modifier = Modifier.height(20.dp))

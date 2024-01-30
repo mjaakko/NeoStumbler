@@ -53,6 +53,20 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'gson.pro', 'altbeacon.pro'
         }
     }
+
+    buildFeatures {
+        flavorDimensions += "version"
+    }
+
+    productFlavors {
+        fdroid {
+            dimension "version"
+        }
+        full {
+            dimension "version"
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -119,7 +133,8 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services'
 
-    implementation 'com.google.android.gms:play-services-location:21.0.1'
+    fullImplementation 'com.google.android.gms:play-services-location:21.0.1'
+
     implementation "androidx.datastore:datastore-preferences:1.0.0"
 
     def room_version = "2.6.1"

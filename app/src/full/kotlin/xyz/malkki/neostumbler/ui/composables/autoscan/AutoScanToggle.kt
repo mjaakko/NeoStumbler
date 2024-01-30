@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.ui.composables
+package xyz.malkki.neostumbler.ui.composables.autoscan
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -31,6 +31,8 @@ import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.getActivity
 import xyz.malkki.neostumbler.scanner.autoscan.ActivityTransitionReceiver
+import xyz.malkki.neostumbler.ui.composables.PermissionsDialog
+import xyz.malkki.neostumbler.ui.composables.ToggleWithAction
 import xyz.malkki.neostumbler.utils.PermissionHelper
 
 private fun DataStore<Preferences>.autoScanEnabled(): Flow<Boolean?> = data

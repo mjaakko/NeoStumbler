@@ -1,0 +1,4 @@
+<resources>
+    <string name="prefer_fused_location">Prefer fused location provider</string>
+    <string name="autoscan_when_moving">Automatic scanning while moving</string>
+</resources>

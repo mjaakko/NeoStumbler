@@ -18,5 +18,11 @@ APKs of the application can be downloaded from [Releases](https://github.com/mja
 
  ## Development
 
- * Build debug APK: `./gradlew build`
- * Build unsigned release APK: `./gradlew buildRelease`
+The application has two product flavors:
+* `full` - includes all features
+* `fdroid` - features dependent on closed-source components (i.e. Google Play Services) are removed
+
+### Building
+
+ * Build debug APK: `./gradlew buildFull` or `./gradlew buildFdroid`
+ * Build unsigned release APK: `./gradlew buildFullRelease` or `./gradlew buildFdroidRelease`
