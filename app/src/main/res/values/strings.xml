@@ -39,6 +39,8 @@
 
     <string name="battery_optimizations_not_disabled_warning">Battery optimizations were not disabled</string>
 
+    <string name="send_reports_automatically">Send reports automatically</string>
+
     <string name="export_notification_channel_name">Data export</string>
 
     <string name="notification_exporting_data">Exporting data…</string>
