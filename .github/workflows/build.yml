@@ -20,7 +20,7 @@ jobs:
           java-version: '17'
       - name: Capitalize version name
         id: capitalize-version
-        uses: ASzc/change-string-case-action@v5
+        uses: ASzc/change-string-case-action@v6
         with:
           string: ${{ matrix.version }}
       - name: Build debug APK
