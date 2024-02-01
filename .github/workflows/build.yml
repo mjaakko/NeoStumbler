@@ -24,7 +24,7 @@ jobs:
         with:
           string: ${{ matrix.version }}
       - name: Build debug APK
-        uses: gradle/gradle-build-action@v2.11.1
+        uses: gradle/gradle-build-action@v3.0.0
         with:
           arguments: assemble${{ steps.capitalize-version.outputs.capitalized }}Debug
       - name: Upload debug APK as artifact
