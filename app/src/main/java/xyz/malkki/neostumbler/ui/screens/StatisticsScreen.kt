@@ -18,6 +18,7 @@ import com.patrykandpatrick.vico.compose.chart.line.lineChart
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import xyz.malkki.neostumbler.ui.viewmodel.StatisticsViewModel
 import xyz.malkki.neostumbler.utils.charts.MultiplesOfTenItemPlacer
+import xyz.malkki.neostumbler.utils.charts.TextLabelItemPlacer
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -29,12 +30,18 @@ private fun StationsByDayChart(entryModel: ChartEntryModelProducer, title: Strin
     Chart(
         chart = lineChart(),
         chartModelProducer = entryModel,
-        startAxis = rememberStartAxis(itemPlacer = remember { MultiplesOfTenItemPlacer() }, valueFormatter = { value, _ ->
-            value.toLong().toString()
-        }),
-        bottomAxis = rememberBottomAxis(valueFormatter = { value, _ ->
-            LocalDate.ofEpochDay(value.toLong()).format(dateTimeFormatter)
-        }),
+        startAxis = rememberStartAxis(
+            itemPlacer = remember { MultiplesOfTenItemPlacer() },
+            valueFormatter = { value, _ ->
+                value.toLong().toString()
+            }
+        ),
+        bottomAxis = rememberBottomAxis(
+            valueFormatter = { value, _ ->
+                LocalDate.ofEpochDay(value.toLong()).format(dateTimeFormatter)
+            },
+            itemPlacer = remember { TextLabelItemPlacer() }
+        ),
         modifier = Modifier.height(320.dp)
     )
 }
