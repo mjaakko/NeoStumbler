@@ -1,5 +1,6 @@
 package xyz.malkki.neostumbler.ui.screens
 
+import android.text.format.DateFormat
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -9,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
@@ -16,16 +18,18 @@ import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
 import com.patrykandpatrick.vico.compose.chart.line.lineChart
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
+import xyz.malkki.neostumbler.extensions.defaultLocale
 import xyz.malkki.neostumbler.ui.viewmodel.StatisticsViewModel
 import xyz.malkki.neostumbler.utils.charts.MultiplesOfTenItemPlacer
 import xyz.malkki.neostumbler.utils.charts.TextLabelItemPlacer
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-private val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM")
-
 @Composable
 private fun StationsByDayChart(entryModel: ChartEntryModelProducer, title: String) {
+    val dateFormatPattern = DateFormat.getBestDateTimePattern(LocalContext.current.defaultLocale, "d MMM")
+    val dateFormat = DateTimeFormatter.ofPattern(dateFormatPattern)
+
     Text(title)
     Chart(
         chart = lineChart(),
@@ -38,7 +42,7 @@ private fun StationsByDayChart(entryModel: ChartEntryModelProducer, title: Strin
         ),
         bottomAxis = rememberBottomAxis(
             valueFormatter = { value, _ ->
-                LocalDate.ofEpochDay(value.toLong()).format(dateTimeFormatter)
+                LocalDate.ofEpochDay(value.toLong()).format(dateFormat)
             },
             itemPlacer = remember { TextLabelItemPlacer() }
         ),
