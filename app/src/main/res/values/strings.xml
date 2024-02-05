@@ -52,4 +52,8 @@
     <string name="export_started">Exporting data from %s to %s</string>
 
     <string name="reupload_data">Reupload data</string>
+
+    <string name="wifis">Wi-Fis</string>
+    <string name="cells">Cells</string>
+    <string name="beacons">Bluetooth beacons</string>
 </resources>
