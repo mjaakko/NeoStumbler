@@ -61,6 +61,8 @@ android {
     productFlavors {
         fdroid {
             dimension "version"
+
+            applicationId = defaultConfig.applicationId + ".fdroid"
         }
         full {
             dimension "version"
