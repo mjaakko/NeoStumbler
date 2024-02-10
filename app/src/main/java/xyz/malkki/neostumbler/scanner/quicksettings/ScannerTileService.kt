@@ -8,15 +8,22 @@ import android.os.Build
 import android.os.IBinder
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
+import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import xyz.malkki.neostumbler.MainActivity
+import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.scanner.ScannerService
+import xyz.malkki.neostumbler.utils.OneTimeActionHelper
 import xyz.malkki.neostumbler.utils.PermissionHelper
 
 class ScannerTileService : TileService() {
     companion object {
         private const val MAIN_ACTIVITY_REQUEST_CODE = 5436;
+
+        const val ADD_QS_TILE_ACTION_NAME = "add_scanner_qs_tile"
     }
+
+    private lateinit var oneTimeActionHelper: OneTimeActionHelper
 
     private var scannerService: ScannerService? = null
 
@@ -49,6 +56,17 @@ class ScannerTileService : TileService() {
                 }
             }
             .updateTile()
+    }
+
+    override fun onCreate() {
+        oneTimeActionHelper = OneTimeActionHelper(application as StumblerApplication)
+    }
+
+    override fun onTileAdded() {
+        runBlocking {
+            //Showing "add QS tile" prompt is unnecessary if the user has already added the QS tile
+            oneTimeActionHelper.markActionShown(ADD_QS_TILE_ACTION_NAME)
+        }
     }
 
     override fun onStartListening() {

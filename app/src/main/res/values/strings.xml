@@ -3,6 +3,8 @@
 
     <string name="ok">OK</string>
 
+    <string name="no_thanks">No thanks</string>
+
     <string name="stop">Stop</string>
 
     <string name="permissions_needed">Permissions needed</string>
@@ -31,6 +33,9 @@
     <string name="start_scanning">Start scanning</string>
     <string name="stop_scanning">Stop scanning</string>
 
+    <string name="toast_reports_uploaded">Uploaded %d reports</string>
+    <string name="toast_reports_upload_failed">Failed to upload reports</string>
+
     <string name="notification_wireless_scanning_active">Wireless scanning active</string>
 
     <string name="notification_reports_created">%d reports created</string>
@@ -56,4 +61,6 @@
     <string name="wifis">Wi-Fis</string>
     <string name="cells">Cells</string>
     <string name="beacons">Bluetooth beacons</string>
+  
+    <string name="add_quick_settings_tile">Add quick settings tile to easily start scanning?</string>
 </resources>
