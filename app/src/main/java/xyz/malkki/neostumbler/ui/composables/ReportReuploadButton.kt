@@ -1,6 +1,7 @@
 package xyz.malkki.neostumbler.ui.composables
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -41,6 +42,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.ZoneOffset
+import java.util.UUID
 
 private fun getSelectableDatesSet(context: Context): LiveData<Set<LocalDate>> {
     return (context.applicationContext as StumblerApplication).reportDb.reportDao()
@@ -51,6 +53,14 @@ private fun getSelectableDatesSet(context: Context): LiveData<Set<LocalDate>> {
 @Composable
 fun ReportReuploadButton() {
     val context = LocalContext.current
+
+    val enqueuedUploadWork = remember { mutableStateOf<UUID?>(null) }
+
+    EffectOnWorkCompleted(
+        workId = enqueuedUploadWork.value,
+        onWorkSuccess = { Toast.makeText(context, context.getString(R.string.toast_reports_uploaded), Toast.LENGTH_SHORT).show() },
+        onWorkFailed = { Toast.makeText(context, context.getString(R.string.toast_reports_upload_failed), Toast.LENGTH_SHORT).show() }
+    )
 
     val selectableDates = getSelectableDatesSet(context).observeAsState()
 
@@ -80,8 +90,11 @@ fun ReportReuploadButton() {
                             .toInstant()
                             .toEpochMilli()
 
+                        val workId = UUID.randomUUID()
+
                         WorkManager.getInstance(context).enqueue(
                             OneTimeWorkRequest.Builder(ReportSendWorker::class.java)
+                                .setId(workId)
                                 .setInputData(
                                     Data.Builder()
                                         .putLong(ReportSendWorker.INPUT_REUPLOAD_FROM, from)
@@ -91,6 +104,7 @@ fun ReportReuploadButton() {
                                 .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                                 .build()
                         )
+                        enqueuedUploadWork.value = workId
 
                         dialogOpen.value = false
                     }
@@ -106,7 +120,9 @@ fun ReportReuploadButton() {
                 )
                 if (selectableDates.value == null) {
                     Box(
-                        modifier = Modifier.height(400.dp).fillMaxWidth(),
+                        modifier = Modifier
+                            .height(400.dp)
+                            .fillMaxWidth(),
                         contentAlignment = Alignment.Center
                     ) {
                         CircularProgressIndicator()
