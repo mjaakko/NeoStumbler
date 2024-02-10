@@ -17,7 +17,7 @@ import java.util.UUID
  * @param onWorkFailed Callback to be called when the work is finished with a failure
  */
 @Composable
-fun EffectOnWorkCompleted(workId: UUID?, onWorkSuccess: () -> Unit, onWorkFailed: () -> Unit) {
+fun EffectOnWorkCompleted(workId: UUID?, onWorkSuccess: (WorkInfo) -> Unit, onWorkFailed: (WorkInfo) -> Unit) {
     val context = LocalContext.current
     val workManager = WorkManager.getInstance(context)
     
@@ -27,9 +27,9 @@ fun EffectOnWorkCompleted(workId: UUID?, onWorkSuccess: () -> Unit, onWorkFailed
                 .filter { it.state == WorkInfo.State.SUCCEEDED || it.state == WorkInfo.State.FAILED }
                 .collectLatest {
                     if (it.state == WorkInfo.State.SUCCEEDED) {
-                        onWorkSuccess()
+                        onWorkSuccess(it)
                     } else if (it.state == WorkInfo.State.FAILED) {
-                        onWorkFailed()
+                        onWorkFailed(it)
                     }
                 }
         }
