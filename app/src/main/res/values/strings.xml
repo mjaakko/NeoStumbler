@@ -32,6 +32,9 @@
     <string name="start_scanning">Start scanning</string>
     <string name="stop_scanning">Stop scanning</string>
 
+    <string name="toast_reports_uploaded">Uploaded %d reports</string>
+    <string name="toast_reports_upload_failed">Failed to upload reports</string>
+
     <string name="notification_wireless_scanning_active">Wireless scanning active</string>
 
     <string name="notification_reports_created">%d reports created</string>

@@ -2,6 +2,7 @@ package xyz.malkki.neostumbler.geosubmit
 
 import android.content.Context
 import androidx.work.CoroutineWorker
+import androidx.work.Data
 import androidx.work.WorkerParameters
 import androidx.work.hasKeyWithValueOfType
 import com.google.gson.GsonBuilder
@@ -21,6 +22,8 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
 
         const val INPUT_REUPLOAD_FROM = "reupload_from"
         const val INPUT_REUPLOAD_TO = "reupload_to"
+
+        const val OUTPUT_REPORTS_SENT = "reports_sent"
 
         private val GSON = GsonBuilder()
             .registerTypeAdapterFactory(OnlyFiniteNumberTypeAdapterFactory())
@@ -57,7 +60,7 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
 
         if (geosubmitReports.isEmpty()) {
             Timber.i("No Geosubmit reports to send")
-            return Result.success()
+            return createResult(0)
         }
 
         return try {
@@ -80,7 +83,7 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
                 .toTypedArray()
             db.reportDao().update(*updatedReports)
 
-            Result.success()
+            createResult(geosubmitReports.size)
         } catch (ex: Exception) {
             Timber.w(ex, "Failed to send Geosubmit reports")
 
@@ -90,6 +93,10 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
                 Result.failure()
             }
         }
+    }
+
+    private fun createResult(reportsSent: Int): Result {
+        return Result.success(Data.Builder().putInt(OUTPUT_REPORTS_SENT, reportsSent).build())
     }
 
     private fun shouldRetry(exception: Exception): Boolean {
