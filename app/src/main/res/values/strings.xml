@@ -3,6 +3,8 @@
 
     <string name="ok">OK</string>
 
+    <string name="no_thanks">No thanks</string>
+
     <string name="stop">Stop</string>
 
     <string name="permissions_needed">Permissions needed</string>
@@ -51,4 +53,6 @@
     <string name="export_started">Exporting data from %s to %s</string>
 
     <string name="reupload_data">Reupload data</string>
+
+    <string name="add_quick_settings_tile">Add quick settings tile to easily start scanning?</string>
 </resources>

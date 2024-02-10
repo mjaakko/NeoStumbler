@@ -1,6 +1,8 @@
 package xyz.malkki.neostumbler.ui.screens
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.content.ComponentName
 import android.os.Build
 import android.text.format.DateFormat
 import android.widget.Toast
@@ -25,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,17 +40,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.launch
 import xyz.malkki.neostumbler.R
+import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.db.entities.ReportWithStats
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.defaultLocale
 import xyz.malkki.neostumbler.scanner.ScannerService
+import xyz.malkki.neostumbler.scanner.quicksettings.ScannerTileService
+import xyz.malkki.neostumbler.ui.composables.AddQSTileDialog
 import xyz.malkki.neostumbler.ui.composables.BatteryOptimizationsDialog
 import xyz.malkki.neostumbler.ui.composables.PermissionsDialog
 import xyz.malkki.neostumbler.ui.composables.ReportUploadButton
 import xyz.malkki.neostumbler.ui.composables.getAddress
 import xyz.malkki.neostumbler.ui.composables.rememberServiceConnection
 import xyz.malkki.neostumbler.ui.viewmodel.ReportsViewModel
+import xyz.malkki.neostumbler.utils.OneTimeActionHelper
 import xyz.malkki.neostumbler.utils.PermissionHelper
 import xyz.malkki.neostumbler.utils.geocoder.CachingGeocoder
 import xyz.malkki.neostumbler.utils.geocoder.Geocoder
@@ -106,9 +114,13 @@ private val requiredPermissions = mutableListOf<String>()
     }
     .toTypedArray()
 
+@SuppressLint("NewApi")
 @Composable
 fun ForegroundScanningButton() {
     val context = LocalContext.current
+
+    val coroutineScope = rememberCoroutineScope()
+    val oneTimeActionHelper = OneTimeActionHelper(context.applicationContext as StumblerApplication)
 
     val serviceConnection = rememberServiceConnection(getService = ScannerService.ScannerServiceBinder::getService)
 
@@ -117,6 +129,10 @@ fun ForegroundScanningButton() {
     }
 
     val showPermissionDialog = remember {
+        mutableStateOf(false)
+    }
+
+    val showQuickSettingsDialog = remember {
         mutableStateOf(false)
     }
 
@@ -132,6 +148,20 @@ fun ForegroundScanningButton() {
         } else {
             Toast.makeText(context, context.getString(R.string.permissions_not_granted), Toast.LENGTH_SHORT).show()
         }
+    }
+
+    if (showQuickSettingsDialog.value) {
+        AddQSTileDialog(
+            componentName = ComponentName(context, ScannerTileService::class.java),
+            dialogText = stringResource(id = R.string.add_quick_settings_tile),
+            onDialogDismissed = {
+                coroutineScope.launch {
+                    oneTimeActionHelper.markActionShown(ScannerTileService.ADD_QS_TILE_ACTION_NAME)
+                }
+
+                showQuickSettingsDialog.value = false
+            }
+        )
     }
 
     if (showPermissionDialog.value) {
@@ -153,6 +183,15 @@ fun ForegroundScanningButton() {
         onClick = {
             if (ScannerService.serviceRunning) {
                 context.startService(ScannerService.stopIntent(context))
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    //Prompt user to add the quick settings tile for scanning
+                    coroutineScope.launch {
+                        if (!oneTimeActionHelper.hasActionBeenShown(ScannerTileService.ADD_QS_TILE_ACTION_NAME)) {
+                            showQuickSettingsDialog.value = true
+                        }
+                    }
+                }
             } else {
                 if (Manifest.permission.ACCESS_FINE_LOCATION !in missingPermissions) {
                     showBatteryOptimizationsDialog.value = true
