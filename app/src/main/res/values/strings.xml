@@ -54,4 +54,5 @@
 
     <string name="reupload_data">Reupload data</string>
 
+    <string name="add_quick_settings_tile">Add quick settings tile to easily start scanning?</string>
 </resources>
