@@ -20,6 +20,7 @@
 
     <string name="map_tab_title">Map</string>
     <string name="reports_tab_title">Reports</string>
+    <string name="statistics_tab_title">Statistics</string>
     <string name="settings_tab_title">Settings</string>
 
     <string name="send_reports">Send reports</string>
@@ -57,5 +58,9 @@
 
     <string name="reupload_data">Reupload data</string>
 
+    <string name="wifis">Wi-Fis</string>
+    <string name="cells">Cells</string>
+    <string name="beacons">Bluetooth beacons</string>
+  
     <string name="add_quick_settings_tile">Add quick settings tile to easily start scanning?</string>
 </resources>

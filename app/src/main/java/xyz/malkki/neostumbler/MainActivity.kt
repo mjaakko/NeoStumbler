@@ -22,10 +22,13 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import xyz.malkki.neostumbler.ui.composables.ReportMap
 import xyz.malkki.neostumbler.ui.screens.ReportsScreen
+import xyz.malkki.neostumbler.ui.screens.StatisticsScreen
 import xyz.malkki.neostumbler.ui.screens.settings.SettingsScreen
 import xyz.malkki.neostumbler.ui.theme.NeoStumblerTheme
 
@@ -56,9 +59,10 @@ class MainActivity : ComponentActivity() {
                             val selectedTabIndex = remember { mutableIntStateOf(1) }
 
                             val items = listOf(
-                                stringResource(R.string.map_tab_title) to Icons.Filled.Place,
-                                stringResource(R.string.reports_tab_title) to Icons.Filled.List,
-                                stringResource(R.string.settings_tab_title)  to Icons.Filled.Settings,
+                                stringResource(R.string.map_tab_title) to rememberVectorPainter(Icons.Filled.Place),
+                                stringResource(R.string.reports_tab_title) to rememberVectorPainter(Icons.Filled.List),
+                                stringResource(R.string.statistics_tab_title) to painterResource(id = R.drawable.statistics_24),
+                                stringResource(R.string.settings_tab_title)  to rememberVectorPainter(Icons.Filled.Settings),
                             )
 
                             Column(modifier = Modifier
@@ -75,6 +79,9 @@ class MainActivity : ComponentActivity() {
                                             ReportsScreen()
                                         }
                                         2 -> {
+                                            StatisticsScreen()
+                                        }
+                                        3 -> {
                                             SettingsScreen()
                                         }
                                     }
@@ -83,7 +90,9 @@ class MainActivity : ComponentActivity() {
                                 NavigationBar {
                                     items.forEachIndexed { index, (title, icon) ->
                                         NavigationBarItem(
-                                            icon = { Icon(icon, contentDescription = title) },
+                                            icon = {
+                                                Icon(icon, contentDescription = title)
+                                            },
                                             label = { Text(title) },
                                             selected = selectedTabIndex.intValue == index,
                                             onClick = { selectedTabIndex.intValue = index }
