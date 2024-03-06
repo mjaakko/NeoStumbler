@@ -133,7 +133,7 @@ dependencies {
     implementation platform('org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.8.0')
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services'
+    fullImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services'
 
     fullImplementation 'com.google.android.gms:play-services-location:21.0.1'
 
