@@ -19,6 +19,7 @@ import android.os.PowerManager.PARTIAL_WAKE_LOCK
 import android.os.PowerManager.WakeLock
 import android.os.SystemClock
 import android.telephony.CellInfo
+import android.telephony.TelephonyManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.FOREGROUND_SERVICE_DEFERRED
 import androidx.core.app.NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE
@@ -50,8 +51,9 @@ import xyz.malkki.neostumbler.extensions.filterNotNullPairs
 import xyz.malkki.neostumbler.extensions.timestampMillis
 import xyz.malkki.neostumbler.extensions.timestampMillisCompat
 import xyz.malkki.neostumbler.location.LocationSourceProvider
+import xyz.malkki.neostumbler.scanner.source.MultiSubscriptionCellInfoSource
+import xyz.malkki.neostumbler.scanner.source.TelephonyManagerCellInfoSource
 import xyz.malkki.neostumbler.utils.getBeaconFlow
-import xyz.malkki.neostumbler.utils.getCellInfoFlow
 import xyz.malkki.neostumbler.utils.getWifiScanFlow
 import java.util.Locale
 import kotlin.math.abs
@@ -172,7 +174,13 @@ class ScannerService : Service() {
             }
             .filterNotNullPairs()
 
-        val cellInfoFlow = getCellInfoFlow(this@ScannerService, scanInterval = SCAN_BUFFER_PERIOD)
+        val cellInfoSource = if (hasReadPhoneStatePermission()) {
+            MultiSubscriptionCellInfoSource(this@ScannerService)
+        } else {
+            TelephonyManagerCellInfoSource(this@ScannerService.getSystemService<TelephonyManager>()!!)
+        }
+
+        val cellInfoFlow = cellInfoSource.getCellInfoFlow(SCAN_BUFFER_PERIOD)
             .map {
                 if (it.isNotEmpty()) {
                     Timestamped(it.maxOf { cellInfo -> cellInfo.timestampMillisCompat }, it)
@@ -397,6 +405,10 @@ class ScannerService : Service() {
         checkMissingPermissions(Manifest.permission.BLUETOOTH_SCAN).isEmpty()
     } else {
         checkMissingPermissions(Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN).isEmpty()
+    }
+
+    private fun hasReadPhoneStatePermission(): Boolean {
+        return checkMissingPermissions(Manifest.permission.READ_PHONE_STATE).isEmpty()
     }
 
     private fun Pair<LocationWithSource, LocationWithSource>.selectBetterLocation(elapsedRealtimeNanos: Long): LocationWithSource {
