@@ -11,6 +11,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.yield
 import xyz.malkki.neostumbler.utils.ImmediateExecutor
 import kotlin.concurrent.thread
@@ -53,4 +54,7 @@ fun SubscriptionManager.getActiveSubscriptionIds(): Flow<List<Int>> = callbackFl
         this@getActiveSubscriptionIds.removeOnSubscriptionsChangedListener(listener)
         looper!!.quit()
     }
+}.distinctUntilChanged { old, new ->
+    //Only emit new values if the IDs have changed
+    HashSet(old) == HashSet(new)
 }
