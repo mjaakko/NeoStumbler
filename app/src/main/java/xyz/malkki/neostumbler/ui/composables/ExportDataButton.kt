@@ -13,8 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DatePickerFormatter
 import androidx.compose.material3.DateRangePicker
 import androidx.compose.material3.DateRangePickerDefaults
 import androidx.compose.material3.MaterialTheme
@@ -41,10 +41,9 @@ import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.export.DataExportWorker
 import xyz.malkki.neostumbler.extensions.selectedDateRange
-import java.time.Instant
+import xyz.malkki.neostumbler.utils.SelectableDatesFromSet
 import java.time.LocalDate
 import java.time.ZoneId
-import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.Date
 
@@ -62,7 +61,7 @@ fun ExportDataButton() {
 
     val dialogOpen = remember { mutableStateOf(false) }
 
-    val dateRangePickerState = rememberDateRangePickerState()
+    val dateRangePickerState = rememberDateRangePickerState(selectableDates = SelectableDatesFromSet(selectableDates::value))
     
     val selectedDates = dateRangePickerState.selectedDateRange()
 
@@ -142,10 +141,7 @@ fun ExportDataButton() {
                     DateRangePicker(
                         state = dateRangePickerState,
                         modifier = Modifier.height(400.dp),
-                        dateFormatter = DatePickerFormatter(selectedDateSkeleton = "d/MM/yyyy"),
-                        dateValidator = { date ->
-                            Instant.ofEpochMilli(date).atOffset(ZoneOffset.UTC).toLocalDate() in selectableDates.value!!
-                        },
+                        dateFormatter = DatePickerDefaults.dateFormatter(selectedDateSkeleton = "d/MM/yyyy"),
                         headline = {
                             //Wrap headline in a box to center the text on a single line
                             Box(
@@ -155,8 +151,10 @@ fun ExportDataButton() {
                                 contentAlignment = Alignment.Center
                             ) {
                                 DateRangePickerDefaults.DateRangePickerHeadline(
-                                    state =  dateRangePickerState,
-                                    dateFormatter = DatePickerFormatter(selectedDateSkeleton = "d/MM/yyyy"),
+                                    selectedStartDateMillis = dateRangePickerState.selectedStartDateMillis,
+                                    selectedEndDateMillis = dateRangePickerState.selectedEndDateMillis,
+                                    displayMode = dateRangePickerState.displayMode,
+                                    dateFormatter = DatePickerDefaults.dateFormatter(selectedDateSkeleton = "d/MM/yyyy"),
                                     modifier = Modifier.scale(0.9f)
                                 )
                             }
