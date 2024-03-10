@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import xyz.malkki.neostumbler.StumblerApplication
+import java.time.LocalDate
 import java.util.SortedMap
 
 class StatisticsViewModel(application: Application) : AndroidViewModel(application) {
@@ -84,8 +85,14 @@ class StatisticsViewModel(application: Application) : AndroidViewModel(applicati
         }
     }
 
-    private fun <K> cumulativeSum(data: SortedMap<K, Long>): Map<K, Long> {
-        val out = mutableMapOf<K, Long>()
+    private fun cumulativeSum(data: SortedMap<LocalDate, Long>): Map<LocalDate, Long> {
+        if (data.isEmpty()) {
+            return emptyMap()
+        }
+
+        val out = mutableMapOf<LocalDate, Long>()
+        //Add 0 for the first day that we don't have data for so that the chart begins from zero
+        out[data.firstKey().minusDays(1)] = 0
 
         var cumul = 0L
         data.forEach { (key, value) ->
