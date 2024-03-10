@@ -58,6 +58,19 @@ fun <A, B, C, D> Flow<A>.combineAny(other1: Flow<B>, other2: Flow<C>, combiner: 
     }
 }
 
+inline fun <reified A, B> Collection<Flow<A>>.combineAny(crossinline combiner: suspend (Array<A?>) -> B): Flow<B> = channelFlow {
+    val values = arrayOfNulls<A?>(size)
+
+    forEachIndexed { index, flow ->
+        launch {
+            flow.collect {
+                values[index] = it
+
+                send(combiner(values.copyOf()))
+            }
+        }
+    }
+}
 
 fun <T> Flow<T>.buffer(window: Duration): Flow<List<T>> = channelFlow {
     val items: MutableList<T> = mutableListOf<T>()

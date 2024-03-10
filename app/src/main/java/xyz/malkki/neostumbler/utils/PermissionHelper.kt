@@ -12,6 +12,7 @@ object PermissionHelper {
             put(Manifest.permission.ACCESS_FINE_LOCATION, "Scanning Wi-Fi networks needs access to exact location")
             put(Manifest.permission.ACTIVITY_RECOGNITION, "Automatically starting scanning needs access to current activity")
             put(Manifest.permission.ACCESS_BACKGROUND_LOCATION, "Automatically starting scanning needs access to background location")
+            put(Manifest.permission.READ_PHONE_STATE, "Access to phone state is needed for using the second SIM card for scanning nearby cells")
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 put(Manifest.permission.POST_NOTIFICATIONS, "Showing status notification needs notification permission")

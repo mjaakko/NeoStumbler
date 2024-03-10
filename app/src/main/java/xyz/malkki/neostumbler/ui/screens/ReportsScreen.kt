@@ -111,6 +111,7 @@ private val requiredPermissions = mutableListOf<String>()
             add(Manifest.permission.BLUETOOTH_ADMIN)
         }
         add(Manifest.permission.ACCESS_FINE_LOCATION)
+        add(Manifest.permission.READ_PHONE_STATE)
     }
     .toTypedArray()
 
