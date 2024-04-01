@@ -165,8 +165,8 @@ dependencies {
 
     implementation 'org.apache.commons:commons-csv:1.10.0'
     
-    implementation "com.patrykandpatrick.vico:compose:1.13.1"
-    implementation "com.patrykandpatrick.vico:compose-m3:1.13.1"
+    implementation "com.patrykandpatrick.vico:compose:1.14.0"
+    implementation "com.patrykandpatrick.vico:compose-m3:1.14.0"
 
     testImplementation "org.mockito.kotlin:mockito-kotlin:5.2.1"
 }
