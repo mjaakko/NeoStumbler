@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import xyz.malkki.neostumbler.StumblerApplication
@@ -21,6 +22,11 @@ class OneTimeActionHelper(private val oneTimeActionsStore: DataStore<Preferences
         return oneTimeActionsStore.data
             .map { it[booleanPreferencesKey(actionName)] }
             .firstOrNull() == true
+    }
+
+    fun hasActionBeenShownFlow(actionName: String): Flow<Boolean> {
+        return oneTimeActionsStore.data
+            .map { it[booleanPreferencesKey(actionName)] == true }
     }
 
     /**

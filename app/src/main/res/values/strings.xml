@@ -63,4 +63,7 @@
     <string name="beacons">Bluetooth beacons</string>
   
     <string name="add_quick_settings_tile">Add quick settings tile to easily start scanning?</string>
+
+    <string name="mls_warning_title">MLS shutting down</string>
+    <string name="mls_warning_text">Mozilla Location Services is going to shut down soon and no longer accepts data submissions. Trying to upload reports will not work\n\nYou can still export the collected data as a ZIP package from the settings</string>
 </resources>
