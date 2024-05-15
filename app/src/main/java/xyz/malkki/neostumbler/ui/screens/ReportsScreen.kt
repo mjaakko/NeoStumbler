@@ -50,6 +50,7 @@ import xyz.malkki.neostumbler.scanner.ScannerService
 import xyz.malkki.neostumbler.scanner.quicksettings.ScannerTileService
 import xyz.malkki.neostumbler.ui.composables.AddQSTileDialog
 import xyz.malkki.neostumbler.ui.composables.BatteryOptimizationsDialog
+import xyz.malkki.neostumbler.ui.composables.MLSWarningDialog
 import xyz.malkki.neostumbler.ui.composables.PermissionsDialog
 import xyz.malkki.neostumbler.ui.composables.ReportUploadButton
 import xyz.malkki.neostumbler.ui.composables.getAddress
@@ -66,6 +67,8 @@ import android.location.Geocoder as AndroidGeocoder
 
 @Composable
 fun ReportsScreen() {
+    MLSWarningDialog()
+
     Column {
         Row {
             ForegroundScanningButton()
