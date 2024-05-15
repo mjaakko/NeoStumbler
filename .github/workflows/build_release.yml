@@ -1,4 +1,4 @@
-name: Build release APK
+name: Build release APKs
 
 on:
   push:
@@ -9,7 +9,7 @@ jobs:
   build:
     permissions:
       contents: write
-    name: Build release APK
+    name: Build release APKs
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,14 +28,15 @@ jobs:
         run: exit 1
       - name: Decode Keystore
         run: echo "${{ secrets.SIGNING_KEY_STORE_BASE64 }}" | base64 -d - > keystore.jks
-      - name: Build release APK
+      - name: Build release APKs
         env:
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
         run: ./gradlew assembleFullRelease
-      - name: Upload APK as an asset to the GitHub release
+      - name: Upload APKs as assets to the GitHub release
         uses: softprops/action-gh-release@v2
         with:
-          files: app/build/outputs/apk/full/release/app-full-release.apk
-
+          files: |
+            app/build/outputs/apk/full/release/app-full-release.apk
+            app/build/outputs/apk/fdroid/release/app-fdroid-release.apk
