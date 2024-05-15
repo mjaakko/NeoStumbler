@@ -33,7 +33,7 @@ jobs:
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
-        run: ./gradlew assembleFullRelease
+        run: ./gradlew assembleRelease
       - name: Upload APKs as assets to the GitHub release
         uses: softprops/action-gh-release@v2
         with:
