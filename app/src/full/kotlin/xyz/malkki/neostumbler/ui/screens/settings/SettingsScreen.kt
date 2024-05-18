@@ -14,10 +14,12 @@ import xyz.malkki.neostumbler.ui.composables.ReportReuploadButton
 import xyz.malkki.neostumbler.ui.composables.SettingsToggle
 import xyz.malkki.neostumbler.ui.composables.autoscan.AutoScanToggle
 import xyz.malkki.neostumbler.ui.composables.settings.AutoUploadToggle
+import xyz.malkki.neostumbler.ui.composables.settings.GeosubmitEndpointSettings
 
 @Composable
 fun SettingsScreen() {
     Column {
+        GeosubmitEndpointSettings()
         AutoUploadToggle()
         SettingsToggle(title = stringResource(id = R.string.prefer_fused_location), preferenceKey = PreferenceKeys.PREFER_FUSED_LOCATION, default = true)
         AutoScanToggle()

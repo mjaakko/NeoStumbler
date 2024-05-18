@@ -1,6 +1,7 @@
 package xyz.malkki.neostumbler.geosubmit
 
 import com.google.gson.Gson
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -15,9 +16,35 @@ import java.util.zip.GZIPOutputStream
 
 private const val BUFFER_SIZE = 8 * 1024
 
-class MLSGeosubmit(private val httpClient: OkHttpClient, private val gson: Gson, private val baseUrl: String = "https://location.services.mozilla.com") : Geosubmit {
+class MLSGeosubmit(
+    private val httpClient: OkHttpClient,
+    private val gson: Gson,
+    private val baseUrl: String = DEFAULT_ENDPOINT,
+    private val apiKey: String? = null
+) : Geosubmit {
+    companion object {
+        const val DEFAULT_ENDPOINT = "https://location.services.mozilla.com"
+    }
+
     override suspend fun sendReports(reports: List<Report>) {
-        val request = Request.Builder().url("$baseUrl/v2/geosubmit").post(createRequestBody(reports)).addHeader("Content-Encoding", "gzip").build()
+        val urlStr = "$baseUrl/v2/geosubmit"
+        val url = urlStr.toHttpUrlOrNull()
+
+        require(url != null) {
+            "Invalid URL: $urlStr"
+        }
+
+        val request = Request.Builder()
+            .url(if (apiKey != null) {
+                url.newBuilder()
+                    .addQueryParameter("key", apiKey)
+                    .build()
+            } else {
+                url
+            })
+            .post(createRequestBody(reports))
+            .addHeader("Content-Encoding", "gzip")
+            .build()
 
         val response = httpClient.newCall(request).executeSuspending()
         response.use {

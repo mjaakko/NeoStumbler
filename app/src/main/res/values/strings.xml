@@ -5,6 +5,9 @@
 
     <string name="no_thanks">No thanks</string>
 
+    <string name="reset">Reset</string>
+    <string name="save">Save</string>
+
     <string name="stop">Stop</string>
 
     <string name="permissions_needed">Permissions needed</string>
@@ -69,4 +72,7 @@
 
     <string name="mls_warning_title">MLS shutting down</string>
     <string name="mls_warning_text">Mozilla Location Services is going to shut down soon and no longer accepts data submissions. Trying to upload reports will not work\n\nYou can still export the collected data as a ZIP package from the settings</string>
+
+    <string name="endpoint">Endpoint</string>
+    <string name="api_key">API key (optional)</string>
 </resources>
