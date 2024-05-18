@@ -3,6 +3,7 @@ package xyz.malkki.neostumbler
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import androidx.core.content.getSystemService
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
@@ -115,6 +116,8 @@ class StumblerApplication : Application() {
     }
 
     private fun setupNotificationChannels() {
+        val notificationManager = getSystemService<NotificationManager>()!!
+
         val scannerNotificationChannel = NotificationChannel(
             STUMBLING_NOTIFICATION_CHANNEL_ID,
             getString(R.string.scanner_status_notification_channel_name),
@@ -123,7 +126,17 @@ class StumblerApplication : Application() {
             setShowBadge(false)
             setBypassDnd(false)
         }
-        getSystemService(NotificationManager::class.java).createNotificationChannel(scannerNotificationChannel)
+        notificationManager.createNotificationChannel(scannerNotificationChannel)
+
+        val reportUploadNotificationChannel = NotificationChannel(
+            REPORT_UPLOAD_NOTIFICATION_CHANNEL_ID,
+            getString(R.string.report_upload_notification_channel_name),
+            NotificationManager.IMPORTANCE_LOW
+        ).apply {
+            setShowBadge(false)
+            setBypassDnd(false)
+        }
+        notificationManager.createNotificationChannel(reportUploadNotificationChannel)
 
         val exportNotificationChannel = NotificationChannel(
             EXPORT_NOTIFICATION_CHANNEL_ID,
@@ -133,12 +146,14 @@ class StumblerApplication : Application() {
             setShowBadge(false)
             setBypassDnd(false)
         }
-        getSystemService(NotificationManager::class.java).createNotificationChannel(exportNotificationChannel)
+        notificationManager.createNotificationChannel(exportNotificationChannel)
     }
 
     companion object {
         const val STUMBLING_NOTIFICATION_CHANNEL_ID = "wifi_scan"
 
         const val EXPORT_NOTIFICATION_CHANNEL_ID = "data_exports"
+
+        const val REPORT_UPLOAD_NOTIFICATION_CHANNEL_ID = "report_upload"
     }
 }
