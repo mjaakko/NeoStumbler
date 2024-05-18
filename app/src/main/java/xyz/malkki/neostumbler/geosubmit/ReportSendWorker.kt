@@ -1,12 +1,17 @@
 package xyz.malkki.neostumbler.geosubmit
 
+import android.app.Notification
 import android.content.Context
+import android.content.pm.ServiceInfo
+import androidx.core.app.NotificationCompat
 import androidx.work.CoroutineWorker
 import androidx.work.Data
+import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.hasKeyWithValueOfType
 import com.google.gson.GsonBuilder
 import timber.log.Timber
+import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.gson.InstantTypeAdapter
 import xyz.malkki.neostumbler.gson.OnlyFiniteNumberTypeAdapterFactory
@@ -17,6 +22,8 @@ import kotlin.time.measureTime
 
 class ReportSendWorker(appContext: Context, params: WorkerParameters) : CoroutineWorker(appContext, params) {
     companion object {
+        private const val REPORT_SEND_NOTIFICATION_ID = 55555
+
         const val PERIODIC_WORK_NAME = "report_upload_periodic"
         const val ONE_TIME_WORK_NAME = "report_upload_one_time"
 
@@ -38,7 +45,9 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
     private val db = application.reportDb
 
     override suspend fun doWork(): Result {
-        val reupload = inputData.hasKeyWithValueOfType<Long>(INPUT_REUPLOAD_FROM) && inputData.hasKeyWithValueOfType<Long>(INPUT_REUPLOAD_TO)
+        val reupload =
+            inputData.hasKeyWithValueOfType<Long>(INPUT_REUPLOAD_FROM)
+                && inputData.hasKeyWithValueOfType<Long>(INPUT_REUPLOAD_TO)
 
         val reportsToUpload = if (!reupload) {
             db.reportDao().getAllReportsNotUploaded()
@@ -52,9 +61,11 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
             Report(
                 report.report.timestamp,
                 Report.Position.fromDbEntity(report.position),
-                report.wifiAccessPoints.map(Report.WifiAccessPoint::fromDbEntity).takeIf { it.isNotEmpty() },
+                report.wifiAccessPoints.map(Report.WifiAccessPoint::fromDbEntity)
+                    .takeIf { it.isNotEmpty() },
                 report.cellTowers.map(Report.CellTower::fromDbEntity).takeIf { it.isNotEmpty() },
-                report.bluetoothBeacons.map(Report.BluetoothBeacon::fromDbEntity).takeIf { it.isNotEmpty() }
+                report.bluetoothBeacons.map(Report.BluetoothBeacon::fromDbEntity)
+                    .takeIf { it.isNotEmpty() }
             )
         }
 
@@ -68,7 +79,11 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
                 geosubmit.sendReports(geosubmitReports)
             }
 
-            Timber.i("Successfully sent ${geosubmitReports.size} reports to MLS in ${duration.toString(DurationUnit.SECONDS, 2)}")
+            Timber.i(
+                "Successfully sent ${geosubmitReports.size} reports to MLS in ${
+                    duration.toString(DurationUnit.SECONDS, 2)
+                }"
+            )
 
             val now = Instant.now()
 
@@ -111,5 +126,23 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
         }
 
         return false
+    }
+
+    override suspend fun getForegroundInfo(): ForegroundInfo {
+        return ForegroundInfo(
+            REPORT_SEND_NOTIFICATION_ID,
+            createNotification(),
+            ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+        )
+    }
+
+    private fun createNotification(): Notification {
+        return NotificationCompat.Builder(applicationContext, StumblerApplication.REPORT_UPLOAD_NOTIFICATION_CHANNEL_ID)
+            .setOngoing(true)
+            .setLocalOnly(true)
+            .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_DEFERRED)
+            .setContentTitle(applicationContext.getString(R.string.notification_sending_reports))
+            .setSmallIcon(R.drawable.sync_24)
+            .build()
     }
 }
