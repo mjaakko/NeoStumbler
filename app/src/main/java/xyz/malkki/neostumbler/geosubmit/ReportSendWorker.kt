@@ -1,13 +1,18 @@
 package xyz.malkki.neostumbler.geosubmit
 
 import android.content.Context
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.WorkerParameters
 import androidx.work.hasKeyWithValueOfType
 import com.google.gson.GsonBuilder
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import xyz.malkki.neostumbler.StumblerApplication
+import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.gson.InstantTypeAdapter
 import xyz.malkki.neostumbler.gson.OnlyFiniteNumberTypeAdapterFactory
 import java.net.SocketTimeoutException
@@ -33,9 +38,26 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
 
     private val application = applicationContext as StumblerApplication
 
-    private val geosubmit = MLSGeosubmit(application.httpClient, GSON)
+    private val geosubmit by lazy {
+        val (endpoint, apiKey) = getEndpointAndApiKey()
+
+        Timber.d("Using endpoint $endpoint with API key $apiKey for Geosubmit")
+
+        MLSGeosubmit(application.httpClient, GSON, endpoint, apiKey)
+    }
 
     private val db = application.reportDb
+
+    private fun getEndpointAndApiKey(): Pair<String, String?> = runBlocking {
+        application.settingsStore.data
+            .map { prefs ->
+                val endpoint = prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)] ?: MLSGeosubmit.DEFAULT_ENDPOINT
+                val apiKey = prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY)]
+
+                endpoint to apiKey
+            }
+            .first()
+    }
 
     override suspend fun doWork(): Result {
         val reupload = inputData.hasKeyWithValueOfType<Long>(INPUT_REUPLOAD_FROM) && inputData.hasKeyWithValueOfType<Long>(INPUT_REUPLOAD_TO)

@@ -10,10 +10,12 @@ import androidx.compose.ui.unit.dp
 import xyz.malkki.neostumbler.ui.composables.ExportDataButton
 import xyz.malkki.neostumbler.ui.composables.ReportReuploadButton
 import xyz.malkki.neostumbler.ui.composables.settings.AutoUploadToggle
+import xyz.malkki.neostumbler.ui.composables.settings.GeosubmitEndpointSettings
 
 @Composable
 fun SettingsScreen() {
     Column {
+        GeosubmitEndpointSettings()
         AutoUploadToggle()
         Spacer(modifier = Modifier.height(20.dp))
         ExportDataButton()
