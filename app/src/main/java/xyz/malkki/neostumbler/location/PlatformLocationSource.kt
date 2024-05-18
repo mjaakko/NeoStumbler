@@ -6,6 +6,7 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.location.LocationRequest
 import android.os.Build
+import android.os.Looper
 import androidx.annotation.RequiresPermission
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
@@ -37,7 +38,7 @@ class PlatformLocationSource(context: Context) : LocationSource {
 
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, locationRequest, ImmediateExecutor, locationListener)
         } else {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, locationIntervalMillis, 0.0f, locationListener)
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, locationIntervalMillis, 0.0f, locationListener, Looper.getMainLooper())
         }
 
         awaitClose {
