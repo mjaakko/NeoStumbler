@@ -1,7 +1,9 @@
 package xyz.malkki.neostumbler.geosubmit
 
+import androidx.annotation.Keep
 import java.time.Instant
 
+@Keep
 data class Report(
     val timestamp: Instant,
     val position: Position,
@@ -9,6 +11,7 @@ data class Report(
     val cellTowers: List<CellTower>?,
     val bluetoothBeacons: List<BluetoothBeacon>?
 ) {
+    @Keep
     data class Position(
         val latitude: Double,
         val longitude: Double,
@@ -39,6 +42,7 @@ data class Report(
         }
     }
 
+    @Keep
     data class WifiAccessPoint(
         val macAddress: String,
         val radioType: String?,
@@ -65,6 +69,7 @@ data class Report(
         }
     }
 
+    @Keep
     data class CellTower(
         val radioType: String,
         val mobileCountryCode: Int?,
@@ -97,6 +102,7 @@ data class Report(
         }
     }
 
+    @Keep
     data class BluetoothBeacon(
         val macAddress: String,
         val name: String?,
