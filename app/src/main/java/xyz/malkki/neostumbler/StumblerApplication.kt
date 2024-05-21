@@ -17,10 +17,12 @@ import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.altbeacon.beacon.AltBeaconParser
+import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.BeaconManager
 import org.altbeacon.beacon.BeaconParser
 import timber.log.Timber
 import xyz.malkki.neostumbler.beacons.IBeaconParser
+import xyz.malkki.neostumbler.beacons.StubDistanceCalculator
 import xyz.malkki.neostumbler.db.DbPruneWorker
 import xyz.malkki.neostumbler.db.ReportDatabase
 import xyz.malkki.neostumbler.utils.UserAgentInterceptor
@@ -68,6 +70,9 @@ class StumblerApplication : Application() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
+
+        //Use stub distance calculator to avoid making unnecessary requests for fetching distance calibrations used by the Beacon Library
+        Beacon.setDistanceCalculator(StubDistanceCalculator)
 
         val beaconManager = BeaconManager.getInstanceForApplication(this)
 
