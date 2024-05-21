@@ -11,10 +11,6 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 suspend fun Geocoder.getFromLocationSuspending(latitude: Double, longitude: Double, maxResults: Int): List<Address> {
-    if (!Geocoder.isPresent()) {
-        return emptyList()
-    }
-
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         return suspendCoroutine { continuation ->
             getFromLocation(latitude, longitude, maxResults, object : Geocoder.GeocodeListener {
