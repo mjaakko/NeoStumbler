@@ -10,7 +10,8 @@ import android.os.IBinder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisallowComposableCalls
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
@@ -18,8 +19,11 @@ import androidx.compose.ui.platform.LocalContext
 @Composable
 inline fun <reified BoundService : Service, reified BoundServiceBinder : Binder> rememberServiceConnection(
     crossinline getService: @DisallowComposableCalls BoundServiceBinder.() -> BoundService,
-): MutableState<BoundService?> {
+): State<BoundService?> {
     val context: Context = LocalContext.current
+
+    //This counter is needed to force recomposition when the service is disconnected
+    val disconnectCount = remember { mutableIntStateOf(0) }
 
     val boundService = remember(context) { mutableStateOf<BoundService?>(null) }
     val serviceConnection: ServiceConnection = remember(context) {
@@ -30,11 +34,12 @@ inline fun <reified BoundService : Service, reified BoundServiceBinder : Binder>
 
             override fun onServiceDisconnected(componentName: ComponentName) {
                 boundService.value = null
+                disconnectCount.intValue += 1
             }
         }
     }
 
-    DisposableEffect(context, serviceConnection) {
+    DisposableEffect(context, serviceConnection, disconnectCount.value) {
         context.bindService(Intent(context, BoundService::class.java), serviceConnection, 0)
 
         onDispose {
