@@ -1,7 +1,6 @@
 package xyz.malkki.neostumbler.geosubmit
 
 import com.google.gson.Gson
-import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -19,29 +18,16 @@ private const val BUFFER_SIZE = 8 * 1024
 class MLSGeosubmit(
     private val httpClient: OkHttpClient,
     private val gson: Gson,
-    private val baseUrl: String = DEFAULT_ENDPOINT,
-    private val apiKey: String? = null
+    private val geosubmitParams: GeosubmitParams
 ) : Geosubmit {
-    companion object {
-        const val DEFAULT_ENDPOINT = "https://location.services.mozilla.com"
-    }
-
     override suspend fun sendReports(reports: List<Report>) {
-        val urlStr = "$baseUrl/v2/geosubmit"
-        val url = urlStr.toHttpUrlOrNull()
-
+        val url = geosubmitParams.toUrl()
         require(url != null) {
-            "Invalid URL: $urlStr"
+            "Failed to create URL from params $geosubmitParams"
         }
 
         val request = Request.Builder()
-            .url(if (apiKey != null) {
-                url.newBuilder()
-                    .addQueryParameter("key", apiKey)
-                    .build()
-            } else {
-                url
-            })
+            .url(url)
             .post(createRequestBody(reports))
             .addHeader("Content-Encoding", "gzip")
             .build()

@@ -46,22 +46,23 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
     private val application = applicationContext as StumblerApplication
 
     private val geosubmit by lazy {
-        val (endpoint, apiKey) = getEndpointAndApiKey()
+        val geosubmitParams = getGeosubmitParams()
 
-        Timber.d("Using endpoint $endpoint with API key $apiKey for Geosubmit")
+        Timber.d("Using endpoint ${geosubmitParams.path} with API key ${geosubmitParams.apiKey} for Geosubmit")
 
-        MLSGeosubmit(application.httpClient, GSON, endpoint, apiKey)
+        MLSGeosubmit(application.httpClient, GSON, geosubmitParams)
     }
 
     private val db = application.reportDb
 
-    private fun getEndpointAndApiKey(): Pair<String, String?> = runBlocking {
+    private fun getGeosubmitParams(): GeosubmitParams = runBlocking {
         application.settingsStore.data
             .map { prefs ->
-                val endpoint = prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)] ?: MLSGeosubmit.DEFAULT_ENDPOINT
+                val endpoint = prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)] ?: GeosubmitParams.DEFAULT_BASE_URL
+                val path = prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH)] ?: GeosubmitParams.DEFAULT_PATH
                 val apiKey = prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY)]
 
-                endpoint to apiKey
+                GeosubmitParams(endpoint, path, apiKey)
             }
             .first()
     }

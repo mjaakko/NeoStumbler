@@ -74,5 +74,6 @@
     <string name="mls_warning_text">Mozilla Location Services is going to shut down soon and no longer accepts data submissions. Trying to upload reports will not work\n\nYou can still export the collected data as a ZIP package from the settings</string>
 
     <string name="endpoint">Endpoint</string>
+    <string name="path">Path</string>
     <string name="api_key">API key (optional)</string>
 </resources>

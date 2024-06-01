@@ -37,14 +37,15 @@ import kotlinx.coroutines.launch
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
-import xyz.malkki.neostumbler.geosubmit.MLSGeosubmit
+import xyz.malkki.neostumbler.geosubmit.GeosubmitParams
 
-private fun DataStore<Preferences>.geosubmitEndpointAndApiKey(): Flow<Pair<String, String?>> = data
+private fun DataStore<Preferences>.geosubmitParams(): Flow<GeosubmitParams> = data
     .map { preferences ->
-        val endpoint = preferences[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)] ?: MLSGeosubmit.DEFAULT_ENDPOINT
+        val endpoint = preferences[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)] ?: GeosubmitParams.DEFAULT_BASE_URL
+        val path = preferences[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH)] ?: GeosubmitParams.DEFAULT_PATH
         val apiKey = preferences[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY)]
 
-        endpoint to apiKey
+        GeosubmitParams(endpoint, path, apiKey)
     }
     .distinctUntilChanged()
 
@@ -55,24 +56,22 @@ fun GeosubmitEndpointSettings() {
     val coroutineScope = rememberCoroutineScope()
 
     val settingsStore = (context.applicationContext as StumblerApplication).settingsStore
-    val endpoint = settingsStore.geosubmitEndpointAndApiKey().collectAsState(initial = null)
+    val params = settingsStore.geosubmitParams().collectAsState(initial = null)
 
     val dialogOpen = remember { mutableStateOf(false) }
 
     if (dialogOpen.value) {
         GeosubmitEndpointDialog(
-            currentEndpoint = endpoint.value?.first,
-            currentApiKey = endpoint.value?.second,
-            onDialogClose = { endpointAndApiKey ->
-                if (endpointAndApiKey != null) {
-                    val (newEndpoint, newApiKey) = endpointAndApiKey
-
+            currentParams = params.value,
+            onDialogClose = { newParams ->
+                if (newParams != null) {
                     coroutineScope.launch {
                         settingsStore.edit { prefs ->
-                            prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)] = newEndpoint
+                            prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)] = newParams.baseUrl
+                            prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH)] = newParams.path
 
-                            if (newApiKey != null) {
-                                prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY)] = newApiKey
+                            if (newParams.apiKey != null) {
+                                prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY)] = newParams.apiKey
                             } else {
                                 prefs.remove(stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY))
                             }
@@ -93,18 +92,21 @@ fun GeosubmitEndpointSettings() {
     ) {
         Column {
             Text(text = stringResource(id = R.string.endpoint))
-            Text(fontSize = 12.sp, fontWeight = FontWeight.Light, text = endpoint.value?.first ?: "")
+            Text(fontSize = 12.sp, fontWeight = FontWeight.Light, text = params.value?.baseUrl ?: "")
         }
     }
 }
 
 @Composable
-private fun GeosubmitEndpointDialog(currentEndpoint: String?, currentApiKey: String?, onDialogClose: (Pair<String, String?>?) -> Unit) {
+private fun GeosubmitEndpointDialog(currentParams: GeosubmitParams?, onDialogClose: (GeosubmitParams?) -> Unit) {
     val endpoint = remember {
-        mutableStateOf(currentEndpoint)
+        mutableStateOf(currentParams?.baseUrl)
+    }
+    val path = remember {
+        mutableStateOf(currentParams?.path)
     }
     val apiKey = remember {
-        mutableStateOf(currentApiKey)
+        mutableStateOf(currentParams?.apiKey)
     }
 
     BasicAlertDialog(
@@ -140,6 +142,18 @@ private fun GeosubmitEndpointDialog(currentEndpoint: String?, currentApiKey: Str
 
                 TextField(
                     modifier = Modifier.fillMaxWidth(),
+                    value = path.value ?: "",
+                    onValueChange = { newPath ->
+                        path.value = newPath
+                    },
+                    label = { Text(text = stringResource(id = R.string.path)) },
+                    singleLine = true
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                TextField(
+                    modifier = Modifier.fillMaxWidth(),
                     value = apiKey.value ?: "",
                     onValueChange = { newApiKey ->
                         apiKey.value = newApiKey
@@ -153,7 +167,8 @@ private fun GeosubmitEndpointDialog(currentEndpoint: String?, currentApiKey: Str
                 Row {
                     TextButton(
                         onClick = {
-                            endpoint.value = MLSGeosubmit.DEFAULT_ENDPOINT
+                            endpoint.value = GeosubmitParams.DEFAULT_BASE_URL
+                            path.value = GeosubmitParams.DEFAULT_PATH
                             apiKey.value = null
                         }
                     ) {
@@ -163,8 +178,8 @@ private fun GeosubmitEndpointDialog(currentEndpoint: String?, currentApiKey: Str
                     Spacer(modifier = Modifier.weight(1.0f))
 
                     TextButton(
-                        onClick = { onDialogClose(endpoint.value!! to apiKey.value) },
-                        enabled = !endpoint.value.isNullOrBlank()
+                        onClick = { onDialogClose(GeosubmitParams(endpoint.value!!, path.value!!, apiKey.value)) },
+                        enabled = !endpoint.value.isNullOrBlank() && !path.value.isNullOrBlank()
                     ) {
                         Text(text = stringResource(id = R.string.save))
                     }
