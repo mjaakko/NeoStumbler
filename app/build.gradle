@@ -163,7 +163,7 @@ dependencies {
 
     implementation 'org.osmdroid:osmdroid-android:6.1.18'
 
-    implementation 'org.apache.commons:commons-csv:1.10.0'
+    implementation 'org.apache.commons:commons-csv:1.11.0'
     
     implementation "com.patrykandpatrick.vico:compose:1.14.0"
     implementation "com.patrykandpatrick.vico:compose-m3:1.14.0"
