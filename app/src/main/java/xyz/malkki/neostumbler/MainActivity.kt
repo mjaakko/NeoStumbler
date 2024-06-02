@@ -33,6 +33,11 @@ import xyz.malkki.neostumbler.ui.screens.settings.SettingsScreen
 import xyz.malkki.neostumbler.ui.theme.NeoStumblerTheme
 
 class MainActivity : ComponentActivity() {
+    companion object {
+        const val EXTRA_START_SCANNING = "start_scanning"
+        const val EXTRA_REQUEST_BACKGROUND_PERMISSION = "request_background_permission"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

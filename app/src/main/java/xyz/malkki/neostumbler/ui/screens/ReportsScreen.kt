@@ -24,6 +24,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,11 +42,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
+import xyz.malkki.neostumbler.MainActivity
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.db.entities.ReportWithStats
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.defaultLocale
+import xyz.malkki.neostumbler.extensions.getActivity
 import xyz.malkki.neostumbler.scanner.ScannerService
 import xyz.malkki.neostumbler.scanner.quicksettings.ScannerTileService
 import xyz.malkki.neostumbler.ui.composables.AddQSTileDialog
@@ -122,6 +125,7 @@ private val requiredPermissions = mutableListOf<String>()
 @Composable
 fun ForegroundScanningButton() {
     val context = LocalContext.current
+    val intent = context.getActivity()?.intent
 
     val coroutineScope = rememberCoroutineScope()
     val oneTimeActionHelper = OneTimeActionHelper(context.applicationContext as StumblerApplication)
@@ -136,6 +140,10 @@ fun ForegroundScanningButton() {
         mutableStateOf(false)
     }
 
+    val showBackgroundLocationPermissionDialog = remember {
+        mutableStateOf(false)
+    }
+
     val showQuickSettingsDialog = remember {
         mutableStateOf(false)
     }
@@ -144,11 +152,42 @@ fun ForegroundScanningButton() {
         context.checkMissingPermissions(*requiredPermissions)
     }
 
+    fun startScanning() {
+        if (ScannerService.serviceRunning) {
+            context.startService(ScannerService.stopIntent(context))
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                //Prompt user to add the quick settings tile for scanning
+                coroutineScope.launch {
+                    if (!oneTimeActionHelper.hasActionBeenShown(ScannerTileService.ADD_QS_TILE_ACTION_NAME)) {
+                        showQuickSettingsDialog.value = true
+                    }
+                }
+            }
+        } else {
+            if (Manifest.permission.ACCESS_FINE_LOCATION !in missingPermissions) {
+                if (intent?.getBooleanExtra(MainActivity.EXTRA_REQUEST_BACKGROUND_PERMISSION, false) == true
+                    && context.checkMissingPermissions(Manifest.permission.ACCESS_BACKGROUND_LOCATION).isNotEmpty()) {
+                    showBackgroundLocationPermissionDialog.value = true
+                } else {
+                    showBatteryOptimizationsDialog.value = true
+                }
+            } else {
+                showPermissionDialog.value = true
+            }
+        }
+    }
+
     val onPermissionsGranted: (Map<String, Boolean>) -> Unit = { permissions ->
         showPermissionDialog.value = false
 
         if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true) {
-            showBatteryOptimizationsDialog.value = true
+            if (intent?.getBooleanExtra(MainActivity.EXTRA_REQUEST_BACKGROUND_PERMISSION, false) == true
+                && context.checkMissingPermissions(Manifest.permission.ACCESS_BACKGROUND_LOCATION).isNotEmpty()) {
+                showBackgroundLocationPermissionDialog.value = true
+            } else {
+                showBatteryOptimizationsDialog.value = true
+            }
         } else {
             Toast.makeText(context, context.getString(R.string.permissions_not_granted), Toast.LENGTH_SHORT).show()
         }
@@ -176,6 +215,19 @@ fun ForegroundScanningButton() {
         )
     }
 
+    if (showBackgroundLocationPermissionDialog.value) {
+        PermissionsDialog(
+            missingPermissions = listOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION),
+            permissionRationales = mapOf(
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION to stringResource(id = R.string.permission_rationale_background_location_quick_settings)
+            ),
+            onPermissionsGranted = {
+                showBackgroundLocationPermissionDialog.value = false
+
+                showBatteryOptimizationsDialog.value = true
+            })
+    }
+
     if (showBatteryOptimizationsDialog.value) {
         BatteryOptimizationsDialog(onBatteryOptimizationsDisabled = {
             showBatteryOptimizationsDialog.value = false
@@ -183,26 +235,15 @@ fun ForegroundScanningButton() {
         })
     }
 
+    LaunchedEffect(intent) {
+        if (intent?.getBooleanExtra(MainActivity.EXTRA_START_SCANNING, false) == true) {
+            startScanning()
+        }
+    }
+
     Button(
         onClick = {
-            if (ScannerService.serviceRunning) {
-                context.startService(ScannerService.stopIntent(context))
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    //Prompt user to add the quick settings tile for scanning
-                    coroutineScope.launch {
-                        if (!oneTimeActionHelper.hasActionBeenShown(ScannerTileService.ADD_QS_TILE_ACTION_NAME)) {
-                            showQuickSettingsDialog.value = true
-                        }
-                    }
-                }
-            } else {
-                if (Manifest.permission.ACCESS_FINE_LOCATION !in missingPermissions) {
-                    showBatteryOptimizationsDialog.value = true
-                } else {
-                    showPermissionDialog.value = true
-                }
-            }
+            startScanning()
         }
     ) {
         val stringResId = if (serviceConnection.value != null) {
