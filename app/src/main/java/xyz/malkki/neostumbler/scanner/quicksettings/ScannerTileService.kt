@@ -1,5 +1,6 @@
 package xyz.malkki.neostumbler.scanner.quicksettings
 
+import android.Manifest
 import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Intent
@@ -8,10 +9,13 @@ import android.os.Build
 import android.os.IBinder
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
+import androidx.core.service.quicksettings.PendingIntentActivityWrapper
+import androidx.core.service.quicksettings.TileServiceCompat
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import xyz.malkki.neostumbler.MainActivity
 import xyz.malkki.neostumbler.StumblerApplication
+import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.scanner.ScannerService
 import xyz.malkki.neostumbler.utils.OneTimeActionHelper
 import xyz.malkki.neostumbler.utils.PermissionHelper
@@ -84,29 +88,33 @@ class ScannerTileService : TileService() {
 
     override fun onClick() {
         if (!scanningActive) {
-            if (PermissionHelper.hasScanPermissions(this)) {
+            if (PermissionHelper.hasScanPermissions(this)
+                && (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE || checkMissingPermissions(Manifest.permission.ACCESS_BACKGROUND_LOCATION).isEmpty())) {
                 //If we already have required permissions, start scanning
                 startForegroundService(ScannerService.startIntent(this))
             } else {
-                //Otherwise open main activity where user can start scanning manually
-                startMainActivity()
+                //Otherwise open main activity to request permissions before starting scanning
+                startMainActivity(requestBackgroundPermission = backgroundLocationPermissionNeeded())
             }
         } else {
             startService(ScannerService.stopIntent(this))
         }
     }
 
-    private fun startMainActivity() {
+    private fun backgroundLocationPermissionNeeded(): Boolean {
+        //As of Android 14, background location permission is needed to start foreground services using location from quick settings tiles
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE
+                && checkMissingPermissions(Manifest.permission.ACCESS_BACKGROUND_LOCATION).isNotEmpty()
+    }
+
+    private fun startMainActivity(requestBackgroundPermission: Boolean = false) {
         val intent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            putExtra(MainActivity.EXTRA_START_SCANNING, true)
+            putExtra(MainActivity.EXTRA_REQUEST_BACKGROUND_PERMISSION, requestBackgroundPermission)
         }
+        val intentWrapper = PendingIntentActivityWrapper(this, MAIN_ACTIVITY_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT, false)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            val pendingIntent = PendingIntent.getActivity(this, MAIN_ACTIVITY_REQUEST_CODE, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
-
-            startActivityAndCollapse(pendingIntent)
-        } else {
-            startActivityAndCollapse(intent)
-        }
+        TileServiceCompat.startActivityAndCollapse(this, intentWrapper)
     }
 }
