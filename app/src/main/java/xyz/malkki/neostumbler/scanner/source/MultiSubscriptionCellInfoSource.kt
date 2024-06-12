@@ -2,9 +2,11 @@ package xyz.malkki.neostumbler.scanner.source
 
 import android.Manifest
 import android.content.Context
+import android.telephony.CellIdentityNr
 import android.telephony.CellInfo
 import android.telephony.CellInfoGsm
 import android.telephony.CellInfoLte
+import android.telephony.CellInfoNr
 import android.telephony.CellInfoWcdma
 import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
@@ -64,6 +66,11 @@ private fun CellInfo.getKey(): String {
         }
         is CellInfoGsm -> {
             "gsm_${cellIdentity.mccString}_${cellIdentity.mncString}_${cellIdentity.cid}_${cellIdentity.lac}"
+        }
+        is CellInfoNr -> {
+            val cellIdentity = cellIdentity as CellIdentityNr
+
+            "nr_${cellIdentity.mccString}_${cellIdentity.mncString}_${cellIdentity.nci}_${cellIdentity.tac}_${cellIdentity.pci}"
         }
         //Currently we don't support other cell types
         else -> ""
