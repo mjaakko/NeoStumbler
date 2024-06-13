@@ -15,6 +15,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.map
+import org.geohex.geohex4j.GeoHex
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
@@ -27,12 +28,6 @@ import timber.log.Timber
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.common.LatLng
 import xyz.malkki.neostumbler.db.dao.ReportDao
-import java.math.BigDecimal
-import java.math.RoundingMode
-import kotlin.math.pow
-
-
-private const val MIN_COORDINATE_DIFF = 0.001 //~110m at equator, ~45m at 65deg north or south
 
 //Number of reports needed for max heat color
 private const val MAX_HEAT = 15
@@ -40,19 +35,19 @@ private const val MAX_HEAT = 15
 private val HEAT_LOW = ColorUtils.setAlphaComponent(0xd278ff, 150)
 private val HEAT_HIGH = ColorUtils.setAlphaComponent(0xaa00ff, 150)
 
-private data class HeatMapTile(val latitude: BigDecimal, val longitude: BigDecimal, val heat: Int)
+private data class HeatMapTile(val geohex: String, val heat: Int)
 
-private fun getHeatMapTiles(reportDao: ReportDao, coordinateScale: Int): LiveData<List<HeatMapTile>> = reportDao.getAllReportsWithLocation()
+private fun getHeatMapTiles(reportDao: ReportDao): LiveData<List<HeatMapTile>> = reportDao.getAllReportsWithLocation()
     .distinctUntilChanged()
     .map { reportsWithLocation ->
         reportsWithLocation
             .map { reportWithLocation ->
-                reportWithLocation.latitude.toBigDecimal().setScale(coordinateScale, RoundingMode.DOWN) to reportWithLocation.longitude.toBigDecimal().setScale(coordinateScale, RoundingMode.DOWN)
+                GeoHex.encode(reportWithLocation.latitude, reportWithLocation.longitude, 9)
             }
             .groupingBy { it }
             .eachCount()
             .map {
-                HeatMapTile(it.key.first, it.key.second, it.value)
+                HeatMapTile(it.key, it.value)
             }
     }
 
@@ -76,7 +71,7 @@ fun ReportMap() {
         value = reportDb.positionDao().getLatestPosition()
     })
 
-    val heatMapTiles = getHeatMapTiles(reportDb.reportDao(), 3).observeAsState(
+    val heatMapTiles = getHeatMapTiles(reportDb.reportDao()).observeAsState(
         initial = emptyList()
     )
 
@@ -113,8 +108,6 @@ fun ReportMap() {
             try {
                 latestPosition.value?.let { view.setPositionIfNotMoved(it) }
 
-                val coordDiff = 10.0.pow(-3)
-
                 val overlay = FolderOverlay()
                 overlay.name = "heatmap"
 
@@ -126,17 +119,14 @@ fun ReportMap() {
 
                         val polygon = Polygon(view)
                         polygon.fillPaint.color = color
-                        polygon.outlinePaint.color = color
-                        polygon.outlinePaint.strokeWidth = 5f
+                        polygon.outlinePaint.color = ColorUtils.setAlphaComponent(0, 0)
+                        polygon.outlinePaint.strokeWidth = 0f
                         //Return with click listener to disable info window
                         polygon.setOnClickListener { _, _, _ -> false }
 
-                        polygon.points = listOf(
-                            GeoPoint(it.latitude.toDouble(), it.longitude.toDouble()),
-                            GeoPoint(it.latitude.toDouble() + coordDiff, it.longitude.toDouble()),
-                            GeoPoint(it.latitude.toDouble() + coordDiff, it.longitude.toDouble() + coordDiff),
-                            GeoPoint(it.latitude.toDouble(), it.longitude.toDouble() + coordDiff),
-                        )
+                        polygon.points = GeoHex.getZoneByCode(it.geohex).hexCoords.map { coord ->
+                            GeoPoint(coord.lat, coord.lon)
+                        }
 
                         polygon
                     }

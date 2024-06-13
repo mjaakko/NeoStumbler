@@ -162,6 +162,7 @@ dependencies {
     implementation 'org.altbeacon:android-beacon-library:2.20.6'
 
     implementation 'org.osmdroid:osmdroid-android:6.1.18'
+    implementation 'org.geohex.geohex4j:geohex4j:3.2.2'
 
     implementation 'org.apache.commons:commons-csv:1.11.0'
     
