@@ -1,1 +1,1 @@
-Application for collecting wireless networks to Mozilla Location Services
+Application for collecting wireless networks to geolocation services
