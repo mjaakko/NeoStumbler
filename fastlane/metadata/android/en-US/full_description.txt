@@ -1,1 +1,1 @@
-<b>NeoStumbler</b> is an application for collecting locations of Wi-Fi networks, cell towers and Bluetooth beacons to Mozilla Location Services
+<b>NeoStumbler</b> is an application for collecting locations of Wi-Fi networks, cell towers and Bluetooth beacons to geolocation services that are API compatible with Mozilla Location Services
