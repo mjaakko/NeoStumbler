@@ -77,7 +77,12 @@
     <string name="path">Path</string>
     <string name="api_key">API key (optional)</string>
 
+    <string name="show_my_location">Show my location</string>
+
     <string name="permission_rationale_background_location_quick_settings">
         Starting scanning from the quick settings needs access to location in the background
+    </string>
+    <string name="permission_rationale_location_map">
+        Showing your location on the map needs permission for location
     </string>
 </resources>
