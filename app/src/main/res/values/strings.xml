@@ -79,6 +79,22 @@
 
     <string name="show_my_location">Show my location</string>
 
+    <string name="permission_rationale_fine_location">
+        Getting access to the current location needs permission for accurate location
+    </string>
+
+    <string name="permission_rationale_read_phone_state">
+        Access to phone state is needed for scanning cell towers with all SIM cards on the device
+    </string>
+
+    <string name="permission_rationale_bluetooth">
+        Scanning Bluetooth beacons needs permission for Bluetooth
+    </string>
+
+    <string name="permission_rationale_post_notifications">
+        Showing status notification needs permission for notifications
+    </string>
+
     <string name="permission_rationale_background_location_quick_settings">
         Starting scanning from the quick settings needs access to location in the background
     </string>

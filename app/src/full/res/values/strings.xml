@@ -1,4 +1,12 @@
 <resources>
     <string name="prefer_fused_location">Prefer fused location provider</string>
     <string name="autoscan_when_moving">Automatic scanning while moving</string>
+
+    <string name="permission_rationale_background_location_autoscan">
+        Automatically starting scanning needs permission for background location
+    </string>
+
+    <string name="permission_rationale_activity_recognition">
+        Automatically starting scanning needs access to current activity
+    </string>
 </resources>
