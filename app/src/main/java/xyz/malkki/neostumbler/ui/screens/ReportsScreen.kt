@@ -60,7 +60,6 @@ import xyz.malkki.neostumbler.ui.composables.getAddress
 import xyz.malkki.neostumbler.ui.composables.rememberServiceConnection
 import xyz.malkki.neostumbler.ui.viewmodel.ReportsViewModel
 import xyz.malkki.neostumbler.utils.OneTimeActionHelper
-import xyz.malkki.neostumbler.utils.PermissionHelper
 import xyz.malkki.neostumbler.utils.geocoder.CachingGeocoder
 import xyz.malkki.neostumbler.utils.geocoder.Geocoder
 import xyz.malkki.neostumbler.utils.geocoder.PlatformGeocoder
@@ -210,7 +209,21 @@ fun ForegroundScanningButton() {
     if (showPermissionDialog.value) {
         PermissionsDialog(
             missingPermissions = missingPermissions,
-            permissionRationales = PermissionHelper.PERMISSION_RATIONALES,
+            permissionRationales = mutableMapOf<String, String>().apply {
+                put(Manifest.permission.ACCESS_FINE_LOCATION, stringResource(id = R.string.permission_rationale_fine_location))
+                put(Manifest.permission.READ_PHONE_STATE, stringResource(id = R.string.permission_rationale_read_phone_state))
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    put(Manifest.permission.POST_NOTIFICATIONS, stringResource(id = R.string.permission_rationale_post_notifications))
+                }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    put(Manifest.permission.BLUETOOTH_SCAN, stringResource(id = R.string.permission_rationale_bluetooth))
+                } else {
+                    put(Manifest.permission.BLUETOOTH, stringResource(id = R.string.permission_rationale_bluetooth))
+                    put(Manifest.permission.BLUETOOTH_ADMIN, stringResource(id = R.string.permission_rationale_bluetooth))
+                }
+            },
             onPermissionsGranted = onPermissionsGranted
         )
     }

@@ -33,7 +33,6 @@ import xyz.malkki.neostumbler.extensions.getActivity
 import xyz.malkki.neostumbler.scanner.autoscan.ActivityTransitionReceiver
 import xyz.malkki.neostumbler.ui.composables.PermissionsDialog
 import xyz.malkki.neostumbler.ui.composables.ToggleWithAction
-import xyz.malkki.neostumbler.utils.PermissionHelper
 
 private fun DataStore<Preferences>.autoScanEnabled(): Flow<Boolean?> = data
     .map { it[booleanPreferencesKey(PreferenceKeys.AUTOSCAN_ENABLED)] }
@@ -102,7 +101,22 @@ fun AutoScanToggle() {
     if (showBasicPermissionsDialog.value) {
         PermissionsDialog(
             missingPermissions = missingPermissionsBasic.value,
-            permissionRationales = PermissionHelper.PERMISSION_RATIONALES,
+            permissionRationales = mutableMapOf<String, String>().apply {
+                put(Manifest.permission.ACCESS_FINE_LOCATION, stringResource(id = R.string.permission_rationale_fine_location))
+                put(Manifest.permission.ACTIVITY_RECOGNITION, stringResource(id = R.string.permission_rationale_activity_recognition))
+                put(Manifest.permission.READ_PHONE_STATE, stringResource(id = R.string.permission_rationale_read_phone_state))
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    put(Manifest.permission.POST_NOTIFICATIONS, stringResource(id = R.string.permission_rationale_post_notifications))
+                }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    put(Manifest.permission.BLUETOOTH_SCAN, stringResource(id = R.string.permission_rationale_bluetooth))
+                } else {
+                    put(Manifest.permission.BLUETOOTH, stringResource(id = R.string.permission_rationale_bluetooth))
+                    put(Manifest.permission.BLUETOOTH_ADMIN, stringResource(id = R.string.permission_rationale_bluetooth))
+                }
+            },
             onPermissionsGranted = { permissions ->
                 showBasicPermissionsDialog.value = false
 
@@ -130,7 +144,9 @@ fun AutoScanToggle() {
     if (showAdditionalPermissionsDialog.value) {
         PermissionsDialog(
             missingPermissions = missingPermissionsAdditional.value,
-            permissionRationales = PermissionHelper.PERMISSION_RATIONALES,
+            permissionRationales = mapOf(
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION to stringResource(id = R.string.permission_rationale_background_location_autoscan)
+            ),
             onPermissionsGranted = { permissions ->
                 showAdditionalPermissionsDialog.value = false
 
