@@ -1,0 +1,1 @@
+Um aplicativo para coletar redes sem-fio para serviços de geolocalização

@@ -1,0 +1,12 @@
+<resources>
+    <string name="prefer_fused_location">Preferir o provedor de localização combinado</string>
+    <string name="autoscan_when_moving">Escaneamento automático ao se mover</string>
+
+    <string name="permission_rationale_background_location_autoscan">
+        Para começar o escaneamento automaticamente, é necessário a permissão de localização em segundo plano
+    </string>
+
+    <string name="permission_rationale_activity_recognition">
+        Para começar o escaneamento automaticamente, é necessário acesso à atividade atual
+    </string>
+</resources>
