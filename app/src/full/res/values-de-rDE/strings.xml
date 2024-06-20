@@ -1,0 +1,12 @@
+<resources>
+    <string name="prefer_fused_location">Fused Location Provider bevorzugen</string>
+    <string name="autoscan_when_moving">Automatisch scannen wenn in Bewegung</string>
+
+    <string name="permission_rationale_background_location_autoscan">
+        Scan automatisch starten benötigt die Berechtigung für Hintergrund Standort
+    </string>
+
+    <string name="permission_rationale_activity_recognition">
+        Scan automatisch starten benötigt Zugriff auf die aktuelle Aktivität
+    </string>
+</resources>
