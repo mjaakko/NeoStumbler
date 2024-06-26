@@ -31,7 +31,7 @@
     <string name="reports">Relatórios:</string>
     <string name="reports_total">Total de relatórios: %s</string>
     <string name="reports_not_uploaded">Relatórios que não foram enviados: %s</string>
-    <string name="reports_last_uploaded">Relatórios enviados na última vez: %s</string>
+    <string name="reports_last_uploaded">Último envio: %s</string>
 
     <string name="start_scanning">Iniciar escaneamento</string>
     <string name="stop_scanning">Parar escaneamento</string>
