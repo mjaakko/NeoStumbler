@@ -1,9 +1,11 @@
 package xyz.malkki.neostumbler.scanner.source
 
 import android.Manifest
+import android.telephony.CellIdentityNr
 import android.telephony.CellInfo
 import android.telephony.CellInfoGsm
 import android.telephony.CellInfoLte
+import android.telephony.CellInfoNr
 import android.telephony.CellInfoWcdma
 import android.telephony.TelephonyManager
 import androidx.annotation.RequiresPermission
@@ -68,6 +70,12 @@ private fun CellInfo.hasEnoughData(): Boolean {
         is CellInfoLte -> {
             cellIdentity.mccString != null && cellIdentity.mncString != null &&
                     (cellIdentity.ci != CellInfo.UNAVAILABLE || cellIdentity.tac != CellInfo.UNAVAILABLE || cellIdentity.pci != CellInfo.UNAVAILABLE)
+        }
+        is CellInfoNr -> {
+            val cellIdentity = cellIdentity as CellIdentityNr
+
+            cellIdentity.mccString != null && cellIdentity.mncString != null &&
+                    (cellIdentity.nci != CellInfo.UNAVAILABLE_LONG || cellIdentity.tac != CellInfo.UNAVAILABLE || cellIdentity.pci != CellInfo.UNAVAILABLE)
         }
         else -> false
     }
