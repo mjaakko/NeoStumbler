@@ -75,7 +75,7 @@ data class Report(
         val mobileCountryCode: Int?,
         val mobileNetworkCode: Int?,
         val locationAreaCode: Int?,
-        val cellId: Int?,
+        val cellId: Long?,
         val age: Long,
         val asu: Int?,
         val primaryScramblingCode: Int?,

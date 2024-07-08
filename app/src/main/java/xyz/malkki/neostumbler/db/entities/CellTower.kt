@@ -2,11 +2,13 @@ package xyz.malkki.neostumbler.db.entities
 
 import android.os.Build
 import android.os.SystemClock
+import android.telephony.CellIdentityNr
 import android.telephony.CellInfo
 import android.telephony.CellInfoGsm
 import android.telephony.CellInfoLte
 import android.telephony.CellInfoNr
 import android.telephony.CellInfoWcdma
+import android.telephony.CellSignalStrengthNr
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -21,7 +23,7 @@ data class CellTower(
     val radioType: String,
     val mobileCountryCode: Int?,
     val mobileNetworkCode: Int?,
-    val cellId: Int?,
+    val cellId: Long?,
     val locationAreaCode: Int?,
     val asu: Int?,
     val primaryScramblingCode: Int?,
@@ -50,11 +52,7 @@ data class CellTower(
 
             return when (cellInfo) {
                 is CellInfoNr -> {
-                    null
-
-                    //MLS currently does not support 5G towers
-
-                    /*val cellSignalStrength = cellInfo.cellSignalStrength as CellSignalStrengthNr
+                    val cellSignalStrength = cellInfo.cellSignalStrength as CellSignalStrengthNr
                     val cellIdentity = cellInfo.cellIdentity as CellIdentityNr
 
                     CellTower(
@@ -62,7 +60,8 @@ data class CellTower(
                         "nr",
                         cellIdentity.mccString?.toIntOrNull(),
                         cellIdentity.mncString?.toIntOrNull(),
-                        cellIdentity.tac.takeIf { it != CellInfo.UNAVAILABLE },
+                        cellIdentity.nci.takeIf { it != CellInfo.UNAVAILABLE_LONG && it != 0L },
+                        cellIdentity.tac.takeIf { it != CellInfo.UNAVAILABLE && it != 0 },
                         cellSignalStrength.asuLevel.takeIf { it != CellInfo.UNAVAILABLE },
                         cellIdentity.pci.takeIf { it != CellInfo.UNAVAILABLE },
                         cellInfo.serving(),
@@ -70,7 +69,7 @@ data class CellTower(
                         null,
                         age,
                         reportId
-                    )*/
+                    )
                 }
                 is CellInfoLte -> {
                     val cellSignalStrength = cellInfo.cellSignalStrength
@@ -81,7 +80,7 @@ data class CellTower(
                         "lte",
                         cellIdentity.mccString?.toIntOrNull(),
                         cellIdentity.mncString?.toIntOrNull(),
-                        cellIdentity.ci.takeIf { it != CellInfo.UNAVAILABLE && it != 0  },
+                        cellIdentity.ci.takeIf { it != CellInfo.UNAVAILABLE && it != 0 }?.toLong(),
                         cellIdentity.tac.takeIf { it != CellInfo.UNAVAILABLE && it != 0  },
                         cellSignalStrength.asuLevel.takeIf { it != CellInfo.UNAVAILABLE },
                         cellIdentity.pci.takeIf { it != CellInfo.UNAVAILABLE },
@@ -101,12 +100,16 @@ data class CellTower(
                         "gsm",
                         cellIdentity.mccString?.toIntOrNull(),
                         cellIdentity.mncString?.toIntOrNull(),
-                        cellIdentity.cid.takeIf { it != CellInfo.UNAVAILABLE && it != 0 },
-                        cellIdentity.lac.takeIf { it != CellInfo.UNAVAILABLE && it != 0  },
+                        cellIdentity.cid.takeIf { it != CellInfo.UNAVAILABLE && it != 0 }?.toLong(),
+                        cellIdentity.lac.takeIf { it != CellInfo.UNAVAILABLE && it != 0 },
                         cellSignalStrength.asuLevel.takeIf { it != CellInfo.UNAVAILABLE },
                         null,
                         cellInfo.serving(),
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) { cellSignalStrength.rssi.takeIf { it != CellInfo.UNAVAILABLE } } else { null },
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                            cellSignalStrength.rssi.takeIf { it != CellInfo.UNAVAILABLE }
+                        } else {
+                            null
+                        },
                         cellSignalStrength.timingAdvance.takeIf { it != CellInfo.UNAVAILABLE },
                         age,
                         reportId
@@ -121,8 +124,8 @@ data class CellTower(
                         "wcdma",
                         cellIdentity.mccString?.toIntOrNull(),
                         cellIdentity.mncString?.toIntOrNull(),
-                        cellIdentity.cid.takeIf { it != CellInfo.UNAVAILABLE && it != 0  },
-                        cellIdentity.lac.takeIf { it != CellInfo.UNAVAILABLE && it != 0  },
+                        cellIdentity.cid.takeIf { it != CellInfo.UNAVAILABLE && it != 0 }?.toLong(),
+                        cellIdentity.lac.takeIf { it != CellInfo.UNAVAILABLE && it != 0 },
                         cellSignalStrength.asuLevel.takeIf { it != CellInfo.UNAVAILABLE },
                         cellIdentity.psc.takeIf { it != CellInfo.UNAVAILABLE },
                         cellInfo.serving(),
