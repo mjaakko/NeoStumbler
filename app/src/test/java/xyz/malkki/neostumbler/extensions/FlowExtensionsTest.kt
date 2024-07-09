@@ -7,8 +7,12 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
+import kotlin.math.sqrt
+import kotlin.random.Random
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.measureTime
 
 class FlowExtensionsTest {
     @Test
@@ -52,5 +56,25 @@ class FlowExtensionsTest {
 
         assertEquals(4, output.size)
         assertArrayEquals(arrayOf(null, 1, null), output[0])
+    }
+
+    @Test
+    fun `Test parallel map`() = runBlocking {
+        val flow = flow {
+            repeat(10) {
+                emit(Random.Default.nextDouble(0.0, Double.MAX_VALUE))
+            }
+        }
+
+        val duration = measureTime {
+            flow
+                .parallelMap {
+                    delay(100)
+                    sqrt(it)
+                }
+                .collect {}
+        }
+
+        assertTrue(duration <= 200.milliseconds)
     }
 }

@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
 import xyz.malkki.neostumbler.db.entities.Report
 import xyz.malkki.neostumbler.db.entities.ReportWithData
 import xyz.malkki.neostumbler.db.entities.ReportWithLocation
@@ -67,7 +68,7 @@ interface ReportDao {
 
     @Transaction
     @Query("SELECT r.id, r.timestamp, p.latitude, p.longitude FROM Report r JOIN Position p ON r.id = p.reportId")
-    fun getAllReportsWithLocation(): LiveData<List<ReportWithLocation>>
+    fun getAllReportsWithLocation(): Flow<List<ReportWithLocation>>
 
     @Query("SELECT DISTINCT DATE(ROUND(r.timestamp / 1000), 'unixepoch') FROM Report r")
     fun getReportDates(): LiveData<List<LocalDate>>

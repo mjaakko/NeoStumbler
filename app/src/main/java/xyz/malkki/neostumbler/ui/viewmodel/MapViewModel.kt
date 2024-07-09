@@ -5,16 +5,21 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asFlow
-import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.liveData
-import androidx.lifecycle.map
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.toList
 import org.geohex.geohex4j.GeoHex
 import org.osmdroid.util.GeoPoint
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
+import xyz.malkki.neostumbler.extensions.parallelMap
 import xyz.malkki.neostumbler.location.LocationSourceProvider
 import kotlin.time.Duration.Companion.seconds
 
@@ -31,9 +36,11 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
         .distinctUntilChanged()
         .map { reportsWithLocation ->
             reportsWithLocation
-                .map { reportWithLocation ->
+                .asFlow()
+                .parallelMap { reportWithLocation ->
                     GeoHex.encode(reportWithLocation.latitude, reportWithLocation.longitude, 9)
                 }
+                .toList()
                 .groupingBy { it }
                 .eachCount()
                 .map {
@@ -45,6 +52,8 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
                     )
                 }
         }
+        .flowOn(Dispatchers.Default)
+        .asLiveData()
 
     private val showMyLocation = MutableLiveData(getApplication<StumblerApplication>().checkMissingPermissions(Manifest.permission.ACCESS_COARSE_LOCATION).isEmpty())
 
