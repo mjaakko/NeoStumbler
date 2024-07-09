@@ -28,6 +28,9 @@ import xyz.malkki.neostumbler.db.ReportDatabase
 import xyz.malkki.neostumbler.utils.UserAgentInterceptor
 import java.io.File
 import java.time.Duration
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.toJavaDuration
 
 class StumblerApplication : Application() {
     val reportDb by lazy {
@@ -57,6 +60,10 @@ class StumblerApplication : Application() {
                 level = HttpLoggingInterceptor.Level.BASIC
             })
             .cache(cache)
+            .connectTimeout(30.seconds.toJavaDuration())
+            /* Read timeout should be long enough, because the Geosubmit API responds only when all data has been processed and
+             that might take a while if a large amount of reports is sent at once */
+            .readTimeout(2.minutes.toJavaDuration())
             .build()
     }
 
