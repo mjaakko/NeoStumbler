@@ -225,3 +225,6 @@ fabric.properties
 ## Android release directory
 
 app/release/
+
+## Kotlin 2.0
+.kotlin/
