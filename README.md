@@ -9,26 +9,28 @@
 
 # NeoStumbler
 
-NeoStumbler is an Android application for collecting locations of cell towers, Wi-Fi access points and Bluetooth beacons to [Mozilla Location Services](https://location.services.mozilla.com/)
+NeoStumbler is an Android application for collecting locations of cell towers, Wi-Fi access points and Bluetooth beacons to geolocation services, which have an API compatible with [Ichnaea](https://ichnaea.readthedocs.io/en/latest/api/geosubmit2.html) (i.e. Mozilla Location Services).
 
 ## Downloads
 
-APKs of the application can be downloaded from [Releases](https://github.com/mjaakko/NeoStumbler/releases) page. There are two variants available:
+There are two variants available:
 * *full* - includes all features
-* *fdroid* - does not include closed componentes (i.e. Google Play Services)
+* *fdroid* - does not include closed components (i.e. Google Play Services)
 
-The *fdroid* variant is also available from [F-Droid](https://f-droid.org/packages/xyz.malkki.neostumbler.fdroid/)
+APKs of the application can be downloaded from [Releases](https://github.com/mjaakko/NeoStumbler/releases) page.
+
+The *fdroid* variant is also available from [F-Droid](https://f-droid.org/packages/xyz.malkki.neostumbler.fdroid/) or alternatively from [IzzyOnDroid](https://android.izzysoft.de/repo/apk/xyz.malkki.neostumbler.fdroid). Reproducible builds are used for building NeoStumbler on F-Droid, which means that it's possible to upgrade an existing installation to a newer version from an alternative source
 
 ## Features
 
-* Supports new Android versions
+* Supports latest Android versions
 * Collect data for cell towers, Wi-Fi access points and Bluetooth beacons
-  * Currently 5G cell towers are not supported due to the lack of support by MLS
 * Service for collecting data
   * Can be started automatically while moving (if Google Play Services available)
+* Map showing the areas where data has been collected
 * Exporting scan data as a .zip
 
- ## Development
+## Development
 
 The application has two product flavors:
 * `full` - includes all features
