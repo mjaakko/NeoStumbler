@@ -86,6 +86,12 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+
+    //These are not needed because the app is not published to Google Play
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
+    }
 }
 
 
