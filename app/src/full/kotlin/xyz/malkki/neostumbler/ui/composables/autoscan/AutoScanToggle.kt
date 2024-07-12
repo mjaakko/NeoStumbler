@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 import timber.log.Timber
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
@@ -33,6 +34,7 @@ import xyz.malkki.neostumbler.extensions.getActivity
 import xyz.malkki.neostumbler.scanner.autoscan.ActivityTransitionReceiver
 import xyz.malkki.neostumbler.ui.composables.PermissionsDialog
 import xyz.malkki.neostumbler.ui.composables.ToggleWithAction
+import kotlin.time.Duration.Companion.seconds
 
 private fun DataStore<Preferences>.autoScanEnabled(): Flow<Boolean?> = data
     .map { it[booleanPreferencesKey(PreferenceKeys.AUTOSCAN_ENABLED)] }
@@ -85,10 +87,20 @@ fun AutoScanToggle() {
     val showAdditionalPermissionsDialog = remember { mutableStateOf(false) }
 
     suspend fun enableAutoScan() {
-        ActivityTransitionReceiver.enable(context)
-        settingsStore.edit { it[booleanPreferencesKey(PreferenceKeys.AUTOSCAN_ENABLED)] = true }
+        try {
+            //Use timeout here so that the toggle doesn't get stuck in case the function never returns (this can happen e.g. when using a stub implementation of GPlay services)
+            withTimeout(2.seconds) {
+                ActivityTransitionReceiver.enable(context)
+            }
 
-        Timber.i("Enabled activity transition listener")
+            settingsStore.edit { it[booleanPreferencesKey(PreferenceKeys.AUTOSCAN_ENABLED)] = true }
+
+            Timber.i("Enabled activity transition listener")
+        } catch (e: Exception) {
+            Timber.w(e, "Failed to enable activity transition listener")
+
+            Toast.makeText(context, context.getString(R.string.autoscan_failed_to_enable), Toast.LENGTH_SHORT).show()
+        }
     }
 
     suspend fun disableAutoScan() {
