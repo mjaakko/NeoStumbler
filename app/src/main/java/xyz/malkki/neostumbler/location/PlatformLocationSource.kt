@@ -2,6 +2,7 @@ package xyz.malkki.neostumbler.location
 
 import android.Manifest
 import android.content.Context
+import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.location.LocationRequest
@@ -12,6 +13,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import timber.log.Timber
 import xyz.malkki.neostumbler.common.LocationWithSource
 import xyz.malkki.neostumbler.utils.ImmediateExecutor
 import kotlin.time.Duration
@@ -23,8 +25,18 @@ class PlatformLocationSource(context: Context) : LocationSource {
     override fun getLocations(interval: Duration): Flow<LocationWithSource> = callbackFlow {
         val locationManager = appContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-        val locationListener = LocationListener {
-            trySendBlocking(LocationWithSource(it, LocationWithSource.LocationSource.GPS))
+        val locationListener = object : LocationListener {
+            override fun onLocationChanged(location: Location) {
+                trySendBlocking(LocationWithSource(location, LocationWithSource.LocationSource.GPS))
+            }
+
+            override fun onProviderDisabled(provider: String) {
+                Timber.w("Location provider $provider disabled")
+            }
+
+            override fun onProviderEnabled(provider: String) {
+                Timber.i("Location provider $provider enabled")
+            }
         }
 
         val locationIntervalMillis = interval.inWholeMilliseconds
