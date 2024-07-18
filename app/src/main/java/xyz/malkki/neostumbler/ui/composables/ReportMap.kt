@@ -109,7 +109,7 @@ fun ReportMap(mapViewModel: MapViewModel = viewModel()) {
                 map.zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
                 map.isTilesScaledToDpi = true
                 map.isVerticalMapRepetitionEnabled = false
-                map.maxZoomLevel = 15.0
+                map.maxZoomLevel = 16.0
                 map.minZoomLevel = 3.0
                 //Add bounds so that user does not move outside of the area where map tiles are available
                 //Latitude range is slightly reduced to avoid displaying blank tiles
