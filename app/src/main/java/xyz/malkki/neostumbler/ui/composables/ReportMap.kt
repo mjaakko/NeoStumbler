@@ -1,6 +1,7 @@
 package xyz.malkki.neostumbler.ui.composables
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,9 +26,6 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.osmdroid.config.Configuration
-import org.osmdroid.events.MapListener
-import org.osmdroid.events.ScrollEvent
-import org.osmdroid.events.ZoomEvent
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
@@ -59,6 +57,7 @@ private fun MapView.setPositionIfNotMoved(latLng: LatLng) {
     }
 }
 
+@SuppressLint("ClickableViewAccessibility")
 @Composable
 fun ReportMap(mapViewModel: MapViewModel = viewModel()) {
     val context = LocalContext.current
@@ -119,19 +118,11 @@ fun ReportMap(mapViewModel: MapViewModel = viewModel()) {
 
                 map.overlays.add(DirectedLocationOverlay(context))
 
-                map.addMapListener(object : MapListener {
-                    override fun onScroll(event: ScrollEvent): Boolean {
-                        trackMyLocation.value = false
+                map.setOnTouchListener { _, _ ->
+                    trackMyLocation.value = false
 
-                        return false
-                    }
-
-                    override fun onZoom(event: ZoomEvent): Boolean {
-                        trackMyLocation.value = false
-
-                        return false
-                    }
-                })
+                    false
+                }
 
                 if (latestPosition.value != null) {
                     map.setPositionIfNotMoved(latestPosition.value!!)
