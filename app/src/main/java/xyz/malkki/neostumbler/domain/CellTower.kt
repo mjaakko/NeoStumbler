@@ -1,7 +1,6 @@
-package xyz.malkki.neostumbler.db.entities
+package xyz.malkki.neostumbler.domain
 
 import android.os.Build
-import android.os.SystemClock
 import android.telephony.CellIdentityNr
 import android.telephony.CellInfo
 import android.telephony.CellInfoGsm
@@ -9,20 +8,12 @@ import android.telephony.CellInfoLte
 import android.telephony.CellInfoNr
 import android.telephony.CellInfoWcdma
 import android.telephony.CellSignalStrengthNr
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
 import xyz.malkki.neostumbler.extensions.timestampMillisCompat
-import java.time.Instant
-import java.time.temporal.ChronoUnit
 
-@Entity(foreignKeys = [ForeignKey(entity = Report::class, parentColumns = ["id"], childColumns = ["reportId"], onDelete = ForeignKey.CASCADE)])
 data class CellTower(
-    @PrimaryKey(autoGenerate = true) val id: Long?,
-    val radioType: String,
-    val mobileCountryCode: Int?,
-    val mobileNetworkCode: Int?,
+    val radioType: RadioType,
+    val mobileCountryCode: String?,
+    val mobileNetworkCode: String?,
     val cellId: Long?,
     val locationAreaCode: Int?,
     val asu: Int?,
@@ -30,8 +21,10 @@ data class CellTower(
     val serving: Int?,
     val signalStrength: Int?,
     val timingAdvance: Int?,
-    val age: Long,
-    @ColumnInfo(index = true) val reportId: Long?
+    /**
+     * Timestamp when the cell tower was observed in milliseconds since boot
+     */
+    val timestamp: Long
 ) {
     companion object {
         private fun CellInfo.serving(): Int? {
@@ -46,20 +39,16 @@ data class CellTower(
             }
         }
 
-        fun fromCellInfo(reportId: Long, currentTime: Instant, cellInfo: CellInfo): CellTower? {
-            //Current time is truncated to seconds -> age can be negative by some milliseconds
-            val age = maxOf(0, Instant.now().minusMillis(SystemClock.elapsedRealtime() - cellInfo.timestampMillisCompat).until(currentTime, ChronoUnit.MILLIS))
-
+        fun fromCellInfo(cellInfo: CellInfo): CellTower? {
             return when (cellInfo) {
                 is CellInfoNr -> {
                     val cellSignalStrength = cellInfo.cellSignalStrength as CellSignalStrengthNr
                     val cellIdentity = cellInfo.cellIdentity as CellIdentityNr
 
                     CellTower(
-                        null,
-                        "nr",
-                        cellIdentity.mccString?.toIntOrNull(),
-                        cellIdentity.mncString?.toIntOrNull(),
+                        RadioType.NR,
+                        cellIdentity.mccString,
+                        cellIdentity.mncString,
                         cellIdentity.nci.takeIf { it != CellInfo.UNAVAILABLE_LONG && it != 0L },
                         cellIdentity.tac.takeIf { it != CellInfo.UNAVAILABLE && it != 0 },
                         cellSignalStrength.asuLevel.takeIf { it != CellInfo.UNAVAILABLE },
@@ -67,39 +56,37 @@ data class CellTower(
                         cellInfo.serving(),
                         cellSignalStrength.dbm.takeIf { it != CellInfo.UNAVAILABLE },
                         null,
-                        age,
-                        reportId
+                        cellInfo.timestampMillisCompat
                     )
                 }
+
                 is CellInfoLte -> {
                     val cellSignalStrength = cellInfo.cellSignalStrength
                     val cellIdentity = cellInfo.cellIdentity
 
                     CellTower(
-                        null,
-                        "lte",
-                        cellIdentity.mccString?.toIntOrNull(),
-                        cellIdentity.mncString?.toIntOrNull(),
+                        RadioType.LTE,
+                        cellIdentity.mccString,
+                        cellIdentity.mncString,
                         cellIdentity.ci.takeIf { it != CellInfo.UNAVAILABLE && it != 0 }?.toLong(),
-                        cellIdentity.tac.takeIf { it != CellInfo.UNAVAILABLE && it != 0  },
+                        cellIdentity.tac.takeIf { it != CellInfo.UNAVAILABLE && it != 0 },
                         cellSignalStrength.asuLevel.takeIf { it != CellInfo.UNAVAILABLE },
                         cellIdentity.pci.takeIf { it != CellInfo.UNAVAILABLE },
                         cellInfo.serving(),
                         cellSignalStrength.rssi.takeIf { it != CellInfo.UNAVAILABLE },
                         cellSignalStrength.timingAdvance.takeIf { it != CellInfo.UNAVAILABLE },
-                        age,
-                        reportId
+                        cellInfo.timestampMillisCompat
                     )
                 }
+
                 is CellInfoGsm -> {
                     val cellSignalStrength = cellInfo.cellSignalStrength
                     val cellIdentity = cellInfo.cellIdentity
 
                     CellTower(
-                        null,
-                        "gsm",
-                        cellIdentity.mccString?.toIntOrNull(),
-                        cellIdentity.mncString?.toIntOrNull(),
+                        RadioType.GSM,
+                        cellIdentity.mccString,
+                        cellIdentity.mncString,
                         cellIdentity.cid.takeIf { it != CellInfo.UNAVAILABLE && it != 0 }?.toLong(),
                         cellIdentity.lac.takeIf { it != CellInfo.UNAVAILABLE && it != 0 },
                         cellSignalStrength.asuLevel.takeIf { it != CellInfo.UNAVAILABLE },
@@ -111,19 +98,18 @@ data class CellTower(
                             null
                         },
                         cellSignalStrength.timingAdvance.takeIf { it != CellInfo.UNAVAILABLE },
-                        age,
-                        reportId
+                        cellInfo.timestampMillisCompat
                     )
                 }
+
                 is CellInfoWcdma -> {
                     val cellSignalStrength = cellInfo.cellSignalStrength
                     val cellIdentity = cellInfo.cellIdentity
 
                     CellTower(
-                        null,
-                        "wcdma",
-                        cellIdentity.mccString?.toIntOrNull(),
-                        cellIdentity.mncString?.toIntOrNull(),
+                        RadioType.WCDMA,
+                        cellIdentity.mccString,
+                        cellIdentity.mncString,
                         cellIdentity.cid.takeIf { it != CellInfo.UNAVAILABLE && it != 0 }?.toLong(),
                         cellIdentity.lac.takeIf { it != CellInfo.UNAVAILABLE && it != 0 },
                         cellSignalStrength.asuLevel.takeIf { it != CellInfo.UNAVAILABLE },
@@ -131,12 +117,16 @@ data class CellTower(
                         cellInfo.serving(),
                         cellSignalStrength.dbm.takeIf { it != CellInfo.UNAVAILABLE },
                         null,
-                        age,
-                        reportId
+                        cellInfo.timestampMillisCompat
                     )
                 }
+
                 else -> null
             }
         }
+    }
+
+    enum class RadioType {
+        GSM, WCDMA, LTE, NR
     }
 }

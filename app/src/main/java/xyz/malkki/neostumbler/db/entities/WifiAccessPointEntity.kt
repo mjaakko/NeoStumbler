@@ -11,8 +11,10 @@ import xyz.malkki.neostumbler.extensions.ssidString
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
-@Entity(foreignKeys = [ForeignKey(entity = Report::class, parentColumns = ["id"], childColumns = ["reportId"], onDelete = ForeignKey.CASCADE)])
-data class WifiAccessPoint(
+@Entity(
+    foreignKeys = [ForeignKey(entity = Report::class, parentColumns = ["id"], childColumns = ["reportId"], onDelete = ForeignKey.CASCADE)]
+)
+data class WifiAccessPointEntity(
     @PrimaryKey(autoGenerate = true) val id: Long?,
     val macAddress: String,
     val radioType: String?,
@@ -25,7 +27,7 @@ data class WifiAccessPoint(
     @ColumnInfo(index = true) val reportId: Long?
 ) {
     companion object {
-        fun createFromScanResult(reportId: Long, currentTime: Instant, scanResult: ScanResult): WifiAccessPoint {
+        fun createFromScanResult(reportId: Long, currentTime: Instant, scanResult: ScanResult): WifiAccessPointEntity {
             val radioType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 when (scanResult.wifiStandard) {
                     //ScanResult.WIFI_STANDARD_11AX -> "802.11ax"
@@ -52,7 +54,7 @@ data class WifiAccessPoint(
             //Current time is truncated to seconds -> age can be negative by some milliseconds
             val age = maxOf(0, Instant.now().minusMillis(SystemClock.elapsedRealtime() - (scanResult.timestamp / 1000)).until(currentTime, ChronoUnit.MILLIS))
 
-            return WifiAccessPoint(
+            return WifiAccessPointEntity(
                 null,
                 scanResult.BSSID,
                 radioType,

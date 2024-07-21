@@ -35,7 +35,8 @@ interface ReportDao {
     fun getLastUploadTime(): LiveData<Instant>
 
     @Transaction
-    @Query("""
+    @Query(
+        """
         SELECT
             r.id AS reportId,
             r.timestamp AS timestamp,
@@ -45,14 +46,15 @@ interface ReportDao {
             COALESCE(ct.cellTowerCount, 0) AS cellTowerCount,
             COALESCE(bb.bluetoothBeaconCount, 0) AS bluetoothBeaconCount
         FROM Report r, Position p
-        LEFT JOIN (SELECT reportId, COUNT(id) AS wifiAccessPointCount FROM WifiAccessPoint GROUP BY reportId) AS wap ON wap.reportId = r.id
-        LEFT JOIN (SELECT reportId, COUNT(id) AS cellTowerCount FROM CellTower GROUP BY reportId) AS ct ON ct.reportId = r.id
-        LEFT JOIN (SELECT reportId, COUNT(id) AS bluetoothBeaconCount FROM BluetoothBeacon GROUP BY reportId) AS bb ON bb.reportId = r.id
+        LEFT JOIN (SELECT reportId, COUNT(id) AS wifiAccessPointCount FROM WifiAccessPointEntity GROUP BY reportId) AS wap ON wap.reportId = r.id
+        LEFT JOIN (SELECT reportId, COUNT(id) AS cellTowerCount FROM CellTowerEntity GROUP BY reportId) AS ct ON ct.reportId = r.id
+        LEFT JOIN (SELECT reportId, COUNT(id) AS bluetoothBeaconCount FROM BluetoothBeaconEntity GROUP BY reportId) AS bb ON bb.reportId = r.id
         WHERE r.uploaded = 0 
         AND r.id = p.reportId
         GROUP BY r.id
         ORDER BY r.timestamp DESC
-    """)
+    """
+    )
     fun getAllReportsWithStats(): LiveData<List<ReportWithStats>>
 
     @Transaction

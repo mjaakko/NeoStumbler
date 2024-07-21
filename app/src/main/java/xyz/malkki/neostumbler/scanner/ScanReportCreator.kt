@@ -3,16 +3,16 @@ package xyz.malkki.neostumbler.scanner
 import android.content.Context
 import android.location.Location
 import android.net.wifi.ScanResult
-import android.telephony.CellInfo
 import androidx.room.withTransaction
 import org.altbeacon.beacon.Beacon
 import timber.log.Timber
 import xyz.malkki.neostumbler.StumblerApplication
-import xyz.malkki.neostumbler.db.entities.BluetoothBeacon
-import xyz.malkki.neostumbler.db.entities.CellTower
+import xyz.malkki.neostumbler.db.entities.BluetoothBeaconEntity
+import xyz.malkki.neostumbler.db.entities.CellTowerEntity
 import xyz.malkki.neostumbler.db.entities.Position
 import xyz.malkki.neostumbler.db.entities.Report
-import xyz.malkki.neostumbler.db.entities.WifiAccessPoint
+import xyz.malkki.neostumbler.db.entities.WifiAccessPointEntity
+import xyz.malkki.neostumbler.domain.CellTower
 import java.time.Instant
 
 class ScanReportCreator(context: Context) {
@@ -22,7 +22,7 @@ class ScanReportCreator(context: Context) {
         locationSource: String,
         location: Location,
         wifiScanResults: List<ScanResult>,
-        cellInfo: List<CellInfo>,
+        cellTowers: List<CellTower>,
         beacons: List<Beacon>,
         reportTimestamp: Instant = Instant.now()
     ) = reportDb.withTransaction {
@@ -32,15 +32,15 @@ class ScanReportCreator(context: Context) {
         val position = Position.createFromLocation(reportId, reportTimestamp, location, locationSource)
         reportDb.positionDao().insert(position)
 
-        val wifiAccessPoints = wifiScanResults.map { WifiAccessPoint.createFromScanResult(reportId, reportTimestamp, it) }
-        reportDb.wifiAccessPointDao().insertAll(*wifiAccessPoints.toTypedArray())
+        val wifiAccessPointEntities = wifiScanResults.map { WifiAccessPointEntity.createFromScanResult(reportId, reportTimestamp, it) }
+        reportDb.wifiAccessPointDao().insertAll(*wifiAccessPointEntities.toTypedArray())
 
-        val cellTowers = cellInfo.mapNotNull { CellTower.fromCellInfo(reportId, reportTimestamp, it) }
-        reportDb.cellTowerDao().insertAll(*cellTowers.toTypedArray())
+        val cellTowerEntities = cellTowers.map { CellTowerEntity.fromCellTower(it, reportTimestamp, reportId) }
+        reportDb.cellTowerDao().insertAll(*cellTowerEntities.toTypedArray())
 
-        val bluetoothBeacons = beacons.map { BluetoothBeacon.fromBeacon(reportId, reportTimestamp, it) }
-        reportDb.bluetoothBeaconDao().insertAll(*bluetoothBeacons.toTypedArray())
+        val bluetoothBeaconEntities = beacons.map { BluetoothBeaconEntity.fromBeacon(reportId, reportTimestamp, it) }
+        reportDb.bluetoothBeaconDao().insertAll(*bluetoothBeaconEntities.toTypedArray())
 
-        Timber.i("Inserted report with ${wifiAccessPoints.size} Wi-Fi access points, ${cellTowers.size} cell towers and ${bluetoothBeacons.size} Bluetooth beacons to DB")
+        Timber.i("Inserted report with ${wifiAccessPointEntities.size} Wi-Fi access points, ${cellTowerEntities.size} cell towers and ${bluetoothBeaconEntities.size} Bluetooth beacons to DB")
     }
 }

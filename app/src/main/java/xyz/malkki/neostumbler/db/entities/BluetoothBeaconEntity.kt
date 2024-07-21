@@ -7,8 +7,10 @@ import androidx.room.PrimaryKey
 import org.altbeacon.beacon.Beacon
 import java.time.Instant
 
-@Entity(foreignKeys = [ForeignKey(entity = Report::class, parentColumns = ["id"], childColumns = ["reportId"], onDelete = ForeignKey.CASCADE)])
-data class BluetoothBeacon(
+@Entity(
+    foreignKeys = [ForeignKey(entity = Report::class, parentColumns = ["id"], childColumns = ["reportId"], onDelete = ForeignKey.CASCADE)]
+)
+data class BluetoothBeaconEntity(
     @PrimaryKey(autoGenerate = true) val id: Long?,
     val macAddress: String,
     val age: Long,
@@ -17,8 +19,8 @@ data class BluetoothBeacon(
     @ColumnInfo(index = true) val reportId: Long?
 ) {
     companion object {
-        fun fromBeacon(reportId: Long, currentTime: Instant, beacon: Beacon): BluetoothBeacon {
-            return BluetoothBeacon(
+        fun fromBeacon(reportId: Long, currentTime: Instant, beacon: Beacon): BluetoothBeaconEntity {
+            return BluetoothBeaconEntity(
                 null,
                 beacon.bluetoothAddress,
                 currentTime.toEpochMilli() - beacon.lastCycleDetectionTimestamp,

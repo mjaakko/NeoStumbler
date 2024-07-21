@@ -14,15 +14,15 @@ data class ReportWithData(
         parentColumn = "id",
         entityColumn = "reportId"
     )
-    val wifiAccessPoints: List<WifiAccessPoint>,
+    val wifiAccessPointEntities: List<WifiAccessPointEntity>,
     @Relation(
         parentColumn = "id",
         entityColumn = "reportId"
     )
-    val cellTowers: List<CellTower>,
+    val cellTowerEntities: List<CellTowerEntity>,
     @Relation(
         parentColumn = "id",
         entityColumn = "reportId"
     )
-    val bluetoothBeacons: List<BluetoothBeacon>
+    val bluetoothBeaconEntities: List<BluetoothBeaconEntity>
 )

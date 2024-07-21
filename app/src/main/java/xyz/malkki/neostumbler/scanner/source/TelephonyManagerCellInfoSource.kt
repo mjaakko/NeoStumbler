@@ -17,18 +17,25 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.isActive
 import timber.log.Timber
+import xyz.malkki.neostumbler.domain.CellTower
 import xyz.malkki.neostumbler.utils.ImmediateExecutor
 import kotlin.time.Duration
 
 class TelephonyManagerCellInfoSource(private val telephonyManager: TelephonyManager) : CellInfoSource {
     @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-    override fun getCellInfoFlow(interval: Duration): Flow<List<CellInfo>> = callbackFlow {
+    override fun getCellInfoFlow(interval: Duration): Flow<List<CellTower>> = callbackFlow {
         val rendezvousQueue = Channel<Unit>(capacity = Channel.RENDEZVOUS)
 
         val cellInfoCallback = object: TelephonyManager.CellInfoCallback() {
             override fun onCellInfo(cellInfo: MutableList<CellInfo>) {
-                //Filter cell infos which don't have enough useful data to be collected
-                trySendBlocking(cellInfo.filter { it.hasEnoughData() })
+                val cellTowers = cellInfo
+                    //Filter cell infos which don't have enough useful data to be collected
+                    .filter { it.hasEnoughData() }
+                    .mapNotNull {
+                        CellTower.fromCellInfo(it)
+                    }
+
+                trySendBlocking(cellTowers)
 
                 rendezvousQueue.trySendBlocking(Unit)
             }
