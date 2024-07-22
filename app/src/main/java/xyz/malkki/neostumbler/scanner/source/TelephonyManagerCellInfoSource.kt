@@ -1,12 +1,7 @@
 package xyz.malkki.neostumbler.scanner.source
 
 import android.Manifest
-import android.telephony.CellIdentityNr
 import android.telephony.CellInfo
-import android.telephony.CellInfoGsm
-import android.telephony.CellInfoLte
-import android.telephony.CellInfoNr
-import android.telephony.CellInfoWcdma
 import android.telephony.TelephonyManager
 import androidx.annotation.RequiresPermission
 import kotlinx.coroutines.channels.Channel
@@ -22,6 +17,26 @@ import xyz.malkki.neostumbler.utils.ImmediateExecutor
 import kotlin.time.Duration
 
 class TelephonyManagerCellInfoSource(private val telephonyManager: TelephonyManager) : CellInfoSource {
+    private fun List<CellTower>.fillMissingData(): List<CellTower> {
+        if (size == 1) {
+            return this
+        } else {
+            val mobileCountryCodes = mapNotNull { it.mobileCountryCode }.toSet()
+            val mobileNetworkCodes = mapNotNull { it.mobileNetworkCode }.toSet()
+
+            return if (mobileCountryCodes.size != 1 || mobileNetworkCodes.size != 1) {
+                this
+            } else {
+                map { cellTower ->
+                    cellTower.copy(
+                        mobileCountryCode = mobileCountryCodes.first(),
+                        mobileNetworkCode = mobileNetworkCodes.first()
+                    )
+                }
+            }
+        }
+    }
+
     @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
     override fun getCellInfoFlow(interval: Duration): Flow<List<CellTower>> = callbackFlow {
         val rendezvousQueue = Channel<Unit>(capacity = Channel.RENDEZVOUS)
@@ -29,11 +44,12 @@ class TelephonyManagerCellInfoSource(private val telephonyManager: TelephonyMana
         val cellInfoCallback = object: TelephonyManager.CellInfoCallback() {
             override fun onCellInfo(cellInfo: MutableList<CellInfo>) {
                 val cellTowers = cellInfo
-                    //Filter cell infos which don't have enough useful data to be collected
-                    .filter { it.hasEnoughData() }
                     .mapNotNull {
                         CellTower.fromCellInfo(it)
                     }
+                    .fillMissingData()
+                    //Filter cell infos which don't have enough useful data to be collected
+                    .filter { it.hasEnoughData() }
 
                 trySendBlocking(cellTowers)
 
@@ -64,26 +80,15 @@ class TelephonyManagerCellInfoSource(private val telephonyManager: TelephonyMana
 /**
  * Checks if the cell info has enough useful data. Used for filtering neighbouring cells which don't specify their cell ID etc.
  */
-private fun CellInfo.hasEnoughData(): Boolean {
-    return when (this) {
-        is CellInfoGsm -> {
-            cellIdentity.mccString != null && cellIdentity.mncString != null &&
-                    (cellIdentity.cid != CellInfo.UNAVAILABLE || cellIdentity.lac!= CellInfo.UNAVAILABLE)
-        }
-        is CellInfoWcdma -> {
-            cellIdentity.mccString != null && cellIdentity.mncString != null &&
-                    (cellIdentity.cid != CellInfo.UNAVAILABLE || cellIdentity.lac!= CellInfo.UNAVAILABLE || cellIdentity.psc != CellInfo.UNAVAILABLE)
-        }
-        is CellInfoLte -> {
-            cellIdentity.mccString != null && cellIdentity.mncString != null &&
-                    (cellIdentity.ci != CellInfo.UNAVAILABLE || cellIdentity.tac != CellInfo.UNAVAILABLE || cellIdentity.pci != CellInfo.UNAVAILABLE)
-        }
-        is CellInfoNr -> {
-            val cellIdentity = cellIdentity as CellIdentityNr
+private fun CellTower.hasEnoughData(): Boolean {
+    if (mobileCountryCode == null || mobileNetworkCode == null) {
+        return false
+    }
 
-            cellIdentity.mccString != null && cellIdentity.mncString != null &&
-                    (cellIdentity.nci != CellInfo.UNAVAILABLE_LONG || cellIdentity.tac != CellInfo.UNAVAILABLE || cellIdentity.pci != CellInfo.UNAVAILABLE)
-        }
-        else -> false
+    return when (radioType) {
+        CellTower.RadioType.GSM -> cellId != null || locationAreaCode != null
+        CellTower.RadioType.WCDMA,
+        CellTower.RadioType.LTE,
+        CellTower.RadioType.NR -> cellId != null || locationAreaCode != null || primaryScramblingCode != null
     }
 }
