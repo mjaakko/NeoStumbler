@@ -6,7 +6,7 @@ import java.time.Instant
 
 @TypeConverters(InstantConverters::class)
 data class ReportWithStats(
-    val reportId: Int,
+    val reportId: Long,
     val timestamp: Instant,
     val latitude: Double,
     val longitude: Double,
