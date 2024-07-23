@@ -5,6 +5,9 @@
 
     <string name="no_thanks">No thanks</string>
 
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
     <string name="reset">Reset</string>
     <string name="save">Save</string>
 
@@ -35,6 +38,9 @@
 
     <string name="start_scanning">Start scanning</string>
     <string name="stop_scanning">Stop scanning</string>
+
+    <string name="delete_report">Delete report</string>
+    <string name="delete_report_confirmation">Are you sure you want to delete the report?</string>
 
     <string name="toast_reports_uploaded">Uploaded %d reports</string>
     <string name="toast_reports_upload_failed">Failed to upload reports</string>

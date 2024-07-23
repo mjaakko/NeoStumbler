@@ -6,6 +6,7 @@ import android.content.ComponentName
 import android.os.Build
 import android.text.format.DateFormat
 import android.widget.Toast
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -53,6 +54,7 @@ import xyz.malkki.neostumbler.scanner.ScannerService
 import xyz.malkki.neostumbler.scanner.quicksettings.ScannerTileService
 import xyz.malkki.neostumbler.ui.composables.AddQSTileDialog
 import xyz.malkki.neostumbler.ui.composables.BatteryOptimizationsDialog
+import xyz.malkki.neostumbler.ui.composables.ConfirmationDialog
 import xyz.malkki.neostumbler.ui.composables.MLSWarningDialog
 import xyz.malkki.neostumbler.ui.composables.PermissionsDialog
 import xyz.malkki.neostumbler.ui.composables.ReportUploadButton
@@ -278,6 +280,24 @@ private fun Reports(reportsViewModel: ReportsViewModel = viewModel()) {
         CachingGeocoder(PlatformGeocoder(AndroidGeocoder(context, context.defaultLocale), 1))
     }
 
+    val reportToDelete = remember { mutableStateOf<Long?>(null) }
+
+    if (reportToDelete.value != null) {
+        ConfirmationDialog(
+            title = stringResource(id = R.string.delete_report),
+            description = stringResource(id = R.string.delete_report_confirmation),
+            positiveButtonText = stringResource(id = R.string.yes),
+            negativeButtonText = stringResource(id = R.string.no),
+            onPositiveAction = {
+                reportsViewModel.deleteReport(reportToDelete.value!!)
+
+                reportToDelete.value = null
+            },
+            onNegativeAction = {
+                reportToDelete.value = null
+            })
+    }
+
     Column(modifier = Modifier.padding(top = 8.dp)) {
         Text(text = stringResource(R.string.reports), style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold))
         LazyColumn {
@@ -285,7 +305,12 @@ private fun Reports(reportsViewModel: ReportsViewModel = viewModel()) {
                 reports.value,
                 key =  { _: Int, report: ReportWithStats -> report.reportId },
                 itemContent = { _, report ->
-                    Report(report = report, geocoder = geocoder)
+                    Report(
+                        report = report,
+                        geocoder = geocoder,
+                        onDeleteReport = { reportId ->
+                            reportToDelete.value = reportId
+                        })
                 }
             )
         }
@@ -293,7 +318,7 @@ private fun Reports(reportsViewModel: ReportsViewModel = viewModel()) {
 }
 
 @Composable
-private fun Report(report: ReportWithStats, geocoder: Geocoder) {
+private fun Report(report: ReportWithStats, geocoder: Geocoder, onDeleteReport: (Long) -> Unit) {
     val context = LocalContext.current
 
     val address = getAddress(report.latitude, report.longitude, geocoder = geocoder)
@@ -305,6 +330,14 @@ private fun Report(report: ReportWithStats, geocoder: Geocoder) {
     val canShowMap = intent.resolveActivity(context.packageManager) != null
 
     Column(modifier = Modifier
+        .combinedClickable(
+            enabled = true,
+            onClick = {},
+            onLongClickLabel = stringResource(id = R.string.delete_report),
+            onLongClick = {
+                onDeleteReport(report.reportId)
+            }
+        )
         .padding(vertical = 4.dp)
         .wrapContentHeight()) {
         Row(modifier = Modifier
