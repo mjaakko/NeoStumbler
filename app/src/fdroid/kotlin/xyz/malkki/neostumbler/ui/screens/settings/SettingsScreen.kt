@@ -11,12 +11,14 @@ import xyz.malkki.neostumbler.ui.composables.ExportDataButton
 import xyz.malkki.neostumbler.ui.composables.ReportReuploadButton
 import xyz.malkki.neostumbler.ui.composables.settings.AutoUploadToggle
 import xyz.malkki.neostumbler.ui.composables.settings.GeosubmitEndpointSettings
+import xyz.malkki.neostumbler.ui.composables.settings.IgnoreScanThrottlingToggle
 
 @Composable
 fun SettingsScreen() {
     Column {
         GeosubmitEndpointSettings()
         AutoUploadToggle()
+        IgnoreScanThrottlingToggle()
         Spacer(modifier = Modifier.height(20.dp))
         ExportDataButton()
         Spacer(modifier = Modifier.height(8.dp))

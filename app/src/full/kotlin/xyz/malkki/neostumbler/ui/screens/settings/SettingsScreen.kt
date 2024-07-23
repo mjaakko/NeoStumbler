@@ -15,6 +15,7 @@ import xyz.malkki.neostumbler.ui.composables.SettingsToggle
 import xyz.malkki.neostumbler.ui.composables.autoscan.AutoScanToggle
 import xyz.malkki.neostumbler.ui.composables.settings.AutoUploadToggle
 import xyz.malkki.neostumbler.ui.composables.settings.GeosubmitEndpointSettings
+import xyz.malkki.neostumbler.ui.composables.settings.IgnoreScanThrottlingToggle
 
 @Composable
 fun SettingsScreen() {
@@ -22,6 +23,7 @@ fun SettingsScreen() {
         GeosubmitEndpointSettings()
         AutoUploadToggle()
         SettingsToggle(title = stringResource(id = R.string.prefer_fused_location), preferenceKey = PreferenceKeys.PREFER_FUSED_LOCATION, default = true)
+        IgnoreScanThrottlingToggle()
         AutoScanToggle()
         Spacer(modifier = Modifier.height(20.dp))
         ExportDataButton()
