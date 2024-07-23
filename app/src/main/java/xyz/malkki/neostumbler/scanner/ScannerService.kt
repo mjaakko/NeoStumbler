@@ -19,7 +19,6 @@ import android.os.PowerManager
 import android.os.PowerManager.PARTIAL_WAKE_LOCK
 import android.os.PowerManager.WakeLock
 import android.os.SystemClock
-import android.telephony.CellInfo
 import android.telephony.TelephonyManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.FOREGROUND_SERVICE_DEFERRED
@@ -47,6 +46,7 @@ import xyz.malkki.neostumbler.MainActivity
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.common.LocationWithSource
+import xyz.malkki.neostumbler.domain.CellTower
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.extensions.buffer
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
@@ -54,7 +54,6 @@ import xyz.malkki.neostumbler.extensions.combineAny
 import xyz.malkki.neostumbler.extensions.filterNotNullPairs
 import xyz.malkki.neostumbler.extensions.isWifiScanThrottled
 import xyz.malkki.neostumbler.extensions.timestampMillis
-import xyz.malkki.neostumbler.extensions.timestampMillisCompat
 import xyz.malkki.neostumbler.location.LocationSourceProvider
 import xyz.malkki.neostumbler.scanner.source.MultiSubscriptionCellInfoSource
 import xyz.malkki.neostumbler.scanner.source.TelephonyManagerCellInfoSource
@@ -189,7 +188,7 @@ class ScannerService : Service() {
         val cellInfoFlow = cellInfoSource.getCellInfoFlow(SCAN_BUFFER_PERIOD)
             .map {
                 if (it.isNotEmpty()) {
-                    Timestamped(it.maxOf { cellInfo -> cellInfo.timestampMillisCompat }, it)
+                    Timestamped(it.maxOf { cellInfo -> cellInfo.timestamp }, it)
                 } else {
                     null
                 }
@@ -269,7 +268,7 @@ class ScannerService : Service() {
             channelFlow {
                 val mutex = Mutex()
 
-                var reportData: Triple<Timestamped<List<CellInfo>>?, Timestamped<List<ScanResult>>?, Timestamped<List<Beacon>>?>? = null
+                var reportData: Triple<Timestamped<List<CellTower>>?, Timestamped<List<ScanResult>>?, Timestamped<List<Beacon>>?>? = null
 
                 launch {
                     reportDataFlow.collect {
@@ -303,7 +302,7 @@ class ScannerService : Service() {
                 val (location, reportData) = it
 
                 scanReportCreator.createReport(location.source.name.lowercase(Locale.ROOT), location.location,
-                    cellInfo = reportData.first?.value ?: emptyList(),
+                    cellTowers = reportData.first?.value ?: emptyList(),
                     wifiScanResults = reportData.second?.value ?: emptyList(),
                     beacons = reportData.third?.value ?: emptyList()
                 )

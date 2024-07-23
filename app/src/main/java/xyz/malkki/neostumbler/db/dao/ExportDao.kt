@@ -7,7 +7,8 @@ import java.time.Instant
 
 @Dao
 interface ExportDao {
-    @Query("""
+    @Query(
+        """
         SELECT
             r.timestamp AS timestamp,
             p.latitude AS latitude,
@@ -20,12 +21,14 @@ interface ExportDao {
             b.signalStrength AS signalStrength
         FROM Report r
         JOIN Position p ON r.id = p.reportId
-        JOIN BluetoothBeacon b ON r.id = b.reportId
+        JOIN BluetoothBeaconEntity b ON r.id = b.reportId
         WHERE r.timestamp >= :from AND r.timestamp <= :to
-    """)
+    """
+    )
     fun bluetoothExportCursor(from: Instant, to: Instant): Cursor
 
-    @Query("""
+    @Query(
+        """
         SELECT
             r.timestamp AS timestamp,
             p.latitude AS latitude,
@@ -39,12 +42,14 @@ interface ExportDao {
             w.ssid AS ssid
         FROM Report r
         JOIN Position p ON r.id = p.reportId
-        JOIN WifiAccessPoint w ON r.id = w.reportId
+        JOIN WifiAccessPointEntity w ON r.id = w.reportId
         WHERE r.timestamp >= :from AND r.timestamp <= :to
-    """)
+    """
+    )
     fun wifiExportCursor(from: Instant, to: Instant): Cursor
 
-    @Query("""
+    @Query(
+        """
         SELECT
             r.timestamp AS timestamp,
             p.latitude AS latitude,
@@ -63,8 +68,9 @@ interface ExportDao {
             c.age AS cellScanAge
         FROM Report r
         JOIN Position p ON r.id = p.reportId
-        JOIN CellTower c ON r.id = c.reportId
+        JOIN CellTowerEntity c ON r.id = c.reportId
         WHERE r.timestamp >= :from AND r.timestamp <= :to
-    """)
+    """
+    )
     fun cellExportCursor(from: Instant, to: Instant): Cursor
 }

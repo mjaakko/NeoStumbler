@@ -54,16 +54,16 @@ data class Report(
         val ssid: String?
     ) {
         companion object {
-            fun fromDbEntity(wifiAccessPoint: xyz.malkki.neostumbler.db.entities.WifiAccessPoint): WifiAccessPoint {
+            fun fromDbEntity(wifiAccessPointEntity: xyz.malkki.neostumbler.db.entities.WifiAccessPointEntity): WifiAccessPoint {
                 return WifiAccessPoint(
-                    wifiAccessPoint.macAddress,
-                    wifiAccessPoint.radioType,
-                    wifiAccessPoint.age,
-                    wifiAccessPoint.channel,
-                    wifiAccessPoint.frequency,
-                    wifiAccessPoint.signalStrength,
-                    wifiAccessPoint.signalToNoiseRatio,
-                    wifiAccessPoint.ssid
+                    wifiAccessPointEntity.macAddress,
+                    wifiAccessPointEntity.radioType,
+                    wifiAccessPointEntity.age,
+                    wifiAccessPointEntity.channel,
+                    wifiAccessPointEntity.frequency,
+                    wifiAccessPointEntity.signalStrength,
+                    wifiAccessPointEntity.signalToNoiseRatio,
+                    wifiAccessPointEntity.ssid
                 )
             }
         }
@@ -84,19 +84,19 @@ data class Report(
         val timingAdvance: Int?
     ) {
         companion object {
-            fun fromDbEntity(cellTower: xyz.malkki.neostumbler.db.entities.CellTower): CellTower {
+            fun fromDbEntity(cellTowerEntity: xyz.malkki.neostumbler.db.entities.CellTowerEntity): CellTower {
                 return CellTower(
-                    cellTower.radioType,
-                    cellTower.mobileCountryCode,
-                    cellTower.mobileNetworkCode,
-                    cellTower.locationAreaCode,
-                    cellTower.cellId,
-                    cellTower.age,
-                    cellTower.asu,
-                    cellTower.primaryScramblingCode,
-                    cellTower.serving,
-                    cellTower.signalStrength,
-                    cellTower.timingAdvance
+                    cellTowerEntity.radioType,
+                    cellTowerEntity.mobileCountryCode,
+                    cellTowerEntity.mobileNetworkCode,
+                    cellTowerEntity.locationAreaCode,
+                    cellTowerEntity.cellId,
+                    cellTowerEntity.age,
+                    cellTowerEntity.asu,
+                    cellTowerEntity.primaryScramblingCode,
+                    cellTowerEntity.serving,
+                    cellTowerEntity.signalStrength,
+                    cellTowerEntity.timingAdvance
                 )
             }
         }
@@ -110,7 +110,7 @@ data class Report(
         val signalStrength: Int?
     ) {
         companion object {
-            fun fromDbEntity(beacon: xyz.malkki.neostumbler.db.entities.BluetoothBeacon): BluetoothBeacon {
+            fun fromDbEntity(beacon: xyz.malkki.neostumbler.db.entities.BluetoothBeaconEntity): BluetoothBeacon {
                 return BluetoothBeacon(
                     beacon.macAddress,
                     beacon.name,

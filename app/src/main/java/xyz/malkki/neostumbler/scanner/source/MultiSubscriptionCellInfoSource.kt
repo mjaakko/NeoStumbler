@@ -2,12 +2,6 @@ package xyz.malkki.neostumbler.scanner.source
 
 import android.Manifest
 import android.content.Context
-import android.telephony.CellIdentityNr
-import android.telephony.CellInfo
-import android.telephony.CellInfoGsm
-import android.telephony.CellInfoLte
-import android.telephony.CellInfoNr
-import android.telephony.CellInfoWcdma
 import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
 import androidx.annotation.RequiresPermission
@@ -16,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.sample
 import timber.log.Timber
+import xyz.malkki.neostumbler.domain.CellTower
 import xyz.malkki.neostumbler.extensions.combineAny
 import xyz.malkki.neostumbler.extensions.getActiveSubscriptionIds
 import kotlin.time.Duration
@@ -23,7 +18,7 @@ import kotlin.time.Duration.Companion.seconds
 
 class MultiSubscriptionCellInfoSource(private val context: Context) : CellInfoSource {
     @RequiresPermission(allOf = [Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION])
-    override fun getCellInfoFlow(interval: Duration): Flow<List<CellInfo>> {
+    override fun getCellInfoFlow(interval: Duration): Flow<List<CellTower>> {
         val subscriptionManager = context.getSystemService<SubscriptionManager>()!!
         val telephonyManager = context.getSystemService<TelephonyManager>()!!
 
@@ -54,25 +49,8 @@ class MultiSubscriptionCellInfoSource(private val context: Context) : CellInfoSo
 }
 
 /**
- * Returns a key describing the cell identity. This can be used to filter duplicate cells
+ * Returns a key used for filtering duplicate cells
  */
-private fun CellInfo.getKey(): String {
-    return when (this) {
-        is CellInfoWcdma -> {
-            "wcdma_${cellIdentity.mccString}_${cellIdentity.mncString}_${cellIdentity.cid}_${cellIdentity.lac}_${cellIdentity.psc}"
-        }
-        is CellInfoLte -> {
-            "lte_${cellIdentity.mccString}_${cellIdentity.mncString}_${cellIdentity.ci}_${cellIdentity.tac}_${cellIdentity.pci}"
-        }
-        is CellInfoGsm -> {
-            "gsm_${cellIdentity.mccString}_${cellIdentity.mncString}_${cellIdentity.cid}_${cellIdentity.lac}"
-        }
-        is CellInfoNr -> {
-            val cellIdentity = cellIdentity as CellIdentityNr
-
-            "nr_${cellIdentity.mccString}_${cellIdentity.mncString}_${cellIdentity.nci}_${cellIdentity.tac}_${cellIdentity.pci}"
-        }
-        //Currently we don't support other cell types
-        else -> ""
-    }
+private fun CellTower.getKey(): String {
+    return "${radioType}/${mobileCountryCode}/${mobileNetworkCode}/${locationAreaCode}/${cellId}/${primaryScramblingCode}"
 }

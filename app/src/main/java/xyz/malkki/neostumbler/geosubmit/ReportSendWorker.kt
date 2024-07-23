@@ -84,10 +84,10 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
             Report(
                 report.report.timestamp,
                 Report.Position.fromDbEntity(report.position),
-                report.wifiAccessPoints.map(Report.WifiAccessPoint::fromDbEntity)
+                report.wifiAccessPointEntities.map(Report.WifiAccessPoint::fromDbEntity)
                     .takeIf { it.isNotEmpty() },
-                report.cellTowers.map(Report.CellTower::fromDbEntity).takeIf { it.isNotEmpty() },
-                report.bluetoothBeacons.map(Report.BluetoothBeacon::fromDbEntity)
+                report.cellTowerEntities.map(Report.CellTower::fromDbEntity).takeIf { it.isNotEmpty() },
+                report.bluetoothBeaconEntities.map(Report.BluetoothBeacon::fromDbEntity)
                     .takeIf { it.isNotEmpty() }
             )
         }
