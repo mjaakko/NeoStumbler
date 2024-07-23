@@ -138,6 +138,13 @@ fun ReportMap(mapViewModel: MapViewModel = viewModel()) {
                     }
                 })
 
+                mapViewModel.mapCenter.value?.let {
+                    map.controller.setCenter(it)
+                }
+                mapViewModel.zoom.value?.let {
+                    map.controller.setZoom(it)
+                }
+
                 if (latestPosition.value != null) {
                     map.setPositionIfNotMoved(latestPosition.value!!)
                 } else {

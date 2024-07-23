@@ -3,6 +3,7 @@ package xyz.malkki.neostumbler.ui.viewmodel
 import android.Manifest
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.asLiveData
@@ -39,9 +40,13 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
 
     private val showMyLocation = MutableLiveData(getApplication<StumblerApplication>().checkMissingPermissions(Manifest.permission.ACCESS_COARSE_LOCATION).isEmpty())
 
-    private val mapCenter = MutableLiveData<IGeoPoint>(GeoPoint(0.0, 0.0))
+    private val _mapCenter = MutableLiveData<IGeoPoint>(GeoPoint(0.0, 0.0))
+    val mapCenter: LiveData<IGeoPoint>
+        get() = _mapCenter
 
-    private val zoom = MutableLiveData(0.0)
+    private val _zoom = MutableLiveData(5.0)
+    val zoom: LiveData<Double>
+        get() = _zoom
 
     val latestReportPosition = liveData {
         emit(db.positionDao().getLatestPosition())
@@ -99,9 +104,9 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
         showMyLocation.postValue(value)
     }
 
-    fun setMapCenter(mapCenter: IGeoPoint) = this.mapCenter.postValue(mapCenter)
+    fun setMapCenter(mapCenter: IGeoPoint) = this._mapCenter.postValue(mapCenter)
 
-    fun setZoom(zoom: Double) = this.zoom.postValue(zoom)
+    fun setZoom(zoom: Double) = this._zoom.postValue(zoom)
 
     /**
      * @property heatPct From 0.0 to 1.0
