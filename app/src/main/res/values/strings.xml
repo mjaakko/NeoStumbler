@@ -77,6 +77,12 @@
     <string name="path">Path</string>
     <string name="api_key">API key (optional)</string>
 
+    <string name="settings_ignore_wifi_scan_throttling">Ignore Wi-Fi scan throttling</string>
+    <string name="wifi_scan_throttling">Wi-Fi scan throttling</string>
+    <string name="wifi_scan_throttling_explanation">
+        You need to disable Wi-Fi scan throttling in your device\'s settings to enable this feature. Usually this can be done in the developer settings
+    </string>
+
     <string name="show_my_location">Show my location</string>
 
     <string name="permission_rationale_fine_location">
