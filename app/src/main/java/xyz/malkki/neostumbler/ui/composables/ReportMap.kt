@@ -44,8 +44,8 @@ import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
 import kotlin.math.roundToInt
 
-private val HEAT_LOW = ColorUtils.setAlphaComponent(0xd278ff, 150)
-private val HEAT_HIGH = ColorUtils.setAlphaComponent(0xaa00ff, 150)
+private val HEAT_LOW = ColorUtils.setAlphaComponent(0xd278ff, 120)
+private val HEAT_HIGH = ColorUtils.setAlphaComponent(0xaa00ff, 120)
 
 /**
  * Sets map to the specified location if the map has not been moved yet
