@@ -78,6 +78,9 @@ class StumblerApplication : Application() {
             Timber.plant(Timber.DebugTree())
         }
 
+        //Disable manifest checking, which seems to cause crashes on certain devices
+        BeaconManager.setManifestCheckingDisabled(true)
+
         //Use stub distance calculator to avoid making unnecessary requests for fetching distance calibrations used by the Beacon Library
         Beacon.setDistanceCalculator(StubDistanceCalculator)
 
