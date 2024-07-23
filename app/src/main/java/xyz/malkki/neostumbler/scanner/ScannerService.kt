@@ -27,6 +27,7 @@ import androidx.core.app.NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE
 import androidx.core.content.getSystemService
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -34,6 +35,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.runningFold
 import kotlinx.coroutines.launch
@@ -45,10 +47,12 @@ import xyz.malkki.neostumbler.MainActivity
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.common.LocationWithSource
+import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.extensions.buffer
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.combineAny
 import xyz.malkki.neostumbler.extensions.filterNotNullPairs
+import xyz.malkki.neostumbler.extensions.isWifiScanThrottled
 import xyz.malkki.neostumbler.extensions.timestampMillis
 import xyz.malkki.neostumbler.extensions.timestampMillisCompat
 import xyz.malkki.neostumbler.location.LocationSourceProvider
@@ -60,6 +64,7 @@ import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.roundToLong
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.nanoseconds
 import kotlin.time.Duration.Companion.seconds
 
@@ -312,15 +317,22 @@ class ScannerService : Service() {
         }
 
         launch {
+            val ignoreScanThrottling = settingsStore.data
+                .map { it[booleanPreferencesKey(PreferenceKeys.IGNORE_SCAN_THROTTLING)] }
+                .first() == true
+
             val wifiManager: WifiManager = this@ScannerService.applicationContext.getSystemService()!!
 
             while (true) {
                 if (wifiManager.startScan()) {
-                    //Every 30s -> four times in 2 minutes
-                    delay(30 * 1000)
-                } else {
+                    if (ignoreScanThrottling && this@ScannerService.isWifiScanThrottled() == false) {
+                        delay(10.seconds)
+                    } else {
+                        delay(30.seconds)
+                    }
+                } else if (!ignoreScanThrottling) {
                     //Wi-Fi scan was not started, maybe we hit scan throttling -> wait longer
-                    delay(60 * 1000)
+                    delay(1.minutes)
                 }
             }
         }
