@@ -26,6 +26,9 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.osmdroid.config.Configuration
+import org.osmdroid.events.MapListener
+import org.osmdroid.events.ScrollEvent
+import org.osmdroid.events.ZoomEvent
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
@@ -41,11 +44,8 @@ import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
 import kotlin.math.roundToInt
 
-//Number of reports needed for max heat color
-private const val MAX_HEAT = 15
-
-private val HEAT_LOW = ColorUtils.setAlphaComponent(0xd278ff, 150)
-private val HEAT_HIGH = ColorUtils.setAlphaComponent(0xaa00ff, 150)
+private val HEAT_LOW = ColorUtils.setAlphaComponent(0xd278ff, 120)
+private val HEAT_HIGH = ColorUtils.setAlphaComponent(0xaa00ff, 120)
 
 /**
  * Sets map to the specified location if the map has not been moved yet
@@ -124,6 +124,27 @@ fun ReportMap(mapViewModel: MapViewModel = viewModel()) {
                     false
                 }
 
+                map.addMapListener(object : MapListener {
+                    override fun onScroll(event: ScrollEvent): Boolean {
+                        mapViewModel.setMapCenter(event.source.mapCenter)
+
+                        return false
+                    }
+
+                    override fun onZoom(event: ZoomEvent): Boolean {
+                        mapViewModel.setZoom(event.source.zoomLevelDouble)
+
+                        return false
+                    }
+                })
+
+                mapViewModel.mapCenter.value?.let {
+                    map.controller.setCenter(it)
+                }
+                mapViewModel.zoom.value?.let {
+                    map.controller.setZoom(it)
+                }
+
                 if (latestPosition.value != null) {
                     map.setPositionIfNotMoved(latestPosition.value!!)
                 } else {
@@ -167,9 +188,7 @@ fun ReportMap(mapViewModel: MapViewModel = viewModel()) {
 
                     heatMapTiles.value
                         .map {
-                            val heatPct = (it.heat.toFloat() / MAX_HEAT).coerceAtMost(1.0f)
-
-                            val color = ColorUtils.blendARGB(HEAT_LOW, HEAT_HIGH, heatPct)
+                            val color = ColorUtils.blendARGB(HEAT_LOW, HEAT_HIGH, it.heatPct)
 
                             val polygon = Polygon(view)
                             polygon.fillPaint.color = color
