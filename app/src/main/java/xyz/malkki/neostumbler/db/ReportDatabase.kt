@@ -22,11 +22,12 @@ import xyz.malkki.neostumbler.db.migrations.RenameTablesToEntities
 
 @Database(
     exportSchema = true,
-    version = 3,
+    version = 4,
     entities = [Report::class, Position::class, WifiAccessPointEntity::class, CellTowerEntity::class, BluetoothBeaconEntity::class,],
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
-        AutoMigration(from = 2, to = 3, spec = RenameTablesToEntities::class)
+        AutoMigration(from = 2, to = 3, spec = RenameTablesToEntities::class),
+        AutoMigration(from = 3, to = 4)
     ]
 )
 @TypeConverters(InstantConverters::class, LocalDateConverters::class)

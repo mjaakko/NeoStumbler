@@ -87,8 +87,8 @@ data class Report(
             fun fromDbEntity(cellTowerEntity: xyz.malkki.neostumbler.db.entities.CellTowerEntity): CellTower {
                 return CellTower(
                     cellTowerEntity.radioType,
-                    cellTowerEntity.mobileCountryCode,
-                    cellTowerEntity.mobileNetworkCode,
+                    cellTowerEntity.mobileCountryCode?.toIntOrNull(),
+                    cellTowerEntity.mobileNetworkCode?.toIntOrNull(),
                     cellTowerEntity.locationAreaCode,
                     cellTowerEntity.cellId,
                     cellTowerEntity.age,
