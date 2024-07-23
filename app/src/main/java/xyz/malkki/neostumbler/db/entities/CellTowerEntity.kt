@@ -15,8 +15,8 @@ import java.time.temporal.ChronoUnit
 data class CellTowerEntity(
     @PrimaryKey(autoGenerate = true) val id: Long?,
     val radioType: String,
-    val mobileCountryCode: Int?,
-    val mobileNetworkCode: Int?,
+    val mobileCountryCode: String?,
+    val mobileNetworkCode: String?,
     val cellId: Long?,
     val locationAreaCode: Int?,
     val asu: Int?,
@@ -35,8 +35,8 @@ data class CellTowerEntity(
             return CellTowerEntity(
                 id = null,
                 radioType = cellTower.radioType.name.lowercase(),
-                mobileCountryCode = cellTower.mobileCountryCode!!.toInt(),
-                mobileNetworkCode = cellTower.mobileNetworkCode!!.toInt(),
+                mobileCountryCode = cellTower.mobileCountryCode!!,
+                mobileNetworkCode = cellTower.mobileNetworkCode!!,
                 cellId = cellTower.cellId,
                 locationAreaCode = cellTower.locationAreaCode,
                 asu = cellTower.asu,
