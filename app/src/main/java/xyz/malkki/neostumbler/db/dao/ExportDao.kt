@@ -65,6 +65,7 @@ interface ExportDao {
             c.primaryScramblingCode AS psc,
             c.signalStrength AS signalStrength,
             c.asu AS asu,
+            c.arfcn AS arfcn,
             c.age AS cellScanAge
         FROM Report r
         JOIN Position p ON r.id = p.reportId

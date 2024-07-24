@@ -81,7 +81,8 @@ data class Report(
         val primaryScramblingCode: Int?,
         val serving: Int?,
         val signalStrength: Int?,
-        val timingAdvance: Int?
+        val timingAdvance: Int?,
+        val arfcn: Int?
     ) {
         companion object {
             fun fromDbEntity(cellTowerEntity: xyz.malkki.neostumbler.db.entities.CellTowerEntity): CellTower {
@@ -96,7 +97,8 @@ data class Report(
                     cellTowerEntity.primaryScramblingCode,
                     cellTowerEntity.serving,
                     cellTowerEntity.signalStrength,
-                    cellTowerEntity.timingAdvance
+                    cellTowerEntity.timingAdvance,
+                    cellTowerEntity.arfcn
                 )
             }
         }
