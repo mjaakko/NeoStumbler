@@ -108,16 +108,24 @@ data class Report(
     data class BluetoothBeacon(
         val macAddress: String,
         val name: String?,
+        val beaconType: Int?,
+        val id1: String?,
+        val id2: String?,
+        val id3: String?,
         val age: Long,
         val signalStrength: Int?
     ) {
         companion object {
             fun fromDbEntity(beacon: xyz.malkki.neostumbler.db.entities.BluetoothBeaconEntity): BluetoothBeacon {
                 return BluetoothBeacon(
-                    beacon.macAddress,
-                    beacon.name,
-                    beacon.age,
-                    beacon.signalStrength
+                    macAddress = beacon.macAddress,
+                    name = beacon.name,
+                    beaconType = beacon.beaconType,
+                    id1 = beacon.id1,
+                    id2 = beacon.id2,
+                    id3 = beacon.id3,
+                    age = beacon.age,
+                    signalStrength = beacon.signalStrength
                 )
             }
         }

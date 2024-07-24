@@ -40,14 +40,14 @@ import kotlinx.coroutines.flow.runningFold
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import org.altbeacon.beacon.Beacon
 import timber.log.Timber
 import xyz.malkki.neostumbler.MainActivity
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.common.LocationWithSource
-import xyz.malkki.neostumbler.domain.CellTower
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.domain.BluetoothBeacon
+import xyz.malkki.neostumbler.domain.CellTower
 import xyz.malkki.neostumbler.extensions.buffer
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.combineAny
@@ -55,9 +55,9 @@ import xyz.malkki.neostumbler.extensions.filterNotNullPairs
 import xyz.malkki.neostumbler.extensions.isWifiScanThrottled
 import xyz.malkki.neostumbler.extensions.timestampMillis
 import xyz.malkki.neostumbler.location.LocationSourceProvider
+import xyz.malkki.neostumbler.scanner.source.BeaconLibraryBluetoothBeaconSource
 import xyz.malkki.neostumbler.scanner.source.MultiSubscriptionCellInfoSource
 import xyz.malkki.neostumbler.scanner.source.TelephonyManagerCellInfoSource
-import xyz.malkki.neostumbler.utils.getBeaconFlow
 import xyz.malkki.neostumbler.utils.getWifiScanFlow
 import java.util.Locale
 import kotlin.math.abs
@@ -226,28 +226,23 @@ class ScannerService : Service() {
             }
 
         val beaconsFlow = if (hasBluetoothScanPermission()) {
-            getBeaconFlow(this@ScannerService)
+            BeaconLibraryBluetoothBeaconSource(this@ScannerService).getBluetoothBeaconFlow()
                 .buffer(SCAN_BUFFER_PERIOD)
                 .map { beacons ->
-                    val now = System.currentTimeMillis()
+                    val now = SystemClock.elapsedRealtime()
 
                     beacons.flatten()
-                        //Beacon library seems to sometimes return very old results -> filter them
-                        .filter { (it.lastCycleDetectionTimestamp - now).milliseconds < BEACON_MAX_AGE }
-                        .groupBy { it.bluetoothAddress }
+                        .groupBy { it.macAddress }
                         .mapValues { beacon ->
-                            beacon.value.maxBy {
-                                it.lastCycleDetectionTimestamp
-                            }
+                            beacon.value.maxBy { it.timestamp }
                         }
-                        .values.toList()
+                        .values
+                        //Beacon library seems to sometimes return very old results -> filter them
+                        .filter { (now - it.timestamp).milliseconds < BEACON_MAX_AGE }
                 }
                 .map { beacons ->
                     if (beacons.isNotEmpty()) {
-                        val avgTimestamp = beacons.map { it.lastCycleDetectionTimestamp }.average().roundToLong()
-                        val avgTimestampElapsedRealtime = SystemClock.elapsedRealtime() - (System.currentTimeMillis() - avgTimestamp)
-
-                        Timestamped(avgTimestampElapsedRealtime, beacons)
+                        Timestamped(beacons.map { it.timestamp }.average().roundToLong(), beacons)
                     } else {
                         null
                     }
@@ -268,7 +263,7 @@ class ScannerService : Service() {
             channelFlow {
                 val mutex = Mutex()
 
-                var reportData: Triple<Timestamped<List<CellTower>>?, Timestamped<List<ScanResult>>?, Timestamped<List<Beacon>>?>? = null
+                var reportData: Triple<Timestamped<List<CellTower>>?, Timestamped<List<ScanResult>>?, Timestamped<List<BluetoothBeacon>>?>? = null
 
                 launch {
                     reportDataFlow.collect {
