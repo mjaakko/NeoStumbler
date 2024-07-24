@@ -21,6 +21,7 @@ data class CellTower(
     val serving: Int?,
     val signalStrength: Int?,
     val timingAdvance: Int?,
+    val arfcn: Int?,
     /**
      * Timestamp when the cell tower was observed in milliseconds since boot
      */
@@ -45,6 +46,7 @@ data class CellTower(
                     val cellSignalStrength = cellInfo.cellSignalStrength as CellSignalStrengthNr
                     val cellIdentity = cellInfo.cellIdentity as CellIdentityNr
 
+
                     CellTower(
                         RadioType.NR,
                         cellIdentity.mccString,
@@ -56,6 +58,7 @@ data class CellTower(
                         cellInfo.serving(),
                         cellSignalStrength.dbm.takeIf { it != CellInfo.UNAVAILABLE },
                         null,
+                        cellIdentity.nrarfcn.takeIf { it != CellInfo.UNAVAILABLE },
                         cellInfo.timestampMillisCompat
                     )
                 }
@@ -75,6 +78,7 @@ data class CellTower(
                         cellInfo.serving(),
                         cellSignalStrength.rssi.takeIf { it != CellInfo.UNAVAILABLE },
                         cellSignalStrength.timingAdvance.takeIf { it != CellInfo.UNAVAILABLE },
+                        cellIdentity.earfcn.takeIf { it != CellInfo.UNAVAILABLE },
                         cellInfo.timestampMillisCompat
                     )
                 }
@@ -98,6 +102,7 @@ data class CellTower(
                             null
                         },
                         cellSignalStrength.timingAdvance.takeIf { it != CellInfo.UNAVAILABLE },
+                        cellIdentity.arfcn.takeIf { it != CellInfo.UNAVAILABLE },
                         cellInfo.timestampMillisCompat
                     )
                 }
@@ -117,6 +122,7 @@ data class CellTower(
                         cellInfo.serving(),
                         cellSignalStrength.dbm.takeIf { it != CellInfo.UNAVAILABLE },
                         null,
+                        cellIdentity.uarfcn.takeIf { it != CellInfo.UNAVAILABLE },
                         cellInfo.timestampMillisCompat
                     )
                 }

@@ -24,6 +24,7 @@ data class CellTowerEntity(
     val serving: Int?,
     val signalStrength: Int?,
     val timingAdvance: Int?,
+    val arfcn: Int?,
     val age: Long,
     @ColumnInfo(index = true) val reportId: Long?
 ) {
@@ -44,6 +45,7 @@ data class CellTowerEntity(
                 serving = cellTower.serving,
                 signalStrength = cellTower.signalStrength,
                 timingAdvance = cellTower.timingAdvance,
+                arfcn = cellTower.arfcn,
                 age = age,
                 reportId = reportId
             )
