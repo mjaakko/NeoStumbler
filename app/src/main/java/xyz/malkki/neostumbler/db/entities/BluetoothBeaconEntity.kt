@@ -1,11 +1,13 @@
 package xyz.malkki.neostumbler.db.entities
 
+import android.os.SystemClock
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import org.altbeacon.beacon.Beacon
+import xyz.malkki.neostumbler.domain.BluetoothBeacon
 import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 @Entity(
     foreignKeys = [ForeignKey(entity = Report::class, parentColumns = ["id"], childColumns = ["reportId"], onDelete = ForeignKey.CASCADE)]
@@ -15,18 +17,28 @@ data class BluetoothBeaconEntity(
     val macAddress: String,
     val age: Long,
     val name: String?,
+    val beaconType: Int?,
+    val id1: String?,
+    val id2: String?,
+    val id3: String?,
     val signalStrength: Int?,
     @ColumnInfo(index = true) val reportId: Long?
 ) {
     companion object {
-        fun fromBeacon(reportId: Long, currentTime: Instant, beacon: Beacon): BluetoothBeaconEntity {
+        fun fromBluetoothBeacon(reportId: Long, reportTimestamp: Instant, beacon: BluetoothBeacon): BluetoothBeaconEntity {
+            val age = maxOf(0, Instant.now().minusMillis(SystemClock.elapsedRealtime() - beacon.timestamp).until(reportTimestamp, ChronoUnit.MILLIS))
+
             return BluetoothBeaconEntity(
                 null,
-                beacon.bluetoothAddress,
-                currentTime.toEpochMilli() - beacon.lastCycleDetectionTimestamp,
-                null,
-                beacon.rssi,
-                reportId
+                macAddress = beacon.macAddress,
+                age = age,
+                name = null,
+                signalStrength = beacon.signalStrength,
+                beaconType = beacon.beaconType,
+                id1 = beacon.id1,
+                id2 = beacon.id2,
+                id3 = beacon.id3,
+                reportId = reportId
             )
         }
     }
