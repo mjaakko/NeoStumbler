@@ -17,6 +17,10 @@ interface ExportDao {
             p.age AS locationAge,
             p.speed AS speed,
             b.macAddress AS macAddress,
+            b.beaconType AS beaconType,
+            b.id1 AS id1,
+            b.id2 AS id2,
+            b.id3 AS id3,
             b.age AS bluetoothScanAge,
             b.signalStrength AS signalStrength
         FROM Report r
