@@ -1,0 +1,28 @@
+name: Feature request
+description: Request a new feature
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe the feature you would like to see
+    validations:
+      required: true
+  - type: textarea
+    id: suggested-implementation
+    attributes:
+      label: Suggested implementation
+      description: Describe how the feature could be implemented (optional)
+  - type: textarea
+    id: additional-information
+    attributes:
+      label: Additional information
+      description: If you have any additional information that would be useful, e.g. links to resources, include them here (optional)
+  - type: checkboxes
+    id: new-bug
+    attributes:
+      label: New request
+      options:
+        - label: I have checked that a similar feature hasn't been requested yet
+          required: true

@@ -1,0 +1,56 @@
+name: Bug report
+description: File a bug report
+labels: ["bug"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe what happened and what did you expect to happen 
+    validations:
+      required: true
+  - type: dropdown
+    id: variant
+    attributes:
+      label: App variant
+      description: Which variant of NeoStumbler are you using?
+      options:
+        - full
+        - fdroid
+      default: 0
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: What version of NeoStumbler are you using?
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Device
+      description: What device are you using?
+    validations:
+      required: true
+  - type: input
+    id: android-version
+    attributes:
+      label: Version
+      description: Which Android version are you using? Also specify if you are using a custom ROM
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Paste any log output you have here (optional)
+      render: shell
+  - type: checkboxes
+    id: new-bug
+    attributes:
+      label: New bug
+      options:
+        - label: I have checked that this bug has not been reported before 
+          required: true
