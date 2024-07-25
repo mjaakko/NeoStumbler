@@ -73,7 +73,9 @@ data class Report(
     data class CellTower(
         val radioType: String,
         val mobileCountryCode: Int?,
+        val mobileCountryCodeStr: String?,
         val mobileNetworkCode: Int?,
+        val mobileNetworkCodeStr: String?,
         val locationAreaCode: Int?,
         val cellId: Long?,
         val age: Long,
@@ -89,7 +91,9 @@ data class Report(
                 return CellTower(
                     cellTowerEntity.radioType,
                     cellTowerEntity.mobileCountryCode?.toIntOrNull(),
+                    cellTowerEntity.mobileCountryCode,
                     cellTowerEntity.mobileNetworkCode?.toIntOrNull(),
+                    cellTowerEntity.mobileNetworkCode,
                     cellTowerEntity.locationAreaCode,
                     cellTowerEntity.cellId,
                     cellTowerEntity.age,
