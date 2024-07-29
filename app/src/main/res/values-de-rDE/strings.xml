@@ -41,7 +41,7 @@
     <string name="stop_scanning">Scan stoppen</string>
 
     <string name="delete_report">Bericht löschen</string>
-    <string name="delete_report_confirmation">Bust Du Dir sicher, dass Du den Bericht löschen möchtest?</string>
+    <string name="delete_report_confirmation">Sind Sie sicher, dass Sie den Bericht löschen möchten?</string>
     
     <string name="toast_reports_uploaded">%d Berichte hochgeladen</string>
     <string name="toast_reports_upload_failed">Berichte hochladen fehlgeschlagen</string>
@@ -84,10 +84,10 @@
     <string name="path">Pfad</string>
     <string name="api_key">API Schlüssel (optional)</string>
     
-    <string name="settings_ignore_wifi_scan_throttling">Ignoriere WLAN Suchdrosselung</string>
-    <string name="wifi_scan_throttling">WLAN Suchdrosselung</string>
+    <string name="settings_ignore_wifi_scan_throttling">Ignoriere WLAN-Suchdrosselung</string>
+    <string name="wifi_scan_throttling">WLAN-Suchdrosselung</string>
     <string name="wifi_scan_throttling_explanation">
-        Du musst die WLAN-Suchdrosselung in Deinen Geräteeinstellungen deaktivieren um diese Funktion zu ermöglichen. Normalerweise kann dies in den Entwicklereinstellungen getan werden
+        Sie müssen die Drosselung der WLAN-Suche in Ihren Geräteeinstellungen deaktivieren um diese Funktion zu ermöglichen. Normalerweise kann dies in den Entwicklereinstellungen getan werden
     </string>
     
     <string name="show_my_location">Zeige meinen Standort</string>
