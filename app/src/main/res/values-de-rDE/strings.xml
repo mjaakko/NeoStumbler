@@ -6,6 +6,9 @@
 
     <string name="no_thanks">Nein danke</string>
 
+    <string name="yes">Ja</string>
+    <string name="no">Nein</string>
+    
     <string name="reset">Zurücksetzen</string>
     <string name="save">Speichern</string>
 
@@ -37,6 +40,9 @@
     <string name="start_scanning">Scan starten</string>
     <string name="stop_scanning">Scan stoppen</string>
 
+    <string name="delete_report">Bericht löschen</string>
+    <string name="delete_report_confirmation">Sind Sie sicher, dass Sie den Bericht löschen möchten?</string>
+    
     <string name="toast_reports_uploaded">%d Berichte hochgeladen</string>
     <string name="toast_reports_upload_failed">Berichte hochladen fehlgeschlagen</string>
 
@@ -77,21 +83,31 @@
     <string name="endpoint">Endpunkt</string>
     <string name="path">Pfad</string>
     <string name="api_key">API Schlüssel (optional)</string>
-
+    
+    <string name="settings_ignore_wifi_scan_throttling">Ignoriere WLAN-Suchdrosselung</string>
+    <string name="wifi_scan_throttling">WLAN-Suchdrosselung</string>
+    <string name="wifi_scan_throttling_explanation">
+        Sie müssen die Drosselung der WLAN-Suche in Ihren Geräteeinstellungen deaktivieren um diese Funktion zu ermöglichen. Normalerweise kann dies in den Entwicklereinstellungen getan werden
+    </string>
+    
     <string name="show_my_location">Zeige meinen Standort</string>
 
     <string name="permission_rationale_fine_location">
         Zugriff auf den aktuellen Standort benötigt die Berechtigung für den Genauen Standort
     </string>
+    
     <string name="permission_rationale_read_phone_state">
         Zugriff auf Telefon wird benötigt um Funkzellen mit allen SIM Karten zu scannen
     </string>
+    
     <string name="permission_rationale_bluetooth">
         Bluetooth Beacon scannen benötigt die Bluetooth Berechtigung
     </string>
+    
     <string name="permission_rationale_post_notifications">
         Status Benachrichtigung anzeigen benötigt die Berechtigung Benachrichtigung
     </string>
+    
     <string name="permission_rationale_background_location_quick_settings">
         Scannen starten von der Schnelleinstellungskachel benötigt im Hintergrund Zugriff auf den Standort
     </string>
