@@ -173,8 +173,8 @@ dependencies {
 
     implementation 'org.apache.commons:commons-csv:1.11.0'
     
-    implementation "com.patrykandpatrick.vico:compose:1.14.0"
-    implementation "com.patrykandpatrick.vico:compose-m3:1.14.0"
+    implementation "com.patrykandpatrick.vico:compose:1.15.0"
+    implementation "com.patrykandpatrick.vico:compose-m3:1.15.0"
 
     testImplementation "org.mockito.kotlin:mockito-kotlin:5.4.0"
 }
