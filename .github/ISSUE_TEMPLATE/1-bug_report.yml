@@ -37,7 +37,7 @@ body:
   - type: input
     id: android-version
     attributes:
-      label: Version
+      label: Android version
       description: Which Android version are you using? Also specify if you are using a custom ROM
     validations:
       required: true
