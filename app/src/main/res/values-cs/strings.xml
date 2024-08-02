@@ -1,2 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="app_name">NeoStumbler</string>
+    <string name="ok">OK</string>
+    <string name="no_thanks">Ne děkuji</string>
+    <string name="yes">Ano</string>
+    <string name="no">Ne</string>
+    <string name="reset">Reset</string>
+    <string name="permissions_needed">Nutno povolit</string>
+    <string name="save">Uložit</string>
+    <string name="stop">Stop</string>
+    <string name="permissions_not_granted">Požadovaná povolení nebyla povolena</string>
+    <string name="wifi_icon_description">Wi-Fi ikona</string>
+    <string name="cell_tower_icon_description">Ikona mobilní věže</string>
+</resources>
