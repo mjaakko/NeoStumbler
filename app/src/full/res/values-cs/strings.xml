@@ -1,2 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="prefer_fused_location">Preferovat poskytovatele spojené polohy</string>
+    <string name="autoscan_when_moving">Automatické skenování při pohybu</string>
+    <string name="autoscan_failed_to_enable">Chyba spouštění automatického skenování polohy</string>
+    <string name="permission_rationale_background_location_autoscan">Automatické skenování při pohybu potřebuje povolení přístupu k poloze v pozadí</string>
+    <string name="permission_rationale_activity_recognition">Automatické skenování při pohybu potřebuje povolení přístupu k aktivitě</string>
+</resources>
