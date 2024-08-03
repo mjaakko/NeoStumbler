@@ -76,4 +76,5 @@
     <string name="permission_rationale_location_map">
         Para mostrar sua localização no mapa, é necessário a permissão de localização
     </string>
+    <string name="app_name">NeoStumbler</string>
 </resources>
