@@ -41,5 +41,5 @@ The application has two product flavors:
 
 ### Building
 
- * Build debug APK: `./gradlew buildFull` or `./gradlew buildFdroid`
+ * Build debug APK: `./gradlew buildFullDebug` or `./gradlew buildFdroidDebug`
  * Build unsigned release APK: `./gradlew buildFullRelease` or `./gradlew buildFdroidRelease`
