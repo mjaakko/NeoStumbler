@@ -1,2 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="no_thanks">Nei takk</string>
+    <string name="ok">OK</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nei</string>
+    <string name="reset">Tilbakestill</string>
+    <string name="save">Lagre</string>
+    <string name="map_tab_title">Kart</string>
+    <string name="statistics_tab_title">Statistikk</string>
+    <string name="settings_tab_title">Innstillinger</string>
+    <string name="delete_report">Slett rapport</string>
+    <string name="export_notification_channel_name">Dataeksport</string>
+    <string name="stop">Stopp</string>
+</resources>
