@@ -5,7 +5,7 @@
     align="right">
 </a>
 
-[![Build status](https://github.com/mjaakko/NeoStumbler/actions/workflows/build.yml/badge.svg)](https://github.com/mjaakko/NeoStumbler/actions/workflows/build.yml) [![License](https://img.shields.io/github/license/mjaakko/NeoStumbler)](./LICENSE) [![Latest release](https://img.shields.io/github/v/release/mjaakko/NeoStumbler)](https://github.com/mjaakko/NeoStumbler/releases/latest) [![Matrix](https://img.shields.io/matrix/neostumbler%3Amatrix.org)](https://matrix.to/#/%23neostumbler:matrix.org)
+[![Build status](https://github.com/mjaakko/NeoStumbler/actions/workflows/build.yml/badge.svg)](https://github.com/mjaakko/NeoStumbler/actions/workflows/build.yml) [![License](https://img.shields.io/github/license/mjaakko/NeoStumbler)](./LICENSE) [![Latest release](https://img.shields.io/github/v/release/mjaakko/NeoStumbler)](https://github.com/mjaakko/NeoStumbler/releases/latest) [![Matrix](https://img.shields.io/matrix/neostumbler%3Amatrix.org)](https://matrix.to/#/%23neostumbler:matrix.org) [![Translation status](https://hosted.weblate.org/widget/neostumbler/svg-badge.svg)](https://hosted.weblate.org/engage/neostumbler/)
 
 # NeoStumbler
 
@@ -43,3 +43,13 @@ The application has two product flavors:
 
  * Build debug APK: `./gradlew buildFullDebug` or `./gradlew buildFdroidDebug`
  * Build unsigned release APK: `./gradlew buildFullRelease` or `./gradlew buildFdroidRelease`
+
+## Contributing
+
+<a href="https://hosted.weblate.org/engage/neostumbler/">
+<img src="https://hosted.weblate.org/widget/neostumbler/287x66-grey.png" alt="Translation status" />
+</a>
+
+### Translations
+
+[Weblate](https://hosted.weblate.org/projects/neostumbler/) is used for translations. If you want to add translations for your language or to update existing translations, you can do that easily from Weblate. If you prefer, you can also update translations via a PR
