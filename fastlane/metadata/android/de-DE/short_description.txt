@@ -1,1 +1,1 @@
-Anwendung um Funknetzwerke für Geolocation Dienste zu sammeln
+Anwendung zum Sammeln von Funknetzwerken für Geolocation-Dienste
