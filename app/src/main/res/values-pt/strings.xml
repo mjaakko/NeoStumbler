@@ -1,2 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="permission_rationale_fine_location">É necessário dar permissão para aceder à localização exata para que a localização seja precisa</string>
+    <string name="permission_rationale_bluetooth">É necessário permitir acesso ao Bluetooth para procurar Bluetooth beacons</string>
+    <string name="permission_rationale_background_location_quick_settings">Iniciar scans a partir das definições rápidas precisa de acesso à localização em segundo plano</string>
+    <string name="stop_scanning">Parar o scan</string>
+    <string name="reset">Redefinir</string>
+    <string name="save">Guardar</string>
+    <string name="permissions_not_granted">As permissões necessárias não foram concedidas</string>
+    <string name="bluetooth_icon_description">Ícone do Bluetooth</string>
+    <string name="map_tab_title">Mapa</string>
+    <string name="wireless_scanning">Scan wireless</string>
+    <string name="reports_tab_title">Relatórios</string>
+    <string name="settings_tab_title">Opções</string>
+    <string name="send_reports">Enviar relatórios</string>
+    <string name="reports_not_uploaded">Relatórios não enviados: %s</string>
+    <string name="reports_last_uploaded">Último envio: %s</string>
+    <string name="delete_report">Apagar relatório</string>
+    <string name="delete_report_confirmation">Tem a certeza que quer apagar o relatório?</string>
+    <string name="notification_sending_reports">Enviando relatórios</string>
+    <string name="notification_wireless_scanning_active">Scan wireless ativo</string>
+    <string name="notification_reports_created">%d relatórios criados</string>
+    <string name="export_notification_channel_name">Exportar informação</string>
+    <string name="export_data">Exportar informação</string>
+    <string name="export_no_file_chosen">Não foi possível exportar a informação porque nenhum ficheiro foi criado</string>
+    <string name="export_started">Exportando informação de %s até %s</string>
+    <string name="cells">Torres de telemóveis</string>
+    <string name="beacons">Bluetooth beacons</string>
+    <string name="endpoint">Ponto de recolha</string>
+    <string name="api_key">API key (opcional)</string>
+    <string name="wifi_scan_throttling">Restrição dos scans de redes Wi-Fi</string>
+    <string name="permission_rationale_read_phone_state">Acesso ao estado do telefone é necessário para fazer scans das antenas das redes móveis com todos os SIMs no dispositivo</string>
+    <string name="permission_rationale_post_notifications">Mostrar notificações com o estado do scan requer permissão para enviar notificações</string>
+    <string name="ok">OK</string>
+    <string name="yes">Sim</string>
+    <string name="permission_rationale_location_map">Mostrar a sua localização no mapa requer acesso à localização</string>
+    <string name="app_name">NeoStumbler</string>
+    <string name="no_thanks">Não obrigado</string>
+    <string name="no">Não</string>
+    <string name="stop">Parar</string>
+    <string name="permissions_needed">Permissões necessárias</string>
+    <string name="wifi_icon_description">Ícone de Wi-Fi</string>
+    <string name="statistics_tab_title">Estatísticas</string>
+    <string name="reports">Relatórios:</string>
+    <string name="reports_total">Total de relatórios: %s</string>
+    <string name="start_scanning">Iniciar scan</string>
+    <string name="cell_tower_icon_description">Ícone da torre de redes móveis</string>
+    <string name="scanner_status_notification_channel_name">Estado do scan</string>
+    <string name="toast_reports_uploaded">Enviados %d relatórios</string>
+    <string name="toast_reports_upload_failed">O envio dos relatórios falhou</string>
+    <string name="report_upload_notification_channel_name">Relatório de envios</string>
+    <string name="ignore_battery_optimizations_title">Ignorar otimizações da bateria</string>
+    <string name="ignore_battery_optimizations_description">Para melhores resultados, a otimização da bateria deve ser desativada. O número de scans de redes Wi-Fi e acesso à localização são significativamente reduzidos se a otimização da bateria estiver ativa e o ecrã estiver desligado</string>
+    <string name="battery_optimizations_not_disabled_warning">As otimizações de bateria não foram desativadas</string>
+    <string name="send_reports_automatically">Enviar relatórios automaticamente</string>
+    <string name="wifis">Wi-Fis</string>
+    <string name="notification_exporting_data">Exportando informação…</string>
+    <string name="reupload_data">Re-enviar informação</string>
+    <string name="add_quick_settings_tile">Adicionar botão às definições rápidas para iniciar scans mais rapidamente?</string>
+    <string name="settings_ignore_wifi_scan_throttling">Ignorar limitações no scan de redes Wi-Fi</string>
+    <string name="mls_warning_title">Encerramento da MLS</string>
+    <string name="mls_warning_text">O Mozilla Location Services vai encerrar em breve. O envio de relatórios não vai funcionar
+\n
+\nAinda pode exportar um ficheiro ZIP com a informação colecionada a partir das opções</string>
+    <string name="path">Caminho</string>
+    <string name="wifi_scan_throttling_explanation">Desative a restrição nos scans/procura de redes Wi-Fi nas definições do seu dispositivo. Normalmente pode ser desativado nas opções de programador/developers settings</string>
+    <string name="show_my_location">Mostrar a minha localização</string>
+</resources>
