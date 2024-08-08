@@ -1,1 +1,1 @@
-<b>NeoStumbler</b> ist eine Anwendung um Standorte von WLAN Netzwerken, Funkzellen und Bluetooth Beacons für Geolocation Dienste zu sammeln die API-kompatibel mit Mozilla Location Services sind
+<b>NeoStumbler</b> ist eine Anwendung, mit der Standorte von WLAN-Netzwerken, Funkzellen und Bluetooth-Beacons für Geolocation-Dienste gesammelt werden können, die API-kompatibel mit Mozilla Location Services sind
