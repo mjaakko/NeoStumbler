@@ -26,7 +26,7 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import xyz.malkki.neostumbler.ui.composables.ReportMap
+import xyz.malkki.neostumbler.ui.screens.MapScreen
 import xyz.malkki.neostumbler.ui.screens.ReportsScreen
 import xyz.malkki.neostumbler.ui.screens.StatisticsScreen
 import xyz.malkki.neostumbler.ui.screens.settings.SettingsScreen
@@ -78,7 +78,7 @@ class MainActivity : ComponentActivity() {
                                     .padding(16.dp)) {
                                     when (selectedTabIndex.intValue) {
                                         0 -> {
-                                            ReportMap()
+                                            MapScreen()
                                         }
                                         1 -> {
                                             ReportsScreen()

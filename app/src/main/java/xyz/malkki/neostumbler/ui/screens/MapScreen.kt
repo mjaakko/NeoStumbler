@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.ui.composables
+package xyz.malkki.neostumbler.ui.screens
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -39,38 +39,31 @@ import org.osmdroid.views.overlay.Polygon
 import org.osmdroid.views.overlay.mylocation.DirectedLocationOverlay
 import timber.log.Timber
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.common.LatLng
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
+import xyz.malkki.neostumbler.ui.composables.PermissionsDialog
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
 import kotlin.math.roundToInt
+
 
 private val HEAT_LOW = ColorUtils.setAlphaComponent(0xd278ff, 120)
 private val HEAT_HIGH = ColorUtils.setAlphaComponent(0xaa00ff, 120)
 
-/**
- * Sets map to the specified location if the map has not been moved yet
- */
-private fun MapView.setPositionIfNotMoved(latLng: LatLng) {
-    if (mapCenter.latitude == 0.0 && mapCenter.longitude == 0.0) {
-        controller.setCenter(GeoPoint(latLng.latitude, latLng.longitude))
-        controller.setZoom(10.0)
-    }
-}
-
 @SuppressLint("ClickableViewAccessibility")
 @Composable
-fun ReportMap(mapViewModel: MapViewModel = viewModel()) {
+fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
     val context = LocalContext.current
 
     val lifecycle = LocalLifecycleOwner.current.lifecycle
 
-    val showPermissionDialog = remember { mutableStateOf(false) }
+    val showPermissionDialog = remember {
+        mutableStateOf(false)
+    }
 
     val trackMyLocation = remember {
         mutableStateOf(false)
     }
 
-    val latestPosition = mapViewModel.latestReportPosition.observeAsState(initial = null)
+    val latestReportPosition = mapViewModel.latestReportPosition.observeAsState(initial = null)
 
     val heatMapTiles = mapViewModel.heatMapTiles.observeAsState(initial = emptyList())
 
@@ -106,7 +99,9 @@ fun ReportMap(mapViewModel: MapViewModel = viewModel()) {
                 val map = LifecycleAwareMap(context)
                 map.setTileSource(TileSourceFactory.MAPNIK)
                 map.setMultiTouchControls(true)
+
                 map.zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
+
                 map.isTilesScaledToDpi = true
                 map.isVerticalMapRepetitionEnabled = false
                 map.maxZoomLevel = 16.0
@@ -114,8 +109,8 @@ fun ReportMap(mapViewModel: MapViewModel = viewModel()) {
                 //Add bounds so that user does not move outside of the area where map tiles are available
                 //Latitude range is slightly reduced to avoid displaying blank tiles
                 map.setScrollableAreaLimitLatitude(MapView.getTileSystem().maxLatitude - 0.3, MapView.getTileSystem().minLatitude + 0.3, 0)
-                map.overlays.add(CopyrightOverlay(context));
 
+                map.overlays.add(CopyrightOverlay(context))
                 map.overlays.add(DirectedLocationOverlay(context))
 
                 map.setOnTouchListener { _, _ ->
@@ -138,31 +133,33 @@ fun ReportMap(mapViewModel: MapViewModel = viewModel()) {
                     }
                 })
 
-                mapViewModel.mapCenter.value?.let {
-                    map.controller.setCenter(it)
-                }
-                mapViewModel.zoom.value?.let {
-                    map.controller.setZoom(it)
-                }
-
-                if (latestPosition.value != null) {
-                    map.setPositionIfNotMoved(latestPosition.value!!)
-                } else {
-                    map.controller.setZoom(5.0)
-                }
-
                 map
             },
-            update = { view ->
-                view.lifecycle = lifecycle
+            update = { map ->
+                map.lifecycle = lifecycle
 
                 try {
-                    latestPosition.value?.let {
-                        view.setPositionIfNotMoved(it)
+                    if (myLocation.value == null || !trackMyLocation.value) {
+                        val center = mapViewModel.mapCenter.value
+                        val zoom = mapViewModel.zoom.value
+
+                        if (center == null || center.latitude == 0.0 && center.longitude == 0.0) {
+                            if (latestReportPosition.value != null) {
+                                //Set map view to the latest report position if there is no saved view
+                                map.controller.setCenter(GeoPoint(latestReportPosition.value!!.latitude, latestReportPosition.value!!.longitude))
+                                map.controller.setZoom(10.0)
+                            } else {
+                                //Otherwise just decrease the zoom level
+                                map.controller.setZoom(5.0)
+                            }
+                        } else {
+                            map.controller.setCenter(center)
+                            map.controller.setZoom(zoom!!)
+                        }
                     }
 
                     myLocation.value?.let { locationWithSource ->
-                        val locationOverlay = view.overlays.find { it is DirectedLocationOverlay }!! as DirectedLocationOverlay
+                        val locationOverlay = map.overlays.find { it is DirectedLocationOverlay }!! as DirectedLocationOverlay
 
                         val geopoint = GeoPoint(locationWithSource.location.latitude, locationWithSource.location.longitude)
 
@@ -179,36 +176,18 @@ fun ReportMap(mapViewModel: MapViewModel = viewModel()) {
                         }
 
                         if (trackMyLocation.value) {
-                            view.controller.setCenter(geopoint)
+                            map.controller.setCenter(geopoint)
                         }
                     }
 
-                    val overlay = FolderOverlay()
-                    overlay.name = "heatmap"
+                    val overlay = createHeatMapOverlay(map, heatMapTiles.value)
 
-                    heatMapTiles.value
-                        .map {
-                            val color = ColorUtils.blendARGB(HEAT_LOW, HEAT_HIGH, it.heatPct)
-
-                            val polygon = Polygon(view)
-                            polygon.fillPaint.color = color
-                            polygon.outlinePaint.color = ColorUtils.setAlphaComponent(0, 0)
-                            polygon.outlinePaint.strokeWidth = 0f
-                            //Return with click listener to disable info window
-                            polygon.setOnClickListener { _, _, _ -> false }
-
-                            polygon.points = it.outline
-
-                            polygon
-                        }
-                        .forEach(overlay::add)
-
-                    view.overlayManager.removeIf {
+                    map.overlayManager.removeIf {
                         it is FolderOverlay && it.name == "heatmap"
                     }
-                    view.overlayManager.add(overlay)
+                    map.overlayManager.add(overlay)
 
-                    view.invalidate()
+                    map.invalidate()
                 } catch (npe: NullPointerException) {
                     //Due to a bug in OSMDroid, updating the map can sometimes throw null pointer exception
                     //To avoid crashing the app, just ignore it
@@ -243,6 +222,29 @@ fun ReportMap(mapViewModel: MapViewModel = viewModel()) {
     }
 }
 
+private fun createHeatMapOverlay(mapView: MapView, heatMapTiles: Collection<MapViewModel.HeatMapTile>): FolderOverlay {
+    return FolderOverlay().apply {
+        name = "heatmap"
+
+        heatMapTiles
+            .map { heatMapTile ->
+                val color = ColorUtils.blendARGB(HEAT_LOW, HEAT_HIGH, heatMapTile.heatPct)
+
+                val polygon = Polygon(mapView)
+                polygon.fillPaint.color = color
+                polygon.outlinePaint.color = ColorUtils.setAlphaComponent(0, 0)
+                polygon.outlinePaint.strokeWidth = 0f
+                //Return with click listener to disable info window
+                polygon.setOnClickListener { _, _, _ -> false }
+
+                polygon.points = heatMapTile.outline
+
+                polygon
+            }
+            .forEach(::add)
+    }
+}
+
 private class LifecycleAwareMap(context: Context) : MapView(context) {
     var lifecycle: Lifecycle? = null
         set(value) {
@@ -263,4 +265,3 @@ private class LifecycleAwareMap(context: Context) : MapView(context) {
         }
     }
 }
-
