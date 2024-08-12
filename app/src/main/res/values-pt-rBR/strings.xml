@@ -1,116 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">NeoStumbler</string>
-
     <string name="ok">OK</string>
-
     <string name="no_thanks">Não, obrigado</string>
-
     <string name="yes">Sim</string>
     <string name="no">Não</string>
-
     <string name="reset">Redefinir</string>
     <string name="save">Salvar</string>
-
     <string name="stop">Parar</string>
-
     <string name="permissions_needed">Permissões necessárias</string>
     <string name="permissions_not_granted">Permissões que eram necessárias não foram concedidas</string>
-
     <string name="wifi_icon_description">Ícone de Wi-Fi</string>
     <string name="cell_tower_icon_description">Ícone de rede móvel</string>
     <string name="bluetooth_icon_description">ícone de Bluetooth</string>
-
     <string name="scanner_status_notification_channel_name">Estado do escaneamento</string>
-
     <string name="wireless_scanning">Escaneamento de redes sem-fio</string>
-
     <string name="map_tab_title">Mapa</string>
     <string name="reports_tab_title">Relatórios</string>
     <string name="statistics_tab_title">Estatísticas</string>
     <string name="settings_tab_title">Configurações</string>
-
     <string name="send_reports">Enviar relatórios</string>
-
     <string name="reports">Relatórios:</string>
     <string name="reports_total">Total de relatórios: %s</string>
     <string name="reports_not_uploaded">Relatórios não enviados: %s</string>
     <string name="reports_last_uploaded">Último envio: %s</string>
-
     <string name="start_scanning">Iniciar escaneamento</string>
     <string name="stop_scanning">Parar escaneamento</string>
-
     <string name="delete_report">Excluir relatório</string>
     <string name="delete_report_confirmation">Tem certeza que deseja excluir o relatório?</string>
-
     <string name="toast_reports_uploaded">%d relatórios enviados</string>
     <string name="toast_reports_upload_failed">Falhou em enviar relatórios</string>
-
     <string name="report_upload_notification_channel_name">Envios de relatórios</string>
     <string name="notification_sending_reports">Enviando relatórios</string>
-
     <string name="notification_wireless_scanning_active">Escaneamento de redes sem-fio ativo</string>
-
     <string name="notification_reports_created">%d relatórios criados</string>
-
     <string name="ignore_battery_optimizations_title">Ignorar otimizações de bateria</string>
     <string name="ignore_battery_optimizations_description">Para melhor resultados, as otimizações de bateria devem ser desativadas. O escaneamento de redes sem-fio e o acesso à localização é significativamente piorado quando a otimização de bateria está ativa e a tela está desligada</string>
-
     <string name="battery_optimizations_not_disabled_warning">As otimizações de bateria não foram desativadas</string>
-
     <string name="send_reports_automatically">Enviar relatórios automaticamente</string>
-
     <string name="export_notification_channel_name">Exportação de dados</string>
-
     <string name="notification_exporting_data">Exportando dados…</string>
-
     <string name="export_data">Exportar dados</string>
-
     <string name="export_no_file_chosen">Não foi possível exportar dados, pois nenhum arquivo foi criado</string>
     <string name="export_started">Exportando dados de %s para %s</string>
-
     <string name="reupload_data">Enviar dados novamente</string>
-
     <string name="wifis">Redes Wi-Fi</string>
     <string name="cells">Redes móveis</string>
     <string name="beacons">Beacons Bluetooth</string>
-  
     <string name="add_quick_settings_tile">Adicionar um bloco às configurações rápidas para iniciar o escaneamento facilmente?</string>
-
     <string name="mls_warning_title">O MLS está sendo desativado</string>
     <string name="mls_warning_text">O "Mozilla Location Services" irá ser desativado em breve e não aceita mais o envio de dados. Enviar relatórios não funcionará\n\nVocê ainda pode exportar os dados coletados como um arquivo ZIP pelas configurações</string>
-
     <string name="endpoint">Servidor</string>
     <string name="path">Caminho</string>
     <string name="api_key">Chave da API (opcional)</string>
-
     <string name="settings_ignore_wifi_scan_throttling">Ignorar limitações de busca por Wi-Fi</string>
     <string name="wifi_scan_throttling">Limitações de busca por Wi-Fi</string>
     <string name="wifi_scan_throttling_explanation">
         Você precisa desativar as limitações de busca por Wi-Fi nas configurações do seu dispositivo para usar esta função. Isto pode normalmente ser feito nas configurações de desenvolvedor
     </string>
-
     <string name="show_my_location">Mostrar minha localização</string>
-
     <string name="permission_rationale_fine_location">
         Para conseguir o acesso à localização atual é necessário a permissão de permissão precisa
     </string>
-
     <string name="permission_rationale_read_phone_state">
         Acesso ao estado do telefone é necessário para o escaneamento de torres de redes móveis com todos os cartões SIMs no dispositivo
     </string>
-
     <string name="permission_rationale_bluetooth">
         Para fazer o escaneamento de beacons Bluetooth, é necessária a permissão para Bluetooth
     </string>
-
     <string name="permission_rationale_post_notifications">
         Para mostrar a notificação de estado, é necessária a permissão para notificações
     </string>
-
     <string name="permission_rationale_background_location_quick_settings">
         Para começar o escaneamento pelas configurações rápidas, é necessário o acesso à localização em segundo plano
     </string>
     <string name="permission_rationale_location_map">
         Para mostrar sua localização no mapa, é necessário a permissão de localização
     </string>
+    <string name="app_name">NeoStumbler</string>
 </resources>
