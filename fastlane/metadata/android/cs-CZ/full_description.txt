@@ -1,0 +1,1 @@
+<b>NeoStumbler</b> je aplikace pro sběr poloh Wi-Fi sítí , telefoních vysílačů a Bluetooth majáků pro polohové služby s API kompatibilních s polohovou službou Mozilla

@@ -1,0 +1,1 @@
+O <b>NeoStumbler</b> é uma aplicação para recolher localizações de redes Wi-Fi, torres de telemóveis e beacons Bluetooth para serviços de geolocalização compatíveis com o formato da API da Mozilla Location Services
