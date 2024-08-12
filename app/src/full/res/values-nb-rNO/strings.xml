@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="prefer_fused_location">Foretrekk sammensveiset posisjonstilbyder</string>
+    <string name="autoscan_when_moving">Automatisk skanning i bevegelse</string>
+    <string name="autoscan_failed_to_enable">Kunne ikke skru på automatisk skanning</string>
+    <string name="permission_rationale_background_location_autoscan">Automatisk start av skanning krever tilgang for bakgrunnshandling</string>
+    <string name="permission_rationale_activity_recognition">Automatisk start av skanning trenger tilgang til nåværende aktivitet</string>
+</resources>
