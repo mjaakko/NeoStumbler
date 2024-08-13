@@ -30,6 +30,20 @@ android {
             useSupportLibrary true
         }
 
+        //Configure supported languages here to avoid including incomplete translations in the releases
+        resConfigs(
+            //English
+            "en",
+            //Czech
+            "cs",
+            //German
+            "de-rDE",
+            //Portuguese
+            "pt",
+            //Brazilian Portuguese
+            "pt-rBR"
+        )
+
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas")
             arg("room.incremental", "true")
