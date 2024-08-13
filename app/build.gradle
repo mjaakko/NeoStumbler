@@ -124,7 +124,7 @@ kotlin {
 
 dependencies {
     implementation 'androidx.core:core-ktx:1.13.1'
-    implementation 'androidx.activity:activity-compose:1.9.0'
+    implementation 'androidx.activity:activity-compose:1.9.1'
 
     def lifecycle_version = '2.7.0'
 
@@ -166,7 +166,7 @@ dependencies {
     ksp "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
 
-    def work_version = "2.9.0"
+    def work_version = "2.9.1"
 
     implementation "androidx.work:work-runtime:$work_version"
     implementation "androidx.work:work-runtime-ktx:$work_version"
@@ -178,7 +178,7 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor"
     testImplementation "com.squareup.okhttp3:mockwebserver"
 
-    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'com.google.code.gson:gson:2.11.0'
 
     implementation 'org.altbeacon:android-beacon-library:2.20.6'
 
@@ -186,9 +186,11 @@ dependencies {
     implementation 'org.geohex.geohex4j:geohex4j:3.2.2'
 
     implementation 'org.apache.commons:commons-csv:1.11.0'
+
+    def vico_version = "1.15.0"
     
-    implementation "com.patrykandpatrick.vico:compose:1.15.0"
-    implementation "com.patrykandpatrick.vico:compose-m3:1.15.0"
+    implementation "com.patrykandpatrick.vico:compose:$vico_version"
+    implementation "com.patrykandpatrick.vico:compose-m3:$vico_version"
 
     testImplementation "org.mockito.kotlin:mockito-kotlin:5.4.0"
 }
