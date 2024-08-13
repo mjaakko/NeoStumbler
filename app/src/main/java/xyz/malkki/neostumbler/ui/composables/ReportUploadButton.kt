@@ -1,5 +1,6 @@
 package xyz.malkki.neostumbler.ui.composables
 
+import android.widget.Toast
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,6 +26,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.geosubmit.ReportSendWorker
+import java.util.UUID
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -54,17 +56,33 @@ fun ReportUploadButton() {
         mutableStateOf(false)
     }
 
+    val enqueuedUploadWork = remember { mutableStateOf<UUID?>(null) }
+
+    EffectOnWorkCompleted(
+        workId = enqueuedUploadWork.value,
+        onWorkSuccess = { workInfo ->
+            val reportsUploaded = workInfo.outputData.getInt(ReportSendWorker.OUTPUT_REPORTS_SENT, 0)
+            Toast.makeText(context, context.getString(R.string.toast_reports_uploaded, reportsUploaded), Toast.LENGTH_SHORT).show()
+        },
+        onWorkFailed = {
+            Toast.makeText(context, context.getString(R.string.toast_reports_upload_failed), Toast.LENGTH_SHORT).show()
+        }
+    )
+
     Button(
         enabled = canUpload.value && !enqueuing.value,
         onClick = {
             coroutineScope.launch {
                 enqueuing.value = true
 
+                val workId = UUID.randomUUID()
+
                 workManager
                     .enqueueUniqueWork(
                         ReportSendWorker.ONE_TIME_WORK_NAME,
                         ExistingWorkPolicy.REPLACE,
                         OneTimeWorkRequestBuilder<ReportSendWorker>()
+                            .setId(workId)
                             .setConstraints(
                                 Constraints(
                                     requiredNetworkType = NetworkType.CONNECTED,
@@ -78,6 +96,8 @@ fun ReportUploadButton() {
                             .build()
                     )
                     .await()
+
+                enqueuedUploadWork.value = workId
 
                 //Add small delay to avoid flickering the button
                 delay(0.3.seconds)
