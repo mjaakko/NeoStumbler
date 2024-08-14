@@ -1,0 +1,119 @@
+<resources>
+    <string name="ok">OK</string>
+
+    <string name="no_thanks">Ei kiitos</string>
+
+    <string name="yes">Kyllä</string>
+    <string name="no">Ei</string>
+
+    <string name="reset">Nollaa</string>
+    <string name="save">Tallenna</string>
+
+    <string name="stop">Lopeta</string>
+
+    <string name="permissions_needed">Käyttölupia tarvitaan</string>
+    <string name="permissions_not_granted">Jotain tarvittavista käyttöluvista ei annettu</string>
+
+    <string name="wifi_icon_description">Wi-Fi kuvake</string>
+    <string name="cell_tower_icon_description">Puhelinmasto kuvake</string>
+    <string name="bluetooth_icon_description">Bluetooth kuvake</string>
+
+    <string name="scanner_status_notification_channel_name">Skannauksen status</string>
+
+    <string name="wireless_scanning">Langaton skannaus</string>
+
+    <string name="map_tab_title">Kartta</string>
+    <string name="reports_tab_title">Raportit</string>
+    <string name="statistics_tab_title">Tilastot</string>
+    <string name="settings_tab_title">Asetukset</string>
+
+    <string name="send_reports">Lähetä raportit</string>
+
+    <string name="reports">Raportit:</string>
+    <string name="reports_total">Raportteja yhteensä: %s</string>
+    <string name="reports_not_uploaded">Raportteja lähettämättä: %s</string>
+    <string name="reports_last_uploaded">Raportit lähetetty viimeksi: %s</string>
+
+    <string name="start_scanning">Aloita skannaaminen</string>
+    <string name="stop_scanning">Lopeta skannaaminen</string>
+
+    <string name="delete_report">Poista raportti</string>
+    <string name="delete_report_confirmation">Oletko varma, että haluat poistaa raportin?</string>
+
+    <string name="toast_reports_uploaded">Lähetetty %d raporttia</string>
+    <string name="toast_reports_upload_failed">Raporttien lähettäminen epäonnistui</string>
+
+    <string name="report_upload_notification_channel_name">Raporttien lähetys</string>
+    <string name="notification_sending_reports">Lähetetään raportteja</string>
+
+    <string name="notification_wireless_scanning_active">Langaton skannaus päällä</string>
+
+    <string name="notification_reports_created">%d raporttia luotu</string>
+
+    <string name="ignore_battery_optimizations_title">Akun optimointi</string>
+    <string name="ignore_battery_optimizations_description">
+        Parhaiden tulosten saamiseksi akun optimointi tulee poistaa käytöstä. Langattomien verkkojen skannaus ja sijaintien saaminen on huomattavan rajoitettua, kun akun optimointi on päällä ja laitteen näyttö on pois päältä
+    </string>
+
+    <string name="battery_optimizations_not_disabled_warning">Akun optimointia ei poistettu käytöstä</string>
+
+    <string name="send_reports_automatically">Lähetä raportit automaattisesti</string>
+
+    <string name="export_notification_channel_name">Raporttien vieminen</string>
+
+    <string name="notification_exporting_data">Viedään dataa…</string>
+
+    <string name="export_data">Vie datat</string>
+
+    <string name="export_no_file_chosen">Datan vieminen ei ole mahdollista, koska tiedostoa ei valittu</string>
+    <string name="export_started">Viedään datat ajanjaksolta %s - %s</string>
+
+    <string name="reupload_data">Lähetä datat uudelleen</string>
+
+    <string name="wifis">Wi-Fit</string>
+    <string name="cells">Puhelinmastot</string>
+    <string name="beacons">Bluetooth-majakat</string>
+  
+    <string name="add_quick_settings_tile">Lisää skannaaminen pika-asetuksiin?</string>
+
+    <string name="mls_warning_title">MLS poistuu käytöstä</string>
+    <string name="mls_warning_text">
+        Mozillan sijaintipalvelu poistuu käytöstä eikä enää ota vastaan datalähetyksiä. Raporttien lähettäminen ei toimi\n\nVoit kuitenkin asetuksista viedä kerätyn datan ZIP-pakettina
+    </string>
+
+    <string name="endpoint">Palvelin</string>
+    <string name="path">Polku</string>
+    <string name="api_key">API-avain (vapaaehtoinen)</string>
+
+    <string name="settings_ignore_wifi_scan_throttling">Wi-Fi -skannaus ilman rajoituksia</string>
+    <string name="wifi_scan_throttling">Wi-Fi -skannauksen rajoitukset</string>
+    <string name="wifi_scan_throttling_explanation">
+        Wi-Fi -skannauksen rajoitukset täytyy poistaa laitteen asetuksista tätä ominaisuutta varten. Tämän voi yleensä tehdä kehittäjän asetuksista
+    </string>
+
+    <string name="show_my_location">Näytä oma sijainti</string>
+
+    <string name="permission_rationale_fine_location">
+        Käyttölupa tarkkaan sijaintiin tarvitaan laitteen sijaintia varten
+    </string>
+
+    <string name="permission_rationale_read_phone_state">
+        Käyttölupa puhelimeen tarvitaan puhelinmastojen skannaamiseen laitteen kaikilla SIM-korteilla
+    </string>
+
+    <string name="permission_rationale_bluetooth">
+        Käyttölupa Bluetoothiin tarvitaan Bluetooth-majakoiden skannaamista varten
+    </string>
+
+    <string name="permission_rationale_post_notifications">
+        Käyttölupa ilmoituksiin tarvitaan statusilmoitusten näyttämistä varten
+    </string>
+
+    <string name="permission_rationale_background_location_quick_settings">
+        Käyttölupa laitteen sijaintiin aina tarvitaan skannaamisen aloittamiseksi pika-asetuksista
+    </string>
+
+    <string name="permission_rationale_location_map">
+        Käyttölupa laitteen sijaintiin tarvitaan oman sijainnin näyttämiseksi kartalla
+    </string>
+</resources>

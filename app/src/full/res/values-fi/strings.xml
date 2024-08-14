@@ -1,0 +1,14 @@
+<resources>
+    <string name="prefer_fused_location">Suosi yhdistettyä sijainnintarjoajaa</string>
+    <string name="autoscan_when_moving">Skannaa automaattisesti liikkuessa</string>
+
+    <string name="autoscan_failed_to_enable">Automaattisen skannaamisen käyttöönotto ei onnistunut</string>
+
+    <string name="permission_rationale_background_location_autoscan">
+        Automaattinen skannaus tarvitsee käyttöluvan laitteen sijaintiin aina
+    </string>
+
+    <string name="permission_rationale_activity_recognition">
+        Automaattinen skannaus tarvitsee käyttöluvan liikkumistietoihin
+    </string>
+</resources>
