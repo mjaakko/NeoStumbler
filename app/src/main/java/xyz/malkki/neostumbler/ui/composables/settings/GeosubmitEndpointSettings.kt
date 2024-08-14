@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -66,20 +65,24 @@ fun GeosubmitEndpointSettings() {
             onDialogClose = { newParams ->
                 if (newParams != null) {
                     coroutineScope.launch {
-                        settingsStore.edit { prefs ->
-                            prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)] = newParams.baseUrl
-                            prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH)] = newParams.path
+                        settingsStore.updateData { prefs ->
+                            prefs.toMutablePreferences().apply {
+                                set(stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT), newParams.baseUrl)
+                                set(stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH), newParams.path)
 
-                            if (newParams.apiKey != null) {
-                                prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY)] = newParams.apiKey
-                            } else {
-                                prefs.remove(stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY))
+                                if (newParams.apiKey != null) {
+                                    set(stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY), newParams.apiKey)
+                                } else {
+                                    remove(stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY))
+                                }
                             }
                         }
+
+                        dialogOpen.value = false
                     }
+                } else {
+                    dialogOpen.value = false
                 }
-                
-                dialogOpen.value = false
             }
         )
     }
