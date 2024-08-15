@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NeoStumbler</string>
+    <string name="app_name" translatable="false">NeoStumbler</string>
 
     <string name="ok">OK</string>
 
