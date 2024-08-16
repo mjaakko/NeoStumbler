@@ -1,7 +1,6 @@
 package xyz.malkki.neostumbler.scanner
 
-import android.net.wifi.ScanResult
-import xyz.malkki.neostumbler.extensions.ssidString
+import xyz.malkki.neostumbler.domain.WifiAccessPoint
 
 /**
  * Filters Wi-Fi networks that should not be sent to MLS.
@@ -9,8 +8,8 @@ import xyz.malkki.neostumbler.extensions.ssidString
  *
  * @return Filtered list of scan results
  */
-fun List<ScanResult>.filterForMLS(): List<ScanResult> = filter { scanResult ->
-    val ssid = scanResult.ssidString
+fun List<WifiAccessPoint>.filterForMLS(): List<WifiAccessPoint> = filter { wifiAccessPoint ->
+    val ssid = wifiAccessPoint.ssid
 
     !ssid.isNullOrBlank() && !ssid.endsWith("_nomap")
 }

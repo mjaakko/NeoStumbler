@@ -2,7 +2,6 @@ package xyz.malkki.neostumbler.scanner
 
 import android.content.Context
 import android.location.Location
-import android.net.wifi.ScanResult
 import androidx.room.withTransaction
 import timber.log.Timber
 import xyz.malkki.neostumbler.StumblerApplication
@@ -13,6 +12,7 @@ import xyz.malkki.neostumbler.db.entities.Report
 import xyz.malkki.neostumbler.db.entities.WifiAccessPointEntity
 import xyz.malkki.neostumbler.domain.BluetoothBeacon
 import xyz.malkki.neostumbler.domain.CellTower
+import xyz.malkki.neostumbler.domain.WifiAccessPoint
 import java.time.Instant
 
 class ScanReportCreator(context: Context) {
@@ -21,7 +21,7 @@ class ScanReportCreator(context: Context) {
     suspend fun createReport(
         locationSource: String,
         location: Location,
-        wifiScanResults: List<ScanResult>,
+        wifiScanResults: List<WifiAccessPoint>,
         cellTowers: List<CellTower>,
         beacons: List<BluetoothBeacon>,
         reportTimestamp: Instant = Instant.now()
@@ -32,7 +32,7 @@ class ScanReportCreator(context: Context) {
         val position = Position.createFromLocation(reportId, reportTimestamp, location, locationSource)
         reportDb.positionDao().insert(position)
 
-        val wifiAccessPointEntities = wifiScanResults.map { WifiAccessPointEntity.createFromScanResult(reportId, reportTimestamp, it) }
+        val wifiAccessPointEntities = wifiScanResults.map { WifiAccessPointEntity.fromWifiAccessPoint(it, reportTimestamp, reportId) }
         reportDb.wifiAccessPointDao().insertAll(*wifiAccessPointEntities.toTypedArray())
 
         val cellTowerEntities = cellTowers.map { CellTowerEntity.fromCellTower(it, reportTimestamp, reportId) }

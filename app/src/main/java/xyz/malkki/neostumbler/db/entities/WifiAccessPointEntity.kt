@@ -1,13 +1,11 @@
 package xyz.malkki.neostumbler.db.entities
 
-import android.net.wifi.ScanResult
-import android.os.Build
 import android.os.SystemClock
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import xyz.malkki.neostumbler.extensions.ssidString
+import xyz.malkki.neostumbler.domain.WifiAccessPoint
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
@@ -27,44 +25,28 @@ data class WifiAccessPointEntity(
     @ColumnInfo(index = true) val reportId: Long?
 ) {
     companion object {
-        fun createFromScanResult(reportId: Long, currentTime: Instant, scanResult: ScanResult): WifiAccessPointEntity {
-            val radioType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                when (scanResult.wifiStandard) {
-                    //ScanResult.WIFI_STANDARD_11AX -> "802.11ax"
-                    ScanResult.WIFI_STANDARD_11AC -> "802.11ac"
-                    ScanResult.WIFI_STANDARD_11N -> "802.11n"
-                    ScanResult.WIFI_STANDARD_LEGACY -> "802.11g" //Could be also 802.11a or 802.11b but g is most likely
-                    else -> null
-                }
-            } else {
-                null
-            }
-
-            val frequency = when (scanResult.channelWidth) {
-                ScanResult.CHANNEL_WIDTH_20MHZ -> scanResult.frequency
-                else -> scanResult.centerFreq0
-            }
-
-            val channelNumber = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                ScanResult.convertFrequencyMhzToChannelIfSupported(frequency).takeIf { it != ScanResult.UNSPECIFIED }
-            } else {
-                null
-            }
-
-            //Current time is truncated to seconds -> age can be negative by some milliseconds
-            val age = maxOf(0, Instant.now().minusMillis(SystemClock.elapsedRealtime() - (scanResult.timestamp / 1000)).until(currentTime, ChronoUnit.MILLIS))
+        fun fromWifiAccessPoint(wifiAccessPoint: WifiAccessPoint, reportTimestamp: Instant, reportId: Long): WifiAccessPointEntity {
+            //Report time is truncated to seconds -> age can be negative by some milliseconds
+            val age = maxOf(0, Instant.now().minusMillis(SystemClock.elapsedRealtime() - (wifiAccessPoint.timestamp)).until(reportTimestamp, ChronoUnit.MILLIS))
 
             return WifiAccessPointEntity(
-                null,
-                scanResult.BSSID,
-                radioType,
-                age,
-                channelNumber,
-                frequency,
-                scanResult.level,
-                null,
-                scanResult.ssidString,
-                reportId
+                id = null,
+                macAddress = wifiAccessPoint.macAddress,
+                radioType = when (wifiAccessPoint.radioType) {
+                    WifiAccessPoint.RadioType.BE -> "802.11be"
+                    WifiAccessPoint.RadioType.AX -> "802.11ax"
+                    WifiAccessPoint.RadioType.AC -> "802.11ac"
+                    WifiAccessPoint.RadioType.N -> "802.11n"
+                    WifiAccessPoint.RadioType.G -> "802.11g"
+                    else -> null
+                },
+                age = age,
+                channel = wifiAccessPoint.channel,
+                frequency = wifiAccessPoint.frequency,
+                signalStrength = wifiAccessPoint.signalStrength,
+                signalToNoiseRatio = null,
+                ssid = wifiAccessPoint.ssid,
+                reportId = reportId
             )
         }
     }

@@ -9,7 +9,6 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
-import android.net.wifi.ScanResult
 import android.net.wifi.WifiManager
 import android.net.wifi.WifiManager.WifiLock
 import android.os.Binder
@@ -30,7 +29,6 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filter
@@ -48,22 +46,21 @@ import xyz.malkki.neostumbler.common.LocationWithSource
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.domain.BluetoothBeacon
 import xyz.malkki.neostumbler.domain.CellTower
+import xyz.malkki.neostumbler.domain.WifiAccessPoint
 import xyz.malkki.neostumbler.extensions.buffer
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.combineAny
 import xyz.malkki.neostumbler.extensions.filterNotNullPairs
 import xyz.malkki.neostumbler.extensions.isWifiScanThrottled
-import xyz.malkki.neostumbler.extensions.timestampMillis
 import xyz.malkki.neostumbler.location.LocationSourceProvider
 import xyz.malkki.neostumbler.scanner.source.BeaconLibraryBluetoothBeaconSource
 import xyz.malkki.neostumbler.scanner.source.MultiSubscriptionCellInfoSource
 import xyz.malkki.neostumbler.scanner.source.TelephonyManagerCellInfoSource
-import xyz.malkki.neostumbler.utils.getWifiScanFlow
+import xyz.malkki.neostumbler.scanner.source.WifiManagerWifiAccessPointSource
 import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.roundToLong
 import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.nanoseconds
 import kotlin.time.Duration.Companion.seconds
 
@@ -194,15 +191,27 @@ class ScannerService : Service() {
                 }
             }
 
-        val wifiScanFlow = getWifiScanFlow(this@ScannerService)
+        val wifiAccessPointSource = WifiManagerWifiAccessPointSource(this@ScannerService)
+
+        val ignoreScanThrottling = settingsStore.data
+            .map { it[booleanPreferencesKey(PreferenceKeys.IGNORE_SCAN_THROTTLING)] }
+            .first() == true
+
+        val wifiScanInterval = if (ignoreScanThrottling && isWifiScanThrottled() == false) {
+            10.seconds
+        } else {
+            30.seconds
+        }
+
+        val wifiScanFlow = wifiAccessPointSource.getWifiAccessPointFlow(wifiScanInterval)
             .buffer(SCAN_BUFFER_PERIOD)
-            .map { scanResults ->
+            .map { wifiAccessPoints ->
                 //Android seems to return multiple batches of scan results in short succession
                 // -> batch them in 30s intervals and group by BSSID to find the latest
-                scanResults.flatten()
-                    .groupBy { scanResult -> scanResult.BSSID }
-                    .mapValues { scanResult ->
-                        scanResult.value.maxBy { it.timestamp }
+                wifiAccessPoints.flatten()
+                    .groupBy { wifiAccessPoint -> wifiAccessPoint.macAddress }
+                    .mapValues { wifiAccessPoint ->
+                        wifiAccessPoint.value.maxBy { it.timestamp }
                     }
                     .values.toList()
             }
@@ -219,7 +228,7 @@ class ScannerService : Service() {
             }
             .map {
                 if (it.isNotEmpty()) {
-                    Timestamped(it.map { scanResult -> scanResult.timestampMillis }.average().roundToLong(), it)
+                    Timestamped(it.map { wifiAccessPoint -> wifiAccessPoint.timestamp }.average().roundToLong(), it)
                 } else {
                     null
                 }
@@ -263,7 +272,7 @@ class ScannerService : Service() {
             channelFlow {
                 val mutex = Mutex()
 
-                var reportData: Triple<Timestamped<List<CellTower>>?, Timestamped<List<ScanResult>>?, Timestamped<List<BluetoothBeacon>>?>? = null
+                var reportData: Triple<Timestamped<List<CellTower>>?, Timestamped<List<WifiAccessPoint>>?, Timestamped<List<BluetoothBeacon>>?>? = null
 
                 launch {
                     reportDataFlow.collect {
@@ -306,27 +315,6 @@ class ScannerService : Service() {
 
                 if (notificationManager.areNotificationsEnabled()) {
                     notificationManager.notify(NOTIFICATION_ID, createNotification())
-                }
-            }
-        }
-
-        launch {
-            val ignoreScanThrottling = settingsStore.data
-                .map { it[booleanPreferencesKey(PreferenceKeys.IGNORE_SCAN_THROTTLING)] }
-                .first() == true
-
-            val wifiManager: WifiManager = this@ScannerService.applicationContext.getSystemService()!!
-
-            while (true) {
-                if (wifiManager.startScan()) {
-                    if (ignoreScanThrottling && this@ScannerService.isWifiScanThrottled() == false) {
-                        delay(10.seconds)
-                    } else {
-                        delay(30.seconds)
-                    }
-                } else if (!ignoreScanThrottling) {
-                    //Wi-Fi scan was not started, maybe we hit scan throttling -> wait longer
-                    delay(1.minutes)
                 }
             }
         }
