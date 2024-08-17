@@ -31,7 +31,7 @@ android {
         }
 
         //Configure supported languages here to avoid including incomplete translations in the releases
-        resourceConfigurations += ['en', 'cs', 'fi', 'de-rDE', 'pt', 'pt-rBR']
+        resourceConfigurations += ['en', 'cs', 'fi', 'fr-rFR', 'de-rDE', 'pt', 'pt-rBR']
 
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas")
