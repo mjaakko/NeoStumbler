@@ -67,23 +67,23 @@
 
     <string name="export_notification_channel_name">Export de données</string>
 
-    <string name="notification_exporting_data">Exporation des données…</string>
+    <string name="notification_exporting_data">Exportation des données…</string>
 
     <string name="export_data">Export de données</string>
 
-    <string name="export_no_file_chosen">Les données ne peuvent être exportées car aucun fichier n\'a été créé</string>
+    <string name="export_no_file_chosen">Les données ne peuvent être exportées, car aucun fichier n\'a été créé</string>
     <string name="export_started">Export des données à partir de %s vers %s</string>
 
-    <string name="reupload_data">Réenvoyer les données</string>
+    <string name="reupload_data">Renvoyer les données</string>
 
     <string name="wifis">Wi-Fi</string>
     <string name="cells">Réseaux mobiles</string>
     <string name="beacons">Balises Bluetooth</string>
-  
-    <string name="add_quick_settings_tile">Ajouter un bloc aux réglages rapide pour facilement démarrer des mesures ?</string>
+
+    <string name="add_quick_settings_tile">Ajouter un bloc aux réglages rapides pour facilement démarrer des mesures ?</string>
 
     <string name="mls_warning_title">Fin du service MLS</string>
-    <string name="mls_warning_text">Mozilla Location Services s\'éteindra prochainement et n\'acceptera plus les soumissions de données. Tenter d\'envoyer des données ne fonctionnera pas.\n\nVous pouvez toujours exporter les données collectées en tant qu\'archive ZIP à partir des paramètres</string>
+    <string name="mls_warning_text">Mozilla Location Services s\'éteindra prochainement et n\'acceptera plus les soumissions de données. Tenter d\'envoyer des mesures ne fonctionnera pas.\n\nVous pouvez toujours exporter les données collectées en tant qu\'archive ZIP à partir des paramètres</string>
 
     <string name="endpoint">Destination</string>
     <string name="path">Chemin</string>
