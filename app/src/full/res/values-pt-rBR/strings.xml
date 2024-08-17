@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="prefer_fused_location">Preferir provedor de localização comb.</string>
+    <string name="prefer_fused_location">Preferir o provedor fundido de localização</string>
     <string name="autoscan_when_moving">Escaneamento automático ao se mover</string>
     <string name="autoscan_failed_to_enable">Falhou em ativar o escaneamento automático</string>
     <string name="permission_rationale_background_location_autoscan">
