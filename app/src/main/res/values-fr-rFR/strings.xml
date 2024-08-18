@@ -5,8 +5,6 @@
     - Upload : envoyer
     -->
     
-    <string name="app_name" translatable="false">NeoStumbler</string>
-
     <string name="ok">D\'accord</string>
 
     <string name="no_thanks">Non merci</string>
