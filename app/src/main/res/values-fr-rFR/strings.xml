@@ -1,0 +1,120 @@
+<resources>
+    <!-- Lexique :
+    - Scan : mesure
+    - Report : rapport
+    - Upload : envoyer
+    -->
+    
+    <string name="ok">D\'accord</string>
+
+    <string name="no_thanks">Non merci</string>
+
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+
+    <string name="reset">Réinitialiser</string>
+    <string name="save">Enregistrer</string>
+
+    <string name="stop">Arrêter</string>
+
+    <string name="permissions_needed">Autorisations nécessaires</string>
+    <string name="permissions_not_granted">Les autorisations nécessaires n\'ont pas été obtenues</string>
+
+    <string name="wifi_icon_description">Icône Wi-Fi</string>
+    <string name="cell_tower_icon_description">Icône d\'antenne téléphonique</string>
+    <string name="bluetooth_icon_description">Icône Bluetooth</string>
+
+    <string name="scanner_status_notification_channel_name">État des mesures</string>
+
+    <string name="wireless_scanning">Mesures sans fil</string>
+
+    <string name="map_tab_title">Carte</string>
+    <string name="reports_tab_title">Rapports</string>
+    <string name="statistics_tab_title">Statistiques</string>
+    <string name="settings_tab_title">Paramètres</string>
+
+    <string name="send_reports">Envoyer les rapports</string>
+
+    <string name="reports">Rapports :</string>
+    <string name="reports_total">Total des rapports : %s</string>
+    <string name="reports_not_uploaded">Rapports non-envoyés : %s</string>
+    <string name="reports_last_uploaded">Dernier rapport envoyé : %s</string>
+
+    <string name="start_scanning">Démarrer les mesures</string>
+    <string name="stop_scanning">Arrêter les mesures</string>
+
+    <string name="delete_report">Supprimer le rapport</string>
+    <string name="delete_report_confirmation">Êtes-vous sûr de vouloir supprimer ce rapport ?</string>
+
+    <string name="toast_reports_uploaded">%d rapports envoyés</string>
+    <string name="toast_reports_upload_failed">Échec de l\'envoi des rapports</string>
+
+    <string name="report_upload_notification_channel_name">Envoi des rapports</string>
+    <string name="notification_sending_reports">Téléversement des rapports</string>
+
+    <string name="notification_wireless_scanning_active">Mesure sans fil active</string>
+
+    <string name="notification_reports_created">%d rapports créés</string>
+
+    <string name="ignore_battery_optimizations_title">Ignorer les optimisations de batterie</string>
+    <string name="ignore_battery_optimizations_description">Pour de meilleurs résultats, les optimisations de batterie doivent être désactivées. Les mesures sans fil et l\'utilisation de la localisation sont significativement affectés lorsque l\'optimisation de batterie est active et l\'écran éteint.</string>
+
+    <string name="battery_optimizations_not_disabled_warning">Les optimisations de batterie n\'ont pas été désactivées</string>
+
+    <string name="send_reports_automatically">Envoyer les rapports automatiquement</string>
+
+    <string name="export_notification_channel_name">Export de données</string>
+
+    <string name="notification_exporting_data">Exportation des données…</string>
+
+    <string name="export_data">Export de données</string>
+
+    <string name="export_no_file_chosen">Les données ne peuvent être exportées, car aucun fichier n\'a été créé</string>
+    <string name="export_started">Export des données à partir de %s vers %s</string>
+
+    <string name="reupload_data">Renvoyer les données</string>
+
+    <string name="wifis">Wi-Fi</string>
+    <string name="cells">Réseaux mobiles</string>
+    <string name="beacons">Balises Bluetooth</string>
+
+    <string name="add_quick_settings_tile">Ajouter un bloc aux réglages rapides pour facilement démarrer des mesures ?</string>
+
+    <string name="mls_warning_title">Fin du service MLS</string>
+    <string name="mls_warning_text">Mozilla Location Services s\'éteindra prochainement et n\'acceptera plus les soumissions de données. Tenter d\'envoyer des mesures ne fonctionnera pas.\n\nVous pouvez toujours exporter les données collectées en tant qu\'archive ZIP à partir des paramètres</string>
+
+    <string name="endpoint">Destination</string>
+    <string name="path">Chemin</string>
+    <string name="api_key">Clé API (optionnel)</string>
+
+    <string name="settings_ignore_wifi_scan_throttling">Ignorer les limitations pour les mesures du Wi-Fi</string>
+    <string name="wifi_scan_throttling">Limitations de mesures du Wi-Fi</string>
+    <string name="wifi_scan_throttling_explanation">
+        Pour activer cette option, vous devez désactiver les limitations de mesure du Wi-Fi dans les paramètres de votre appareil. Elle se trouve généralement dans les options pour les développeurs.
+    </string>
+
+    <string name="show_my_location">Afficher mon emplacement</string>
+
+    <string name="permission_rationale_fine_location">
+        L\'autorisation d\'accéder à la position exacte est nécessaire pour afficher l\'emplacement actuel
+    </string>
+
+    <string name="permission_rationale_read_phone_state">
+        L\'accès à l\'état du téléphone est nécessaire pour la mesure des antennes téléphoniques à partir de toutes les cartes SIM de cet appareil
+    </string>
+
+    <string name="permission_rationale_bluetooth">
+        L\'autorisation d\'accéder au Bluetooth est nécessaire pour mesurer les balises Bluetooth
+    </string>
+
+    <string name="permission_rationale_post_notifications">
+        L\'autorisation d\'accéder aux notifications est nécessaire pour afficher une notification de l\'activité
+    </string>
+
+    <string name="permission_rationale_background_location_quick_settings">
+        L\'autorisation d\'accéder à la localisation en arrière-plan est nécessaire pour démarrer des mesures à partir des réglages rapides
+    </string>
+    <string name="permission_rationale_location_map">
+        L\'autorisation d\'accéder à la localisation est nécessaire pour afficher votre emplacement sur la carte
+    </string>
+</resources>
