@@ -4,6 +4,6 @@ import kotlinx.coroutines.flow.Flow
 import xyz.malkki.neostumbler.common.LocationWithSource
 import kotlin.time.Duration
 
-interface LocationSource {
+fun interface LocationSource {
     fun getLocations(interval: Duration): Flow<LocationWithSource>
 }
