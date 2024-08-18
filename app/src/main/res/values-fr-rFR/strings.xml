@@ -112,7 +112,7 @@
     </string>
 
     <string name="permission_rationale_background_location_quick_settings">
-        L\'autorisation d\'accéder constamment à la localisation est nécessaire pour démarrer des mesures à partir des réglages rapides
+        L\'autorisation d\'accéder à la localisation en arrière-plan est nécessaire pour démarrer des mesures à partir des réglages rapides
     </string>
     <string name="permission_rationale_location_map">
         L\'autorisation d\'accéder à la localisation est nécessaire pour afficher votre emplacement sur la carte
