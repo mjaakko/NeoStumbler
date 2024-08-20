@@ -16,12 +16,14 @@ import xyz.malkki.neostumbler.ui.composables.autoscan.AutoScanToggle
 import xyz.malkki.neostumbler.ui.composables.settings.AutoUploadToggle
 import xyz.malkki.neostumbler.ui.composables.settings.GeosubmitEndpointSettings
 import xyz.malkki.neostumbler.ui.composables.settings.IgnoreScanThrottlingToggle
+import xyz.malkki.neostumbler.ui.composables.settings.MovementDetectorSettings
 
 @Composable
 fun SettingsScreen() {
     Column {
         GeosubmitEndpointSettings()
         AutoUploadToggle()
+        MovementDetectorSettings()
         SettingsToggle(title = stringResource(id = R.string.prefer_fused_location), preferenceKey = PreferenceKeys.PREFER_FUSED_LOCATION, default = true)
         IgnoreScanThrottlingToggle()
         AutoScanToggle()

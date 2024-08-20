@@ -14,7 +14,6 @@ import xyz.malkki.neostumbler.common.LocationWithSource
 import xyz.malkki.neostumbler.domain.BluetoothBeacon
 import xyz.malkki.neostumbler.domain.WifiAccessPoint
 import xyz.malkki.neostumbler.scanner.data.ReportData
-import kotlin.time.Duration.Companion.seconds
 
 class WirelessScannerTest {
     @Test
@@ -39,7 +38,7 @@ class WirelessScannerTest {
             bluetoothBeaconSource = { emptyFlow() }
         )
 
-        val reportFlow = wirelessScanner.createReports(5.seconds, 5.seconds, 5.seconds)
+        val reportFlow = wirelessScanner.createReports()
 
         assertThrows(NoSuchElementException::class.java) {
             runBlocking {
@@ -91,7 +90,7 @@ class WirelessScannerTest {
             bluetoothBeaconSource = { emptyFlow() }
         )
 
-        val reportFlow = wirelessScanner.createReports(5.seconds, 5.seconds, 5.seconds)
+        val reportFlow = wirelessScanner.createReports()
 
         assertThrows(NoSuchElementException::class.java) {
             runBlocking {
@@ -136,7 +135,7 @@ class WirelessScannerTest {
             timeSource = { 0 }
         )
 
-        val reportFlow = wirelessScanner.createReports(5.seconds, 5.seconds, 5.seconds)
+        val reportFlow = wirelessScanner.createReports()
 
         val reports = runBlocking {
             val output = mutableListOf<ReportData>()

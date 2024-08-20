@@ -9,6 +9,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
+import android.hardware.SensorManager
 import android.net.wifi.WifiManager
 import android.net.wifi.WifiManager.WifiLock
 import android.os.Binder
@@ -25,13 +26,17 @@ import androidx.core.content.getSystemService
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import xyz.malkki.neostumbler.MainActivity
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
@@ -39,6 +44,10 @@ import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.isWifiScanThrottled
 import xyz.malkki.neostumbler.location.LocationSourceProvider
+import xyz.malkki.neostumbler.scanner.movement.ConstantMovementDetector
+import xyz.malkki.neostumbler.scanner.movement.LocationBasedMovementDetector
+import xyz.malkki.neostumbler.scanner.movement.MovementDetectorType
+import xyz.malkki.neostumbler.scanner.movement.SignificantMotionMovementDetector
 import xyz.malkki.neostumbler.scanner.source.BeaconLibraryBluetoothBeaconSource
 import xyz.malkki.neostumbler.scanner.source.BluetoothBeaconSource
 import xyz.malkki.neostumbler.scanner.source.MultiSubscriptionCellInfoSource
@@ -141,6 +150,10 @@ class ScannerService : Service() {
 
         val locationSource = LocationSourceProvider(this@ScannerService).getLocationSource()
 
+        val locationFlow = locationSource
+            .getLocations(LOCATION_INTERVAL)
+            .shareIn(this, started = SharingStarted.WhileSubscribed())
+
         val cellInfoSource = if (hasReadPhoneStatePermission()) {
             MultiSubscriptionCellInfoSource(this@ScannerService)
         } else {
@@ -165,9 +178,37 @@ class ScannerService : Service() {
             BluetoothBeaconSource { emptyFlow() }
         }
 
+        val movementDetectorType = settingsStore.data
+            .map { prefs ->
+                prefs[stringPreferencesKey(PreferenceKeys.MOVEMENT_DETECTOR)]?.let {
+                    try {
+                        MovementDetectorType.valueOf(it)
+                    } catch (ex: Exception) {
+                        null
+                    }
+                } ?: MovementDetectorType.NONE
+            }
+            .first()
+
+        val movementDetector = when (movementDetectorType) {
+            MovementDetectorType.NONE -> ConstantMovementDetector
+            MovementDetectorType.LOCATION -> LocationBasedMovementDetector {
+                locationFlow.map { it.location }
+            }
+            MovementDetectorType.SIGNIFICANT_MOTION -> SignificantMotionMovementDetector(this@ScannerService.getSystemService<SensorManager>()!!)
+        }
+
+        Timber.i("Using ${movementDetector::class.simpleName} for detecting movement")
+
         launch {
-            WirelessScanner(locationSource, cellInfoSource, wifiAccessPointSource, bluetoothBeaconSource)
-                .createReports(wifiScanInterval, CELL_SCAN_INTERVAL, LOCATION_INTERVAL)
+            WirelessScanner(
+                locationSource = { locationFlow },
+                cellInfoSource = { cellInfoSource.getCellInfoFlow(CELL_SCAN_INTERVAL) },
+                bluetoothBeaconSource = { bluetoothBeaconSource.getBluetoothBeaconFlow() },
+                wifiAccessPointSource = { wifiAccessPointSource.getWifiAccessPointFlow(wifiScanInterval) },
+                movementDetector = movementDetector
+            )
+                .createReports()
                 .collect { reportData ->
                     scanReportCreator.createReport(
                         locationSource = reportData.location.source.name.lowercase(Locale.ROOT),

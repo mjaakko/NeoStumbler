@@ -89,6 +89,21 @@
         You need to disable Wi-Fi scan throttling in your device\'s settings to enable this feature. Usually this can be done in the developer settings
     </string>
 
+    <string name="movement_detection">Movement detection</string>
+
+    <string name="movement_detection_none_title">None</string>
+    <string name="movement_detection_none_description">Keep scanning even when not moving</string>
+
+    <string name="movement_detection_location_title">Location based</string>
+    <string name="movement_detection_location_description">
+        Pauses scanning when location does not change. Keeps GPS active
+    </string>
+
+    <string name="movement_detection_significant_motion_title">Motion sensor</string>
+    <string name="movement_detection_significant_motion_description">
+        Pauses scanning and GPS when no significant motion is detected. Saves battery, but does not work reliably on some devices
+    </string>
+
     <string name="show_my_location">Show my location</string>
 
     <string name="permission_rationale_fine_location">

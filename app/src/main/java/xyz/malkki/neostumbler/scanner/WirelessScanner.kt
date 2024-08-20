@@ -3,27 +3,30 @@ package xyz.malkki.neostumbler.scanner
 import android.os.SystemClock
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.runningFold
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import timber.log.Timber
 import xyz.malkki.neostumbler.common.LocationWithSource
 import xyz.malkki.neostumbler.domain.BluetoothBeacon
 import xyz.malkki.neostumbler.domain.CellTower
 import xyz.malkki.neostumbler.domain.WifiAccessPoint
 import xyz.malkki.neostumbler.extensions.elapsedRealtimeMillisCompat
-import xyz.malkki.neostumbler.location.LocationSource
 import xyz.malkki.neostumbler.scanner.data.ReportData
-import xyz.malkki.neostumbler.scanner.source.BluetoothBeaconSource
-import xyz.malkki.neostumbler.scanner.source.CellInfoSource
-import xyz.malkki.neostumbler.scanner.source.WifiAccessPointSource
+import xyz.malkki.neostumbler.scanner.movement.ConstantMovementDetector
+import xyz.malkki.neostumbler.scanner.movement.MovementDetector
 import kotlin.math.abs
-import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
@@ -40,27 +43,44 @@ private val BEACON_MAX_AGE = 20.seconds
  * @param timeSource Time source used in the data, defaults to [SystemClock.elapsedRealtime]
  */
 class WirelessScanner(
-    private val locationSource: LocationSource,
-    private val cellInfoSource: CellInfoSource,
-    private val wifiAccessPointSource: WifiAccessPointSource,
-    private val bluetoothBeaconSource: BluetoothBeaconSource,
+    private val locationSource: () -> Flow<LocationWithSource>,
+    private val cellInfoSource: () -> Flow<List<CellTower>>,
+    private val wifiAccessPointSource: () -> Flow<List<WifiAccessPoint>>,
+    private val bluetoothBeaconSource: () -> Flow<List<BluetoothBeacon>>,
+    private val movementDetector: MovementDetector = ConstantMovementDetector,
     private val timeSource: () -> Long = SystemClock::elapsedRealtime
 ) {
-    /**
-     * @param wifiScanInterval Interval for Wi-Fi scans
-     * @param cellScanInterval Interval for cell tower scans
-     * @param locationInterval Interval for receiving locations
-     */
-    fun createReports(wifiScanInterval: Duration, cellScanInterval: Duration, locationInterval: Duration): Flow<ReportData> = channelFlow {
+    fun createReports(): Flow<ReportData> = channelFlow {
         val mutex = Mutex()
 
         val wifiAccessPointByMacAddr = mutableMapOf<String, WifiAccessPoint>()
         val bluetoothBeaconsByMacAddr = mutableMapOf<String, BluetoothBeacon>()
         val cellTowersByKey = mutableMapOf<String, CellTower>()
 
+        val isMovingFlow = movementDetector
+            .getIsMovingFlow()
+            .onEach {
+                if (it) {
+                    Timber.i("Moving started, resuming scanning")
+                } else {
+                    Timber.i("Moving stopped, pausing scanning")
+                }
+            }
+            .shareIn(
+                scope = this,
+                started = SharingStarted.Eagerly,
+                replay = 1
+            )
+
         launch(Dispatchers.Default) {
-            wifiAccessPointSource
-                .getWifiAccessPointFlow(wifiScanInterval)
+            isMovingFlow
+                .flatMapLatest { isMoving ->
+                    if (isMoving) {
+                        wifiAccessPointSource.invoke()
+                    } else {
+                        emptyFlow()
+                    }
+                }
                 .map {
                     it.filterHiddenNetworks()
                 }
@@ -74,9 +94,15 @@ class WirelessScanner(
         }
 
         launch(Dispatchers.Default) {
-            bluetoothBeaconSource
-                .getBluetoothBeaconFlow()
-                .map{ bluetoothBeacons ->
+            isMovingFlow
+                .flatMapLatest { isMoving ->
+                    if (isMoving) {
+                        bluetoothBeaconSource.invoke()
+                    } else {
+                        emptyFlow()
+                    }
+                }
+                .map { bluetoothBeacons ->
                     val now = timeSource.invoke()
 
                     bluetoothBeacons.filter {
@@ -94,8 +120,14 @@ class WirelessScanner(
         }
 
         launch(Dispatchers.Default) {
-            cellInfoSource
-                .getCellInfoFlow(cellScanInterval)
+            isMovingFlow
+                .flatMapLatest { isMoving ->
+                    if (isMoving) {
+                        cellInfoSource.invoke()
+                    } else {
+                        emptyFlow()
+                    }
+                }
                 .collect { cellTowers ->
                     mutex.withLock {
                         cellTowers.forEach { cellTower ->
@@ -105,8 +137,14 @@ class WirelessScanner(
                 }
         }
 
-        locationSource
-            .getLocations(locationInterval)
+        isMovingFlow
+            .flatMapLatest { isMoving ->
+                if (isMoving) {
+                    locationSource.invoke()
+                } else {
+                    emptyFlow()
+                }
+            }
             .filter {
                 it.location.hasAccuracy() && it.location.accuracy <= LOCATION_MAX_ACCURACY
             }
