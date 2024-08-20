@@ -47,11 +47,9 @@ class WifiManagerWifiAccessPointSource(context: Context) : WifiAccessPointSource
                     lastScan = SystemClock.elapsedRealtime()
                     delay(interval)
                 } else {
-                    val delayMillis = maxOf(0, (lastScan + MIN_INTERVAL_THROTTLED.inWholeMilliseconds) - SystemClock.elapsedRealtime())
+                    Timber.d("Wi-Fi scan was not started, maybe we hit scan throttling")
 
-                    Timber.d("Wi-Fi scan was not started, maybe we hit scan throttling? Trying again in ${delayMillis}ms")
-
-                    delay(delayMillis)
+                    delay(MIN_INTERVAL_THROTTLED)
                 }
             }
         }
