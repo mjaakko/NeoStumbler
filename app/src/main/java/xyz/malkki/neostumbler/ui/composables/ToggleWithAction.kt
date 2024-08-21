@@ -1,7 +1,9 @@
 package xyz.malkki.neostumbler.ui.composables
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
@@ -13,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 
 @Composable
@@ -25,7 +28,18 @@ fun ToggleWithAction(title: String, enabled: Boolean, checked: Boolean, action: 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .wrapContentHeight(),
+            .wrapContentHeight()
+            .clickable(
+                enabled = enabled && !changingState.value,
+                onClick = {
+                    coroutineScope.launch {
+                        changingState.value = true
+                        action(!checked)
+                        changingState.value = false
+                    }
+                }
+            )
+            .defaultMinSize(minHeight = 48.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(modifier = Modifier.wrapContentSize(), text = title)
@@ -34,13 +48,7 @@ fun ToggleWithAction(title: String, enabled: Boolean, checked: Boolean, action: 
             modifier = Modifier.wrapContentSize(),
             enabled = enabled && !changingState.value,
             checked = checked,
-            onCheckedChange = { checked ->
-                coroutineScope.launch {
-                    changingState.value = true
-                    action(checked)
-                    changingState.value = false
-                }
-            }
+            onCheckedChange = null
         )
     }
 }
