@@ -81,6 +81,9 @@
         Mozillan sijaintipalvelu poistuu käytöstä eikä enää ota vastaan datalähetyksiä. Raporttien lähettäminen ei toimi\n\nVoit kuitenkin asetuksista viedä kerätyn datan ZIP-pakettina
     </string>
 
+    <string name="settings_group_reports">Raportit</string>
+    <string name="settings_group_scanning">Skannaus</string>
+
     <string name="endpoint">Palvelin</string>
     <string name="path">Polku</string>
     <string name="api_key">API-avain (vapaaehtoinen)</string>
@@ -89,6 +92,21 @@
     <string name="wifi_scan_throttling">Wi-Fi -skannauksen rajoitukset</string>
     <string name="wifi_scan_throttling_explanation">
         Wi-Fi -skannauksen rajoitukset täytyy poistaa laitteen asetuksista tätä ominaisuutta varten. Tämän voi yleensä tehdä kehittäjän asetuksista
+    </string>
+
+    <string name="movement_detection">Liikkeen tunnistus</string>
+
+    <string name="movement_detection_none_title">Ei käytössä</string>
+    <string name="movement_detection_none_description">Skannaamista jatketaan myös pysähdyksissä</string>
+
+    <string name="movement_detection_location_title">Sijaintiin perustuva</string>
+    <string name="movement_detection_location_description">
+        Pysäyttää skannaamisen, kun sijainti ei muutu. Pitää GPS:n päällä
+    </string>
+
+    <string name="movement_detection_significant_motion_title">Liiketunnistin</string>
+    <string name="movement_detection_significant_motion_description">
+        Pysäyttää skannaamisen ja GPS:n, kun laitteen liiketunnistimesta ei havaita liikettä. Säästää akkua, mutta ei toimi luotettavasti joillain laitteilla
     </string>
 
     <string name="show_my_location">Näytä oma sijainti</string>

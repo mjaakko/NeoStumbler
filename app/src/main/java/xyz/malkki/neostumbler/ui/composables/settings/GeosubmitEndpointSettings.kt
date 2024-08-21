@@ -1,5 +1,6 @@
 package xyz.malkki.neostumbler.ui.composables.settings
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -88,12 +89,14 @@ fun GeosubmitEndpointSettings() {
     }
 
     Surface(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(48.dp),
         onClick = {
             dialogOpen.value = true
         }
     ) {
-        Column {
+        Column(verticalArrangement = Arrangement.Center) {
             Text(text = stringResource(id = R.string.endpoint))
             Text(fontSize = 12.sp, fontWeight = FontWeight.Light, text = params.value?.baseUrl ?: "")
         }
