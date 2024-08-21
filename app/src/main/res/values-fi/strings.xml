@@ -81,6 +81,9 @@
         Mozillan sijaintipalvelu poistuu käytöstä eikä enää ota vastaan datalähetyksiä. Raporttien lähettäminen ei toimi\n\nVoit kuitenkin asetuksista viedä kerätyn datan ZIP-pakettina
     </string>
 
+    <string name="settings_group_reports">Raportit</string>
+    <string name="settings_group_scanning">Skannaus</string>
+
     <string name="endpoint">Palvelin</string>
     <string name="path">Polku</string>
     <string name="api_key">API-avain (vapaaehtoinen)</string>

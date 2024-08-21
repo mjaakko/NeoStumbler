@@ -18,7 +18,6 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.BasicAlertDialog
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
@@ -109,11 +108,12 @@ fun MovementDetectorSettings() {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
+            .height(48.dp)
             .clickable(enabled = movementDetectorType.value != null) {
                 dialogOpen.value = true
             }
     ) {
-        Column {
+        Column(verticalArrangement = Arrangement.Center) {
             Text(text = stringResource(id = R.string.movement_detection))
             Text(
                 fontSize = 12.sp,
@@ -131,8 +131,6 @@ private fun Context.significantMotionSensorAvailable(): Boolean {
 @Composable
 private fun MovementDetectorDialog(currentMovementDetector: MovementDetectorType, onDialogClose: (MovementDetectorType) -> Unit) {
     val context = LocalContext.current
-
-    val contentColor = LocalContentColor.current
 
     BasicAlertDialog(
         onDismissRequest = { onDialogClose(currentMovementDetector) }
