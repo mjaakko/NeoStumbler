@@ -52,9 +52,9 @@
     <string name="report_upload_notification_channel_name">Envoi des rapports</string>
     <string name="notification_sending_reports">Téléversement des rapports</string>
 
-    <string name="notification_wireless_scanning_active">Mesure sans fil active</string>
+    <string name="notification_wireless_scanning_title">Mesure sans fil active</string>
 
-    <string name="notification_reports_created">%d rapports créés</string>
+    <string name="notification_wireless_scanning_content_reports_created">%d rapports créés</string>
 
     <string name="ignore_battery_optimizations_title">Ignorer les optimisations de batterie</string>
     <string name="ignore_battery_optimizations_description">Pour de meilleurs résultats, les optimisations de batterie doivent être désactivées. Les mesures sans fil et l\'utilisation de la localisation sont significativement affectés lorsque l\'optimisation de batterie est active et l\'écran éteint.</string>

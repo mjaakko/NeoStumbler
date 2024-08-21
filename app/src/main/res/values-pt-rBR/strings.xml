@@ -31,8 +31,8 @@
     <string name="toast_reports_upload_failed">Falhou em enviar relatórios</string>
     <string name="report_upload_notification_channel_name">Envios de relatórios</string>
     <string name="notification_sending_reports">Enviando relatórios</string>
-    <string name="notification_wireless_scanning_active">Escaneamento de redes sem-fio ativo</string>
-    <string name="notification_reports_created">%d relatórios criados</string>
+    <string name="notification_wireless_scanning_title">Escaneamento de redes sem-fio ativo</string>
+    <string name="notification_wireless_scanning_content_reports_created">%d relatórios criados</string>
     <string name="ignore_battery_optimizations_title">Ignorar otimizações de bateria</string>
     <string name="ignore_battery_optimizations_description">Para melhor resultados, as otimizações de bateria devem ser desativadas. O escaneamento de redes sem-fio e o acesso à localização é significativamente piorado quando a otimização de bateria está ativa e a tela está desligada</string>
     <string name="battery_optimizations_not_disabled_warning">As otimizações de bateria não foram desativadas</string>

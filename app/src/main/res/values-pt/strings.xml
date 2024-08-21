@@ -18,8 +18,8 @@
     <string name="delete_report">Apagar relatório</string>
     <string name="delete_report_confirmation">Tem a certeza que quer apagar o relatório?</string>
     <string name="notification_sending_reports">Enviando relatórios</string>
-    <string name="notification_wireless_scanning_active">Scan wireless ativo</string>
-    <string name="notification_reports_created">%d relatórios criados</string>
+    <string name="notification_wireless_scanning_title">Scan wireless ativo</string>
+    <string name="notification_wireless_scanning_content_reports_created">%d relatórios criados</string>
     <string name="export_notification_channel_name">Exportar informação</string>
     <string name="export_data">Exportar informação</string>
     <string name="export_no_file_chosen">Não foi possível exportar a informação porque nenhum ficheiro foi criado</string>

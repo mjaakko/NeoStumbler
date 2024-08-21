@@ -32,8 +32,8 @@
     <string name="toast_reports_upload_failed">Berichte hochladen fehlgeschlagen</string>
     <string name="report_upload_notification_channel_name">Berichtuploads</string>
     <string name="notification_sending_reports">Lade Berichte hoch</string>
-    <string name="notification_wireless_scanning_active">Funknetzwerke scannen aktiv</string>
-    <string name="notification_reports_created">%d Berichte erstellt</string>
+    <string name="notification_wireless_scanning_title">Funknetzwerke scannen aktiv</string>
+    <string name="notification_wireless_scanning_content_reports_created">%d Berichte erstellt</string>
     <string name="ignore_battery_optimizations_title">Akkuoptimierungen ignorieren</string>
     <string name="ignore_battery_optimizations_description">Für beste Ergebnisse sollten Akkuoptimierungen deaktiviert sein. Funknetzwerkscans und Standortabfragen werden erheblich gedrosselt, wenn Akkuoptimierungen aktiv und der Bildschirm aus sind.</string>
     <string name="battery_optimizations_not_disabled_warning">Akkuoptimierungen sind nicht deaktiviert</string>
