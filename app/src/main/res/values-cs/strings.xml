@@ -62,4 +62,13 @@
     <string name="export_notification_channel_name">Export dat</string>
     <string name="send_reports_automatically">Automaticky posílat reporty</string>
     <string name="export_data">Exportovat data</string>
+    <string name="settings_group_reports">Reporty</string>
+    <string name="settings_group_scanning">Skenování</string>
+    <string name="movement_detection">Detekce pohybu</string>
+    <string name="movement_detection_none_description">Pokračovat ve skenování i když se nehýbete</string>
+    <string name="movement_detection_location_title">Založené na poloze</string>
+    <string name="movement_detection_significant_motion_title">Sensor pohybu</string>
+    <string name="movement_detection_significant_motion_description">Pozastaví skenování a GPS když není detekov pohyb. Šetří baterii, ale nespolehlivý na některých zařízeních</string>
+    <string name="movement_detection_none_title">Žádný</string>
+    <string name="movement_detection_location_description">Pozadtaví skenování když se poloha nemění. Udržuje GPS aktivní</string>
 </resources>
