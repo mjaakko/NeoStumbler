@@ -50,6 +50,7 @@ import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
+import xyz.malkki.neostumbler.extensions.get
 import xyz.malkki.neostumbler.extensions.isWifiScanThrottled
 import xyz.malkki.neostumbler.location.LocationSourceProvider
 import xyz.malkki.neostumbler.scanner.movement.ConstantMovementDetector
@@ -101,6 +102,10 @@ class ScannerService : Service() {
                 putExtra(EXTRA_AUTOSTART, autostart)
             }
         }
+
+        enum class NotificationStyle(val detailLevel: Int) {
+            MINIMAL(1), BASIC(2), DETAILED(3)
+        }
     }
 
     private lateinit var wakeLock: WakeLock
@@ -119,6 +124,8 @@ class ScannerService : Service() {
     private var autostarted = true
 
     private var scanning = false
+
+    private var notificationStyle = NotificationStyle.BASIC
 
     private val binder = ScannerServiceBinder()
 
@@ -155,6 +162,12 @@ class ScannerService : Service() {
         }
 
         scanning = true
+
+        notificationStyle = settingsStore.data
+            .map { prefs ->
+                prefs.get<NotificationStyle>(PreferenceKeys.SCANNER_NOTIFICATION_STYLE) ?: NotificationStyle.BASIC
+            }
+            .first()
 
         val gpsActiveChannel = Channel<Boolean>()
 
@@ -308,6 +321,8 @@ class ScannerService : Service() {
         wifiLock.release()
         wakeLock.release()
 
+        notificationManager.cancel(NOTIFICATION_ID)
+
         super.onDestroy()
     }
 
@@ -332,25 +347,41 @@ class ScannerService : Service() {
         }
 
         return NotificationCompat.Builder(this@ScannerService, StumblerApplication.STUMBLING_NOTIFICATION_CHANNEL_ID)
-            .setSmallIcon(R.drawable.radar_24)
-            .setContentTitle(getString(R.string.notification_wireless_scanning_title))
-            .setContentText(if (satellitesInUseText != null) {
-                "$reportsCreatedText | $satellitesInUseText"
-            } else {
-                reportsCreatedText
-            })
-            .setPriority(NotificationCompat.PRIORITY_LOW)
-            .setOngoing(true)
-            .setAllowSystemGeneratedContextualActions(false)
-            .setOnlyAlertOnce(true)
-            .setLocalOnly(true)
-            .setCategory(Notification.CATEGORY_SERVICE)
-            .setForegroundServiceBehavior(if (autostarted) { FOREGROUND_SERVICE_DEFERRED } else { FOREGROUND_SERVICE_IMMEDIATE })
-            .setUsesChronometer(true)
-            .setShowWhen(true)
-            .setWhen(startedAt)
-            .setContentIntent(intent)
-            .addAction(NotificationCompat.Action(R.drawable.stop_24, getString(R.string.stop), stopScanningPendingIntent))
+            .apply {
+                setSmallIcon(R.drawable.radar_24)
+
+                setContentTitle(getString(R.string.notification_wireless_scanning_title))
+
+                if (notificationStyle == NotificationStyle.BASIC || (notificationStyle >= NotificationStyle.BASIC && satellitesInUseText == null)) {
+                    setContentText(reportsCreatedText)
+                } else if (notificationStyle.detailLevel >= NotificationStyle.BASIC.detailLevel) {
+                    setContentText("$reportsCreatedText | $satellitesInUseText")
+
+                    setStyle(NotificationCompat.BigTextStyle().bigText("""
+                        $reportsCreatedText
+                       
+                        $satellitesInUseText
+                    """.trimIndent()))
+                }
+
+                setPriority(NotificationCompat.PRIORITY_LOW)
+
+                setOngoing(true)
+                setAllowSystemGeneratedContextualActions(false)
+                setOnlyAlertOnce(true)
+                setLocalOnly(true)
+
+                setCategory(Notification.CATEGORY_SERVICE)
+
+                setForegroundServiceBehavior(if (autostarted) { FOREGROUND_SERVICE_DEFERRED } else { FOREGROUND_SERVICE_IMMEDIATE })
+
+                setUsesChronometer(true)
+                setShowWhen(true)
+                setWhen(startedAt)
+
+                setContentIntent(intent)
+                addAction(NotificationCompat.Action(R.drawable.stop_24, getString(R.string.stop), stopScanningPendingIntent))
+            }
             .build()
     }
 

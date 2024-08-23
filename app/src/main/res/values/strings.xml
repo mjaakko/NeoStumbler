@@ -94,6 +94,7 @@
 
     <string name="settings_group_reports">Reports</string>
     <string name="settings_group_scanning">Scanning</string>
+    <string name="settings_group_other">Other</string>
 
     <string name="movement_detection">Movement detection</string>
 
@@ -108,6 +109,23 @@
     <string name="movement_detection_significant_motion_title">Motion sensor</string>
     <string name="movement_detection_significant_motion_description">
         Pauses scanning and GPS when no significant motion is detected. Saves battery, but does not work reliably on some devices
+    </string>
+
+    <string name="notification_style">Notification style</string>
+
+    <string name="notification_style_minimal_title">Minimal</string>
+    <string name="notification_style_minimal_description">
+        Shows the notification with no details
+    </string>
+
+    <string name="notification_style_basic_title">Basic</string>
+    <string name="notification_style_basic_description">
+        Shows the number of reports created
+    </string>
+
+    <string name="notification_style_detailed_title">Detailed</string>
+    <string name="notification_style_detailed_description">
+        Shows the number of reports created and the number of GNSS satellites
     </string>
 
     <string name="show_my_location">Show my location</string>
