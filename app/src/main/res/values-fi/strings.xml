@@ -48,9 +48,12 @@
     <string name="report_upload_notification_channel_name">Raporttien lähetys</string>
     <string name="notification_sending_reports">Lähetetään raportteja</string>
 
-    <string name="notification_wireless_scanning_active">Langaton skannaus päällä</string>
+    <string name="notification_wireless_scanning_title">Langaton skannaus päällä</string>
 
-    <string name="notification_reports_created">%d raporttia luotu</string>
+    <string name="notification_wireless_scanning_content_reports_created">%d raporttia luotu</string>
+    <string name="notification_wireless_scanning_content_satellite_stats">
+        %1$d/%2$d satelliittia käytössä
+    </string>
 
     <string name="ignore_battery_optimizations_title">Akun optimointi</string>
     <string name="ignore_battery_optimizations_description">
@@ -85,6 +88,7 @@
 
     <string name="settings_group_reports">Raportit</string>
     <string name="settings_group_scanning">Skannaus</string>
+    <string name="settings_group_other">Muut</string>
 
     <string name="endpoint">Palvelin</string>
     <string name="path">Polku</string>
@@ -111,6 +115,29 @@
     <string name="movement_detection_significant_motion_title">Liiketunnistin</string>
     <string name="movement_detection_significant_motion_description">
         Pysäyttää skannaamisen ja GPS:n, kun laitteen liiketunnistimesta ei havaita liikettä. Säästää akkua, mutta ei toimi luotettavasti joillain laitteilla
+    </string>
+
+    <string name="notification_style">Ilmoituksen tyyli</string>
+
+    <string name="notification_style_minimal_title">
+        Minimaalinen
+    </string>
+    <string name="notification_style_minimal_description">
+        Ilmoitus näytetään ilman lisätietoja
+    </string>
+
+    <string name="notification_style_basic_title">
+        Oletus
+    </string>
+    <string name="notification_style_basic_description">
+        Ilmoituksessa näytetään luotujen raporttien määrä
+    </string>
+
+    <string name="notification_style_detailed_title">
+        Yksityiskohtainen
+    </string>
+    <string name="notification_style_detailed_description">
+        Ilmoituksessa näytetään luotujen raporttien määrä ja GNSS-satelliittien määrä
     </string>
 
     <string name="show_my_location">Näytä oma sijainti</string>

@@ -50,9 +50,12 @@
     <string name="report_upload_notification_channel_name">Report uploads</string>
     <string name="notification_sending_reports">Sending reports</string>
 
-    <string name="notification_wireless_scanning_active">Wireless scanning active</string>
+    <string name="notification_wireless_scanning_title">Wireless scanning active</string>
 
-    <string name="notification_reports_created">%d reports created</string>
+    <string name="notification_wireless_scanning_content_reports_created">%d reports created</string>
+    <string name="notification_wireless_scanning_content_satellite_stats">
+        %1$d/%2$d satellites in use
+    </string>
 
     <string name="ignore_battery_optimizations_title">Ignore battery optimizations</string>
     <string name="ignore_battery_optimizations_description">For best results, battery optimizations should be disabled. Wireless scanning and location access is significantly throttled when battery optimization is active and the screen is off</string>
@@ -95,6 +98,7 @@
 
     <string name="settings_group_reports">Reports</string>
     <string name="settings_group_scanning">Scanning</string>
+    <string name="settings_group_other">Other</string>
 
     <string name="movement_detection">Movement detection</string>
 
@@ -109,6 +113,23 @@
     <string name="movement_detection_significant_motion_title">Motion sensor</string>
     <string name="movement_detection_significant_motion_description">
         Pauses scanning and GPS when no significant motion is detected. Saves battery, but does not work reliably on some devices
+    </string>
+
+    <string name="notification_style">Notification style</string>
+
+    <string name="notification_style_minimal_title">Minimal</string>
+    <string name="notification_style_minimal_description">
+        Shows the notification with no details
+    </string>
+
+    <string name="notification_style_basic_title">Basic</string>
+    <string name="notification_style_basic_description">
+        Shows the number of reports created
+    </string>
+
+    <string name="notification_style_detailed_title">Detailed</string>
+    <string name="notification_style_detailed_description">
+        Shows the number of reports created and the number of GNSS satellites
     </string>
 
     <string name="show_my_location">Show my location</string>

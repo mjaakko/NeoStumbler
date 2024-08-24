@@ -14,4 +14,6 @@ object PreferenceKeys {
     const val GEOSUBMIT_API_KEY = "geosubmit_api_key"
 
     const val MOVEMENT_DETECTOR = "movement_detector"
+
+    const val SCANNER_NOTIFICATION_STYLE = "scanner_notification_style"
 }

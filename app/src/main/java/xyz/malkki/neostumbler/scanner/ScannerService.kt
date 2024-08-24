@@ -30,10 +30,18 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -42,6 +50,7 @@ import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
+import xyz.malkki.neostumbler.extensions.get
 import xyz.malkki.neostumbler.extensions.isWifiScanThrottled
 import xyz.malkki.neostumbler.location.LocationSourceProvider
 import xyz.malkki.neostumbler.scanner.movement.ConstantMovementDetector
@@ -53,6 +62,8 @@ import xyz.malkki.neostumbler.scanner.source.BluetoothBeaconSource
 import xyz.malkki.neostumbler.scanner.source.MultiSubscriptionCellInfoSource
 import xyz.malkki.neostumbler.scanner.source.TelephonyManagerCellInfoSource
 import xyz.malkki.neostumbler.scanner.source.WifiManagerWifiAccessPointSource
+import xyz.malkki.neostumbler.utils.GpsStats
+import xyz.malkki.neostumbler.utils.getGpsStatsFlow
 import java.util.Locale
 import kotlin.time.Duration.Companion.seconds
 
@@ -91,6 +102,10 @@ class ScannerService : Service() {
                 putExtra(EXTRA_AUTOSTART, autostart)
             }
         }
+
+        enum class NotificationStyle(val detailLevel: Int) {
+            MINIMAL(1), BASIC(2), DETAILED(3)
+        }
     }
 
     private lateinit var wakeLock: WakeLock
@@ -110,7 +125,7 @@ class ScannerService : Service() {
 
     private var scanning = false
 
-    private var reportsCreated = 0
+    private var notificationStyle = NotificationStyle.BASIC
 
     private val binder = ScannerServiceBinder()
 
@@ -148,11 +163,39 @@ class ScannerService : Service() {
 
         scanning = true
 
+        notificationStyle = settingsStore.data
+            .map { prefs ->
+                prefs.get<NotificationStyle>(PreferenceKeys.SCANNER_NOTIFICATION_STYLE) ?: NotificationStyle.BASIC
+            }
+            .first()
+
+        val gpsActiveChannel = Channel<Boolean>()
+
+        val gpsStatsFlow = gpsActiveChannel
+            .consumeAsFlow()
+            .distinctUntilChanged()
+            .flatMapLatest { gpsActive ->
+                if (gpsActive) {
+                    getGpsStatsFlow(this@ScannerService)
+                } else {
+                    flowOf(null)
+                }
+            }
+
         val locationSource = LocationSourceProvider(this@ScannerService).getLocationSource()
 
         val locationFlow = locationSource
             .getLocations(LOCATION_INTERVAL)
-            .shareIn(this, started = SharingStarted.WhileSubscribed())
+            .onStart {
+                gpsActiveChannel.send(true)
+            }
+            .onCompletion {
+                gpsActiveChannel.send(false)
+            }
+            .shareIn(
+                scope = this,
+                started = SharingStarted.WhileSubscribed()
+            )
 
         val cellInfoSource = if (hasReadPhoneStatePermission()) {
             MultiSubscriptionCellInfoSource(this@ScannerService)
@@ -200,7 +243,11 @@ class ScannerService : Service() {
 
         Timber.i("Using ${movementDetector::class.simpleName} for detecting movement")
 
+        val reportsCreatedChannel = Channel<Int>()
+
         launch {
+            var reportsCreated = 0
+
             WirelessScanner(
                 locationSource = { locationFlow },
                 cellInfoSource = { cellInfoSource.getCellInfoFlow(CELL_SCAN_INTERVAL) },
@@ -218,15 +265,23 @@ class ScannerService : Service() {
                         beacons = reportData.bluetoothBeacons
                     )
 
-                    reportsCreated++
+                    reportsCreatedChannel.send(reportsCreated++)
+                }
+        }
 
+        launch {
+            reportsCreatedChannel.consumeAsFlow()
+                .combine(gpsStatsFlow) { reportsCount, gpsStats ->
+                    reportsCount to gpsStats
+                }
+                .collect { (reportsCount, gpsStats) ->
                     if (notificationManager.areNotificationsEnabled()) {
-                        notificationManager.notify(NOTIFICATION_ID, createNotification())
+                        notificationManager.notify(NOTIFICATION_ID, createNotification(reportsCreated = reportsCount, gpsStats = gpsStats))
                     }
                 }
         }
 
-        startForeground(NOTIFICATION_ID, createNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION)
+        startForeground(NOTIFICATION_ID, createNotification(reportsCreated = 0), ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION)
     }
 
     private fun stopScanning() {
@@ -266,10 +321,12 @@ class ScannerService : Service() {
         wifiLock.release()
         wakeLock.release()
 
+        notificationManager.cancel(NOTIFICATION_ID)
+
         super.onDestroy()
     }
 
-    private fun createNotification(): Notification {
+    private fun createNotification(reportsCreated: Int, gpsStats: GpsStats? = null): Notification {
         val intent = PendingIntent.getActivity(
             this@ScannerService,
             MAIN_ACTIVITY_PENDING_INTENT_REQUEST_CODE,
@@ -284,22 +341,47 @@ class ScannerService : Service() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
+        val reportsCreatedText = getString(R.string.notification_wireless_scanning_content_reports_created, reportsCreated)
+        val satellitesInUseText = gpsStats?.let {
+            getString(R.string.notification_wireless_scanning_content_satellite_stats, it.satellitesUsedInFix, it.satellitesTotal)
+        }
+
         return NotificationCompat.Builder(this@ScannerService, StumblerApplication.STUMBLING_NOTIFICATION_CHANNEL_ID)
-            .setSmallIcon(R.drawable.radar_24)
-            .setContentTitle(getString(R.string.notification_wireless_scanning_active))
-            .setContentText(getString(R.string.notification_reports_created, reportsCreated))
-            .setPriority(NotificationCompat.PRIORITY_LOW)
-            .setOngoing(true)
-            .setAllowSystemGeneratedContextualActions(false)
-            .setOnlyAlertOnce(true)
-            .setLocalOnly(true)
-            .setCategory(Notification.CATEGORY_SERVICE)
-            .setForegroundServiceBehavior(if (autostarted) { FOREGROUND_SERVICE_DEFERRED } else { FOREGROUND_SERVICE_IMMEDIATE })
-            .setUsesChronometer(true)
-            .setShowWhen(true)
-            .setWhen(startedAt)
-            .setContentIntent(intent)
-            .addAction(NotificationCompat.Action(R.drawable.stop_24, getString(R.string.stop), stopScanningPendingIntent))
+            .apply {
+                setSmallIcon(R.drawable.radar_24)
+
+                setContentTitle(getString(R.string.notification_wireless_scanning_title))
+
+                if (notificationStyle == NotificationStyle.BASIC || (notificationStyle >= NotificationStyle.BASIC && satellitesInUseText == null)) {
+                    setContentText(reportsCreatedText)
+                } else if (notificationStyle.detailLevel >= NotificationStyle.BASIC.detailLevel) {
+                    setContentText("$reportsCreatedText | $satellitesInUseText")
+
+                    setStyle(NotificationCompat.BigTextStyle().bigText("""
+                        $reportsCreatedText
+                       
+                        $satellitesInUseText
+                    """.trimIndent()))
+                }
+
+                setPriority(NotificationCompat.PRIORITY_LOW)
+
+                setOngoing(true)
+                setAllowSystemGeneratedContextualActions(false)
+                setOnlyAlertOnce(true)
+                setLocalOnly(true)
+
+                setCategory(Notification.CATEGORY_SERVICE)
+
+                setForegroundServiceBehavior(if (autostarted) { FOREGROUND_SERVICE_DEFERRED } else { FOREGROUND_SERVICE_IMMEDIATE })
+
+                setUsesChronometer(true)
+                setShowWhen(true)
+                setWhen(startedAt)
+
+                setContentIntent(intent)
+                addAction(NotificationCompat.Action(R.drawable.stop_24, getString(R.string.stop), stopScanningPendingIntent))
+            }
             .build()
     }
 

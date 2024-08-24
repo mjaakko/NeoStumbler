@@ -29,8 +29,8 @@
     <string name="toast_reports_upload_failed">Chyba při odesílání reportů</string>
     <string name="notification_sending_reports">Odesílání reportů</string>
     <string name="scanner_status_notification_channel_name">Stav skenování</string>
-    <string name="notification_wireless_scanning_active">Skenování aktivní</string>
-    <string name="notification_reports_created">Vytvořeno %d reportů</string>
+    <string name="notification_wireless_scanning_title">Skenování aktivní</string>
+    <string name="notification_wireless_scanning_content_reports_created">Vytvořeno %d reportů</string>
     <string name="ignore_battery_optimizations_title">Povolení stále běžet na pozadí</string>
     <string name="bluetooth_icon_description">Ikona Bluetooth</string>
     <string name="wireless_scanning">Skenování</string>
