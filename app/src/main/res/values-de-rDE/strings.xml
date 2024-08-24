@@ -37,7 +37,7 @@
     <string name="ignore_battery_optimizations_title">Akkuoptimierungen ignorieren</string>
     <string name="ignore_battery_optimizations_description">Für beste Ergebnisse sollten Akkuoptimierungen deaktiviert sein. Funknetzwerkscans und Standortabfragen werden erheblich gedrosselt, wenn Akkuoptimierungen aktiv und der Bildschirm aus sind.</string>
     <string name="battery_optimizations_not_disabled_warning">Akkuoptimierungen sind nicht deaktiviert</string>
-    <string name="send_reports_automatically">Automatisch Berichte senden</string>
+    <string name="send_reports_automatically">Berichte automatisch senden</string>
     <string name="export_notification_channel_name">Datenexport</string>
     <string name="notification_exporting_data">Exportiere Daten…</string>
     <string name="export_data">Daten exportieren</string>
