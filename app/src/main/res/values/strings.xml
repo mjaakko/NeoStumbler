@@ -20,6 +20,8 @@
     <string name="cell_tower_icon_description">Cell tower icon</string>
     <string name="bluetooth_icon_description">Bluetooth icon</string>
 
+    <string name="warning_icon_description">Warning icon</string>
+
     <string name="scanner_status_notification_channel_name">Scanning status</string>
 
     <string name="wireless_scanning">Wireless scanning</string>
@@ -82,6 +84,8 @@
     <string name="endpoint">Endpoint</string>
     <string name="path">Path</string>
     <string name="api_key">API key (optional)</string>
+
+    <string name="unencrypted_endpoint_warning">Unencrypted endpoint</string>
 
     <string name="settings_ignore_wifi_scan_throttling">Ignore Wi-Fi scan throttling</string>
     <string name="wifi_scan_throttling">Wi-Fi scan throttling</string>

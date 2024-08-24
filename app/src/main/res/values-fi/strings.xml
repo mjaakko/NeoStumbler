@@ -18,6 +18,8 @@
     <string name="cell_tower_icon_description">Puhelinmasto kuvake</string>
     <string name="bluetooth_icon_description">Bluetooth kuvake</string>
 
+    <string name="warning_icon_description">Varoituskuvake</string>
+
     <string name="scanner_status_notification_channel_name">Skannauksen status</string>
 
     <string name="wireless_scanning">Langaton skannaus</string>
@@ -87,6 +89,8 @@
     <string name="endpoint">Palvelin</string>
     <string name="path">Polku</string>
     <string name="api_key">API-avain (vapaaehtoinen)</string>
+
+    <string name="unencrypted_endpoint_warning">Salaamaton palvelin</string>
 
     <string name="settings_ignore_wifi_scan_throttling">Wi-Fi -skannaus ilman rajoituksia</string>
     <string name="wifi_scan_throttling">Wi-Fi -skannauksen rajoitukset</string>

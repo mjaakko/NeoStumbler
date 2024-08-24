@@ -7,10 +7,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.BasicAlertDialog
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -21,8 +24,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -144,6 +149,10 @@ private fun GeosubmitEndpointDialog(currentParams: GeosubmitParams?, onDialogClo
                     singleLine = true
                 )
 
+                if (endpoint.value.isUnencryptedUrl) {
+                    UnencryptedEndpointWarning()
+                }
+
                 Spacer(modifier = Modifier.height(8.dp))
 
                 TextField(
@@ -194,3 +203,31 @@ private fun GeosubmitEndpointDialog(currentParams: GeosubmitParams?, onDialogClo
         }
     }
 }
+
+@Composable
+private fun UnencryptedEndpointWarning() {
+    Row(
+        modifier = Modifier
+            .wrapContentSize()
+            .padding(top = 2.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.warning_14sp),
+            tint = MaterialTheme.colorScheme.onErrorContainer,
+            contentDescription = stringResource(id = R.string.warning_icon_description)
+        )
+        Spacer(modifier = Modifier.width(2.dp))
+        Text(modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            text = stringResource(id = R.string.unencrypted_endpoint_warning),
+            style = MaterialTheme.typography.labelSmall.copy(fontSize = 14.sp),
+            color = MaterialTheme.colorScheme.onErrorContainer
+        )
+    }
+}
+
+private val String?.isUnencryptedUrl: Boolean
+    get() = this?.startsWith("http:") ?: false
