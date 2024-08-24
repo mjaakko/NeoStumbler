@@ -71,4 +71,15 @@
     <string name="movement_detection_significant_motion_description">Pozastaví skenování a GPS když není detekov pohyb. Šetří baterii, ale nespolehlivý na některých zařízeních</string>
     <string name="movement_detection_none_title">Žádný</string>
     <string name="movement_detection_location_description">Pozadtaví skenování když se poloha nemění. Udržuje GPS aktivní</string>
+    <string name="warning_icon_description">Varovná ikona</string>
+    <string name="unencrypted_endpoint_warning">Nešifrované připojení</string>
+    <string name="notification_wireless_scanning_content_satellite_stats">%1$d/%2$d satelitů používáno</string>
+    <string name="notification_style_minimal_description">Ukazuje upozornění bez detailů</string>
+    <string name="notification_style_basic_title">Základní</string>
+    <string name="notification_style_basic_description">Ukazeje počet vytvořených reportů</string>
+    <string name="notification_style_detailed_title">Detailní</string>
+    <string name="notification_style_detailed_description">Ukazuje počet vytvořených reportů a počet GNSS satelitů</string>
+    <string name="settings_group_other">Ostatní</string>
+    <string name="notification_style">Styl upozornění</string>
+    <string name="notification_style_minimal_title">Minimální</string>
 </resources>
