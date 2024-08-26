@@ -238,7 +238,10 @@ class ScannerService : Service() {
             MovementDetectorType.LOCATION -> LocationBasedMovementDetector {
                 locationFlow.map { it.location }
             }
-            MovementDetectorType.SIGNIFICANT_MOTION -> SignificantMotionMovementDetector(this@ScannerService.getSystemService<SensorManager>()!!)
+            MovementDetectorType.SIGNIFICANT_MOTION -> SignificantMotionMovementDetector(
+                sensorManager = this@ScannerService.getSystemService<SensorManager>()!!,
+                locationSource = { locationFlow.map { it.location } }
+            )
         }
 
         Timber.i("Using ${movementDetector::class.simpleName} for detecting movement")
