@@ -9,7 +9,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
-import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -18,7 +18,7 @@ class OneTimeActionHelperTest {
     private val testContext: Context = ApplicationProvider.getApplicationContext()
 
     @Test
-    fun testOneTimeActionIsMarkedAsShown() = runTest {
+    fun testOneTimeActionIsMarkedAsShown() = runBlocking {
         val actionName = "test"
 
         val testDataStore: DataStore<Preferences> = PreferenceDataStoreFactory.create(
