@@ -11,6 +11,9 @@
     <string name="reset">Reset</string>
     <string name="save">Save</string>
 
+    <string name="cancel">Cancel</string>
+    <string name="use">Use</string>
+
     <string name="stop">Stop</string>
 
     <string name="permissions_needed">Permissions needed</string>
@@ -89,6 +92,12 @@
     <string name="api_key">API key (optional)</string>
 
     <string name="unencrypted_endpoint_warning">Unencrypted endpoint</string>
+
+    <string name="suggested_services_title">Suggested services</string>
+
+    <string name="suggested_service_hosted_by">Hosted by:</string>
+    <string name="suggested_service_website">Website</string>
+    <string name="suggested_service_terms_of_use">Terms of use</string>
 
     <string name="settings_ignore_wifi_scan_throttling">Ignore Wi-Fi scan throttling</string>
     <string name="wifi_scan_throttling">Wi-Fi scan throttling</string>

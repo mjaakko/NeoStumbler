@@ -1,0 +1,12 @@
+[
+  {
+    "name": "beaconDB",
+    "website": "https://beacondb.net/",
+    "termsOfUse": "https://beacondb.net/privacy/",
+    "hostedBy": "Joel Koen",
+    "endpoint": {
+      "baseUrl": "https://api.beacondb.net",
+      "path": "/v2/geosubmit"
+    }
+  }
+]

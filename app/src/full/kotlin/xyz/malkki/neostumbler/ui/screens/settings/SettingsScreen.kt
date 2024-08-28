@@ -17,7 +17,7 @@ import xyz.malkki.neostumbler.ui.composables.SettingsGroup
 import xyz.malkki.neostumbler.ui.composables.SettingsToggle
 import xyz.malkki.neostumbler.ui.composables.autoscan.AutoScanToggle
 import xyz.malkki.neostumbler.ui.composables.settings.AutoUploadToggle
-import xyz.malkki.neostumbler.ui.composables.settings.GeosubmitEndpointSettings
+import xyz.malkki.neostumbler.ui.composables.settings.geosubmit.GeosubmitEndpointSettings
 import xyz.malkki.neostumbler.ui.composables.settings.IgnoreScanThrottlingToggle
 import xyz.malkki.neostumbler.ui.composables.settings.MovementDetectorSettings
 import xyz.malkki.neostumbler.ui.composables.settings.ScannerNotificationStyleSettings
