@@ -206,16 +206,6 @@ private fun GeosubmitEndpointDialog(currentParams: GeosubmitParams?, onDialogClo
                 }
 
                 Row {
-                    TextButton(
-                        onClick = {
-                            endpoint.value = GeosubmitParams.DEFAULT_BASE_URL
-                            path.value = GeosubmitParams.DEFAULT_PATH
-                            apiKey.value = null
-                        }
-                    ) {
-                        Text(text = stringResource(id = R.string.reset))
-                    }
-
                     Spacer(modifier = Modifier.weight(1.0f))
 
                     TextButton(
