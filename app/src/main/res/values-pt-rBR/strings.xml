@@ -47,8 +47,6 @@
     <string name="cells">Redes móveis</string>
     <string name="beacons">Beacons Bluetooth</string>
     <string name="add_quick_settings_tile">Adicionar um bloco às configurações rápidas para iniciar o escaneamento facilmente?</string>
-    <string name="mls_warning_title">O MLS está sendo desativado</string>
-    <string name="mls_warning_text">O "Mozilla Location Services" irá ser desativado em breve e não aceita mais o envio de dados. Enviar relatórios não funcionará\n\nVocê ainda pode exportar os dados coletados como um arquivo ZIP pelas configurações</string>
     <string name="endpoint">Servidor</string>
     <string name="path">Caminho</string>
     <string name="api_key">Chave da API (opcional)</string>

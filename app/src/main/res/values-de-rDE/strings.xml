@@ -48,10 +48,7 @@
     <string name="cells">Funkzellen</string>
     <string name="beacons">Bluetooth-Beacon</string>
     <string name="add_quick_settings_tile">Schnelleinstellungskachel hinzufügen, um das Scannen einfacher zu starten?</string>
-    <string name="mls_warning_title">MLS wird abgeschaltet</string>
-    <string name="mls_warning_text">Mozilla Location Services werden bald abgeschaltet und akzeptieren keine weiteren Daten. Hochladeversuche werden fehlschlagen.
-\n
-\nGesammelte Daten können immer noch in den Einstellungen als ZIP-Paket exportiert werden.</string>
+
     <string name="endpoint">Endpunkt</string>
     <string name="path">Pfad</string>
     <string name="api_key">API-Schlüssel (optional)</string>

@@ -84,9 +84,9 @@
   
     <string name="add_quick_settings_tile">Lisää skannaaminen pika-asetuksiin?</string>
 
-    <string name="mls_warning_title">MLS poistuu käytöstä</string>
+    <string name="mls_warning_title">MLS on poistunut käytöstä</string>
     <string name="mls_warning_text">
-        Mozillan sijaintipalvelu poistuu käytöstä eikä enää ota vastaan datalähetyksiä. Raporttien lähettäminen ei toimi\n\nVoit kuitenkin asetuksista viedä kerätyn datan ZIP-pakettina
+        Mozillan sijaintipalvelu on poistunut käytöstä eikä enää hyväksy datalähetyksiä. Vaihda palvelin johonkin korvaavaan palveluun, jolle löytyy ehdotuksia asetuksista.\n\nDatat voi myös viedä ZIP-pakettina asetuksista
     </string>
 
     <string name="settings_group_reports">Raportit</string>

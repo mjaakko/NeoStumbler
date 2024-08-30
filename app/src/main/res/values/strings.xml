@@ -84,8 +84,8 @@
   
     <string name="add_quick_settings_tile">Add quick settings tile to easily start scanning?</string>
 
-    <string name="mls_warning_title">MLS shutting down</string>
-    <string name="mls_warning_text">Mozilla Location Services is going to shut down soon and no longer accepts data submissions. Trying to upload reports will not work\n\nYou can still export the collected data as a ZIP package from the settings</string>
+    <string name="mls_warning_title">MLS has shut down</string>
+    <string name="mls_warning_text">Mozilla Location Services has shut down and does not accept data submissions anymore. You have to change the endpoint to another service, for which there are suggestions in the settings.\n\nData can also be exported as a ZIP package from the settings</string>
 
     <string name="endpoint">Endpoint</string>
     <string name="path">Path</string>
