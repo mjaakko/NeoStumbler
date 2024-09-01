@@ -4,7 +4,10 @@ on:
   push:
     branches:
       - 'master'
-  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -26,10 +29,10 @@ jobs:
         uses: ASzc/change-string-case-action@v6
         with:
           string: ${{ matrix.version }}
-      - name: Build debug APK
+      - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v3
-        with:
-          arguments: assemble${{ steps.capitalize-version.outputs.capitalized }}Debug
+      - name: Build debug APK
+        run: ./gradlew assemble${{ steps.capitalize-version.outputs.capitalized }}Debug
       - name: Upload debug APK as artifact
         uses: actions/upload-artifact@v4
         with:
