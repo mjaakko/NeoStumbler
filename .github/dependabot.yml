@@ -13,6 +13,7 @@ updates:
       kotlin-gradle-plugins:
         patterns:
           - 'org.jetbrains.kotlin.android'
+          - 'org.jetbrains.kotlin.plugin.compose'
           - 'com.google.devtools.ksp'
       android-gradle-plugins:
         patterns:
