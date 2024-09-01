@@ -1,10 +1,14 @@
 package xyz.malkki.neostumbler.scanner
 
 import android.location.Location
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.timeout
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Test
@@ -14,6 +18,7 @@ import xyz.malkki.neostumbler.common.LocationWithSource
 import xyz.malkki.neostumbler.domain.BluetoothBeacon
 import xyz.malkki.neostumbler.domain.WifiAccessPoint
 import xyz.malkki.neostumbler.scanner.data.ReportData
+import kotlin.time.Duration.Companion.seconds
 
 class WirelessScannerTest {
     @Test
@@ -40,9 +45,11 @@ class WirelessScannerTest {
 
         val reportFlow = wirelessScanner.createReports()
 
-        assertThrows(NoSuchElementException::class.java) {
+        assertThrows(TimeoutCancellationException::class.java) {
             runBlocking {
-                reportFlow.first()
+                withTimeout(1.seconds) {
+                    reportFlow.first()
+                }
             }
         }
     }
@@ -92,9 +99,11 @@ class WirelessScannerTest {
 
         val reportFlow = wirelessScanner.createReports()
 
-        assertThrows(NoSuchElementException::class.java) {
+        assertThrows(TimeoutCancellationException::class.java) {
             runBlocking {
-                reportFlow.first()
+                withTimeout(1.seconds) {
+                    reportFlow.first()
+                }
             }
         }
     }
@@ -140,7 +149,14 @@ class WirelessScannerTest {
         val reports = runBlocking {
             val output = mutableListOf<ReportData>()
 
-            reportFlow.collect(output::add)
+            reportFlow
+                .timeout(5.seconds)
+                .catch {
+                    if (it !is TimeoutCancellationException) {
+                        throw it
+                    }
+                }
+                .collect(output::add)
 
             output.toList()
         }
