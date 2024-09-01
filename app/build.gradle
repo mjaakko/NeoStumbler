@@ -143,6 +143,9 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8'
     fullImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services'
+    
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test'
+    androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test'
 
     fullImplementation 'com.google.android.gms:play-services-location:21.3.0'
 
