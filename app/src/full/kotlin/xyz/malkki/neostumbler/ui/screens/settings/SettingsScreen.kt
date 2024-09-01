@@ -19,6 +19,7 @@ import xyz.malkki.neostumbler.ui.composables.autoscan.AutoScanToggle
 import xyz.malkki.neostumbler.ui.composables.settings.AutoUploadToggle
 import xyz.malkki.neostumbler.ui.composables.settings.geosubmit.GeosubmitEndpointSettings
 import xyz.malkki.neostumbler.ui.composables.settings.IgnoreScanThrottlingToggle
+import xyz.malkki.neostumbler.ui.composables.settings.LanguageSwitcher
 import xyz.malkki.neostumbler.ui.composables.settings.MovementDetectorSettings
 import xyz.malkki.neostumbler.ui.composables.settings.ScannerNotificationStyleSettings
 
@@ -43,6 +44,7 @@ fun SettingsScreen() {
 
         SettingsGroup(title = stringResource(id = R.string.settings_group_other)) {
             ScannerNotificationStyleSettings()
+            LanguageSwitcher()
         }
 
         Spacer(modifier = Modifier.height(20.dp))

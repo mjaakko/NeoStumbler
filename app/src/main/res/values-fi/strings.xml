@@ -149,6 +149,8 @@
         Ilmoituksessa näytetään luotujen raporttien määrä ja GNSS-satelliittien määrä
     </string>
 
+    <string name="app_language">Kieli</string>
+
     <string name="show_my_location">Näytä oma sijainti</string>
 
     <string name="permission_rationale_fine_location">

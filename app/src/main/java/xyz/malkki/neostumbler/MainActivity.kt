@@ -1,8 +1,8 @@
 package xyz.malkki.neostumbler
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -32,7 +32,7 @@ import xyz.malkki.neostumbler.ui.screens.StatisticsScreen
 import xyz.malkki.neostumbler.ui.screens.settings.SettingsScreen
 import xyz.malkki.neostumbler.ui.theme.NeoStumblerTheme
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     companion object {
         const val EXTRA_START_SCANNING = "start_scanning"
         const val EXTRA_REQUEST_BACKGROUND_PERMISSION = "request_background_permission"
