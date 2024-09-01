@@ -80,9 +80,6 @@
 
     <string name="add_quick_settings_tile">Ajouter un bloc aux réglages rapides pour facilement démarrer des mesures ?</string>
 
-    <string name="mls_warning_title">Fin du service MLS</string>
-    <string name="mls_warning_text">Mozilla Location Services s\'éteindra prochainement et n\'acceptera plus les soumissions de données. Tenter d\'envoyer des mesures ne fonctionnera pas.\n\nVous pouvez toujours exporter les données collectées en tant qu\'archive ZIP à partir des paramètres</string>
-
     <string name="endpoint">Destination</string>
     <string name="path">Chemin</string>
     <string name="api_key">Clé API (optionnel)</string>

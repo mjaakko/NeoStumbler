@@ -58,10 +58,6 @@
     <string name="reupload_data">Re-enviar informação</string>
     <string name="add_quick_settings_tile">Adicionar botão às definições rápidas para iniciar scans mais rapidamente?</string>
     <string name="settings_ignore_wifi_scan_throttling">Ignorar limitações no scan de redes Wi-Fi</string>
-    <string name="mls_warning_title">Encerramento da MLS</string>
-    <string name="mls_warning_text">O Mozilla Location Services vai encerrar em breve. O envio de relatórios não vai funcionar
-\n
-\nAinda pode exportar um ficheiro ZIP com a informação colecionada a partir das opções</string>
     <string name="path">Caminho</string>
     <string name="wifi_scan_throttling_explanation">Desative a restrição nos scans/procura de redes Wi-Fi nas definições do seu dispositivo. Normalmente pode ser desativado nas opções de programador/developers settings</string>
     <string name="show_my_location">Mostrar a minha localização</string>

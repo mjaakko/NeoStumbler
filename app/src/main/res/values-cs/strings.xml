@@ -46,10 +46,7 @@
     <string name="permission_rationale_background_location_quick_settings">Spouštění skenování z rychlých nastavení potřebuje oprávnění přístupu k poloze v pozadí</string>
     <string name="permission_rationale_location_map">Zobrazení polohy na mapě potřebuje oprávnění přístupu k poloze</string>
     <string name="report_upload_notification_channel_name">Nahraných reportů</string>
-    <string name="mls_warning_title">Polohová služba Mozilla končí</string>
-    <string name="mls_warning_text">Polohová Služba Mozilla bude brzy vypnutá, a aktuálně nepřímá žádná nová data. Odesílání reportů nebude fungovat.
-\n
-\nPořád je možné exportovat posbíraná data jako ZIP soubor v nastavení</string>
+
     <string name="api_key">API klíč (nepovinný)</string>
     <string name="settings_ignore_wifi_scan_throttling">Vypnout přibrždění vyhledávání Wi-Fi</string>
     <string name="wifi_scan_throttling">Přibrždění hledání Wi-Fi</string>

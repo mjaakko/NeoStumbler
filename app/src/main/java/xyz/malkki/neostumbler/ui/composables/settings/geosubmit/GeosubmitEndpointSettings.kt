@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.ui.composables.settings
+package xyz.malkki.neostumbler.ui.composables.settings.geosubmit
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -7,13 +7,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.BasicAlertDialog
-import androidx.compose.material3.Icon
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -27,7 +25,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -120,6 +117,24 @@ private fun GeosubmitEndpointDialog(currentParams: GeosubmitParams?, onDialogClo
         mutableStateOf(currentParams?.apiKey)
     }
 
+    val showSuggestedServicesDialog = remember {
+        mutableStateOf(false)
+    }
+
+    if (showSuggestedServicesDialog.value) {
+        SuggestedServicesDialog(
+            onServiceSelected = { service ->
+                if (service != null)  {
+                    endpoint.value = service.endpoint.baseUrl
+                    path.value = service.endpoint.path
+                    apiKey.value = service.endpoint.apiKey
+                }
+
+                showSuggestedServicesDialog.value = false
+            }
+        )
+    }
+
     BasicAlertDialog(
         onDismissRequest = { onDialogClose(null) }
     ) {
@@ -179,17 +194,18 @@ private fun GeosubmitEndpointDialog(currentParams: GeosubmitParams?, onDialogClo
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                Row {
-                    TextButton(
-                        onClick = {
-                            endpoint.value = GeosubmitParams.DEFAULT_BASE_URL
-                            path.value = GeosubmitParams.DEFAULT_PATH
-                            apiKey.value = null
-                        }
-                    ) {
-                        Text(text = stringResource(id = R.string.reset))
+                Button(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    onClick = {
+                        showSuggestedServicesDialog.value = true
                     }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.suggested_services_title)
+                    )
+                }
 
+                Row {
                     Spacer(modifier = Modifier.weight(1.0f))
 
                     TextButton(
@@ -201,31 +217,6 @@ private fun GeosubmitEndpointDialog(currentParams: GeosubmitParams?, onDialogClo
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun UnencryptedEndpointWarning() {
-    Row(
-        modifier = Modifier
-            .wrapContentSize()
-            .padding(top = 2.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Icon(
-            painter = painterResource(id = R.drawable.warning_14sp),
-            tint = MaterialTheme.colorScheme.onErrorContainer,
-            contentDescription = stringResource(id = R.string.warning_icon_description)
-        )
-        Spacer(modifier = Modifier.width(2.dp))
-        Text(modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight(),
-            text = stringResource(id = R.string.unencrypted_endpoint_warning),
-            style = MaterialTheme.typography.labelSmall.copy(fontSize = 14.sp),
-            color = MaterialTheme.colorScheme.onErrorContainer
-        )
     }
 }
 

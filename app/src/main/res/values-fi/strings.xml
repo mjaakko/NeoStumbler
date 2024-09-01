@@ -9,6 +9,9 @@
     <string name="reset">Nollaa</string>
     <string name="save">Tallenna</string>
 
+    <string name="cancel">Peru</string>
+    <string name="use">Käytä</string>
+
     <string name="stop">Lopeta</string>
 
     <string name="permissions_needed">Käyttölupia tarvitaan</string>
@@ -81,9 +84,9 @@
   
     <string name="add_quick_settings_tile">Lisää skannaaminen pika-asetuksiin?</string>
 
-    <string name="mls_warning_title">MLS poistuu käytöstä</string>
+    <string name="mls_warning_title">MLS on poistunut käytöstä</string>
     <string name="mls_warning_text">
-        Mozillan sijaintipalvelu poistuu käytöstä eikä enää ota vastaan datalähetyksiä. Raporttien lähettäminen ei toimi\n\nVoit kuitenkin asetuksista viedä kerätyn datan ZIP-pakettina
+        Mozillan sijaintipalvelu on poistunut käytöstä eikä enää hyväksy datalähetyksiä. Vaihda palvelin johonkin korvaavaan palveluun, jolle löytyy ehdotuksia asetuksista.\n\nDatat voi myös viedä ZIP-pakettina asetuksista
     </string>
 
     <string name="settings_group_reports">Raportit</string>
@@ -95,6 +98,12 @@
     <string name="api_key">API-avain (vapaaehtoinen)</string>
 
     <string name="unencrypted_endpoint_warning">Salaamaton palvelin</string>
+
+    <string name="suggested_services_title">Ehdotetut palvelut</string>
+
+    <string name="suggested_service_hosted_by">Ylläpitäjä:</string>
+    <string name="suggested_service_website">Verkkosivu</string>
+    <string name="suggested_service_terms_of_use">Käyttöehdot</string>
 
     <string name="settings_ignore_wifi_scan_throttling">Wi-Fi -skannaus ilman rajoituksia</string>
     <string name="wifi_scan_throttling">Wi-Fi -skannauksen rajoitukset</string>
