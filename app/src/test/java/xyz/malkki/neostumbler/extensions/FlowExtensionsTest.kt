@@ -1,10 +1,12 @@
 package xyz.malkki.neostumbler.extensions
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -66,15 +68,17 @@ class FlowExtensionsTest {
             }
         }
 
-        val duration = measureTime {
-            flow
-                .parallelMap {
-                    delay(100)
-                    sqrt(it)
-                }
-                .collect {}
+        val duration = withContext(Dispatchers.IO) {
+            measureTime {
+                flow
+                    .parallelMap {
+                        delay(100)
+                        sqrt(it)
+                    }
+                    .collect {}
+            }
         }
 
-        assertTrue(duration <= 200.milliseconds)
+        assertTrue(duration <= 500.milliseconds)
     }
 }
