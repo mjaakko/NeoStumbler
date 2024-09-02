@@ -7,6 +7,7 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
 import java.util.UUID
 
 /**
@@ -24,6 +25,7 @@ fun EffectOnWorkCompleted(workId: UUID?, onWorkSuccess: (WorkInfo) -> Unit, onWo
     LaunchedEffect(workId) {
         if (workId != null) {
             workManager.getWorkInfoByIdFlow(workId)
+                .filterNotNull()
                 .filter { it.state == WorkInfo.State.SUCCEEDED || it.state == WorkInfo.State.FAILED }
                 .collectLatest {
                     if (it.state == WorkInfo.State.SUCCEEDED) {
