@@ -33,10 +33,17 @@ android {
         //Configure supported languages here to avoid including incomplete translations in the releases
         resourceConfigurations += ['en', 'cs', 'fi', 'fr-rFR', 'de-rDE', 'pt', 'pt-rBR']
 
+        //Add supported locales to a build config field for the language picker UI
+        buildConfigField("String", "SUPPORTED_LOCALES", "\"" + resourceConfigurations.join(",") + "\"")
+
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas")
             arg("room.incremental", "true")
         }
+    }
+
+    androidResources {
+        generateLocaleConfig true
     }
 
     buildTypes {
@@ -114,6 +121,8 @@ kotlin {
 dependencies {
     implementation 'androidx.core:core-ktx:1.13.1'
     implementation 'androidx.activity:activity-compose:1.9.1'
+
+    implementation 'androidx.appcompat:appcompat:1.7.0'
 
     def lifecycle_version = '2.8.4'
 

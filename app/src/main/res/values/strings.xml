@@ -141,6 +141,8 @@
         Shows the number of reports created and the number of GNSS satellites
     </string>
 
+    <string name="app_language">Language</string>
+
     <string name="show_my_location">Show my location</string>
 
     <string name="permission_rationale_fine_location">
