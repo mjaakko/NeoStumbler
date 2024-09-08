@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.pm.ServiceInfo
 import android.net.Uri
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
@@ -32,7 +33,7 @@ class DataExportWorker(appContext: Context, private val params: WorkerParameters
             .setOngoing(true)
             .setLocalOnly(true)
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
-            .setContentTitle(applicationContext.getString(R.string.notification_exporting_data))
+            .setContentTitle(ContextCompat.getString(applicationContext, R.string.notification_exporting_data))
             .setSmallIcon(R.drawable.upload_file_24)
             .build()
     }

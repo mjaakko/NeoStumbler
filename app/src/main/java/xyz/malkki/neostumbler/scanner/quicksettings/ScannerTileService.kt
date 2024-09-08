@@ -8,6 +8,7 @@ import android.content.Intent
 import android.os.Build
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
+import androidx.core.content.ContextCompat
 import androidx.core.service.quicksettings.PendingIntentActivityWrapper
 import androidx.core.service.quicksettings.TileServiceCompat
 import kotlinx.coroutines.runBlocking
@@ -42,7 +43,7 @@ class ScannerTileService : TileService() {
         qsTile
             .apply {
                 subtitle = if (scanningActive) {
-                    getString(R.string.notification_wireless_scanning_content_reports_created, reportsCreated)
+                    ContextCompat.getString(this@ScannerTileService, R.string.notification_wireless_scanning_content_reports_created).format(reportsCreated)
                 } else {
                     null
                 }

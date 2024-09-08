@@ -27,6 +27,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
 import androidx.work.Constraints
@@ -59,10 +60,10 @@ fun ReportReuploadButton() {
         workId = enqueuedUploadWork.value,
         onWorkSuccess = { workInfo ->
             val reportsUploaded = workInfo.outputData.getInt(ReportSendWorker.OUTPUT_REPORTS_SENT, 0)
-            Toast.makeText(context, context.getString(R.string.toast_reports_uploaded, reportsUploaded), Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, ContextCompat.getString(context, R.string.toast_reports_uploaded).format(reportsUploaded), Toast.LENGTH_SHORT).show()
         },
         onWorkFailed = {
-            Toast.makeText(context, context.getString(R.string.toast_reports_upload_failed), Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, ContextCompat.getString(context, R.string.toast_reports_upload_failed), Toast.LENGTH_SHORT).show()
         }
     )
 
