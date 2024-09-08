@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -48,7 +49,7 @@ fun BatteryOptimizationsDialog(onBatteryOptimizationsDisabled: (Boolean) -> Unit
 
             onBatteryOptimizationsDisabled(batteryOptimizationsDisabled)
             if (!batteryOptimizationsDisabled) {
-                Toast.makeText(context, context.getString(R.string.battery_optimizations_not_disabled_warning), Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, ContextCompat.getString(context, R.string.battery_optimizations_not_disabled_warning), Toast.LENGTH_SHORT).show()
             }
         }
     )

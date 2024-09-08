@@ -30,6 +30,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
 import androidx.work.Constraints
@@ -69,7 +70,7 @@ fun ExportDataButton() {
         contract = ActivityResultContracts.CreateDocument("application/zip"),
         onResult = { uri ->
             if (uri == null) {
-                Toast.makeText(context, context.getString(R.string.export_no_file_chosen), Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, ContextCompat.getString(context, R.string.export_no_file_chosen), Toast.LENGTH_SHORT).show()
             } else {
                 val dateFormat = DateFormat.getDateFormat(context)
 
@@ -78,7 +79,7 @@ fun ExportDataButton() {
                 val fromFormatted = dateFormat.format(Date.from(selectedDates!!.start.atStartOfDay(localTimeZone).toInstant()))
                 val toFormatted = dateFormat.format(Date.from(selectedDates.endInclusive.atStartOfDay(localTimeZone).toInstant()))
 
-                Toast.makeText(context, context.getString(R.string.export_started, fromFormatted, toFormatted), Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, ContextCompat.getString(context, R.string.export_started).format(fromFormatted, toFormatted), Toast.LENGTH_SHORT).show()
 
                 //Convert to local time
                 val from = selectedDates.start.atStartOfDay(localTimeZone).toInstant().toEpochMilli()

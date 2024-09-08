@@ -3,6 +3,7 @@ package xyz.malkki.neostumbler
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -135,7 +136,7 @@ class StumblerApplication : Application() {
 
         val scannerNotificationChannel = NotificationChannel(
             STUMBLING_NOTIFICATION_CHANNEL_ID,
-            getString(R.string.scanner_status_notification_channel_name),
+            ContextCompat.getString(this, R.string.scanner_status_notification_channel_name),
             NotificationManager.IMPORTANCE_LOW
         ).apply {
             setShowBadge(false)
@@ -145,7 +146,7 @@ class StumblerApplication : Application() {
 
         val reportUploadNotificationChannel = NotificationChannel(
             REPORT_UPLOAD_NOTIFICATION_CHANNEL_ID,
-            getString(R.string.report_upload_notification_channel_name),
+            ContextCompat.getString(this, R.string.report_upload_notification_channel_name),
             NotificationManager.IMPORTANCE_LOW
         ).apply {
             setShowBadge(false)
@@ -155,7 +156,7 @@ class StumblerApplication : Application() {
 
         val exportNotificationChannel = NotificationChannel(
             EXPORT_NOTIFICATION_CHANNEL_ID,
-            getString(R.string.export_notification_channel_name),
+            ContextCompat.getString(this, R.string.export_notification_channel_name),
             NotificationManager.IMPORTANCE_DEFAULT
         ).apply {
             setShowBadge(false)

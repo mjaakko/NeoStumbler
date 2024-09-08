@@ -4,6 +4,7 @@ import android.app.Notification
 import android.content.Context
 import android.content.pm.ServiceInfo
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.work.CoroutineWorker
 import androidx.work.Data
@@ -164,7 +165,7 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
             .setOngoing(true)
             .setLocalOnly(true)
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_DEFERRED)
-            .setContentTitle(applicationContext.getString(R.string.notification_sending_reports))
+            .setContentTitle(ContextCompat.getString(applicationContext, R.string.notification_sending_reports))
             .setSmallIcon(R.drawable.sync_24)
             .build()
     }

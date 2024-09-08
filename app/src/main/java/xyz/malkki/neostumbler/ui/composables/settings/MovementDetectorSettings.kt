@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -57,8 +58,8 @@ fun MovementDetectorSettings() {
             } else {
                 setOf(MovementDetectorType.SIGNIFICANT_MOTION)
             },
-            titleProvider = { context.getString(TITLES[it]!!) },
-            descriptionProvider = { context.getString(DESCRIPTIONS[it]!!) },
+            titleProvider = { ContextCompat.getString(context, TITLES[it]!!) },
+            descriptionProvider = { ContextCompat.getString(context, DESCRIPTIONS[it]!!) },
             onValueSelected = { newMovementDetectorType ->
                 settingsStore.updateData { prefs ->
                     prefs.toMutablePreferences().apply {

@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.asFlow
 import androidx.work.Constraints
 import androidx.work.ExistingWorkPolicy
@@ -62,10 +63,10 @@ fun ReportUploadButton() {
         workId = enqueuedUploadWork.value,
         onWorkSuccess = { workInfo ->
             val reportsUploaded = workInfo.outputData.getInt(ReportSendWorker.OUTPUT_REPORTS_SENT, 0)
-            Toast.makeText(context, context.getString(R.string.toast_reports_uploaded, reportsUploaded), Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, ContextCompat.getString(context, R.string.toast_reports_uploaded).format(reportsUploaded), Toast.LENGTH_SHORT).show()
         },
         onWorkFailed = {
-            Toast.makeText(context, context.getString(R.string.toast_reports_upload_failed), Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, ContextCompat.getString(context, R.string.toast_reports_upload_failed), Toast.LENGTH_SHORT).show()
         }
     )
 

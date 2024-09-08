@@ -22,6 +22,7 @@ import android.telephony.TelephonyManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.FOREGROUND_SERVICE_DEFERRED
 import androidx.core.app.NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE
+import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -354,16 +355,16 @@ class ScannerService : Service() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val reportsCreatedText = getString(R.string.notification_wireless_scanning_content_reports_created, reportsCreated)
+        val reportsCreatedText = ContextCompat.getString(applicationContext, R.string.notification_wireless_scanning_content_reports_created).format(reportsCreated)
         val satellitesInUseText = gpsStats?.let {
-            getString(R.string.notification_wireless_scanning_content_satellite_stats, it.satellitesUsedInFix, it.satellitesTotal)
+            ContextCompat.getString(applicationContext, R.string.notification_wireless_scanning_content_satellite_stats).format(it.satellitesUsedInFix, it.satellitesTotal)
         }
 
         return NotificationCompat.Builder(this@ScannerService, StumblerApplication.STUMBLING_NOTIFICATION_CHANNEL_ID)
             .apply {
                 setSmallIcon(R.drawable.radar_24)
 
-                setContentTitle(getString(R.string.notification_wireless_scanning_title))
+                setContentTitle(ContextCompat.getString(applicationContext, R.string.notification_wireless_scanning_title))
 
                 if (notificationStyle == NotificationStyle.BASIC || (notificationStyle >= NotificationStyle.BASIC && satellitesInUseText == null)) {
                     setContentText(reportsCreatedText)
@@ -393,7 +394,7 @@ class ScannerService : Service() {
                 setWhen(startedAt)
 
                 setContentIntent(intent)
-                addAction(NotificationCompat.Action(R.drawable.stop_24, getString(R.string.stop), stopScanningPendingIntent))
+                addAction(NotificationCompat.Action(R.drawable.stop_24, ContextCompat.getString(applicationContext, R.string.stop), stopScanningPendingIntent))
             }
             .build()
     }

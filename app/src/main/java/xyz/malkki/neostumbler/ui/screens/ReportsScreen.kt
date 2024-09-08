@@ -41,7 +41,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.room.util.appendPlaceholders
 import kotlinx.coroutines.launch
 import xyz.malkki.neostumbler.MainActivity
 import xyz.malkki.neostumbler.R
@@ -190,7 +192,7 @@ fun ForegroundScanningButton() {
                 showBatteryOptimizationsDialog.value = true
             }
         } else {
-            Toast.makeText(context, context.getString(R.string.permissions_not_granted), Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, ContextCompat.getString(context, R.string.permissions_not_granted), Toast.LENGTH_SHORT).show()
         }
     }
 

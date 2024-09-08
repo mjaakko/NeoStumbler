@@ -11,6 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.core.content.ContextCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -99,7 +100,7 @@ fun AutoScanToggle() {
         } catch (e: Exception) {
             Timber.w(e, "Failed to enable activity transition listener")
 
-            Toast.makeText(context, context.getString(R.string.autoscan_failed_to_enable), Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, ContextCompat.getString(context, R.string.autoscan_failed_to_enable), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -147,7 +148,7 @@ fun AutoScanToggle() {
                         showAdditionalPermissionsDialog.value = true
                     }
                 } else {
-                    Toast.makeText(context, context.getString(R.string.permissions_not_granted), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, ContextCompat.getString(context, R.string.permissions_not_granted), Toast.LENGTH_SHORT).show()
                 }
             }
         )
@@ -167,7 +168,7 @@ fun AutoScanToggle() {
                         enableAutoScan()
                     }
                 } else {
-                    Toast.makeText(context, context.getString(R.string.permissions_not_granted), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, ContextCompat.getString(context, R.string.permissions_not_granted), Toast.LENGTH_SHORT).show()
                 }
             }
         )

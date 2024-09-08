@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
                     Scaffold(
                         topBar = {
                             TopAppBar(
-                                title = { Text(text = getString(R.string.app_name)) },
+                                title = { Text(text = stringResource(R.string.app_name)) },
                                 colors = TopAppBarDefaults.smallTopAppBarColors(
                                     containerColor = MaterialTheme.colorScheme.primary,
                                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
