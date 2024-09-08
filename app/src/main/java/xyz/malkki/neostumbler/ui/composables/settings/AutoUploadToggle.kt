@@ -11,11 +11,19 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.await
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.geosubmit.ReportSendWorker
 import xyz.malkki.neostumbler.ui.composables.ToggleWithAction
 import java.time.Duration
+
+private fun WorkManager.autoUploadEnabled(): Flow<Boolean> = getWorkInfosForUniqueWorkFlow(ReportSendWorker.PERIODIC_WORK_NAME)
+    .map { workInfos ->
+        workInfos.any { workInfo ->
+            workInfo.state != WorkInfo.State.CANCELLED && workInfo.state != WorkInfo.State.FAILED
+        }
+    }
 
 @Composable
 fun AutoUploadToggle() {
@@ -23,13 +31,7 @@ fun AutoUploadToggle() {
 
     val workManager = WorkManager.getInstance(context)
 
-    val autoUploadEnabled = workManager.getWorkInfosForUniqueWorkFlow(ReportSendWorker.PERIODIC_WORK_NAME)
-        .map { workInfos ->
-            workInfos.any { workInfo ->
-                workInfo.state != WorkInfo.State.CANCELLED && workInfo.state != WorkInfo.State.FAILED
-            }
-        }
-        .collectAsState(initial = null)
+    val autoUploadEnabled = workManager.autoUploadEnabled().collectAsState(initial = null)
 
     ToggleWithAction(
         title = stringResource(R.string.send_reports_automatically),
