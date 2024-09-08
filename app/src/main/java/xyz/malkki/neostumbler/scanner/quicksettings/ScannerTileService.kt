@@ -3,10 +3,9 @@ package xyz.malkki.neostumbler.scanner.quicksettings
 import android.Manifest
 import android.app.PendingIntent
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
 import android.os.Build
-import android.os.IBinder
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import androidx.core.service.quicksettings.PendingIntentActivityWrapper
@@ -14,6 +13,7 @@ import androidx.core.service.quicksettings.TileServiceCompat
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import xyz.malkki.neostumbler.MainActivity
+import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.scanner.ScannerService
@@ -25,34 +25,28 @@ class ScannerTileService : TileService() {
         private const val MAIN_ACTIVITY_REQUEST_CODE = 5436;
 
         const val ADD_QS_TILE_ACTION_NAME = "add_scanner_qs_tile"
+
+        fun updateTile(context: Context) {
+            requestListeningState(context, ComponentName(context, ScannerTileService::class.java))
+        }
     }
 
     private lateinit var oneTimeActionHelper: OneTimeActionHelper
 
-    private var scannerService: ScannerService? = null
-
-    private val serviceConnection = object : ServiceConnection {
-        override fun onServiceConnected(service: ComponentName, binder: IBinder) {
-            scannerService = (binder as ScannerService.ScannerServiceBinder).getService()
-
-            updateQsTile()
-        }
-
-        override fun onServiceDisconnected(service: ComponentName) {
-            scannerService = null
-
-            updateQsTile()
-        }
-    }
-
-    private val scanningActive: Boolean
-        get() = scannerService != null
-
     private fun updateQsTile() {
+        val scanningActive = ScannerService.serviceRunning
+        val reportsCreated = ScannerService.reportsCreated
+
         Timber.d("Setting QS tile to %s", if (scanningActive) { "active" } else { "inactive" })
         
         qsTile
             .apply {
+                subtitle = if (scanningActive) {
+                    getString(R.string.notification_wireless_scanning_content_reports_created, reportsCreated)
+                } else {
+                    null
+                }
+
                 state = if (scanningActive) {
                     Tile.STATE_ACTIVE
                 } else {
@@ -74,20 +68,15 @@ class ScannerTileService : TileService() {
     }
 
     override fun onStartListening() {
-        bindService(Intent(this, ScannerService::class.java), serviceConnection, 0)
-
         updateQsTile()
     }
 
     override fun onStopListening() {
-        unbindService(serviceConnection)
 
-        scannerService = null
-        updateQsTile()
     }
 
     override fun onClick() {
-        if (!scanningActive) {
+        if (qsTile.state == Tile.STATE_INACTIVE) {
             if (PermissionHelper.hasScanPermissions(this)
                 && (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE || checkMissingPermissions(Manifest.permission.ACCESS_BACKGROUND_LOCATION).isEmpty())) {
                 //If we already have required permissions, start scanning

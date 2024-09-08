@@ -57,6 +57,7 @@ import xyz.malkki.neostumbler.scanner.movement.ConstantMovementDetector
 import xyz.malkki.neostumbler.scanner.movement.LocationBasedMovementDetector
 import xyz.malkki.neostumbler.scanner.movement.MovementDetectorType
 import xyz.malkki.neostumbler.scanner.movement.SignificantMotionMovementDetector
+import xyz.malkki.neostumbler.scanner.quicksettings.ScannerTileService
 import xyz.malkki.neostumbler.scanner.source.BeaconLibraryBluetoothBeaconSource
 import xyz.malkki.neostumbler.scanner.source.BluetoothBeaconSource
 import xyz.malkki.neostumbler.scanner.source.MultiSubscriptionCellInfoSource
@@ -85,10 +86,6 @@ class ScannerService : Service() {
 
         private val WIFI_SCAN_INTERVAL_UNTHROTTLED = 10.seconds
 
-        private var _serviceRunning = false
-        val serviceRunning: Boolean
-            get() = _serviceRunning
-
         fun startIntent(context: Context, autostart: Boolean = false): Intent {
             return Intent(context, ScannerService::class.java).apply {
                 putExtra("start", true)
@@ -106,6 +103,14 @@ class ScannerService : Service() {
         enum class NotificationStyle(val detailLevel: Int) {
             MINIMAL(1), BASIC(2), DETAILED(3)
         }
+
+        private var _reportsCreated: Int = 0
+        val reportsCreated: Int
+            get() = _reportsCreated
+
+        private var _serviceRunning = false
+        val serviceRunning: Boolean
+            get() = _serviceRunning
     }
 
     private lateinit var wakeLock: WakeLock
@@ -134,6 +139,8 @@ class ScannerService : Service() {
         super.onCreate()
 
         _serviceRunning = true
+
+        ScannerTileService.updateTile(this)
 
         wakeLock = getSystemService<PowerManager>()!!.newWakeLock(PARTIAL_WAKE_LOCK, this::class.java.canonicalName).apply {
             acquire()
@@ -249,8 +256,6 @@ class ScannerService : Service() {
         val reportsCreatedChannel = Channel<Int>()
 
         launch {
-            var reportsCreated = 0
-
             WirelessScanner(
                 locationSource = { locationFlow },
                 cellInfoSource = { cellInfoSource.getCellInfoFlow(CELL_SCAN_INTERVAL) },
@@ -268,7 +273,9 @@ class ScannerService : Service() {
                         beacons = reportData.bluetoothBeacons
                     )
 
-                    reportsCreatedChannel.send(reportsCreated++)
+                    reportsCreatedChannel.send(++_reportsCreated)
+
+                    ScannerTileService.updateTile(this@ScannerService)
                 }
         }
 
@@ -320,6 +327,9 @@ class ScannerService : Service() {
         coroutineScope.cancel()
 
         _serviceRunning = false
+        _reportsCreated = 0
+
+        ScannerTileService.updateTile(this)
 
         wifiLock.release()
         wakeLock.release()
@@ -398,7 +408,7 @@ class ScannerService : Service() {
         return checkMissingPermissions(Manifest.permission.READ_PHONE_STATE).isEmpty()
     }
 
-    public inner class ScannerServiceBinder : Binder() {
+    inner class ScannerServiceBinder : Binder() {
         fun getService(): ScannerService = this@ScannerService
     }
 }
