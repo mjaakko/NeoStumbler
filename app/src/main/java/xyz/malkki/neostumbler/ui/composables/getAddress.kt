@@ -1,5 +1,6 @@
 package xyz.malkki.neostumbler.ui.composables
 
+import android.annotation.SuppressLint
 import android.location.Address
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -10,6 +11,7 @@ import xyz.malkki.neostumbler.utils.geocoder.Geocoder
 import java.io.IOException
 
 @Composable
+@SuppressLint("ProduceStateDoesNotAssignValue") //https://issuetracker.google.com/issues/349411310
 fun getAddress(latitude: Double, longitude: Double, geocoder: Geocoder): State<String> = produceState(
     initialValue = "",
     latitude,
