@@ -95,6 +95,11 @@ android {
         }
     }
 
+    lintOptions {
+        //Don't check for missing translations when linting, because it's not feasible to always have 100% translation coverage
+        disable('MissingTranslation')
+    }
+
     //These are not needed because the app is not published to Google Play
     dependenciesInfo {
         includeInApk = false
