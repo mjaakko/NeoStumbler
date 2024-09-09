@@ -1,10 +1,12 @@
 package xyz.malkki.neostumbler.utils
 
 import android.content.Context
+import androidx.annotation.Keep
 import com.google.gson.Gson
 import xyz.malkki.neostumbler.R
 import java.nio.charset.StandardCharsets
 
+@Keep
 data class SuggestedService(
     val name: String,
     val description: String?,
