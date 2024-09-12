@@ -27,6 +27,7 @@ data class SuggestedService(
         }
     }
 
+    @Keep
     data class Endpoint(
         val baseUrl: String,
         val path: String,
