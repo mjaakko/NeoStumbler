@@ -61,4 +61,24 @@
     <string name="path">Caminho</string>
     <string name="wifi_scan_throttling_explanation">Desative a restrição nos scans/procura de redes Wi-Fi nas definições do seu dispositivo. Normalmente pode ser desativado nas opções de programador/developers settings</string>
     <string name="show_my_location">Mostrar a minha localização</string>
+    <string name="warning_icon_description">Ícone de aviso</string>
+    <string name="unencrypted_endpoint_warning">Ponto de recolha não encriptado</string>
+    <string name="movement_detection">Deteção de movimento</string>
+    <string name="movement_detection_none_title">Não detetado</string>
+    <string name="movement_detection_location_title">Baseado na localização</string>
+    <string name="movement_detection_location_description">Pausa o scan quando a sua localização não muda. Mantém o GPS ativo</string>
+    <string name="movement_detection_significant_motion_title">Sensor de movimento</string>
+    <string name="movement_detection_significant_motion_description">Pausa o scan e GPS quando nenhum movimento significativo é detetado. Poupa bateria, mas não funciona bem em alguns dispositivos</string>
+    <string name="movement_detection_none_description">Continuar o scan mesmo sem movimento</string>
+    <string name="notification_wireless_scanning_content_satellite_stats">%1$d/%2$d satélites em uso</string>
+    <string name="settings_group_reports">Relatórios</string>
+    <string name="settings_group_other">Outros</string>
+    <string name="notification_style">Estilo da notificação</string>
+    <string name="notification_style_minimal_title">Mínimo</string>
+    <string name="notification_style_minimal_description">Mostra a notificação sem detalhes</string>
+    <string name="notification_style_basic_description">Mostra o número de relatórios criados</string>
+    <string name="settings_group_scanning">Scanning</string>
+    <string name="notification_style_detailed_title">Detalhado</string>
+    <string name="notification_style_basic_title">Básico</string>
+    <string name="notification_style_detailed_description">Mostra o número de relatórios criados e o número de satélites GNSS</string>
 </resources>

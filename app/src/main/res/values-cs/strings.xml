@@ -5,7 +5,7 @@
     <string name="no_thanks">Ne děkuji</string>
     <string name="yes">Ano</string>
     <string name="no">Ne</string>
-    <string name="reset">Reset</string>
+    <string name="reset">Resetovat</string>
     <string name="permissions_needed">Nutno udělit oprávnění</string>
     <string name="save">Uložit</string>
     <string name="stop">Stop</string>
@@ -15,7 +15,7 @@
     <string name="reports_tab_title">Reporty</string>
     <string name="statistics_tab_title">Statistiky</string>
     <string name="settings_tab_title">Nastavení</string>
-    <string name="send_reports">Poslat reporty</string>
+    <string name="send_reports">Odeslat reporty</string>
     <string name="reports">Reporty:</string>
     <string name="reports_total">Celkem reportů: %s</string>
     <string name="reports_not_uploaded">Neodeslané reporty: %s</string>
@@ -46,7 +46,6 @@
     <string name="permission_rationale_background_location_quick_settings">Spouštění skenování z rychlých nastavení potřebuje oprávnění přístupu k poloze v pozadí</string>
     <string name="permission_rationale_location_map">Zobrazení polohy na mapě potřebuje oprávnění přístupu k poloze</string>
     <string name="report_upload_notification_channel_name">Nahraných reportů</string>
-
     <string name="api_key">API klíč (nepovinný)</string>
     <string name="settings_ignore_wifi_scan_throttling">Vypnout přibrždění vyhledávání Wi-Fi</string>
     <string name="wifi_scan_throttling">Přibrždění hledání Wi-Fi</string>
@@ -58,8 +57,39 @@
     <string name="cells">Telefonní vysílače</string>
     <string name="ignore_battery_optimizations_description">Pro nejlepší výsledky, aplikace by měla mít povoleno stále běžet na pozadí. Skenování je výrazně zpomaleno pokud není povolení stále běžet na pozadí uděleno a obrazovka je vypnutá</string>
     <string name="battery_optimizations_not_disabled_warning">Povolení stále běžet na pozadí nebylo uděleno</string>
-    <string name="notification_exporting_data">Export dat probíhá…</string>
+    <string name="notification_exporting_data">Probíhá export dat…</string>
     <string name="export_notification_channel_name">Export dat</string>
     <string name="send_reports_automatically">Automaticky posílat reporty</string>
     <string name="export_data">Exportovat data</string>
+    <string name="settings_group_reports">Reporty</string>
+    <string name="settings_group_scanning">Skenování</string>
+    <string name="movement_detection">Detekce pohybu</string>
+    <string name="movement_detection_none_description">Pokračovat ve skenování i když se nehýbete</string>
+    <string name="movement_detection_location_title">Založené na poloze</string>
+    <string name="movement_detection_significant_motion_title">Senzor pohybu</string>
+    <string name="movement_detection_significant_motion_description">Pozastaví skenování a GPS když není detekován pohyb. Šetří baterii, ale nespolehlivý na některých zařízeních</string>
+    <string name="movement_detection_none_title">Žádný</string>
+    <string name="movement_detection_location_description">Pozastaví skenování když se poloha nemění. Udržuje GPS aktivní</string>
+    <string name="warning_icon_description">Varovná ikona</string>
+    <string name="unencrypted_endpoint_warning">Nešifrované připojení k serveru</string>
+    <string name="notification_wireless_scanning_content_satellite_stats">%1$d/%2$d satelitů používáno</string>
+    <string name="notification_style_minimal_description">Ukazuje upozornění bez detailů</string>
+    <string name="notification_style_basic_title">Základní</string>
+    <string name="notification_style_basic_description">Ukazuje počet vytvořených reportů</string>
+    <string name="notification_style_detailed_title">Detailní</string>
+    <string name="notification_style_detailed_description">Ukazuje počet vytvořených reportů a počet GNSS satelitů</string>
+    <string name="settings_group_other">Ostatní</string>
+    <string name="notification_style">Styl upozornění</string>
+    <string name="notification_style_minimal_title">Minimální</string>
+    <string name="suggested_service_terms_of_use">Podmínky použití</string>
+    <string name="mls_warning_title">Polohová služba Mozilla končí</string>
+    <string name="cancel">Zrušit</string>
+    <string name="use">Použít</string>
+    <string name="mls_warning_text">Polohová Služba Mozilla (MLS) byla vypnutá, a nepřijímá nová data. Musíte změnit koncový bod na jinou službu, pro kterou jsou v nastavení návrhy.
+\n
+\nData je možné exportovat jako ZIP soubor v nastavení.</string>
+    <string name="suggested_services_title">Navrhované služby</string>
+    <string name="suggested_service_website">Webová stránka</string>
+    <string name="suggested_service_hosted_by">Provozovatel:</string>
+    <string name="app_language">Jazyk</string>
 </resources>

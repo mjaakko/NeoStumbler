@@ -10,9 +10,9 @@
     <string name="stop">Stopp</string>
     <string name="permissions_needed">Notwendige Berechtigungen</string>
     <string name="permissions_not_granted">Notwendige Berechtigungen wurden nicht zugelassen</string>
-    <string name="wifi_icon_description">WLAN-Icon</string>
-    <string name="cell_tower_icon_description">Funkturm-Icon</string>
-    <string name="bluetooth_icon_description">Bluetooth-Icon</string>
+    <string name="wifi_icon_description">WLAN-Symbol</string>
+    <string name="cell_tower_icon_description">Funkturm-Symbol</string>
+    <string name="bluetooth_icon_description">Bluetooth-Symbol</string>
     <string name="scanner_status_notification_channel_name">Scan-Status</string>
     <string name="wireless_scanning">Funknetzwerke scannen</string>
     <string name="map_tab_title">Karte</string>
@@ -35,9 +35,9 @@
     <string name="notification_wireless_scanning_title">Funknetzwerke scannen aktiv</string>
     <string name="notification_wireless_scanning_content_reports_created">%d Berichte erstellt</string>
     <string name="ignore_battery_optimizations_title">Akkuoptimierungen ignorieren</string>
-    <string name="ignore_battery_optimizations_description">Für beste Ergebnisse sollten Akkuoptimierungen deaktiviert sein. Funknetzwerkscans und Standortabfragen werden erheblich gedrosselt, wenn Akkuoptimierungen aktiv und der Bildschirm aus sind.</string>
+    <string name="ignore_battery_optimizations_description">Für beste Ergebnisse sollten Akkuoptimierungen deaktiviert sein. Funknetzwerkscans und Standortabfragen werden erheblich gedrosselt, wenn Akkuoptimierungen aktiv und der Bildschirm aus sind</string>
     <string name="battery_optimizations_not_disabled_warning">Akkuoptimierungen sind nicht deaktiviert</string>
-    <string name="send_reports_automatically">Automatisch Berichte senden</string>
+    <string name="send_reports_automatically">Berichte automatisch senden</string>
     <string name="export_notification_channel_name">Datenexport</string>
     <string name="notification_exporting_data">Exportiere Daten…</string>
     <string name="export_data">Daten exportieren</string>
@@ -48,7 +48,6 @@
     <string name="cells">Funkzellen</string>
     <string name="beacons">Bluetooth-Beacon</string>
     <string name="add_quick_settings_tile">Schnelleinstellungskachel hinzufügen, um das Scannen einfacher zu starten?</string>
-
     <string name="endpoint">Endpunkt</string>
     <string name="path">Pfad</string>
     <string name="api_key">API-Schlüssel (optional)</string>
@@ -62,4 +61,35 @@
     <string name="permission_rationale_post_notifications">Die Status-Benachrichtigung anzuzeigen, benötigt die Benachrichtigungsberechtigung</string>
     <string name="permission_rationale_background_location_quick_settings">Das Scannen von den Schnelleinstellungen aus zu starten, benötigt im Hintergrund Zugriff auf den Standort</string>
     <string name="permission_rationale_location_map">Deinen Standort auf der Karte anzuzeigen, benötigt die Standort-Berechtigung</string>
+    <string name="movement_detection_location_description">Pausiert Scannen wenn Standort sich nicht ändern. Hält GPS aktiv</string>
+    <string name="notification_style_minimal_description">Zeigt Benachrichtigung ohne Details</string>
+    <string name="notification_style_basic_title">Einfach</string>
+    <string name="notification_style_basic_description">Zeigt die Anzahl der erstellten Berichte</string>
+    <string name="suggested_service_terms_of_use">Nutzungsbedingungen</string>
+    <string name="warning_icon_description">Warn-Symbol</string>
+    <string name="movement_detection_significant_motion_title">Bewegungssensor</string>
+    <string name="movement_detection_significant_motion_description">Pausiert Scannen und GPS wenn keine signifikante Bewegung erkannt wird. Spart Akku aber funktioniert auf manchen Geräten nicht zuverlässig</string>
+    <string name="notification_style_detailed_description">Zeigt die Anzahl der erstellen Berichte und Anzahl der GNSS Satelliten</string>
+    <string name="mls_warning_title">MLS hat den Betrieb eingestellt</string>
+    <string name="mls_warning_text">Mozilla Location Services hat den Betrieb eingestellt und akzeptiert keine Datenübermittlung mehr. Du musst den Endpunkt zu einem anderen Dienst ändern, dazu gibts es Vorschläge in den Einstellungen.
+\n
+\nDaten können in den Einstellungen auch als ZIP-Paket exportiert werden</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="use">Benutzen</string>
+    <string name="notification_wireless_scanning_content_satellite_stats">%1$d/%2$d Satelliten werden verwendet</string>
+    <string name="unencrypted_endpoint_warning">Unverschlüsselter Endpunkt</string>
+    <string name="suggested_services_title">Vorgeschlagene Dienste</string>
+    <string name="suggested_service_hosted_by">Betrieben von:</string>
+    <string name="suggested_service_website">Webseite</string>
+    <string name="settings_group_reports">Berichte</string>
+    <string name="settings_group_scanning">Scannen</string>
+    <string name="settings_group_other">Sonstiges</string>
+    <string name="movement_detection">Bewegungserkennung</string>
+    <string name="movement_detection_none_title">Keine</string>
+    <string name="movement_detection_none_description">Scannen fortsetzen auch wenn nicht in Bewegung</string>
+    <string name="movement_detection_location_title">Standort-basiert</string>
+    <string name="notification_style">Benachrichtigungsstil</string>
+    <string name="notification_style_minimal_title">Minimal</string>
+    <string name="notification_style_detailed_title">Detailliert</string>
+    <string name="app_language">Sprache</string>
 </resources>
