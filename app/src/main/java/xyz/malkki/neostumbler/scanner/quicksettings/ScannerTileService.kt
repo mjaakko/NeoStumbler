@@ -42,6 +42,9 @@ class ScannerTileService : TileService() {
         
         qsTile
             .apply {
+                //Label has to be updated here to support per-app locales even though it's specified in the manifest
+                label = ContextCompat.getString(this@ScannerTileService, R.string.wireless_scanning)
+
                 subtitle = if (scanningActive) {
                     ContextCompat.getString(this@ScannerTileService, R.string.notification_wireless_scanning_content_reports_created).format(reportsCreated)
                 } else {
