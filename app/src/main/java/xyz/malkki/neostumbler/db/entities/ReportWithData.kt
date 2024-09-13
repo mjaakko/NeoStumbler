@@ -9,7 +9,7 @@ data class ReportWithData(
         parentColumn = "id",
         entityColumn = "reportId"
     )
-    val position: Position,
+    val positionEntity: PositionEntity,
     @Relation(
         parentColumn = "id",
         entityColumn = "reportId"

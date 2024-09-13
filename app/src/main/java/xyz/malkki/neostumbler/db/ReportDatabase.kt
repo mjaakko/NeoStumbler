@@ -15,22 +15,24 @@ import xyz.malkki.neostumbler.db.dao.StatisticsDao
 import xyz.malkki.neostumbler.db.dao.WifiAccessPointDao
 import xyz.malkki.neostumbler.db.entities.BluetoothBeaconEntity
 import xyz.malkki.neostumbler.db.entities.CellTowerEntity
-import xyz.malkki.neostumbler.db.entities.Position
+import xyz.malkki.neostumbler.db.entities.PositionEntity
 import xyz.malkki.neostumbler.db.entities.Report
 import xyz.malkki.neostumbler.db.entities.WifiAccessPointEntity
+import xyz.malkki.neostumbler.db.migrations.RenamePositionToPositionEntity
 import xyz.malkki.neostumbler.db.migrations.RenameTablesToEntities
 
 @Database(
     exportSchema = true,
-    version = 7,
-    entities = [Report::class, Position::class, WifiAccessPointEntity::class, CellTowerEntity::class, BluetoothBeaconEntity::class,],
+    version = 8,
+    entities = [Report::class, PositionEntity::class, WifiAccessPointEntity::class, CellTowerEntity::class, BluetoothBeaconEntity::class,],
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
         AutoMigration(from = 2, to = 3, spec = RenameTablesToEntities::class),
         AutoMigration(from = 3, to = 4),
         AutoMigration(from = 4, to = 5),
         AutoMigration(from = 5, to = 6),
-        AutoMigration(from = 6, to = 7)
+        AutoMigration(from = 6, to = 7),
+        AutoMigration(from = 7, to = 8, spec = RenamePositionToPositionEntity::class)
     ]
 )
 @TypeConverters(InstantConverters::class, LocalDateConverters::class)

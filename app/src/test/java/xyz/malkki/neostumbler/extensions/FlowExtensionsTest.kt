@@ -2,8 +2,11 @@ package xyz.malkki.neostumbler.extensions
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -14,6 +17,7 @@ import org.junit.Test
 import kotlin.math.sqrt
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 import kotlin.time.measureTime
 
 class FlowExtensionsTest {
@@ -80,5 +84,36 @@ class FlowExtensionsTest {
         }
 
         assertTrue(duration <= 500.milliseconds)
+    }
+
+    @Test
+    fun `Test throttle last`() = runBlocking {
+        val flow = (1..30).toList().asFlow().onEach { delay(100) }
+
+        val values = flow.throttleLast(1.seconds).toList()
+
+        assertEquals(listOf(1, 10, 20, 30), values)
+    }
+
+    @Test
+    fun `Test combineWithLatestFrom with an empty flow`() = runBlocking {
+        val a = flowOf(1)
+        val b = emptyFlow<Int>()
+
+        val list = a.combineWithLatestFrom(b) { valueA, valueB -> valueA to valueB }.toList()
+
+        assertEquals(1, list.size)
+        assertEquals(1 to null, list.first())
+    }
+
+    @Test
+    fun `Test combineWithLatestFrom`() = runBlocking {
+        val a = flowOf(1, 2).onEach { delay(500) }
+        val b = (1..30).toList().asFlow().onEach { delay(100) }
+
+        val list = a.combineWithLatestFrom(b) { valueA, valueB -> valueA to valueB }.toList()
+
+        assertEquals(2, list.size)
+        assertEquals(9, list.last().second)
     }
 }

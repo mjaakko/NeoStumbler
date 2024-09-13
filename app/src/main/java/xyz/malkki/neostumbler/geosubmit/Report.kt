@@ -25,18 +25,18 @@ data class Report(
         val source: String
     ) {
         companion object {
-            fun fromDbEntity(position: xyz.malkki.neostumbler.db.entities.Position): Position {
+            fun fromDbEntity(positionEntity: xyz.malkki.neostumbler.db.entities.PositionEntity): Position {
                 return Position(
-                    position.latitude,
-                    position.longitude,
-                    position.accuracy,
-                    position.age,
-                    position.altitude,
-                    position.altitudeAccuracy,
-                    position.heading,
-                    position.pressure,
-                    position.speed,
-                    position.source
+                    positionEntity.latitude,
+                    positionEntity.longitude,
+                    positionEntity.accuracy,
+                    positionEntity.age,
+                    positionEntity.altitude,
+                    positionEntity.altitudeAccuracy,
+                    positionEntity.heading,
+                    positionEntity.pressure,
+                    positionEntity.speed,
+                    positionEntity.source
                 )
             }
         }

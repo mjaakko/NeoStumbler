@@ -48,7 +48,7 @@ interface ReportDao {
             COALESCE(wap.wifiAccessPointCount, 0) AS wifiAccessPointCount,
             COALESCE(ct.cellTowerCount, 0) AS cellTowerCount,
             COALESCE(bb.bluetoothBeaconCount, 0) AS bluetoothBeaconCount
-        FROM Report r, Position p
+        FROM Report r, PositionEntity p
         LEFT JOIN (SELECT reportId, COUNT(id) AS wifiAccessPointCount FROM WifiAccessPointEntity GROUP BY reportId) AS wap ON wap.reportId = r.id
         LEFT JOIN (SELECT reportId, COUNT(id) AS cellTowerCount FROM CellTowerEntity GROUP BY reportId) AS ct ON ct.reportId = r.id
         LEFT JOIN (SELECT reportId, COUNT(id) AS bluetoothBeaconCount FROM BluetoothBeaconEntity GROUP BY reportId) AS bb ON bb.reportId = r.id
@@ -68,11 +68,11 @@ interface ReportDao {
     @Query("SELECT * FROM Report WHERE timestamp >= :from AND timestamp <= :to")
     suspend fun getAllReportsForTimerange(from: Instant, to: Instant): List<ReportWithData>
 
-    @Query("SELECT r.id, r.timestamp, p.latitude, p.longitude FROM Report r JOIN Position p ON r.id = p.reportId WHERE r.timestamp >= :timestamp")
+    @Query("SELECT r.id, r.timestamp, p.latitude, p.longitude FROM Report r JOIN PositionEntity p ON r.id = p.reportId WHERE r.timestamp >= :timestamp")
     suspend fun getReportsNewerThan(timestamp: Instant): List<ReportWithLocation>
 
     @Transaction
-    @Query("SELECT r.id, r.timestamp, p.latitude, p.longitude FROM Report r JOIN Position p ON r.id = p.reportId")
+    @Query("SELECT r.id, r.timestamp, p.latitude, p.longitude FROM Report r JOIN PositionEntity p ON r.id = p.reportId")
     fun getAllReportsWithLocation(): Flow<List<ReportWithLocation>>
 
     @Transaction
@@ -80,7 +80,7 @@ interface ReportDao {
         SELECT
             r.id, r.timestamp, p.latitude, p.longitude
         FROM Report r
-        JOIN Position p ON r.id = p.reportId
+        JOIN PositionEntity p ON r.id = p.reportId
         WHERE p.latitude >= :minLatitude
             AND p.latitude <= :maxLatitude
             AND p.longitude >= :minLongitude
