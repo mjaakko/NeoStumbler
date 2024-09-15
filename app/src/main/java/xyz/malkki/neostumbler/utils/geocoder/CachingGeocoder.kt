@@ -6,19 +6,16 @@ import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import java.math.BigDecimal
-import java.math.RoundingMode
+import org.geohex.geohex4j.GeoHex
 import java.util.concurrent.ConcurrentHashMap
 
-private typealias LocationKey = Pair<BigDecimal, BigDecimal>
-
 class CachingGeocoder(private val actualGeocoder: Geocoder): Geocoder {
-    private val cache = LruCache<LocationKey, List<Address>>(100)
+    private val cache = LruCache<String, List<Address>>(100)
 
-    private val ongoingRequests = ConcurrentHashMap<LocationKey, Deferred<List<Address>>>()
+    private val ongoingRequests = ConcurrentHashMap<String, Deferred<List<Address>>>()
 
     override suspend fun getAddresses(latitude: Double, longitude: Double): List<Address> = coroutineScope {
-        val key = latitude.roundCoordinate() to longitude.roundCoordinate()
+        val key = GeoHex.encode(latitude, longitude, 10)
 
         val cachedAddresses = cache[key]
         if (cachedAddresses != null) {
@@ -27,7 +24,9 @@ class CachingGeocoder(private val actualGeocoder: Geocoder): Geocoder {
 
         val futureAddresses = ongoingRequests.compute(key) { _, existing ->
             existing ?: async(start = CoroutineStart.LAZY) {
-                val addresses = actualGeocoder.getAddresses(key.first.toDouble(), key.second.toDouble())
+                val zone = GeoHex.getZoneByCode(key)
+
+                val addresses = actualGeocoder.getAddresses(zone.lat, zone.lon)
 
                 cache.put(key, addresses)
                 ongoingRequests.remove(key)
@@ -38,6 +37,4 @@ class CachingGeocoder(private val actualGeocoder: Geocoder): Geocoder {
 
         futureAddresses.await()
     }
-
-    private fun Double.roundCoordinate(): BigDecimal = toBigDecimal().setScale(5, RoundingMode.HALF_UP)
 }
