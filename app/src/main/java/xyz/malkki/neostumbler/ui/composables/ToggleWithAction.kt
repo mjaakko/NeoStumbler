@@ -1,8 +1,8 @@
 package xyz.malkki.neostumbler.ui.composables
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -40,10 +40,13 @@ fun ToggleWithAction(title: String, enabled: Boolean, checked: Boolean, action: 
                 }
             )
             .defaultMinSize(minHeight = 48.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(modifier = Modifier.wrapContentSize(), text = title)
-        Spacer(modifier = Modifier.weight(1.0f))
+        Text(
+            modifier = Modifier.wrapContentHeight().weight(1.0f),
+            text = title
+        )
         Switch(
             modifier = Modifier.wrapContentSize(),
             enabled = enabled && !changingState.value,
