@@ -139,6 +139,12 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
     }
 
     private fun shouldRetry(exception: Exception): Boolean {
+        //By default, WorkManager will retry indefinitely
+        //If uploading hasn't been successful after 5 retries, just return a failure to stop retrying
+        if (runAttemptCount >= 5) {
+            return false
+        }
+
         if (exception is SocketTimeoutException) {
             //Retry timeouts because most likely we are just temporarily disconnected
             return true

@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
+import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
@@ -43,6 +44,8 @@ import xyz.malkki.neostumbler.utils.SelectableDatesFromSet
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.UUID
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.toJavaDuration
 
 private fun getSelectableDatesSet(context: Context): LiveData<Set<LocalDate>> {
     return (context.applicationContext as StumblerApplication).reportDb.reportDao()
@@ -100,6 +103,7 @@ fun ReportReuploadButton() {
                         WorkManager.getInstance(context).enqueue(
                             OneTimeWorkRequest.Builder(ReportSendWorker::class.java)
                                 .setId(workId)
+                                .setBackoffCriteria(BackoffPolicy.LINEAR, 30.seconds.toJavaDuration())
                                 .setInputData(
                                     Data.Builder()
                                         .putLong(ReportSendWorker.INPUT_REUPLOAD_FROM, from)
