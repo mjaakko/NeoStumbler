@@ -65,12 +65,32 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
             val (minLat, minLon) = bounds.first
             val (maxLat, maxLon) = bounds.second
 
-            db.reportDao().getAllReportsWithLocationInsideBoundingBox(
-                minLatitude = minLat,
-                minLongitude = minLon,
-                maxLatitude = maxLat,
-                maxLongitude = maxLon
-            )
+            if (minLon > maxLon) {
+                //Handle crossing the 180th meridian
+                val left = db.reportDao().getAllReportsWithLocationInsideBoundingBox(
+                    minLatitude = minLat,
+                    minLongitude = minLon,
+                    maxLatitude = maxLat,
+                    maxLongitude = 180.0
+                )
+                val right = db.reportDao().getAllReportsWithLocationInsideBoundingBox(
+                    minLatitude = -180.0,
+                    minLongitude = minLon,
+                    maxLatitude = maxLat,
+                    maxLongitude = maxLon
+                )
+
+                left.combine(right) { listA, listB ->
+                    listA + listB
+                }
+            } else {
+                db.reportDao().getAllReportsWithLocationInsideBoundingBox(
+                    minLatitude = minLat,
+                    minLongitude = minLon,
+                    maxLatitude = maxLat,
+                    maxLongitude = maxLon
+                )
+            }
         }
         .distinctUntilChanged()
         .combine(
