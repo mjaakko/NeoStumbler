@@ -11,6 +11,7 @@ import androidx.core.app.LocaleManagerCompat
 import androidx.core.os.LocaleListCompat
 import xyz.malkki.neostumbler.BuildConfig
 import xyz.malkki.neostumbler.R
+import xyz.malkki.neostumbler.scanner.quicksettings.ScannerTileService
 import java.util.Locale
 
 private val SUPPORTED_LOCALES_BCP47 = BuildConfig.SUPPORTED_LOCALES
@@ -65,6 +66,9 @@ fun LanguageSwitcher() {
         descriptionProvider = { it.getDisplayName(it) },
         onValueSelected = { newLocale ->
             AppCompatDelegate.setApplicationLocales(LocaleListCompat.create(newLocale))
+
+            //Update QS tile so that it will use the selected language
+            ScannerTileService.updateTile(context)
         }
     )
 }
