@@ -12,6 +12,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.asFlow
+import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
@@ -29,6 +30,7 @@ import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.geosubmit.ReportSendWorker
 import java.util.UUID
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.toJavaDuration
 
 /**
  * Returns a flow which emits booleans indicating whether an upload can be started
@@ -84,6 +86,7 @@ fun ReportUploadButton() {
                         ExistingWorkPolicy.REPLACE,
                         OneTimeWorkRequestBuilder<ReportSendWorker>()
                             .setId(workId)
+                            .setBackoffCriteria(BackoffPolicy.LINEAR, 30.seconds.toJavaDuration())
                             .setConstraints(
                                 Constraints(
                                     requiredNetworkType = NetworkType.CONNECTED,
