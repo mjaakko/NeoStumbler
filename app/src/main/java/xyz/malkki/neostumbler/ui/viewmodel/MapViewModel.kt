@@ -9,8 +9,12 @@ import androidx.lifecycle.asFlow
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.liveData
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -21,6 +25,7 @@ import org.geohex.geohex4j.GeoHex
 import org.osmdroid.api.IGeoPoint
 import org.osmdroid.util.GeoPoint
 import xyz.malkki.neostumbler.StumblerApplication
+import xyz.malkki.neostumbler.common.LatLng
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.parallelMap
 import xyz.malkki.neostumbler.location.LocationSourceProvider
@@ -48,24 +53,40 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
     val zoom: LiveData<Double>
         get() = _zoom
 
+    private val mapBounds = Channel<Pair<LatLng, LatLng>>(capacity = Channel.Factory.CONFLATED)
+
     val latestReportPosition = liveData {
         emit(db.positionDao().getLatestPosition())
     }
 
-    val heatMapTiles = db.reportDao().getAllReportsWithLocation()
+    val heatMapTiles = mapBounds.consumeAsFlow()
+        .debounce(0.2.seconds)
+        .flatMapLatest { bounds ->
+            val (minLat, minLon) = bounds.first
+            val (maxLat, maxLon) = bounds.second
+
+            db.reportDao().getAllReportsWithLocationInsideBoundingBox(
+                minLatitude = minLat,
+                minLongitude = minLon,
+                maxLatitude = maxLat,
+                maxLongitude = maxLon
+            )
+        }
         .distinctUntilChanged()
-        .combine(zoom.asFlow()
-            .map { zoom ->
-                if (zoom >= 13.5) {
-                    GEOHEX_RESOLUTION_HIGH
-                } else if (zoom >= 11.5) {
-                    GEOHEX_RESOLUTION_MEDIUM
-                } else {
-                    GEOHEX_RESOLUTION_LOW
+        .combine(
+            flow = zoom.asFlow()
+                .map { zoom ->
+                    if (zoom >= 13.5) {
+                        GEOHEX_RESOLUTION_HIGH
+                    } else if (zoom >= 11.5) {
+                        GEOHEX_RESOLUTION_MEDIUM
+                    } else {
+                        GEOHEX_RESOLUTION_LOW
+                    }
                 }
-            }
-            .distinctUntilChanged()
-        ) { a, b -> a to b }
+                .distinctUntilChanged(),
+            transform = { a, b -> a to b }
+        )
         .map { (reportsWithLocation, resolution) ->
             reportsWithLocation
                 .asFlow()
@@ -107,6 +128,10 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
     fun setMapCenter(mapCenter: IGeoPoint) = this._mapCenter.postValue(mapCenter)
 
     fun setZoom(zoom: Double) = this._zoom.postValue(zoom)
+
+    fun setMapBounds(minLatitude: Double, minLongitude: Double, maxLatitude: Double, maxLongitude: Double) {
+        this.mapBounds.trySendBlocking(LatLng(minLatitude, minLongitude) to LatLng(maxLatitude, maxLongitude))
+    }
 
     /**
      * @property heatPct From 0.0 to 1.0

@@ -122,12 +122,24 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
                 map.addMapListener(object : MapListener {
                     override fun onScroll(event: ScrollEvent): Boolean {
                         mapViewModel.setMapCenter(event.source.mapCenter)
+                        mapViewModel.setMapBounds(
+                            minLatitude = event.source.boundingBox.latSouth,
+                            minLongitude = event.source.boundingBox.lonWest,
+                            maxLatitude = event.source.boundingBox.latNorth,
+                            maxLongitude = event.source.boundingBox.lonEast
+                        )
 
                         return false
                     }
 
                     override fun onZoom(event: ZoomEvent): Boolean {
                         mapViewModel.setZoom(event.source.zoomLevelDouble)
+                        mapViewModel.setMapBounds(
+                            minLatitude = event.source.boundingBox.latSouth,
+                            minLongitude = event.source.boundingBox.lonWest,
+                            maxLatitude = event.source.boundingBox.latNorth,
+                            maxLongitude = event.source.boundingBox.lonEast
+                        )
 
                         return false
                     }

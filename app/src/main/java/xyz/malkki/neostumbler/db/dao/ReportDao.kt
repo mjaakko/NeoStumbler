@@ -75,6 +75,24 @@ interface ReportDao {
     @Query("SELECT r.id, r.timestamp, p.latitude, p.longitude FROM Report r JOIN Position p ON r.id = p.reportId")
     fun getAllReportsWithLocation(): Flow<List<ReportWithLocation>>
 
+    @Transaction
+    @Query("""
+        SELECT
+            r.id, r.timestamp, p.latitude, p.longitude
+        FROM Report r
+        JOIN Position p ON r.id = p.reportId
+        WHERE p.latitude >= :minLatitude
+            AND p.latitude <= :maxLatitude
+            AND p.longitude >= :minLongitude
+            AND p.longitude <= :maxLongitude
+    """)
+    fun getAllReportsWithLocationInsideBoundingBox(
+        minLatitude: Double,
+        minLongitude: Double,
+        maxLatitude: Double,
+        maxLongitude: Double
+    ): Flow<List<ReportWithLocation>>
+
     @Query("SELECT DISTINCT DATE(ROUND(r.timestamp / 1000), 'unixepoch') FROM Report r")
     fun getReportDates(): LiveData<List<LocalDate>>
 }
