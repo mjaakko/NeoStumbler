@@ -13,13 +13,13 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.toList
 import org.geohex.geohex4j.GeoHex
 import org.osmdroid.api.IGeoPoint
@@ -29,6 +29,7 @@ import xyz.malkki.neostumbler.common.LatLng
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.parallelMap
 import xyz.malkki.neostumbler.location.LocationSourceProvider
+import kotlin.math.abs
 import kotlin.time.Duration.Companion.seconds
 
 //The "size" of one report relative to the geohex size. The idea is that hexes with lower resolution need more reports to show the same color
@@ -59,7 +60,7 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
         emit(db.positionDao().getLatestPosition())
     }
 
-    val heatMapTiles = mapBounds.consumeAsFlow()
+    val heatMapTiles = mapBounds.receiveAsFlow()
         .debounce(0.2.seconds)
         .flatMapLatest { bounds ->
             val (minLat, minLon) = bounds.first
@@ -150,7 +151,17 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
     fun setZoom(zoom: Double) = this._zoom.postValue(zoom)
 
     fun setMapBounds(minLatitude: Double, minLongitude: Double, maxLatitude: Double, maxLongitude: Double) {
-        this.mapBounds.trySendBlocking(LatLng(minLatitude, minLongitude) to LatLng(maxLatitude, maxLongitude))
+        //Make the bounds slightly larger so that data in the map edges will be visible
+        val latAdjust = abs(maxLatitude - minLatitude) * 0.1
+        val lngAdjust = if (minLongitude > maxLongitude) {
+            (360.0 + maxLongitude) - minLongitude
+        } else {
+            maxLongitude - minLongitude
+        } * 0.1
+
+        val bounds = LatLng(minLatitude - latAdjust, minLongitude - lngAdjust) to LatLng(maxLatitude + latAdjust, maxLongitude + lngAdjust)
+
+        mapBounds.trySendBlocking(bounds)
     }
 
     /**
