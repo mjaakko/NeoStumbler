@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.utils
+package xyz.malkki.neostumbler.http
 
 import okhttp3.OkHttpClient
 import okhttp3.Request

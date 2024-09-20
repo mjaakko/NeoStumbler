@@ -46,15 +46,15 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
 
     private val application = applicationContext as StumblerApplication
 
-    private val geosubmit by lazy {
+    private val db = application.reportDb
+
+    private suspend fun getGeosubmitApi(): Geosubmit {
         val geosubmitParams = getGeosubmitParams()
 
         Timber.d("Using endpoint ${geosubmitParams.path} with API key ${geosubmitParams.apiKey} for Geosubmit")
 
-        MLSGeosubmit(application.httpClient, GSON, geosubmitParams)
+        return MLSGeosubmit(application.httpClientProvider.await(), GSON, geosubmitParams)
     }
-
-    private val db = application.reportDb
 
     private fun getGeosubmitParams(): GeosubmitParams = runBlocking {
         application.settingsStore.data
@@ -69,6 +69,8 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
     }
 
     override suspend fun doWork(): Result {
+        val geosubmit = getGeosubmitApi()
+
         val reupload =
             inputData.hasKeyWithValueOfType<Long>(INPUT_REUPLOAD_FROM)
                 && inputData.hasKeyWithValueOfType<Long>(INPUT_REUPLOAD_TO)

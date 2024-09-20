@@ -198,5 +198,8 @@ dependencies {
     implementation "com.patrykandpatrick.vico:compose:$vico_version"
     implementation "com.patrykandpatrick.vico:compose-m3:$vico_version"
 
+    fullImplementation 'com.google.android.gms:play-services-cronet:18.1.0'
+    fullImplementation 'com.google.net.cronet:cronet-okhttp:0.1.0'
+
     testImplementation "org.mockito.kotlin:mockito-kotlin:5.4.0"
 }
