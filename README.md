@@ -16,7 +16,9 @@ NeoStumbler is an Android application for collecting locations of cell towers, W
 There are two variants available:
 * *full* - includes all features
 * *fdroid* - does not include closed components (i.e. Google Play Services)
-  * Features missing: fused location provider and automatic scanning
+  * Features missing:
+    * [Fused location provider](https://developers.google.com/location-context/fused-location-provider)
+    * Automatic scanning based on [activity recognition](https://developers.google.com/location-context/activity-recognition)
 
 APKs of the application can be downloaded from [Releases](https://github.com/mjaakko/NeoStumbler/releases) page.
 
@@ -28,8 +30,8 @@ Updates for the *full* variant have to be manually checked and downloaded from t
 
 * Supports latest Android versions
 * Collect data for cell towers, Wi-Fi access points and Bluetooth beacons
-* Service for collecting data
-  * Can be started automatically while moving (if using the *full* variant and Google Play Services are available)
+  * Data collection can be started automatically while moving (if using the *full* variant with Google Play Services)
+* Scanning can be automatically paused when not moving
 * Map showing the areas where data has been collected
 * Exporting scan data as a .zip
 
