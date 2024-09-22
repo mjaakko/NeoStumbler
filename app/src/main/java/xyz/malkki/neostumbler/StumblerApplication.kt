@@ -14,9 +14,12 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import okhttp3.Cache
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import okhttp3.Call
 import org.altbeacon.beacon.AltBeaconParser
 import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.BeaconManager
@@ -26,13 +29,10 @@ import xyz.malkki.neostumbler.beacons.IBeaconParser
 import xyz.malkki.neostumbler.beacons.StubDistanceCalculator
 import xyz.malkki.neostumbler.db.DbPruneWorker
 import xyz.malkki.neostumbler.db.ReportDatabase
-import xyz.malkki.neostumbler.utils.UserAgentInterceptor
-import java.io.File
+import xyz.malkki.neostumbler.http.getCallFactory
 import java.time.Duration
-import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.seconds
-import kotlin.time.toJavaDuration
 
+@OptIn(DelicateCoroutinesApi::class)
 class StumblerApplication : Application() {
     val reportDb by lazy {
         Room.databaseBuilder(this,
@@ -41,31 +41,8 @@ class StumblerApplication : Application() {
             .build()
     }
 
-    val httpClient by lazy {
-        val cacheDir = File(cacheDir, "okhttp")
-        cacheDir.mkdirs()
-
-        //TODO: is this cache actually used for anything?
-        val cache = Cache(cacheDir, 10 * 1024 * 1024) // 10MB
-
-        val userAgentVersion = if (BuildConfig.DEBUG) {
-            "dev"
-        } else {
-            BuildConfig.VERSION_CODE
-        }
-        val userAgentInterceptor = UserAgentInterceptor("${resources.getString(R.string.app_name)}/${userAgentVersion}")
-
-        OkHttpClient.Builder()
-            .addInterceptor(userAgentInterceptor)
-            .addInterceptor(HttpLoggingInterceptor(Timber::d).apply {
-                level = HttpLoggingInterceptor.Level.BASIC
-            })
-            .cache(cache)
-            .connectTimeout(30.seconds.toJavaDuration())
-            /* Read timeout should be long enough, because the Geosubmit API responds only when all data has been processed and
-             that might take a while if a large amount of reports is sent at once */
-            .readTimeout(2.minutes.toJavaDuration())
-            .build()
+    val httpClientProvider: Deferred<Call.Factory> = GlobalScope.async(start = CoroutineStart.LAZY) {
+        getCallFactory(this@StumblerApplication)
     }
 
     val settingsStore: DataStore<Preferences> by preferencesDataStore(name = "settings")

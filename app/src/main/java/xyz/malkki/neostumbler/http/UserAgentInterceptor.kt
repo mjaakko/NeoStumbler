@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.utils
+package xyz.malkki.neostumbler.http
 
 import okhttp3.Interceptor
 import okhttp3.Response

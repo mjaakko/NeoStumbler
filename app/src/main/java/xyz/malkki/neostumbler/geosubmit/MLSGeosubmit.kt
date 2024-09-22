@@ -1,9 +1,9 @@
 package xyz.malkki.neostumbler.geosubmit
 
 import com.google.gson.Gson
+import okhttp3.Call
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import okio.BufferedSink
@@ -16,7 +16,7 @@ import java.util.zip.GZIPOutputStream
 private const val BUFFER_SIZE = 8 * 1024
 
 class MLSGeosubmit(
-    private val httpClient: OkHttpClient,
+    private val httpClient: Call.Factory,
     private val gson: Gson,
     private val geosubmitParams: GeosubmitParams
 ) : Geosubmit {
