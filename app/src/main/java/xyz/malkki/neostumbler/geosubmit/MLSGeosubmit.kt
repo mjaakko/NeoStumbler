@@ -7,9 +7,9 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Request
 import okhttp3.RequestBody
 import okio.BufferedSink
+import org.apache.commons.io.output.CloseShieldOutputStream
 import xyz.malkki.neostumbler.extensions.executeSuspending
 import java.io.IOException
-import java.io.OutputStreamWriter
 import java.nio.charset.StandardCharsets
 import java.util.zip.GZIPOutputStream
 
@@ -45,9 +45,11 @@ class MLSGeosubmit(
             override fun contentType(): MediaType = "application/json".toMediaType()
 
             override fun writeTo(sink: BufferedSink) {
-                OutputStreamWriter(GZIPOutputStream(sink.outputStream(), BUFFER_SIZE), StandardCharsets.UTF_8).use {
-                    gson.toJson(mapOf("items" to reports), it)
-                }
+                GZIPOutputStream(CloseShieldOutputStream.wrap(sink.outputStream()), BUFFER_SIZE)
+                    .bufferedWriter(StandardCharsets.UTF_8)
+                    .use {
+                        gson.toJson(mapOf("items" to reports), it)
+                    }
             }
         }
     }
