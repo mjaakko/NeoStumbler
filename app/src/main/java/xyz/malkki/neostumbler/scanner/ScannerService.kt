@@ -9,6 +9,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
+import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.net.wifi.WifiManager
 import android.net.wifi.WifiManager.WifiLock
@@ -59,14 +60,15 @@ import xyz.malkki.neostumbler.scanner.movement.LocationBasedMovementDetector
 import xyz.malkki.neostumbler.scanner.movement.MovementDetectorType
 import xyz.malkki.neostumbler.scanner.movement.SignificantMotionMovementDetector
 import xyz.malkki.neostumbler.scanner.quicksettings.ScannerTileService
+import xyz.malkki.neostumbler.scanner.source.AirPressureSource
 import xyz.malkki.neostumbler.scanner.source.BeaconLibraryBluetoothBeaconSource
 import xyz.malkki.neostumbler.scanner.source.BluetoothBeaconSource
 import xyz.malkki.neostumbler.scanner.source.MultiSubscriptionCellInfoSource
+import xyz.malkki.neostumbler.scanner.source.PressureSensorAirPressureSource
 import xyz.malkki.neostumbler.scanner.source.TelephonyManagerCellInfoSource
 import xyz.malkki.neostumbler.scanner.source.WifiManagerWifiAccessPointSource
 import xyz.malkki.neostumbler.utils.GpsStats
 import xyz.malkki.neostumbler.utils.getGpsStatsFlow
-import java.util.Locale
 import kotlin.time.Duration.Companion.seconds
 
 class ScannerService : Service() {
@@ -177,6 +179,8 @@ class ScannerService : Service() {
             }
             .first()
 
+        val sensorManager = this@ScannerService.getSystemService<SensorManager>()!!
+
         val gpsActiveChannel = Channel<Boolean>()
 
         val gpsStatsFlow = gpsActiveChannel
@@ -247,12 +251,20 @@ class ScannerService : Service() {
                 locationFlow.map { it.location }
             }
             MovementDetectorType.SIGNIFICANT_MOTION -> SignificantMotionMovementDetector(
-                sensorManager = this@ScannerService.getSystemService<SensorManager>()!!,
+                sensorManager = sensorManager,
                 locationSource = { locationFlow.map { it.location } }
             )
         }
 
         Timber.i("Using ${movementDetector::class.simpleName} for detecting movement")
+
+        val airPressureSource = if (sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE) != null) {
+            PressureSensorAirPressureSource(sensorManager)
+        } else {
+            Timber.w("Device does not have an air pressure sensor, not collecting air pressure data")
+
+            AirPressureSource { emptyFlow() }
+        }
 
         val reportsCreatedChannel = Channel<Int>()
 
@@ -262,13 +274,13 @@ class ScannerService : Service() {
                 cellInfoSource = { cellInfoSource.getCellInfoFlow(CELL_SCAN_INTERVAL) },
                 bluetoothBeaconSource = { bluetoothBeaconSource.getBluetoothBeaconFlow() },
                 wifiAccessPointSource = { wifiAccessPointSource.getWifiAccessPointFlow(wifiScanInterval) },
+                airPressureSource = { airPressureSource.getAirPressureFlow(LOCATION_INTERVAL / 2) },
                 movementDetector = movementDetector
             )
                 .createReports()
                 .collect { reportData ->
                     scanReportCreator.createReport(
-                        locationSource = reportData.location.source.name.lowercase(Locale.ROOT),
-                        location = reportData.location.location,
+                        position = reportData.position,
                         cellTowers = reportData.cellTowers,
                         wifiScanResults = reportData.wifiAccessPoints,
                         beacons = reportData.bluetoothBeacons

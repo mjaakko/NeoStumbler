@@ -7,8 +7,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
@@ -64,4 +66,26 @@ fun <T, R> Flow<T>.parallelMap(
         .buffer()
         .map { it.await() }
         .flowOn(context)
+}
+
+/**
+ * Only emits the latest value received from the source flow within the specified [interval]
+ */
+fun <T> Flow<T>.throttleLast(interval: Duration): Flow<T> = conflate().transform {
+    emit(it)
+    delay(interval)
+}
+
+fun <A, B, C> Flow<A>.combineWithLatestFrom(other: Flow<B>, combiner: (A, B?) -> C): Flow<C> = channelFlow {
+    var otherValue: B? = null
+
+    launch {
+        other.collect {
+            otherValue = it
+        }
+    }
+
+    collect {
+        send(combiner.invoke(it, otherValue))
+    }
 }

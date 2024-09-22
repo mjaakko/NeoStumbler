@@ -26,7 +26,7 @@ interface ExportDao {
             b.age AS bluetoothScanAge,
             b.signalStrength AS signalStrength
         FROM Report r
-        JOIN Position p ON r.id = p.reportId
+        JOIN PositionEntity p ON r.id = p.reportId
         JOIN BluetoothBeaconEntity b ON r.id = b.reportId
         WHERE r.timestamp >= :from AND r.timestamp <= :to
     """
@@ -49,7 +49,7 @@ interface ExportDao {
             w.signalStrength AS signalStrength,
             w.ssid AS ssid
         FROM Report r
-        JOIN Position p ON r.id = p.reportId
+        JOIN PositionEntity p ON r.id = p.reportId
         JOIN WifiAccessPointEntity w ON r.id = w.reportId
         WHERE r.timestamp >= :from AND r.timestamp <= :to
     """
@@ -78,7 +78,7 @@ interface ExportDao {
             c.arfcn AS arfcn,
             c.age AS cellScanAge
         FROM Report r
-        JOIN Position p ON r.id = p.reportId
+        JOIN PositionEntity p ON r.id = p.reportId
         JOIN CellTowerEntity c ON r.id = c.reportId
         WHERE r.timestamp >= :from AND r.timestamp <= :to
     """

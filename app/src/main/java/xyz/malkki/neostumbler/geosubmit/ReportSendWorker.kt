@@ -84,7 +84,7 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
         val geosubmitReports = reportsToUpload.map { report ->
             Report(
                 report.report.timestamp,
-                Report.Position.fromDbEntity(report.position),
+                Report.Position.fromDbEntity(report.positionEntity),
                 report.wifiAccessPointEntities.map(Report.WifiAccessPoint::fromDbEntity)
                     .takeIf { it.isNotEmpty() },
                 report.cellTowerEntities.map(Report.CellTower::fromDbEntity).takeIf { it.isNotEmpty() },

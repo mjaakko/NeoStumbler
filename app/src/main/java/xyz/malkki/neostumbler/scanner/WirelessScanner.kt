@@ -19,13 +19,17 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import timber.log.Timber
 import xyz.malkki.neostumbler.common.LocationWithSource
+import xyz.malkki.neostumbler.domain.AirPressureObservation
 import xyz.malkki.neostumbler.domain.BluetoothBeacon
 import xyz.malkki.neostumbler.domain.CellTower
+import xyz.malkki.neostumbler.domain.Position
 import xyz.malkki.neostumbler.domain.WifiAccessPoint
+import xyz.malkki.neostumbler.extensions.combineWithLatestFrom
 import xyz.malkki.neostumbler.extensions.elapsedRealtimeMillisCompat
 import xyz.malkki.neostumbler.scanner.data.ReportData
 import xyz.malkki.neostumbler.scanner.movement.ConstantMovementDetector
 import xyz.malkki.neostumbler.scanner.movement.MovementDetector
+import java.util.Locale
 import kotlin.math.abs
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
@@ -39,11 +43,15 @@ private val LOCATION_MAX_AGE = 20.seconds
 //Maximum age for beacons
 private val BEACON_MAX_AGE = 20.seconds
 
+//Maximum age of air pressure data, relative to the location timestamp
+private val AIR_PRESSURE_MAX_AGE = 2.seconds
+
 /**
  * @param timeSource Time source used in the data, defaults to [SystemClock.elapsedRealtime]
  */
 class WirelessScanner(
     private val locationSource: () -> Flow<LocationWithSource>,
+    private val airPressureSource: () -> Flow<AirPressureObservation>,
     private val cellInfoSource: () -> Flow<List<CellTower>>,
     private val wifiAccessPointSource: () -> Flow<List<WifiAccessPoint>>,
     private val bluetoothBeaconSource: () -> Flow<List<BluetoothBeacon>>,
@@ -140,27 +148,40 @@ class WirelessScanner(
         isMovingFlow
             .flatMapLatest { isMoving ->
                 if (isMoving) {
-                    locationSource.invoke()
+                    val locationFlow = locationSource.invoke()
+                    val airPressureFlow = airPressureSource.invoke()
+
+                    locationFlow.combineWithLatestFrom(airPressureFlow) { location, airPressure ->
+                        //Use air pressure data only if it's not too old
+                        location to airPressure?.takeIf {
+                            abs(location.location.elapsedRealtimeMillisCompat - it.timestamp).milliseconds <= AIR_PRESSURE_MAX_AGE
+                        }
+                    }
                 } else {
                     emptyFlow()
                 }
             }
-            .filter {
-                it.location.hasAccuracy() && it.location.accuracy <= LOCATION_MAX_ACCURACY
+            .filter { (location, _) ->
+                location.location.hasAccuracy() && location.location.accuracy <= LOCATION_MAX_ACCURACY
             }
-            .filter {
-                val age = (timeSource.invoke() - it.location.elapsedRealtimeMillisCompat).milliseconds
+            .filter { (location, _) ->
+                val age = (timeSource.invoke() - location.location.elapsedRealtimeMillisCompat).milliseconds
 
                 age <= LOCATION_MAX_AGE
             }
             //Collect locations in pairs so that we can choose the best one based on timestamp
-            .runningFold(Pair<LocationWithSource?, LocationWithSource?>(null, null)) { pair, newLocation ->
+            .runningFold(Pair<LocationWithAirPressure?, LocationWithAirPressure?>(null, null)) { pair, newLocation ->
                 pair.second to newLocation
             }
             .filter {
                 it.second != null
             }
-            .flatMapConcat { (location1, location2) ->
+            .flatMapConcat { (p1, p2) ->
+                val location1 = p1?.first
+                val airPressure1 = p1?.second
+                val location2 = p2?.first
+                val airPressure2 = p2?.second
+
                 val (cells, wifis, bluetooths) = mutex.withLock {
                     val cells = cellTowersByKey.values.toList()
                     cellTowersByKey.clear()
@@ -192,7 +213,11 @@ class WirelessScanner(
                 listOfNotNull(
                     location1?.let {
                         ReportData(
-                            location = it,
+                            position = Position.fromLocation(
+                                location = it.location,
+                                source = it.source.name.lowercase(Locale.ROOT),
+                                airPressure = airPressure1?.airPressure?.toDouble()
+                            ),
                             cellTowers = location1cells,
                             wifiAccessPoints = location1wifis
                                 .takeIf { it.size >= 2 } ?: emptyList(),
@@ -200,7 +225,11 @@ class WirelessScanner(
                         )
                     },
                     ReportData(
-                        location = location2!!,
+                        position = Position.fromLocation(
+                            location = location2!!.location,
+                            source = location2.source.name.lowercase(Locale.ROOT),
+                            airPressure = airPressure2?.airPressure?.toDouble()
+                        ),
                         cellTowers = location2cells,
                         wifiAccessPoints = location2wifis
                             .takeIf { it.size >= 2 } ?: emptyList(),
@@ -229,3 +258,5 @@ class WirelessScanner(
         !ssid.isNullOrBlank() && !ssid.endsWith("_nomap")
     }
 }
+
+private typealias LocationWithAirPressure = Pair<LocationWithSource, AirPressureObservation?>
