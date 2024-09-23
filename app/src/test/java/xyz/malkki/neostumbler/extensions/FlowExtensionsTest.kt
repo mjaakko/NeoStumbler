@@ -116,4 +116,17 @@ class FlowExtensionsTest {
         assertEquals(2, list.size)
         assertEquals(9, list.last().second)
     }
+
+    @Test
+    fun `Test maxAge`() = runBlocking {
+        val a = flow {
+            emit(1)
+            delay(2.seconds)
+            emit(2)
+        }
+
+        val values = a.maxAge(1.seconds).toList()
+
+        assertEquals(listOf(1, null, 2, null), values)
+    }
 }

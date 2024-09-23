@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
@@ -88,4 +89,14 @@ fun <A, B, C> Flow<A>.combineWithLatestFrom(other: Flow<B>, combiner: (A, B?) ->
     collect {
         send(combiner.invoke(it, otherValue))
     }
+}
+
+/**
+ * Emits null if the flow does not emit another value within the specified duration.
+ * Note that this will cause the flow to emit null as the last value (i.e. it probably makes sense to use this operator only for flows that never complete)
+ */
+fun <T> Flow<T>.maxAge(duration: Duration): Flow<T?> = transformLatest { value ->
+    emit(value)
+    delay(duration)
+    emit(null)
 }
