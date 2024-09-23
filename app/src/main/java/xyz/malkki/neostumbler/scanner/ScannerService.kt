@@ -11,8 +11,6 @@ import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.hardware.Sensor
 import android.hardware.SensorManager
-import android.net.wifi.WifiManager
-import android.net.wifi.WifiManager.WifiLock
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
@@ -117,7 +115,6 @@ class ScannerService : Service() {
     }
 
     private lateinit var wakeLock: WakeLock
-    private lateinit var wifiLock: WifiLock
 
     private lateinit var notificationManager: NotificationManager
 
@@ -146,9 +143,6 @@ class ScannerService : Service() {
         ScannerTileService.updateTile(this)
 
         wakeLock = getSystemService<PowerManager>()!!.newWakeLock(PARTIAL_WAKE_LOCK, this::class.java.canonicalName).apply {
-            acquire()
-        }
-        wifiLock = getSystemService<WifiManager>()!!.createWifiLock(WifiManager.WIFI_MODE_FULL_LOW_LATENCY, this::class.java.canonicalName).apply {
             acquire()
         }
 
@@ -344,7 +338,6 @@ class ScannerService : Service() {
 
         ScannerTileService.updateTile(this)
 
-        wifiLock.release()
         wakeLock.release()
 
         notificationManager.cancel(NOTIFICATION_ID)
