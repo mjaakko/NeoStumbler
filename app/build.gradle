@@ -154,7 +154,7 @@ dependencies {
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
 
-    implementation platform('org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.8.1')
+    implementation platform('org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.9.0')
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8'
     fullImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services'
