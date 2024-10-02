@@ -167,4 +167,13 @@
     <string name="permission_rationale_location_map">
         Showing your location on the map needs permission for location
     </string>
+
+    <string name="troubleshooting">Troubleshooting</string>
+
+    <string name="troubleshooting_permissions_granted">Permissions granted</string>
+    <string name="troubleshooting_battery_optimizations_disabled">Battery optimizations disabled</string>
+    <string name="troubleshooting_accurate_location_available">Accurate location available</string>
+    <string name="troubleshooting_wifi_scan_always_available">Wi-Fi scanning always available</string>
+
+    <string name="troubleshooting_fix">Fix</string>
 </resources>

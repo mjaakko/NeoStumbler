@@ -1,5 +1,6 @@
 package xyz.malkki.neostumbler.ui.screens.settings
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -15,13 +16,14 @@ import xyz.malkki.neostumbler.ui.composables.ExportDataButton
 import xyz.malkki.neostumbler.ui.composables.ReportReuploadButton
 import xyz.malkki.neostumbler.ui.composables.SettingsGroup
 import xyz.malkki.neostumbler.ui.composables.SettingsToggle
+import xyz.malkki.neostumbler.ui.composables.TroubleshootingView
 import xyz.malkki.neostumbler.ui.composables.autoscan.AutoScanToggle
 import xyz.malkki.neostumbler.ui.composables.settings.AutoUploadToggle
-import xyz.malkki.neostumbler.ui.composables.settings.geosubmit.GeosubmitEndpointSettings
 import xyz.malkki.neostumbler.ui.composables.settings.IgnoreScanThrottlingToggle
 import xyz.malkki.neostumbler.ui.composables.settings.LanguageSwitcher
 import xyz.malkki.neostumbler.ui.composables.settings.MovementDetectorSettings
 import xyz.malkki.neostumbler.ui.composables.settings.ScannerNotificationStyleSettings
+import xyz.malkki.neostumbler.ui.composables.settings.geosubmit.GeosubmitEndpointSettings
 
 @Composable
 fun SettingsScreen() {
@@ -48,8 +50,13 @@ fun SettingsScreen() {
         }
 
         Spacer(modifier = Modifier.height(20.dp))
-        ExportDataButton()
-        Spacer(modifier = Modifier.height(8.dp))
-        ReportReuploadButton()
+
+        Column(
+            verticalArrangement = Arrangement.spacedBy(space = 8.dp)
+        ) {
+            TroubleshootingView()
+            ExportDataButton()
+            ReportReuploadButton()
+        }
     }
 }

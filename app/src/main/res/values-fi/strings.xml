@@ -176,4 +176,13 @@
     <string name="permission_rationale_location_map">
         Käyttölupa laitteen sijaintiin tarvitaan oman sijainnin näyttämiseksi kartalla
     </string>
+
+    <string name="troubleshooting">Vianmääritys</string>
+
+    <string name="troubleshooting_permissions_granted">Käyttöluvat annettu</string>
+    <string name="troubleshooting_battery_optimizations_disabled">Akun optimointi poistettu käytöstä</string>
+    <string name="troubleshooting_accurate_location_available">Tarkka sijainti saatavilla</string>
+    <string name="troubleshooting_wifi_scan_always_available">Wi-Fi -skannaus aina päällä</string>
+
+    <string name="troubleshooting_fix">Korjaa</string>
 </resources>
