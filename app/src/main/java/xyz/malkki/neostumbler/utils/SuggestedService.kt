@@ -9,7 +9,7 @@ import xyz.malkki.neostumbler.R
 @Serializable
 data class SuggestedService(
     val name: String,
-    val description: String?,
+    val description: String? = null,
     val website: String,
     val termsOfUse: String,
     val hostedBy: String,
@@ -29,6 +29,6 @@ data class SuggestedService(
     data class Endpoint(
         val baseUrl: String,
         val path: String,
-        val apiKey: String?
+        val apiKey: String? = null
     )
 }
