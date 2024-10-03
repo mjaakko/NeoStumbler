@@ -1,6 +1,8 @@
 package xyz.malkki.neostumbler.geosubmit
 
-import com.google.gson.Gson
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.encodeToStream
 import okhttp3.Call
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
@@ -10,14 +12,12 @@ import okio.BufferedSink
 import org.apache.commons.io.output.CloseShieldOutputStream
 import xyz.malkki.neostumbler.extensions.executeSuspending
 import java.io.IOException
-import java.nio.charset.StandardCharsets
 import java.util.zip.GZIPOutputStream
 
 private const val BUFFER_SIZE = 8 * 1024
 
 class MLSGeosubmit(
     private val httpClient: Call.Factory,
-    private val gson: Gson,
     private val geosubmitParams: GeosubmitParams
 ) : Geosubmit {
     override suspend fun sendReports(reports: List<Report>) {
@@ -46,13 +46,16 @@ class MLSGeosubmit(
 
             override fun writeTo(sink: BufferedSink) {
                 GZIPOutputStream(CloseShieldOutputStream.wrap(sink.outputStream()), BUFFER_SIZE)
-                    .bufferedWriter(StandardCharsets.UTF_8)
+                    .buffered()
                     .use {
-                        gson.toJson(mapOf("items" to reports), it)
+                        Json.encodeToStream(ReportItems(reports), it)
                     }
             }
         }
     }
 
     class MLSException(message: String, val httpStatusCode: Int) : IOException(message)
+
+    @Serializable
+    private data class ReportItems(val items: List<Report>)
 }
