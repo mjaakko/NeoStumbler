@@ -233,7 +233,7 @@ class ScannerService : Service() {
                     } catch (ex: Exception) {
                         null
                     }
-                } ?: MovementDetectorType.NONE
+                } ?: MovementDetectorType.LOCATION
             }
             .first()
 
