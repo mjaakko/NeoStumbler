@@ -45,8 +45,9 @@ fun SubscriptionManager.getActiveSubscriptionIds(): Flow<List<Int>> = callbackFl
     }
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        this@getActiveSubscriptionIds.addOnSubscriptionsChangedListener(ImmediateExecutor, listener!!)
+        this@getActiveSubscriptionIds.addOnSubscriptionsChangedListener(ImmediateExecutor, listener)
     } else {
+        @Suppress("DEPRECATION")
         this@getActiveSubscriptionIds.addOnSubscriptionsChangedListener(listener)
     }
 
