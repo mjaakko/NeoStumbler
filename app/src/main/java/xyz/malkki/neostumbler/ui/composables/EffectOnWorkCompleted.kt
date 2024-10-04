@@ -13,7 +13,7 @@ import java.util.UUID
 /**
  * Helper composable for running an effect when work is completed
  *
- * @param Work ID for [WorkManager]
+ * @param workId Work ID for [WorkManager]
  * @param onWorkSuccess Callback to be called when the work is finished successfully
  * @param onWorkFailed Callback to be called when the work is finished with a failure
  */

@@ -25,6 +25,7 @@ suspend fun Geocoder.getFromLocationSuspending(latitude: Double, longitude: Doub
         }
     } else {
         return withContext(Dispatchers.IO) {
+            @Suppress("DEPRECATION")
             return@withContext getFromLocation(latitude, longitude, maxResults) ?: emptyList()
         }
     }

@@ -66,6 +66,7 @@ class StumblerApplication : Application() {
 
         //Try forcing foreground mode (this doesn't seem to work)
         beaconManager.setEnableScheduledScanJobs(false)
+        @Suppress("DEPRECATION")
         beaconManager.backgroundMode = false
 
         beaconManager.backgroundBetweenScanPeriod = 5 * 1000

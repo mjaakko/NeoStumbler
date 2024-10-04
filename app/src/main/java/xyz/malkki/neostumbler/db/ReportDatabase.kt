@@ -24,7 +24,7 @@ import xyz.malkki.neostumbler.db.migrations.RenameTablesToEntities
 @Database(
     exportSchema = true,
     version = 8,
-    entities = [Report::class, PositionEntity::class, WifiAccessPointEntity::class, CellTowerEntity::class, BluetoothBeaconEntity::class,],
+    entities = [Report::class, PositionEntity::class, WifiAccessPointEntity::class, CellTowerEntity::class, BluetoothBeaconEntity::class],
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
         AutoMigration(from = 2, to = 3, spec = RenameTablesToEntities::class),

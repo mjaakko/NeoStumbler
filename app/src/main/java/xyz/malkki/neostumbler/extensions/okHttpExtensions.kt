@@ -14,8 +14,8 @@ suspend fun Call.executeSuspending(): Response = suspendCancellableCoroutine { c
         }
 
         override fun onResponse(call: Call, response: Response) {
-            cancellableContinuation.resume(response) {
-                response.close()
+            cancellableContinuation.resume(response) { _, res, _ ->
+                res.close()
             }
         }
     })

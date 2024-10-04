@@ -186,8 +186,8 @@ fun AutoScanToggle() {
                         googleApiAvailability.makeGooglePlayServicesAvailable(context.getActivity()!!).await()
                     }
                 } catch (ex: Exception) {
-                    Timber.w("Failed to make Google Play Services available, cannot enable autoscan", ex)
-                    return@ToggleWithAction;
+                    Timber.w(ex, "Failed to make Google Play Services available, cannot enable autoscan")
+                    return@ToggleWithAction
                 }
             }
 

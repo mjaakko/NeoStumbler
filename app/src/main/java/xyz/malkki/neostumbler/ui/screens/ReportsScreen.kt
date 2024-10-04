@@ -43,7 +43,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.room.util.appendPlaceholders
 import kotlinx.coroutines.launch
 import xyz.malkki.neostumbler.MainActivity
 import xyz.malkki.neostumbler.R

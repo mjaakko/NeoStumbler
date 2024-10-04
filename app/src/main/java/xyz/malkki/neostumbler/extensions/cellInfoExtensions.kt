@@ -10,5 +10,6 @@ val CellInfo.timestampMillisCompat: Long
     get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         timestampMillis
     } else {
+        @Suppress("DEPRECATION")
         timeStamp / 1_000_000
     }
