@@ -176,4 +176,6 @@
     <string name="permission_rationale_location_map">
         Käyttölupa laitteen sijaintiin tarvitaan oman sijainnin näyttämiseksi kartalla
     </string>
+
+    <string name="use_dynamic_color_ui">Käytä dynaamisia värejä käyttöliittymässä</string>
 </resources>

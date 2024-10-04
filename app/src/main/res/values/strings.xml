@@ -167,4 +167,6 @@
     <string name="permission_rationale_location_map">
         Showing your location on the map needs permission for location
     </string>
+
+    <string name="use_dynamic_color_ui">Use dynamic colors in the UI</string>
 </resources>
