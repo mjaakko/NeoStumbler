@@ -13,7 +13,6 @@ import androidx.work.WorkerParameters
 import androidx.work.hasKeyWithValueOfType
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
@@ -48,8 +47,8 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
         return MLSGeosubmit(application.httpClientProvider.await(), geosubmitParams)
     }
 
-    private fun getGeosubmitParams(): GeosubmitParams = runBlocking {
-        application.settingsStore.data
+    private suspend fun getGeosubmitParams(): GeosubmitParams {
+        return application.settingsStore.data
             .map { prefs ->
                 val endpoint = prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)] ?: GeosubmitParams.DEFAULT_BASE_URL
                 val path = prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH)] ?: GeosubmitParams.DEFAULT_PATH

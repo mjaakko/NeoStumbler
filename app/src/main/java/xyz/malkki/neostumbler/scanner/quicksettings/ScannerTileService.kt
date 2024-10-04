@@ -23,7 +23,7 @@ import xyz.malkki.neostumbler.utils.PermissionHelper
 
 class ScannerTileService : TileService() {
     companion object {
-        private const val MAIN_ACTIVITY_REQUEST_CODE = 5436;
+        private const val MAIN_ACTIVITY_REQUEST_CODE = 5436
 
         const val ADD_QS_TILE_ACTION_NAME = "add_scanner_qs_tile"
 

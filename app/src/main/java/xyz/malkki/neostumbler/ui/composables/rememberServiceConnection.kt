@@ -39,7 +39,7 @@ inline fun <reified BoundService : Service, reified BoundServiceBinder : Binder>
         }
     }
 
-    DisposableEffect(context, serviceConnection, disconnectCount.value) {
+    DisposableEffect(context, serviceConnection, disconnectCount.intValue) {
         context.bindService(Intent(context, BoundService::class.java), serviceConnection, 0)
 
         onDispose {
