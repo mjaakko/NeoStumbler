@@ -1,0 +1,1 @@
+<b>NeoStumbler</b>收集 Wi-Fi 网络、信号塔和蓝牙信标的位置，用以贡献给 Mozilla Location Service 或者其它与其 API 兼容的定位服务
