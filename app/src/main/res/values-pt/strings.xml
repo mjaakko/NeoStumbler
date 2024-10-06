@@ -20,10 +20,10 @@
     <string name="notification_sending_reports">Enviando relatórios</string>
     <string name="notification_wireless_scanning_title">Scan wireless ativo</string>
     <string name="notification_wireless_scanning_content_reports_created">%d relatórios criados</string>
-    <string name="export_notification_channel_name">Exportar informação</string>
-    <string name="export_data">Exportar informação</string>
-    <string name="export_no_file_chosen">Não foi possível exportar a informação porque nenhum ficheiro foi criado</string>
-    <string name="export_started">Exportando informação de %s até %s</string>
+    <string name="export_notification_channel_name">Exportação de dados</string>
+    <string name="export_data">Exportar dados</string>
+    <string name="export_no_file_chosen">Não foi possível exportar os dados porque nenhum ficheiro foi criado</string>
+    <string name="export_started">Exportando dados desde %s até %s</string>
     <string name="cells">Torres de telemóveis</string>
     <string name="beacons">Bluetooth beacons</string>
     <string name="endpoint">Ponto de recolha</string>
@@ -53,8 +53,8 @@
     <string name="battery_optimizations_not_disabled_warning">As otimizações de bateria não foram desativadas</string>
     <string name="send_reports_automatically">Enviar relatórios automaticamente</string>
     <string name="wifis">Wi-Fis</string>
-    <string name="notification_exporting_data">Exportando informação…</string>
-    <string name="reupload_data">Re-enviar informação</string>
+    <string name="notification_exporting_data">Exportando dados…</string>
+    <string name="reupload_data">Re-enviar dados</string>
     <string name="add_quick_settings_tile">Adicionar botão às definições rápidas para iniciar scans mais rapidamente?</string>
     <string name="settings_ignore_wifi_scan_throttling">Ignorar limitações no scan de redes Wi-Fi</string>
     <string name="path">Caminho</string>
@@ -80,4 +80,13 @@
     <string name="notification_style_detailed_title">Detalhado</string>
     <string name="notification_style_basic_title">Básico</string>
     <string name="notification_style_detailed_description">Mostra o número de relatórios criados e o número de satélites GNSS</string>
+    <string name="mls_warning_title">O MLS encerrou</string>
+    <string name="suggested_service_terms_of_use">Termos de uso</string>
+    <string name="mls_warning_text">O Mozilla Location Services encerrou e não recebe mais submissões. Mude o ponto de recolha para outro serviço. Algumas sugestões estão disponíveis nas opções da app.\n\nOs dados locais também podem ser exportados como ZIP nas opções da app</string>
+    <string name="cancel">Cancelar</string>
+    <string name="use">Usar</string>
+    <string name="suggested_services_title">Serviços sugeridos</string>
+    <string name="suggested_service_hosted_by">Alojado por:</string>
+    <string name="suggested_service_website">Website</string>
+    <string name="app_language">Língua</string>
 </resources>
