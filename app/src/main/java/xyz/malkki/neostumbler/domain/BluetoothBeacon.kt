@@ -10,8 +10,8 @@ data class BluetoothBeacon(
     val id2: String?,
     val id3: String?,
     val signalStrength: Int,
-    val timestamp: Long
-) {
+    override val timestamp: Long
+) : ObservedDevice {
     companion object {
         fun fromBeacon(beacon: Beacon): BluetoothBeacon {
             val timestamp = SystemClock.elapsedRealtime() - (System.currentTimeMillis() - beacon.lastCycleDetectionTimestamp)

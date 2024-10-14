@@ -1,5 +1,6 @@
 package xyz.malkki.neostumbler.scanner
 
+import android.location.Location
 import android.os.SystemClock
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -22,6 +23,7 @@ import xyz.malkki.neostumbler.common.LocationWithSource
 import xyz.malkki.neostumbler.domain.AirPressureObservation
 import xyz.malkki.neostumbler.domain.BluetoothBeacon
 import xyz.malkki.neostumbler.domain.CellTower
+import xyz.malkki.neostumbler.domain.ObservedDevice
 import xyz.malkki.neostumbler.domain.Position
 import xyz.malkki.neostumbler.domain.WifiAccessPoint
 import xyz.malkki.neostumbler.extensions.combineWithLatestFrom
@@ -40,8 +42,8 @@ private const val LOCATION_MAX_ACCURACY = 200
 //Maximum age for locations
 private val LOCATION_MAX_AGE = 20.seconds
 
-//Maximum age for beacons
-private val BEACON_MAX_AGE = 20.seconds
+//Maximum age for observed devices. This is used to filter out old data when e.g. there is no GPS signal and there's a gap between two locations
+private val OBSERVED_DEVICE_MAX_AGE = 30.seconds
 
 //Maximum age of air pressure data, relative to the location timestamp
 private val AIR_PRESSURE_MAX_AGE = 2.seconds
@@ -110,14 +112,6 @@ class WirelessScanner(
                         emptyFlow()
                     }
                 }
-                .map { bluetoothBeacons ->
-                    val now = timeSource.invoke()
-
-                    bluetoothBeacons.filter {
-                        //Beacon library seems to sometimes return very old results -> filter them
-                        (now - it.timestamp).milliseconds <= BEACON_MAX_AGE
-                    }
-                }
                 .collect { bluetoothBeacons ->
                     mutex.withLock {
                         bluetoothBeacons.forEach { bluetoothBeacon ->
@@ -176,12 +170,7 @@ class WirelessScanner(
             .filter {
                 it.second != null
             }
-            .flatMapConcat { (p1, p2) ->
-                val location1 = p1?.first
-                val airPressure1 = p1?.second
-                val location2 = p2?.first
-                val airPressure2 = p2?.second
-
+            .flatMapConcat { (location1WithPressure, location2WithPressure) ->
                 val (cells, wifis, bluetooths) = mutex.withLock {
                     val cells = cellTowersByKey.values.toList()
                     cellTowersByKey.clear()
@@ -195,46 +184,28 @@ class WirelessScanner(
                     Triple(cells, wifis, bluetooths)
                 }
 
-                val (location1cells, location2cells) = cells.partition {
-                    location1 != null &&
-                            abs(it.timestamp - location1.location.elapsedRealtimeMillisCompat) < abs(it.timestamp - location2!!.location.elapsedRealtimeMillisCompat)
-                }
+                val location1 = location1WithPressure?.first
+                val location2 = location2WithPressure?.first
 
-                val (location1wifis, location2wifis) = wifis.partition {
-                    location1 != null &&
-                        abs(it.timestamp - location1.location.elapsedRealtimeMillisCompat) < abs(it.timestamp - location2!!.location.elapsedRealtimeMillisCompat)
-                }
+                val now = timeSource.invoke()
 
-                val (location1bluetooths, location2bluetooths) = bluetooths.partition {
-                    location1 != null &&
-                        abs(it.timestamp - location1.location.elapsedRealtimeMillisCompat) < abs(it.timestamp - location2!!.location.elapsedRealtimeMillisCompat)
-                }
+                val (location1cells, location2cells) = cells
+                    .filterOldData(now)
+                    .partitionByLocationTimestamp(location1?.location, location2!!.location)
+
+                val (location1wifis, location2wifis) = wifis
+                    .filterOldData(now)
+                    .partitionByLocationTimestamp(location1?.location, location2.location)
+
+                val (location1bluetooths, location2bluetooths) = bluetooths
+                    .filterOldData(now)
+                    .partitionByLocationTimestamp(location1?.location, location2.location)
 
                 listOfNotNull(
                     location1?.let {
-                        ReportData(
-                            position = Position.fromLocation(
-                                location = it.location,
-                                source = it.source.name.lowercase(Locale.ROOT),
-                                airPressure = airPressure1?.airPressure?.toDouble()
-                            ),
-                            cellTowers = location1cells,
-                            wifiAccessPoints = location1wifis
-                                .takeIf { it.size >= 2 } ?: emptyList(),
-                            bluetoothBeacons = location1bluetooths
-                        )
+                        createReport(location1WithPressure, location1cells, location1wifis, location1bluetooths)
                     },
-                    ReportData(
-                        position = Position.fromLocation(
-                            location = location2!!.location,
-                            source = location2.source.name.lowercase(Locale.ROOT),
-                            airPressure = airPressure2?.airPressure?.toDouble()
-                        ),
-                        cellTowers = location2cells,
-                        wifiAccessPoints = location2wifis
-                            .takeIf { it.size >= 2 } ?: emptyList(),
-                        bluetoothBeacons = location2bluetooths
-                    )
+                    createReport(location2WithPressure, location2cells, location2wifis, location2bluetooths)
                 ).asFlow()
             }
             .filter {
@@ -246,6 +217,19 @@ class WirelessScanner(
     private val CellTower.key: String
         get() = listOf(mobileCountryCode, mobileNetworkCode, locationAreaCode, cellId, primaryScramblingCode).joinToString("/")
 
+    private fun createReport(location: LocationWithAirPressure, cells: List<CellTower>, wifis: List<WifiAccessPoint>, bluetooths: List<BluetoothBeacon>): ReportData {
+        return ReportData(
+            position = Position.fromLocation(
+                location = location.first.location,
+                source = location.first.source.name.lowercase(Locale.ROOT),
+                airPressure = location.second?.airPressure?.toDouble()
+            ),
+            cellTowers = cells,
+            wifiAccessPoints = wifis.takeIf { it.size >= 2 } ?: emptyList(),
+            bluetoothBeacons = bluetooths
+        )
+    }
+
     /**
      * Filters Wi-Fi networks that should not be sent to geolocation services, i.e.
      * hidden networks with empty SSID or those with SSID ending in "_nomap"
@@ -256,6 +240,16 @@ class WirelessScanner(
         val ssid = wifiAccessPoint.ssid
 
         !ssid.isNullOrBlank() && !ssid.endsWith("_nomap")
+    }
+
+    private fun <T : ObservedDevice> List<T>.filterOldData(currentTimestamp: Long): List<T> = filter { device ->
+        (currentTimestamp - device.timestamp).milliseconds <= OBSERVED_DEVICE_MAX_AGE
+    }
+
+    private fun <T : ObservedDevice> List<T>.partitionByLocationTimestamp(location1: Location?, location2: Location): Pair<List<T>, List<T>> = partition {
+        //location1 can be null, because locations are collected pairwise and the first location does not have a pair
+        location1 != null &&
+                abs(it.timestamp - location1.elapsedRealtimeMillisCompat) < abs(it.timestamp - location2.elapsedRealtimeMillisCompat)
     }
 }
 
