@@ -221,4 +221,4 @@ private fun GeosubmitEndpointDialog(currentParams: GeosubmitParams?, onDialogClo
 }
 
 private val String?.isUnencryptedUrl: Boolean
-    get() = this?.startsWith("http:") ?: false
+    get() = this?.startsWith("http:") == true

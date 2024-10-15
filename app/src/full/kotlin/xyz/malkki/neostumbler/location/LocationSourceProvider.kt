@@ -16,7 +16,7 @@ class LocationSourceProvider(private val context: Context) {
     private fun preferFusedLocation(): Boolean = runBlocking {
         settingsStore.data
             .map { it[booleanPreferencesKey(PreferenceKeys.PREFER_FUSED_LOCATION)] }
-            .firstOrNull() ?: true
+            .firstOrNull() != false
     }
 
     fun getLocationSource(): LocationSource {

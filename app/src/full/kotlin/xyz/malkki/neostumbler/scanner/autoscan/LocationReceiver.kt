@@ -63,7 +63,7 @@ class LocationReceiver : BroadcastReceiver() {
             Timber.i("Requesting location update to determine if scanning should be started")
             fusedLocationProviderClient.requestLocationUpdates(locationRequest, getPendingIntent(context))
                 .addOnSuccessListener { Timber.i("Location update requested") }
-                .addOnFailureListener { e -> Timber.w("Failed to request location update", e) }
+                .addOnFailureListener { e -> Timber.w(e, "Failed to request location update") }
         }
     }
 

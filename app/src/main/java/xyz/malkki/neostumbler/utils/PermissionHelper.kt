@@ -2,7 +2,6 @@ package xyz.malkki.neostumbler.utils
 
 import android.Manifest
 import android.content.Context
-import android.os.Build
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 
 object PermissionHelper {

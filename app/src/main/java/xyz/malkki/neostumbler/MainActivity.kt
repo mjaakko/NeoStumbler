@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
                         topBar = {
                             TopAppBar(
                                 title = { Text(text = stringResource(R.string.app_name)) },
-                                colors = TopAppBarDefaults.smallTopAppBarColors(
+                                colors = TopAppBarDefaults.topAppBarColors(
                                     containerColor = MaterialTheme.colorScheme.primary,
                                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
                                 ),
@@ -89,18 +89,10 @@ class MainActivity : AppCompatActivity() {
                             val selectedTabIndex = remember { mutableIntStateOf(1) }
 
                             val items = listOf(
-                                stringResource(R.string.map_tab_title) to rememberVectorPainter(
-                                    Icons.Filled.Place
-                                ),
-                                stringResource(R.string.reports_tab_title) to rememberVectorPainter(
-                                    Icons.Filled.List
-                                ),
-                                stringResource(R.string.statistics_tab_title) to painterResource(
-                                    id = R.drawable.statistics_24
-                                ),
-                                stringResource(R.string.settings_tab_title) to rememberVectorPainter(
-                                    Icons.Filled.Settings
-                                ),
+                                stringResource(R.string.map_tab_title) to rememberVectorPainter(Icons.Filled.Place),
+                                stringResource(R.string.reports_tab_title) to rememberVectorPainter(Icons.AutoMirrored.Default.List),
+                                stringResource(R.string.statistics_tab_title) to painterResource(id = R.drawable.statistics_24),
+                                stringResource(R.string.settings_tab_title)  to rememberVectorPainter(Icons.Filled.Settings),
                             )
 
                             Column(
