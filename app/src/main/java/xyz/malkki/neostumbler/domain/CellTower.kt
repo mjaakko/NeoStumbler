@@ -25,8 +25,8 @@ data class CellTower(
     /**
      * Timestamp when the cell tower was observed in milliseconds since boot
      */
-    val timestamp: Long
-) {
+    override val timestamp: Long
+) : ObservedDevice {
     companion object {
         private fun CellInfo.serving(): Int? {
             if (cellConnectionStatus == CellInfo.CONNECTION_UNKNOWN) {
