@@ -12,8 +12,8 @@ data class WifiAccessPoint(
     val frequency: Int?,
     val signalStrength: Int?,
     val ssid: String?,
-    val timestamp: Long
-) {
+    override val timestamp: Long
+) : ObservedDevice {
     companion object {
         fun fromScanResult(scanResult: ScanResult): WifiAccessPoint {
             val radioType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {

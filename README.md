@@ -11,6 +11,10 @@
 
 NeoStumbler is an Android application for collecting locations of cell towers, Wi-Fi access points and Bluetooth beacons to geolocation services, which have an API compatible with [Ichnaea](https://ichnaea.readthedocs.io/en/latest/api/geosubmit2.html) (i.e. Mozilla Location Services).
 
+> [!NOTE]
+> Mozilla Location Service (MLS) will retire it's service entirely very soon.
+> Multiple entities have access to their dataset, most notably, [BeaconDB](https://beacondb.net) will be their successor and accept data submissions
+
 ## Downloads
 
 There are two variants available:
