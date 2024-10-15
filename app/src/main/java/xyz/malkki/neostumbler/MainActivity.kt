@@ -1,5 +1,6 @@
 package xyz.malkki.neostumbler
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +20,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -26,11 +28,24 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.ui.screens.MapScreen
 import xyz.malkki.neostumbler.ui.screens.ReportsScreen
 import xyz.malkki.neostumbler.ui.screens.StatisticsScreen
 import xyz.malkki.neostumbler.ui.screens.settings.SettingsScreen
 import xyz.malkki.neostumbler.ui.theme.NeoStumblerTheme
+
+private fun Context.useDynamicColor(): Flow<Boolean> = (applicationContext as StumblerApplication).settingsStore.data
+    .map { prefs ->
+        prefs[booleanPreferencesKey(PreferenceKeys.DYNAMIC_COLOR_THEME)] == true
+    }
 
 class MainActivity : AppCompatActivity() {
     companion object {
@@ -39,10 +54,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val dynamicColorFlow = useDynamicColor().stateIn(lifecycleScope, started = SharingStarted.Eagerly, initialValue = null)
+
+        installSplashScreen().apply {
+            setKeepOnScreenCondition {
+                dynamicColorFlow.value == null
+            }
+        }
+
         super.onCreate(savedInstanceState)
 
         setContent {
-            NeoStumblerTheme {
+            val dynamicColorState = dynamicColorFlow.collectAsState()
+
+            NeoStumblerTheme(dynamicColor = dynamicColorState.value == true) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize()
@@ -59,7 +84,7 @@ class MainActivity : AppCompatActivity() {
 
                                 }
                             )
-                         },
+                        },
                         content = {
                             val selectedTabIndex = remember { mutableIntStateOf(1) }
 
@@ -70,22 +95,29 @@ class MainActivity : AppCompatActivity() {
                                 stringResource(R.string.settings_tab_title)  to rememberVectorPainter(Icons.Filled.Settings),
                             )
 
-                            Column(modifier = Modifier
-                                .fillMaxSize()
-                                .padding(paddingValues = it)) {
-                                Column(modifier = Modifier
-                                    .weight(1.0f)
-                                    .padding(16.dp)) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(paddingValues = it)
+                            ) {
+                                Column(
+                                    modifier = Modifier
+                                        .weight(1.0f)
+                                        .padding(16.dp)
+                                ) {
                                     when (selectedTabIndex.intValue) {
                                         0 -> {
                                             MapScreen()
                                         }
+
                                         1 -> {
                                             ReportsScreen()
                                         }
+
                                         2 -> {
                                             StatisticsScreen()
                                         }
+
                                         3 -> {
                                             SettingsScreen()
                                         }
