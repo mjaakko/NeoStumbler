@@ -6,6 +6,8 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.serialization'
 }
 
+def DB_SCHEMAS_DIR =  "$projectDir/schemas"
+
 android {
     namespace 'xyz.malkki.neostumbler'
     compileSdk 34
@@ -38,9 +40,13 @@ android {
         buildConfigField("String", "SUPPORTED_LOCALES", "\"" + resourceConfigurations.join(",") + "\"")
 
         ksp {
-            arg("room.schemaLocation", "$projectDir/schemas")
+            arg("room.schemaLocation", DB_SCHEMAS_DIR)
             arg("room.incremental", "true")
         }
+    }
+
+    sourceSets {
+        androidTest.assets.srcDirs += files(DB_SCHEMAS_DIR.toString())
     }
 
     androidResources {
@@ -176,6 +182,7 @@ dependencies {
     annotationProcessor "androidx.room:room-compiler:$room_version"
     ksp "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
+    androidTestImplementation "androidx.room:room-testing:$room_version"
 
     def work_version = "2.9.1"
 
