@@ -89,4 +89,5 @@
     <string name="suggested_service_hosted_by">Alojado por:</string>
     <string name="suggested_service_website">Website</string>
     <string name="app_language">Língua</string>
+    <string name="use_dynamic_color_ui">Usar cores dinâmicas na UI</string>
 </resources>
