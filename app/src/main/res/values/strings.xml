@@ -169,4 +169,10 @@
     </string>
 
     <string name="use_dynamic_color_ui">Use dynamic colors in the UI</string>
+
+    <string name="db_prune_title">Delete sent reports</string>
+    <string name="db_prune_one_month">After one month</string>
+    <string name="db_prune_two_months">After two months</string>
+    <string name="db_prune_six_months">After six months</string>
+    <string name="db_prune_never">Never</string>
 </resources>

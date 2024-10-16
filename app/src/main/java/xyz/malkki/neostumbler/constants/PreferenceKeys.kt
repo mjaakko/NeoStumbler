@@ -18,4 +18,6 @@ object PreferenceKeys {
     const val SCANNER_NOTIFICATION_STYLE = "scanner_notification_style"
 
     const val DYNAMIC_COLOR_THEME = "dynamic_color_theme"
+
+    const val DB_PRUNE_DATA_MAX_AGE_DAYS = "db_prune_max_age_days"
 }

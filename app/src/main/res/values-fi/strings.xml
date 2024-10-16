@@ -178,4 +178,10 @@
     </string>
 
     <string name="use_dynamic_color_ui">Käytä dynaamisia värejä käyttöliittymässä</string>
-</resources>
+
+    <string name="db_prune_title">Poista lähetetyt raportit</string>
+    <string name="db_prune_one_month">Kuukauden jälkeen</string>
+    <string name="db_prune_two_months">Kahden kuukauden jälkeen</string>
+    <string name="db_prune_six_months">Kuuden kuukauden jälkeen</string>
+    <string name="db_prune_never">Ei ikinä</string>
+    </resources>
