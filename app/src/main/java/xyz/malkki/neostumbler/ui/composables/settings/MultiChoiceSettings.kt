@@ -142,6 +142,8 @@ private fun <O> MultiChoiceSettingsDialog(
                                 onClick = null
                             )
 
+                            val description = descriptionProvider?.invoke(option)
+
                             Column(
                                 modifier = Modifier
                                     //Disabled -> alpha 0.38f https://developer.android.com/develop/ui/compose/designsystems/material2-material3#emphasis-and
@@ -152,15 +154,13 @@ private fun <O> MultiChoiceSettingsDialog(
                                             0.38f
                                         }
                                     )
-                                    .align(Alignment.Top)
+                                    .align(if (description != null) { Alignment.Top } else { Alignment.CenterVertically })
                                     .padding(start = 16.dp)
                             ) {
                                 Text(
                                     text = titleProvider.invoke(option),
                                     style = MaterialTheme.typography.bodyMedium.merge()
                                 )
-
-                                val description = descriptionProvider?.invoke(option)
 
                                 if (description != null) {
                                     Text(
