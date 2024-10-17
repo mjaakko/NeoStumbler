@@ -105,4 +105,5 @@
     <string name="suggested_services_title">Serviços sugeridos</string>
     <string name="movement_detection_significant_motion_description">Pausa o escaneamento e o GPS quando nenhum movimento significante é detectado. Economiza bateria, mas pode não funcionar bem em certos dispositivos</string>
     <string name="app_language">Idioma</string>
+    <string name="use_dynamic_color_ui">Usar cores dinâmicas na interface</string>
 </resources>
