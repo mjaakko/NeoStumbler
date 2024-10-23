@@ -91,4 +91,5 @@
     <string name="notification_style_minimal_title">Minimal</string>
     <string name="notification_style_detailed_title">Detailliert</string>
     <string name="app_language">Sprache</string>
+    <string name="use_dynamic_color_ui">Verwende dynamische Farben</string>
 </resources>
