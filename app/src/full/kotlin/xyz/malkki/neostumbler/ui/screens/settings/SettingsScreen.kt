@@ -1,6 +1,7 @@
 package xyz.malkki.neostumbler.ui.screens.settings
 
 import android.os.Build
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -13,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.ui.composables.ExportDataButton
+import xyz.malkki.neostumbler.ui.composables.ManageStorageButton
 import xyz.malkki.neostumbler.ui.composables.ReportReuploadButton
 import xyz.malkki.neostumbler.ui.composables.SettingsGroup
 import xyz.malkki.neostumbler.ui.composables.SettingsToggle
@@ -59,9 +61,13 @@ fun SettingsScreen() {
             }
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
-        ExportDataButton()
         Spacer(modifier = Modifier.height(8.dp))
-        ReportReuploadButton()
+        Column(
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            ManageStorageButton()
+            ExportDataButton()
+            ReportReuploadButton()
+        }
     }
 }
