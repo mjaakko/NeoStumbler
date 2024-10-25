@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
@@ -14,13 +13,16 @@ import androidx.compose.material3.DateRangePicker
 import androidx.compose.material3.DateRangePickerDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.extensions.selectedDateRange
 import xyz.malkki.neostumbler.utils.SelectableDatesFromSet
 import java.time.LocalDate
@@ -45,8 +47,17 @@ fun DateRangePickerDialog(
         onDismissRequest = {
             onDatesSelected(null)
         },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    onDatesSelected(null)
+                }
+            ) {
+                Text(text = stringResource(R.string.cancel))
+            }
+        },
         confirmButton = {
-            Button(
+            TextButton(
                 enabled = selectedDates != null,
                 onClick = {
                     onDatesSelected(selectedDates)
@@ -59,7 +70,7 @@ fun DateRangePickerDialog(
         Column {
             Text(
                 style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(16.dp, 12.dp, 12.dp, 8.dp),
+                modifier = Modifier.padding(24.dp, 24.dp, 12.dp, 8.dp),
                 text = title
             )
             if (selectableDates.value == null) {
