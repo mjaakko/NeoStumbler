@@ -5,7 +5,6 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.WorkerParameters
-import androidx.work.hasKeyWithValueOfType
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
@@ -21,9 +20,6 @@ import kotlin.time.measureTimedValue
 class DbPruneWorker(appContext: Context, params: WorkerParameters) : CoroutineWorker(appContext, params) {
     companion object {
         const val PERIODIC_WORK_NAME = "db_prune_periodic"
-        const val ONE_TIME_WORK_NAME = "db_prune_one_time"
-
-        const val INPUT_MAX_AGE_DAYS = "max_age_days"
 
         const val OUTPUT_REPORTS_DELETED = "reports_deleted"
     }
@@ -40,16 +36,14 @@ class DbPruneWorker(appContext: Context, params: WorkerParameters) : CoroutineWo
         val db = (applicationContext as StumblerApplication).reportDb
         val reportDao = db.reportDao()
 
-        val maxAgeDays = if (inputData.hasKeyWithValueOfType<Long>(INPUT_MAX_AGE_DAYS)) {
-            inputData.getLong(INPUT_MAX_AGE_DAYS, -1L)
-        } else {
-            getMaxAgeDays() ?: -1L
-        }.takeIf {
-            it > 0
+        //By default delete reports older than 60 days
+        val maxAgeDays = getMaxAgeDays() ?: 60
+        if (maxAgeDays < 0) {
+            //If the max age is negative, DB pruning has been disabled in the settings -> succeed immediately
+            return Result.success()
         }
 
-        //By default delete reports older than 60 days
-        val minTimestamp = ZonedDateTime.now().minusDays(maxAgeDays ?: 60).toInstant()
+        val minTimestamp = ZonedDateTime.now().minusDays(maxAgeDays).toInstant()
 
         Timber.i("Deleting reports older than $minTimestamp")
 
