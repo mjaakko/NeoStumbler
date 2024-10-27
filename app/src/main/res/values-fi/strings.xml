@@ -179,7 +179,8 @@
         Käyttölupa laitteen sijaintiin tarvitaan oman sijainnin näyttämiseksi kartalla
     </string>
 
-    <string name="troubleshooting">Vianmääritys</string>
+    <string name="troubleshooting_title">Vianmääritys</string>
+    <string name="troubleshooting_description">Korjaa skannauksen yleisiä ongelmia</string>
 
     <string name="troubleshooting_permissions_granted">Käyttöluvat annettu</string>
     <string name="troubleshooting_battery_optimizations_disabled">Akun optimointi poistettu käytöstä</string>

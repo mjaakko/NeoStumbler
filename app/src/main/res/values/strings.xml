@@ -170,7 +170,8 @@
         Showing your location on the map needs permission for location
     </string>
 
-    <string name="troubleshooting">Troubleshooting</string>
+    <string name="troubleshooting_title">Troubleshooting</string>
+    <string name="troubleshooting_description">Fix common issues in scanning</string>
 
     <string name="troubleshooting_permissions_granted">Permissions granted</string>
     <string name="troubleshooting_battery_optimizations_disabled">Battery optimizations disabled</string>
