@@ -33,7 +33,7 @@ private fun DataStore<Preferences>.ignoringWifiScanThrottling(): Flow<Boolean> =
     .map { it[booleanPreferencesKey(PreferenceKeys.IGNORE_SCAN_THROTTLING)] }
     .distinctUntilChanged()
     .map {
-        it ?: false
+        it == true
     }
 
 @Composable

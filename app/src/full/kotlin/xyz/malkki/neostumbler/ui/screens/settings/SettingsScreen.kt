@@ -1,5 +1,6 @@
 package xyz.malkki.neostumbler.ui.screens.settings
 
+import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,8 +20,10 @@ import xyz.malkki.neostumbler.ui.composables.SettingsToggle
 import xyz.malkki.neostumbler.ui.composables.TroubleshootingView
 import xyz.malkki.neostumbler.ui.composables.autoscan.AutoScanToggle
 import xyz.malkki.neostumbler.ui.composables.settings.AutoUploadToggle
+import xyz.malkki.neostumbler.ui.composables.settings.DbPruneSettings
 import xyz.malkki.neostumbler.ui.composables.settings.IgnoreScanThrottlingToggle
 import xyz.malkki.neostumbler.ui.composables.settings.LanguageSwitcher
+import xyz.malkki.neostumbler.ui.composables.settings.ManageStorageSettingsItem
 import xyz.malkki.neostumbler.ui.composables.settings.MovementDetectorSettings
 import xyz.malkki.neostumbler.ui.composables.settings.ScannerNotificationStyleSettings
 import xyz.malkki.neostumbler.ui.composables.settings.geosubmit.GeosubmitEndpointSettings
@@ -33,6 +36,7 @@ fun SettingsScreen() {
         ) {
             GeosubmitEndpointSettings()
             AutoUploadToggle()
+            DbPruneSettings()
         }
 
         SettingsGroup(
@@ -47,12 +51,22 @@ fun SettingsScreen() {
         SettingsGroup(title = stringResource(id = R.string.settings_group_other)) {
             ScannerNotificationStyleSettings()
             LanguageSwitcher()
+
+            // Dynamic color is available on Android 12+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                SettingsToggle(
+                    title = stringResource(id = R.string.use_dynamic_color_ui),
+                    preferenceKey = PreferenceKeys.DYNAMIC_COLOR_THEME,
+                    default = false
+                )
+            }
+
+            ManageStorageSettingsItem()
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
-
+        Spacer(modifier = Modifier.height(8.dp))
         Column(
-            verticalArrangement = Arrangement.spacedBy(space = 8.dp)
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             TroubleshootingView()
             ExportDataButton()

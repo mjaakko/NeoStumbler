@@ -60,6 +60,52 @@ class WirelessScannerTest {
     }
 
     @Test
+    fun `Test no reports are created with old data`() {
+        val wirelessScanner = WirelessScanner(
+            locationSource = {
+                flowOf(
+                    LocationWithSource(
+                        source = LocationWithSource.LocationSource.GPS,
+                        location = mock<Location> {
+                            on { provider } doReturn "gps"
+                            on { latitude } doReturn 50.0
+                            on { longitude } doReturn 10.0
+                            on { accuracy } doReturn 15.0f
+                            on { elapsedRealtimeMillis } doReturn 60000
+                        }
+                    )
+                )
+            },
+            cellInfoSource = { emptyFlow() },
+            wifiAccessPointSource = { emptyFlow() },
+            bluetoothBeaconSource = {
+                flowOf(listOf(
+                    BluetoothBeacon(
+                        macAddress = "01:01:01:01:01",
+                        signalStrength = -68,
+                        timestamp = 25000,
+                        beaconType = null,
+                        id1 = null,
+                        id2 = null,
+                        id3 = null,
+                    )
+                ))
+            },
+            airPressureSource = { emptyFlow() }
+        )
+
+        val reportFlow = wirelessScanner.createReports()
+
+        assertThrows(TimeoutCancellationException::class.java) {
+            runBlocking {
+                withTimeout(1.seconds) {
+                    reportFlow.first()
+                }
+            }
+        }
+    }
+
+    @Test
     fun `Test no reports are created when Wi-Fi networks have an opt-out`() {
         val wirelessScanner = WirelessScanner(
             locationSource = {

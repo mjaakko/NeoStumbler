@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.NeoStumbler" parent="@style/Theme.AppCompat.Light.NoActionBar" />
+
+    <style name="Theme.Starting" parent="Theme.SplashScreen.IconBackground">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_screen_icon</item>
+        <item name="postSplashScreenTheme">@style/Theme.NeoStumbler</item>
+    </style>
 </resources>

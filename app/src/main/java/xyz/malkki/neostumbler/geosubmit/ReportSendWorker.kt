@@ -11,16 +11,12 @@ import androidx.work.Data
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.hasKeyWithValueOfType
-import com.google.gson.GsonBuilder
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
-import xyz.malkki.neostumbler.gson.InstantTypeAdapter
-import xyz.malkki.neostumbler.gson.OnlyFiniteNumberTypeAdapterFactory
 import java.net.SocketTimeoutException
 import java.time.Instant
 import kotlin.time.DurationUnit
@@ -37,11 +33,6 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
         const val INPUT_REUPLOAD_TO = "reupload_to"
 
         const val OUTPUT_REPORTS_SENT = "reports_sent"
-
-        private val GSON = GsonBuilder()
-            .registerTypeAdapterFactory(OnlyFiniteNumberTypeAdapterFactory())
-            .registerTypeAdapter(Instant::class.java, InstantTypeAdapter())
-            .create()
     }
 
     private val application = applicationContext as StumblerApplication
@@ -53,11 +44,11 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
 
         Timber.d("Using endpoint ${geosubmitParams.path} with API key ${geosubmitParams.apiKey} for Geosubmit")
 
-        return MLSGeosubmit(application.httpClientProvider.await(), GSON, geosubmitParams)
+        return MLSGeosubmit(application.httpClientProvider.await(), geosubmitParams)
     }
 
-    private fun getGeosubmitParams(): GeosubmitParams = runBlocking {
-        application.settingsStore.data
+    private suspend fun getGeosubmitParams(): GeosubmitParams {
+        return application.settingsStore.data
             .map { prefs ->
                 val endpoint = prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)] ?: GeosubmitParams.DEFAULT_BASE_URL
                 val path = prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH)] ?: GeosubmitParams.DEFAULT_PATH
@@ -85,7 +76,7 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
         }
         val geosubmitReports = reportsToUpload.map { report ->
             Report(
-                report.report.timestamp,
+                report.report.timestamp.toEpochMilli(),
                 Report.Position.fromDbEntity(report.positionEntity),
                 report.wifiAccessPointEntities.map(Report.WifiAccessPoint::fromDbEntity)
                     .takeIf { it.isNotEmpty() },

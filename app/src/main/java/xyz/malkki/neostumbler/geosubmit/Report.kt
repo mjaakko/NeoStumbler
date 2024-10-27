@@ -1,17 +1,16 @@
 package xyz.malkki.neostumbler.geosubmit
 
-import androidx.annotation.Keep
-import java.time.Instant
+import kotlinx.serialization.Serializable
 
-@Keep
+@Serializable
 data class Report(
-    val timestamp: Instant,
+    val timestamp: Long,
     val position: Position,
     val wifiAccessPoints: List<WifiAccessPoint>?,
     val cellTowers: List<CellTower>?,
     val bluetoothBeacons: List<BluetoothBeacon>?
 ) {
-    @Keep
+    @Serializable
     data class Position(
         val latitude: Double,
         val longitude: Double,
@@ -29,20 +28,20 @@ data class Report(
                 return Position(
                     positionEntity.latitude,
                     positionEntity.longitude,
-                    positionEntity.accuracy,
+                    positionEntity.accuracy?.takeUnless { it.isNaN() },
                     positionEntity.age,
-                    positionEntity.altitude,
-                    positionEntity.altitudeAccuracy,
-                    positionEntity.heading,
-                    positionEntity.pressure,
-                    positionEntity.speed,
+                    positionEntity.altitude?.takeUnless { it.isNaN() },
+                    positionEntity.altitudeAccuracy?.takeUnless { it.isNaN() },
+                    positionEntity.heading?.takeUnless { it.isNaN() },
+                    positionEntity.pressure?.takeUnless { it.isNaN() },
+                    positionEntity.speed?.takeUnless { it.isNaN() },
                     positionEntity.source
                 )
             }
         }
     }
 
-    @Keep
+    @Serializable
     data class WifiAccessPoint(
         val macAddress: String,
         val radioType: String?,
@@ -69,7 +68,7 @@ data class Report(
         }
     }
 
-    @Keep
+    @Serializable
     data class CellTower(
         val radioType: String,
         val mobileCountryCode: Int?,
@@ -108,7 +107,7 @@ data class Report(
         }
     }
 
-    @Keep
+    @Serializable
     data class BluetoothBeacon(
         val macAddress: String,
         val name: String?,

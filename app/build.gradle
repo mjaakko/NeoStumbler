@@ -3,7 +3,10 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'com.google.devtools.ksp'
     id 'org.jetbrains.kotlin.plugin.compose'
+    id 'org.jetbrains.kotlin.plugin.serialization'
 }
+
+def DB_SCHEMAS_DIR =  "$projectDir/schemas"
 
 android {
     namespace 'xyz.malkki.neostumbler'
@@ -37,9 +40,13 @@ android {
         buildConfigField("String", "SUPPORTED_LOCALES", "\"" + resourceConfigurations.join(",") + "\"")
 
         ksp {
-            arg("room.schemaLocation", "$projectDir/schemas")
+            arg("room.schemaLocation", DB_SCHEMAS_DIR)
             arg("room.incremental", "true")
         }
+    }
+
+    sourceSets {
+        androidTest.assets.srcDirs += files(DB_SCHEMAS_DIR.toString())
     }
 
     androidResources {
@@ -59,7 +66,7 @@ android {
             minifyEnabled true
             shrinkResources true
 
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'gson.pro', 'altbeacon.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'altbeacon.pro'
         }
     }
 
@@ -75,6 +82,12 @@ android {
         }
         full {
             dimension "version"
+        }
+    }
+        
+    applicationVariants.configureEach { variant ->
+        if (variant.buildType.debuggable) {
+            variant.resValue("string", "app_name", "NeoStumbler (dev, $variant.flavorName)")
         }
     }
 
@@ -121,16 +134,19 @@ kotlin {
         freeCompilerArgs.add("-opt-in=androidx.compose.material3.ExperimentalMaterial3Api")
         freeCompilerArgs.add("-opt-in=androidx.compose.foundation.ExperimentalFoundationApi")
         freeCompilerArgs.add("-opt-in=kotlinx.coroutines.FlowPreview")
+        freeCompilerArgs.add("-opt-in=kotlinx.serialization.ExperimentalSerializationApi")
     }
 }
 
 dependencies {
     implementation 'androidx.core:core-ktx:1.13.1'
-    implementation 'androidx.activity:activity-compose:1.9.1'
+    implementation 'androidx.activity:activity-compose:1.9.2'
 
     implementation 'androidx.appcompat:appcompat:1.7.0'
 
-    def lifecycle_version = '2.8.4'
+    implementation 'androidx.core:core-splashscreen:1.0.1'
+
+    def lifecycle_version = '2.8.6'
 
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
@@ -139,7 +155,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_version"
 
 
-    implementation platform('androidx.compose:compose-bom:2024.08.00')
+    implementation platform('androidx.compose:compose-bom:2024.09.03')
     implementation 'androidx.compose.ui:ui'
     implementation 'androidx.compose.ui:ui-graphics'
     implementation 'androidx.compose.ui:ui-tooling-preview'
@@ -154,7 +170,7 @@ dependencies {
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
 
-    implementation platform('org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.8.1')
+    implementation platform('org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.9.0')
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8'
     fullImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services'
@@ -172,6 +188,7 @@ dependencies {
     annotationProcessor "androidx.room:room-compiler:$room_version"
     ksp "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
+    androidTestImplementation "androidx.room:room-testing:$room_version"
 
     def work_version = "2.9.1"
 
@@ -185,7 +202,7 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor"
     testImplementation "com.squareup.okhttp3:mockwebserver"
 
-    implementation 'com.google.code.gson:gson:2.11.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1'
 
     implementation 'org.altbeacon:android-beacon-library:2.20.6'
 

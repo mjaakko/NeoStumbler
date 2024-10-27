@@ -11,6 +11,7 @@ val ScanResult.ssidString: String?
         val ssid = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             wifiSsid?.toString()
         } else {
+            @Suppress("DEPRECATION")
             SSID
         }
 

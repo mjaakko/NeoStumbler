@@ -14,6 +14,8 @@
 
     <string name="stop">Lopeta</string>
 
+    <string name="delete">Poista</string>
+
     <string name="permissions_needed">Käyttölupia tarvitaan</string>
     <string name="permissions_not_granted">Jotain tarvittavista käyttöluvista ei annettu</string>
 
@@ -185,4 +187,24 @@
     <string name="troubleshooting_wifi_scan_always_available">Wi-Fi -skannaus aina päällä</string>
 
     <string name="troubleshooting_fix">Korjaa</string>
+
+    <string name="use_dynamic_color_ui">Käytä dynaamisia värejä käyttöliittymässä</string>
+
+    <string name="db_prune_title">Poista lähetetyt raportit</string>
+    <string name="db_prune_one_month">Kuukauden jälkeen</string>
+    <string name="db_prune_two_months">Kahden kuukauden jälkeen</string>
+    <string name="db_prune_six_months">Kuuden kuukauden jälkeen</string>
+    <string name="db_prune_never">Ei ikinä</string>
+
+    <string name="manage_storage_title">Hallinnoi tilan käyttöä</string>
+
+    <string name="db_size">Tietokannan koko: %s</string>
+
+    <string name="delete_reports_by_date">Poista raportit ajanjaksolta</string>
+    <string name="delete_all_reports">Poista kaikki raportit</string>
+
+    <string name="delete_all_reports_confirmation">Oletko varma, että haluat poistaa kaikki raportit?</string>
+
+    <string name="toast_deleted_reports">%d raporttia poistettu</string>
+    <string name="toast_deleted_all_reports">Kaikki raportit poistettu</string>
 </resources>

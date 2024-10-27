@@ -1,6 +1,5 @@
 package xyz.malkki.neostumbler.ui.composables.settings.geosubmit
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,9 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -40,6 +37,7 @@ import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.geosubmit.GeosubmitParams
+import xyz.malkki.neostumbler.ui.composables.settings.SettingsItem
 
 private fun DataStore<Preferences>.geosubmitParams(): Flow<GeosubmitParams> = data
     .map { preferences ->
@@ -90,19 +88,13 @@ fun GeosubmitEndpointSettings() {
         )
     }
 
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(48.dp),
+    SettingsItem(
+        title = stringResource(R.string.endpoint),
+        description = params.value?.baseUrl ?: "",
         onClick = {
             dialogOpen.value = true
         }
-    ) {
-        Column(verticalArrangement = Arrangement.Center) {
-            Text(text = stringResource(id = R.string.endpoint))
-            Text(fontSize = 12.sp, fontWeight = FontWeight.Light, text = params.value?.baseUrl ?: "")
-        }
-    }
+    )
 }
 
 @Composable
@@ -221,4 +213,4 @@ private fun GeosubmitEndpointDialog(currentParams: GeosubmitParams?, onDialogClo
 }
 
 private val String?.isUnencryptedUrl: Boolean
-    get() = this?.startsWith("http:") ?: false
+    get() = this?.startsWith("http:") == true

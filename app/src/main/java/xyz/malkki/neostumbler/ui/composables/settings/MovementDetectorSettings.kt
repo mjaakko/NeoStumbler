@@ -36,7 +36,7 @@ private val DESCRIPTIONS = mapOf(
 private fun DataStore<Preferences>.movementDetector(): Flow<MovementDetectorType> = data
     .map { preferences ->
         preferences.get<MovementDetectorType>(PreferenceKeys.MOVEMENT_DETECTOR)
-            ?: MovementDetectorType.NONE
+            ?: MovementDetectorType.LOCATION
     }
     .distinctUntilChanged()
 

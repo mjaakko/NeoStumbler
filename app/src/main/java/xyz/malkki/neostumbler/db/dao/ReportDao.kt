@@ -25,6 +25,9 @@ interface ReportDao {
     @Query("DELETE FROM Report WHERE id IN (:reportIds)")
     suspend fun delete(vararg reportIds: Long)
 
+    @Query("DELETE FROM Report WHERE timestamp >= :minTimestamp AND timestamp <= :maxTimestamp")
+    suspend fun deleteFromTimeRange(minTimestamp: Instant, maxTimestamp: Instant): Int
+
     @Query("DELETE FROM Report WHERE timestamp <= :timestamp")
     suspend fun deleteOlderThan(timestamp: Instant): Int
 
