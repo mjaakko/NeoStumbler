@@ -16,6 +16,8 @@
 
     <string name="stop">Stop</string>
 
+    <string name="delete">Delete</string>
+
     <string name="permissions_needed">Permissions needed</string>
     <string name="permissions_not_granted">Permissions that are required were not granted</string>
 
@@ -169,4 +171,22 @@
     </string>
 
     <string name="use_dynamic_color_ui">Use dynamic colors in the UI</string>
+
+    <string name="db_prune_title">Delete sent reports</string>
+    <string name="db_prune_one_month">After one month</string>
+    <string name="db_prune_two_months">After two months</string>
+    <string name="db_prune_six_months">After six months</string>
+    <string name="db_prune_never">Never</string>
+
+    <string name="manage_storage_title">Manage storage</string>
+
+    <string name="db_size">Database size: %s</string>
+
+    <string name="delete_reports_by_date">Delete reports by date</string>
+    <string name="delete_all_reports">Delete all reports</string>
+
+    <string name="delete_all_reports_confirmation">Are you sure you want to delete all reports?</string>
+    
+    <string name="toast_deleted_reports">Deleted %d reports</string>
+    <string name="toast_deleted_all_reports">Deleted all reports</string>
 </resources>
