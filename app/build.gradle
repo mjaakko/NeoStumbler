@@ -78,6 +78,12 @@ android {
             dimension "version"
         }
     }
+        
+    applicationVariants.configureEach { variant ->
+        if (variant.buildType.debuggable) {
+            variant.resValue("string", "app_name", "NeoStumbler (dev, $variant.flavorName)")
+        }
+    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
