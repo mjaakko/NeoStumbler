@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.ui.composables
+package xyz.malkki.neostumbler.ui.composables.settings
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.BasicAlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -22,9 +21,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import xyz.malkki.neostumbler.R
+import xyz.malkki.neostumbler.ui.composables.ManageStorage
 
 @Composable
-fun ManageStorageButton() {
+fun ManageStorageSettingsItem() {
     val showDialog = remember { mutableStateOf(false) }
 
     if (showDialog.value) {
@@ -45,7 +45,7 @@ fun ManageStorageButton() {
                     modifier = Modifier.padding(all = 24.dp)
                 ) {
                     Text(
-                        text = stringResource(R.string.manage_storage),
+                        text = stringResource(R.string.manage_storage_title),
                         style = MaterialTheme.typography.titleLarge
                     )
 
@@ -66,11 +66,10 @@ fun ManageStorageButton() {
         }
     }
 
-    Button(
+    SettingsItem(
+        title = stringResource(R.string.manage_storage_title),
         onClick = {
             showDialog.value = true
         }
-    ) {
-        Text(text = stringResource(R.string.manage_storage))
-    }
+    )
 }

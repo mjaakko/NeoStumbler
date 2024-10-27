@@ -187,7 +187,7 @@
     <string name="db_prune_six_months">Kuuden kuukauden jälkeen</string>
     <string name="db_prune_never">Ei ikinä</string>
 
-    <string name="manage_storage">Hallinnoi tilan käyttöä</string>
+    <string name="manage_storage_title">Hallinnoi tilan käyttöä</string>
 
     <string name="db_size">Tietokannan koko: %s</string>
 

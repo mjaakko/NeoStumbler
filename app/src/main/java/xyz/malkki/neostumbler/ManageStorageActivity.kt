@@ -29,7 +29,7 @@ class ManageStorageActivity : AppCompatActivity() {
                     Scaffold(
                         topBar = {
                             TopAppBar(
-                                title = { Text(text = stringResource(R.string.manage_storage)) },
+                                title = { Text(text = stringResource(R.string.manage_storage_title)) },
                                 colors = TopAppBarDefaults.topAppBarColors(
                                     containerColor = MaterialTheme.colorScheme.primary,
                                     titleContentColor = MaterialTheme.colorScheme.onPrimary,

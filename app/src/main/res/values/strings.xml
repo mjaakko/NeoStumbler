@@ -178,7 +178,7 @@
     <string name="db_prune_six_months">After six months</string>
     <string name="db_prune_never">Never</string>
 
-    <string name="manage_storage">Manage storage</string>
+    <string name="manage_storage_title">Manage storage</string>
 
     <string name="db_size">Database size: %s</string>
 

@@ -15,7 +15,6 @@ import androidx.compose.ui.unit.dp
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.ui.composables.ExportDataButton
-import xyz.malkki.neostumbler.ui.composables.ManageStorageButton
 import xyz.malkki.neostumbler.ui.composables.ReportReuploadButton
 import xyz.malkki.neostumbler.ui.composables.SettingsGroup
 import xyz.malkki.neostumbler.ui.composables.SettingsToggle
@@ -23,6 +22,7 @@ import xyz.malkki.neostumbler.ui.composables.settings.AutoUploadToggle
 import xyz.malkki.neostumbler.ui.composables.settings.DbPruneSettings
 import xyz.malkki.neostumbler.ui.composables.settings.IgnoreScanThrottlingToggle
 import xyz.malkki.neostumbler.ui.composables.settings.LanguageSwitcher
+import xyz.malkki.neostumbler.ui.composables.settings.ManageStorageSettingsItem
 import xyz.malkki.neostumbler.ui.composables.settings.MovementDetectorSettings
 import xyz.malkki.neostumbler.ui.composables.settings.ScannerNotificationStyleSettings
 import xyz.malkki.neostumbler.ui.composables.settings.geosubmit.GeosubmitEndpointSettings
@@ -57,13 +57,14 @@ fun SettingsScreen() {
                     default = false
                 )
             }
+
+            ManageStorageSettingsItem()
         }
 
         Spacer(modifier = Modifier.height(8.dp))
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            ManageStorageButton()
             ExportDataButton()
             ReportReuploadButton()
         }
