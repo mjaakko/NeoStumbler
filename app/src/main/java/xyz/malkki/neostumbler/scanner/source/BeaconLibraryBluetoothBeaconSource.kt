@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.map
 import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.BeaconManager
 import org.altbeacon.beacon.Region
+import timber.log.Timber
 import xyz.malkki.neostumbler.domain.BluetoothBeacon
 import kotlin.random.Random
 
@@ -26,12 +27,25 @@ class BeaconLibraryBluetoothBeaconSource(context: Context) : BluetoothBeaconSour
 
         val region = Region("all_beacons_${Random.Default.nextInt(0, Int.MAX_VALUE)}", null, null, null)
 
-        beaconManager.startRangingBeacons(region)
+        try {
+            beaconManager.startRangingBeacons(region)
 
-        awaitClose {
-            beaconManager.stopRangingBeacons(region)
+            awaitClose {
+                beaconManager.stopRangingBeacons(region)
 
-            beaconManager.removeRangeNotifier(rangeNotifier)
+                beaconManager.removeRangeNotifier(rangeNotifier)
+            }
+        } catch (ex: Exception) {
+            /**
+             * Beacon scanning can cause a crash if the beacon service has been disabled
+             *
+             * This can happen e.g. when a custom ROM is used, see: https://github.com/mjaakko/NeoStumbler/issues/272
+             */
+            Timber.w(ex, "Failed to start scanning Bluetooth beacons")
+
+            awaitClose {
+                beaconManager.removeRangeNotifier(rangeNotifier)
+            }
         }
     }
 
