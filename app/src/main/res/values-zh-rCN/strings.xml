@@ -89,4 +89,18 @@
     <string name="app_language">语言</string>
     <string name="notification_style_basic_title">基本</string>
     <string name="notification_style_detailed_title">详细</string>
+    <string name="delete">删除</string>
+    <string name="use_dynamic_color_ui">使用动态配色</string>
+    <string name="db_prune_title">删除已发送报告</string>
+    <string name="db_prune_one_month">1个月后</string>
+    <string name="db_prune_two_months">2个月后</string>
+    <string name="db_prune_never">永不</string>
+    <string name="manage_storage_title">管理存储</string>
+    <string name="db_size">数据库大小: %s</string>
+    <string name="delete_reports_by_date">按日期删除报告</string>
+    <string name="delete_all_reports">删除所有报告</string>
+    <string name="delete_all_reports_confirmation">你确定要删除所有报告吗？</string>
+    <string name="toast_deleted_reports">已删除%d个报告</string>
+    <string name="toast_deleted_all_reports">已删除所有报告</string>
+    <string name="db_prune_six_months">6个月后</string>
 </resources>
