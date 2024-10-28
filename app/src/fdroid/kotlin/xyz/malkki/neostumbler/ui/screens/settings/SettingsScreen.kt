@@ -14,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.ui.composables.AboutNeoStumbler
 import xyz.malkki.neostumbler.ui.composables.ExportDataButton
 import xyz.malkki.neostumbler.ui.composables.ReportReuploadButton
 import xyz.malkki.neostumbler.ui.composables.SettingsGroup
@@ -62,11 +63,16 @@ fun SettingsScreen() {
         }
 
         Spacer(modifier = Modifier.height(8.dp))
+
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             ExportDataButton()
             ReportReuploadButton()
         }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        AboutNeoStumbler()
     }
 }

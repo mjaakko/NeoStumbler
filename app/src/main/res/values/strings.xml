@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name" translatable="false">NeoStumbler</string>
+    <string name="author" translatable="false">Jaakko Malkki</string>
 
     <string name="ok">OK</string>
 
@@ -189,4 +190,14 @@
     
     <string name="toast_deleted_reports">Deleted %d reports</string>
     <string name="toast_deleted_all_reports">Deleted all reports</string>
+
+    <string name="about_app">About NeoStumbler</string>
+    <string name="app_version">Version: %s</string>
+    <string name="app_variant">Variant: %s</string>
+
+    <string name="author_text">Made with ❤️ by %1$s and %2$s</string>
+    <string name="contributors">contributors</string>
+
+    <string name="bug_report_button">Report a bug</string>
+    <string name="update_translations_button">Update translations</string>
 </resources>
