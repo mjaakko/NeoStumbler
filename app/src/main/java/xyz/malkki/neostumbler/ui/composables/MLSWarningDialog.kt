@@ -1,8 +1,8 @@
 package xyz.malkki.neostumbler.ui.composables
 
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -33,7 +33,7 @@ fun MLSWarningDialog() {
             title = { Text(stringResource(id = R.string.mls_warning_title)) },
             text = { Text(stringResource(id = R.string.mls_warning_text)) },
             confirmButton = {
-                Button(onClick = {
+                TextButton(onClick = {
                     coroutineScope.launch {
                         oneTimeActionHelper.markActionShown(MLS_WARNING)
                     }
