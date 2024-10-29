@@ -18,6 +18,7 @@ import xyz.malkki.neostumbler.ui.composables.ExportDataButton
 import xyz.malkki.neostumbler.ui.composables.ReportReuploadButton
 import xyz.malkki.neostumbler.ui.composables.SettingsGroup
 import xyz.malkki.neostumbler.ui.composables.SettingsToggle
+import xyz.malkki.neostumbler.ui.composables.TroubleshootingSettingsItem
 import xyz.malkki.neostumbler.ui.composables.settings.AutoUploadToggle
 import xyz.malkki.neostumbler.ui.composables.settings.DbPruneSettings
 import xyz.malkki.neostumbler.ui.composables.settings.IgnoreScanThrottlingToggle
@@ -58,6 +59,7 @@ fun SettingsScreen() {
                 )
             }
 
+            TroubleshootingSettingsItem()
             ManageStorageSettingsItem()
         }
 
