@@ -204,7 +204,7 @@ dependencies {
 
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3'
 
-    implementation 'org.altbeacon:android-beacon-library:2.20.6'
+    implementation 'org.altbeacon:android-beacon-library:2.20.7'
 
     implementation 'org.osmdroid:osmdroid-android:6.1.20'
     implementation 'org.geohex.geohex4j:geohex4j:3.2.2'
