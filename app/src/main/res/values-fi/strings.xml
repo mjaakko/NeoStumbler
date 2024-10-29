@@ -208,4 +208,15 @@
 
     <string name="toast_deleted_reports">%d raporttia poistettu</string>
     <string name="toast_deleted_all_reports">Kaikki raportit poistettu</string>
+ 
+
+    <string name="about_app">Tietoja NeoStumblerista</string>
+    <string name="app_version">Versio: %s</string>
+    <string name="app_variant">Variantti: %s</string>
+
+    <string name="author_text">Tehnyt ❤️:llä %1$s ja %2$s</string>
+    <string name="contributors">kehittäjäyhteisö</string>
+
+    <string name="bug_report_button">Ilmoita bugista</string>
+    <string name="update_translations_button">Päivitä käännöksiä</string>
 </resources>
