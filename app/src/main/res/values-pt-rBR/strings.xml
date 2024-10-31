@@ -126,4 +126,11 @@
     <string name="troubleshooting_accurate_location_available">Localização precisa disponível</string>
     <string name="db_size">Tamanho do banco de dados: %s</string>
     <string name="troubleshooting_wifi_scan_always_available">Escaneamento Wi-Fi sempre disponível</string>
+    <string name="about_app">Sobre o NeoStumbler</string>
+    <string name="app_version">Versão: %s</string>
+    <string name="app_variant">Variante:</string>
+    <string name="author_text">Feito com ❤️ por %1$s e %2$s</string>
+    <string name="contributors">contribuidores</string>
+    <string name="bug_report_button">Relatar um erro</string>
+    <string name="update_translations_button">Atualizar traduções</string>
 </resources>
