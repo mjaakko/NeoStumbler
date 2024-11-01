@@ -1,9 +1,15 @@
 package xyz.malkki.neostumbler.extensions
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import java.io.IOException
+import java.nio.file.Path
+import java.nio.file.Paths
+import kotlin.io.path.copyTo
 
 /**
  * Returns the estimated size of the database in bytes
@@ -31,4 +37,37 @@ suspend fun SupportSQLiteDatabase.getTableNames(): Collection<String> = withCont
                 }
             }
         }
+}
+
+/**
+ * Copies database contents to the specified file
+ *
+ * @param target File where the contents are copied to
+ */
+suspend fun SupportSQLiteDatabase.copyTo(target: Path) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        copyToR(target)
+    } else {
+        copyToLegacy(target)
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.R)
+private suspend fun SupportSQLiteDatabase.copyToR(target: Path) = withContext(Dispatchers.IO) {
+    //Android 11+ supports VACUUM INTO
+    query("VACUUM main INTO '${target.toAbsolutePath()}'").use {
+        it.moveToFirst()
+    }
+}
+
+private suspend fun SupportSQLiteDatabase.copyToLegacy(target: Path) = withContext(Dispatchers.IO) {
+    //First, create a WAL checkpoint to make sure that all data is in the main database file
+    query("PRAGMA wal_checkpoint(full)").use {
+        it.moveToFirst()
+    }
+
+    ensureActive()
+
+    //Then copy the database file to the target
+    Paths.get(path).copyTo(target, overwrite = true)
 }

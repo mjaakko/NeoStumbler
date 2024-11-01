@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.ui.composables
+package xyz.malkki.neostumbler.ui.composables.export
 
 import android.content.Context
 import android.text.format.DateFormat
@@ -23,7 +23,8 @@ import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
-import xyz.malkki.neostumbler.export.DataExportWorker
+import xyz.malkki.neostumbler.export.CsvExportWorker
+import xyz.malkki.neostumbler.ui.composables.DateRangePickerDialog
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -36,7 +37,7 @@ private fun getSelectableDatesSet(context: Context): LiveData<Set<LocalDate>> {
 }
 
 @Composable
-fun ExportDataButton() {
+fun ExportCsvButton() {
     val context = LocalContext.current
 
     val selectableDates = getSelectableDatesSet(context).observeAsState()
@@ -77,11 +78,11 @@ fun ExportDataButton() {
                     .toEpochMilli()
 
                 WorkManager.getInstance(context).enqueue(
-                    OneTimeWorkRequest.Builder(DataExportWorker::class.java)
+                    OneTimeWorkRequest.Builder(CsvExportWorker::class.java)
                         .setInputData(Data.Builder()
-                            .putString(DataExportWorker.INPUT_OUTPUT_URI, uri.toString())
-                            .putLong(DataExportWorker.INPUT_FROM, from)
-                            .putLong(DataExportWorker.INPUT_TO, to)
+                            .putString(CsvExportWorker.INPUT_OUTPUT_URI, uri.toString())
+                            .putLong(CsvExportWorker.INPUT_FROM, from)
+                            .putLong(CsvExportWorker.INPUT_TO, to)
                             .build())
                         .setConstraints(Constraints.NONE)
                         .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
@@ -103,8 +104,10 @@ fun ExportDataButton() {
                 selectedDates.value = dateRange
 
                 if (selectedDates.value != null) {
-                    val fromFormatted = selectedDates.value!!.start.format(DateTimeFormatter.BASIC_ISO_DATE)
-                    val toFormatted = selectedDates.value!!.endInclusive.format(DateTimeFormatter.BASIC_ISO_DATE)
+                    val fromFormatted =
+                        selectedDates.value!!.start.format(DateTimeFormatter.BASIC_ISO_DATE)
+                    val toFormatted =
+                        selectedDates.value!!.endInclusive.format(DateTimeFormatter.BASIC_ISO_DATE)
 
                     activityLauncher.launch("neostumbler_export_${fromFormatted}_$toFormatted.zip")
                 } else {
@@ -120,6 +123,6 @@ fun ExportDataButton() {
             dialogOpen.value = true
         }
     ) {
-        Text(text = stringResource(id = R.string.export_data))
+        Text(text = stringResource(id = R.string.export_csv))
     }
 }

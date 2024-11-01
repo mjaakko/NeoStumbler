@@ -79,6 +79,9 @@
     <string name="export_no_file_chosen">Cannot export data, because no file was created</string>
     <string name="export_started">Exporting data from %s to %s</string>
 
+    <string name="export_csv">Export as CSV</string>
+    <string name="export_raw_database">Export raw database</string>
+
     <string name="reupload_data">Reupload data</string>
 
     <string name="wifis">Wi-Fis</string>
@@ -192,6 +195,8 @@
     <string name="manage_storage_title">Manage storage</string>
 
     <string name="db_size">Database size: %s</string>
+
+    <string name="delete_data">Delete data</string>
 
     <string name="delete_reports_by_date">Delete reports by date</string>
     <string name="delete_all_reports">Delete all reports</string>

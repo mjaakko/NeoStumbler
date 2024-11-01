@@ -75,8 +75,11 @@
 
     <string name="export_data">Vie datat</string>
 
-    <string name="export_no_file_chosen">Datan vieminen ei ole mahdollista, koska tiedostoa ei valittu</string>
+    <string name="export_no_file_chosen">Datan vieminen ei onnistunut, koska tiedostoa ei valittu</string>
     <string name="export_started">Viedään datat ajanjaksolta %s - %s</string>
+
+    <string name="export_csv">Vie CSV:nä</string>
+    <string name="export_raw_database">Vie raaka tietokanta</string>
 
     <string name="reupload_data">Lähetä datat uudelleen</string>
 
@@ -200,6 +203,8 @@
     <string name="manage_storage_title">Hallinnoi tilan käyttöä</string>
 
     <string name="db_size">Tietokannan koko: %s</string>
+
+    <string name="delete_data">Poista dataa</string>
 
     <string name="delete_reports_by_date">Poista raportit ajanjaksolta</string>
     <string name="delete_all_reports">Poista kaikki raportit</string>
