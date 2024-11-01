@@ -3,6 +3,8 @@ package xyz.malkki.neostumbler.ui.composables
 import android.text.format.Formatter
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -11,8 +13,10 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -29,6 +33,8 @@ import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.db.ReportDatabase
 import xyz.malkki.neostumbler.extensions.getEstimatedSize
 import xyz.malkki.neostumbler.extensions.getTableNames
+import xyz.malkki.neostumbler.ui.composables.export.ExportCsvButton
+import xyz.malkki.neostumbler.ui.composables.export.ExportDatabaseButton
 import java.time.LocalDate
 import java.time.ZoneOffset
 
@@ -63,9 +69,31 @@ fun ManageStorage() {
             style = MaterialTheme.typography.bodySmall
         )
 
-        DeleteReportsByDate(reportDb = reportDb)
+        Spacer(modifier = Modifier.height(8.dp))
 
-        DeleteAllReportsButton(reportDb = reportDb)
+        Column {
+            Text(
+                text = stringResource(id = R.string.delete_data),
+                style = MaterialTheme.typography.titleSmall
+            )
+
+            DeleteReportsByDate(reportDb = reportDb)
+
+            DeleteAllReportsButton(reportDb = reportDb)
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Column {
+            Text(
+                text = stringResource(id = R.string.export_data),
+                style = MaterialTheme.typography.titleSmall
+            )
+
+            ExportCsvButton()
+
+            ExportDatabaseButton()
+        }
     }
 }
 

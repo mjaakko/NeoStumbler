@@ -17,7 +17,7 @@ import java.time.Instant
 import kotlin.time.DurationUnit
 import kotlin.time.measureTime
 
-class DataExportWorker(appContext: Context, private val params: WorkerParameters) : CoroutineWorker(appContext, params) {
+class CsvExportWorker(appContext: Context, private val params: WorkerParameters) : CoroutineWorker(appContext, params) {
     companion object {
         const val INPUT_FROM = "from"
         const val INPUT_TO = "to"
@@ -26,7 +26,7 @@ class DataExportWorker(appContext: Context, private val params: WorkerParameters
         private const val DATA_EXPORT_NOTIFICATION_ID = 200000
     }
 
-    private val dataExporter = DataExporter(applicationContext as StumblerApplication)
+    private val csvExporter = CsvExporter(applicationContext as StumblerApplication)
 
     private fun createNotification(): Notification {
         return NotificationCompat.Builder(applicationContext, StumblerApplication.EXPORT_NOTIFICATION_CHANNEL_ID)
@@ -61,7 +61,7 @@ class DataExportWorker(appContext: Context, private val params: WorkerParameters
         val to = Instant.ofEpochMilli(params.inputData.getLong(INPUT_TO, 0))
 
         val time = measureTime {
-            dataExporter.exportToFile(uri, from, to)
+            csvExporter.exportToFile(uri, from, to)
         }
 
         Timber.i("Exported data for time period [$from, $to] to $uri in ${time.toString(DurationUnit.SECONDS, 1)}")

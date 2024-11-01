@@ -21,9 +21,9 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
 /**
- * Helper for exporting scan data
+ * Helper for exporting scan data as CSV files
  */
-class DataExporter(private val application: StumblerApplication) {
+class CsvExporter(private val application: StumblerApplication) {
     companion object {
         private const val BEACONS_FILE_NAME = "beacons.csv"
         private const val WIFIS_FILE_NAME = "wifis.csv"
