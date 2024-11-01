@@ -30,6 +30,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -134,23 +135,23 @@ fun ForegroundScanningButton() {
 
     val serviceConnection = rememberServiceConnection(getService = ScannerService.ScannerServiceBinder::getService)
 
-    val showBatteryOptimizationsDialog = remember {
+    val showBatteryOptimizationsDialog = rememberSaveable {
         mutableStateOf(false)
     }
 
-    val showPermissionDialog = remember {
+    val showPermissionDialog = rememberSaveable {
         mutableStateOf(false)
     }
 
-    val showBackgroundLocationPermissionDialog = remember {
+    val showBackgroundLocationPermissionDialog = rememberSaveable {
         mutableStateOf(false)
     }
 
-    val showQuickSettingsDialog = remember {
+    val showQuickSettingsDialog = rememberSaveable {
         mutableStateOf(false)
     }
 
-    val missingPermissions = remember {
+    val missingPermissions = rememberSaveable {
         context.checkMissingPermissions(*requiredPermissions)
     }
 
@@ -281,7 +282,7 @@ private fun Reports(reportsViewModel: ReportsViewModel = viewModel()) {
         CachingGeocoder(PlatformGeocoder(AndroidGeocoder(context, context.defaultLocale), 1))
     }
 
-    val reportToDelete = remember { mutableStateOf<Long?>(null) }
+    val reportToDelete = rememberSaveable { mutableStateOf<Long?>(null) }
 
     if (reportToDelete.value != null) {
         ConfirmationDialog(

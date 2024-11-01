@@ -3,7 +3,6 @@ package xyz.malkki.neostumbler.ui.composables.settings
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -54,15 +53,13 @@ fun LanguageSwitcher() {
         (0 until localeList.size()).map { localeList.get(it)!! }
     }
 
-    val selectedLanguage = remember {
-        mutableStateOf(getCurrentLocale(context))
-    }
+    val selectedLanguage = getCurrentLocale(context)
     
     MultiChoiceSettings(
         title = stringResource(id = R.string.app_language),
         options = locales,
-        selectedOption = selectedLanguage.value,
-        titleProvider = { it.getDisplayName(selectedLanguage.value) },
+        selectedOption = selectedLanguage,
+        titleProvider = { it.getDisplayName(selectedLanguage) },
         descriptionProvider = { it.getDisplayName(it) },
         onValueSelected = { newLocale ->
             AppCompatDelegate.setApplicationLocales(LocaleListCompat.create(newLocale))

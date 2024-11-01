@@ -22,7 +22,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
                             )
                         },
                         content = {
-                            val selectedTabIndex = remember { mutableIntStateOf(1) }
+                            val selectedTabIndex = rememberSaveable { mutableIntStateOf(1) }
 
                             val items = listOf(
                                 stringResource(R.string.map_tab_title) to rememberVectorPainter(Icons.Filled.Place),

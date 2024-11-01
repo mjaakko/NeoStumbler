@@ -14,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
@@ -67,16 +68,20 @@ fun ReportUploadButton() {
         mutableStateOf(false)
     }
 
-    val enqueuedUploadWork = remember { mutableStateOf<UUID?>(null) }
+    val enqueuedUploadWork = rememberSaveable { mutableStateOf<UUID?>(null) }
 
     EffectOnWorkCompleted(
         workId = enqueuedUploadWork.value,
         onWorkSuccess = { workInfo ->
             val reportsUploaded = workInfo.outputData.getInt(ReportSendWorker.OUTPUT_REPORTS_SENT, 0)
             Toast.makeText(context, ContextCompat.getString(context, R.string.toast_reports_uploaded).format(reportsUploaded), Toast.LENGTH_SHORT).show()
+
+            enqueuedUploadWork.value = null
         },
         onWorkFailed = {
             Toast.makeText(context, ContextCompat.getString(context, R.string.toast_reports_upload_failed), Toast.LENGTH_SHORT).show()
+
+            enqueuedUploadWork.value = null
         }
     )
 
