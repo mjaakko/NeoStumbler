@@ -29,12 +29,6 @@ class BeaconLibraryBluetoothBeaconSource(context: Context) : BluetoothBeaconSour
 
         try {
             beaconManager.startRangingBeacons(region)
-
-            awaitClose {
-                beaconManager.stopRangingBeacons(region)
-
-                beaconManager.removeRangeNotifier(rangeNotifier)
-            }
         } catch (ex: Exception) {
             /**
              * Beacon scanning can cause a crash if the beacon service has been disabled
@@ -42,10 +36,12 @@ class BeaconLibraryBluetoothBeaconSource(context: Context) : BluetoothBeaconSour
              * This can happen e.g. when a custom ROM is used, see: https://github.com/mjaakko/NeoStumbler/issues/272
              */
             Timber.w(ex, "Failed to start scanning Bluetooth beacons")
+        }
 
-            awaitClose {
-                beaconManager.removeRangeNotifier(rangeNotifier)
-            }
+        awaitClose {
+            beaconManager.stopRangingBeacons(region)
+
+            beaconManager.removeRangeNotifier(rangeNotifier)
         }
     }
 
