@@ -16,6 +16,7 @@ import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.extensions.copyTo
 import java.nio.file.Files
 import kotlin.io.path.createTempFile
+import kotlin.io.path.deleteIfExists
 
 class DatabaseExportWorker(appContext: Context, private val params: WorkerParameters) : CoroutineWorker(appContext, params)  {
     companion object {
@@ -63,7 +64,7 @@ class DatabaseExportWorker(appContext: Context, private val params: WorkerParame
 
             return Result.success()
         } finally {
-            tempFile
+            tempFile.deleteIfExists()
         }
     }
 }
