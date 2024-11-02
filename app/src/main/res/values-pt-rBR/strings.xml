@@ -133,4 +133,7 @@
     <string name="contributors">contribuidores</string>
     <string name="bug_report_button">Relatar um erro</string>
     <string name="update_translations_button">Atualizar traduções</string>
+    <string name="export_raw_database">Exportar banco de dados bruto</string>
+    <string name="export_csv">Exportar como CSV</string>
+    <string name="delete_data">Excluir dados</string>
 </resources>
