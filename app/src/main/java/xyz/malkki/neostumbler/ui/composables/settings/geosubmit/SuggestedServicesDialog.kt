@@ -26,6 +26,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -49,11 +50,11 @@ fun SuggestedServicesDialog(onServiceSelected: (SuggestedService?) -> Unit) {
         mutableStateListOf<SuggestedService>()
     }
 
-    val expanded = remember {
+    val expanded = rememberSaveable {
         mutableStateOf(false)
     }
 
-    val selectedService = remember {
+    val selectedService = rememberSaveable {
         mutableStateOf<SuggestedService?>(null)
     }
 

@@ -7,7 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
@@ -38,22 +38,26 @@ private fun getSelectableDatesSet(context: Context): LiveData<Set<LocalDate>> {
 fun ReportReuploadButton() {
     val context = LocalContext.current
 
-    val enqueuedUploadWork = remember { mutableStateOf<UUID?>(null) }
+    val enqueuedUploadWork = rememberSaveable { mutableStateOf<UUID?>(null) }
 
     EffectOnWorkCompleted(
         workId = enqueuedUploadWork.value,
         onWorkSuccess = { workInfo ->
             val reportsUploaded = workInfo.outputData.getInt(ReportSendWorker.OUTPUT_REPORTS_SENT, 0)
             Toast.makeText(context, ContextCompat.getString(context, R.string.toast_reports_uploaded).format(reportsUploaded), Toast.LENGTH_SHORT).show()
+
+            enqueuedUploadWork.value = null
         },
         onWorkFailed = {
             Toast.makeText(context, ContextCompat.getString(context, R.string.toast_reports_upload_failed), Toast.LENGTH_SHORT).show()
+
+            enqueuedUploadWork.value = null
         }
     )
 
     val selectableDates = getSelectableDatesSet(context).observeAsState()
 
-    val dialogOpen = remember { mutableStateOf(false) }
+    val dialogOpen = rememberSaveable { mutableStateOf(false) }
 
     if (dialogOpen.value) {
         DateRangePickerDialog(

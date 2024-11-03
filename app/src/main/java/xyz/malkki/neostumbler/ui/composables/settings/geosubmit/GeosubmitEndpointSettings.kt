@@ -19,8 +19,8 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -58,7 +58,7 @@ fun GeosubmitEndpointSettings() {
     val settingsStore = (context.applicationContext as StumblerApplication).settingsStore
     val params = settingsStore.geosubmitParams().collectAsState(initial = null)
 
-    val dialogOpen = remember { mutableStateOf(false) }
+    val dialogOpen = rememberSaveable { mutableStateOf(false) }
 
     if (dialogOpen.value) {
         GeosubmitEndpointDialog(
@@ -99,17 +99,17 @@ fun GeosubmitEndpointSettings() {
 
 @Composable
 private fun GeosubmitEndpointDialog(currentParams: GeosubmitParams?, onDialogClose: (GeosubmitParams?) -> Unit) {
-    val endpoint = remember {
+    val endpoint = rememberSaveable {
         mutableStateOf(currentParams?.baseUrl)
     }
-    val path = remember {
+    val path = rememberSaveable {
         mutableStateOf(currentParams?.path)
     }
-    val apiKey = remember {
+    val apiKey = rememberSaveable {
         mutableStateOf(currentParams?.apiKey)
     }
 
-    val showSuggestedServicesDialog = remember {
+    val showSuggestedServicesDialog = rememberSaveable {
         mutableStateOf(false)
     }
 

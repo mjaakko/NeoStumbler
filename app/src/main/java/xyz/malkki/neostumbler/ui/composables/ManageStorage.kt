@@ -11,8 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -103,7 +103,7 @@ private fun DeleteReportsByDate(reportDb: ReportDatabase) {
 
     val coroutineScope = rememberCoroutineScope()
 
-    val showDatePicker = remember {
+    val showDatePicker = rememberSaveable {
         mutableStateOf(false)
     }
 
@@ -145,7 +145,7 @@ private fun DeleteAllReportsButton(reportDb: ReportDatabase) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
-    val showConfirmationDialog = remember { mutableStateOf(false) }
+    val showConfirmationDialog = rememberSaveable { mutableStateOf(false) }
 
     if (showConfirmationDialog.value) {
         ConfirmationDialog(
