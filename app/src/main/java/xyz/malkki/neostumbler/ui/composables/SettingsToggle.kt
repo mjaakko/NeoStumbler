@@ -20,7 +20,7 @@ private fun DataStore<Preferences>.preferenceEnabled(preferenceKey: String, defa
     }
 
 @Composable
-fun SettingsToggle(title: String, preferenceKey: String, default: Boolean = false) {
+fun SettingsToggle(title: String, description: String? = null, preferenceKey: String, default: Boolean = false) {
     val context = LocalContext.current
 
     val settingsStore = (context.applicationContext as StumblerApplication).settingsStore
@@ -28,6 +28,7 @@ fun SettingsToggle(title: String, preferenceKey: String, default: Boolean = fals
 
     ToggleWithAction(
         title = title,
+        description = description,
         enabled = true,
         checked = enabled.value,
         action = { checked ->

@@ -18,39 +18,100 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.scan
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import xyz.malkki.neostumbler.domain.WifiAccessPoint
 import xyz.malkki.neostumbler.utils.ImmediateExecutor
+import xyz.malkki.neostumbler.utils.RateLimiter
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
-//Minimum scan interval that can be used when Wi-Fi scan throttling is active
-private val MIN_INTERVAL_THROTTLED = 30.seconds
+//https://developer.android.com/develop/connectivity/wifi/wifi-scan#wifi-scan-throttling
+private val ANDROID_WIFI_SCAN_THROTTLE_PERIOD = 2.minutes
+private const val ANDROID_WIFI_SCAN_THROTTLE_COUNT = 4
 
-class WifiManagerWifiAccessPointSource(context: Context) : WifiAccessPointSource {
+private val MAX_INTERVAL = 1.minutes
+
+//Minimum scan interval that can be used when Wi-Fi scan throttling is active
+//This is slightly lower than the throttle period divided by the throttle count to allow for scan bursts
+private val MIN_INTERVAL_THROTTLED = 20.seconds
+
+//Minimum scan interval when WI-Fi scanning is not throttled.
+//This should result in enough Wi-Fi scans being made even when in a fast moving car etc.
+private val MIN_INTERVAL_UNTHROTTLED = 3.seconds
+
+class WifiManagerWifiAccessPointSource(
+    context: Context,
+    wifiScanThrottled: Boolean,
+    private val timeSource: () -> Long = SystemClock::elapsedRealtime
+) : WifiAccessPointSource {
     private val appContext = context.applicationContext
     private val wifiManager = appContext.getSystemService<WifiManager>()!!
 
+    private val rateLimiter = if (wifiScanThrottled) {
+        RateLimiter(ANDROID_WIFI_SCAN_THROTTLE_COUNT, ANDROID_WIFI_SCAN_THROTTLE_PERIOD, timeSource)
+    } else {
+        null
+    }
+
+    private val minScanInterval = if (wifiScanThrottled) {
+        MIN_INTERVAL_THROTTLED
+    } else {
+        MIN_INTERVAL_UNTHROTTLED
+    }
+
+    private suspend fun doWifiScan() {
+        Timber.d("Starting Wi-Fi scan")
+
+        if (rateLimiter != null) {
+            rateLimiter.doRateLimited {
+                @Suppress("DEPRECATION")
+                wifiManager.startScan()
+            }
+        } else {
+            @Suppress("DEPRECATION")
+            wifiManager.startScan()
+        }
+    }
+
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_WIFI_STATE])
-    override fun getWifiAccessPointFlow(interval: Duration): Flow<List<WifiAccessPoint>> = channelFlow {
+    override fun getWifiAccessPointFlow(interval: Flow<Duration>): Flow<List<WifiAccessPoint>> = channelFlow {
         launch(Dispatchers.Default) {
-            var lastScan = SystemClock.elapsedRealtime()
+            val scanInterval = interval.map {
+                    it.coerceIn(
+                        minimumValue = minScanInterval,
+                        maximumValue = MAX_INTERVAL
+                    )
+                }
+                .stateIn(this, started = SharingStarted.Eagerly, initialValue = minScanInterval)
 
             while (true) {
-                @Suppress("DEPRECATION")
-                if (wifiManager.startScan()) {
-                    lastScan = SystemClock.elapsedRealtime()
-                    delay(interval)
-                } else {
-                    Timber.d("Wi-Fi scan was not started, maybe we hit scan throttling")
+                doWifiScan()
 
-                    delay(MIN_INTERVAL_THROTTLED)
-                }
+                val scannedAt = timeSource.invoke()
+
+                scanInterval
+                    .scan(null as Duration?) { a, b ->
+                        listOfNotNull(a, b).minOrNull()
+                    }
+                    .filterNotNull()
+                    .mapLatest { interval ->
+                        val delayMs = ((scannedAt + interval.inWholeMilliseconds) - timeSource.invoke()).coerceAtLeast(0)
+
+                        delay(delayMs)
+                    }
+                    .first()
             }
         }
 

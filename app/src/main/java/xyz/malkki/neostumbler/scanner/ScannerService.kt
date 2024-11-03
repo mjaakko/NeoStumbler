@@ -27,7 +27,6 @@ import androidx.core.content.getSystemService
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -63,6 +62,7 @@ import xyz.malkki.neostumbler.scanner.quicksettings.ScannerTileService
 import xyz.malkki.neostumbler.scanner.source.AirPressureSource
 import xyz.malkki.neostumbler.scanner.source.BeaconLibraryBluetoothBeaconSource
 import xyz.malkki.neostumbler.scanner.source.BluetoothBeaconSource
+import xyz.malkki.neostumbler.scanner.source.CellInfoSource
 import xyz.malkki.neostumbler.scanner.source.MultiSubscriptionCellInfoSource
 import xyz.malkki.neostumbler.scanner.source.PressureSensorAirPressureSource
 import xyz.malkki.neostumbler.scanner.source.TelephonyManagerCellInfoSource
@@ -88,6 +88,12 @@ class ScannerService : Service() {
         private val WIFI_SCAN_INTERVAL_THROTTLED = 30.seconds
 
         private val WIFI_SCAN_INTERVAL_UNTHROTTLED = 10.seconds
+
+        //Try to scan Wi-Fis every 50 meters (when using dynamic scan frequency)
+        private const val WIFI_SCAN_DISTANCE = 50.0
+
+        //Try to scan cells every 150 meters (when using dynamic scan frequency)
+        private const val CELL_SCAN_DISTANCE = 150.0
 
         fun startIntent(context: Context, autostart: Boolean = false): Intent {
             return Intent(context, ScannerService::class.java).apply {
@@ -203,39 +209,39 @@ class ScannerService : Service() {
                 started = SharingStarted.WhileSubscribed()
             )
 
-        val cellInfoSource = if (hasReadPhoneStatePermission()) {
-            MultiSubscriptionCellInfoSource(this@ScannerService)
-        } else {
-            TelephonyManagerCellInfoSource(this@ScannerService.getSystemService<TelephonyManager>()!!)
+        val speedFlow = locationFlow.map {
+            if (it.location.hasSpeed()) {
+                it.location.speed
+            } else {
+                0.0f
+            }
         }
 
-        val wifiAccessPointSource = WifiManagerWifiAccessPointSource(this@ScannerService)
+        val cellInfoSource = getCellInfoSource()
 
-        val ignoreScanThrottling = settingsStore.data
+        val ignoreScanThrottlingPreference = settingsStore.data
             .map { it[booleanPreferencesKey(PreferenceKeys.IGNORE_SCAN_THROTTLING)] }
             .first() == true
 
-        val wifiScanInterval = if (ignoreScanThrottling && isWifiScanThrottled() == false) {
-            WIFI_SCAN_INTERVAL_UNTHROTTLED
-        } else {
+        val wifiScanThrottled = !ignoreScanThrottlingPreference || isWifiScanThrottled() == true
+
+        val wifiAccessPointSource = WifiManagerWifiAccessPointSource(this@ScannerService, wifiScanThrottled = wifiScanThrottled)
+
+        val dynamicScanIntervalPreference = settingsStore.data
+            .map { it[booleanPreferencesKey(PreferenceKeys.DYNAMIC_SCAN_FREQUENCY)] }
+            .first() != false
+
+        val wifiScanInterval = if (wifiScanThrottled) {
             WIFI_SCAN_INTERVAL_THROTTLED
+        } else {
+            WIFI_SCAN_INTERVAL_UNTHROTTLED
         }
 
-        val bluetoothBeaconSource = if (hasBluetoothScanPermission() && (application as StumblerApplication).bluetoothScanAvailable) {
-            BeaconLibraryBluetoothBeaconSource(this@ScannerService)
-        } else {
-            BluetoothBeaconSource { emptyFlow() }
-        }
+        val bluetoothBeaconSource = getBluetoothBeaconSource()
 
         val movementDetectorType = settingsStore.data
             .map { prefs ->
-                prefs[stringPreferencesKey(PreferenceKeys.MOVEMENT_DETECTOR)]?.let {
-                    try {
-                        MovementDetectorType.valueOf(it)
-                    } catch (ex: Exception) {
-                        null
-                    }
-                } ?: MovementDetectorType.LOCATION
+                prefs.get<MovementDetectorType>(PreferenceKeys.MOVEMENT_DETECTOR) ?: MovementDetectorType.LOCATION
             }
             .first()
 
@@ -246,7 +252,9 @@ class ScannerService : Service() {
             }
             MovementDetectorType.SIGNIFICANT_MOTION -> SignificantMotionMovementDetector(
                 sensorManager = sensorManager,
-                locationSource = { locationFlow.map { it.location } }
+                locationSource = {
+                    locationFlow.map { it.location }
+                }
             )
         }
 
@@ -262,10 +270,30 @@ class ScannerService : Service() {
 
         launch {
             WirelessScanner(
-                locationSource = { locationFlow },
-                cellInfoSource = { cellInfoSource.getCellInfoFlow(CELL_SCAN_INTERVAL) },
-                bluetoothBeaconSource = { bluetoothBeaconSource.getBluetoothBeaconFlow() },
-                wifiAccessPointSource = { wifiAccessPointSource.getWifiAccessPointFlow(wifiScanInterval) },
+                locationSource = {
+                    locationFlow
+                },
+                cellInfoSource = {
+                    val scanFrequencyFlow = if (dynamicScanIntervalPreference) {
+                        speedFlow.map { speed -> (CELL_SCAN_DISTANCE / speed).seconds }
+                    } else {
+                        flowOf(CELL_SCAN_INTERVAL)
+                    }
+
+                    cellInfoSource.getCellInfoFlow(scanFrequencyFlow)
+                },
+                bluetoothBeaconSource = {
+                    bluetoothBeaconSource.getBluetoothBeaconFlow()
+                },
+                wifiAccessPointSource = {
+                    val scanFrequencyFlow = if (dynamicScanIntervalPreference) {
+                        speedFlow.map { speed -> (WIFI_SCAN_DISTANCE / speed).seconds }
+                    } else {
+                        flowOf(wifiScanInterval)
+                    }
+
+                    wifiAccessPointSource.getWifiAccessPointFlow(scanFrequencyFlow)
+                },
                 airPressureSource = { airPressureSource.getAirPressureFlow(LOCATION_INTERVAL / 2) },
                 movementDetector = movementDetector
             )
@@ -297,6 +325,22 @@ class ScannerService : Service() {
         }
 
         startForeground(NOTIFICATION_ID, createNotification(reportsCreated = 0), ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION)
+    }
+
+    private fun getCellInfoSource(): CellInfoSource {
+        return if (hasReadPhoneStatePermission()) {
+            MultiSubscriptionCellInfoSource(this@ScannerService)
+        } else {
+            TelephonyManagerCellInfoSource(this@ScannerService.getSystemService<TelephonyManager>()!!)
+        }
+    }
+
+    private fun getBluetoothBeaconSource(): BluetoothBeaconSource {
+        return if (hasBluetoothScanPermission() && (application as StumblerApplication).bluetoothScanAvailable) {
+            BeaconLibraryBluetoothBeaconSource(this@ScannerService)
+        } else {
+            BluetoothBeaconSource { emptyFlow() }
+        }
     }
 
     private fun stopScanning() {

@@ -43,8 +43,18 @@ fun SettingsScreen() {
             title = stringResource(id = R.string.settings_group_scanning)
         ) {
             MovementDetectorSettings()
-            SettingsToggle(title = stringResource(id = R.string.prefer_fused_location), preferenceKey = PreferenceKeys.PREFER_FUSED_LOCATION, default = true)
+            SettingsToggle(
+                title = stringResource(id = R.string.prefer_fused_location),
+                preferenceKey = PreferenceKeys.PREFER_FUSED_LOCATION,
+                default = true
+            )
             IgnoreScanThrottlingToggle()
+            SettingsToggle(
+                title = stringResource(id = R.string.dynamic_scan_frequency_title),
+                description = stringResource(id = R.string.dynamic_scan_frequency_description),
+                preferenceKey = PreferenceKeys.DYNAMIC_SCAN_FREQUENCY,
+                default = true
+            )
             AutoScanToggle()
         }
 

@@ -5,5 +5,5 @@ import xyz.malkki.neostumbler.domain.WifiAccessPoint
 import kotlin.time.Duration
 
 fun interface WifiAccessPointSource {
-    fun getWifiAccessPointFlow(interval: Duration): Flow<List<WifiAccessPoint>>
+    fun getWifiAccessPointFlow(scanInterval: Flow<Duration>): Flow<List<WifiAccessPoint>>
 }

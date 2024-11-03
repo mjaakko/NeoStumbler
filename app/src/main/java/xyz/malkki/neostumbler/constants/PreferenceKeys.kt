@@ -15,6 +15,8 @@ object PreferenceKeys {
 
     const val MOVEMENT_DETECTOR = "movement_detector"
 
+    const val DYNAMIC_SCAN_FREQUENCY = "dynamic_scan_frequency"
+
     const val SCANNER_NOTIFICATION_STYLE = "scanner_notification_style"
 
     const val DYNAMIC_COLOR_THEME = "dynamic_color_theme"

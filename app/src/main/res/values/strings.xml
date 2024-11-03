@@ -146,6 +146,9 @@
         Pauses scanning and GPS when no significant motion is detected. Saves battery, but does not work reliably on some devices
     </string>
 
+    <string name="dynamic_scan_frequency_title">Dynamic scan frequency</string>
+    <string name="dynamic_scan_frequency_description">Adjust scan frequency dynamically based on currecnt speed</string>
+
     <string name="notification_style">Notification style</string>
 
     <string name="notification_style_minimal_title">Minimal</string>
