@@ -82,7 +82,7 @@
     <string name="permissions_needed">所需权限</string>
     <string name="reset">重置</string>
     <string name="save">保存</string>
-    <string name="ignore_battery_optimizations_description">为了最佳效果，应关闭电池优化。无线扫描和定位在开启电池优化和息屏时会受到严重限制</string>
+    <string name="ignore_battery_optimizations_description">为了最佳效果，应关闭电池优化。无线扫描和定位在开启电池优化且息屏时会受到严重限制</string>
     <string name="battery_optimizations_not_disabled_warning">电池优化未禁用</string>
     <string name="movement_detection_significant_motion_description">没有显著移动时暂停扫描和定位。很省电，但是可能在某些设备上不工作</string>
     <string name="notification_style_minimal_description">显示没有任何详细信息的通知</string>
@@ -103,4 +103,21 @@
     <string name="toast_deleted_reports">已删除%d个报告</string>
     <string name="toast_deleted_all_reports">已删除所有报告</string>
     <string name="db_prune_six_months">6个月后</string>
+    <string name="about_app">关于 NeoStumbler</string>
+    <string name="app_version">版本: %s</string>
+    <string name="bug_report_button">报告软件缺陷</string>
+    <string name="troubleshooting_title">故障排除</string>
+    <string name="troubleshooting_battery_optimizations_disabled">电池优化已禁用</string>
+    <string name="troubleshooting_accurate_location_available">精确位置可用</string>
+    <string name="troubleshooting_fix">修复</string>
+    <string name="export_csv">导出为 CSV</string>
+    <string name="export_raw_database">导出原始数据库</string>
+    <string name="troubleshooting_description">解决扫描中的一般问题</string>
+    <string name="troubleshooting_permissions_granted">权限已授予</string>
+    <string name="troubleshooting_wifi_scan_always_available">Wi-Fi扫描始终可用</string>
+    <string name="delete_data">删除数据</string>
+    <string name="app_variant">变种: %s</string>
+    <string name="contributors">贡献者</string>
+    <string name="update_translations_button">更新翻译</string>
+    <string name="author_text">由 %1$s 和 %2$s 用 ❤️ 发电</string>
 </resources>
