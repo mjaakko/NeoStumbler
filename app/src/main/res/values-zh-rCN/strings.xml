@@ -28,7 +28,7 @@
     <string name="reports">报告:</string>
     <string name="reports_total">报告总数: %s</string>
     <string name="reports_not_uploaded">未上传报告: %s</string>
-    <string name="reports_last_uploaded">上次上传的报告: %s</string>
+    <string name="reports_last_uploaded">最后上传报告: %s</string>
     <string name="delete_report">删除报告</string>
     <string name="delete_report_confirmation">是否确实要删除报告？</string>
     <string name="toast_reports_uploaded">已上传 %d 个报告</string>
@@ -65,7 +65,7 @@
     <string name="suggested_service_hosted_by">运作者：</string>
     <string name="suggested_service_terms_of_use">使用条款</string>
     <string name="settings_group_reports">报告</string>
-    <string name="settings_group_scanning">扫描中</string>
+    <string name="settings_group_scanning">扫描</string>
     <string name="movement_detection_none_title">无</string>
     <string name="movement_detection_location_description">位置无变化时暂停扫描。定位始终开启</string>
     <string name="notification_style_basic_description">显示创建的报告数量</string>
@@ -117,7 +117,7 @@
     <string name="troubleshooting_wifi_scan_always_available">Wi-Fi扫描始终可用</string>
     <string name="delete_data">删除数据</string>
     <string name="app_variant">变种: %s</string>
-    <string name="contributors">贡献者</string>
+    <string name="contributors">贡献者们</string>
     <string name="update_translations_button">更新翻译</string>
     <string name="author_text">由 %1$s 和 %2$s 用 ❤️ 发电</string>
 </resources>
