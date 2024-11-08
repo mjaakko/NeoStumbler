@@ -219,7 +219,7 @@ class ScannerService : Service() {
             WIFI_SCAN_INTERVAL_THROTTLED
         }
 
-        val bluetoothBeaconSource = if (hasBluetoothScanPermission()) {
+        val bluetoothBeaconSource = if (hasBluetoothScanPermission() && (application as StumblerApplication).bluetoothScanAvailable) {
             BeaconLibraryBluetoothBeaconSource(this@ScannerService)
         } else {
             BluetoothBeaconSource { emptyFlow() }
