@@ -31,6 +31,7 @@ import xyz.malkki.neostumbler.db.DbPruneWorker
 import xyz.malkki.neostumbler.db.ReportDatabase
 import xyz.malkki.neostumbler.http.getCallFactory
 import java.time.Duration
+import kotlin.properties.Delegates
 
 @OptIn(DelicateCoroutinesApi::class)
 class StumblerApplication : Application() {
@@ -49,6 +50,8 @@ class StumblerApplication : Application() {
 
     val oneTimeActionsStore: DataStore<Preferences> by preferencesDataStore(name = "one_time_actions")
 
+    var bluetoothScanAvailable by Delegates.notNull<Boolean>()
+
     override fun onCreate() {
         super.onCreate()
 
@@ -62,29 +65,41 @@ class StumblerApplication : Application() {
         //Use stub distance calculator to avoid making unnecessary requests for fetching distance calibrations used by the Beacon Library
         Beacon.setDistanceCalculator(StubDistanceCalculator)
 
-        val beaconManager = BeaconManager.getInstanceForApplication(this)
+        try {
+            val beaconManager = BeaconManager.getInstanceForApplication(this)
 
-        //Try forcing foreground mode (this doesn't seem to work)
-        beaconManager.setEnableScheduledScanJobs(false)
-        @Suppress("DEPRECATION")
-        beaconManager.backgroundMode = false
+            //Try forcing foreground mode (this doesn't seem to work)
+            beaconManager.setEnableScheduledScanJobs(false)
+            @Suppress("DEPRECATION")
+            beaconManager.backgroundMode = false
 
-        beaconManager.backgroundBetweenScanPeriod = 5 * 1000
-        beaconManager.backgroundScanPeriod = 1100
+            beaconManager.backgroundBetweenScanPeriod = 5 * 1000
+            beaconManager.backgroundScanPeriod = 1100
 
-        beaconManager.foregroundBetweenScanPeriod = 5 * 1000
-        beaconManager.foregroundScanPeriod = 1100
-        //Max age for beacons: 10 seconds
-        beaconManager.setMaxTrackingAge(10 * 1000)
+            beaconManager.foregroundBetweenScanPeriod = 5 * 1000
+            beaconManager.foregroundScanPeriod = 1100
+            //Max age for beacons: 10 seconds
+            beaconManager.setMaxTrackingAge(10 * 1000)
 
-        //Add parsers for common beacons types
-        beaconManager.beaconParsers.apply {
-            add(IBeaconParser)
-            add(AltBeaconParser())
-            add(BeaconParser(BeaconParser.URI_BEACON_LAYOUT))
-            add(BeaconParser(BeaconParser.EDDYSTONE_TLM_LAYOUT))
-            add(BeaconParser(BeaconParser.EDDYSTONE_UID_LAYOUT))
-            add(BeaconParser(BeaconParser.EDDYSTONE_URL_LAYOUT))
+            //Add parsers for common beacons types
+            beaconManager.beaconParsers.apply {
+                add(IBeaconParser)
+                add(AltBeaconParser())
+                add(BeaconParser(BeaconParser.URI_BEACON_LAYOUT))
+                add(BeaconParser(BeaconParser.EDDYSTONE_TLM_LAYOUT))
+                add(BeaconParser(BeaconParser.EDDYSTONE_UID_LAYOUT))
+                add(BeaconParser(BeaconParser.EDDYSTONE_URL_LAYOUT))
+            }
+
+            bluetoothScanAvailable = true
+        } catch (ex: Exception) {
+            /**
+             * Configuring beacon manager can throw an exception when the service has been disabled,
+             * e.g. when using a custom ROM to block trackers
+             */
+            Timber.w(ex, "Failed to configure BeaconManager")
+
+            bluetoothScanAvailable = false
         }
 
         val workManager = WorkManager.getInstance(this)
