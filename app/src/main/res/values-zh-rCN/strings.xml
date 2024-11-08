@@ -11,7 +11,7 @@
     <string name="start_scanning">启动扫描</string>
     <string name="stop_scanning">停止扫描</string>
     <string name="wireless_scanning">无线扫描</string>
-    <string name="notification_wireless_scanning_content_satellite_stats">正使用%1$d/%2$d个卫星</string>
+    <string name="notification_wireless_scanning_content_satellite_stats">正使用 %1$d/%2$d 个卫星</string>
     <string name="ignore_battery_optimizations_title">忽略电池优化</string>
     <string name="notification_exporting_data">导出数据中…</string>
     <string name="export_notification_channel_name">数据导出</string>
@@ -28,7 +28,7 @@
     <string name="reports">报告:</string>
     <string name="reports_total">报告总数: %s</string>
     <string name="reports_not_uploaded">未上传报告: %s</string>
-    <string name="reports_last_uploaded">上次上传的报告: %s</string>
+    <string name="reports_last_uploaded">最后上传报告: %s</string>
     <string name="delete_report">删除报告</string>
     <string name="delete_report_confirmation">是否确实要删除报告？</string>
     <string name="toast_reports_uploaded">已上传 %d 个报告</string>
@@ -47,7 +47,7 @@
     <string name="mls_warning_title">MLS 已经退役</string>
     <string name="mls_warning_text">Mozilla 位置服务（Mozilla Location Services）已经退役，不再接受数据提交。你必须将端点更改为其他服务，设置中有建议选项。\n\n你也可以在设置中将数据导出为 ZIP 压缩包</string>
     <string name="endpoint">端点</string>
-    <string name="path">Path</string>
+    <string name="path">路径</string>
     <string name="api_key">API 密钥（可选）</string>
     <string name="suggested_services_title">建议服务</string>
     <string name="suggested_service_website">网站</string>
@@ -65,11 +65,11 @@
     <string name="suggested_service_hosted_by">运作者：</string>
     <string name="suggested_service_terms_of_use">使用条款</string>
     <string name="settings_group_reports">报告</string>
-    <string name="settings_group_scanning">扫描中</string>
+    <string name="settings_group_scanning">扫描</string>
     <string name="movement_detection_none_title">无</string>
     <string name="movement_detection_location_description">位置无变化时暂停扫描。定位始终开启</string>
     <string name="notification_style_basic_description">显示创建的报告数量</string>
-    <string name="notification_style_detailed_description">显示报告和GNSS卫星数量</string>
+    <string name="notification_style_detailed_description">显示报告和 GNSS 卫星数量</string>
     <string name="show_my_location">显示我的位置</string>
     <string name="permission_rationale_fine_location">获取当前位置需要精确位置权限</string>
     <string name="permission_rationale_read_phone_state">扫描本机 SIM 所连接之信号塔需要获取手机状态权限</string>
@@ -114,10 +114,10 @@
     <string name="export_raw_database">导出原始数据库</string>
     <string name="troubleshooting_description">解决扫描中的一般问题</string>
     <string name="troubleshooting_permissions_granted">权限已授予</string>
-    <string name="troubleshooting_wifi_scan_always_available">Wi-Fi扫描始终可用</string>
+    <string name="troubleshooting_wifi_scan_always_available">Wi-Fi 扫描始终可用</string>
     <string name="delete_data">删除数据</string>
     <string name="app_variant">变种: %s</string>
-    <string name="contributors">贡献者</string>
+    <string name="contributors">贡献者们</string>
     <string name="update_translations_button">更新翻译</string>
     <string name="author_text">由 %1$s 和 %2$s 用 ❤️ 发电</string>
 </resources>

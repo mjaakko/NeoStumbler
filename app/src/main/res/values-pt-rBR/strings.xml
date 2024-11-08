@@ -128,7 +128,7 @@
     <string name="troubleshooting_wifi_scan_always_available">Escaneamento Wi-Fi sempre disponível</string>
     <string name="about_app">Sobre o NeoStumbler</string>
     <string name="app_version">Versão: %s</string>
-    <string name="app_variant">Variante:</string>
+    <string name="app_variant">Variante: %s</string>
     <string name="author_text">Feito com ❤️ por %1$s e %2$s</string>
     <string name="contributors">contribuidores</string>
     <string name="bug_report_button">Relatar um erro</string>
