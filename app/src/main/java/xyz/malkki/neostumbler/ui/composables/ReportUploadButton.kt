@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.asFlow
 import androidx.work.BackoffPolicy
@@ -131,6 +132,10 @@ fun ReportUploadButton() {
         )
         Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
 
-        Text(text = stringResource(R.string.send_reports))
+        Text(
+            text = stringResource(R.string.send_reports),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
     }
 }
