@@ -76,9 +76,11 @@ fun ReportsScreen() {
     MLSWarningDialog()
 
     Column {
-        Row {
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             ForegroundScanningButton()
+
             Spacer(modifier = Modifier.weight(1.0f))
+
             ReportUploadButton()
         }
         ReportStats()

@@ -41,8 +41,8 @@
     <string name="reports_not_uploaded">Raportteja lähettämättä: %s</string>
     <string name="reports_last_uploaded">Raportit lähetetty viimeksi: %s</string>
 
-    <string name="start_scanning">Aloita skannaaminen</string>
-    <string name="stop_scanning">Lopeta skannaaminen</string>
+    <string name="start_scanning">Aloita skannaus</string>
+    <string name="stop_scanning">Lopeta skannaus</string>
 
     <string name="delete_report">Poista raportti</string>
     <string name="delete_report_confirmation">Oletko varma, että haluat poistaa raportin?</string>
