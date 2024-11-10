@@ -2,9 +2,7 @@ package xyz.malkki.neostumbler.scanner.source
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
 import android.content.IntentFilter
 import android.net.wifi.ScanResult
 import android.net.wifi.WifiManager
@@ -33,6 +31,7 @@ import timber.log.Timber
 import xyz.malkki.neostumbler.domain.WifiAccessPoint
 import xyz.malkki.neostumbler.utils.ImmediateExecutor
 import xyz.malkki.neostumbler.utils.RateLimiter
+import xyz.malkki.neostumbler.utils.broadcastReceiverFlow
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -148,20 +147,12 @@ class WifiManagerWifiAccessPointSource(
         }
     }
 
-    private fun getWifiScanFlowLegacy(appContext: Context, wifiManager: WifiManager): Flow<List<ScanResult>> = callbackFlow {
-        val broadcastReceiver = object : BroadcastReceiver() {
-            @SuppressLint("MissingPermission")
-            override fun onReceive(context: Context, intent: Intent) {
-                if (isActive) {
-                    trySendBlocking(wifiManager.scanResults)
-                }
+    private fun getWifiScanFlowLegacy(appContext: Context, wifiManager: WifiManager): Flow<List<ScanResult>> {
+        return appContext
+            .broadcastReceiverFlow(IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION))
+            .map {
+                @SuppressLint("MissingPermission")
+                wifiManager.scanResults
             }
-        }
-
-        appContext.registerReceiver(broadcastReceiver, IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION))
-
-        awaitClose {
-            appContext.unregisterReceiver(broadcastReceiver)
-        }
     }
 }
