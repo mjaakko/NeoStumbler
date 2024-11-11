@@ -109,7 +109,7 @@
     <string name="troubleshooting_title">故障排除</string>
     <string name="troubleshooting_battery_optimizations_disabled">电池优化已禁用</string>
     <string name="troubleshooting_accurate_location_available">精确位置可用</string>
-    <string name="troubleshooting_fix">Fix</string>
+    <string name="troubleshooting_fix">修复</string>
     <string name="export_csv">导出为 CSV</string>
     <string name="export_raw_database">导出原始数据库</string>
     <string name="troubleshooting_description">解决扫描中的一般问题</string>
