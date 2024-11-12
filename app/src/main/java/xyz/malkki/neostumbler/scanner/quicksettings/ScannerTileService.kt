@@ -11,7 +11,12 @@ import android.service.quicksettings.TileService
 import androidx.core.content.ContextCompat
 import androidx.core.service.quicksettings.PendingIntentActivityWrapper
 import androidx.core.service.quicksettings.TileServiceCompat
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import xyz.malkki.neostumbler.MainActivity
 import xyz.malkki.neostumbler.R
@@ -32,51 +37,70 @@ class ScannerTileService : TileService() {
         }
     }
 
+    private lateinit var coroutineScope: CoroutineScope
+
     private lateinit var oneTimeActionHelper: OneTimeActionHelper
 
-    private fun updateQsTile() {
-        val scanningActive = ScannerService.serviceRunning
-        val reportsCreated = ScannerService.reportsCreated
-
-        Timber.d("Setting QS tile to %s", if (scanningActive) { "active" } else { "inactive" })
-        
-        qsTile
-            .apply {
-                //Label has to be updated here to support per-app locales even though it's specified in the manifest
-                label = ContextCompat.getString(this@ScannerTileService, R.string.wireless_scanning)
-
-                subtitle = if (scanningActive) {
-                    ContextCompat.getString(this@ScannerTileService, R.string.notification_wireless_scanning_content_reports_created).format(reportsCreated)
-                } else {
-                    null
-                }
-
-                state = if (scanningActive) {
-                    Tile.STATE_ACTIVE
-                } else {
-                    Tile.STATE_INACTIVE
-                }
-            }
-            .updateTile()
-    }
+    private var updaterJob: Job? = null
 
     override fun onCreate() {
+        super.onCreate()
+
+        coroutineScope = CoroutineScope(Dispatchers.Default)
+
         oneTimeActionHelper = OneTimeActionHelper(application as StumblerApplication)
     }
 
+    override fun onDestroy() {
+        coroutineScope.cancel()
+
+        super.onDestroy()
+    }
+
     override fun onTileAdded() {
-        runBlocking {
+        coroutineScope.launch {
             //Showing "add QS tile" prompt is unnecessary if the user has already added the QS tile
             oneTimeActionHelper.markActionShown(ADD_QS_TILE_ACTION_NAME)
         }
     }
 
     override fun onStartListening() {
-        updateQsTile()
+        updaterJob = coroutineScope.launch {
+            ScannerService.serviceRunning
+                .combine(ScannerService.reportsCreated) { a, b -> a to b }
+                .collect { (scanningActive, reportsCreated) ->
+                    Timber.d("Updating QS tile, scanning: $scanningActive, reports: $reportsCreated")
+
+                    qsTile
+                        .apply {
+                            //Label has to be updated here to support per-app locales even though it's specified in the manifest
+                            label = ContextCompat.getString(
+                                this@ScannerTileService,
+                                R.string.wireless_scanning
+                            )
+
+                            subtitle = if (scanningActive) {
+                                ContextCompat.getString(
+                                    this@ScannerTileService,
+                                    R.string.notification_wireless_scanning_content_reports_created
+                                ).format(reportsCreated)
+                            } else {
+                                null
+                            }
+
+                            state = if (scanningActive) {
+                                Tile.STATE_ACTIVE
+                            } else {
+                                Tile.STATE_INACTIVE
+                            }
+                        }
+                        .updateTile()
+                }
+        }
     }
 
     override fun onStopListening() {
-
+        updaterJob?.cancel()
     }
 
     override fun onClick() {
