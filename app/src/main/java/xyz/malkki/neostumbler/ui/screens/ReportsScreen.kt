@@ -158,7 +158,7 @@ fun ForegroundScanningButton() {
     }
 
     fun startScanning() {
-        if (ScannerService.serviceRunning) {
+        if (ScannerService.serviceRunning.value) {
             context.startService(ScannerService.stopIntent(context))
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

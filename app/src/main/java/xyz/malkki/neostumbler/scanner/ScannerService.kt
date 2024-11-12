@@ -30,11 +30,11 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
@@ -43,6 +43,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import xyz.malkki.neostumbler.MainActivity
@@ -105,13 +106,13 @@ class ScannerService : Service() {
             MINIMAL(1), BASIC(2), DETAILED(3)
         }
 
-        private var _reportsCreated: Int = 0
-        val reportsCreated: Int
-            get() = _reportsCreated
+        private val _reportsCreated = MutableStateFlow(0)
+        val reportsCreated: StateFlow<Int>
+            get() = _reportsCreated.asStateFlow()
 
-        private var _serviceRunning = false
-        val serviceRunning: Boolean
-            get() = _serviceRunning
+        private val _serviceRunning = MutableStateFlow(false)
+        val serviceRunning: StateFlow<Boolean>
+            get() = _serviceRunning.asStateFlow()
     }
 
     private lateinit var wakeLock: WakeLock
@@ -138,7 +139,7 @@ class ScannerService : Service() {
     override fun onCreate() {
         super.onCreate()
 
-        _serviceRunning = true
+        _serviceRunning.value = true
 
         ScannerTileService.updateTile(this)
 
@@ -258,8 +259,6 @@ class ScannerService : Service() {
             AirPressureSource { emptyFlow() }
         }
 
-        val reportsCreatedChannel = Channel<Int>()
-
         launch {
             WirelessScanner(
                 locationSource = { locationFlow },
@@ -278,14 +277,14 @@ class ScannerService : Service() {
                         beacons = reportData.bluetoothBeacons
                     )
 
-                    reportsCreatedChannel.send(++_reportsCreated)
+                    _reportsCreated.update { it + 1 }
 
                     ScannerTileService.updateTile(this@ScannerService)
                 }
         }
 
         launch {
-            reportsCreatedChannel.consumeAsFlow()
+            reportsCreated
                 .combine(gpsStatsFlow) { reportsCount, gpsStats ->
                     reportsCount to gpsStats
                 }
@@ -331,8 +330,8 @@ class ScannerService : Service() {
     override fun onDestroy() {
         coroutineScope.cancel()
 
-        _serviceRunning = false
-        _reportsCreated = 0
+        _serviceRunning.value = false
+        _reportsCreated.value = 0
 
         ScannerTileService.updateTile(this)
 
