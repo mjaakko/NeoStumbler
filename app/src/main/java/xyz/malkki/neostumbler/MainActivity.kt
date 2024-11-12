@@ -72,6 +72,15 @@ class MainActivity : AppCompatActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize()
                 ) {
+                    val items = listOf(
+                        stringResource(R.string.map_tab_title) to rememberVectorPainter(Icons.Filled.Place),
+                        stringResource(R.string.reports_tab_title) to rememberVectorPainter(Icons.AutoMirrored.Default.List),
+                        stringResource(R.string.statistics_tab_title) to painterResource(id = R.drawable.statistics_24),
+                        stringResource(R.string.settings_tab_title)  to rememberVectorPainter(Icons.Filled.Settings),
+                    )
+
+                    val selectedTabIndex = rememberSaveable { mutableIntStateOf(1) }
+
                     Scaffold(
                         topBar = {
                             TopAppBar(
@@ -85,16 +94,21 @@ class MainActivity : AppCompatActivity() {
                                 }
                             )
                         },
+                        bottomBar = {
+                            NavigationBar {
+                                items.forEachIndexed { index, (title, icon) ->
+                                    NavigationBarItem(
+                                        icon = {
+                                            Icon(icon, contentDescription = title)
+                                        },
+                                        label = { Text(title) },
+                                        selected = selectedTabIndex.intValue == index,
+                                        onClick = { selectedTabIndex.intValue = index }
+                                    )
+                                }
+                            }
+                        },
                         content = {
-                            val selectedTabIndex = rememberSaveable { mutableIntStateOf(1) }
-
-                            val items = listOf(
-                                stringResource(R.string.map_tab_title) to rememberVectorPainter(Icons.Filled.Place),
-                                stringResource(R.string.reports_tab_title) to rememberVectorPainter(Icons.AutoMirrored.Default.List),
-                                stringResource(R.string.statistics_tab_title) to painterResource(id = R.drawable.statistics_24),
-                                stringResource(R.string.settings_tab_title)  to rememberVectorPainter(Icons.Filled.Settings),
-                            )
-
                             Column(
                                 modifier = Modifier
                                     .fillMaxSize()
@@ -121,19 +135,6 @@ class MainActivity : AppCompatActivity() {
                                         3 -> {
                                             SettingsScreen()
                                         }
-                                    }
-                                }
-
-                                NavigationBar {
-                                    items.forEachIndexed { index, (title, icon) ->
-                                        NavigationBarItem(
-                                            icon = {
-                                                Icon(icon, contentDescription = title)
-                                            },
-                                            label = { Text(title) },
-                                            selected = selectedTabIndex.intValue == index,
-                                            onClick = { selectedTabIndex.intValue = index }
-                                        )
                                     }
                                 }
                             }

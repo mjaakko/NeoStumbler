@@ -10,7 +10,7 @@ def DB_SCHEMAS_DIR =  "$projectDir/schemas"
 
 android {
     namespace 'xyz.malkki.neostumbler'
-    compileSdk 34
+    compileSdk 35
 
     signingConfigs {
         release {
@@ -24,7 +24,7 @@ android {
     defaultConfig {
         applicationId "xyz.malkki.neostumbler"
         minSdk 29
-        targetSdk 34
+        targetSdk 35
         versionCode 16
         versionName "1.4.0-rc1"
 
