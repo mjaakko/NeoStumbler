@@ -228,3 +228,6 @@ app/release/
 
 ## Kotlin 2.0
 .kotlin/
+
+## Release build script
+build_release.sh
