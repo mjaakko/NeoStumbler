@@ -47,7 +47,7 @@ fun ExportCsvButton() {
     }
 
     val selectedDates = rememberSaveable {
-        mutableStateOf<ClosedRange<LocalDate>?>(null)
+        mutableStateOf<Pair<LocalDate, LocalDate>?>(null)
     }
 
     val activityLauncher = rememberLauncherForActivityResult(
@@ -60,8 +60,8 @@ fun ExportCsvButton() {
 
                 val localTimeZone = ZoneId.systemDefault()
 
-                val fromDate = selectedDates.value!!.start
-                val toDate = selectedDates.value!!.endInclusive
+                val fromDate = selectedDates.value!!.first
+                val toDate = selectedDates.value!!.second
 
                 val fromFormatted = dateFormat.format(Date.from(fromDate.atStartOfDay(localTimeZone).toInstant()))
                 val toFormatted = dateFormat.format(Date.from(toDate.atStartOfDay(localTimeZone).toInstant()))
@@ -101,13 +101,13 @@ fun ExportCsvButton() {
             selectButtonText = stringResource(id = R.string.export_data),
             selectableDates = selectableDates,
             onDatesSelected = { dateRange ->
-                selectedDates.value = dateRange
+                selectedDates.value = dateRange?.let { it.start to it.endInclusive }
 
                 if (selectedDates.value != null) {
                     val fromFormatted =
-                        selectedDates.value!!.start.format(DateTimeFormatter.BASIC_ISO_DATE)
+                        selectedDates.value!!.first.format(DateTimeFormatter.BASIC_ISO_DATE)
                     val toFormatted =
-                        selectedDates.value!!.endInclusive.format(DateTimeFormatter.BASIC_ISO_DATE)
+                        selectedDates.value!!.second.format(DateTimeFormatter.BASIC_ISO_DATE)
 
                     activityLauncher.launch("neostumbler_export_${fromFormatted}_$toFormatted.zip")
                 } else {
