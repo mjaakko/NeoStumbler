@@ -11,16 +11,20 @@ import org.altbeacon.beacon.BeaconManager
 import org.altbeacon.beacon.Region
 import timber.log.Timber
 import xyz.malkki.neostumbler.domain.BluetoothBeacon
+import xyz.malkki.neostumbler.extensions.buffer
 import kotlin.random.Random
+import kotlin.time.Duration.Companion.seconds
+
+private val BEACON_BUFFER_WINDOW = 10.seconds
 
 class BeaconLibraryBluetoothBeaconSource(context: Context) : BluetoothBeaconSource {
     private val appContext = context.applicationContext
 
-    private fun getBeaconFlow(context: Context): Flow<List<Beacon>> = callbackFlow {
+    private fun getBeaconFlow(context: Context): Flow<Collection<Beacon>> = callbackFlow {
         val beaconManager = BeaconManager.getInstanceForApplication(context)
 
         val rangeNotifier: (Collection<Beacon>, Region) -> Unit = { beacons: Collection<Beacon>, _: Region ->
-            trySendBlocking(beacons.toList())
+            trySendBlocking(beacons)
         }
 
         beaconManager.addRangeNotifier(rangeNotifier)
@@ -45,9 +49,25 @@ class BeaconLibraryBluetoothBeaconSource(context: Context) : BluetoothBeaconSour
         }
     }
 
-    override fun getBluetoothBeaconFlow(): Flow<List<BluetoothBeacon>> = getBeaconFlow(appContext).map { beacons ->
-        beacons.map { beacon ->
-            BluetoothBeacon.fromBeacon(beacon)
+    override fun getBluetoothBeaconFlow(): Flow<List<BluetoothBeacon>> = getBeaconFlow(appContext)
+        .map { beacons ->
+            beacons.map { beacon ->
+                BluetoothBeacon.fromBeacon(beacon)
+            }
         }
-    }
+        /*
+         * Beacon library can give us the same beacon many times in a short succession
+         * To avoid creating a lot of reports with just a single beacon, buffer them here and only publish the latest data by MAC address
+         */
+        .buffer(BEACON_BUFFER_WINDOW)
+        .map { beacons ->
+            beacons
+                .flatten()
+                .groupingBy { it.macAddress }
+                .reduce { _, a, b ->
+                    maxOf(a, b, Comparator.comparingLong(BluetoothBeacon::timestamp))
+                }
+                .values
+                .toList()
+        }
 }
