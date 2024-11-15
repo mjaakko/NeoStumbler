@@ -8,20 +8,16 @@ import androidx.annotation.RequiresPermission
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapLatest
-import kotlinx.coroutines.flow.scan
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.isActive
 import timber.log.Timber
 import xyz.malkki.neostumbler.domain.CellTower
 import xyz.malkki.neostumbler.utils.ImmediateExecutor
+import xyz.malkki.neostumbler.utils.delayWithMinDuration
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -95,16 +91,7 @@ class TelephonyManagerCellInfoSource(
 
             rendezvousQueue.receive()
 
-            scanInterval
-                .scan(null as Duration?) { a, b ->
-                    listOfNotNull(a, b).minOrNull()
-                }
-                .filterNotNull()
-                .mapLatest { interval ->
-                    val delayMs = ((scannedAt + interval.inWholeMilliseconds) - timeSource.invoke()).coerceAtLeast(0)
-                    delay(delayMs)
-                }
-                .first()
+            delayWithMinDuration(scannedAt, timeSource, scanInterval)
         }
 
         awaitClose {
