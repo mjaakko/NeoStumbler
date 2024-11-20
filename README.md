@@ -19,6 +19,7 @@ There are two variants available:
   * Features missing:
     * [Fused location provider](https://developers.google.com/location-context/fused-location-provider)
     * Automatic scanning based on [activity recognition](https://developers.google.com/location-context/activity-recognition)
+    * [Cronet](https://developer.android.com/develop/connectivity/cronet) HTTP engine
 
 APKs of the application can be downloaded from [Releases](https://github.com/mjaakko/NeoStumbler/releases) page.
 
@@ -33,7 +34,7 @@ Updates for the *full* variant have to be manually checked and downloaded from t
   * Data collection can be started automatically while moving (if using the *full* variant with Google Play Services)
 * Scanning can be automatically paused when not moving
 * Map showing the areas where data has been collected
-* Exporting scan data as a .zip
+* Exporting scan data as CSV files or as a raw SQLite file
 
 ## Development
 
@@ -44,14 +45,19 @@ The application has two product flavors:
 ### Building
 
  * Build debug APK: `./gradlew buildFullDebug` or `./gradlew buildFdroidDebug`
- * Build unsigned release APK: `./gradlew buildFullRelease` or `./gradlew buildFdroidRelease`
+ * Build release APK: `./gradlew buildFullRelease` or `./gradlew buildFdroidRelease`
+   * Note that by default this will build a signed APK
+     * This needs a Java keystore file named `keystore.jks` in the project root directory and setting values for environment variables (see `app/build.gradle`)
+     * Alternatively, to build an unsigned APK, remove `signingConfigs` block from `app/build.gradle`
 
 ## Contributing
+
+Contributions from the community are welcome and encouraged. Easiest ways to contribute are to create and update translations and to create bug reports. Requests for new features are welcome as well. If you want to implement a new feature, please create an issue first if there's some design or planning needed
+
+### Translations
 
 <a href="https://hosted.weblate.org/engage/neostumbler/">
 <img src="https://hosted.weblate.org/widget/neostumbler/287x66-grey.png" alt="Translation status" />
 </a>
-
-### Translations
 
 [Weblate](https://hosted.weblate.org/projects/neostumbler/) is used for translations. If you want to add translations for your language or to update existing translations, you can do that easily from Weblate. If you prefer, you can also update translations via a PR
