@@ -40,6 +40,7 @@ import org.osmdroid.views.overlay.mylocation.DirectedLocationOverlay
 import timber.log.Timber
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
+import xyz.malkki.neostumbler.ui.composables.KeepScreenOn
 import xyz.malkki.neostumbler.ui.composables.PermissionsDialog
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
 import kotlin.math.roundToInt
@@ -85,6 +86,8 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
             }
         )
     }
+
+    KeepScreenOn()
 
     Box(
         modifier = Modifier.fillMaxSize()
