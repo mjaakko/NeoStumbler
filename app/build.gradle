@@ -4,9 +4,19 @@ plugins {
     id 'com.google.devtools.ksp'
     id 'org.jetbrains.kotlin.plugin.compose'
     id 'org.jetbrains.kotlin.plugin.serialization'
+    id 'app.accrescent.tools.bundletool'
 }
 
 def DB_SCHEMAS_DIR =  "$projectDir/schemas"
+
+bundletool {
+    signingConfig {
+        storeFile = file("../keystore.jks")
+        storePassword = System.getenv("SIGNING_STORE_PASSWORD")
+        keyAlias = System.getenv("SIGNING_KEY_ALIAS")
+        keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
+    }
+}
 
 android {
     namespace 'xyz.malkki.neostumbler'
@@ -51,6 +61,13 @@ android {
 
     androidResources {
         generateLocaleConfig true
+    }
+
+    bundle {
+        //Don't split the app bundle by language, because we have an in-app language switcher which needs all languages to be available
+        language {
+            enableSplit = false
+        }
     }
 
     buildTypes {
