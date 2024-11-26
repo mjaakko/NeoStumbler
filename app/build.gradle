@@ -63,6 +63,13 @@ android {
         generateLocaleConfig true
     }
 
+    bundle {
+        //Don't split the app bundle by language, because we have an in-app language switcher which needs all languages to be available
+        language {
+            enableSplit = false
+        }
+    }
+
     buildTypes {
         debug {
             applicationIdSuffix = ".dev"
