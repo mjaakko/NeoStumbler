@@ -21,6 +21,7 @@ import android.telephony.TelephonyManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.FOREGROUND_SERVICE_DEFERRED
 import androidx.core.app.NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE
+import androidx.core.app.PendingIntentCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.datastore.core.DataStore
@@ -343,18 +344,20 @@ class ScannerService : Service() {
     }
 
     private fun createNotification(reportsCreated: Int, gpsStats: GpsStats? = null): Notification {
-        val intent = PendingIntent.getActivity(
+        val intent = PendingIntentCompat.getActivity(
             this@ScannerService,
             MAIN_ACTIVITY_PENDING_INTENT_REQUEST_CODE,
             Intent(this@ScannerService, MainActivity::class.java),
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT,
+            false
         )
 
-        val stopScanningPendingIntent = PendingIntent.getService(
+        val stopScanningPendingIntent = PendingIntentCompat.getService(
             this@ScannerService,
             STOP_SCANNER_SERVICE_PENDING_INTENT_REQUEST_CODE,
             stopIntent(this@ScannerService, false),
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT,
+            false
         )
 
         val reportsCreatedText = ContextCompat.getString(applicationContext, R.string.notification_wireless_scanning_content_reports_created).format(reportsCreated)
