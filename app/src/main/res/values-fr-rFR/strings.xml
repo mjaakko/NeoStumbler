@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Lexique :
     - Scan : mesure
@@ -6,112 +7,135 @@
     -->
     
     <string name="ok">D\'accord</string>
-
     <string name="no_thanks">Non merci</string>
-
     <string name="yes">Oui</string>
     <string name="no">Non</string>
-
     <string name="reset">Réinitialiser</string>
     <string name="save">Enregistrer</string>
-
     <string name="stop">Arrêter</string>
-
     <string name="permissions_needed">Autorisations nécessaires</string>
     <string name="permissions_not_granted">Les autorisations nécessaires n\'ont pas été obtenues</string>
-
     <string name="wifi_icon_description">Icône Wi-Fi</string>
     <string name="cell_tower_icon_description">Icône d\'antenne téléphonique</string>
     <string name="bluetooth_icon_description">Icône Bluetooth</string>
-
     <string name="scanner_status_notification_channel_name">État des mesures</string>
-
     <string name="wireless_scanning">Mesures sans fil</string>
-
     <string name="map_tab_title">Carte</string>
     <string name="reports_tab_title">Rapports</string>
     <string name="statistics_tab_title">Statistiques</string>
     <string name="settings_tab_title">Paramètres</string>
-
     <string name="send_reports">Envoyer les rapports</string>
-
     <string name="reports">Rapports :</string>
     <string name="reports_total">Total des rapports : %s</string>
     <string name="reports_not_uploaded">Rapports non-envoyés : %s</string>
     <string name="reports_last_uploaded">Dernier rapport envoyé : %s</string>
-
     <string name="start_scanning">Démarrer les mesures</string>
     <string name="stop_scanning">Arrêter les mesures</string>
-
     <string name="delete_report">Supprimer le rapport</string>
     <string name="delete_report_confirmation">Êtes-vous sûr de vouloir supprimer ce rapport ?</string>
-
     <string name="toast_reports_uploaded">%d rapports envoyés</string>
     <string name="toast_reports_upload_failed">Échec de l\'envoi des rapports</string>
-
     <string name="report_upload_notification_channel_name">Envoi des rapports</string>
     <string name="notification_sending_reports">Téléversement des rapports</string>
-
     <string name="notification_wireless_scanning_title">Mesure sans fil active</string>
-
     <string name="notification_wireless_scanning_content_reports_created">%d rapports créés</string>
-
     <string name="ignore_battery_optimizations_title">Ignorer les optimisations de batterie</string>
-    <string name="ignore_battery_optimizations_description">Pour de meilleurs résultats, les optimisations de batterie doivent être désactivées. Les mesures sans fil et l\'utilisation de la localisation sont significativement affectés lorsque l\'optimisation de batterie est active et l\'écran éteint.</string>
-
+    <string name="ignore_battery_optimizations_description">Pour de meilleurs résultats, les optimisations de batterie doivent être désactivées. Les mesures sans fil et l’utilisation de la localisation sont significativement affectés lorsque l’optimisation de batterie est active et l’écran éteint</string>
     <string name="battery_optimizations_not_disabled_warning">Les optimisations de batterie n\'ont pas été désactivées</string>
-
     <string name="send_reports_automatically">Envoyer les rapports automatiquement</string>
-
     <string name="export_notification_channel_name">Export de données</string>
-
     <string name="notification_exporting_data">Exportation des données…</string>
-
-    <string name="export_data">Export de données</string>
-
+    <string name="export_data">Exporter les données</string>
     <string name="export_no_file_chosen">Les données ne peuvent être exportées, car aucun fichier n\'a été créé</string>
     <string name="export_started">Export des données à partir de %s vers %s</string>
-
     <string name="reupload_data">Renvoyer les données</string>
-
     <string name="wifis">Wi-Fi</string>
     <string name="cells">Réseaux mobiles</string>
     <string name="beacons">Balises Bluetooth</string>
-
     <string name="add_quick_settings_tile">Ajouter un bloc aux réglages rapides pour facilement démarrer des mesures ?</string>
-
     <string name="endpoint">Destination</string>
     <string name="path">Chemin</string>
     <string name="api_key">Clé API (optionnel)</string>
-
     <string name="settings_ignore_wifi_scan_throttling">Ignorer les limitations pour les mesures du Wi-Fi</string>
     <string name="wifi_scan_throttling">Limitations de mesures du Wi-Fi</string>
-    <string name="wifi_scan_throttling_explanation">
-        Pour activer cette option, vous devez désactiver les limitations de mesure du Wi-Fi dans les paramètres de votre appareil. Elle se trouve généralement dans les options pour les développeurs.
-    </string>
-
+    <string name="wifi_scan_throttling_explanation">Pour activer cette option, vous devez désactiver la limitation de mesure du Wi-Fi dans les paramètres de votre appareil. Elle se trouve généralement dans les options pour les développeurs</string>
     <string name="show_my_location">Afficher mon emplacement</string>
-
     <string name="permission_rationale_fine_location">
         L\'autorisation d\'accéder à la position exacte est nécessaire pour afficher l\'emplacement actuel
     </string>
-
     <string name="permission_rationale_read_phone_state">
         L\'accès à l\'état du téléphone est nécessaire pour la mesure des antennes téléphoniques à partir de toutes les cartes SIM de cet appareil
     </string>
-
     <string name="permission_rationale_bluetooth">
         L\'autorisation d\'accéder au Bluetooth est nécessaire pour mesurer les balises Bluetooth
     </string>
-
     <string name="permission_rationale_post_notifications">
         L\'autorisation d\'accéder aux notifications est nécessaire pour afficher une notification de l\'activité
     </string>
-
     <string name="permission_rationale_background_location_quick_settings">
         L\'autorisation d\'accéder à la localisation en arrière-plan est nécessaire pour démarrer des mesures à partir des réglages rapides
     </string>
     <string name="permission_rationale_location_map">
         L\'autorisation d\'accéder à la localisation est nécessaire pour afficher votre emplacement sur la carte
     </string>
+    <string name="use_dynamic_color_ui">Utiliser des couleurs dynamiques pour l’interface</string>
+    <string name="delete">Supprimer</string>
+    <string name="notification_wireless_scanning_content_satellite_stats">%1$d/%2$d satellites utilisés</string>
+    <string name="mls_warning_title">MLS a fermé</string>
+    <string name="settings_group_other">Autres</string>
+    <string name="notification_style_detailed_description">Affiche le nombre de rapports créés et le nombre de satellites GNSS</string>
+    <string name="db_prune_two_months">Après deux mois</string>
+    <string name="delete_reports_by_date">Supprimer les rapports par date</string>
+    <string name="mls_warning_text">Les services de localisation Mozilla (MLS) ont été fermés et n’acceptent plus de soumissions de données. Vous devez changer le point de terminaison et définir un autre service, pour lequel il y a des suggestions dans les paramètres.\n\nLes données peuvent également être exportées sous forme de fichier ZIP depuis les paramètres</string>
+    <string name="suggested_service_website">Site web</string>
+    <string name="notification_style_detailed_title">Détaillé</string>
+    <string name="suggested_services_title">Services suggérés</string>
+    <string name="movement_detection_location_title">Basé sur la position</string>
+    <string name="db_prune_title">Supprimer les rapports envoyés</string>
+    <string name="db_prune_one_month">Après un mois</string>
+    <string name="movement_detection_none_description">Continuer le scan même sans mouvement</string>
+    <string name="db_prune_six_months">Après six mois</string>
+    <string name="db_prune_never">Jamais</string>
+    <string name="delete_all_reports_confirmation">Êtes-vous sûr de vouloir supprimer tous les rapports ?</string>
+    <string name="troubleshooting_description">Corriger les problèmes courants avec le scan</string>
+    <string name="warning_icon_description">Icône d’avertissement</string>
+    <string name="settings_group_scanning">Scan</string>
+    <string name="movement_detection">Détection du mouvement</string>
+    <string name="movement_detection_location_description">Met en pause le scan lorsque la localisation ne change pas. Garde le GPS actif</string>
+    <string name="movement_detection_significant_motion_title">Capteur de mouvements</string>
+    <string name="unencrypted_endpoint_warning">Point de terminaison non chiffré</string>
+    <string name="settings_group_reports">Rapports</string>
+    <string name="troubleshooting_title">Débogage</string>
+    <string name="toast_deleted_all_reports">Tous les rapports ont été supprimés</string>
+    <string name="notification_style_basic_description">Affiche le nombre de rapports créés</string>
+    <string name="delete_all_reports">Supprimer tous les rapports</string>
+    <string name="toast_deleted_reports">%d rapports supprimés</string>
+    <string name="about_app">À propos de NeoStumbler</string>
+    <string name="app_version">Version : %s</string>
+    <string name="app_variant">Variante : %s</string>
+    <string name="export_csv">Exporter en CSV</string>
+    <string name="export_raw_database">Exporter la base de données brute</string>
+    <string name="suggested_service_terms_of_use">Conditions d’utilisation</string>
+    <string name="movement_detection_none_title">Aucune</string>
+    <string name="movement_detection_significant_motion_description">Met en pause le scan et le GPS lorsqu’aucun mouvement particulier n’est détecté. Permet d’économiser de la batterie mais n’est pas fiable sur tous les appareils</string>
+    <string name="notification_style">Style de notification</string>
+    <string name="notification_style_minimal_title">Minimal</string>
+    <string name="notification_style_minimal_description">Affiche la notification sans détails</string>
+    <string name="notification_style_basic_title">Basique</string>
+    <string name="troubleshooting_permissions_granted">Permissions accordées</string>
+    <string name="troubleshooting_battery_optimizations_disabled">Optimisations de la batterie désactivées</string>
+    <string name="troubleshooting_accurate_location_available">Position précise disponible</string>
+    <string name="troubleshooting_wifi_scan_always_available">Scan Wi-Fi toujours disponible</string>
+    <string name="troubleshooting_fix">Corriger</string>
+    <string name="manage_storage_title">Gérer le stockage</string>
+    <string name="db_size">Taille de la base de données : %s</string>
+    <string name="delete_data">Supprimer les données</string>
+    <string name="contributors">contributeurs</string>
+    <string name="author_text">Fait avec ❤️ par %1$s et %2$s</string>
+    <string name="bug_report_button">Signaler un bogue</string>
+    <string name="update_translations_button">Mettre les traductions à jour</string>
+    <string name="cancel">Annuler</string>
+    <string name="use">Utiliser</string>
+    <string name="suggested_service_hosted_by">Hébergé par :</string>
+    <string name="app_language">Langue</string>
 </resources>
