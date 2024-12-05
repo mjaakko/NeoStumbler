@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.os.Build
 import android.text.format.DateFormat
-import android.widget.Toast
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -52,6 +51,7 @@ import xyz.malkki.neostumbler.db.entities.ReportWithStats
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.defaultLocale
 import xyz.malkki.neostumbler.extensions.getActivity
+import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.scanner.ScannerService
 import xyz.malkki.neostumbler.scanner.quicksettings.ScannerTileService
 import xyz.malkki.neostumbler.ui.composables.AddQSTileDialog
@@ -194,7 +194,7 @@ fun ForegroundScanningButton() {
                 showBatteryOptimizationsDialog.value = true
             }
         } else {
-            Toast.makeText(context, ContextCompat.getString(context, R.string.permissions_not_granted), Toast.LENGTH_SHORT).show()
+            context.showToast(ContextCompat.getString(context, R.string.permissions_not_granted))
         }
     }
 

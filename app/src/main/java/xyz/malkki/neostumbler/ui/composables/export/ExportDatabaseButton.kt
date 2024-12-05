@@ -1,6 +1,5 @@
 package xyz.malkki.neostumbler.ui.composables.export
 
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.Button
@@ -16,6 +15,7 @@ import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.export.DatabaseExportWorker
+import xyz.malkki.neostumbler.extensions.showToast
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -29,7 +29,7 @@ fun ExportDatabaseButton() {
         contract = ActivityResultContracts.CreateDocument(DB_MIME_TYPE),
         onResult = { uri ->
             if (uri == null) {
-                Toast.makeText(context, ContextCompat.getString(context, R.string.export_no_file_chosen), Toast.LENGTH_SHORT).show()
+                context.showToast(ContextCompat.getString(context, R.string.export_no_file_chosen))
             } else {
                 WorkManager.getInstance(context).enqueue(
                     OneTimeWorkRequest.Builder(DatabaseExportWorker::class.java)

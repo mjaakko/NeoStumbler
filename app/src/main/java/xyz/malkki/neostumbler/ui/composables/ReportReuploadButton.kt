@@ -1,7 +1,6 @@
 package xyz.malkki.neostumbler.ui.composables
 
 import android.content.Context
-import android.widget.Toast
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +20,7 @@ import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
+import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.geosubmit.ReportSendWorker
 import java.time.LocalDate
 import java.time.ZoneId
@@ -44,12 +44,12 @@ fun ReportReuploadButton() {
         workId = enqueuedUploadWork.value,
         onWorkSuccess = { workInfo ->
             val reportsUploaded = workInfo.outputData.getInt(ReportSendWorker.OUTPUT_REPORTS_SENT, 0)
-            Toast.makeText(context, ContextCompat.getString(context, R.string.toast_reports_uploaded).format(reportsUploaded), Toast.LENGTH_SHORT).show()
+            context.showToast(ContextCompat.getString(context, R.string.toast_reports_uploaded).format(reportsUploaded))
 
             enqueuedUploadWork.value = null
         },
         onWorkFailed = {
-            Toast.makeText(context, ContextCompat.getString(context, R.string.toast_reports_upload_failed), Toast.LENGTH_SHORT).show()
+            context.showToast(ContextCompat.getString(context, R.string.toast_reports_upload_failed))
 
             enqueuedUploadWork.value = null
         }
