@@ -1,5 +1,6 @@
 package xyz.malkki.neostumbler.ui.composables
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -79,8 +80,18 @@ fun ReportUploadButton() {
 
             enqueuedUploadWork.value = null
         },
-        onWorkFailed = {
-            context.showToast(ContextCompat.getString(context, R.string.toast_reports_upload_failed))
+        onWorkFailed = { workInfo ->
+            val errorMessage = workInfo.outputData.getString(ReportSendWorker.OUTPUT_ERROR_MESSAGE)
+
+            val toastText = buildString {
+                append(ContextCompat.getString(context, R.string.toast_reports_upload_failed))
+
+                if (errorMessage != null) {
+                    append("\n\n")
+                    append(errorMessage)
+                }
+            }
+            context.showToast(toastText, length = Toast.LENGTH_LONG)
 
             enqueuedUploadWork.value = null
         }

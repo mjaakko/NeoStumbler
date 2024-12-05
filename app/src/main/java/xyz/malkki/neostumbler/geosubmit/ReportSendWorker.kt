@@ -37,6 +37,7 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
         const val INPUT_REUPLOAD_TO = "reupload_to"
 
         const val OUTPUT_REPORTS_SENT = "reports_sent"
+        const val OUTPUT_ERROR_MESSAGE = "error_message"
     }
 
     private val application = applicationContext as StumblerApplication
@@ -104,7 +105,7 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
             if (shouldRetry(ex)) {
                 Result.retry()
             } else {
-                Result.failure(createResultData(reportsSent))
+                Result.failure(createResultData(reportsSent, errorMessage = ex.message))
             }
         }
     }
@@ -142,9 +143,15 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
         db.reportDao().update(*updatedReports)
     }
 
-    private fun createResultData(reportsSent: Int): Data {
+    private fun createResultData(reportsSent: Int, errorMessage: String? = null): Data {
         return Data.Builder()
-            .putInt(OUTPUT_REPORTS_SENT, reportsSent)
+            .apply {
+                putInt(OUTPUT_REPORTS_SENT, reportsSent)
+
+                if (errorMessage != null) {
+                    putString(OUTPUT_ERROR_MESSAGE, errorMessage)
+                }
+            }
             .build()
     }
 
