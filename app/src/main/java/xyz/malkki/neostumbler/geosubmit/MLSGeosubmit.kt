@@ -20,6 +20,10 @@ class MLSGeosubmit(
     private val httpClient: Call.Factory,
     private val geosubmitParams: GeosubmitParams
 ) : Geosubmit {
+    companion object {
+        private val JSON_ENCODER = Json { explicitNulls = false }
+    }
+
     override suspend fun sendReports(reports: List<Report>) {
         val url = geosubmitParams.toUrl()
         require(url != null) {
@@ -48,7 +52,7 @@ class MLSGeosubmit(
                 GZIPOutputStream(CloseShieldOutputStream.wrap(sink.outputStream()), BUFFER_SIZE)
                     .buffered()
                     .use {
-                        Json.encodeToStream(ReportItems(reports), it)
+                        JSON_ENCODER.encodeToStream(ReportItems(reports), it)
                     }
             }
         }

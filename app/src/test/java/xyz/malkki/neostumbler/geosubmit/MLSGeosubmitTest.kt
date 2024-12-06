@@ -7,6 +7,7 @@ import okhttp3.OkHttpClient
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -83,5 +84,8 @@ class MLSGeosubmitTest {
 
         val requestBody = GZIPInputStream(request.body.inputStream()).use { it.readAllBytes().toString(StandardCharsets.UTF_8) }
         assertTrue(requestBody.contains("01:01:01:01:01:01"))
+
+        //Check that request body does not contain nulls -> Ichnaea servers don't accept them
+        assertFalse(requestBody.contains("null"))
     }
 }
