@@ -1,7 +1,6 @@
 package xyz.malkki.neostumbler.ui.composables
 
 import android.os.PowerManager
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,6 +21,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
+import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.utils.OneTimeActionHelper
 import xyz.malkki.neostumbler.utils.requestIgnoreBatteryOptimizations
 
@@ -49,7 +49,7 @@ fun BatteryOptimizationsDialog(onBatteryOptimizationsDisabled: (Boolean) -> Unit
 
             onBatteryOptimizationsDisabled(batteryOptimizationsDisabled)
             if (!batteryOptimizationsDisabled) {
-                Toast.makeText(context, ContextCompat.getString(context, R.string.battery_optimizations_not_disabled_warning), Toast.LENGTH_SHORT).show()
+                context.showToast(ContextCompat.getString(context, R.string.battery_optimizations_not_disabled_warning))
             }
         }
     )

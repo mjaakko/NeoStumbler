@@ -17,14 +17,18 @@ import timber.log.Timber
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.db.entities.ReportWithData
 import java.net.SocketTimeoutException
 import java.time.Instant
-import kotlin.time.DurationUnit
-import kotlin.time.measureTime
+import kotlin.collections.isNotEmpty
+import kotlin.collections.map
 
 class ReportSendWorker(appContext: Context, params: WorkerParameters) : CoroutineWorker(appContext, params) {
     companion object {
         private const val REPORT_SEND_NOTIFICATION_ID = 55555
+
+        //Send max 2000 reports in one request to avoid creating too large payloads
+        private const val MAX_REPORTS_PER_BATCH = 2000
 
         const val PERIODIC_WORK_NAME = "report_upload_periodic"
         const val ONE_TIME_WORK_NAME = "report_upload_one_time"
@@ -33,6 +37,7 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
         const val INPUT_REUPLOAD_TO = "reupload_to"
 
         const val OUTPUT_REPORTS_SENT = "reports_sent"
+        const val OUTPUT_ERROR_MESSAGE = "error_message"
     }
 
     private val application = applicationContext as StumblerApplication
@@ -74,61 +79,80 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
 
             db.reportDao().getAllReportsForTimerange(from, to)
         }
-        val geosubmitReports = reportsToUpload.map { report ->
-            Report(
-                report.report.timestamp.toEpochMilli(),
-                Report.Position.fromDbEntity(report.positionEntity),
-                report.wifiAccessPointEntities.map(Report.WifiAccessPoint::fromDbEntity)
-                    .takeIf { it.isNotEmpty() },
-                report.cellTowerEntities.map(Report.CellTower::fromDbEntity).takeIf { it.isNotEmpty() },
-                report.bluetoothBeaconEntities.map(Report.BluetoothBeacon::fromDbEntity)
-                    .takeIf { it.isNotEmpty() }
-            )
+
+        if (reportsToUpload.isEmpty()) {
+            Timber.i("No Geosubmit reports to send")
+            return Result.success(createResultData(0))
         }
 
-        if (geosubmitReports.isEmpty()) {
-            Timber.i("No Geosubmit reports to send")
-            return createResult(0)
-        }
+        var reportsSent = 0
 
         return try {
-            val duration = measureTime {
-                geosubmit.sendReports(geosubmitReports)
-            }
+            reportsToUpload
+                .chunked(MAX_REPORTS_PER_BATCH)
+                .forEach {
+                    sendReports(geosubmit, it)
 
-            Timber.i(
-                "Successfully sent ${geosubmitReports.size} reports to MLS in ${
-                    duration.toString(DurationUnit.SECONDS, 2)
-                }"
-            )
+                    reportsSent += it.size
 
-            val now = Instant.now()
-
-            val updatedReports = reportsToUpload
-                .filter {
-                    //Do not update upload timestamp for reports which were reuploaded
-                    !it.report.uploaded
+                    setProgress(createResultData(reportsSent))
                 }
-                .map {
-                    it.report.copy(uploaded = true, uploadTimestamp = now)
-                }
-                .toTypedArray()
-            db.reportDao().update(*updatedReports)
 
-            createResult(geosubmitReports.size)
+            Result.success(createResultData(reportsSent))
         } catch (ex: Exception) {
             Timber.w(ex, "Failed to send Geosubmit reports")
 
             if (shouldRetry(ex)) {
                 Result.retry()
             } else {
-                Result.failure()
+                Result.failure(createResultData(reportsSent, errorMessage = ex.message))
             }
         }
     }
 
-    private fun createResult(reportsSent: Int): Result {
-        return Result.success(Data.Builder().putInt(OUTPUT_REPORTS_SENT, reportsSent).build())
+    private suspend fun sendReports(geosubmitApi: Geosubmit, reports: List<ReportWithData>) {
+        val geosubmitReports = reports.map { report ->
+            Report(
+                timestamp = report.report.timestamp.toEpochMilli(),
+                position = Report.Position.fromDbEntity(report.positionEntity),
+                wifiAccessPoints = report.wifiAccessPointEntities
+                    .map(Report.WifiAccessPoint::fromDbEntity)
+                    .takeIf { it.isNotEmpty() },
+                cellTowers = report.cellTowerEntities
+                    .map(Report.CellTower::fromDbEntity)
+                    .takeIf { it.isNotEmpty() },
+                bluetoothBeacons = report.bluetoothBeaconEntities
+                    .map(Report.BluetoothBeacon::fromDbEntity)
+                    .takeIf { it.isNotEmpty() }
+            )
+        }
+
+        geosubmitApi.sendReports(geosubmitReports)
+
+        val now = Instant.now()
+
+        val updatedReports = reports
+            .filter {
+                //Do not update upload timestamp for reports which were reuploaded
+                !it.report.uploaded
+            }
+            .map {
+                it.report.copy(uploaded = true, uploadTimestamp = now)
+            }
+            .toTypedArray()
+        db.reportDao().update(*updatedReports)
+    }
+
+    private fun createResultData(reportsSent: Int, errorMessage: String? = null): Data {
+        return Data.Builder()
+            .apply {
+                putInt(OUTPUT_REPORTS_SENT, reportsSent)
+
+                if (errorMessage != null) {
+                    putString(OUTPUT_ERROR_MESSAGE, errorMessage)
+                }
+            }
+            .build()
     }
 
     private fun shouldRetry(exception: Exception): Boolean {

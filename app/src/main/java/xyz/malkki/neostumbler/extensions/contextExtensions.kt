@@ -7,6 +7,8 @@ import android.content.pm.PackageManager
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.provider.Settings
+import android.widget.Toast
+import androidx.annotation.IntDef
 import androidx.core.content.getSystemService
 import androidx.core.os.LocaleListCompat
 import java.util.Locale
@@ -50,4 +52,22 @@ fun Context.isWifiScanThrottled(): Boolean? {
             else -> null
         }
     }
+}
+
+@IntDef(flag = true, value = [
+    Toast.LENGTH_SHORT,
+    Toast.LENGTH_LONG
+])
+@Retention(AnnotationRetention.SOURCE)
+annotation class ToastLength
+
+
+/**
+ * Shows a toast message with the specified text
+ *
+ * @param text Text to show
+ * @param length Duration of the toast
+ */
+fun Context.showToast(text: String, @ToastLength length: Int = Toast.LENGTH_SHORT) {
+    Toast.makeText(this, text, length).show()
 }

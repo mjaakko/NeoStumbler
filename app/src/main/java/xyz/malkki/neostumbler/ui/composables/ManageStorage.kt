@@ -1,7 +1,6 @@
 package xyz.malkki.neostumbler.ui.composables
 
 import android.text.format.Formatter
-import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -33,6 +32,7 @@ import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.db.ReportDatabase
 import xyz.malkki.neostumbler.extensions.getEstimatedSize
 import xyz.malkki.neostumbler.extensions.getTableNames
+import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.ui.composables.export.ExportCsvButton
 import xyz.malkki.neostumbler.ui.composables.export.ExportDatabaseButton
 import java.time.LocalDate
@@ -124,7 +124,7 @@ private fun DeleteReportsByDate(reportDb: ReportDatabase) {
                     coroutineScope.launch {
                         val deletedCount = reportDb.reportDao().deleteFromTimeRange(from, to)
 
-                        Toast.makeText(context, ContextCompat.getString(context, R.string.toast_deleted_reports).format(deletedCount), Toast.LENGTH_SHORT).show()
+                        context.showToast(ContextCompat.getString(context, R.string.toast_deleted_reports).format(deletedCount))
                     }
                 }
             }
@@ -161,7 +161,7 @@ private fun DeleteAllReportsButton(reportDb: ReportDatabase) {
                         reportDb.clearAllTables()
                     }
 
-                    Toast.makeText(context, ContextCompat.getString(context, R.string.toast_deleted_all_reports), Toast.LENGTH_SHORT).show()
+                    context.showToast(ContextCompat.getString(context, R.string.toast_deleted_all_reports))
                 }
             },
             onNegativeAction = {

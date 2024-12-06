@@ -37,6 +37,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import xyz.malkki.neostumbler.R
+import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.geosubmit.ReportSendWorker
 import java.util.UUID
 import kotlin.time.Duration.Companion.seconds
@@ -75,12 +76,22 @@ fun ReportUploadButton() {
         workId = enqueuedUploadWork.value,
         onWorkSuccess = { workInfo ->
             val reportsUploaded = workInfo.outputData.getInt(ReportSendWorker.OUTPUT_REPORTS_SENT, 0)
-            Toast.makeText(context, ContextCompat.getString(context, R.string.toast_reports_uploaded).format(reportsUploaded), Toast.LENGTH_SHORT).show()
+            context.showToast(ContextCompat.getString(context, R.string.toast_reports_uploaded).format(reportsUploaded))
 
             enqueuedUploadWork.value = null
         },
-        onWorkFailed = {
-            Toast.makeText(context, ContextCompat.getString(context, R.string.toast_reports_upload_failed), Toast.LENGTH_SHORT).show()
+        onWorkFailed = { workInfo ->
+            val errorMessage = workInfo.outputData.getString(ReportSendWorker.OUTPUT_ERROR_MESSAGE)
+
+            val toastText = buildString {
+                append(ContextCompat.getString(context, R.string.toast_reports_upload_failed))
+
+                if (errorMessage != null) {
+                    append("\n\n")
+                    append(errorMessage)
+                }
+            }
+            context.showToast(toastText, length = Toast.LENGTH_LONG)
 
             enqueuedUploadWork.value = null
         }

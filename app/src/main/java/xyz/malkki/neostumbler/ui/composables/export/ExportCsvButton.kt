@@ -2,7 +2,6 @@ package xyz.malkki.neostumbler.ui.composables.export
 
 import android.content.Context
 import android.text.format.DateFormat
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.Button
@@ -24,6 +23,7 @@ import androidx.work.WorkManager
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.export.CsvExportWorker
+import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.ui.composables.DateRangePickerDialog
 import java.time.LocalDate
 import java.time.ZoneId
@@ -54,7 +54,7 @@ fun ExportCsvButton() {
         contract = ActivityResultContracts.CreateDocument("application/zip"),
         onResult = { uri ->
             if (uri == null) {
-                Toast.makeText(context, ContextCompat.getString(context, R.string.export_no_file_chosen), Toast.LENGTH_SHORT).show()
+                context.showToast(ContextCompat.getString(context, R.string.export_no_file_chosen))
             } else {
                 val dateFormat = DateFormat.getDateFormat(context)
 
@@ -66,7 +66,7 @@ fun ExportCsvButton() {
                 val fromFormatted = dateFormat.format(Date.from(fromDate.atStartOfDay(localTimeZone).toInstant()))
                 val toFormatted = dateFormat.format(Date.from(toDate.atStartOfDay(localTimeZone).toInstant()))
 
-                Toast.makeText(context, ContextCompat.getString(context, R.string.export_started).format(fromFormatted, toFormatted), Toast.LENGTH_SHORT).show()
+                context.showToast(ContextCompat.getString(context, R.string.export_started).format(fromFormatted, toFormatted))
 
                 //Convert to local time
                 val from = fromDate.atStartOfDay(localTimeZone).toInstant().toEpochMilli()

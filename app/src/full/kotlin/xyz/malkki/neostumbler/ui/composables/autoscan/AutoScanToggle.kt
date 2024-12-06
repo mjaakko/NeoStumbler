@@ -3,7 +3,6 @@ package xyz.malkki.neostumbler.ui.composables.autoscan
 import android.Manifest
 import android.annotation.SuppressLint
 import android.os.Build
-import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -33,6 +32,7 @@ import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.getActivity
+import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.scanner.autoscan.ActivityTransitionReceiver
 import xyz.malkki.neostumbler.ui.composables.PermissionsDialog
 import xyz.malkki.neostumbler.ui.composables.ToggleWithAction
@@ -101,7 +101,7 @@ fun AutoScanToggle() {
         } catch (e: Exception) {
             Timber.w(e, "Failed to enable activity transition listener")
 
-            Toast.makeText(context, ContextCompat.getString(context, R.string.autoscan_failed_to_enable), Toast.LENGTH_SHORT).show()
+            context.showToast(ContextCompat.getString(context, R.string.autoscan_failed_to_enable))
         }
     }
 
@@ -149,7 +149,7 @@ fun AutoScanToggle() {
                         showAdditionalPermissionsDialog.value = true
                     }
                 } else {
-                    Toast.makeText(context, ContextCompat.getString(context, R.string.permissions_not_granted), Toast.LENGTH_SHORT).show()
+                    context.showToast(ContextCompat.getString(context, R.string.permissions_not_granted))
                 }
             }
         )
@@ -169,7 +169,7 @@ fun AutoScanToggle() {
                         enableAutoScan()
                     }
                 } else {
-                    Toast.makeText(context, ContextCompat.getString(context, R.string.permissions_not_granted), Toast.LENGTH_SHORT).show()
+                    context.showToast(ContextCompat.getString(context, R.string.permissions_not_granted))
                 }
             }
         )
