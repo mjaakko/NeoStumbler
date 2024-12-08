@@ -24,22 +24,24 @@ class ScanReportCreator(context: Context) {
         cellTowers: List<CellTower>,
         beacons: List<BluetoothBeacon>,
         reportTimestamp: Instant = Instant.now()
-    ) = reportDb.withTransaction {
-        val report = Report(null, reportTimestamp, false, null)
-        val reportId = reportDb.reportDao().insert(report)
+    ) = reportDb.value.let { db ->
+        db.withTransaction {
+            val report = Report(null, reportTimestamp, false, null)
+            val reportId = db.reportDao().insert(report)
 
-        val positionEntity = PositionEntity.createFromPosition(reportId, reportTimestamp, position)
-        reportDb.positionDao().insert(positionEntity)
+            val positionEntity = PositionEntity.createFromPosition(reportId, reportTimestamp, position)
+            db.positionDao().insert(positionEntity)
 
-        val wifiAccessPointEntities = wifiScanResults.map { WifiAccessPointEntity.fromWifiAccessPoint(it, reportTimestamp, reportId) }
-        reportDb.wifiAccessPointDao().insertAll(*wifiAccessPointEntities.toTypedArray())
+            val wifiAccessPointEntities = wifiScanResults.map { WifiAccessPointEntity.fromWifiAccessPoint(it, reportTimestamp, reportId) }
+            db.wifiAccessPointDao().insertAll(*wifiAccessPointEntities.toTypedArray())
 
-        val cellTowerEntities = cellTowers.map { CellTowerEntity.fromCellTower(it, reportTimestamp, reportId) }
-        reportDb.cellTowerDao().insertAll(*cellTowerEntities.toTypedArray())
+            val cellTowerEntities = cellTowers.map { CellTowerEntity.fromCellTower(it, reportTimestamp, reportId) }
+            db.cellTowerDao().insertAll(*cellTowerEntities.toTypedArray())
 
-        val bluetoothBeaconEntities = beacons.map { BluetoothBeaconEntity.fromBluetoothBeacon(reportId, reportTimestamp, it) }
-        reportDb.bluetoothBeaconDao().insertAll(*bluetoothBeaconEntities.toTypedArray())
+            val bluetoothBeaconEntities = beacons.map { BluetoothBeaconEntity.fromBluetoothBeacon(reportId, reportTimestamp, it) }
+            db.bluetoothBeaconDao().insertAll(*bluetoothBeaconEntities.toTypedArray())
 
-        Timber.i("Inserted report with ${wifiAccessPointEntities.size} Wi-Fi access points, ${cellTowerEntities.size} cell towers and ${bluetoothBeaconEntities.size} Bluetooth beacons to DB")
+            Timber.i("Inserted report with ${wifiAccessPointEntities.size} Wi-Fi access points, ${cellTowerEntities.size} cell towers and ${bluetoothBeaconEntities.size} Bluetooth beacons to DB")
+        }
     }
 }

@@ -42,7 +42,7 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
 
     private val application = applicationContext as StumblerApplication
 
-    private val db = application.reportDb
+    private val db = application.reportDb.value
 
     private suspend fun getGeosubmitApi(): Geosubmit {
         val geosubmitParams = getGeosubmitParams()

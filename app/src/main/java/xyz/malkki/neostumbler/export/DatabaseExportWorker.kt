@@ -52,7 +52,7 @@ class DatabaseExportWorker(appContext: Context, private val params: WorkerParame
         val tempFile = createTempFile(applicationContext.cacheDir.toPath(), "export", "db")
 
         try {
-            val reportDb = (applicationContext as StumblerApplication).reportDb
+            val reportDb = (applicationContext as StumblerApplication).reportDb.value
 
             reportDb.openHelper.writableDatabase.copyTo(tempFile)
 

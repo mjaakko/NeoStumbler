@@ -30,7 +30,7 @@ class CsvExporter(private val application: StumblerApplication) {
         private const val CELLS_FILE_NAME = "cells.csv"
     }
 
-    private val exportDao = application.reportDb.exportDao()
+    private val exportDao = application.reportDb.value.exportDao()
 
     private val decimalFormat = DecimalFormat("0", DecimalFormatSymbols(Locale.ROOT)).apply {
         roundingMode = RoundingMode.HALF_UP

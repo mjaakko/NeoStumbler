@@ -25,7 +25,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -42,6 +41,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import xyz.malkki.neostumbler.MainActivity
@@ -92,9 +92,9 @@ fun ReportsScreen() {
 private fun ReportStats(reportsViewModel: ReportsViewModel = viewModel()) {
     val context = LocalContext.current
 
-    val reportsTotal = reportsViewModel.reportsTotal.observeAsState()
-    val reportsNotUploaded = reportsViewModel.reportsNotUploaded.observeAsState()
-    val reportsLastUploaded = reportsViewModel.lastUpload.observeAsState()
+    val reportsTotal = reportsViewModel.reportsTotal.collectAsStateWithLifecycle(null)
+    val reportsNotUploaded = reportsViewModel.reportsNotUploaded.collectAsStateWithLifecycle(null)
+    val reportsLastUploaded = reportsViewModel.lastUpload.collectAsStateWithLifecycle(null)
 
     val lastUploadedText = reportsLastUploaded.value?.let {
         val millis = it.toEpochMilli()
@@ -277,7 +277,7 @@ fun ForegroundScanningButton() {
 
 @Composable
 private fun Reports(reportsViewModel: ReportsViewModel = viewModel()) {
-    val reports = reportsViewModel.reports.observeAsState(initial = emptyList())
+    val reports = reportsViewModel.reports.collectAsStateWithLifecycle(emptyList())
 
     val context = LocalContext.current
     val geocoder = remember {

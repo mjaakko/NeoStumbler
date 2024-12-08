@@ -1,6 +1,8 @@
 package xyz.malkki.neostumbler.ui.composables
 
 import android.text.format.Formatter
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -8,7 +10,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -17,19 +19,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.map
 import androidx.room.invalidationTrackerFlow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.db.ReportDatabase
+import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.extensions.getEstimatedSize
 import xyz.malkki.neostumbler.extensions.getTableNames
 import xyz.malkki.neostumbler.extensions.showToast
@@ -37,6 +41,9 @@ import xyz.malkki.neostumbler.ui.composables.export.ExportCsvButton
 import xyz.malkki.neostumbler.ui.composables.export.ExportDatabaseButton
 import java.time.LocalDate
 import java.time.ZoneOffset
+import kotlin.io.path.createTempFile
+import kotlin.io.path.deleteIfExists
+import kotlin.io.path.outputStream
 
 private fun ReportDatabase.dbSizeFlow(): Flow<Long> = channelFlow {
     val tableNames = openHelper.readableDatabase.getTableNames()
@@ -48,7 +55,7 @@ private fun ReportDatabase.dbSizeFlow(): Flow<Long> = channelFlow {
         .collect(::send)
 }
 
-private fun ReportDatabase.selectableDates(): LiveData<Set<LocalDate>> {
+private fun ReportDatabase.selectableDates(): Flow<Set<LocalDate>> {
     return reportDao()
         .getReportDates()
         .map { it.toSet() }
@@ -59,7 +66,7 @@ fun ManageStorage() {
     val context = LocalContext.current
     val reportDb = (context.applicationContext as StumblerApplication).reportDb
 
-    val dbSize = reportDb.dbSizeFlow().collectAsStateWithLifecycle(initialValue = null)
+    val dbSize = reportDb.flatMapLatest { it.dbSizeFlow() }.collectAsState(null)
 
     val dbSizeFormatted = dbSize.value?.let { Formatter.formatShortFileSize(context, it) } ?: "..."
 
@@ -94,11 +101,22 @@ fun ManageStorage() {
 
             ExportDatabaseButton()
         }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Column {
+            Text(
+                text = stringResource(id = R.string.import_data),
+                style = MaterialTheme.typography.titleSmall
+            )
+
+            ImportDb()
+        }
     }
 }
 
 @Composable
-private fun DeleteReportsByDate(reportDb: ReportDatabase) {
+private fun DeleteReportsByDate(reportDb: StateFlow<ReportDatabase>) {
     val context = LocalContext.current
 
     val coroutineScope = rememberCoroutineScope()
@@ -107,7 +125,9 @@ private fun DeleteReportsByDate(reportDb: ReportDatabase) {
         mutableStateOf(false)
     }
 
-    val selectableDates = reportDb.selectableDates().observeAsState(initial = null)
+    val selectableDates = reportDb
+        .flatMapLatest { it.selectableDates() }
+        .collectAsStateWithLifecycle(initialValue = null)
 
     if (showDatePicker.value) {
         DateRangePickerDialog(
@@ -122,7 +142,7 @@ private fun DeleteReportsByDate(reportDb: ReportDatabase) {
                     val to = dateRange.endInclusive.plusDays(1).atStartOfDay().atOffset(ZoneOffset.UTC).toInstant()
 
                     coroutineScope.launch {
-                        val deletedCount = reportDb.reportDao().deleteFromTimeRange(from, to)
+                        val deletedCount = reportDb.value.reportDao().deleteFromTimeRange(from, to)
 
                         context.showToast(ContextCompat.getString(context, R.string.toast_deleted_reports).format(deletedCount))
                     }
@@ -141,7 +161,7 @@ private fun DeleteReportsByDate(reportDb: ReportDatabase) {
 }
 
 @Composable
-private fun DeleteAllReportsButton(reportDb: ReportDatabase) {
+private fun DeleteAllReportsButton(reportDb: StateFlow<ReportDatabase>) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
@@ -158,7 +178,7 @@ private fun DeleteAllReportsButton(reportDb: ReportDatabase) {
 
                 coroutineScope.launch {
                     withContext(Dispatchers.IO) {
-                        reportDb.clearAllTables()
+                        reportDb.value.clearAllTables()
                     }
 
                     context.showToast(ContextCompat.getString(context, R.string.toast_deleted_all_reports))
@@ -176,5 +196,83 @@ private fun DeleteAllReportsButton(reportDb: ReportDatabase) {
         }
     ) {
         Text(text = stringResource(id = R.string.delete_all_reports))
+    }
+}
+
+@Composable
+private fun ImportDb() {
+    val context = LocalContext.current
+    val coroutineContext = rememberCoroutineScope()
+
+    val confirmationDialogOpen = rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        if (uri == null) {
+            //No file was chosen
+            return@rememberLauncherForActivityResult
+        }
+
+        coroutineContext.launch {
+            val tempDbFile = createTempFile(context.cacheDir.toPath(), "temp", ".db")
+
+            try {
+                val inputStream = context.contentResolver.openInputStream(uri)
+                if (inputStream == null) {
+                    context.showToast(ContextCompat.getString(context, R.string.failed_to_open_selected_file))
+                    return@launch
+                }
+
+                withContext(Dispatchers.IO) {
+                    inputStream.use { input ->
+                        tempDbFile.outputStream().buffered().use { output ->
+                            input.copyTo(output)
+                        }
+                    }
+                }
+
+                if (ReportDatabaseManager.validateDatabase(context, tempDbFile)) {
+                    val app = context.applicationContext as StumblerApplication
+
+                    app.reportDatabaseManager.importDb(tempDbFile)
+
+                    val reportCount = app.reportDb.value.reportDao().getReportCount().first()
+                    context.showToast(ContextCompat.getString(context, R.string.import_database_successful).format(reportCount))
+                } else {
+                    context.showToast(ContextCompat.getString(context, R.string.import_database_not_valid))
+                }
+            } catch (_: Exception) {
+                context.showToast(ContextCompat.getString(context, R.string.failed_to_open_selected_file))
+            } finally {
+                tempDbFile.deleteIfExists()
+            }
+        }
+    }
+
+    if (confirmationDialogOpen.value) {
+        ConfirmationDialog(
+            title = stringResource(R.string.import_raw_database),
+            description = stringResource(R.string.import_raw_database_description),
+            positiveButtonText = stringResource(R.string.ok),
+            negativeButtonText = stringResource(R.string.cancel),
+            onPositiveAction = {
+                confirmationDialogOpen.value = false
+
+                //Specifying correct mime type seems to cause DB files to not be selectable in some cases -> use wildcard
+                launcher.launch("*/*")
+            },
+            onNegativeAction = {
+                confirmationDialogOpen.value = false
+            }
+        )
+    }
+
+    Button(
+        onClick = {
+            confirmationDialogOpen.value = true
+        }
+    ) {
+        Text(text = stringResource(id = R.string.import_raw_database))
     }
 }

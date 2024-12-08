@@ -57,7 +57,7 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
     private val mapBounds = Channel<Pair<LatLng, LatLng>>(capacity = Channel.Factory.CONFLATED)
 
     val latestReportPosition = liveData {
-        emit(db.positionDao().getLatestPosition())
+        emit(db.value.positionDao().getLatestPosition())
     }
 
     val heatMapTiles = mapBounds.receiveAsFlow()
@@ -66,15 +66,17 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
             val (minLat, minLon) = bounds.first
             val (maxLat, maxLon) = bounds.second
 
+            val dao = db.value.reportDao()
+
             if (minLon > maxLon) {
                 //Handle crossing the 180th meridian
-                val left = db.reportDao().getAllReportsWithLocationInsideBoundingBox(
+                val left = dao.getAllReportsWithLocationInsideBoundingBox(
                     minLatitude = minLat,
                     minLongitude = minLon,
                     maxLatitude = maxLat,
                     maxLongitude = 180.0
                 )
-                val right = db.reportDao().getAllReportsWithLocationInsideBoundingBox(
+                val right = dao.getAllReportsWithLocationInsideBoundingBox(
                     minLatitude = -180.0,
                     minLongitude = minLon,
                     maxLatitude = maxLat,
@@ -85,7 +87,7 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
                     listA + listB
                 }
             } else {
-                db.reportDao().getAllReportsWithLocationInsideBoundingBox(
+                dao.getAllReportsWithLocationInsideBoundingBox(
                     minLatitude = minLat,
                     minLongitude = minLon,
                     maxLatitude = maxLat,

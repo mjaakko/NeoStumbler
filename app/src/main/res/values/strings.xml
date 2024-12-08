@@ -19,6 +19,10 @@
 
     <string name="delete">Delete</string>
 
+    <string name="failed_to_open_selected_file">
+        Failed to open the selected file
+    </string>
+
     <string name="permissions_needed">Permissions needed</string>
     <string name="permissions_not_granted">Permissions that are required were not granted</string>
 
@@ -81,6 +85,16 @@
 
     <string name="export_csv">Export as CSV</string>
     <string name="export_raw_database">Export raw database</string>
+
+    <string name="import_data">Import data</string>
+
+    <string name="import_raw_database">Import raw database</string>
+    <string name="import_raw_database_description">
+        Importing a raw database will replace the existing database
+    </string>
+
+    <string name="import_database_not_valid">The selected file did not contain a valid database</string>
+    <string name="import_database_successful">Imported database with %d reports</string>
 
     <string name="reupload_data">Reupload data</string>
 
