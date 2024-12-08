@@ -16,6 +16,10 @@
 
     <string name="delete">Poista</string>
 
+    <string name="failed_to_open_selected_file">
+        Valitun tiedoston avaaminen ei onnistunut
+    </string>
+
     <string name="permissions_needed">Käyttölupia tarvitaan</string>
     <string name="permissions_not_granted">Jotain tarvittavista käyttöluvista ei annettu</string>
 
@@ -73,13 +77,22 @@
 
     <string name="notification_exporting_data">Viedään dataa…</string>
 
-    <string name="export_data">Vie datat</string>
+    <string name="export_data">Vie dataa</string>
 
     <string name="export_no_file_chosen">Datan vieminen ei onnistunut, koska tiedostoa ei valittu</string>
     <string name="export_started">Viedään datat ajanjaksolta %s - %s</string>
 
     <string name="export_csv">Vie CSV:nä</string>
     <string name="export_raw_database">Vie raaka tietokanta</string>
+
+    <string name="import_data">Tuo dataa</string>
+
+    <string name="import_raw_database">Tuo raaka tietokanta</string>
+    <string name="import_raw_database_description">
+        Raa\'an tietokannan tuominen korvaa käytössä olevan tietokannan
+    </string>
+
+    <string name="import_database_not_valid">Valitussa tiedostossa ei ollut eheää tietokantaa</string>
 
     <string name="reupload_data">Lähetä datat uudelleen</string>
 

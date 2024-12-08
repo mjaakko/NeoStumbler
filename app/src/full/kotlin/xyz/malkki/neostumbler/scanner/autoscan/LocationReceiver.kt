@@ -87,7 +87,7 @@ class LocationReceiver : BroadcastReceiver() {
 
     @SuppressLint("MissingPermission")
     private fun tryStartAutoscan(context: Context, currentLocation: Location) {
-        val reportDao = (context.applicationContext as StumblerApplication).reportDb.reportDao()
+        val reportDao = (context.applicationContext as StumblerApplication).reportDb.value.reportDao()
 
         val reportMinTimestamp = Instant.now().minus(Duration.ofDays(30))
         Timber.d("Querying reports newer than $reportMinTimestamp")

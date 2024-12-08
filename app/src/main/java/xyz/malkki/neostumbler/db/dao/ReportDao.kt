@@ -1,6 +1,5 @@
 package xyz.malkki.neostumbler.db.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -32,13 +31,13 @@ interface ReportDao {
     suspend fun deleteOlderThan(timestamp: Instant): Int
 
     @Query("SELECT COUNT(*) FROM Report")
-    fun getReportCount(): LiveData<Int>
+    fun getReportCount(): Flow<Int>
 
     @Query("SELECT COUNT(*) FROM Report WHERE uploaded = 0")
-    fun getReportCountNotUploaded(): LiveData<Int>
+    fun getReportCountNotUploaded(): Flow<Int>
 
     @Query("SELECT MAX(r.uploadTimestamp) AS timestamp FROM Report r WHERE r.uploaded = 1")
-    fun getLastUploadTime(): LiveData<Instant>
+    fun getLastUploadTime(): Flow<Instant?>
 
     @Transaction
     @Query(
@@ -61,7 +60,7 @@ interface ReportDao {
         ORDER BY r.timestamp DESC
     """
     )
-    fun getAllReportsWithStats(): LiveData<List<ReportWithStats>>
+    fun getAllReportsWithStats(): Flow<List<ReportWithStats>>
 
     @Transaction
     @Query("SELECT * FROM Report WHERE uploaded = 0")
@@ -97,5 +96,5 @@ interface ReportDao {
     ): Flow<List<ReportWithLocation>>
 
     @Query("SELECT DISTINCT DATE(ROUND(r.timestamp / 1000), 'unixepoch') FROM Report r")
-    fun getReportDates(): LiveData<List<LocalDate>>
+    fun getReportDates(): Flow<List<LocalDate>>
 }

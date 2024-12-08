@@ -5,20 +5,21 @@ import android.widget.Toast
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.map
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.extensions.showToast
@@ -29,9 +30,9 @@ import java.util.UUID
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
 
-private fun getSelectableDatesSet(context: Context): LiveData<Set<LocalDate>> {
-    return (context.applicationContext as StumblerApplication).reportDb.reportDao()
-        .getReportDates()
+private fun getSelectableDatesSet(context: Context): Flow<Set<LocalDate>> {
+    return (context.applicationContext as StumblerApplication).reportDb
+        .flatMapLatest { it.reportDao().getReportDates() }
         .map { it.toSet() }
 }
 
@@ -66,7 +67,7 @@ fun ReportReuploadButton() {
         }
     )
 
-    val selectableDates = getSelectableDatesSet(context).observeAsState()
+    val selectableDates = getSelectableDatesSet(context).collectAsStateWithLifecycle(null)
 
     val dialogOpen = rememberSaveable { mutableStateOf(false) }
 

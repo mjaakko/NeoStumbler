@@ -10,17 +10,21 @@ import com.patrykandpatrick.vico.core.entry.ChartEntry
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatrick.vico.core.entry.entryOf
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import xyz.malkki.neostumbler.StumblerApplication
+import xyz.malkki.neostumbler.db.dao.StatisticsDao
 import java.time.LocalDate
 import java.util.SortedMap
 
 class StatisticsViewModel(application: Application) : AndroidViewModel(application) {
-    private val statisticsDao = (application as StumblerApplication).reportDb.statisticsDao()
+    private val statisticsDao: Flow<StatisticsDao> = (application as StumblerApplication).reportDb.mapLatest { it.statisticsDao() }
 
     val wifiEntryModel = ChartEntryModelProducer(emptyList<ChartEntry>())
 
@@ -46,7 +50,10 @@ class StatisticsViewModel(application: Application) : AndroidViewModel(applicati
 
     init {
         viewModelScope.launch(Dispatchers.Default) {
-            statisticsDao.newWifisPerDay()
+            statisticsDao
+                .flatMapLatest {
+                    it.newWifisPerDay()
+                }
                 .distinctUntilChanged()
                 .map { cumulativeSum(it.toSortedMap()) }
                 .map {
@@ -59,7 +66,10 @@ class StatisticsViewModel(application: Application) : AndroidViewModel(applicati
         }
 
         viewModelScope.launch(Dispatchers.Default)  {
-            statisticsDao.newCellsPerDay()
+            statisticsDao
+                .flatMapLatest {
+                    it.newCellsPerDay()
+                }
                 .distinctUntilChanged()
                 .map { cumulativeSum(it.toSortedMap()) }
                 .map {
@@ -72,7 +82,10 @@ class StatisticsViewModel(application: Application) : AndroidViewModel(applicati
         }
 
         viewModelScope.launch(Dispatchers.Default)  {
-            statisticsDao.newBeaconsPerDay()
+            statisticsDao
+                .flatMapLatest {
+                    it.newBeaconsPerDay()
+                }
                 .distinctUntilChanged()
                 .map { cumulativeSum(it.toSortedMap()) }
                 .map {

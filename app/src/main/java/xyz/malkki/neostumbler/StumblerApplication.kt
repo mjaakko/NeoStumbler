@@ -8,7 +8,6 @@ import androidx.core.content.getSystemService
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import androidx.room.Room
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
@@ -19,6 +18,7 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.StateFlow
 import okhttp3.Call
 import org.altbeacon.beacon.AltBeaconParser
 import org.altbeacon.beacon.Beacon
@@ -29,18 +29,17 @@ import xyz.malkki.neostumbler.beacons.IBeaconParser
 import xyz.malkki.neostumbler.beacons.StubDistanceCalculator
 import xyz.malkki.neostumbler.db.DbPruneWorker
 import xyz.malkki.neostumbler.db.ReportDatabase
+import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.http.getCallFactory
 import java.time.Duration
 import kotlin.properties.Delegates
 
 @OptIn(DelicateCoroutinesApi::class)
 class StumblerApplication : Application() {
-    val reportDb by lazy {
-        Room.databaseBuilder(this,
-                ReportDatabase::class.java,
-                "report-db")
-            .build()
-    }
+    lateinit var reportDatabaseManager: ReportDatabaseManager
+
+    val reportDb: StateFlow<ReportDatabase>
+        get() = reportDatabaseManager.reportDb
 
     val httpClientProvider: Deferred<Call.Factory> = GlobalScope.async(start = CoroutineStart.LAZY) {
         getCallFactory(this@StumblerApplication)
@@ -58,6 +57,8 @@ class StumblerApplication : Application() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
+
+        reportDatabaseManager = ReportDatabaseManager(this)
 
         //Disable manifest checking, which seems to cause crashes on certain devices
         BeaconManager.setManifestCheckingDisabled(true)

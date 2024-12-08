@@ -33,7 +33,7 @@ class DbPruneWorker(appContext: Context, params: WorkerParameters) : CoroutineWo
     }
 
     override suspend fun doWork(): Result {
-        val db = (applicationContext as StumblerApplication).reportDb
+        val db = (applicationContext as StumblerApplication).reportDb.value
         val reportDao = db.reportDao()
 
         //By default delete reports older than 60 days
