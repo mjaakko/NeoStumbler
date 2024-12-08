@@ -6,9 +6,9 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.viewModelScope
-import com.patrykandpatrick.vico.core.entry.ChartEntry
-import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
-import com.patrykandpatrick.vico.core.entry.entryOf
+import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
+import com.patrykandpatrick.vico.core.common.data.ExtraStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -24,13 +24,17 @@ import java.time.LocalDate
 import java.util.SortedMap
 
 class StatisticsViewModel(application: Application) : AndroidViewModel(application) {
+    companion object {
+        val MAX_Y_VALUE_KEY = ExtraStore.Key<Long>()
+    }
+
     private val statisticsDao: Flow<StatisticsDao> = (application as StumblerApplication).reportDb.mapLatest { it.statisticsDao() }
 
-    val wifiEntryModel = ChartEntryModelProducer(emptyList<ChartEntry>())
+    val wifiEntryModel = CartesianChartModelProducer()
 
-    val cellEntryModel = ChartEntryModelProducer(emptyList<ChartEntry>())
+    val cellEntryModel = CartesianChartModelProducer()
 
-    val beaconEntryModel = ChartEntryModelProducer(emptyList<ChartEntry>())
+    val beaconEntryModel = CartesianChartModelProducer()
 
     private val wifisLoaded = MutableLiveData(false)
     private val cellsLoaded = MutableLiveData(false)
@@ -56,13 +60,28 @@ class StatisticsViewModel(application: Application) : AndroidViewModel(applicati
                 }
                 .distinctUntilChanged()
                 .map { cumulativeSum(it.toSortedMap()) }
-                .map {
-                    it.map { (date, count) ->
-                        entryOf(date.toEpochDay(), count)
+                .onEach { wifisLoaded.postValue(true) }
+                .collectLatest { entries ->
+                    val chartData = entries
+                        .map {
+                            it.key.toEpochDay() to it.value
+                        }
+
+                    if (chartData.isNotEmpty()) {
+                        wifiEntryModel.runTransaction {
+                            val x = chartData.map { it.first }
+                            val y = chartData.map { it.second }
+
+                            lineSeries {
+                                series(x = x, y = y)
+
+                                extras {
+                                    it[MAX_Y_VALUE_KEY] = y.max()
+                                }
+                            }
+                        }
                     }
                 }
-                .onEach { wifisLoaded.postValue(true) }
-                .collectLatest { entries -> wifiEntryModel.setEntries(entries) }
         }
 
         viewModelScope.launch(Dispatchers.Default)  {
@@ -72,13 +91,28 @@ class StatisticsViewModel(application: Application) : AndroidViewModel(applicati
                 }
                 .distinctUntilChanged()
                 .map { cumulativeSum(it.toSortedMap()) }
-                .map {
-                    it.map { (date, count) ->
-                        entryOf(date.toEpochDay(), count)
+                .onEach { cellsLoaded.postValue(true) }
+                .collectLatest { entries ->
+                    val chartData = entries
+                        .map {
+                            it.key.toEpochDay() to it.value
+                        }
+
+                    if (chartData.isNotEmpty()) {
+                        cellEntryModel.runTransaction {
+                            val x = chartData.map { it.first }
+                            val y = chartData.map { it.second }
+
+                            lineSeries {
+                                series(x = x, y = y)
+
+                                extras {
+                                    it[MAX_Y_VALUE_KEY] = y.max()
+                                }
+                            }
+                        }
                     }
                 }
-                .onEach { cellsLoaded.postValue(true) }
-                .collectLatest { entries -> cellEntryModel.setEntries(entries) }
         }
 
         viewModelScope.launch(Dispatchers.Default)  {
@@ -88,13 +122,28 @@ class StatisticsViewModel(application: Application) : AndroidViewModel(applicati
                 }
                 .distinctUntilChanged()
                 .map { cumulativeSum(it.toSortedMap()) }
-                .map {
-                    it.map { (date, count) ->
-                        entryOf(date.toEpochDay(), count)
+                .onEach { beaconsLoaded.postValue(true) }
+                .collectLatest { entries ->
+                    val chartData = entries
+                        .map {
+                            it.key.toEpochDay() to it.value
+                        }
+
+                    if (chartData.isNotEmpty()) {
+                        beaconEntryModel.runTransaction {
+                            val x = chartData.map { it.first }
+                            val y = chartData.map { it.second }
+
+                            lineSeries {
+                                series(x = x, y = y)
+
+                                extras {
+                                    it[MAX_Y_VALUE_KEY] = y.max()
+                                }
+                            }
+                        }
                     }
                 }
-                .onEach { beaconsLoaded.postValue(true) }
-                .collectLatest { entries -> beaconEntryModel.setEntries(entries) }
         }
     }
 

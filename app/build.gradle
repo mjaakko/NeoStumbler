@@ -228,7 +228,7 @@ dependencies {
 
     implementation 'org.apache.commons:commons-csv:1.12.0'
 
-    def vico_version = "1.15.0"
+    def vico_version = "2.0.0-beta.3"
     
     implementation "com.patrykandpatrick.vico:compose:$vico_version"
     implementation "com.patrykandpatrick.vico:compose-m3:$vico_version"

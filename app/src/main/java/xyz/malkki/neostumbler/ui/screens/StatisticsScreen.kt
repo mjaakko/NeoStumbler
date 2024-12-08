@@ -19,43 +19,53 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
-import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
-import com.patrykandpatrick.vico.compose.chart.Chart
-import com.patrykandpatrick.vico.compose.chart.line.lineChart
-import com.patrykandpatrick.vico.compose.chart.scroll.rememberChartScrollSpec
-import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
-import com.patrykandpatrick.vico.core.scroll.InitialScroll
+import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
+import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
+import com.patrykandpatrick.vico.compose.common.ProvideVicoTheme
+import com.patrykandpatrick.vico.compose.m3.common.rememberM3VicoTheme
+import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
+import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
+import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.extensions.defaultLocale
 import xyz.malkki.neostumbler.ui.viewmodel.StatisticsViewModel
-import xyz.malkki.neostumbler.utils.charts.MultiplesOfTenItemPlacer
-import xyz.malkki.neostumbler.utils.charts.TextLabelItemPlacer
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import kotlin.math.floor
+import kotlin.math.log10
+import kotlin.math.pow
 
 @Composable
-private fun StationsByDayChart(entryModel: ChartEntryModelProducer, title: String) {
+private fun StationsByDayChart(entryModel: CartesianChartModelProducer, title: String) {
     val dateFormatPattern = DateFormat.getBestDateTimePattern(LocalContext.current.defaultLocale, "d MMM")
     val dateFormat = DateTimeFormatter.ofPattern(dateFormatPattern)
 
     Text(title)
-    Chart(
-        chart = lineChart(),
-        chartModelProducer = entryModel,
-        startAxis = rememberStartAxis(
-            itemPlacer = remember { MultiplesOfTenItemPlacer() },
-            valueFormatter = { value, _ ->
-                value.toLong().toString()
-            }
+    CartesianChartHost(
+        chart = rememberCartesianChart(
+            rememberLineCartesianLayer(),
+            startAxis = VerticalAxis.rememberStart(
+                itemPlacer = remember {
+                    VerticalAxis.ItemPlacer.step(step = { extras ->
+                        val max = extras[StatisticsViewModel.MAX_Y_VALUE_KEY]
+
+                        10.0.pow(floor(log10(max.toDouble()))) / 10
+                    })
+                }
+            ),
+            bottomAxis = HorizontalAxis.rememberBottom(
+                valueFormatter = remember {
+                    CartesianValueFormatter { context, value, pos ->
+                        LocalDate.ofEpochDay(value.toLong()).format(dateFormat)
+                    }
+                }
+            ),
         ),
-        bottomAxis = rememberBottomAxis(
-            valueFormatter = { value, _ ->
-                LocalDate.ofEpochDay(value.toLong()).format(dateFormat)
-            },
-            itemPlacer = remember { TextLabelItemPlacer() }
-        ),
-        chartScrollSpec = rememberChartScrollSpec(initialScroll = InitialScroll.End),
+        modelProducer = entryModel,
         modifier = Modifier.height(320.dp)
     )
 }
@@ -72,12 +82,14 @@ fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = viewModel()) {
         }
     } else {
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-            StationsByDayChart(entryModel = statisticsViewModel.wifiEntryModel, title = stringResource(id = R.string.wifis))
-            Spacer(modifier = Modifier.height(16.dp))
-            StationsByDayChart(entryModel = statisticsViewModel.cellEntryModel, title = stringResource(id = R.string.cells))
-            Spacer(modifier = Modifier.height(16.dp))
-            StationsByDayChart(entryModel = statisticsViewModel.beaconEntryModel, title = stringResource(id = R.string.beacons))
-            Spacer(modifier = Modifier.height(16.dp))
+            ProvideVicoTheme(rememberM3VicoTheme()) {
+                StationsByDayChart(entryModel = statisticsViewModel.wifiEntryModel, title = stringResource(id = R.string.wifis))
+                Spacer(modifier = Modifier.height(16.dp))
+                StationsByDayChart(entryModel = statisticsViewModel.cellEntryModel, title = stringResource(id = R.string.cells))
+                Spacer(modifier = Modifier.height(16.dp))
+                StationsByDayChart(entryModel = statisticsViewModel.beaconEntryModel, title = stringResource(id = R.string.beacons))
+                Spacer(modifier = Modifier.height(16.dp))
+            }
         }
     }
 }
