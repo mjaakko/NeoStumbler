@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
@@ -24,7 +25,6 @@ import androidx.room.invalidationTrackerFlow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -45,20 +45,21 @@ import kotlin.io.path.createTempFile
 import kotlin.io.path.deleteIfExists
 import kotlin.io.path.outputStream
 
-private fun ReportDatabase.dbSizeFlow(): Flow<Long> = channelFlow {
-    val tableNames = openHelper.readableDatabase.getTableNames()
+private fun Flow<ReportDatabase>.dbSizeFlow(): Flow<Long> = flatMapLatest { db ->
+    val tableNames = db.openHelper.readableDatabase.getTableNames()
 
-    invalidationTrackerFlow(*tableNames.toTypedArray(), emitInitialState = true)
+    db.invalidationTrackerFlow(*tableNames.toTypedArray(), emitInitialState = true)
         .map {
-            openHelper.readableDatabase.getEstimatedSize()
+            db.openHelper.readableDatabase.getEstimatedSize()
         }
-        .collect(::send)
 }
 
-private fun ReportDatabase.selectableDates(): Flow<Set<LocalDate>> {
-    return reportDao()
-        .getReportDates()
-        .map { it.toSet() }
+private fun Flow<ReportDatabase>.selectableDates(): Flow<Set<LocalDate>> {
+    return flatMapLatest { db ->
+        db.reportDao()
+            .getReportDates()
+            .map { it.toSet() }
+    }
 }
 
 @Composable
@@ -66,7 +67,7 @@ fun ManageStorage() {
     val context = LocalContext.current
     val reportDb = (context.applicationContext as StumblerApplication).reportDb
 
-    val dbSize = reportDb.flatMapLatest { it.dbSizeFlow() }.collectAsState(null)
+    val dbSize = remember(reportDb) { reportDb.dbSizeFlow() }.collectAsState(null)
 
     val dbSizeFormatted = dbSize.value?.let { Formatter.formatShortFileSize(context, it) } ?: "..."
 
@@ -125,8 +126,7 @@ private fun DeleteReportsByDate(reportDb: StateFlow<ReportDatabase>) {
         mutableStateOf(false)
     }
 
-    val selectableDates = reportDb
-        .flatMapLatest { it.selectableDates() }
+    val selectableDates = remember(reportDb) { reportDb.selectableDates() }
         .collectAsStateWithLifecycle(initialValue = null)
 
     if (showDatePicker.value) {
