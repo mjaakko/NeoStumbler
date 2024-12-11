@@ -2,17 +2,17 @@ package xyz.malkki.neostumbler.ui.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.viewModelScope
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
 import com.patrykandpatrick.vico.core.common.data.ExtraStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
@@ -20,55 +20,67 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.db.dao.StatisticsDao
+import xyz.malkki.neostumbler.ui.viewmodel.StatisticsViewModel.DataType
 import java.time.LocalDate
 import java.util.SortedMap
 
 class StatisticsViewModel(application: Application) : AndroidViewModel(application) {
+    enum class DataType {
+        WIFIS, CELLS, BEACONS
+    }
+
+    enum class State {
+        LOADING, LOADED, NO_DATA
+    }
+
     companion object {
         val MAX_Y_VALUE_KEY = ExtraStore.Key<Long>()
     }
 
     private val statisticsDao: Flow<StatisticsDao> = (application as StumblerApplication).reportDb.mapLatest { it.statisticsDao() }
 
-    val wifiEntryModel = CartesianChartModelProducer()
+    private val _selectedDataType = MutableStateFlow(DataType.WIFIS)
+    val selectedDataType: StateFlow<DataType>
+        get() = _selectedDataType.asStateFlow()
 
-    val cellEntryModel = CartesianChartModelProducer()
+    private val _loading = MutableStateFlow(State.LOADING)
+    val loading: StateFlow<State>
+        get() = _loading
 
-    val beaconEntryModel = CartesianChartModelProducer()
-
-    private val wifisLoaded = MutableLiveData(false)
-    private val cellsLoaded = MutableLiveData(false)
-    private val beaconsLoaded = MutableLiveData(false)
-
-    val dataLoaded = MediatorLiveData<Boolean>()
-        .apply {
-            val setDataLoaded = { _: Boolean ->
-                value = wifisLoaded.value == true && cellsLoaded.value == true && beaconsLoaded.value == true
-            }
-
-            addSource(wifisLoaded, setDataLoaded)
-            addSource(cellsLoaded, setDataLoaded)
-            addSource(beaconsLoaded, setDataLoaded)
-        }
-        .distinctUntilChanged()
+    val chartModelProducer = CartesianChartModelProducer()
 
     init {
         viewModelScope.launch(Dispatchers.Default) {
-            statisticsDao
-                .flatMapLatest {
-                    it.newWifisPerDay()
+            val dataTypeFlow = _selectedDataType
+                .onEach {
+                    _loading.value = State.LOADING
                 }
-                .distinctUntilChanged()
-                .map { cumulativeSum(it.toSortedMap()) }
-                .onEach { wifisLoaded.postValue(true) }
-                .collectLatest { entries ->
-                    val chartData = entries
+
+            statisticsDao
+                .combine(dataTypeFlow) { a, b -> a to b }
+                .flatMapLatest { (dao, dataType) ->
+                    when (dataType) {
+                        DataType.WIFIS -> dao.newWifisPerDay()
+                        DataType.CELLS -> dao.newCellsPerDay()
+                        DataType.BEACONS -> dao.newBeaconsPerDay()
+                    }
+                }
+                .map {
+                    cumulativeSum(it.toSortedMap())
                         .map {
                             it.key.toEpochDay() to it.value
                         }
-
-                    if (chartData.isNotEmpty()) {
-                        wifiEntryModel.runTransaction {
+                }
+                .onEach {
+                    _loading.value = if (it.isEmpty()) {
+                        State.NO_DATA
+                    } else {
+                        State.LOADED
+                    }
+                }
+                .collectLatest { chartData ->
+                    chartModelProducer.runTransaction {
+                        if (chartData.isNotEmpty()) {
                             val x = chartData.map { it.first }
                             val y = chartData.map { it.second }
 
@@ -82,69 +94,11 @@ class StatisticsViewModel(application: Application) : AndroidViewModel(applicati
                         }
                     }
                 }
-        }
+            }
+    }
 
-        viewModelScope.launch(Dispatchers.Default)  {
-            statisticsDao
-                .flatMapLatest {
-                    it.newCellsPerDay()
-                }
-                .distinctUntilChanged()
-                .map { cumulativeSum(it.toSortedMap()) }
-                .onEach { cellsLoaded.postValue(true) }
-                .collectLatest { entries ->
-                    val chartData = entries
-                        .map {
-                            it.key.toEpochDay() to it.value
-                        }
-
-                    if (chartData.isNotEmpty()) {
-                        cellEntryModel.runTransaction {
-                            val x = chartData.map { it.first }
-                            val y = chartData.map { it.second }
-
-                            lineSeries {
-                                series(x = x, y = y)
-
-                                extras {
-                                    it[MAX_Y_VALUE_KEY] = y.max()
-                                }
-                            }
-                        }
-                    }
-                }
-        }
-
-        viewModelScope.launch(Dispatchers.Default)  {
-            statisticsDao
-                .flatMapLatest {
-                    it.newBeaconsPerDay()
-                }
-                .distinctUntilChanged()
-                .map { cumulativeSum(it.toSortedMap()) }
-                .onEach { beaconsLoaded.postValue(true) }
-                .collectLatest { entries ->
-                    val chartData = entries
-                        .map {
-                            it.key.toEpochDay() to it.value
-                        }
-
-                    if (chartData.isNotEmpty()) {
-                        beaconEntryModel.runTransaction {
-                            val x = chartData.map { it.first }
-                            val y = chartData.map { it.second }
-
-                            lineSeries {
-                                series(x = x, y = y)
-
-                                extras {
-                                    it[MAX_Y_VALUE_KEY] = y.max()
-                                }
-                            }
-                        }
-                    }
-                }
-        }
+    fun setDataType(dataType: DataType) {
+        _selectedDataType.value = dataType
     }
 
     private fun cumulativeSum(data: SortedMap<LocalDate, Long>): Map<LocalDate, Long> {

@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
@@ -90,7 +91,7 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
     KeepScreenOn()
 
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize().padding(16.dp)
     ) {
         AndroidView(
             modifier = Modifier.fillMaxSize(),

@@ -16,6 +16,8 @@
 
     <string name="delete">Poista</string>
 
+    <string name="no_data">Ei tietoja</string>
+
     <string name="failed_to_open_selected_file">
         Valitun tiedoston avaaminen ei onnistunut
     </string>

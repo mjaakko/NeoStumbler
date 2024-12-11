@@ -75,7 +75,7 @@ import android.location.Geocoder as AndroidGeocoder
 fun ReportsScreen() {
     MLSWarningDialog()
 
-    Column {
+    Column(modifier = Modifier.padding(16.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             ForegroundScanningButton()
 

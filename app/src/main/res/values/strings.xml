@@ -19,6 +19,8 @@
 
     <string name="delete">Delete</string>
 
+    <string name="no_data">No data</string>
+
     <string name="failed_to_open_selected_file">
         Failed to open the selected file
     </string>
