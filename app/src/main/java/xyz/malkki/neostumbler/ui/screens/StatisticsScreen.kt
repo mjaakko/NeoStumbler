@@ -3,81 +3,146 @@ package xyz.malkki.neostumbler.ui.screens
 import android.text.format.DateFormat
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
-import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
-import com.patrykandpatrick.vico.compose.chart.Chart
-import com.patrykandpatrick.vico.compose.chart.line.lineChart
-import com.patrykandpatrick.vico.compose.chart.scroll.rememberChartScrollSpec
-import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
-import com.patrykandpatrick.vico.core.scroll.InitialScroll
+import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
+import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
+import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
+import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
+import com.patrykandpatrick.vico.compose.common.ProvideVicoTheme
+import com.patrykandpatrick.vico.compose.m3.common.rememberM3VicoTheme
+import com.patrykandpatrick.vico.core.cartesian.Scroll
+import com.patrykandpatrick.vico.core.cartesian.Zoom
+import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
+import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
+import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.extensions.defaultLocale
 import xyz.malkki.neostumbler.ui.viewmodel.StatisticsViewModel
-import xyz.malkki.neostumbler.utils.charts.MultiplesOfTenItemPlacer
-import xyz.malkki.neostumbler.utils.charts.TextLabelItemPlacer
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import kotlin.math.floor
+import kotlin.math.log10
+import kotlin.math.pow
 
 @Composable
-private fun StationsByDayChart(entryModel: ChartEntryModelProducer, title: String) {
-    val dateFormatPattern = DateFormat.getBestDateTimePattern(LocalContext.current.defaultLocale, "d MMM")
-    val dateFormat = DateTimeFormatter.ofPattern(dateFormatPattern)
+private fun StationsByDayChart(entryModel: CartesianChartModelProducer) {
+    val locale = LocalContext.current.defaultLocale
 
-    Text(title)
-    Chart(
-        chart = lineChart(),
-        chartModelProducer = entryModel,
-        startAxis = rememberStartAxis(
-            itemPlacer = remember { MultiplesOfTenItemPlacer() },
-            valueFormatter = { value, _ ->
-                value.toLong().toString()
-            }
+    val dateFormat = remember(locale) {
+        val pattern = DateFormat.getBestDateTimePattern(locale, "d MMM")
+
+        DateTimeFormatter.ofPattern(pattern)
+    }
+
+    CartesianChartHost(
+        modifier = Modifier
+            .padding(
+                start = 8.dp,
+                top = 8.dp,
+                bottom = 8.dp
+            )
+            .fillMaxSize(),
+        scrollState = rememberVicoScrollState(initialScroll = Scroll.Absolute.End),
+        zoomState = rememberVicoZoomState(initialZoom = remember { Zoom.min(Zoom.static(), Zoom.Content) }),
+        chart = rememberCartesianChart(
+            rememberLineCartesianLayer(),
+            startAxis = VerticalAxis.rememberStart(
+                itemPlacer = remember {
+                    VerticalAxis.ItemPlacer.step(step = { extras ->
+                        val max = extras[StatisticsViewModel.MAX_Y_VALUE_KEY]
+
+                        10.0.pow(floor(log10(max.toDouble()))) / 10
+                    })
+                }
+            ),
+            bottomAxis = HorizontalAxis.rememberBottom(
+                valueFormatter = remember {
+                    CartesianValueFormatter { context, value, pos ->
+                        LocalDate.ofEpochDay(value.toLong()).format(dateFormat)
+                    }
+                }
+            ),
         ),
-        bottomAxis = rememberBottomAxis(
-            valueFormatter = { value, _ ->
-                LocalDate.ofEpochDay(value.toLong()).format(dateFormat)
-            },
-            itemPlacer = remember { TextLabelItemPlacer() }
-        ),
-        chartScrollSpec = rememberChartScrollSpec(initialScroll = InitialScroll.End),
-        modifier = Modifier.height(320.dp)
+        modelProducer = entryModel
     )
 }
+
 @Composable
 fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = viewModel()) {
-    val dataLoaded = statisticsViewModel.dataLoaded.observeAsState(initial = false)
+    val selectedDataType = statisticsViewModel.selectedDataType.collectAsState(initial = StatisticsViewModel.DataType.WIFIS)
 
-    if (!dataLoaded.value) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+    val loading = statisticsViewModel.loading.collectAsState(initial = StatisticsViewModel.State.LOADING)
+
+    Column {
+        PrimaryTabRow(
+            selectedTabIndex = selectedDataType.value.ordinal
         ) {
-            CircularProgressIndicator()
+            StatisticsViewModel.DataType.entries.map { dataType ->
+                Tab(
+                    selected = selectedDataType.value == dataType,
+                    onClick = {
+                        statisticsViewModel.setDataType(dataType)
+                    },
+                    text = {
+                        Text(
+                            text = when (dataType) {
+                                StatisticsViewModel.DataType.WIFIS -> stringResource(id = R.string.wifis)
+                                StatisticsViewModel.DataType.CELLS -> stringResource(id = R.string.cells)
+                                StatisticsViewModel.DataType.BEACONS -> stringResource(id = R.string.beacons)
+                            },
+                            style = LocalTextStyle.current.copy(
+                                lineBreak = LineBreak.Heading
+                            )
+                        )
+                    }
+                )
+            }
         }
-    } else {
-        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-            StationsByDayChart(entryModel = statisticsViewModel.wifiEntryModel, title = stringResource(id = R.string.wifis))
-            Spacer(modifier = Modifier.height(16.dp))
-            StationsByDayChart(entryModel = statisticsViewModel.cellEntryModel, title = stringResource(id = R.string.cells))
-            Spacer(modifier = Modifier.height(16.dp))
-            StationsByDayChart(entryModel = statisticsViewModel.beaconEntryModel, title = stringResource(id = R.string.beacons))
-            Spacer(modifier = Modifier.height(16.dp))
+
+        ProvideVicoTheme(rememberM3VicoTheme()) {
+            when (loading.value) {
+                StatisticsViewModel.State.LOADING -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+                StatisticsViewModel.State.LOADED -> {
+                    StationsByDayChart(
+                        entryModel = statisticsViewModel.chartModelProducer
+                    )
+                }
+                StatisticsViewModel.State.NO_DATA -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(text = stringResource(id = R.string.no_data))
+                    }
+                }
+            }
         }
     }
 }
