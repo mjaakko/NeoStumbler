@@ -56,7 +56,11 @@ private fun StationsByDayChart(entryModel: CartesianChartModelProducer) {
 
     CartesianChartHost(
         modifier = Modifier
-            .padding(16.dp)
+            .padding(
+                start = 8.dp,
+                top = 8.dp,
+                bottom = 8.dp
+            )
             .fillMaxSize(),
         scrollState = rememberVicoScrollState(initialScroll = Scroll.Absolute.End),
         zoomState = rememberVicoZoomState(initialZoom = remember { Zoom.min(Zoom.static(), Zoom.Content) }),
