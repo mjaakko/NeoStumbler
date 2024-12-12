@@ -142,4 +142,5 @@
     <string name="import_raw_database_description">Importar um banco de dados bruto substituirá o banco de dados atual</string>
     <string name="import_database_not_valid">O arquivo selecionado não contém um banco de dados válido</string>
     <string name="import_database_successful">Banco de dados importado com %d relatórios</string>
+    <string name="no_data">Nenhum dado</string>
 </resources>
