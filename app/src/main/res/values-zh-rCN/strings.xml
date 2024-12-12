@@ -120,4 +120,10 @@
     <string name="contributors">贡献者们</string>
     <string name="update_translations_button">更新翻译</string>
     <string name="author_text">由 %1$s 和 %2$s 用 ❤️ 发电</string>
+    <string name="failed_to_open_selected_file">无法打开所选文件</string>
+    <string name="import_data">导入数据</string>
+    <string name="import_raw_database">导入新数据库</string>
+    <string name="import_raw_database_description">导入新数据库的会替换当前的</string>
+    <string name="import_database_not_valid">所选文件未包含有效数据库</string>
+    <string name="import_database_successful">已导入有 %d 份报告的数据库</string>
 </resources>
