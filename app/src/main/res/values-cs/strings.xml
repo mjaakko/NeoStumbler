@@ -128,4 +128,5 @@
     <string name="troubleshooting_accurate_location_available">Přesná pozice nalezena</string>
     <string name="troubleshooting_title">Odstraňování problémů</string>
     <string name="import_database_not_valid">Vybraný soubor neobsahuje platnou databázi</string>
+    <string name="no_data">Žádná data</string>
 </resources>
