@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -29,7 +30,7 @@ import xyz.malkki.neostumbler.ui.composables.settings.geosubmit.GeosubmitEndpoin
 
 @Composable
 fun SettingsScreen() {
-    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+    Column(modifier = Modifier.padding(16.dp).verticalScroll(rememberScrollState())) {
         SettingsGroup(
             title = stringResource(id = R.string.settings_group_reports)
         ) {
