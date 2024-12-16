@@ -37,6 +37,7 @@ import org.maplibre.android.location.LocationComponentActivationOptions
 import org.maplibre.android.maps.MapLibreMap
 import org.maplibre.android.maps.MapView
 import org.maplibre.android.maps.Style
+import org.maplibre.android.module.http.HttpRequestUtil
 import org.maplibre.android.plugins.annotation.FillManager
 import org.maplibre.android.plugins.annotation.FillOptions
 import xyz.malkki.neostumbler.R
@@ -66,6 +67,10 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
         mutableStateOf<FillManager?>(null)
     }
 
+    val httpClient = mapViewModel.httpClient.collectAsState(initial = null)
+
+    val mapStyle = mapViewModel.mapStyle.collectAsState(initial = null)
+
     val latestReportPosition = mapViewModel.latestReportPosition.collectAsState(initial = null)
 
     val heatMapTiles = mapViewModel.heatMapTiles.collectAsState(initial = emptyList())
@@ -94,103 +99,105 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        AndroidView(
-            modifier = Modifier.fillMaxSize(),
-            factory = { context ->
-                MapLibre.getInstance(context)
+        if (mapStyle.value != null && httpClient.value != null) {
+            AndroidView(
+                modifier = Modifier.fillMaxSize(),
+                factory = { context ->
+                    MapLibre.getInstance(context)
+                    HttpRequestUtil.setOkHttpClient(httpClient.value)
 
-                val mapView = LifecycleAwareMap(context)
-                mapView.getMapAsync { map ->
-                    val styleBuilder = Style.Builder()
-                        .fromJson(context.assets.open("style.json").use { it.readBytes().decodeToString() })
+                    val mapView = LifecycleAwareMap(context)
+                    mapView.getMapAsync { map ->
+                        val styleBuilder = Style.Builder()
+                            .fromJson(mapStyle.value!!)
 
-                    map.setStyle(styleBuilder)
+                        map.setStyle(styleBuilder)
 
-                    map.addOnMoveListener(object : MapLibreMap.OnMoveListener {
-                        override fun onMoveBegin(p0: MoveGestureDetector) {
-                            trackMyLocation.value = false
+                        map.addOnMoveListener(object : MapLibreMap.OnMoveListener {
+                            override fun onMoveBegin(p0: MoveGestureDetector) {
+                                trackMyLocation.value = false
+                            }
+
+                            override fun onMove(p0: MoveGestureDetector) {}
+
+                            override fun onMoveEnd(p0: MoveGestureDetector) {}
+                        })
+
+                        map.setMinZoomPreference(3.0)
+                        map.setMaxZoomPreference(16.0)
+
+                        map.uiSettings.isLogoEnabled = false
+                        map.uiSettings.isAttributionEnabled = false
+
+                        map.addOnCameraMoveListener(object : MapLibreMap.OnCameraMoveListener {
+                            override fun onCameraMove() {
+                                val mapCenter = xyz.malkki.neostumbler.common.LatLng(map.cameraPosition.target!!.latitude, map.cameraPosition.target!!.longitude)
+
+                                mapViewModel.setMapCenter(mapCenter)
+                                mapViewModel.setZoom(map.cameraPosition.zoom)
+
+                                mapViewModel.setMapBounds(
+                                    minLatitude = map.projection.visibleRegion.latLngBounds.latitudeSouth,
+                                    maxLatitude = map.projection.visibleRegion.latLngBounds.latitudeNorth,
+                                    minLongitude = map.projection.visibleRegion.latLngBounds.longitudeWest,
+                                    maxLongitude = map.projection.visibleRegion.latLngBounds.longitudeEast
+                                )
+                            }
+                        })
+
+                        map.locationComponent.activateLocationComponent(
+                            LocationComponentActivationOptions.builder(context, map.style!!)
+                                //Set location engine to null, because we provide locations by ourself
+                                .locationEngine(null)
+                                .useDefaultLocationEngine(false)
+                                .build()
+                        )
+                        @SuppressLint("MissingPermission")
+                        map.locationComponent.isLocationComponentEnabled = true
+
+                        fillManager.value = FillManager(mapView, map, map.style!!)
+                    }
+
+                    mapView
+                },
+                update = { mapView ->
+                    mapView.lifecycle = lifecycle
+
+                    mapView.getMapAsync { map ->
+                        if (map.cameraPosition.target == null || (map.cameraPosition.target?.latitude == 0.0 && map.cameraPosition.target?.longitude == 0.0)) {
+                            if (latestReportPosition.value != null) {
+                                map.cameraPosition = CameraPosition.Builder()
+                                    .target(latestReportPosition.value?.let { LatLng(it.latitude, it.longitude) })
+                                    .zoom(10.0)
+                                    .build()
+                            } else {
+                                map.cameraPosition = CameraPosition.Builder()
+                                    .target(LatLng(mapViewModel.mapCenter.value.latitude, mapViewModel.mapCenter.value.longitude))
+                                    .zoom(mapViewModel.zoom.value)
+                                    .build()
+                            }
                         }
 
-                        override fun onMove(p0: MoveGestureDetector) {}
+                        if (myLocation.value != null) {
+                            map.locationComponent.forceLocationUpdate(myLocation.value!!.location)
 
-                        override fun onMoveEnd(p0: MoveGestureDetector) {}
-                    })
-
-                    map.setMinZoomPreference(3.0)
-                    map.setMaxZoomPreference(16.0)
-
-                    map.uiSettings.isLogoEnabled = false
-                    map.uiSettings.isAttributionEnabled = false
-
-                    map.addOnCameraMoveListener(object : MapLibreMap.OnCameraMoveListener {
-                        override fun onCameraMove() {
-                            val mapCenter = xyz.malkki.neostumbler.common.LatLng(map.cameraPosition.target!!.latitude, map.cameraPosition.target!!.longitude)
-
-                            mapViewModel.setMapCenter(mapCenter)
-                            mapViewModel.setZoom(map.cameraPosition.zoom)
-
-                            mapViewModel.setMapBounds(
-                                minLatitude = map.projection.visibleRegion.latLngBounds.latitudeSouth,
-                                maxLatitude = map.projection.visibleRegion.latLngBounds.latitudeNorth,
-                                minLongitude = map.projection.visibleRegion.latLngBounds.longitudeWest,
-                                maxLongitude = map.projection.visibleRegion.latLngBounds.longitudeEast
-                            )
-                        }
-                    })
-
-                    map.locationComponent.activateLocationComponent(
-                        LocationComponentActivationOptions.builder(context, map.style!!)
-                            //Set location engine to null, because we provide locations by ourself
-                            .locationEngine(null)
-                            .useDefaultLocationEngine(false)
-                            .build()
-                    )
-                    @SuppressLint("MissingPermission")
-                    map.locationComponent.isLocationComponentEnabled = true
-
-                    fillManager.value = FillManager(mapView, map, map.style!!)
-                }
-                //TODO: set HTTP client for the map with HttpRequestUtil
-
-                mapView
-            },
-            update = { mapView ->
-                mapView.lifecycle = lifecycle
-
-                mapView.getMapAsync { map ->
-                    if (map.cameraPosition.target == null || (map.cameraPosition.target?.latitude == 0.0 && map.cameraPosition.target?.longitude == 0.0)) {
-                        if (latestReportPosition.value != null) {
-                            map.cameraPosition = CameraPosition.Builder()
-                                .target(latestReportPosition.value?.let { LatLng(it.latitude, it.longitude) })
-                                .zoom(10.0)
-                                .build()
-                        } else {
-                            map.cameraPosition = CameraPosition.Builder()
-                                .target(LatLng(mapViewModel.mapCenter.value.latitude, mapViewModel.mapCenter.value.longitude))
-                                .zoom(mapViewModel.zoom.value)
-                                .build()
+                            if (trackMyLocation.value) {
+                                map.cameraPosition = CameraPosition.Builder().target(LatLng(myLocation.value!!.location.latitude, myLocation.value!!.location.longitude)).build()
+                            }
                         }
                     }
 
-                    if (myLocation.value != null) {
-                        map.locationComponent.forceLocationUpdate(myLocation.value!!.location)
+                    fillManager.value?.let {
+                        it.deleteAll()
 
-                        if (trackMyLocation.value) {
-                            map.cameraPosition = CameraPosition.Builder().target(LatLng(myLocation.value!!.location.latitude, myLocation.value!!.location.longitude)).build()
-                        }
+                        it.create(createHeatMapFill(heatMapTiles.value))
                     }
+                },
+                onRelease = { view ->
+                    view.lifecycle = null
                 }
-
-                fillManager.value?.let {
-                    it.deleteAll()
-
-                    it.create(createHeatMapFill(heatMapTiles.value))
-                }
-            },
-            onRelease = { view ->
-                view.lifecycle = null
-            }
-        )
+            )
+        }
 
         Box(
             modifier = Modifier.fillMaxSize().padding(16.dp)

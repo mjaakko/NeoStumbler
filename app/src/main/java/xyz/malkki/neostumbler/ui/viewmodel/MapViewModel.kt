@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.trySendBlocking
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -23,6 +24,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
+import okhttp3.Call
 import org.geohex.geohex4j.GeoHex
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.common.LatLng
@@ -43,6 +46,18 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
     private val locationSource = LocationSourceProvider(getApplication()).getLocationSource()
 
     private val db = getApplication<StumblerApplication>().reportDb
+
+    private val _httpClient = MutableStateFlow<Call.Factory?>(null)
+    val httpClient: StateFlow<Call.Factory?>
+        get() = _httpClient.asStateFlow()
+
+    val mapStyle: Flow<String> = flow {
+            application.assets.open("style.json").use {
+                emit(it.readBytes().decodeToString())
+            }
+        }
+        .flowOn(Dispatchers.IO)
+        .shareIn(viewModelScope, started = SharingStarted.Eagerly, replay = 1)
 
     private val showMyLocation = MutableStateFlow(getApplication<StumblerApplication>().checkMissingPermissions(Manifest.permission.ACCESS_COARSE_LOCATION).isEmpty())
 
@@ -141,6 +156,13 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
                 emptyFlow()
             }
         }
+
+    init {
+        viewModelScope.launch {
+            val httpClient = (application as StumblerApplication).httpClientProvider.await()
+            _httpClient.value = httpClient
+        }
+    }
 
     fun setShowMyLocation(value: Boolean) {
         showMyLocation.value = value
