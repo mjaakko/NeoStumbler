@@ -34,6 +34,8 @@ import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.geometry.LatLng
 import org.maplibre.android.gestures.MoveGestureDetector
 import org.maplibre.android.location.LocationComponentActivationOptions
+import org.maplibre.android.location.LocationComponentConstants
+import org.maplibre.android.location.modes.RenderMode
 import org.maplibre.android.maps.MapLibreMap
 import org.maplibre.android.maps.MapView
 import org.maplibre.android.maps.Style
@@ -129,6 +131,8 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
                         map.uiSettings.isLogoEnabled = false
                         map.uiSettings.isAttributionEnabled = false
 
+                        map.uiSettings.isRotateGesturesEnabled = false
+
                         map.addOnCameraMoveListener(object : MapLibreMap.OnCameraMoveListener {
                             override fun onCameraMove() {
                                 val mapCenter = xyz.malkki.neostumbler.common.LatLng(map.cameraPosition.target!!.latitude, map.cameraPosition.target!!.longitude)
@@ -154,8 +158,9 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
                         )
                         @SuppressLint("MissingPermission")
                         map.locationComponent.isLocationComponentEnabled = true
+                        map.locationComponent.renderMode = RenderMode.COMPASS
 
-                        fillManager.value = FillManager(mapView, map, map.style!!)
+                        fillManager.value = FillManager(mapView, map, map.style!!, LocationComponentConstants.SHADOW_LAYER, null)
                     }
 
                     mapView
