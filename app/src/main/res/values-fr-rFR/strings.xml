@@ -144,4 +144,5 @@
     <string name="import_database_not_valid">Le fichier sélectionné ne contenait pas de base de données valide</string>
     <string name="import_raw_database">Importer une base de données brute</string>
     <string name="import_raw_database_description">Importer une base de données brute va remplacer celle existante</string>
+    <string name="no_data">Pas de données</string>
 </resources>
