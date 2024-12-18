@@ -30,7 +30,9 @@ object HttpUtils {
             BuildConfig.VERSION_CODE
         }
 
-        return "${context.resources.getString(R.string.app_name)}/${userAgentVersion}"
+        val appName = context.resources.getString(R.string.app_name).substringBefore(" (")
+
+        return "${appName}/${userAgentVersion}"
     }
 
     fun createOkHttpClient(context: Context): OkHttpClient {
