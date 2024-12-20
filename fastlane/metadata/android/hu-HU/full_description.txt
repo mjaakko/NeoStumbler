@@ -1,0 +1,1 @@
+<b>A NeoStumbler</b> egy alkalmazás a Wi-Fi hálózatok, mobil bázisállomások és Bluetooth jeladók helyének összegyűjtésére a Mozilla helymeghatározó szolgáltatásához
