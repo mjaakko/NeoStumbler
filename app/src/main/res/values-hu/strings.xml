@@ -103,7 +103,7 @@
     <string name="cancel">Mégsem</string>
     <string name="settings_group_reports">Eredmények</string>
     <string name="movement_detection_none_description">Folyamatos szkennelés akkor is, ha nem mozog</string>
-    <string name="movement_detection_significant_motion_description">Szünetelteti a szkennelést és a GPS-t, ha nem észlel jelentős mozgást. Kíméli az akkumulátort, de nem működik megbízhatóan egyes készülékeken.</string>
+    <string name="movement_detection_significant_motion_description">Szünetelteti a szkennelést és a GPS-t, ha nem észlel jelentős mozgást. Kíméli az akkumulátort, de nem működik megbízhatóan egyes készülékeken</string>
     <string name="permission_rationale_location_map">A pozíció megjelenítése a térképen jogosultságot igényel</string>
     <string name="permission_rationale_read_phone_state">A telefon állapotához való hozzáférés szükséges minden SIM kártya eléréséhez</string>
     <string name="notification_style_detailed_title">Részletes</string>
