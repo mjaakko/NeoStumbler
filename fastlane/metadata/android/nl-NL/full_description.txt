@@ -1,1 +1,1 @@
-<b>NeoStumbler</b> is een programma om locaties van WiFi-netwerken, mobiele telefoniemasten en Bluetooth bakens te verzamelen voor plaatsbepalingsdiensten die vergelijkbaar zijn met Mozilla Location Services
+<b>NeoStumbler</b> is een app om locaties van WiFi-netwerken, mobiele telefoniemasten en Bluetooth-bakens te verzamelen voor plaatsbepalingsdiensten die vergelijkbaar zijn met Mozilla Location Services
