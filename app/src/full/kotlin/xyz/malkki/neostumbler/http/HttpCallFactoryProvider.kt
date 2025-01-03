@@ -5,8 +5,10 @@ import com.google.android.gms.net.CronetProviderInstaller
 import com.google.net.cronet.okhttptransport.CronetCallFactory
 import kotlinx.coroutines.tasks.await
 import okhttp3.Call
+import org.chromium.net.CronetEngine
 import org.chromium.net.CronetProvider
 import timber.log.Timber
+import kotlin.io.path.createDirectories
 
 suspend fun getCallFactory(context: Context): Call.Factory {
     try {
@@ -27,6 +29,10 @@ suspend fun getCallFactory(context: Context): Call.Factory {
         return HttpUtils.createOkHttpClient(context)
     }
 
+    val cacheDir = context.cacheDir.toPath().resolve("cronet_cache").apply {
+        createDirectories()
+    }
+
     val userAgent = HttpUtils.getUserAgent(context)
 
     val cronetEngine = provider.createBuilder()
@@ -34,6 +40,8 @@ suspend fun getCallFactory(context: Context): Call.Factory {
         .enableHttp2(true)
         .enableQuic(true)
         .setUserAgent(userAgent)
+        .setStoragePath(cacheDir.toAbsolutePath().toString())
+        .enableHttpCache(CronetEngine.Builder.HTTP_CACHE_DISK, HttpUtils.CACHE_SIZE)
         .build()
 
     return CronetCallFactory.newBuilder(cronetEngine)

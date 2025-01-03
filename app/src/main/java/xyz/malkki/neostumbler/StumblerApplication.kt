@@ -32,6 +32,8 @@ import xyz.malkki.neostumbler.db.ReportDatabase
 import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.http.getCallFactory
 import java.time.Duration
+import kotlin.io.path.deleteRecursively
+import kotlin.io.path.exists
 import kotlin.properties.Delegates
 
 @OptIn(DelicateCoroutinesApi::class)
@@ -57,6 +59,8 @@ class StumblerApplication : Application() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
+
+        deleteOsmDroidFiles()
 
         reportDatabaseManager = ReportDatabaseManager(this)
 
@@ -157,6 +161,18 @@ class StumblerApplication : Application() {
             setBypassDnd(false)
         }
         notificationManager.createNotificationChannel(exportNotificationChannel)
+    }
+
+    /**
+     * Deletes files used by Osmdroid library (no longer used by NeoStumbler)
+     */
+    fun deleteOsmDroidFiles() {
+        val osmdroidDir = dataDir.toPath().resolve("files").resolve("osmdroid")
+
+        if (osmdroidDir.exists()) {
+            Timber.d("Deleting OsmDroid files")
+            osmdroidDir.deleteRecursively()
+        }
     }
 
     companion object {
