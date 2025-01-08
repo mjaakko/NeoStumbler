@@ -44,7 +44,7 @@ android {
         }
 
         //Configure supported languages here to avoid including incomplete translations in the releases
-        resourceConfigurations += ['en', 'cs', 'fi', 'fr-rFR', 'de-rDE', 'hu', 'it', 'nb-rNO', 'nl', 'pt', 'pt-rBR', 'zh-rCN']
+        resourceConfigurations += ['en', 'cs', 'fi', 'fr-rFR', 'de-rDE', 'hu', 'it', 'nb-rNO', 'nl', 'pt', 'pt-rBR', 'uk', 'zh-rCN']
 
         //Add supported locales to a build config field for the language picker UI
         buildConfigField("String", "SUPPORTED_LOCALES", "\"" + resourceConfigurations.join(",") + "\"")
