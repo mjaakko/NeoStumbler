@@ -35,8 +35,8 @@ android {
         applicationId "xyz.malkki.neostumbler"
         minSdk 29
         targetSdk 35
-        versionCode 20
-        versionName "1.4.2"
+        versionCode 21
+        versionName "1.4.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -44,7 +44,7 @@ android {
         }
 
         //Configure supported languages here to avoid including incomplete translations in the releases
-        resourceConfigurations += ['en', 'cs', 'fi', 'fr-rFR', 'de-rDE', 'it', 'nb-rNO', 'nl', 'pt', 'pt-rBR', 'zh-rCN']
+        resourceConfigurations += ['en', 'cs', 'fi', 'fr-rFR', 'de-rDE', 'hu', 'it', 'nb-rNO', 'nl', 'pt', 'pt-rBR', 'uk', 'zh-rCN']
 
         //Add supported locales to a build config field for the language picker UI
         buildConfigField("String", "SUPPORTED_LOCALES", "\"" + resourceConfigurations.join(",") + "\"")
@@ -173,7 +173,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_version"
 
 
-    implementation platform('androidx.compose:compose-bom:2024.11.00')
+    implementation platform('androidx.compose:compose-bom:2024.12.01')
     implementation 'androidx.compose.ui:ui'
     implementation 'androidx.compose.ui:ui-graphics'
     implementation 'androidx.compose.ui:ui-tooling-preview'
@@ -188,7 +188,7 @@ dependencies {
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
 
-    implementation platform('org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.9.0')
+    implementation platform('org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.10.1')
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8'
     fullImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services'

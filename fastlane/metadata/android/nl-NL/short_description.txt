@@ -1,1 +1,1 @@
-Programma om draadloze netwerken te verzamelen voor plaatsbepalingsdiensten
+App om draadloze netwerken te verzamelen voor plaatsbepalingsdiensten

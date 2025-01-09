@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="autoscan_failed_to_enable">Sikertelen az automatikus szkennelés engedélyezése</string>
+    <string name="permission_rationale_activity_recognition">A szkennelés automatikus elindításához hozzáférésre van szükség az aktuális tevékenységhez</string>
+    <string name="prefer_fused_location">Fúziós helyszolgáltatók előnyben részesítése</string>
+    <string name="autoscan_when_moving">Automatikus szkennelés mozgás közben</string>
+    <string name="permission_rationale_background_location_autoscan">Az automatikus szkennelés indításához engedélyezni kell a program háttérben való futását</string>
+</resources>

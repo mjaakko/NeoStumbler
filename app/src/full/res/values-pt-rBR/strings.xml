@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="prefer_fused_location">Preferir o provedor fundido de localização</string>
-    <string name="autoscan_when_moving">Escaneamento automático ao se mover</string>
-    <string name="autoscan_failed_to_enable">Falhou em ativar o escaneamento automático</string>
-    <string name="permission_rationale_background_location_autoscan">
-        Para começar o escaneamento automaticamente, é necessário a permissão de localização em segundo plano
-    </string>
-    <string name="permission_rationale_activity_recognition">
-        Para começar o escaneamento automaticamente, é necessário acesso à atividade atual
-    </string>
+    <string name="prefer_fused_location">Preferir fornecedor de localização unido</string>
+    <string name="autoscan_when_moving">Scan automático ao se mover</string>
+    <string name="autoscan_failed_to_enable">Falha ao ativar o scan automático</string>
+    <string name="permission_rationale_background_location_autoscan">Para começar o scan automaticamente, é necessário a permissão de localização em segundo plano</string>
+    <string name="permission_rationale_activity_recognition">Para começar o scan automaticamente, é necessário acesso à atividade atual</string>
 </resources>

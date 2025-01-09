@@ -128,4 +128,5 @@
     <string name="bug_report_button">Melde ein Fehler</string>
     <string name="update_translations_button">Aktualisiere Übersetzung</string>
     <string name="author_text">Mit ❤️ von %1$s und %2$s erstellt</string>
+    <string name="no_data">Keine Daten vorhanden</string>
 </resources>

@@ -55,7 +55,7 @@ fun SuggestedServicesDialog(onServiceSelected: (SuggestedService?) -> Unit) {
     }
 
     val selectedService = rememberSaveable {
-        mutableStateOf<SuggestedService?>(null)
+        mutableStateOf<Int?>(null)
     }
 
     LaunchedEffect(key1 = Unit) {
@@ -63,7 +63,7 @@ fun SuggestedServicesDialog(onServiceSelected: (SuggestedService?) -> Unit) {
             SuggestedService.getSuggestedServices(context)
         }.let {
             suggestedServices.addAll(it)
-            selectedService.value = it.first()
+            selectedService.value = 0
         }
     }
 
@@ -107,7 +107,7 @@ fun SuggestedServicesDialog(onServiceSelected: (SuggestedService?) -> Unit) {
                             }
                         ) {
                             TextField(
-                                value = selectedService.value!!.name,
+                                value = suggestedServices[selectedService.value!!].name,
                                 onValueChange = {},
                                 readOnly = true,
                                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded.value) },
@@ -120,13 +120,13 @@ fun SuggestedServicesDialog(onServiceSelected: (SuggestedService?) -> Unit) {
                                     expanded.value = false
                                 }
                             ) {
-                                suggestedServices.forEach { suggestedService ->
+                                suggestedServices.forEachIndexed { index, suggestedService ->
                                     DropdownMenuItem(
                                         text = {
                                             Text(text = suggestedService.name)
                                         },
                                         onClick = {
-                                            selectedService.value = suggestedService
+                                            selectedService.value = index
                                             expanded.value = false
                                         }
                                     )
@@ -137,7 +137,7 @@ fun SuggestedServicesDialog(onServiceSelected: (SuggestedService?) -> Unit) {
                         Spacer(modifier = Modifier.height(12.dp))
 
                         SuggestedServiceDetails(
-                            service = selectedService.value!!
+                            service = suggestedServices[selectedService.value!!]
                         )
                     }
                 }
@@ -157,7 +157,7 @@ fun SuggestedServicesDialog(onServiceSelected: (SuggestedService?) -> Unit) {
 
                     TextButton(
                         onClick = {
-                            onServiceSelected(selectedService.value)
+                            onServiceSelected(suggestedServices[selectedService.value!!])
                         }
                     ) {
                         Text(text = stringResource(id = R.string.use))

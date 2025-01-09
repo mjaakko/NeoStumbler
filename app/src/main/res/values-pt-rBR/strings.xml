@@ -8,12 +8,12 @@
     <string name="save">Salvar</string>
     <string name="stop">Parar</string>
     <string name="permissions_needed">Permissões necessárias</string>
-    <string name="permissions_not_granted">Permissões que eram necessárias não foram concedidas</string>
+    <string name="permissions_not_granted">Permissões que são necessárias não foram concedidas</string>
     <string name="wifi_icon_description">Ícone de Wi-Fi</string>
-    <string name="cell_tower_icon_description">Ícone de rede móvel</string>
-    <string name="bluetooth_icon_description">ícone de Bluetooth</string>
-    <string name="scanner_status_notification_channel_name">Estado do escaneamento</string>
-    <string name="wireless_scanning">Escaneamento de redes sem-fio</string>
+    <string name="cell_tower_icon_description">Ícone de torre de celular</string>
+    <string name="bluetooth_icon_description">Ícone de Bluetooth</string>
+    <string name="scanner_status_notification_channel_name">Status do scan</string>
+    <string name="wireless_scanning">Scan de redes sem-fio</string>
     <string name="map_tab_title">Mapa</string>
     <string name="reports_tab_title">Relatórios</string>
     <string name="statistics_tab_title">Estatísticas</string>
@@ -23,18 +23,18 @@
     <string name="reports_total">Total de relatórios: %s</string>
     <string name="reports_not_uploaded">Relatórios não enviados: %s</string>
     <string name="reports_last_uploaded">Último envio: %s</string>
-    <string name="start_scanning">Iniciar escaneamento</string>
-    <string name="stop_scanning">Parar escaneamento</string>
+    <string name="start_scanning">Iniciar scan</string>
+    <string name="stop_scanning">Parar scan</string>
     <string name="delete_report">Excluir relatório</string>
-    <string name="delete_report_confirmation">Tem certeza que deseja excluir o relatório?</string>
+    <string name="delete_report_confirmation">Você tem certeza que deseja excluir o relatório?</string>
     <string name="toast_reports_uploaded">%d relatórios enviados</string>
-    <string name="toast_reports_upload_failed">Falhou em enviar relatórios</string>
-    <string name="report_upload_notification_channel_name">Envios de relatórios</string>
+    <string name="toast_reports_upload_failed">Falha ao enviar relatórios</string>
+    <string name="report_upload_notification_channel_name">Envio de relatórios</string>
     <string name="notification_sending_reports">Enviando relatórios</string>
-    <string name="notification_wireless_scanning_title">Escaneamento de redes sem-fio ativo</string>
+    <string name="notification_wireless_scanning_title">Scan de redes sem-fio ativo</string>
     <string name="notification_wireless_scanning_content_reports_created">%d relatórios criados</string>
     <string name="ignore_battery_optimizations_title">Ignorar otimizações de bateria</string>
-    <string name="ignore_battery_optimizations_description">Para melhor resultados, as otimizações de bateria devem ser desativadas. O escaneamento de redes sem-fio e o acesso à localização é significativamente piorado quando a otimização de bateria está ativa e a tela está desligada</string>
+    <string name="ignore_battery_optimizations_description">Para resultados melhores, as otimizações de bateria devem ser desativadas. O scan de redes sem-fio e o acesso à localização é significativamente sufocado quando as otimizações de bateria estão ativas e a tela está desligada</string>
     <string name="battery_optimizations_not_disabled_warning">As otimizações de bateria não foram desativadas</string>
     <string name="send_reports_automatically">Enviar relatórios automaticamente</string>
     <string name="export_notification_channel_name">Exportação de dados</string>
@@ -42,68 +42,54 @@
     <string name="export_data">Exportar dados</string>
     <string name="export_no_file_chosen">Não foi possível exportar dados, pois nenhum arquivo foi criado</string>
     <string name="export_started">Exportando dados de %s para %s</string>
-    <string name="reupload_data">Enviar dados novamente</string>
+    <string name="reupload_data">Re-enviar dados</string>
     <string name="wifis">Redes Wi-Fi</string>
-    <string name="cells">Redes móveis</string>
+    <string name="cells">Redes de torres de celular</string>
     <string name="beacons">Beacons Bluetooth</string>
-    <string name="add_quick_settings_tile">Adicionar um bloco às configurações rápidas para iniciar o escaneamento facilmente?</string>
-    <string name="endpoint">Servidor</string>
+    <string name="add_quick_settings_tile">Adicionar bloco às configurações rápidas para iniciar o scan facilmente?</string>
+    <string name="endpoint">Serviço</string>
     <string name="path">Caminho</string>
-    <string name="api_key">Chave da API (opcional)</string>
+    <string name="api_key">Chave de API (opcional)</string>
     <string name="settings_ignore_wifi_scan_throttling">Ignorar limitações de busca por Wi-Fi</string>
     <string name="wifi_scan_throttling">Limitações de busca por Wi-Fi</string>
-    <string name="wifi_scan_throttling_explanation">
-        Você precisa desativar as limitações de busca por Wi-Fi nas configurações do seu dispositivo para usar esta função. Isto pode normalmente ser feito nas configurações de desenvolvedor
-    </string>
+    <string name="wifi_scan_throttling_explanation">Você precisa desativar as limitações de busca por Wi-Fi nas configurações do seu dispositivo para usar esta funcionalidade. Isto normalmente pode ser feito pelas opções de desenvolvedor</string>
     <string name="show_my_location">Mostrar minha localização</string>
-    <string name="permission_rationale_fine_location">
-        Para conseguir o acesso à localização atual é necessário a permissão de permissão precisa
-    </string>
-    <string name="permission_rationale_read_phone_state">
-        Acesso ao estado do telefone é necessário para o escaneamento de torres de redes móveis com todos os cartões SIMs no dispositivo
-    </string>
-    <string name="permission_rationale_bluetooth">
-        Para fazer o escaneamento de beacons Bluetooth, é necessária a permissão para Bluetooth
-    </string>
-    <string name="permission_rationale_post_notifications">
-        Para mostrar a notificação de estado, é necessária a permissão para notificações
-    </string>
-    <string name="permission_rationale_background_location_quick_settings">
-        Para começar o escaneamento pelas configurações rápidas, é necessário o acesso à localização em segundo plano
-    </string>
+    <string name="permission_rationale_fine_location">Para obter acesso à localização atual, é necessário a permissão de localização precisa</string>
+    <string name="permission_rationale_read_phone_state">Acesso ao status do telefone é necessário para o scan de torres de celular com todos os cartões SIMs no dispositivo</string>
+    <string name="permission_rationale_bluetooth">Para fazer o scan de beacons Bluetooth, é necessária a permissão de Bluetooth</string>
+    <string name="permission_rationale_post_notifications">Para mostrar a notificação de status, é necessária a permissão de notificações</string>
+    <string name="permission_rationale_background_location_quick_settings">Para começar o scan pelas configurações rápidas, é necessário acesso à localização em segundo plano</string>
     <string name="permission_rationale_location_map">
         Para mostrar sua localização no mapa, é necessário a permissão de localização
     </string>
     <string name="warning_icon_description">Ícone de alerta</string>
-    <string name="mls_warning_text">O serviço de localização da Mozilla (Mozilla Location Services) foi encerrado e não aceita mais novos dados. Você precisa mudar para outro serviço, dos quais temos sugestões nas configurações.
-\n
-\nOs dados também podem ser exportados como um pacote ZIP pelas configurações</string>
+    <string name="mls_warning_text">O serviço de localização da Mozilla (Mozilla Location Services) foi encerrado e não aceita mais novos envios. Você precisa mudar para outro serviço, dos quais temos sugestões nas configurações.\n\nOs dados também podem ser exportados como um pacote ZIP pelas configurações</string>
     <string name="mls_warning_title">O MLS foi encerrado</string>
     <string name="cancel">Cancelar</string>
     <string name="use">Usar</string>
     <string name="notification_wireless_scanning_content_satellite_stats">%1$d/%2$d satélites em uso</string>
     <string name="suggested_service_terms_of_use">Termos de uso</string>
     <string name="settings_group_reports">Relatórios</string>
-    <string name="settings_group_scanning">Escaneando</string>
+    <string name="settings_group_scanning">Scan</string>
     <string name="settings_group_other">Outros</string>
     <string name="movement_detection">Detecção de movimento</string>
-    <string name="movement_detection_none_title">Nenhum</string>
-    <string name="movement_detection_none_description">Continuar escaneamento mesmo ao parar de mover</string>
-    <string name="movement_detection_location_title">Baseado na localização</string>
-    <string name="movement_detection_location_description">Pausa o escaneamento quando a localização não muda. Mantém o GPS ativo</string>
+    <string name="movement_detection_none_title">Nenhuma</string>
+    <string name="movement_detection_none_description">Continuar o scan mesmo ao parar de mover</string>
+    <string name="movement_detection_location_title">Baseado em localização</string>
+    <string name="movement_detection_location_description">Pausa o scan quando a localização não muda. Mantém o GPS ativo</string>
     <string name="movement_detection_significant_motion_title">Sensor de movimento</string>
-    <string name="notification_style">Estilo de notificação</string>
+    <string name="notification_style">Estilo da notificação</string>
     <string name="notification_style_minimal_title">Mínimo</string>
     <string name="notification_style_minimal_description">Mostra a notificação com nenhum detalhe</string>
     <string name="notification_style_basic_title">Básico</string>
     <string name="notification_style_basic_description">Mostra o número de relatórios criados</string>
     <string name="notification_style_detailed_title">Detalhado</string>
     <string name="notification_style_detailed_description">Mostra o número de relatórios criados e o número de satélites GNSS</string>
-    <string name="unencrypted_endpoint_warning">Servidor não seguro</string>
+    <string name="unencrypted_endpoint_warning">Serviço não-criptografado</string>
     <string name="suggested_service_website">Site</string>
     <string name="suggested_service_hosted_by">Hospedado por:</string>
     <string name="suggested_services_title">Serviços sugeridos</string>
-    <string name="movement_detection_significant_motion_description">Pausa o escaneamento e o GPS quando nenhum movimento significante é detectado. Economiza bateria, mas pode não funcionar bem em certos dispositivos</string>
+    <string name="movement_detection_significant_motion_description">Pausa o scan e o GPS quando nenhum movimento significativo é detectado. Economiza bateria, mas pode não funcionar bem em alguns dispositivos</string>
     <string name="app_language">Idioma</string>
     <string name="use_dynamic_color_ui">Usar cores dinâmicas na interface</string>
     <string name="delete">Excluir</string>
@@ -112,20 +98,20 @@
     <string name="db_prune_one_month">Após um mês</string>
     <string name="db_prune_six_months">Após 6 meses</string>
     <string name="toast_deleted_all_reports">Todos os relatórios foram excluidos</string>
-    <string name="delete_reports_by_date">Excluir relatórios por data</string>
+    <string name="delete_reports_by_date">Excluir relatórios pela data</string>
     <string name="delete_all_reports">Excluir todos os relatórios</string>
-    <string name="delete_all_reports_confirmation">Tem certeza que deseja excluir todos os relatórios?</string>
+    <string name="delete_all_reports_confirmation">Você tem certeza que deseja excluir todos os relatórios?</string>
     <string name="toast_deleted_reports">%d relatórios foram excluídos</string>
     <string name="db_prune_never">Nunca</string>
     <string name="manage_storage_title">Gerenciar armazenamento</string>
     <string name="troubleshooting_title">Resolução de problemas</string>
-    <string name="troubleshooting_description">Consertar problemas comuns no escaneamento</string>
+    <string name="troubleshooting_description">Resolva problemas comuns no scan</string>
     <string name="troubleshooting_permissions_granted">Permissões concedidas</string>
     <string name="troubleshooting_battery_optimizations_disabled">Otimizações de bateria desativadas</string>
-    <string name="troubleshooting_fix">Consertar</string>
+    <string name="troubleshooting_fix">Resolver</string>
     <string name="troubleshooting_accurate_location_available">Localização precisa disponível</string>
     <string name="db_size">Tamanho do banco de dados: %s</string>
-    <string name="troubleshooting_wifi_scan_always_available">Escaneamento Wi-Fi sempre disponível</string>
+    <string name="troubleshooting_wifi_scan_always_available">Scan de Wi-Fi sempre disponível</string>
     <string name="about_app">Sobre o NeoStumbler</string>
     <string name="app_version">Versão: %s</string>
     <string name="app_variant">Variante: %s</string>
@@ -139,8 +125,8 @@
     <string name="failed_to_open_selected_file">Falha ao abrir o arquivo selecionado</string>
     <string name="import_data">Importar dados</string>
     <string name="import_raw_database">Importar banco de dados bruto</string>
-    <string name="import_raw_database_description">Importar um banco de dados bruto substituirá o banco de dados atual</string>
+    <string name="import_raw_database_description">Ao importar um banco de dados bruto, o atual será substituído</string>
     <string name="import_database_not_valid">O arquivo selecionado não contém um banco de dados válido</string>
-    <string name="import_database_successful">Banco de dados importado com %d relatórios</string>
-    <string name="no_data">Nenhum dado</string>
+    <string name="import_database_successful">O banco de dados foi importado com %d relatórios</string>
+    <string name="no_data">Sem dados</string>
 </resources>
