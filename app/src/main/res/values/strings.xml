@@ -131,6 +131,11 @@
     <string name="settings_group_scanning">Scanning</string>
     <string name="settings_group_other">Other</string>
 
+    <string name="wifi_scan_distance">Wi-Fi scan distance</string>
+    <string name="cell_tower_scan_distance">Cell tower scan distance</string>
+
+    <string name="every_x_meters">Every %d meters</string>
+
     <string name="movement_detection">Movement detection</string>
 
     <string name="movement_detection_none_title">None</string>
@@ -145,9 +150,6 @@
     <string name="movement_detection_significant_motion_description">
         Pauses scanning and GPS when no significant motion is detected. Saves battery, but does not work reliably on some devices
     </string>
-
-    <string name="dynamic_scan_frequency_title">Dynamic scan frequency</string>
-    <string name="dynamic_scan_frequency_description">Adjust scan frequency dynamically based on currecnt speed</string>
 
     <string name="notification_style">Notification style</string>
 

@@ -27,6 +27,7 @@ import androidx.core.content.getSystemService
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.intPreferencesKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -83,17 +84,11 @@ class ScannerService : Service() {
         //Try to get new locations every 5 seconds
         private val LOCATION_INTERVAL = 5.seconds
 
-        private val CELL_SCAN_INTERVAL = 10.seconds
+        //By default, try to scan Wi-Fis every 50 meters
+        const val DEFAULT_WIFI_SCAN_DISTANCE: Int = 50
 
-        private val WIFI_SCAN_INTERVAL_THROTTLED = 30.seconds
-
-        private val WIFI_SCAN_INTERVAL_UNTHROTTLED = 10.seconds
-
-        //Try to scan Wi-Fis every 50 meters (when using dynamic scan frequency)
-        private const val WIFI_SCAN_DISTANCE = 50.0
-
-        //Try to scan cells every 150 meters (when using dynamic scan frequency)
-        private const val CELL_SCAN_DISTANCE = 150.0
+        //By default, try to scan cells every 120 meters
+        const val DEFAULT_CELL_SCAN_DISTANCE: Int = 120
 
         fun startIntent(context: Context, autostart: Boolean = false): Intent {
             return Intent(context, ScannerService::class.java).apply {
@@ -181,6 +176,20 @@ class ScannerService : Service() {
             }
             .first()
 
+        val wifiScanDistance = settingsStore.data
+            .map { prefs ->
+                prefs[intPreferencesKey(PreferenceKeys.WIFI_SCAN_DISTANCE)] ?: DEFAULT_WIFI_SCAN_DISTANCE
+            }
+            .first()
+
+        val cellScanDistance = settingsStore.data
+            .map { prefs ->
+                prefs[intPreferencesKey(PreferenceKeys.CELL_SCAN_DISTANCE)] ?: DEFAULT_CELL_SCAN_DISTANCE
+            }
+            .first()
+
+        Timber.d("Scan distances: ${wifiScanDistance}m - Wi-Fis, ${cellScanDistance}m - cell towers")
+
         val sensorManager = this@ScannerService.getSystemService<SensorManager>()!!
 
         val gpsActiveChannel = MutableStateFlow(value = false)
@@ -227,16 +236,6 @@ class ScannerService : Service() {
 
         val wifiAccessPointSource = WifiManagerWifiAccessPointSource(this@ScannerService, wifiScanThrottled = wifiScanThrottled)
 
-        val dynamicScanIntervalPreference = settingsStore.data
-            .map { it[booleanPreferencesKey(PreferenceKeys.DYNAMIC_SCAN_FREQUENCY)] }
-            .first() != false
-
-        val wifiScanInterval = if (wifiScanThrottled) {
-            WIFI_SCAN_INTERVAL_THROTTLED
-        } else {
-            WIFI_SCAN_INTERVAL_UNTHROTTLED
-        }
-
         val bluetoothBeaconSource = getBluetoothBeaconSource()
 
         val movementDetectorType = settingsStore.data
@@ -274,11 +273,7 @@ class ScannerService : Service() {
                     locationFlow
                 },
                 cellInfoSource = {
-                    val scanFrequencyFlow = if (dynamicScanIntervalPreference) {
-                        speedFlow.map { speed -> (CELL_SCAN_DISTANCE / speed).seconds }
-                    } else {
-                        flowOf(CELL_SCAN_INTERVAL)
-                    }
+                    val scanFrequencyFlow = speedFlow.map { speed -> (cellScanDistance.toDouble() / speed).seconds }
 
                     cellInfoSource.getCellInfoFlow(scanFrequencyFlow)
                 },
@@ -286,11 +281,7 @@ class ScannerService : Service() {
                     bluetoothBeaconSource.getBluetoothBeaconFlow()
                 },
                 wifiAccessPointSource = {
-                    val scanFrequencyFlow = if (dynamicScanIntervalPreference) {
-                        speedFlow.map { speed -> (WIFI_SCAN_DISTANCE / speed).seconds }
-                    } else {
-                        flowOf(wifiScanInterval)
-                    }
+                    val scanFrequencyFlow = speedFlow.map { speed -> (wifiScanDistance.toDouble() / speed).seconds }
 
                     wifiAccessPointSource.getWifiAccessPointFlow(scanFrequencyFlow)
                 },

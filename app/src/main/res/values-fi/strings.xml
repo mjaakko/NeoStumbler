@@ -131,6 +131,11 @@
         Wi-Fi -skannauksen rajoitukset täytyy poistaa laitteen asetuksista tätä ominaisuutta varten. Tämän voi yleensä tehdä kehittäjän asetuksista
     </string>
 
+    <string name="wifi_scan_distance">Wi-Fi -skannausten etäisyys</string>
+    <string name="cell_tower_scan_distance">Puhelinmastojen skannausten etäisyys</string>
+
+    <string name="every_x_meters">Joka %d. metri</string>
+
     <string name="movement_detection">Liikkeen tunnistus</string>
 
     <string name="movement_detection_none_title">Ei käytössä</string>
@@ -145,9 +150,6 @@
     <string name="movement_detection_significant_motion_description">
         Pysäyttää skannaamisen ja GPS:n, kun laitteen liiketunnistimesta ei havaita liikettä. Säästää akkua, mutta ei toimi luotettavasti joillain laitteilla
     </string>
-
-    <string name="dynamic_scan_frequency_title">Dynaaminen skannaustiheys</string>
-    <string name="dynamic_scan_frequency_description">Säädä skannauksen tiheyttä nopeuden mukaan</string>
 
     <string name="notification_style">Ilmoituksen tyyli</string>
 
