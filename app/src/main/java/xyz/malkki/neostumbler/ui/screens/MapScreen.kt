@@ -122,7 +122,7 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
                         })
 
                         map.setMinZoomPreference(3.0)
-                        map.setMaxZoomPreference(16.0)
+                        map.setMaxZoomPreference(15.0)
 
                         val attributionMargin = density.run { 8.dp.roundToPx() }
 
