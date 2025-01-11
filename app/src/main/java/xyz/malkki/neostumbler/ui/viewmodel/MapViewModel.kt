@@ -114,9 +114,9 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
         .combine(
             flow = zoom
                 .map { zoom ->
-                    if (zoom >= 13.5) {
+                    if (zoom >= 13) {
                         GEOHEX_RESOLUTION_HIGH
-                    } else if (zoom >= 11.5) {
+                    } else if (zoom >= 11) {
                         GEOHEX_RESOLUTION_MEDIUM
                     } else {
                         GEOHEX_RESOLUTION_LOW
