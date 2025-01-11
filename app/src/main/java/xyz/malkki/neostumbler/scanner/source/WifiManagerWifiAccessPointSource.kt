@@ -24,6 +24,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import xyz.malkki.neostumbler.domain.WifiAccessPoint
+import xyz.malkki.neostumbler.extensions.buffer
 import xyz.malkki.neostumbler.utils.ImmediateExecutor
 import xyz.malkki.neostumbler.utils.RateLimiter
 import xyz.malkki.neostumbler.utils.broadcastReceiverFlow
@@ -38,13 +39,15 @@ private const val ANDROID_WIFI_SCAN_THROTTLE_COUNT = 4
 
 private val MAX_INTERVAL = 1.minutes
 
-//Minimum scan interval that can be used when Wi-Fi scan throttling is active
-//This is slightly lower than the throttle period divided by the throttle count to allow for scan bursts
-private val MIN_INTERVAL_THROTTLED = 20.seconds
+// Minimum scan interval that can be used when Wi-Fi scan throttling is active.
+// This is slightly lower than the throttle period divided by number of scans to allow for bursts
+private val MIN_INTERVAL_THROTTLED: Duration = (ANDROID_WIFI_SCAN_THROTTLE_PERIOD / ANDROID_WIFI_SCAN_THROTTLE_COUNT) * 0.75
 
-//Minimum scan interval when WI-Fi scanning is not throttled.
-//This should result in enough Wi-Fi scans being made even when in a fast moving car etc.
-private val MIN_INTERVAL_UNTHROTTLED = 3.seconds
+// Minimum scan interval when WI-Fi scanning is not throttled
+private val MIN_INTERVAL_UNTHROTTLED = 2.5.seconds
+
+// Buffer scan results because sometimes multiple scan results are received in a short succession
+private val WIFI_BUFFER_WINDOW = 5.seconds
 
 class WifiManagerWifiAccessPointSource(
     context: Context,
@@ -110,6 +113,17 @@ class WifiManagerWifiAccessPointSource(
                 scanResults.map { scanResult ->
                     WifiAccessPoint.fromScanResult(scanResult)
                 }
+            }
+            .buffer(WIFI_BUFFER_WINDOW)
+            .map { wifis ->
+                wifis
+                    .flatten()
+                    .groupingBy { it.macAddress }
+                    .reduce { _, a, b ->
+                        maxOf(a, b, Comparator.comparingLong(WifiAccessPoint::timestamp))
+                    }
+                    .values
+                    .toList()
             }
             .collect(::send)
     }
