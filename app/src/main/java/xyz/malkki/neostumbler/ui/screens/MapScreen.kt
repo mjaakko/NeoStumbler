@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -18,10 +17,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.graphics.ColorUtils
 import androidx.lifecycle.Lifecycle
@@ -56,6 +55,8 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
     val context = LocalContext.current
 
     val lifecycle = LocalLifecycleOwner.current.lifecycle
+
+    val density = LocalDensity.current
 
     val showPermissionDialog = rememberSaveable {
         mutableStateOf(false)
@@ -110,11 +111,6 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
 
                     val mapView = LifecycleAwareMap(context)
                     mapView.getMapAsync { map ->
-                        val styleBuilder = Style.Builder()
-                            .fromJson(mapStyle.value!!)
-
-                        map.setStyle(styleBuilder)
-
                         map.addOnMoveListener(object : MapLibreMap.OnMoveListener {
                             override fun onMoveBegin(p0: MoveGestureDetector) {
                                 trackMyLocation.value = false
@@ -128,8 +124,11 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
                         map.setMinZoomPreference(3.0)
                         map.setMaxZoomPreference(16.0)
 
+                        val attributionMargin = density.run { 8.dp.roundToPx() }
+
                         map.uiSettings.isLogoEnabled = false
-                        map.uiSettings.isAttributionEnabled = false
+                        map.uiSettings.setAttributionMargins(attributionMargin, 0, 0, attributionMargin)
+                        map.uiSettings.isAttributionEnabled = true
 
                         map.uiSettings.isRotateGesturesEnabled = false
 
@@ -149,18 +148,23 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
                             }
                         })
 
-                        map.locationComponent.activateLocationComponent(
-                            LocationComponentActivationOptions.builder(context, map.style!!)
-                                //Set location engine to null, because we provide locations by ourself
-                                .locationEngine(null)
-                                .useDefaultLocationEngine(false)
-                                .build()
-                        )
-                        @SuppressLint("MissingPermission")
-                        map.locationComponent.isLocationComponentEnabled = true
-                        map.locationComponent.renderMode = RenderMode.COMPASS
+                        val styleBuilder = Style.Builder()
+                            .fromJson(mapStyle.value!!)
 
-                        fillManager.value = FillManager(mapView, map, map.style!!, LocationComponentConstants.SHADOW_LAYER, null)
+                        map.setStyle(styleBuilder) { style ->
+                            map.locationComponent.activateLocationComponent(
+                                LocationComponentActivationOptions.builder(context, style)
+                                    //Set location engine to null, because we provide locations by ourself
+                                    .locationEngine(null)
+                                    .useDefaultLocationEngine(false)
+                                    .build()
+                            )
+                            @SuppressLint("MissingPermission")
+                            map.locationComponent.isLocationComponentEnabled = true
+                            map.locationComponent.renderMode = RenderMode.COMPASS
+
+                            fillManager.value = FillManager(mapView, map, style, LocationComponentConstants.SHADOW_LAYER, null)
+                        }
                     }
 
                     mapView
@@ -207,12 +211,6 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
         Box(
             modifier = Modifier.fillMaxSize().padding(16.dp)
         ) {
-            Text(
-                modifier = Modifier.align(Alignment.BottomStart),
-                text = stringResource(R.string.openstreetmap_attribution),
-                fontSize = 10.sp
-            )
-
             FilledIconButton(
                 modifier = Modifier
                     .size(48.dp)
