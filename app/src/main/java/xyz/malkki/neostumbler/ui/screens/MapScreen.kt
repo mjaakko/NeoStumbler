@@ -10,13 +10,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -24,38 +25,38 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.graphics.ColorUtils
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import org.osmdroid.config.Configuration
-import org.osmdroid.events.MapListener
-import org.osmdroid.events.ScrollEvent
-import org.osmdroid.events.ZoomEvent
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory
-import org.osmdroid.util.GeoPoint
-import org.osmdroid.views.CustomZoomButtonsController
-import org.osmdroid.views.MapView
-import org.osmdroid.views.overlay.CopyrightOverlay
-import org.osmdroid.views.overlay.FolderOverlay
-import org.osmdroid.views.overlay.Polygon
-import org.osmdroid.views.overlay.mylocation.DirectedLocationOverlay
-import timber.log.Timber
+import org.maplibre.android.MapLibre
+import org.maplibre.android.camera.CameraPosition
+import org.maplibre.android.geometry.LatLng
+import org.maplibre.android.gestures.MoveGestureDetector
+import org.maplibre.android.location.LocationComponentActivationOptions
+import org.maplibre.android.location.LocationComponentConstants
+import org.maplibre.android.location.modes.RenderMode
+import org.maplibre.android.maps.MapLibreMap
+import org.maplibre.android.maps.MapView
+import org.maplibre.android.maps.Style
+import org.maplibre.android.module.http.HttpRequestUtil
+import org.maplibre.android.plugins.annotation.FillManager
+import org.maplibre.android.plugins.annotation.FillOptions
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.ui.composables.KeepScreenOn
 import xyz.malkki.neostumbler.ui.composables.PermissionsDialog
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
-import kotlin.math.roundToInt
-
 
 private val HEAT_LOW = ColorUtils.setAlphaComponent(0xd278ff, 120)
 private val HEAT_HIGH = ColorUtils.setAlphaComponent(0xaa00ff, 120)
 
-@SuppressLint("ClickableViewAccessibility")
 @Composable
 fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
     val context = LocalContext.current
 
     val lifecycle = LocalLifecycleOwner.current.lifecycle
+
+    val density = LocalDensity.current
 
     val showPermissionDialog = rememberSaveable {
         mutableStateOf(false)
@@ -65,9 +66,17 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
         mutableStateOf(false)
     }
 
-    val latestReportPosition = mapViewModel.latestReportPosition.observeAsState(initial = null)
+    val fillManager = remember {
+        mutableStateOf<FillManager?>(null)
+    }
 
-    val heatMapTiles = mapViewModel.heatMapTiles.observeAsState(initial = emptyList())
+    val httpClient = mapViewModel.httpClient.collectAsState(initial = null)
+
+    val mapStyle = mapViewModel.mapStyle.collectAsState(initial = null)
+
+    val latestReportPosition = mapViewModel.latestReportPosition.collectAsState(initial = null)
+
+    val heatMapTiles = mapViewModel.heatMapTiles.collectAsState(initial = emptyList())
 
     val myLocation = mapViewModel.myLocation.collectAsStateWithLifecycle(initialValue = null, minActiveState = Lifecycle.State.RESUMED)
 
@@ -91,173 +100,149 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
     KeepScreenOn()
 
     Box(
-        modifier = Modifier.fillMaxSize().padding(16.dp)
+        modifier = Modifier.fillMaxSize()
     ) {
-        AndroidView(
-            modifier = Modifier.fillMaxSize(),
-            factory = { context ->
-                Configuration.getInstance().load(context, context.getSharedPreferences("osmdroid", Context.MODE_PRIVATE))
+        if (mapStyle.value != null && httpClient.value != null) {
+            AndroidView(
+                modifier = Modifier.fillMaxSize(),
+                factory = { context ->
+                    MapLibre.getInstance(context)
+                    HttpRequestUtil.setOkHttpClient(httpClient.value)
 
-                //https://github.com/osmdroid/osmdroid/wiki/How-to-use-the-osmdroid-library-(Java)
-
-                val map = LifecycleAwareMap(context)
-                map.setTileSource(TileSourceFactory.MAPNIK)
-                map.setMultiTouchControls(true)
-
-                map.zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
-
-                map.isTilesScaledToDpi = true
-                map.isVerticalMapRepetitionEnabled = false
-                map.maxZoomLevel = 16.0
-                map.minZoomLevel = 3.0
-                //Add bounds so that user does not move outside of the area where map tiles are available
-                //Latitude range is slightly reduced to avoid displaying blank tiles
-                map.setScrollableAreaLimitLatitude(MapView.getTileSystem().maxLatitude - 0.3, MapView.getTileSystem().minLatitude + 0.3, 0)
-
-                map.overlays.add(CopyrightOverlay(context))
-                map.overlays.add(DirectedLocationOverlay(context))
-
-                map.setOnTouchListener { _, _ ->
-                    trackMyLocation.value = false
-
-                    false
-                }
-
-                map.addMapListener(object : MapListener {
-                    override fun onScroll(event: ScrollEvent): Boolean {
-                        mapViewModel.setMapCenter(event.source.mapCenter)
-                        mapViewModel.setMapBounds(
-                            minLatitude = event.source.boundingBox.latSouth,
-                            minLongitude = event.source.boundingBox.lonWest,
-                            maxLatitude = event.source.boundingBox.latNorth,
-                            maxLongitude = event.source.boundingBox.lonEast
-                        )
-
-                        return false
-                    }
-
-                    override fun onZoom(event: ZoomEvent): Boolean {
-                        mapViewModel.setZoom(event.source.zoomLevelDouble)
-                        mapViewModel.setMapBounds(
-                            minLatitude = event.source.boundingBox.latSouth,
-                            minLongitude = event.source.boundingBox.lonWest,
-                            maxLatitude = event.source.boundingBox.latNorth,
-                            maxLongitude = event.source.boundingBox.lonEast
-                        )
-
-                        return false
-                    }
-                })
-
-                map
-            },
-            update = { map ->
-                map.lifecycle = lifecycle
-
-                try {
-                    if (myLocation.value == null || !trackMyLocation.value) {
-                        val center = mapViewModel.mapCenter.value
-                        val zoom = mapViewModel.zoom.value
-
-                        if (center == null || center.latitude == 0.0 && center.longitude == 0.0) {
-                            if (latestReportPosition.value != null) {
-                                //Set map view to the latest report position if there is no saved view
-                                map.controller.setCenter(GeoPoint(latestReportPosition.value!!.latitude, latestReportPosition.value!!.longitude))
-                                map.controller.setZoom(10.0)
-                            } else {
-                                //Otherwise just decrease the zoom level
-                                map.controller.setZoom(5.0)
+                    val mapView = LifecycleAwareMap(context)
+                    mapView.getMapAsync { map ->
+                        map.addOnMoveListener(object : MapLibreMap.OnMoveListener {
+                            override fun onMoveBegin(p0: MoveGestureDetector) {
+                                trackMyLocation.value = false
                             }
-                        } else {
-                            map.controller.setCenter(center)
-                            map.controller.setZoom(zoom!!)
+
+                            override fun onMove(p0: MoveGestureDetector) {}
+
+                            override fun onMoveEnd(p0: MoveGestureDetector) {}
+                        })
+
+                        map.setMinZoomPreference(3.0)
+                        map.setMaxZoomPreference(15.0)
+
+                        val attributionMargin = density.run { 8.dp.roundToPx() }
+
+                        map.uiSettings.isLogoEnabled = false
+                        map.uiSettings.setAttributionMargins(attributionMargin, 0, 0, attributionMargin)
+                        map.uiSettings.isAttributionEnabled = true
+
+                        map.uiSettings.isRotateGesturesEnabled = false
+
+                        map.addOnCameraMoveListener(object : MapLibreMap.OnCameraMoveListener {
+                            override fun onCameraMove() {
+                                val mapCenter = xyz.malkki.neostumbler.common.LatLng(map.cameraPosition.target!!.latitude, map.cameraPosition.target!!.longitude)
+
+                                mapViewModel.setMapCenter(mapCenter)
+                                mapViewModel.setZoom(map.cameraPosition.zoom)
+
+                                mapViewModel.setMapBounds(
+                                    minLatitude = map.projection.visibleRegion.latLngBounds.latitudeSouth,
+                                    maxLatitude = map.projection.visibleRegion.latLngBounds.latitudeNorth,
+                                    minLongitude = map.projection.visibleRegion.latLngBounds.longitudeWest,
+                                    maxLongitude = map.projection.visibleRegion.latLngBounds.longitudeEast
+                                )
+                            }
+                        })
+
+                        val styleBuilder = Style.Builder()
+                            .fromJson(mapStyle.value!!)
+
+                        map.setStyle(styleBuilder) { style ->
+                            map.locationComponent.activateLocationComponent(
+                                LocationComponentActivationOptions.builder(context, style)
+                                    //Set location engine to null, because we provide locations by ourself
+                                    .locationEngine(null)
+                                    .useDefaultLocationEngine(false)
+                                    .build()
+                            )
+                            @SuppressLint("MissingPermission")
+                            map.locationComponent.isLocationComponentEnabled = true
+                            map.locationComponent.renderMode = RenderMode.COMPASS
+
+                            fillManager.value = FillManager(mapView, map, style, LocationComponentConstants.SHADOW_LAYER, null)
                         }
                     }
 
-                    myLocation.value?.let { locationWithSource ->
-                        val locationOverlay = map.overlays.find { it is DirectedLocationOverlay }!! as DirectedLocationOverlay
+                    mapView
+                },
+                update = { mapView ->
+                    mapView.lifecycle = lifecycle
 
-                        val geopoint = GeoPoint(locationWithSource.location.latitude, locationWithSource.location.longitude)
-
-                        locationOverlay.location = geopoint
-                        if (locationWithSource.location.hasBearing()) {
-                            locationOverlay.setBearing(locationWithSource.location.bearing)
+                    mapView.getMapAsync { map ->
+                        if (map.cameraPosition.target == null || (map.cameraPosition.target?.latitude == 0.0 && map.cameraPosition.target?.longitude == 0.0)) {
+                            if (latestReportPosition.value != null) {
+                                map.cameraPosition = CameraPosition.Builder()
+                                    .target(latestReportPosition.value?.let { LatLng(it.latitude, it.longitude) })
+                                    .zoom(10.0)
+                                    .build()
+                            } else {
+                                map.cameraPosition = CameraPosition.Builder()
+                                    .target(LatLng(mapViewModel.mapCenter.value.latitude, mapViewModel.mapCenter.value.longitude))
+                                    .zoom(mapViewModel.zoom.value)
+                                    .build()
+                            }
                         }
 
-                        if (locationWithSource.location.hasAccuracy()) {
-                            locationOverlay.setShowAccuracy(true)
-                            locationOverlay.setAccuracy(locationWithSource.location.accuracy.roundToInt())
-                        } else {
-                            locationOverlay.setShowAccuracy(false)
-                        }
+                        if (myLocation.value != null) {
+                            map.locationComponent.forceLocationUpdate(myLocation.value!!.location)
 
-                        if (trackMyLocation.value) {
-                            map.controller.setCenter(geopoint)
+                            if (trackMyLocation.value) {
+                                map.cameraPosition = CameraPosition.Builder().target(LatLng(myLocation.value!!.location.latitude, myLocation.value!!.location.longitude)).build()
+                            }
                         }
                     }
 
-                    val overlay = createHeatMapOverlay(map, heatMapTiles.value)
+                    fillManager.value?.let {
+                        it.deleteAll()
 
-                    map.overlayManager.removeIf {
-                        it is FolderOverlay && it.name == "heatmap"
+                        it.create(createHeatMapFill(heatMapTiles.value))
                     }
-                    map.overlayManager.add(overlay)
-
-                    map.invalidate()
-                } catch (npe: NullPointerException) {
-                    //Due to a bug in OSMDroid, updating the map can sometimes throw null pointer exception
-                    //To avoid crashing the app, just ignore it
-                    //The null pointer exception seems to only happen when the map is being removed from Composable tree
-                    Timber.w(npe, "Map update failed due to a NullPointerException")
+                },
+                onRelease = { view ->
+                    view.lifecycle = null
                 }
-            },
-            onRelease = { view ->
-                view.lifecycle = null
-            }
-        )
-
-        FilledIconButton(
-            modifier = Modifier
-                .size(48.dp)
-                .align(Alignment.BottomEnd),
-            onClick = {
-                if (context.checkMissingPermissions(Manifest.permission.ACCESS_FINE_LOCATION).isEmpty()) {
-                    mapViewModel.setShowMyLocation(true)
-                    trackMyLocation.value = true
-                } else {
-                    showPermissionDialog.value = true
-                }
-            }
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.my_location_24),
-                contentDescription = stringResource(id = R.string.show_my_location)
             )
         }
 
+        Box(
+            modifier = Modifier.fillMaxSize().padding(16.dp)
+        ) {
+            FilledIconButton(
+                modifier = Modifier
+                    .size(48.dp)
+                    .align(Alignment.BottomEnd),
+                onClick = {
+                    if (context.checkMissingPermissions(Manifest.permission.ACCESS_FINE_LOCATION).isEmpty()) {
+                        mapViewModel.setShowMyLocation(true)
+                        trackMyLocation.value = true
+                    } else {
+                        showPermissionDialog.value = true
+                    }
+                }
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.my_location_24),
+                    contentDescription = stringResource(id = R.string.show_my_location)
+                )
+            }
+        }
     }
 }
 
-private fun createHeatMapOverlay(mapView: MapView, heatMapTiles: Collection<MapViewModel.HeatMapTile>): FolderOverlay {
-    return FolderOverlay().apply {
-        name = "heatmap"
+private fun createHeatMapFill(tiles: Collection<MapViewModel.HeatMapTile>): List<FillOptions> {
+    return tiles.map { tile ->
+        val color = ColorUtils.blendARGB(HEAT_LOW, HEAT_HIGH, tile.heatPct)
 
-        heatMapTiles
-            .map { heatMapTile ->
-                val color = ColorUtils.blendARGB(HEAT_LOW, HEAT_HIGH, heatMapTile.heatPct)
-
-                val polygon = Polygon(mapView)
-                polygon.fillPaint.color = color
-                polygon.outlinePaint.color = ColorUtils.setAlphaComponent(0, 0)
-                polygon.outlinePaint.strokeWidth = 0f
-                //Return with click listener to disable info window
-                polygon.setOnClickListener { _, _, _ -> false }
-
-                polygon.points = heatMapTile.outline
-
-                polygon
-            }
-            .forEach(::add)
+        FillOptions()
+            .withFillColor(org.maplibre.android.utils.ColorUtils.colorToRgbaString(color))
+            .withFillOutlineColor(org.maplibre.android.utils.ColorUtils.colorToRgbaString(ColorUtils.setAlphaComponent(0, 0)))
+            .withLatLngs(listOf(tile.outline.map {
+                LatLng(it.latitude, it.longitude)
+            }))
     }
 }
 
@@ -276,6 +261,15 @@ private class LifecycleAwareMap(context: Context) : MapView(context) {
             }
             Lifecycle.Event.ON_PAUSE -> {
                 onPause()
+            }
+            Lifecycle.Event.ON_START -> {
+                onStart()
+            }
+            Lifecycle.Event.ON_STOP -> {
+                onStop()
+            }
+            Lifecycle.Event.ON_DESTROY -> {
+                onDestroy()
             }
             else -> {}
         }

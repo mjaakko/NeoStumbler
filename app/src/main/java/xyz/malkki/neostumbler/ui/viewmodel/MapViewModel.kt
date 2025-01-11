@@ -3,27 +3,30 @@ package xyz.malkki.neostumbler.ui.viewmodel
 import android.Manifest
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asFlow
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.trySendBlocking
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
+import okhttp3.Call
 import org.geohex.geohex4j.GeoHex
-import org.osmdroid.api.IGeoPoint
-import org.osmdroid.util.GeoPoint
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.common.LatLng
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
@@ -44,19 +47,31 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
 
     private val db = getApplication<StumblerApplication>().reportDb
 
-    private val showMyLocation = MutableLiveData(getApplication<StumblerApplication>().checkMissingPermissions(Manifest.permission.ACCESS_COARSE_LOCATION).isEmpty())
+    private val _httpClient = MutableStateFlow<Call.Factory?>(null)
+    val httpClient: StateFlow<Call.Factory?>
+        get() = _httpClient.asStateFlow()
 
-    private val _mapCenter = MutableLiveData<IGeoPoint>(GeoPoint(0.0, 0.0))
-    val mapCenter: LiveData<IGeoPoint>
-        get() = _mapCenter
+    val mapStyle: Flow<String> = flow {
+            application.assets.open("style.json").use {
+                emit(it.readBytes().decodeToString())
+            }
+        }
+        .flowOn(Dispatchers.IO)
+        .shareIn(viewModelScope, started = SharingStarted.Eagerly, replay = 1)
 
-    private val _zoom = MutableLiveData(5.0)
-    val zoom: LiveData<Double>
-        get() = _zoom
+    private val showMyLocation = MutableStateFlow(getApplication<StumblerApplication>().checkMissingPermissions(Manifest.permission.ACCESS_COARSE_LOCATION).isEmpty())
+
+    private val _mapCenter = MutableStateFlow<LatLng>(LatLng(0.0, 0.0))
+    val mapCenter: StateFlow<LatLng>
+        get() = _mapCenter.asStateFlow()
+
+    private val _zoom = MutableStateFlow(5.0)
+    val zoom: StateFlow<Double>
+        get() = _zoom.asStateFlow()
 
     private val mapBounds = Channel<Pair<LatLng, LatLng>>(capacity = Channel.Factory.CONFLATED)
 
-    val latestReportPosition = liveData {
+    val latestReportPosition = flow {
         emit(db.value.positionDao().getLatestPosition())
     }
 
@@ -97,11 +112,11 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
         }
         .distinctUntilChanged()
         .combine(
-            flow = zoom.asFlow()
+            flow = zoom
                 .map { zoom ->
-                    if (zoom >= 13.5) {
+                    if (zoom >= 13) {
                         GEOHEX_RESOLUTION_HIGH
-                    } else if (zoom >= 11.5) {
+                    } else if (zoom >= 11) {
                         GEOHEX_RESOLUTION_MEDIUM
                     } else {
                         GEOHEX_RESOLUTION_LOW
@@ -124,18 +139,16 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
 
                     HeatMapTile(
                         zone.hexCoords.map { coord ->
-                            GeoPoint(coord.lat, coord.lon)
+                            LatLng(coord.lat, coord.lon)
                         },
                         ((it.value * REPORT_SIZE) / zone.hexSize).coerceAtMost(1.0).toFloat()
                     )
                 }
         }
         .flowOn(Dispatchers.Default)
-        .asLiveData()
+        .shareIn(viewModelScope, started = SharingStarted.Lazily)
 
     val myLocation = showMyLocation
-        .asFlow()
-        .distinctUntilChanged()
         .flatMapLatest {
             if (it) {
                 locationSource.getLocations(2.seconds)
@@ -144,13 +157,24 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
 
-    fun setShowMyLocation(value: Boolean) {
-        showMyLocation.postValue(value)
+    init {
+        viewModelScope.launch {
+            val httpClient = (application as StumblerApplication).httpClientProvider.await()
+            _httpClient.value = httpClient
+        }
     }
 
-    fun setMapCenter(mapCenter: IGeoPoint) = this._mapCenter.postValue(mapCenter)
+    fun setShowMyLocation(value: Boolean) {
+        showMyLocation.value = value
+    }
 
-    fun setZoom(zoom: Double) = this._zoom.postValue(zoom)
+    fun setMapCenter(mapCenter: LatLng) {
+        this._mapCenter.value = mapCenter
+    }
+
+    fun setZoom(zoom: Double) {
+        this._zoom.value = zoom
+    }
 
     fun setMapBounds(minLatitude: Double, minLongitude: Double, maxLatitude: Double, maxLongitude: Double) {
         //Make the bounds slightly larger so that data in the map edges will be visible
@@ -169,5 +193,5 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
     /**
      * @property heatPct From 0.0 to 1.0
      */
-    data class HeatMapTile(val outline: List<GeoPoint>, val heatPct: Float)
+    data class HeatMapTile(val outline: List<LatLng>, val heatPct: Float)
 }

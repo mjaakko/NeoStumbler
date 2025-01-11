@@ -146,6 +146,7 @@ tasks.register('printVersionName') {
 
 kotlin {
     compilerOptions {
+        freeCompilerArgs.add("-opt-in=kotlin.io.path.ExperimentalPathApi")
         freeCompilerArgs.add("-opt-in=kotlin.time.ExperimentalTime")
         freeCompilerArgs.add("-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi")
         freeCompilerArgs.add("-opt-in=androidx.compose.material3.ExperimentalMaterial3Api")
@@ -223,7 +224,9 @@ dependencies {
 
     implementation 'org.altbeacon:android-beacon-library:2.20.6'
 
-    implementation 'org.osmdroid:osmdroid-android:6.1.20'
+    implementation 'org.maplibre.gl:android-sdk:11.7.0'
+    implementation 'org.maplibre.gl:android-plugin-annotation-v9:3.0.2'
+
     implementation 'org.geohex.geohex4j:geohex4j:3.2.2'
 
     implementation 'org.apache.commons:commons-csv:1.12.0'
