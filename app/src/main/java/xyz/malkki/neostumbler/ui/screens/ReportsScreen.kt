@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.os.Build
 import android.text.format.DateFormat
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,13 +13,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -33,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -43,6 +46,8 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import kotlinx.coroutines.launch
 import xyz.malkki.neostumbler.MainActivity
 import xyz.malkki.neostumbler.R
@@ -60,6 +65,7 @@ import xyz.malkki.neostumbler.ui.composables.ConfirmationDialog
 import xyz.malkki.neostumbler.ui.composables.MLSWarningDialog
 import xyz.malkki.neostumbler.ui.composables.PermissionsDialog
 import xyz.malkki.neostumbler.ui.composables.ReportUploadButton
+import xyz.malkki.neostumbler.ui.composables.Shimmer
 import xyz.malkki.neostumbler.ui.composables.getAddress
 import xyz.malkki.neostumbler.ui.composables.rememberServiceConnection
 import xyz.malkki.neostumbler.ui.viewmodel.ReportsViewModel
@@ -277,7 +283,7 @@ fun ForegroundScanningButton() {
 
 @Composable
 private fun Reports(reportsViewModel: ReportsViewModel = viewModel()) {
-    val reports = reportsViewModel.reports.collectAsStateWithLifecycle(emptyList())
+    val reports = reportsViewModel.reports.collectAsLazyPagingItems()
 
     val context = LocalContext.current
     val geocoder = remember {
@@ -305,19 +311,37 @@ private fun Reports(reportsViewModel: ReportsViewModel = viewModel()) {
     Column(modifier = Modifier.padding(top = 8.dp)) {
         Text(text = stringResource(R.string.reports), style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold))
         LazyColumn {
-            itemsIndexed(
-                reports.value,
-                key =  { _: Int, report: ReportWithStats -> report.reportId },
-                itemContent = { _, report ->
+            items(
+                reports.itemCount,
+                key = reports.itemKey { it.reportId }
+            ) { index ->
+                val report = reports.get(index)
+
+                if (report != null) {
                     Report(
                         report = report,
                         geocoder = geocoder,
                         onDeleteReport = { reportId ->
                             reportToDelete.value = reportId
                         })
+                } else {
+                    ReportPlaceholder()
                 }
-            )
+            }
         }
+    }
+}
+
+@Composable
+private fun ReportPlaceholder() {
+    val density = LocalDensity.current
+
+    val height = with(density) { 14.sp.toDp() }
+
+    Column(modifier = Modifier.wrapContentHeight().padding(vertical = 4.dp)) {
+        Shimmer(modifier = Modifier.height(height).fillMaxWidth().background(Color.LightGray, shape = RoundedCornerShape(2.dp)))
+        Spacer(modifier = Modifier.height(2.dp))
+        Shimmer(modifier = Modifier.height(height).fillMaxWidth().background(Color.LightGray, shape = RoundedCornerShape(2.dp)))
     }
 }
 
@@ -333,20 +357,24 @@ private fun Report(report: ReportWithStats, geocoder: Geocoder, onDeleteReport: 
     val intent = showMapWithMarkerIntent(report.latitude, report.longitude)
     val canShowMap = intent.resolveActivity(context.packageManager) != null
 
-    Column(modifier = Modifier
-        .combinedClickable(
-            enabled = true,
-            onClick = {},
-            onLongClickLabel = stringResource(id = R.string.delete_report),
-            onLongClick = {
-                onDeleteReport(report.reportId)
-            }
-        )
-        .padding(vertical = 4.dp)
-        .wrapContentHeight()) {
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()) {
+    Column(
+        modifier = Modifier
+            .combinedClickable(
+                enabled = true,
+                onClick = {},
+                onLongClickLabel = stringResource(id = R.string.delete_report),
+                onLongClick = {
+                    onDeleteReport(report.reportId)
+                }
+            )
+            .padding(vertical = 4.dp)
+            .wrapContentHeight()
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+        ) {
             Text(modifier = Modifier.wrapContentSize(), text = dateStr, style = TextStyle(fontSize = 14.sp))
             Spacer(modifier = Modifier.weight(1.0f))
             StationCount(iconRes = R.drawable.wifi_14sp, iconDescription = stringResource(R.string.wifi_icon_description), count = report.wifiAccessPointCount)
@@ -370,8 +398,12 @@ private fun StationCount(iconRes: Int, iconDescription: String, count: Int) {
     Row(modifier = Modifier.wrapContentSize(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
         Icon(painter = painterResource(iconRes), contentDescription = iconDescription)
         Spacer(modifier = Modifier.width(2.dp))
-        Text(modifier = Modifier
-            .wrapContentWidth()
-            .fillMaxHeight(), text = count.toString(), style = TextStyle(fontSize = 14.sp))
+        Text(
+            modifier = Modifier
+                .wrapContentWidth()
+                .fillMaxHeight(),
+            text = count.toString(),
+            style = TextStyle(fontSize = 14.sp)
+        )
     }
 }
