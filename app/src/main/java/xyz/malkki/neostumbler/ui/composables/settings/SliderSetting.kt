@@ -97,7 +97,8 @@ fun SliderSetting(
                         )
 
                         Text(
-                            text = valueFormatter.invoke(sliderValue.intValue)
+                            text = valueFormatter.invoke(sliderValue.intValue),
+                            style = MaterialTheme.typography.bodySmall
                         )
                     }
 
