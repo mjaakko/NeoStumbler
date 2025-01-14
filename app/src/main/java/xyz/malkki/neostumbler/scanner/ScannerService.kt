@@ -81,8 +81,8 @@ class ScannerService : Service() {
 
         private const val EXTRA_AUTOSTART = "autostart"
 
-        //Try to get new locations every 5 seconds
-        private val LOCATION_INTERVAL = 5.seconds
+        //Try to get new locations every second
+        private val LOCATION_INTERVAL = 1.seconds
 
         //By default, try to scan Wi-Fis every 50 meters
         const val DEFAULT_WIFI_SCAN_DISTANCE: Int = 50
