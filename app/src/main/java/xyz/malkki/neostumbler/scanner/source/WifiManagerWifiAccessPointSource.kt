@@ -44,7 +44,7 @@ private val MAX_INTERVAL = 1.minutes
 private val MIN_INTERVAL_THROTTLED: Duration = (ANDROID_WIFI_SCAN_THROTTLE_PERIOD / ANDROID_WIFI_SCAN_THROTTLE_COUNT) * 0.75
 
 // Minimum scan interval when WI-Fi scanning is not throttled
-private val MIN_INTERVAL_UNTHROTTLED = 2.5.seconds
+private val MIN_INTERVAL_UNTHROTTLED = 1.5.seconds
 
 // Buffer scan results because sometimes multiple scan results are received in a short succession
 private val WIFI_BUFFER_WINDOW = 5.seconds
@@ -92,7 +92,7 @@ class WifiManagerWifiAccessPointSource(
                         maximumValue = MAX_INTERVAL
                     )
                 }
-                .stateIn(this, started = SharingStarted.Eagerly, initialValue = minScanInterval)
+                .stateIn(this, started = SharingStarted.Eagerly, initialValue = MAX_INTERVAL)
 
             while (true) {
                 doWifiScan()

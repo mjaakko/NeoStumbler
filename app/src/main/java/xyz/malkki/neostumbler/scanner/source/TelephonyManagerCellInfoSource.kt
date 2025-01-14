@@ -22,7 +22,7 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
-private val MIN_INTERVAL = 5.seconds
+private val MIN_INTERVAL = 1.5.seconds
 
 private val MAX_INTERVAL = 1.minutes
 
@@ -59,7 +59,7 @@ class TelephonyManagerCellInfoSource(
                     maximumValue = MAX_INTERVAL
                 )
             }
-            .stateIn(this, started = SharingStarted.Eagerly, initialValue = MIN_INTERVAL)
+            .stateIn(this, started = SharingStarted.Eagerly, initialValue = MAX_INTERVAL)
 
         val rendezvousQueue = Channel<Unit>(capacity = Channel.RENDEZVOUS)
 
