@@ -63,7 +63,7 @@ private fun StationsByDayChart(entryModel: CartesianChartModelProducer) {
             )
             .fillMaxSize(),
         scrollState = rememberVicoScrollState(initialScroll = Scroll.Absolute.End),
-        zoomState = rememberVicoZoomState(initialZoom = remember { Zoom.min(Zoom.static(), Zoom.Content) }),
+        zoomState = rememberVicoZoomState(initialZoom = remember { Zoom.min(Zoom.fixed(), Zoom.Content) }),
         chart = rememberCartesianChart(
             rememberLineCartesianLayer(),
             startAxis = VerticalAxis.rememberStart(
