@@ -51,7 +51,7 @@ fun SettingsScreen() {
             MovementDetectorSettings()
             IgnoreScanThrottlingToggle()
             SliderSetting(
-                title = stringResource(R.string.wifi_scan_distance),
+                title = stringResource(R.string.wifi_scan_frequency),
                 preferenceKey = PreferenceKeys.WIFI_SCAN_DISTANCE,
                 range = 10..250,
                 step = 10,
@@ -61,7 +61,7 @@ fun SettingsScreen() {
                 default = ScannerService.DEFAULT_WIFI_SCAN_DISTANCE,
             )
             SliderSetting(
-                title = stringResource(R.string.cell_tower_scan_distance),
+                title = stringResource(R.string.cell_tower_scan_frequency),
                 preferenceKey = PreferenceKeys.CELL_SCAN_DISTANCE,
                 range = 20..500,
                 step = 20,
