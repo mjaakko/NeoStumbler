@@ -1,2 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="autoscan_when_moving">Автоматическое сканирование при движении</string>
+    <string name="permission_rationale_activity_recognition">Автоматически начинающееся сканирование требует доступа к текущей активности</string>
+    <string name="permission_rationale_background_location_autoscan">Автоматически начинающееся сканирование требует разрешения для геолокации в фоновом режиме</string>
+    <string name="autoscan_failed_to_enable">Не удалось включить автоматическое сканирование</string>
+    <string name="prefer_fused_location">Предпочитать объединённого поставщика местоположения</string>
+</resources>
