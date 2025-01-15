@@ -71,7 +71,7 @@ private fun StationsByDayChart(entryModel: CartesianChartModelProducer) {
                     VerticalAxis.ItemPlacer.step(step = { extras ->
                         val max = extras[StatisticsViewModel.MAX_Y_VALUE_KEY]
 
-                        10.0.pow(floor(log10(max.toDouble()))) / 10
+                        (10.0.pow(floor(log10(max.toDouble()))) / 10).coerceAtLeast(1.0)
                     })
                 }
             ),
