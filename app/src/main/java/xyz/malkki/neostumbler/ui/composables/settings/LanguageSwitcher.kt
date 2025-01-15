@@ -13,6 +13,17 @@ import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.scanner.quicksettings.ScannerTileService
 import java.util.Locale
 
+//Place English first, otherwise sort by language code
+private val ENGLISH_FIRST_COMPARATOR: Comparator<String> = Comparator<String> { a, b ->
+    if (a == "en") {
+        -1
+    } else if (b == "en") {
+        1
+    } else {
+        a.compareTo(b)
+    }
+}
+
 private val SUPPORTED_LOCALES_BCP47 = BuildConfig.SUPPORTED_LOCALES
     .split(',')
     .map { languageTag ->
@@ -24,6 +35,7 @@ private val SUPPORTED_LOCALES_BCP47 = BuildConfig.SUPPORTED_LOCALES
             "${subtags[0]}-${subtags[1].replaceFirst("r", "")}"
         }
     }
+    .sortedWith(ENGLISH_FIRST_COMPARATOR)
     .toTypedArray()
 
 private fun getCurrentLocale(context: Context): Locale {
