@@ -3,10 +3,15 @@ package xyz.malkki.neostumbler.ui.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import xyz.malkki.neostumbler.StumblerApplication
+import xyz.malkki.neostumbler.db.entities.ReportWithStats
 
 class ReportsViewModel(application: Application) : AndroidViewModel(application) {
     private val db = getApplication<StumblerApplication>().reportDb
@@ -18,11 +23,12 @@ class ReportsViewModel(application: Application) : AndroidViewModel(application)
         .flatMapLatest { it.reportDao().getReportCountNotUploaded() }
         .distinctUntilChanged()
 
-    val reports = db
+    val reports: Flow<PagingData<ReportWithStats>> = db
         .flatMapLatest {
-            it.reportDao().getAllReportsWithStats()
+            Pager(PagingConfig(pageSize = 40, prefetchDistance = 5)) {
+                it.reportDao().getAllReportsWithStats()
+            }.flow
         }
-        .distinctUntilChanged()
 
     val lastUpload = db
         .flatMapLatest { it.reportDao().getLastUploadTime() }

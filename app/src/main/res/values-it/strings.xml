@@ -43,7 +43,7 @@
     <string name="export_started">Esportazione dati da %s a %s</string>
     <string name="export_csv">Esporta come CSV</string>
     <string name="export_raw_database">Esporta database grezzo</string>
-    <string name="import_data">Importa dati</string>
+    <string name="import_data">Importazione dati</string>
     <string name="import_raw_database">Importa database grezzo</string>
     <string name="import_raw_database_description">L\'importazione di un database grezzo sostituirà il database esistente</string>
     <string name="import_database_successful">Database importato con %d rilevamenti</string>
@@ -115,7 +115,7 @@
     <string name="db_prune_six_months">Dopo sei mesi</string>
     <string name="manage_storage_title">Gestisci dati salvati</string>
     <string name="db_size">Dimensione database: %s</string>
-    <string name="delete_data">Elimina dati</string>
+    <string name="delete_data">Eliminazione dati</string>
     <string name="delete_reports_by_date">Elimina rilevamenti per data</string>
     <string name="delete_all_reports">Elimina tutti i rilevamenti</string>
     <string name="about_app">Informazioni su NeoStumbler</string>

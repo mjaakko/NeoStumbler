@@ -1,5 +1,6 @@
 package xyz.malkki.neostumbler.db.dao
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -60,7 +61,7 @@ interface ReportDao {
         ORDER BY r.timestamp DESC
     """
     )
-    fun getAllReportsWithStats(): Flow<List<ReportWithStats>>
+    fun getAllReportsWithStats(): PagingSource<Int, ReportWithStats>
 
     @Transaction
     @Query("SELECT * FROM Report WHERE uploaded = 0")

@@ -107,14 +107,24 @@ class StatisticsViewModel(application: Application) : AndroidViewModel(applicati
         }
 
         val out = mutableMapOf<LocalDate, Long>()
+        val first: LocalDate = data.firstKey().minusDays(1)
         //Add 0 for the first day that we don't have data for so that the chart begins from zero
-        out[data.firstKey().minusDays(1)] = 0
+        out[first] = 0
 
         var cumul = 0L
+        var prev = first
         data.forEach { (key, value) ->
-            cumul += value
+            //Add data for missing days to avoid interpolating on the chart
+            var d = prev.plusDays(1)
+            while (d < key) {
+                out[d] = cumul
+                d = d.plusDays(1)
+            }
 
+            cumul += value
             out[key] = cumul
+
+            prev = key
         }
 
         return out
