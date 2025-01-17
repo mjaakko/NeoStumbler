@@ -1,5 +1,6 @@
 package xyz.malkki.neostumbler.utils
 
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
@@ -17,14 +18,14 @@ class RateLimiterTest {
 
         val rateLimiter = RateLimiter(4, period, { System.nanoTime() / 1_000_000 })
 
-        val job1 = launch(Dispatchers.Default) {
+        val job1 = launch(Dispatchers.Default, start = CoroutineStart.LAZY) {
             repeat(4) {
                 rateLimiter.doRateLimited {
                     yield()
                 }
             }
         }
-        val job2 = launch(Dispatchers.Default) {
+        val job2 = launch(Dispatchers.Default, start = CoroutineStart.LAZY) {
             repeat(4) {
                 rateLimiter.doRateLimited {
                     yield()
@@ -36,8 +37,8 @@ class RateLimiterTest {
             listOf(job1, job2).joinAll()
         }
 
-        assertTrue(elapsed >= period)
-        assertTrue(elapsed < period * 2)
+        assertTrue("Jobs finished sooner than expected", elapsed >= period)
+        assertTrue("Jobs finished later than expected", elapsed < period * 2)
     }
 
     @Test
@@ -46,21 +47,21 @@ class RateLimiterTest {
 
         val rateLimiter = RateLimiter(4, period, { System.nanoTime() / 1_000_000 })
 
-        val job1 = launch(Dispatchers.Default) {
+        val job1 = launch(Dispatchers.Default, start = CoroutineStart.LAZY) {
             repeat(4) {
                 rateLimiter.doRateLimited {
                     yield()
                 }
             }
         }
-        val job2 = launch(Dispatchers.Default) {
+        val job2 = launch(Dispatchers.Default, start = CoroutineStart.LAZY) {
             repeat(4) {
                 rateLimiter.doRateLimited {
                     yield()
                 }
             }
         }
-        val job3 = launch(Dispatchers.Default) {
+        val job3 = launch(Dispatchers.Default, start = CoroutineStart.LAZY) {
             repeat(4) {
                 rateLimiter.doRateLimited {
                     yield()
@@ -72,7 +73,7 @@ class RateLimiterTest {
             listOf(job1, job2, job3).joinAll()
         }
 
-        assertTrue(elapsed >= period * 2)
-        assertTrue(elapsed < period * 3)
+        assertTrue("Jobs finished sooner than expected", elapsed >= period * 2)
+        assertTrue("Jobs finished later than expected", elapsed < period * 3)
     }
 }
