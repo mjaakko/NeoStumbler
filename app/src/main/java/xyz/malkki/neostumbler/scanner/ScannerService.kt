@@ -66,6 +66,7 @@ import xyz.malkki.neostumbler.scanner.source.BluetoothBeaconSource
 import xyz.malkki.neostumbler.scanner.source.CellInfoSource
 import xyz.malkki.neostumbler.scanner.source.MultiSubscriptionCellInfoSource
 import xyz.malkki.neostumbler.scanner.source.PressureSensorAirPressureSource
+import xyz.malkki.neostumbler.scanner.source.SmoothenedGpsSpeedSource
 import xyz.malkki.neostumbler.scanner.source.TelephonyManagerCellInfoSource
 import xyz.malkki.neostumbler.scanner.source.WifiManagerWifiAccessPointSource
 import xyz.malkki.neostumbler.utils.GpsStats
@@ -218,13 +219,7 @@ class ScannerService : Service() {
                 started = SharingStarted.WhileSubscribed()
             )
 
-        val speedFlow = locationFlow.map {
-            if (it.location.hasSpeed()) {
-                it.location.speed
-            } else {
-                0.0f
-            }
-        }
+        val speedFlow = SmoothenedGpsSpeedSource(locationFlow.map { it.location }).getSpeedFlow()
 
         val cellInfoSource = getCellInfoSource()
 
@@ -273,7 +268,8 @@ class ScannerService : Service() {
                     locationFlow
                 },
                 cellInfoSource = {
-                    val scanFrequencyFlow = speedFlow.map { speed -> (cellScanDistance.toDouble() / speed).seconds }
+                    val scanFrequencyFlow = speedFlow
+                        .map { speed -> (cellScanDistance.toDouble() / speed).seconds }
 
                     cellInfoSource.getCellInfoFlow(scanFrequencyFlow)
                 },
@@ -281,7 +277,8 @@ class ScannerService : Service() {
                     bluetoothBeaconSource.getBluetoothBeaconFlow()
                 },
                 wifiAccessPointSource = {
-                    val scanFrequencyFlow = speedFlow.map { speed -> (wifiScanDistance.toDouble() / speed).seconds }
+                    val scanFrequencyFlow = speedFlow
+                        .map { speed -> (wifiScanDistance.toDouble() / speed).seconds }
 
                     wifiAccessPointSource.getWifiAccessPointFlow(scanFrequencyFlow)
                 },
