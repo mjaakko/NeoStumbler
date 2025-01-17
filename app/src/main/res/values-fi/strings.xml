@@ -131,6 +131,11 @@
         Wi-Fi -skannauksen rajoitukset täytyy poistaa laitteen asetuksista tätä ominaisuutta varten. Tämän voi yleensä tehdä kehittäjän asetuksista
     </string>
 
+    <string name="wifi_scan_frequency">Wi-Fi -skannausten tiheys</string>
+    <string name="cell_tower_scan_frequency">Puhelinmastojen skannausten tiheys</string>
+
+    <string name="every_x_meters">Joka %d. metri</string>
+
     <string name="movement_detection">Liikkeen tunnistus</string>
 
     <string name="movement_detection_none_title">Ei käytössä</string>

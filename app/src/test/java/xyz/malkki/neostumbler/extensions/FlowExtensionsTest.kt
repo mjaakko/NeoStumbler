@@ -129,4 +129,13 @@ class FlowExtensionsTest {
 
         assertEquals(listOf(1, null, 2, null), values)
     }
+
+    @Test
+    fun `Test collecting flow values pairwise`() = runBlocking {
+        val a = flowOf(1, 2, 3)
+
+        val values = a.pairwise().toList()
+
+        assertEquals(listOf(1 to 2, 2 to 3), values)
+    }
 }

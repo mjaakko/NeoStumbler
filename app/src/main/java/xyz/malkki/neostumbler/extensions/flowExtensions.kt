@@ -8,8 +8,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.scan
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.launch
@@ -100,3 +102,9 @@ fun <T> Flow<T>.maxAge(duration: Duration): Flow<T?> = transformLatest { value -
     delay(duration)
     emit(null)
 }
+
+fun <T> Flow<T>.pairwise(): Flow<Pair<T, T>> = scan(Pair<T?, T?>(null, null)) { pair, value ->
+        pair.second to value
+    }
+    .filter { it.first != null && it.second != null }
+    .map { it.first!! to it.second!! }

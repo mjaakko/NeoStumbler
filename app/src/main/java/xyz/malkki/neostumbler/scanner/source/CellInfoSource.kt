@@ -5,5 +5,5 @@ import xyz.malkki.neostumbler.domain.CellTower
 import kotlin.time.Duration
 
 fun interface CellInfoSource {
-    fun getCellInfoFlow(interval: Duration): Flow<List<CellTower>>
+    fun getCellInfoFlow(interval: Flow<Duration>): Flow<List<CellTower>>
 }

@@ -1,22 +1,35 @@
 package xyz.malkki.neostumbler.scanner.source
 
 import android.Manifest
+import android.os.SystemClock
 import android.telephony.CellInfo
 import android.telephony.TelephonyManager
 import androidx.annotation.RequiresPermission
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.isActive
 import timber.log.Timber
 import xyz.malkki.neostumbler.domain.CellTower
 import xyz.malkki.neostumbler.utils.ImmediateExecutor
+import xyz.malkki.neostumbler.utils.delayWithMinDuration
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
-class TelephonyManagerCellInfoSource(private val telephonyManager: TelephonyManager) : CellInfoSource {
+private val MIN_INTERVAL = 1.5.seconds
+
+private val MAX_INTERVAL = 1.minutes
+
+class TelephonyManagerCellInfoSource(
+    private val telephonyManager: TelephonyManager,
+    private val timeSource: () -> Long = SystemClock::elapsedRealtime
+) : CellInfoSource {
     private fun List<CellTower>.fillMissingData(): List<CellTower> {
         if (size == 1) {
             return this
@@ -38,7 +51,16 @@ class TelephonyManagerCellInfoSource(private val telephonyManager: TelephonyMana
     }
 
     @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-    override fun getCellInfoFlow(interval: Duration): Flow<List<CellTower>> = callbackFlow {
+    override fun getCellInfoFlow(interval: Flow<Duration>): Flow<List<CellTower>> = callbackFlow {
+        val scanInterval = interval
+            .map {
+                it.coerceIn(
+                    minimumValue = MIN_INTERVAL,
+                    maximumValue = MAX_INTERVAL
+                )
+            }
+            .stateIn(this, started = SharingStarted.Eagerly, initialValue = MAX_INTERVAL)
+
         val rendezvousQueue = Channel<Unit>(capacity = Channel.RENDEZVOUS)
 
         val cellInfoCallback = object: TelephonyManager.CellInfoCallback() {
@@ -65,10 +87,11 @@ class TelephonyManagerCellInfoSource(private val telephonyManager: TelephonyMana
 
         while (isActive) {
             telephonyManager.requestCellInfoUpdate(ImmediateExecutor, cellInfoCallback)
+            val scannedAt = timeSource.invoke()
 
             rendezvousQueue.receive()
 
-            delay(interval)
+            delayWithMinDuration(scannedAt, timeSource, scanInterval)
         }
 
         awaitClose {

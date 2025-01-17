@@ -10,10 +10,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.scanner.ScannerService
 import xyz.malkki.neostumbler.ui.composables.AboutNeoStumbler
 import xyz.malkki.neostumbler.ui.composables.ReportReuploadButton
 import xyz.malkki.neostumbler.ui.composables.SettingsGroup
@@ -26,10 +29,13 @@ import xyz.malkki.neostumbler.ui.composables.settings.LanguageSwitcher
 import xyz.malkki.neostumbler.ui.composables.settings.ManageStorageSettingsItem
 import xyz.malkki.neostumbler.ui.composables.settings.MovementDetectorSettings
 import xyz.malkki.neostumbler.ui.composables.settings.ScannerNotificationStyleSettings
+import xyz.malkki.neostumbler.ui.composables.settings.SliderSetting
 import xyz.malkki.neostumbler.ui.composables.settings.geosubmit.GeosubmitEndpointSettings
 
 @Composable
 fun SettingsScreen() {
+    val context = LocalContext.current
+
     Column(modifier = Modifier.padding(16.dp).verticalScroll(rememberScrollState())) {
         SettingsGroup(
             title = stringResource(id = R.string.settings_group_reports)
@@ -44,6 +50,26 @@ fun SettingsScreen() {
         ) {
             MovementDetectorSettings()
             IgnoreScanThrottlingToggle()
+            SliderSetting(
+                title = stringResource(R.string.wifi_scan_frequency),
+                preferenceKey = PreferenceKeys.WIFI_SCAN_DISTANCE,
+                range = 10..250,
+                step = 10,
+                valueFormatter = {
+                    ContextCompat.getString(context, R.string.every_x_meters).format(it)
+                },
+                default = ScannerService.DEFAULT_WIFI_SCAN_DISTANCE,
+            )
+            SliderSetting(
+                title = stringResource(R.string.cell_tower_scan_frequency),
+                preferenceKey = PreferenceKeys.CELL_SCAN_DISTANCE,
+                range = 20..500,
+                step = 20,
+                valueFormatter = {
+                    ContextCompat.getString(context, R.string.every_x_meters).format(it)
+                },
+                default = ScannerService.DEFAULT_CELL_SCAN_DISTANCE,
+            )
         }
 
         SettingsGroup(title = stringResource(id = R.string.settings_group_other)) {
