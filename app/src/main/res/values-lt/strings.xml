@@ -73,7 +73,6 @@
     <string name="suggested_service_hosted_by">Valdytojas:</string>
     <string name="suggested_service_website">Svetainė</string>
     <string name="suggested_service_terms_of_use">Naudojimosi sąlygos</string>
-    <string name="settings_ignore_wifi_scan_throttling">Nepaisyti „Wi-Fi“ skenavimo ribojimų</string>
     <string name="wifi_scan_throttling">Belaidžių tinklų skenavimo ribojimai</string>
     <string name="wifi_scan_throttling_explanation">Kad galėtumėte įjungti šią funkciją, turite įrenginio nustatymuose išjungti „Wi-Fi“ skenavimo slopinimą. Paprastai tai galima atlikti kūrėjų parinktyse</string>
     <string name="settings_group_reports">Ataskaitos</string>
