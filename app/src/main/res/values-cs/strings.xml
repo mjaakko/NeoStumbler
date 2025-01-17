@@ -46,7 +46,7 @@
     <string name="permission_rationale_location_map">Zobrazení polohy na mapě potřebuje oprávnění přístupu k poloze</string>
     <string name="report_upload_notification_channel_name">Nahraných reportů</string>
     <string name="api_key">API klíč (nepovinný)</string>
-    <string name="settings_ignore_wifi_scan_throttling">Vypnout přibrždění vyhledávání Wi-Fi</string>
+    <string name="settings_ignore_wifi_scan_throttling_title">Vypnout přibrždění vyhledávání Wi-Fi</string>
     <string name="wifi_scan_throttling">Přibrždění hledání Wi-Fi</string>
     <string name="wifi_scan_throttling_explanation">Pro odemčení této možnosti je třeba vypnout přibrždění vyhledávání Wi-Fi (Wi-Fi scan throttling) v nastavení zařízení. Toto nastavení lze většinou najít v nastavení pro vývojáře</string>
     <string name="permission_rationale_fine_location">Pro přístup k aktuální poloze je třeba udělit povolení přístupu k přesné poloze</string>

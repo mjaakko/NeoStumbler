@@ -125,7 +125,9 @@
     <string name="suggested_service_website">Verkkosivu</string>
     <string name="suggested_service_terms_of_use">Käyttöehdot</string>
 
-    <string name="settings_ignore_wifi_scan_throttling">Wi-Fi -skannaus ilman rajoituksia</string>
+    <string name="settings_ignore_wifi_scan_throttling_title">Wi-Fi -skannaus ilman rajoituksia</string>
+    <string name="settings_ignore_wifi_scan_throttling_description">Jos skannaus on rajoitettu, skannauksia voidaan tehdä vain neljä kertaa kahdessa minuutissa</string>
+
     <string name="wifi_scan_throttling">Wi-Fi -skannauksen rajoitukset</string>
     <string name="wifi_scan_throttling_explanation">
         Wi-Fi -skannauksen rajoitukset täytyy poistaa laitteen asetuksista tätä ominaisuutta varten. Tämän voi yleensä tehdä kehittäjän asetuksista

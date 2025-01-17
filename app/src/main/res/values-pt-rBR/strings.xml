@@ -50,7 +50,7 @@
     <string name="endpoint">Serviço</string>
     <string name="path">Caminho</string>
     <string name="api_key">Chave de API (opcional)</string>
-    <string name="settings_ignore_wifi_scan_throttling">Ignorar limitações de busca por Wi-Fi</string>
+    <string name="settings_ignore_wifi_scan_throttling_title">Ignorar limitações de busca por Wi-Fi</string>
     <string name="wifi_scan_throttling">Limitações de busca por Wi-Fi</string>
     <string name="wifi_scan_throttling_explanation">Você precisa desativar as limitações de busca por Wi-Fi nas configurações do seu dispositivo para usar esta funcionalidade. Isto normalmente pode ser feito pelas opções de desenvolvedor</string>
     <string name="show_my_location">Mostrar minha localização</string>

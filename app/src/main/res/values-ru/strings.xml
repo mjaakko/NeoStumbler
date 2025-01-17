@@ -57,7 +57,7 @@
     <string name="suggested_services_title">Предлагаемые сервисы</string>
     <string name="suggested_service_hosted_by">Размещено:</string>
     <string name="suggested_service_website">Сайт</string>
-    <string name="settings_ignore_wifi_scan_throttling">Игнорировать неточности сканирования Wi-Fi</string>
+    <string name="settings_ignore_wifi_scan_throttling_title">Игнорировать неточности сканирования Wi-Fi</string>
     <string name="wifi_scan_throttling">Неточности сканирования Wi-Fi</string>
     <string name="settings_group_other">Другое</string>
     <string name="movement_detection">Определение движения</string>

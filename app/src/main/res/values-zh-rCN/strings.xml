@@ -52,7 +52,7 @@
     <string name="suggested_services_title">建议服务</string>
     <string name="suggested_service_website">网站</string>
     <string name="unencrypted_endpoint_warning">未加密的端点</string>
-    <string name="settings_ignore_wifi_scan_throttling">忽略 Wi-Fi 扫描限制</string>
+    <string name="settings_ignore_wifi_scan_throttling_title">忽略 Wi-Fi 扫描限制</string>
     <string name="wifi_scan_throttling">Wi-Fi 扫描限制</string>
     <string name="wifi_scan_throttling_explanation">你需要在你设备的设置中禁用 Wi-Fi 扫描限制才能启用此功能。通常可在开发者设置中找到</string>
     <string name="settings_group_other">其他</string>

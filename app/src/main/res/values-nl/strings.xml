@@ -68,7 +68,7 @@
     <string name="unencrypted_endpoint_warning">Onversleutelde ontvangstlocatie</string>
     <string name="suggested_service_hosted_by">Aangeboden door:</string>
     <string name="suggested_service_terms_of_use">Gebruikersovereenkomst</string>
-    <string name="settings_ignore_wifi_scan_throttling">Wifi-scannen niet beperken</string>
+    <string name="settings_ignore_wifi_scan_throttling_title">Wifi-scannen niet beperken</string>
     <string name="wifi_scan_throttling">Wifi-scanbeperking</string>
     <string name="settings_group_reports">Rapporten</string>
     <string name="settings_group_scanning">Scannen</string>

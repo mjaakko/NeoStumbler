@@ -50,7 +50,7 @@
     <string name="endpoint">Endpunkt</string>
     <string name="path">Pfad</string>
     <string name="api_key">API-Schlüssel (optional)</string>
-    <string name="settings_ignore_wifi_scan_throttling">Ignoriere WLAN-Suchdrosselung</string>
+    <string name="settings_ignore_wifi_scan_throttling_title">Ignoriere WLAN-Suchdrosselung</string>
     <string name="wifi_scan_throttling">WLAN-Suchdrosselung</string>
     <string name="wifi_scan_throttling_explanation">Sie müssen die Drosselung der WLAN-Suche in Ihren Geräteeinstellungen deaktivieren, um diese Funktion zu ermöglichen. Normalerweise kann dies in den Entwicklereinstellungen getan werden</string>
     <string name="show_my_location">Zeige meinen Standort</string>
