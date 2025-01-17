@@ -1,2 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="stop_scanning">Nutraukti skenavimą</string>
+    <string name="no_thanks">Ačiū, ne</string>
+    <string name="reports_last_uploaded">Ataskaitos paskiausiai išsiųstos: %s</string>
+    <string name="reports_total">Iš viso ataskaitų: %s</string>
+    <string name="ok">Gerai</string>
+    <string name="permissions_not_granted">Būtinieji leidimai nesuteikti</string>
+    <string name="yes">Taip</string>
+    <string name="no">Ne</string>
+    <string name="reset">Atkurti</string>
+    <string name="save">Įrašyti</string>
+    <string name="cancel">Atsisakyti</string>
+    <string name="use">Naudoti</string>
+    <string name="stop">Stop</string>
+    <string name="delete">Šalinti</string>
+    <string name="no_data">Duomenų nėra</string>
+    <string name="failed_to_open_selected_file">Nepavyko atverti pažymėto failo</string>
+    <string name="permissions_needed">Reikia leidimų</string>
+    <string name="scanner_status_notification_channel_name">Skenavimo būsena</string>
+    <string name="wireless_scanning">Belaidžių tinklų skenavimas</string>
+    <string name="map_tab_title">Žemėlapis</string>
+    <string name="reports_tab_title">Ataskaitos</string>
+    <string name="wifi_icon_description">Belaidžių tinklų:</string>
+    <string name="cell_tower_icon_description">Korinio ryšio bokštų:</string>
+    <string name="bluetooth_icon_description">„Bluetooth“ siųstuvų:</string>
+    <string name="warning_icon_description">Įspėjimas</string>
+    <string name="statistics_tab_title">Statistika</string>
+    <string name="settings_tab_title">Nustatymai</string>
+    <string name="send_reports">Siųsti ataskaitas</string>
+    <string name="reports">Ataskaitos:</string>
+    <string name="reports_not_uploaded">Neišsiųstų ataskaitų: %s</string>
+    <string name="start_scanning">Pradėti skenavimą</string>
+    <string name="delete_report">Šalinti ataskaitą</string>
+    <string name="delete_report_confirmation">Ar tikrai norite pašalinti šią ataskaitą?</string>
+    <string name="toast_reports_upload_failed">Nepavyko išsiųsti ataskaitų</string>
+    <string name="toast_reports_uploaded">Išsiųsta ataskaitų: %d</string>
+</resources>
