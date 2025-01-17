@@ -91,4 +91,10 @@
     <string name="notification_style_minimal_description">Pranešimuose nebus jokių ataskaitų duomenų</string>
     <string name="notification_style_basic_title">Glausti</string>
     <string name="movement_detection_location_title">Vietovės pagrindu</string>
+    <string name="notification_style_detailed_description">Pranešimuose bus rodomas sukurtų ataskaitų skaičius ir GNSS palydovų skaičius</string>
+    <string name="notification_style_basic_description">Pranešimuose bus rodomas sukurtų ataskaitų skaičius</string>
+    <string name="app_language">Kalba</string>
+    <string name="show_my_location">Rodyti esamą vietovę</string>
+    <string name="permission_rationale_fine_location">Leidimo nustatyti tikslią vietovę reikia tam, kad galėtume kurti kuo tikslesnes ataskaitas</string>
+    <string name="notification_style_detailed_title">Išsamūs</string>
 </resources>
