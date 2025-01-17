@@ -19,7 +19,7 @@
     <string name="reports_total">Celkem reportů: %s</string>
     <string name="reports_not_uploaded">Neodeslané reporty: %s</string>
     <string name="reports_last_uploaded">Reporty naposled odeslány: %s</string>
-    <string name="start_scanning">Začít skenování</string>
+    <string name="start_scanning">Začít skenovat</string>
     <string name="stop_scanning">Zastavit skenování</string>
     <string name="delete_report">Odstranit report</string>
     <string name="map_tab_title">Mapa</string>
@@ -49,13 +49,13 @@
     <string name="settings_ignore_wifi_scan_throttling_title">Vypnout přibrždění vyhledávání Wi-Fi</string>
     <string name="wifi_scan_throttling">Přibrždění hledání Wi-Fi</string>
     <string name="wifi_scan_throttling_explanation">Pro odemčení této možnosti je třeba vypnout přibrždění vyhledávání Wi-Fi (Wi-Fi scan throttling) v nastavení zařízení. Toto nastavení lze většinou najít v nastavení pro vývojáře</string>
-    <string name="permission_rationale_fine_location">Pro přístup k aktuální poloze je třeba udělit povolení přístupu k přesné poloze</string>
+    <string name="permission_rationale_fine_location">Povolení pro přístup k přesné poloze je nutné k vytváření užitečných reportů</string>
     <string name="permission_rationale_read_phone_state">Oprávnění přístupu k telefonu je potřeba pro skenování telefonních věží pomocí všech SIM karet v zařízení</string>
     <string name="permission_rationale_post_notifications">Zobrazení stavu skenování potřebuje oprávnění k zobrazování oznámení</string>
     <string name="add_quick_settings_tile">Přidat dlaždici do rychlých nastavení pro rychlé spuštění skenování?</string>
     <string name="cells">Telefonní vysílače</string>
-    <string name="ignore_battery_optimizations_description">Pro nejlepší výsledky, aplikace by měla mít povoleno stále běžet na pozadí. Skenování je výrazně zpomaleno pokud není povolení stále běžet na pozadí uděleno a obrazovka je vypnutá</string>
-    <string name="battery_optimizations_not_disabled_warning">Povolení stále běžet na pozadí nebylo uděleno</string>
+    <string name="ignore_battery_optimizations_description">Pro nejlepší výsledky, aplikace by měla mít povoleno stále běžet v pozadí. Skenování je výrazně zpomaleno pokud toto povolení není uděleno a obrazovka je vypnutá</string>
+    <string name="battery_optimizations_not_disabled_warning">Stále běžet v pozadí není povoleno</string>
     <string name="notification_exporting_data">Probíhá export dat…</string>
     <string name="export_notification_channel_name">Export dat</string>
     <string name="send_reports_automatically">Automaticky posílat reporty</string>
@@ -64,10 +64,10 @@
     <string name="settings_group_scanning">Skenování</string>
     <string name="movement_detection">Detekce pohybu</string>
     <string name="movement_detection_none_description">Pokračovat ve skenování i když se nehýbete</string>
-    <string name="movement_detection_location_title">Založené na poloze</string>
+    <string name="movement_detection_location_title">Založená na poloze</string>
     <string name="movement_detection_significant_motion_title">Senzor pohybu</string>
     <string name="movement_detection_significant_motion_description">Pozastaví skenování a GPS když není detekován pohyb. Šetří baterii, ale nespolehlivý na některých zařízeních</string>
-    <string name="movement_detection_none_title">Žádný</string>
+    <string name="movement_detection_none_title">Žádná</string>
     <string name="movement_detection_location_description">Pozastaví skenování když se poloha nemění. Udržuje GPS aktivní</string>
     <string name="warning_icon_description">Varovná ikona</string>
     <string name="unencrypted_endpoint_warning">Nešifrované připojení k serveru</string>
@@ -101,7 +101,7 @@
     <string name="db_prune_never">Nikdy</string>
     <string name="troubleshooting_description">Opravení běžných problémů při skenování</string>
     <string name="troubleshooting_permissions_granted">Udělená oprávnění</string>
-    <string name="troubleshooting_battery_optimizations_disabled">Povolení stále běžet na pozadí uděleno</string>
+    <string name="troubleshooting_battery_optimizations_disabled">Povolení stále běžet na pozadí</string>
     <string name="failed_to_open_selected_file">Vybraný soubor se nepodařilo otevřít</string>
     <string name="export_csv">Exportovat jako CSV</string>
     <string name="export_raw_database">Exportovat databázi</string>
@@ -116,10 +116,10 @@
     <string name="toast_deleted_all_reports">Všechny reporty smazány</string>
     <string name="about_app">O aplikaci</string>
     <string name="app_version">Verze: %s</string>
-    <string name="author_text">Vytvořeno s ❤️ od %1$s a %2$s</string>
-    <string name="contributors">přispěvatelé</string>
-    <string name="bug_report_button">Nahlásit chybu</string>
-    <string name="update_translations_button">Pomoc s překlady</string>
+    <string name="author_text">S ❤️ vytvořil %1$s %2$s</string>
+    <string name="contributors">et al.</string>
+    <string name="bug_report_button">Nahlásit problémy</string>
+    <string name="update_translations_button">Pomozte s překladem</string>
     <string name="db_size">Velikost databáze: %s</string>
     <string name="delete_all_reports">Smazat všechny reporty</string>
     <string name="app_variant">Varianta: %s</string>
@@ -129,4 +129,8 @@
     <string name="troubleshooting_title">Odstraňování problémů</string>
     <string name="import_database_not_valid">Vybraný soubor neobsahuje platnou databázi</string>
     <string name="no_data">Žádná data</string>
+    <string name="settings_ignore_wifi_scan_throttling_description">Pokud je přibrždění vyhledávání Wi-Fi zapnuté, bude možně vytvořit jen 2 skeny za minutu</string>
+    <string name="wifi_scan_frequency">Frekvence skenování Wi-Fi</string>
+    <string name="cell_tower_scan_frequency">Frekvence vyhledávání mobilních věží</string>
+    <string name="every_x_meters">Každých %d metrů</string>
 </resources>
