@@ -72,3 +72,5 @@ Contributions from the community are welcome and encouraged. Easiest ways to con
 </a>
 
 [Weblate](https://hosted.weblate.org/projects/neostumbler/) is used for translations. If you want to add translations for your language or to update existing translations, you can do that easily from Weblate. If you prefer, you can also update translations via a PR
+
+Note that once you've finished translating a new language, it needs to be enabled in the build configuration. See [this commit](https://github.com/mjaakko/NeoStumbler/commit/2c17e6f71825563fa78510b18a1d8e80596e4797) for an example
