@@ -89,7 +89,8 @@ fun IgnoreScanThrottlingToggle() {
     }
 
     ToggleWithAction(
-        title = stringResource(id = R.string.settings_ignore_wifi_scan_throttling),
+        title = stringResource(id = R.string.settings_ignore_wifi_scan_throttling_title),
+        description = stringResource(id = R.string.settings_ignore_wifi_scan_throttling_description),
         enabled = true,
         checked = enabled.value,
         action = { checked ->

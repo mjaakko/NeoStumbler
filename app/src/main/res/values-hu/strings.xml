@@ -50,7 +50,7 @@
     <string name="suggested_service_hosted_by">Kiszolgáló:</string>
     <string name="suggested_service_website">Weboldal</string>
     <string name="suggested_service_terms_of_use">Felhasználási feltételek</string>
-    <string name="settings_ignore_wifi_scan_throttling">A Wi-Fi szkennelés korlátozásának figyelmen kívül hagyása</string>
+    <string name="settings_ignore_wifi_scan_throttling_title">A Wi-Fi szkennelés korlátozásának figyelmen kívül hagyása</string>
     <string name="settings_group_scanning">Szkennelés</string>
     <string name="settings_group_other">Egyéb</string>
     <string name="movement_detection">Mozgásérzékelés</string>

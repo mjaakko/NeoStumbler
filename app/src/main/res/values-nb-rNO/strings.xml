@@ -83,7 +83,7 @@
     <string name="cells">Mobilmaster</string>
     <string name="beacons">Blåtanns-signalgivere</string>
     <string name="add_quick_settings_tile">Legg til hurtiginnstillinger for rask skanningsoppstart?</string>
-    <string name="settings_ignore_wifi_scan_throttling">Ignorer begrensning av Wi-Fi-skanning</string>
+    <string name="settings_ignore_wifi_scan_throttling_title">Ignorer begrensning av Wi-Fi-skanning</string>
     <string name="movement_detection_none_description">Fortsett skanning selv når du ikke beveger deg</string>
     <string name="movement_detection_location_description">Tar pause når skanningsposisjon ikke endrer seg. Holder GPS aktiv.</string>
     <string name="movement_detection_significant_motion_description">Tar pause i skanning og GPS når ingen bevegelse registreres. Sparer batteri, men har problemer på noen enheter.</string>

@@ -121,7 +121,9 @@
     <string name="suggested_service_website">Website</string>
     <string name="suggested_service_terms_of_use">Terms of use</string>
 
-    <string name="settings_ignore_wifi_scan_throttling">Ignore Wi-Fi scan throttling</string>
+    <string name="settings_ignore_wifi_scan_throttling_title">Ignore Wi-Fi scan throttling</string>
+    <string name="settings_ignore_wifi_scan_throttling_description">If scanning is throttled, only four scans can be done in a two-minute period</string>
+
     <string name="wifi_scan_throttling">Wi-Fi scan throttling</string>
     <string name="wifi_scan_throttling_explanation">
         You need to disable Wi-Fi scan throttling in your device\'s settings to enable this feature. Usually this can be done in the developer settings

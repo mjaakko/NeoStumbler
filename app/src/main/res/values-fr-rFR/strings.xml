@@ -56,7 +56,7 @@
     <string name="endpoint">Destination</string>
     <string name="path">Chemin</string>
     <string name="api_key">Clé API (optionnel)</string>
-    <string name="settings_ignore_wifi_scan_throttling">Ignorer les limitations pour les mesures du Wi-Fi</string>
+    <string name="settings_ignore_wifi_scan_throttling_title">Ignorer les limitations pour les mesures du Wi-Fi</string>
     <string name="wifi_scan_throttling">Limitations de mesures du Wi-Fi</string>
     <string name="wifi_scan_throttling_explanation">Pour activer cette option, vous devez désactiver la limitation de mesure du Wi-Fi dans les paramètres de votre appareil. Elle se trouve généralement dans les options pour les développeurs</string>
     <string name="show_my_location">Afficher mon emplacement</string>

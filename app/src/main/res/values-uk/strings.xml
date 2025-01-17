@@ -49,7 +49,7 @@
     <string name="suggested_service_hosted_by">Хостинг:</string>
     <string name="suggested_service_website">Вебсайт</string>
     <string name="suggested_service_terms_of_use">Умови використання</string>
-    <string name="settings_ignore_wifi_scan_throttling">Ігнорувати обмеження сканування Wi-Fi</string>
+    <string name="settings_ignore_wifi_scan_throttling_title">Ігнорувати обмеження сканування Wi-Fi</string>
     <string name="wifi_scan_throttling">Обмеження сканування Wi-Fi</string>
     <string name="wifi_scan_throttling_explanation">Вам потрібно вимкнути обмеження сканування Wi-Fi в налаштуваннях вашого пристрою, щоб увімкнути цю функцію. Зазвичай це можна зробити в налаштуваннях для розробників</string>
     <string name="settings_group_reports">Звіти</string>
