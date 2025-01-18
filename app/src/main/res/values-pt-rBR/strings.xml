@@ -117,7 +117,7 @@
     <string name="app_variant">Variante: %s</string>
     <string name="author_text">Feito com ❤️ por %1$s e %2$s</string>
     <string name="contributors">contribuidores</string>
-    <string name="bug_report_button">Relatar um erro</string>
+    <string name="bug_report_button">Relatar um problema</string>
     <string name="update_translations_button">Atualizar traduções</string>
     <string name="export_raw_database">Exportar banco de dados bruto</string>
     <string name="export_csv">Exportar como CSV</string>
@@ -129,4 +129,8 @@
     <string name="import_database_not_valid">O arquivo selecionado não contém um banco de dados válido</string>
     <string name="import_database_successful">O banco de dados foi importado com %d relatórios</string>
     <string name="no_data">Sem dados</string>
+    <string name="settings_ignore_wifi_scan_throttling_description">Se o scan é limitado, somente 4 scans podem ser feitos em um período de 2 minutos</string>
+    <string name="wifi_scan_frequency">Frequência de scan Wi-Fi</string>
+    <string name="every_x_meters">A cada %d metros</string>
+    <string name="cell_tower_scan_frequency">Frequência de scan de torres de celular</string>
 </resources>
