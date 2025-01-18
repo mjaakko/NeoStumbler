@@ -127,4 +127,8 @@
     <string name="db_size">Розмір бази даних: %s</string>
     <string name="troubleshooting_description">Виправлення поширених проблем зі скануванням</string>
     <string name="manage_storage_title">Керування сховищем</string>
+    <string name="settings_ignore_wifi_scan_throttling_description">Якщо сканування обмежено, можна виконати лише чотири сканування протягом двох хвилин</string>
+    <string name="wifi_scan_frequency">Частота сканування Wi-Fi</string>
+    <string name="cell_tower_scan_frequency">Частота сканування стільникових веж</string>
+    <string name="every_x_meters">Кожні %d метрів</string>
 </resources>
