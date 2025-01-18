@@ -1,0 +1,1 @@
+<b>NeoStumbler</b> – tai programa, padedanti rinkti duomenis apie belaidžius tinklus, mobiliojo ryšio bokštus ir „Bluetooth“ siųstuvus ir pateikti juos tarnyboms, naudojančioms su „Mozilla Location Services“ suderinamą API
