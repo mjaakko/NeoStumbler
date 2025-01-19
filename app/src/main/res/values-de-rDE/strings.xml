@@ -28,6 +28,7 @@
     <string name="delete_report">Bericht löschen</string>
     <string name="delete_report_confirmation">Sind Sie sicher, dass Sie den Bericht löschen möchten?</string>
     <plurals name="toast_reports_uploaded">
+        <item quantity="one">%d Bericht hochgeladen</item>
         <item quantity="other">%d Berichte hochgeladen</item>
     </plurals>
     <string name="toast_reports_upload_failed">Berichte hochladen fehlgeschlagen</string>
@@ -35,6 +36,7 @@
     <string name="notification_sending_reports">Lade Berichte hoch</string>
     <string name="notification_wireless_scanning_title">Funknetzwerke scannen aktiv</string>
     <plurals name="notification_wireless_scanning_content_reports_created">
+        <item quantity="one">%d Bericht erstellt</item>
         <item quantity="other">%d Berichte erstellt</item>
     </plurals>
     <string name="ignore_battery_optimizations_title">Akkuoptimierungen ignorieren</string>
@@ -110,7 +112,8 @@
     <string name="import_raw_database_description">Der Import einer Rohdatenbank ersetzt die bestehende Datenbank</string>
     <string name="import_database_not_valid">Die ausgewähle Datei beinhaltet keine gültige Datenbank</string>
     <plurals name="import_database_successful">
-        <item quantity="other">Importierte Datenbank mit %d Berichten</item>
+        <item quantity="one">Datenbank mit %d Bericht importiert</item>
+        <item quantity="other">Datenbank mit %d Berichten importiert</item>
     </plurals>
     <string name="troubleshooting_battery_optimizations_disabled">Batterieoptimierung deaktiviert</string>
     <string name="troubleshooting_accurate_location_available">Genaue Lokalisierung verfügbar</string>
@@ -126,6 +129,7 @@
     <string name="delete_all_reports">Lösche alle Berichte</string>
     <string name="delete_all_reports_confirmation">Möchtest du wirklich alle Berichte löschen?</string>
     <plurals name="toast_deleted_reports">
+        <item quantity="one">%d Bericht gelöscht</item>
         <item quantity="other">%d Berichte gelöscht</item>
     </plurals>
     <string name="toast_deleted_all_reports">Lösche alle Berichte</string>
@@ -137,4 +141,7 @@
     <string name="update_translations_button">Aktualisiere Übersetzung</string>
     <string name="author_text">Mit ❤️ von %1$s und %2$s erstellt</string>
     <string name="no_data">Keine Daten vorhanden</string>
+    <string name="every_x_meters">Alle %d Meter</string>
+    <string name="wifi_scan_frequency">Häufigkeit des Wi-Fi Scans</string>
+    <string name="cell_tower_scan_frequency">Häufigkeit des Funkzellen-Scans</string>
 </resources>
