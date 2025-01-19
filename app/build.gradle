@@ -186,7 +186,6 @@ dependencies {
     def lifecycle_version = '2.8.7'
 
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_version"
@@ -202,7 +201,6 @@ dependencies {
     implementation 'androidx.compose.ui:ui-tooling-preview'
 
     implementation 'androidx.compose.material3:material3'
-    implementation "androidx.compose.runtime:runtime-livedata"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
