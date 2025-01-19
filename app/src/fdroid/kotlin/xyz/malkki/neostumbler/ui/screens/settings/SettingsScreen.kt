@@ -49,6 +49,11 @@ fun SettingsScreen() {
             title = stringResource(id = R.string.settings_group_scanning)
         ) {
             MovementDetectorSettings()
+            SettingsToggle(
+                title = stringResource(id = R.string.keep_screen_on_while_scanning),
+                preferenceKey = PreferenceKeys.KEEP_SCREEN_ON_WHILE_SCANNING,
+                default = false
+            )
             IgnoreScanThrottlingToggle()
             SliderSetting(
                 title = stringResource(R.string.wifi_scan_frequency),

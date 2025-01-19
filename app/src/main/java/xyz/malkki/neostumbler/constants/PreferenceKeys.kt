@@ -7,6 +7,8 @@ object PreferenceKeys {
     const val AUTOSCAN_ENABLED = "autoscan_enabled"
     const val PREFER_FUSED_LOCATION = "prefer_fused_location"
 
+    const val KEEP_SCREEN_ON_WHILE_SCANNING = "screen_on_while_scanning"
+
     const val IGNORE_SCAN_THROTTLING = "ignore_scan_throttling"
 
     const val WIFI_SCAN_DISTANCE = "wifi_scan_distance"

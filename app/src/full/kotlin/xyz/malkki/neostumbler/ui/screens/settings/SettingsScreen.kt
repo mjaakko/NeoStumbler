@@ -50,6 +50,11 @@ fun SettingsScreen() {
         ) {
             MovementDetectorSettings()
             SettingsToggle(
+                title = stringResource(id = R.string.keep_screen_on_while_scanning),
+                preferenceKey = PreferenceKeys.KEEP_SCREEN_ON_WHILE_SCANNING,
+                default = false
+            )
+            SettingsToggle(
                 title = stringResource(id = R.string.prefer_fused_location),
                 preferenceKey = PreferenceKeys.PREFER_FUSED_LOCATION,
                 default = true

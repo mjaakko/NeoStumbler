@@ -46,6 +46,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import xyz.malkki.neostumbler.MainActivity
 import xyz.malkki.neostumbler.R
@@ -122,6 +123,8 @@ class ScannerService : Service() {
 
     private lateinit var notificationManager: NotificationManager
 
+    private lateinit var powerManager: PowerManager
+
     private lateinit var settingsStore: DataStore<Preferences>
 
     private lateinit var scanReportCreator: ScanReportCreator
@@ -133,6 +136,8 @@ class ScannerService : Service() {
     private var autostarted = true
 
     private var scanning = false
+
+    private var screenOnWakeLock: WakeLock? = null
 
     private var notificationStyle = NotificationStyle.BASIC
 
@@ -146,13 +151,30 @@ class ScannerService : Service() {
 
         ScannerTileService.updateTile(this)
 
-        wakeLock = getSystemService<PowerManager>()!!.newWakeLock(PARTIAL_WAKE_LOCK, this::class.java.canonicalName).apply {
+        powerManager = getSystemService<PowerManager>()!!
+
+        wakeLock = powerManager.newWakeLock(PARTIAL_WAKE_LOCK, this::class.java.canonicalName).apply {
             acquire()
         }
 
         notificationManager = getSystemService()!!
 
         settingsStore = (application as StumblerApplication).settingsStore
+
+        screenOnWakeLock = runBlocking {
+            val keepScreenOn = settingsStore.data.map { it[booleanPreferencesKey(PreferenceKeys.KEEP_SCREEN_ON_WHILE_SCANNING)] }.first() == true
+
+            if (keepScreenOn) {
+                Timber.d("Creating a wake lock to keep the screen on while scanning")
+
+                @Suppress("DEPRECATION")
+                powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, ScannerService::class.java.canonicalName!! + "_screen_on").apply {
+                    acquire()
+                }
+            } else {
+                null
+            }
+        }
 
         scanReportCreator = ScanReportCreator(this)
 
@@ -361,6 +383,8 @@ class ScannerService : Service() {
     }
 
     override fun onDestroy() {
+        screenOnWakeLock?.release()
+
         coroutineScope.cancel()
 
         _serviceRunning.value = false
