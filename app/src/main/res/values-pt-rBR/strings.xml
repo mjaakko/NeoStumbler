@@ -28,6 +28,8 @@
     <string name="delete_report">Excluir relatório</string>
     <string name="delete_report_confirmation">Você tem certeza que deseja excluir o relatório?</string>
     <plurals name="toast_reports_uploaded">
+        <item quantity="one">%d relatório enviado</item>
+        <item quantity="many">%dM relatórios enviados</item>
         <item quantity="other">%d relatórios enviados</item>
     </plurals>
     <string name="toast_reports_upload_failed">Falha ao enviar relatórios</string>
@@ -35,6 +37,8 @@
     <string name="notification_sending_reports">Enviando relatórios</string>
     <string name="notification_wireless_scanning_title">Scan de redes sem-fio ativo</string>
     <plurals name="notification_wireless_scanning_content_reports_created">
+        <item quantity="one">%d relatório criado</item>
+        <item quantity="many">%dM relatórios criados</item>
         <item quantity="other">%d relatórios criados</item>
     </plurals>
     <string name="ignore_battery_optimizations_title">Ignorar otimizações de bateria</string>
@@ -106,6 +110,8 @@
     <string name="delete_all_reports">Excluir todos os relatórios</string>
     <string name="delete_all_reports_confirmation">Você tem certeza que deseja excluir todos os relatórios?</string>
     <plurals name="toast_deleted_reports">
+        <item quantity="one">%d relatório foi excluído</item>
+        <item quantity="many">%dM relatórios foram excluídos</item>
         <item quantity="other">%d relatórios foram excluídos</item>
     </plurals>
     <string name="db_prune_never">Nunca</string>
@@ -134,6 +140,8 @@
     <string name="import_raw_database_description">Ao importar um banco de dados bruto, o atual será substituído</string>
     <string name="import_database_not_valid">O arquivo selecionado não contém um banco de dados válido</string>
     <plurals name="import_database_successful">
+        <item quantity="one">O banco de dados foi importado com %d relatório</item>
+        <item quantity="many">O banco de dados foi importado com %dM relatórios</item>
         <item quantity="other">O banco de dados foi importado com %d relatórios</item>
     </plurals>
     <string name="no_data">Sem dados</string>
