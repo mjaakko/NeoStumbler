@@ -44,10 +44,12 @@
     <string name="delete_report">Rapport verwijderen</string>
     <string name="delete_report_confirmation">Weet u zeker dat u het rapport wilt verwijderen?</string>
     <plurals name="toast_reports_uploaded">
-        <item quantity="other">%d rapporten geüploaded</item>
+        <item quantity="one">%d raport opgestuurd</item>
+        <item quantity="other">%d rapporten opgestuurd</item>
     </plurals>
     <string name="notification_sending_reports">Rapporten versturen</string>
     <plurals name="notification_wireless_scanning_content_reports_created">
+        <item quantity="one">%d rapport gemaakt</item>
         <item quantity="other">%d rapporten gemaakt</item>
     </plurals>
     <string name="notification_wireless_scanning_content_satellite_stats">%1$d/%2$d satellieten in gebruik</string>
@@ -61,7 +63,8 @@
     <string name="export_csv">Exporteren als CSV</string>
     <string name="export_raw_database">Ruwe database exporteren</string>
     <plurals name="import_database_successful">
-        <item quantity="other">Database met %d rapporten geïmporteerd</item>
+        <item quantity="one">Databank met %d raport geïmporteerd</item>
+        <item quantity="other">Databank met %d rapporten geïmporteerd</item>
     </plurals>
     <string name="reupload_data">Gegevens opnieuw uploaden</string>
     <string name="wifis">Wifi-netwerken</string>
@@ -105,6 +108,7 @@
     <string name="notification_style_basic_title">Basis</string>
     <string name="permission_rationale_location_map">Het tonen van uw huidige locatie op de kaart vereist locatie­rechten</string>
     <plurals name="toast_deleted_reports">
+        <item quantity="one">%d rapport verwijderd</item>
         <item quantity="other">%d rapporten verwijderd</item>
     </plurals>
     <string name="db_prune_title">Verzonden rapporten verwijderen</string>
@@ -135,4 +139,9 @@
     <string name="troubleshooting_fix">Oplossen</string>
     <string name="delete_data">Gegevens verwijderen</string>
     <string name="update_translations_button">Vertalingen bewerken</string>
+    <string name="settings_ignore_wifi_scan_throttling_description">Wanneer het zoeken is beperkt, kunnen maar vier opdrachten per twee minuten worden uitgevoerd</string>
+    <string name="wifi_scan_frequency">Wi-Fi zoek frequentie</string>
+    <string name="cell_tower_scan_frequency">Telefoonmast zoek frequentie</string>
+    <string name="every_x_meters">Elke %d meter</string>
+    <string name="map_tile_source">Kaart bron</string>
 </resources>
