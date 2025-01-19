@@ -243,7 +243,10 @@
 
     <string name="delete_all_reports_confirmation">Oletko varma, että haluat poistaa kaikki raportit?</string>
 
-    <string name="toast_deleted_reports">%d raporttia poistettu</string>
+    <plurals name="toast_deleted_reports">
+        <item quantity="one">%d raportti poistettu</item>
+        <item quantity="other">%d raporttia poistettu</item>
+    </plurals>
     <string name="toast_deleted_all_reports">Kaikki raportit poistettu</string>
  
 
