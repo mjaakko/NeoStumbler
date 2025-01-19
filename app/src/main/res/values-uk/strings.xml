@@ -40,7 +40,7 @@
     <string name="import_raw_database">Імпортувати сиру базу даних</string>
     <string name="import_database_not_valid">Вибраний файл не містить дійсної бази даних</string>
     <plurals name="import_database_successful">
-        <item quantity="other">Імпортовано базу даних з %d звітами</item>
+        <item quantity="many">Імпортовано базу даних з %d звітами</item>
     </plurals>
     <string name="cells">Мобільні вежі</string>
     <string name="beacons">Bluetooth маяки</string>
@@ -90,7 +90,7 @@
     <string name="update_translations_button">Оновлення перекладів</string>
     <string name="no">Ні</string>
     <plurals name="toast_reports_uploaded">
-        <item quantity="other">Завантажено %d звітів</item>
+        <item quantity="many">Завантажено %d звітів</item>
     </plurals>
     <string name="mls_warning_title">MLS припинив роботу</string>
     <string name="ok">OK</string>
@@ -102,7 +102,7 @@
     <string name="failed_to_open_selected_file">Не вдалося відкрити вибраний файл</string>
     <string name="warning_icon_description">Значок Попередження</string>
     <plurals name="toast_deleted_reports">
-        <item quantity="other">Видалено %d звітів</item>
+        <item quantity="many">Видалено %d звітів</item>
     </plurals>
     <string name="app_version">Версія: %s</string>
     <string name="permissions_not_granted">Не надано необхідні дозволи</string>
@@ -113,7 +113,7 @@
     <string name="bluetooth_icon_description">Значок Bluetooth</string>
     <string name="wireless_scanning">Бездротове сканування</string>
     <plurals name="notification_wireless_scanning_content_reports_created">
-        <item quantity="other">Створено %d звітів</item>
+        <item quantity="many">Створено %d звітів</item>
     </plurals>
     <string name="delete_data">Видалення даних</string>
     <string name="import_data">Імпортувати дані</string>

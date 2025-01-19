@@ -132,7 +132,7 @@
     <string name="import_raw_database_description">导入新数据库的会替换当前的</string>
     <string name="import_database_not_valid">所选文件未包含有效数据库</string>
     <plurals name="import_database_successful">
-        已导入有 %d 份报告的数据库
+        <item quantity="other">已导入有 %d 份报告的数据库</item>
     </plurals>
     <string name="no_data">无数据</string>
 </resources>
