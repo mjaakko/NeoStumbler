@@ -21,7 +21,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.asFlow
 import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.ExistingWorkPolicy
@@ -47,8 +46,7 @@ import kotlin.time.toJavaDuration
 /**
  * Returns a flow which emits booleans indicating whether an upload can be started
  */
-private fun WorkManager.getCanUploadFlow(): Flow<Boolean> = getWorkInfosForUniqueWorkLiveData(ReportSendWorker.ONE_TIME_WORK_NAME)
-    .asFlow()
+private fun WorkManager.getCanUploadFlow(): Flow<Boolean> = getWorkInfosForUniqueWorkFlow(ReportSendWorker.ONE_TIME_WORK_NAME)
     .map { workInfos ->
         workInfos.none { workInfo ->
             workInfo.state == WorkInfo.State.ENQUEUED

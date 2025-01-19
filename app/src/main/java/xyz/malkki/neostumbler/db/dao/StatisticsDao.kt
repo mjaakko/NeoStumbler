@@ -1,6 +1,5 @@
 package xyz.malkki.neostumbler.db.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.MapColumn
 import androidx.room.Query
@@ -29,25 +28,4 @@ interface StatisticsDao {
     """
     )
     fun newCellsPerDay(): Flow<Map<@MapColumn("date") LocalDate, @MapColumn("count") Long>>
-
-    @Query(
-        """
-        SELECT COUNT(DISTINCT macAddress) FROM WifiAccessPointEntity
-    """
-    )
-    fun distinctWifisCount(): LiveData<Long>
-
-    @Query(
-        """
-        SELECT COUNT(DISTINCT macAddress) FROM BluetoothBeaconEntity
-    """
-    )
-    fun distinctBeaconsCount(): LiveData<Long>
-
-    @Query(
-        """
-        SELECT COUNT(*) FROM (SELECT DISTINCT radioType, mobileCountryCode, mobileNetworkCode, locationAreaCode, cellId, primaryScramblingCode FROM CellTowerEntity)
-    """
-    )
-    fun distinctCellsCount(): LiveData<Long>
 }
