@@ -22,6 +22,7 @@ import xyz.malkki.neostumbler.MainActivity
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
+import xyz.malkki.neostumbler.extensions.getQuantityString
 import xyz.malkki.neostumbler.scanner.ScannerService
 import xyz.malkki.neostumbler.utils.OneTimeActionHelper
 import xyz.malkki.neostumbler.utils.PermissionHelper
@@ -80,10 +81,7 @@ class ScannerTileService : TileService() {
                             )
 
                             subtitle = if (scanningActive) {
-                                ContextCompat.getString(
-                                    this@ScannerTileService,
-                                    R.string.notification_wireless_scanning_content_reports_created
-                                ).format(reportsCreated)
+                                applicationContext.getQuantityString(R.plurals.notification_wireless_scanning_content_reports_created, reportsCreated, reportsCreated)
                             } else {
                                 null
                             }

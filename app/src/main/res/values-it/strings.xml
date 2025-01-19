@@ -28,12 +28,16 @@
     <string name="reports_not_uploaded">Rilevamenti non inviate: %s</string>
     <string name="reports_last_uploaded">Data ultimo invio: %s</string>
     <string name="delete_report">Elimina rilevazione</string>
-    <string name="toast_reports_uploaded">%d rilevamenti inviate</string>
+    <plurals name="toast_reports_uploaded">
+        <item quantity="other">%d rilevamenti inviate</item>
+    </plurals>
     <string name="toast_reports_upload_failed">Impossibile inviare rilevamenti</string>
     <string name="report_upload_notification_channel_name">Invio rilevamenti</string>
     <string name="notification_sending_reports">Invio rilevamenti in corso</string>
     <string name="notification_wireless_scanning_title">Scansione wireless attiva</string>
-    <string name="notification_wireless_scanning_content_reports_created">%d rilevamenti creati</string>
+    <plurals name="notification_wireless_scanning_content_reports_created">
+        <item quantity="other">%d rilevamenti creati</item>
+    </plurals>
     <string name="ignore_battery_optimizations_title">Ignora ottimizzazioni batteria</string>
     <string name="send_reports_automatically">Invia rilevamenti automaticamente</string>
     <string name="export_notification_channel_name">Esportazione dati</string>
@@ -46,7 +50,9 @@
     <string name="import_data">Importazione dati</string>
     <string name="import_raw_database">Importa database grezzo</string>
     <string name="import_raw_database_description">L\'importazione di un database grezzo sostituirà il database esistente</string>
-    <string name="import_database_successful">Database importato con %d rilevamenti</string>
+    <plurals name="import_database_successful">
+        <item quantity="other">Database importato con %d rilevamenti</item>
+    </plurals>
     <string name="reupload_data">Re-invia dati</string>
     <string name="wifis">Wi-Fi</string>
     <string name="cells">Celle</string>
@@ -80,7 +86,9 @@
     <string name="notification_style_basic_description">Mostra il numero di rilevamenti generati</string>
     <string name="troubleshooting_fix">Risolvi</string>
     <string name="db_prune_never">Mai</string>
-    <string name="toast_deleted_reports">%d rilevamenti eliminati</string>
+    <plurals name="toast_deleted_reports">
+        <item quantity="other">%d rilevamenti eliminati</item>
+    </plurals>
     <string name="delete_all_reports_confirmation">Confermi di voler eliminare tutti i rilevamenti?</string>
     <string name="author_text">Creato con ❤️ da %1$s e %2$s</string>
     <string name="contributors">collaboratori</string>

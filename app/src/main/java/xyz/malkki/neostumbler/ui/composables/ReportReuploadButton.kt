@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
+import xyz.malkki.neostumbler.extensions.getQuantityString
 import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.geosubmit.ReportSendWorker
 import java.time.LocalDate
@@ -46,7 +47,7 @@ fun ReportReuploadButton() {
         workId = enqueuedUploadWork.value,
         onWorkSuccess = { workInfo ->
             val reportsUploaded = workInfo.outputData.getInt(ReportSendWorker.OUTPUT_REPORTS_SENT, 0)
-            context.showToast(ContextCompat.getString(context, R.string.toast_reports_uploaded).format(reportsUploaded))
+            context.showToast(context.getQuantityString(R.plurals.toast_reports_uploaded, reportsUploaded, reportsUploaded))
 
             enqueuedUploadWork.value = null
         },

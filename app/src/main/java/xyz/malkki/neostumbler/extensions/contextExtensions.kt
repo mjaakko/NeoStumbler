@@ -9,6 +9,8 @@ import android.os.Build
 import android.provider.Settings
 import android.widget.Toast
 import androidx.annotation.IntDef
+import androidx.annotation.PluralsRes
+import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.core.os.LocaleListCompat
 import java.util.Locale
@@ -70,4 +72,11 @@ annotation class ToastLength
  */
 fun Context.showToast(text: String, @ToastLength length: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(this, text, length).show()
+}
+
+/**
+ * Returns the quantity string with support for user-configured language ([androidx.appcompat.app.AppCompatDelegate])
+ */
+fun Context.getQuantityString(@PluralsRes resId: Int, quantity: Int, vararg formatArgs: Any = emptyArray<Any>()): String {
+    return ContextCompat.getContextForLanguage(this).resources.getQuantityString(resId, quantity, *formatArgs)
 }

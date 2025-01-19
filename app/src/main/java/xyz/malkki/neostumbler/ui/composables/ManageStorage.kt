@@ -35,6 +35,7 @@ import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.db.ReportDatabase
 import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.extensions.getEstimatedSize
+import xyz.malkki.neostumbler.extensions.getQuantityString
 import xyz.malkki.neostumbler.extensions.getTableNames
 import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.ui.composables.export.ExportCsvButton
@@ -144,7 +145,7 @@ private fun DeleteReportsByDate(reportDb: StateFlow<ReportDatabase>) {
                     coroutineScope.launch {
                         val deletedCount = reportDb.value.reportDao().deleteFromTimeRange(from, to)
 
-                        context.showToast(ContextCompat.getString(context, R.string.toast_deleted_reports).format(deletedCount))
+                        context.showToast(context.getQuantityString(R.plurals.toast_deleted_reports, deletedCount, deletedCount))
                     }
                 }
             }
@@ -238,7 +239,7 @@ private fun ImportDb() {
                     app.reportDatabaseManager.importDb(tempDbFile)
 
                     val reportCount = app.reportDb.value.reportDao().getReportCount().first()
-                    context.showToast(ContextCompat.getString(context, R.string.import_database_successful).format(reportCount))
+                    context.showToast(context.getQuantityString(R.plurals.import_database_successful, reportCount, reportCount))
                 } else {
                     context.showToast(ContextCompat.getString(context, R.string.import_database_not_valid))
                 }
