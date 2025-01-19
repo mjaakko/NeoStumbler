@@ -3,12 +3,31 @@ package xyz.malkki.neostumbler.ui.screens
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.material3.AlertDialogDefaults
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -20,6 +39,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.graphics.ColorUtils
@@ -46,6 +66,7 @@ import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.ui.composables.KeepScreenOn
 import xyz.malkki.neostumbler.ui.composables.PermissionsDialog
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
+import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel.MapTileSource
 
 private val HEAT_LOW = ColorUtils.setAlphaComponent(0xd278ff, 120)
 private val HEAT_HIGH = ColorUtils.setAlphaComponent(0xaa00ff, 120)
@@ -66,11 +87,17 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
         mutableStateOf(false)
     }
 
+    val loadedStyle = remember {
+        mutableStateOf<MapViewModel.MapStyle?>(null)
+    }
+
     val fillManager = remember {
         mutableStateOf<FillManager?>(null)
     }
 
     val httpClient = mapViewModel.httpClient.collectAsState(initial = null)
+
+    val selectedMapTileSource = mapViewModel.mapTileSource.collectAsState(initial = null)
 
     val mapStyle = mapViewModel.mapStyle.collectAsState(initial = null)
 
@@ -148,8 +175,13 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
                             }
                         })
 
-                        val styleBuilder = Style.Builder()
-                            .fromJson(mapStyle.value!!)
+                        val styleBuilder = Style.Builder().apply {
+                            if (mapStyle.value!!.styleJson != null) {
+                                fromJson(mapStyle.value!!.styleJson!!)
+                            } else {
+                                fromUri(mapStyle.value!!.styleUrl!!)
+                            }
+                        }
 
                         map.setStyle(styleBuilder) { style ->
                             map.locationComponent.activateLocationComponent(
@@ -194,6 +226,16 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
                                 map.cameraPosition = CameraPosition.Builder().target(LatLng(myLocation.value!!.location.latitude, myLocation.value!!.location.longitude)).build()
                             }
                         }
+
+                        //Ugly, but we don't want to update the map style unless it has actually changed
+                        //TODO: think about a better way to do this
+                        if (map.style != null) {
+                            if (mapStyle.value!!.styleUrl != null && map.style!!.uri != mapStyle.value!!.styleUrl) {
+                                map.setStyle(Style.Builder().fromUri(mapStyle.value!!.styleUrl!!))
+                            } else if (mapStyle.value!!.styleJson != null && map.style!!.json != mapStyle.value!!.styleJson) {
+                                map.setStyle(Style.Builder().fromJson(mapStyle.value!!.styleJson!!))
+                            }
+                        }
                     }
 
                     fillManager.value?.let {
@@ -211,6 +253,14 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
         Box(
             modifier = Modifier.fillMaxSize().padding(16.dp)
         ) {
+            if (selectedMapTileSource.value != null) {
+                MapTileSourceButton(
+                    modifier = Modifier.size(32.dp).align(Alignment.TopEnd),
+                    selectedMapTileSource = selectedMapTileSource.value!!,
+                    onMapTileSourceSelected = { mapViewModel.setMapTileSource(it) }
+                )
+            }
+
             FilledIconButton(
                 modifier = Modifier
                     .size(48.dp)
@@ -243,6 +293,92 @@ private fun createHeatMapFill(tiles: Collection<MapViewModel.HeatMapTile>): List
             .withLatLngs(listOf(tile.outline.map {
                 LatLng(it.latitude, it.longitude)
             }))
+    }
+}
+
+@Composable
+private fun MapTileSourceButton(modifier: Modifier, selectedMapTileSource: MapTileSource, onMapTileSourceSelected: (MapTileSource) -> Unit) {
+    val dialogOpen = rememberSaveable { mutableStateOf(false) }
+
+    if (dialogOpen.value) {
+        BasicAlertDialog(
+            onDismissRequest = {
+                dialogOpen.value = false
+            }
+        ) {
+            Surface(
+                modifier = Modifier
+                    .wrapContentWidth()
+                    .wrapContentHeight(),
+                shape = MaterialTheme.shapes.small,
+                tonalElevation = AlertDialogDefaults.TonalElevation
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        style = MaterialTheme.typography.titleLarge,
+                        text = stringResource(id = R.string.map_tile_source),
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Column(
+                        modifier = Modifier
+                            .selectableGroup()
+                            .padding(bottom = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        MapTileSource.entries.forEach { mapTileSource ->
+                            Row(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .wrapContentHeight()
+                                    .defaultMinSize(minHeight = 36.dp)
+                                    .selectable(
+                                        selected = mapTileSource == selectedMapTileSource,
+                                        onClick = {
+                                            onMapTileSourceSelected(mapTileSource)
+
+                                            dialogOpen.value = false
+                                        },
+                                        role = Role.RadioButton
+                                    )
+                                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                RadioButton(
+                                    modifier = Modifier
+                                        .align(Alignment.CenterVertically)
+                                        .padding(top = 4.dp),
+                                    selected = mapTileSource == selectedMapTileSource,
+                                    onClick = null
+                                )
+
+                                Text(
+                                    modifier = Modifier
+                                        .align(Alignment.CenterVertically)
+                                        .padding(start = 16.dp),
+                                    text = mapTileSource.title,
+                                    style = MaterialTheme.typography.bodyMedium.merge()
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    FilledTonalIconButton(
+        modifier = modifier,
+        onClick = {
+            dialogOpen.value = true
+        },
+        colors = IconButtonDefaults.filledTonalIconButtonColors()
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.layers_18),
+            contentDescription = stringResource(id = R.string.map_tile_source)
+        )
     }
 }
 
