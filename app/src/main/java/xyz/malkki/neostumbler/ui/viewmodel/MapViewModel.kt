@@ -2,6 +2,7 @@ package xyz.malkki.neostumbler.ui.viewmodel
 
 import android.Manifest
 import android.app.Application
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -25,11 +26,14 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.Call
 import org.geohex.geohex4j.GeoHex
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.common.LatLng
+import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
+import xyz.malkki.neostumbler.extensions.get
 import xyz.malkki.neostumbler.extensions.parallelMap
 import xyz.malkki.neostumbler.location.LocationSourceProvider
 import kotlin.math.abs
@@ -45,18 +49,28 @@ private const val GEOHEX_RESOLUTION_LOW = 7
 class MapViewModel(application: Application) : AndroidViewModel(application) {
     private val locationSource = LocationSourceProvider(getApplication()).getLocationSource()
 
+    private val settingsStore = getApplication<StumblerApplication>().settingsStore
+
     private val db = getApplication<StumblerApplication>().reportDb
 
     private val _httpClient = MutableStateFlow<Call.Factory?>(null)
     val httpClient: StateFlow<Call.Factory?>
         get() = _httpClient.asStateFlow()
 
-    val mapStyle: Flow<String> = flow {
-            application.assets.open("style.json").use {
-                emit(it.readBytes().decodeToString())
+    val mapTileSource: Flow<MapTileSource> = settingsStore.data
+        .map { prefs ->
+            prefs.get<MapTileSource>(PreferenceKeys.MAP_TILE_SOURCE) ?: MapTileSource.OPENSTREETMAP
+        }
+        .distinctUntilChanged()
+
+    val mapStyle: Flow<MapStyle> = mapTileSource
+        .map { mapTileSource ->
+            if (mapTileSource.sourceAsset != null) {
+                MapStyle(styleUrl = null, styleJson = readStyleFromAssets(mapTileSource.sourceAsset))
+            } else {
+                MapStyle(styleUrl = mapTileSource.sourceUrl!!, styleJson = null)
             }
         }
-        .flowOn(Dispatchers.IO)
         .shareIn(viewModelScope, started = SharingStarted.Eagerly, replay = 1)
 
     private val showMyLocation = MutableStateFlow(getApplication<StumblerApplication>().checkMissingPermissions(Manifest.permission.ACCESS_COARSE_LOCATION).isEmpty())
@@ -190,8 +204,32 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
         mapBounds.trySendBlocking(bounds)
     }
 
+    fun setMapTileSource(mapTileSource: MapTileSource) {
+        viewModelScope.launch {
+            settingsStore.updateData { prefs ->
+                prefs.toMutablePreferences().apply {
+                    set(stringPreferencesKey(PreferenceKeys.MAP_TILE_SOURCE), mapTileSource.name)
+                }
+            }
+        }
+    }
+
+    private suspend fun readStyleFromAssets(assetName: String): String = withContext(Dispatchers.IO) {
+        getApplication<StumblerApplication>().assets.open(assetName).use {
+            it.readBytes().decodeToString()
+        }
+    }
+
     /**
      * @property heatPct From 0.0 to 1.0
      */
     data class HeatMapTile(val outline: List<LatLng>, val heatPct: Float)
+
+    enum class MapTileSource(val title: String, val sourceUrl: String?, val sourceAsset: String?) {
+        OPENSTREETMAP("OpenStreetMap", null, "osm_raster_style.json"),
+        OPENFREEMAP("OpenFreeMap", "https://tiles.openfreemap.org/styles/liberty", null),
+        VERSATILES("VersaTiles", "https://tiles.versatiles.org/assets/styles/colorful.json", null)
+    }
+
+    data class MapStyle(val styleUrl: String?, val styleJson: String?)
 }

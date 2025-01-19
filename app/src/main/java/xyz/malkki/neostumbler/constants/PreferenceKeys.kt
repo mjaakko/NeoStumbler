@@ -23,4 +23,6 @@ object PreferenceKeys {
     const val DYNAMIC_COLOR_THEME = "dynamic_color_theme"
 
     const val DB_PRUNE_DATA_MAX_AGE_DAYS = "db_prune_max_age_days"
+
+    const val MAP_TILE_SOURCE = "map_tile_source"
 }
