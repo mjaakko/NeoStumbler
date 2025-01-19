@@ -53,6 +53,7 @@ import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.get
+import xyz.malkki.neostumbler.extensions.getQuantityString
 import xyz.malkki.neostumbler.extensions.isWifiScanThrottled
 import xyz.malkki.neostumbler.location.LocationSourceProvider
 import xyz.malkki.neostumbler.scanner.movement.ConstantMovementDetector
@@ -392,7 +393,7 @@ class ScannerService : Service() {
             false
         )
 
-        val reportsCreatedText = ContextCompat.getString(applicationContext, R.string.notification_wireless_scanning_content_reports_created).format(reportsCreated)
+        val reportsCreatedText = applicationContext.getQuantityString(R.plurals.notification_wireless_scanning_content_reports_created, reportsCreated, reportsCreated)
         val satellitesInUseText = gpsStats?.let {
             ContextCompat.getString(applicationContext, R.string.notification_wireless_scanning_content_satellite_stats).format(it.satellitesUsedInFix, it.satellitesTotal)
         }

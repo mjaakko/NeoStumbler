@@ -27,12 +27,16 @@
     <string name="stop_scanning">Scan stoppen</string>
     <string name="delete_report">Bericht löschen</string>
     <string name="delete_report_confirmation">Sind Sie sicher, dass Sie den Bericht löschen möchten?</string>
-    <string name="toast_reports_uploaded">%d Berichte hochgeladen</string>
+    <plurals name="toast_reports_uploaded">
+        <item quantity="other">%d Berichte hochgeladen</item>
+    </plurals>
     <string name="toast_reports_upload_failed">Berichte hochladen fehlgeschlagen</string>
     <string name="report_upload_notification_channel_name">Berichtuploads</string>
     <string name="notification_sending_reports">Lade Berichte hoch</string>
     <string name="notification_wireless_scanning_title">Funknetzwerke scannen aktiv</string>
-    <string name="notification_wireless_scanning_content_reports_created">%d Berichte erstellt</string>
+    <plurals name="notification_wireless_scanning_content_reports_created">
+        <item quantity="other">%d Berichte erstellt</item>
+    </plurals>
     <string name="ignore_battery_optimizations_title">Akkuoptimierungen ignorieren</string>
     <string name="ignore_battery_optimizations_description">Für beste Ergebnisse sollten Akkuoptimierungen deaktiviert sein. Funknetzwerkscans und Standortabfragen werden erheblich gedrosselt, wenn Akkuoptimierungen aktiv und der Bildschirm aus sind</string>
     <string name="battery_optimizations_not_disabled_warning">Akkuoptimierungen sind nicht deaktiviert</string>
@@ -105,7 +109,9 @@
     <string name="import_raw_database">RAW Datenbank importieren</string>
     <string name="import_raw_database_description">Der Import einer Rohdatenbank ersetzt die bestehende Datenbank</string>
     <string name="import_database_not_valid">Die ausgewähle Datei beinhaltet keine gültige Datenbank</string>
-    <string name="import_database_successful">Importierte Datenbank mit %d Berichten</string>
+    <plurals name="import_database_successful">
+        <item quantity="other">Importierte Datenbank mit %d Berichten</item>
+    </plurals>
     <string name="troubleshooting_battery_optimizations_disabled">Batterieoptimierung deaktiviert</string>
     <string name="troubleshooting_accurate_location_available">Genaue Lokalisierung verfügbar</string>
     <string name="troubleshooting_fix">Reparieren</string>
@@ -119,7 +125,9 @@
     <string name="delete_reports_by_date">Lösche Berichte nach Datum</string>
     <string name="delete_all_reports">Lösche alle Berichte</string>
     <string name="delete_all_reports_confirmation">Möchtest du wirklich alle Berichte löschen?</string>
-    <string name="toast_deleted_reports">%d Berichte gelöscht</string>
+    <plurals name="toast_deleted_reports">
+        <item quantity="other">%d Berichte gelöscht</item>
+    </plurals>
     <string name="toast_deleted_all_reports">Lösche alle Berichte</string>
     <string name="about_app">Über NeoStumbler</string>
     <string name="app_version">Version: %s</string>

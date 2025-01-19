@@ -31,12 +31,16 @@
     <string name="reports_last_uploaded">最后上传报告: %s</string>
     <string name="delete_report">删除报告</string>
     <string name="delete_report_confirmation">是否确实要删除报告？</string>
-    <string name="toast_reports_uploaded">已上传 %d 个报告</string>
+    <plurals name="toast_reports_uploaded">
+        <item quantity="other">已上传 %d 个报告</item>
+    </plurals>
     <string name="toast_reports_upload_failed">上传报告失败</string>
     <string name="report_upload_notification_channel_name">报告上传</string>
     <string name="notification_sending_reports">正在上传报告</string>
     <string name="notification_wireless_scanning_title">无线扫描活动中</string>
-    <string name="notification_wireless_scanning_content_reports_created">%d 个报告已创建</string>
+    <plurals name="notification_wireless_scanning_content_reports_created">
+        <item quantity="other">%d 个报告已创建</item>
+    </plurals>
     <string name="send_reports_automatically">自动上传报告</string>
     <string name="export_no_file_chosen">无法导出数据，因为未创建任何文件</string>
     <string name="export_started">正从 %s 到 %s 导出数据</string>
@@ -100,7 +104,9 @@
     <string name="delete_reports_by_date">按日期删除报告</string>
     <string name="delete_all_reports">删除所有报告</string>
     <string name="delete_all_reports_confirmation">你确定要删除所有报告吗？</string>
-    <string name="toast_deleted_reports">已删除%d个报告</string>
+    <plurals name="toast_deleted_reports">
+        <item quantity="other">已删除%d个报告</item>
+    </plurals>
     <string name="toast_deleted_all_reports">已删除所有报告</string>
     <string name="db_prune_six_months">6个月后</string>
     <string name="about_app">关于 NeoStumbler</string>
@@ -125,6 +131,8 @@
     <string name="import_raw_database">导入新数据库</string>
     <string name="import_raw_database_description">导入新数据库的会替换当前的</string>
     <string name="import_database_not_valid">所选文件未包含有效数据库</string>
-    <string name="import_database_successful">已导入有 %d 份报告的数据库</string>
+    <plurals name="import_database_successful">
+        已导入有 %d 份报告的数据库
+    </plurals>
     <string name="no_data">无数据</string>
 </resources>

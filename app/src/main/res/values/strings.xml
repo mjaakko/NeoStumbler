@@ -56,7 +56,10 @@
     <string name="delete_report">Delete report</string>
     <string name="delete_report_confirmation">Are you sure you want to delete the report?</string>
 
-    <string name="toast_reports_uploaded">Uploaded %d reports</string>
+    <plurals name="toast_reports_uploaded">
+        <item quantity="one">Uploaded %d report</item>
+        <item quantity="other">Uploaded %d reports</item>
+    </plurals>
     <string name="toast_reports_upload_failed">Failed to upload reports</string>
 
     <string name="report_upload_notification_channel_name">Report uploads</string>
@@ -64,7 +67,10 @@
 
     <string name="notification_wireless_scanning_title">Wireless scanning active</string>
 
-    <string name="notification_wireless_scanning_content_reports_created">%d reports created</string>
+    <plurals name="notification_wireless_scanning_content_reports_created">
+        <item quantity="one">%d report created</item>
+        <item quantity="other">%d reports created</item>
+    </plurals>
     <string name="notification_wireless_scanning_content_satellite_stats">
         %1$d/%2$d satellites in use
     </string>
@@ -96,7 +102,10 @@
     </string>
 
     <string name="import_database_not_valid">The selected file did not contain a valid database</string>
-    <string name="import_database_successful">Imported database with %d reports</string>
+    <plurals name="import_database_successful">
+        <item quantity="one">Imported database with %d report</item>
+        <item quantity="other">Imported database with %d reports</item>
+    </plurals>
 
     <string name="reupload_data">Reupload data</string>
 
@@ -225,8 +234,11 @@
     <string name="delete_all_reports">Delete all reports</string>
 
     <string name="delete_all_reports_confirmation">Are you sure you want to delete all reports?</string>
-    
-    <string name="toast_deleted_reports">Deleted %d reports</string>
+
+    <plurals name="toast_deleted_reports">
+        <item quantity="one">Deleted %d report</item>
+        <item quantity="other">Deleted %d reports</item>
+    </plurals>
     <string name="toast_deleted_all_reports">Deleted all reports</string>
 
     <string name="about_app">About NeoStumbler</string>

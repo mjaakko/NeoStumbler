@@ -43,9 +43,13 @@
     <string name="reports_tab_title">Rapporten</string>
     <string name="delete_report">Rapport verwijderen</string>
     <string name="delete_report_confirmation">Weet u zeker dat u het rapport wilt verwijderen?</string>
-    <string name="toast_reports_uploaded">%d rapporten geüploaded</string>
+    <plurals name="toast_reports_uploaded">
+        <item quantity="other">%d rapporten geüploaded</item>
+    </plurals>
     <string name="notification_sending_reports">Rapporten versturen</string>
-    <string name="notification_wireless_scanning_content_reports_created">%d rapporten gemaakt</string>
+    <plurals name="notification_wireless_scanning_content_reports_created">
+        <item quantity="other">%d rapporten gemaakt</item>
+    </plurals>
     <string name="notification_wireless_scanning_content_satellite_stats">%1$d/%2$d satellieten in gebruik</string>
     <string name="battery_optimizations_not_disabled_warning">Accu­optimalisatie is niet uitgeschakeld</string>
     <string name="send_reports_automatically">Rapporten automatisch versturen</string>
@@ -56,7 +60,9 @@
     <string name="export_started">Gegevens van %s naar %s exporteren</string>
     <string name="export_csv">Exporteren als CSV</string>
     <string name="export_raw_database">Ruwe database exporteren</string>
-    <string name="import_database_successful">Database met %d rapporten geïmporteerd</string>
+    <plurals name="import_database_successful">
+        <item quantity="other">Database met %d rapporten geïmporteerd</item>
+    </plurals>
     <string name="reupload_data">Gegevens opnieuw uploaden</string>
     <string name="wifis">Wifi-netwerken</string>
     <string name="cells">Zend­masten</string>
@@ -98,7 +104,9 @@
     <string name="notification_style_minimal_description">Toont de melding zonder details</string>
     <string name="notification_style_basic_title">Basis</string>
     <string name="permission_rationale_location_map">Het tonen van uw huidige locatie op de kaart vereist locatie­rechten</string>
-    <string name="toast_deleted_reports">%d rapporten verwijderd</string>
+    <plurals name="toast_deleted_reports">
+        <item quantity="other">%d rapporten verwijderd</item>
+    </plurals>
     <string name="db_prune_title">Verzonden rapporten verwijderen</string>
     <string name="delete_reports_by_date">Rapporten op datum verwijderen</string>
     <string name="contributors">bijdragers</string>

@@ -30,7 +30,9 @@
     <string name="movement_detection_significant_motion_title">Bevegelsessensor</string>
     <string name="warning_icon_description">Advarselsikon</string>
     <string name="delete_report_confirmation">Slett rapporten?</string>
-    <string name="toast_reports_uploaded">Lastet opp %d rapporter</string>
+    <plurals name="toast_reports_uploaded">
+        <item quantity="other">Lastet opp %d rapporter</item>
+    </plurals>
     <string name="toast_reports_upload_failed">Klarte ikke å laste opp rapporter</string>
     <string name="report_upload_notification_channel_name">Rapport-opplastninger</string>
     <string name="notification_sending_reports">Rapportforsendelse</string>
@@ -55,7 +57,9 @@
     <string name="permissions_not_granted">Påkrevde tilganger ble ikke innvilget</string>
     <string name="cell_tower_icon_description">Mobilmast-ikon</string>
     <string name="notification_wireless_scanning_title">Skanner trådløst …</string>
-    <string name="notification_wireless_scanning_content_reports_created">%d rapporter opprettet</string>
+    <plurals name="notification_wireless_scanning_content_reports_created">
+        <item quantity="other">%d rapporter opprettet</item>
+    </plurals>
     <string name="export_data">Eksporter data</string>
     <string name="path">Sti</string>
     <string name="endpoint">Endepunkt</string>

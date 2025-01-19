@@ -23,14 +23,18 @@
     <string name="reports_last_uploaded">Utoljára feltöltött eredmények: %s</string>
     <string name="start_scanning">Szkennelés indítása</string>
     <string name="delete_report">Eredmények törlése</string>
-    <string name="toast_reports_uploaded">Feltöltve %d eredmény</string>
+    <plurals name="toast_reports_uploaded">
+        <item quantity="other">Feltöltve %d eredmény</item>
+    </plurals>
     <string name="toast_reports_upload_failed">Nem sikerült feltölteni az eredményeket</string>
     <string name="report_upload_notification_channel_name">Eredmény feltöltések</string>
     <string name="notification_sending_reports">Eredmények küldése</string>
     <string name="export_notification_channel_name">Adatok exportálása</string>
     <string name="notification_exporting_data">Adatok exportálása…</string>
     <string name="export_data">Adat exportálása</string>
-    <string name="notification_wireless_scanning_content_reports_created">Készült %d eredmény</string>
+    <plurals name="notification_wireless_scanning_content_reports_created">
+        <item quantity="other">Készült %d eredmény</item>
+    </plurals>
     <string name="notification_wireless_scanning_content_satellite_stats">Használat műholdak száma: %1$d/%2$d</string>
     <string name="ignore_battery_optimizations_title">Akkumulátor optimalizálás figyelmen kívül hagyása</string>
     <string name="battery_optimizations_not_disabled_warning">Az akkumulátor optimalizálás nem volt letiltva</string>
@@ -39,7 +43,9 @@
     <string name="import_data">Adatok importálása</string>
     <string name="import_raw_database">Nyers adatbázis importálása</string>
     <string name="import_database_not_valid">A kiválasztott fájl nem tartalmaz érvényes adatbázist</string>
-    <string name="import_database_successful">Az importált adatbázis %d rekordot tartalmaz</string>
+    <plurals name="import_database_successful">
+        <item quantity="other">Az importált adatbázis %d rekordot tartalmaz</item>
+    </plurals>
     <string name="reupload_data">Újratöltött adat</string>
     <string name="wifis">WiFi-k</string>
     <string name="cells">Mobil cellák</string>
@@ -117,7 +123,9 @@
     <string name="db_prune_six_months">Hat honap múlva</string>
     <string name="db_size">Adatbázis mérete: %s</string>
     <string name="delete_reports_by_date">Eredmények törlése dátum szerint</string>
-    <string name="toast_deleted_reports">Törölve %d eredmény</string>
+    <plurals name="toast_deleted_reports">
+        <item quantity="other">Törölve %d eredmény</item>
+    </plurals>
     <string name="toast_deleted_all_reports">Minden eredmény törölve</string>
     <string name="ignore_battery_optimizations_description">A legjobb eredmény elérése érdekében az akkumulátor optimalizálását ki kell kapcsolni. A vezeték nélküli szkennelés és a helymeghatározás jelentősen lassul, ha az akkumulátor-optimalizálás aktív és a képernyő ki van kapcsolva</string>
     <string name="suggested_services_title">Ajánlott szolgáltatások</string>

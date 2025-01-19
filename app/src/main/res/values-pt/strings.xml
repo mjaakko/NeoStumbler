@@ -19,7 +19,9 @@
     <string name="delete_report_confirmation">Tem a certeza que quer apagar o relatório?</string>
     <string name="notification_sending_reports">Enviando relatórios</string>
     <string name="notification_wireless_scanning_title">Scan wireless ativo</string>
-    <string name="notification_wireless_scanning_content_reports_created">%d relatórios criados</string>
+    <plurals name="notification_wireless_scanning_content_reports_created">
+        <item quantity="other">%d relatórios criados</item>
+    </plurals>
     <string name="export_notification_channel_name">Exportação de dados</string>
     <string name="export_data">Exportar dados</string>
     <string name="export_no_file_chosen">Não foi possível exportar os dados porque nenhum ficheiro foi criado</string>
@@ -45,7 +47,9 @@
     <string name="start_scanning">Iniciar scan</string>
     <string name="cell_tower_icon_description">Ícone da torre de redes móveis</string>
     <string name="scanner_status_notification_channel_name">Estado do scan</string>
-    <string name="toast_reports_uploaded">Enviados %d relatórios</string>
+    <plurals name="toast_reports_uploaded">
+        <item quantity="other">Enviados %d relatórios</item>
+    </plurals>
     <string name="toast_reports_upload_failed">O envio dos relatórios falhou</string>
     <string name="report_upload_notification_channel_name">Relatório de envios</string>
     <string name="ignore_battery_optimizations_title">Ignorar otimizações da bateria</string>
@@ -94,13 +98,17 @@
     <string name="failed_to_open_selected_file">Falha ao abrir o ficheiro selecionado</string>
     <string name="import_raw_database">Importar base de dados</string>
     <string name="import_database_not_valid">O ficheiro selecionado não contém uma base de dados válida</string>
-    <string name="import_database_successful">Base de dados importada com %d relatórios</string>
+    <plurals name="import_database_successful">
+        <item quantity="other">Base de dados importada com %d relatórios</item>
+    </plurals>
     <string name="delete_all_reports">Apagar todos os relatórios</string>
     <string name="delete">Apagar</string>
     <string name="import_raw_database_description">Importar uma base de dados substitui a base de dados atual</string>
     <string name="export_csv">Exportar como CSV</string>
     <string name="troubleshooting_title">Resolução de problemas</string>
-    <string name="toast_deleted_reports">%d relatórios apagados</string>
+    <plurals name="toast_deleted_reports">
+        <item quantity="other">%d relatórios apagados</item>
+    </plurals>
     <string name="toast_deleted_all_reports">Todos os relatórios foram apagados</string>
     <string name="troubleshooting_wifi_scan_always_available">Scan de redes Wi-Fi sempre disponível</string>
     <string name="troubleshooting_fix">Corrigir</string>

@@ -53,7 +53,10 @@
     <string name="delete_report">Poista raportti</string>
     <string name="delete_report_confirmation">Oletko varma, että haluat poistaa raportin?</string>
 
-    <string name="toast_reports_uploaded">Lähetetty %d raporttia</string>
+    <plurals name="toast_reports_uploaded">
+        <item quantity="one">Lähetetty %d raportti</item>
+        <item quantity="other">Lähetetty %d raporttia</item>
+    </plurals>
     <string name="toast_reports_upload_failed">Raporttien lähettäminen epäonnistui</string>
 
     <string name="report_upload_notification_channel_name">Raporttien lähetys</string>
@@ -61,7 +64,10 @@
 
     <string name="notification_wireless_scanning_title">Langaton skannaus päällä</string>
 
-    <string name="notification_wireless_scanning_content_reports_created">%d raporttia luotu</string>
+    <plurals name="notification_wireless_scanning_content_reports_created">
+        <item quantity="one">%d raportti luotu</item>
+        <item quantity="other">%d raporttia luotu</item>
+    </plurals>
     <string name="notification_wireless_scanning_content_satellite_stats">
         %1$d/%2$d satelliittia käytössä
     </string>
@@ -95,6 +101,10 @@
     </string>
 
     <string name="import_database_not_valid">Valitussa tiedostossa ei ollut eheää tietokantaa</string>
+    <plurals name="import_database_successful">
+        <item quantity="one">Tuotu tietokanta, jossa %d raportti</item>
+        <item quantity="other">Tuotu tietokanta, jossa %d raporttia</item>
+    </plurals>
 
     <string name="reupload_data">Lähetä datat uudelleen</string>
 
@@ -233,7 +243,10 @@
 
     <string name="delete_all_reports_confirmation">Oletko varma, että haluat poistaa kaikki raportit?</string>
 
-    <string name="toast_deleted_reports">%d raporttia poistettu</string>
+    <plurals name="toast_deleted_reports">
+        <item quantity="one">%d raportti poistettu</item>
+        <item quantity="other">%d raporttia poistettu</item>
+    </plurals>
     <string name="toast_deleted_all_reports">Kaikki raportit poistettu</string>
  
 

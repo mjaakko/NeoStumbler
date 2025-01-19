@@ -34,14 +34,18 @@
     <string name="delete_report">Šalinti ataskaitą</string>
     <string name="delete_report_confirmation">Ar tikrai norite pašalinti šią ataskaitą?</string>
     <string name="toast_reports_upload_failed">Nepavyko išsiųsti ataskaitų</string>
-    <string name="toast_reports_uploaded">Išsiųsta ataskaitų: %d</string>
+    <plurals name="toast_reports_uploaded">
+        <item quantity="other">Išsiųsta ataskaitų: %d</item>
+    </plurals>
     <string name="wifi_scan_frequency">Belaidžių tinklų skenavimo dažnis</string>
     <string name="movement_detection_location_description">Pristabdyti skenavimą, kol nepasikeičia vietovė. Naudojamas GPS signalas</string>
     <string name="mls_warning_text">„Mozilla Location Services“ tarnyba išjungta ir naujų duomenų nebepriima. Naudojamą tarnybą turite pakeisti kita. Nustatymuose tam turime pasiūlymų.\n\nTaip pat nustatymuose galite eksportuoti duomenis kaip ZIP failą</string>
     <string name="report_upload_notification_channel_name">Išsiųstos ataskaitos</string>
     <string name="notification_sending_reports">Siunčiamos ataskaitos</string>
     <string name="notification_wireless_scanning_title">Belaidžių tinklų skenavimas aktyvus</string>
-    <string name="notification_wireless_scanning_content_reports_created">Sukurta ataskaitų: %d</string>
+    <plurals name="notification_wireless_scanning_content_reports_created">
+        <item quantity="other">Sukurta ataskaitų: %d</item>
+    </plurals>
     <string name="notification_wireless_scanning_content_satellite_stats">Naudojama palydovų: %1$d/%2$d</string>
     <string name="ignore_battery_optimizations_title">Nepaisyti akumuliatoriaus optimizacijų</string>
     <string name="ignore_battery_optimizations_description">Norint pasiekti geriausių rezultatų, turėtų būti išjungtos akumuliatoriaus optimizacijos. Kol jos įjungtos, esant išjungtam ekranui, belaidžių tinklų skenavimas ir prieiga prie vietovės informacijos yra stipriai ribojami</string>
@@ -58,7 +62,9 @@
     <string name="import_raw_database">Importuoti neapdorotą duomenų bazę</string>
     <string name="import_raw_database_description">Importuojant neapdorotą duomenų bazę, joje esantys duomenys perrašys dabar turimus</string>
     <string name="import_database_not_valid">Pasirinktame faile neaptikta tinkama duomenų bazė</string>
-    <string name="import_database_successful">Duomenų bazė importuota. Iš viso įrašų: %d</string>
+    <plurals name="import_database_successful">
+        <item quantity="other">Duomenų bazė importuota. Iš viso įrašų: %d</item>
+    </plurals>
     <string name="reupload_data">Iš naujo išsiųsti duomenis</string>
     <string name="wifis">Belaidžiai tinklai</string>
     <string name="cells">Ryšio bokštai</string>
@@ -106,7 +112,9 @@
     <string name="delete_reports_by_date">Šalinti ataskaitas pagal datą</string>
     <string name="delete_all_reports">Šalinti visas ataskaitas</string>
     <string name="delete_all_reports_confirmation">Ar tikrai norite pašalinti visas ataskaitas?</string>
-    <string name="toast_deleted_reports">Pašalinta ataskaitų: %d</string>
+    <plurals name="toast_deleted_reports">
+        <item quantity="other">Pašalinta ataskaitų: %d</item>
+    </plurals>
     <string name="toast_deleted_all_reports">Visos ataskaitos pašalintos</string>
     <string name="about_app">Apie „NeoStumbler“</string>
     <string name="app_version">Versija: %s</string>

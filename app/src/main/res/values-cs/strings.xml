@@ -24,12 +24,16 @@
     <string name="delete_report">Odstranit report</string>
     <string name="map_tab_title">Mapa</string>
     <string name="delete_report_confirmation">Jste si jisti že chcete tento report smazat?</string>
-    <string name="toast_reports_uploaded">Odesláno %d reportů</string>
+    <plurals name="toast_reports_uploaded">
+        <item quantity="other">Odesláno %d reportů</item>
+    </plurals>
     <string name="toast_reports_upload_failed">Chyba při odesílání reportů</string>
     <string name="notification_sending_reports">Odesílání reportů</string>
     <string name="scanner_status_notification_channel_name">Stav skenování</string>
     <string name="notification_wireless_scanning_title">Skenování aktivní</string>
-    <string name="notification_wireless_scanning_content_reports_created">Vytvořeno %d reportů</string>
+    <plurals name="notification_wireless_scanning_content_reports_created">
+        <item quantity="other">Vytvořeno %d reportů</item>
+    </plurals>
     <string name="ignore_battery_optimizations_title">Povolení stále běžet na pozadí</string>
     <string name="bluetooth_icon_description">Ikona Bluetooth</string>
     <string name="wireless_scanning">Skenování</string>
@@ -107,12 +111,16 @@
     <string name="export_raw_database">Exportovat databázi</string>
     <string name="import_data">Importovat data</string>
     <string name="import_raw_database_description">Importování databáze přepíše stávající databázi</string>
-    <string name="import_database_successful">Databáze obsahující %d reportů úspěšně importována</string>
+    <plurals name="import_database_successful">
+        <item quantity="other">Databáze obsahující %d reportů úspěšně importována</item>
+    </plurals>
     <string name="troubleshooting_wifi_scan_always_available">Hledání Wi-Fi v pozadí</string>
     <string name="troubleshooting_fix">Spravit</string>
     <string name="delete_data">Smazat data</string>
     <string name="delete_all_reports_confirmation">Opravdu chcete smazat všechny reporty?</string>
-    <string name="toast_deleted_reports">%d reportů smazáno</string>
+    <plurals name="toast_deleted_reports">
+        <item quantity="other">%d reportů smazáno</item>
+    </plurals>
     <string name="toast_deleted_all_reports">Všechny reporty smazány</string>
     <string name="about_app">O aplikaci</string>
     <string name="app_version">Verze: %s</string>

@@ -27,12 +27,16 @@
     <string name="stop_scanning">Parar scan</string>
     <string name="delete_report">Excluir relatório</string>
     <string name="delete_report_confirmation">Você tem certeza que deseja excluir o relatório?</string>
-    <string name="toast_reports_uploaded">%d relatórios enviados</string>
+    <plurals name="toast_reports_uploaded">
+        <item quantity="other">%d relatórios enviados</item>
+    </plurals>
     <string name="toast_reports_upload_failed">Falha ao enviar relatórios</string>
     <string name="report_upload_notification_channel_name">Envio de relatórios</string>
     <string name="notification_sending_reports">Enviando relatórios</string>
     <string name="notification_wireless_scanning_title">Scan de redes sem-fio ativo</string>
-    <string name="notification_wireless_scanning_content_reports_created">%d relatórios criados</string>
+    <plurals name="notification_wireless_scanning_content_reports_created">
+        <item quantity="other">%d relatórios criados</item>
+    </plurals>
     <string name="ignore_battery_optimizations_title">Ignorar otimizações de bateria</string>
     <string name="ignore_battery_optimizations_description">Para resultados melhores, as otimizações de bateria devem ser desativadas. O scan de redes sem-fio e o acesso à localização é significativamente sufocado quando as otimizações de bateria estão ativas e a tela está desligada</string>
     <string name="battery_optimizations_not_disabled_warning">As otimizações de bateria não foram desativadas</string>
@@ -101,7 +105,9 @@
     <string name="delete_reports_by_date">Excluir relatórios pela data</string>
     <string name="delete_all_reports">Excluir todos os relatórios</string>
     <string name="delete_all_reports_confirmation">Você tem certeza que deseja excluir todos os relatórios?</string>
-    <string name="toast_deleted_reports">%d relatórios foram excluídos</string>
+    <plurals name="toast_deleted_reports">
+        <item quantity="other">%d relatórios foram excluídos</item>
+    </plurals>
     <string name="db_prune_never">Nunca</string>
     <string name="manage_storage_title">Gerenciar armazenamento</string>
     <string name="troubleshooting_title">Resolução de problemas</string>
@@ -127,7 +133,9 @@
     <string name="import_raw_database">Importar banco de dados bruto</string>
     <string name="import_raw_database_description">Ao importar um banco de dados bruto, o atual será substituído</string>
     <string name="import_database_not_valid">O arquivo selecionado não contém um banco de dados válido</string>
-    <string name="import_database_successful">O banco de dados foi importado com %d relatórios</string>
+    <plurals name="import_database_successful">
+        <item quantity="other">O banco de dados foi importado com %d relatórios</item>
+    </plurals>
     <string name="no_data">Sem dados</string>
     <string name="settings_ignore_wifi_scan_throttling_description">Se o scan é limitado, somente 4 scans podem ser feitos em um período de 2 minutos</string>
     <string name="wifi_scan_frequency">Frequência de scan Wi-Fi</string>
