@@ -2,7 +2,11 @@
 <resources>
     <string name="notification_sending_reports">அறிக்கைகளை அனுப்புகிறது</string>
     <string name="notification_wireless_scanning_title">வயர்லெச் ச்கேனிங் செயலில்</string>
-    <string name="notification_wireless_scanning_content_reports_created">%d அறிக்கைகள் உருவாக்கப்பட்டன</string>
+    <plurals name="notification_wireless_scanning_content_reports_created">
+        <item quantity="other">
+            %d அறிக்கைகள் உருவாக்கப்பட்டன
+        </item>
+    </plurals>
     <string name="notification_wireless_scanning_content_satellite_stats">பயன்பாட்டில் உள்ள%1$d/%2$d செயற்கைக்கோள்கள்</string>
     <string name="ignore_battery_optimizations_title">பேட்டரி மேம்படுத்தல்களை புறக்கணிக்கவும்</string>
     <string name="ignore_battery_optimizations_description">சிறந்த முடிவுகளுக்கு, பேட்டரி மேம்படுத்தல்கள் முடக்கப்பட வேண்டும். பேட்டரி உகப்பாக்கம் செயலில் இருக்கும்போது மற்றும் திரை முடக்கப்பட்டால் வயர்லெச் ச்கேனிங் மற்றும் இருப்பிட அணுகல் கணிசமாக தூண்டப்படுகிறது</string>
@@ -46,7 +50,11 @@
     <string name="stop_scanning">ச்கேன் செய்வதை நிறுத்துங்கள்</string>
     <string name="delete_report">அறிக்கையை நீக்கு</string>
     <string name="delete_report_confirmation">அறிக்கையை நீக்க விரும்புகிறீர்களா?</string>
-    <string name="toast_reports_uploaded">பதிவேற்றியது %d அறிக்கைகள்</string>
+    <plurals name="toast_reports_uploaded">
+        <item quantity="other">
+            பதிவேற்றியது %d அறிக்கைகள்
+        </item>
+    </plurals>
     <string name="toast_reports_upload_failed">அறிக்கைகளைப் பதிவேற்றத் தவறிவிட்டது</string>
     <string name="report_upload_notification_channel_name">பதிவேற்றங்களைப் புகாரளிக்கவும்</string>
     <string name="export_no_file_chosen">தரவை ஏற்றுமதி செய்ய முடியாது, ஏனெனில் எந்த கோப்பும் உருவாக்கப்படவில்லை</string>
@@ -57,7 +65,11 @@
     <string name="import_raw_database">மூல தரவுத்தளத்தை இறக்குமதி செய்யுங்கள்</string>
     <string name="import_raw_database_description">ஒரு மூல தரவுத்தளத்தை இறக்குமதி செய்வது தற்போதுள்ள தரவுத்தளத்தை மாற்றும்</string>
     <string name="import_database_not_valid">தேர்ந்தெடுக்கப்பட்ட கோப்பில் சரியான தரவுத்தளம் இல்லை</string>
-    <string name="import_database_successful">%d அறிக்கைகளுடன் இறக்குமதி செய்யப்பட்ட தரவுத்தளம்</string>
+    <plurals name="import_database_successful">
+        <item quantity="other">
+            %d அறிக்கைகளுடன் இறக்குமதி செய்யப்பட்ட தரவுத்தளம்
+        </item>
+    </plurals>
     <string name="reupload_data">தரவை மீண்டும் ஏற்றவும்</string>
     <string name="wifis">வை-ஃபிச்</string>
     <string name="cells">செல்கள்</string>
@@ -122,7 +134,11 @@
     <string name="delete_reports_by_date">தேதியின்படி அறிக்கைகளை நீக்கு</string>
     <string name="delete_all_reports">எல்லா அறிக்கைகளையும் நீக்கு</string>
     <string name="delete_all_reports_confirmation">எல்லா அறிக்கைகளையும் நீக்க விரும்புகிறீர்களா?</string>
-    <string name="toast_deleted_reports">நீக்கப்பட்டது %d அறிக்கைகள்</string>
+    <plurals name="toast_deleted_reports">
+        <item quantity="other">
+            நீக்கப்பட்டது %d அறிக்கைகள்
+        </item>
+    </plurals>
     <string name="toast_deleted_all_reports">எல்லா அறிக்கைகளையும் நீக்கியது</string>
     <string name="about_app">நியோச்டம்ப்ளர் பற்றி</string>
     <string name="app_version">பதிப்பு: %s</string>
