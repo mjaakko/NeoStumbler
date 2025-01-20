@@ -151,4 +151,5 @@
     <string name="wifi_scan_frequency">Частота сканування Wi-Fi</string>
     <string name="cell_tower_scan_frequency">Частота сканування стільникових веж</string>
     <string name="every_x_meters">Кожні %d метрів</string>
+    <string name="map_tile_source">Джерела плиток карти</string>
 </resources>

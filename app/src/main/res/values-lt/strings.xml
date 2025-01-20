@@ -35,7 +35,9 @@
     <string name="delete_report_confirmation">Ar tikrai norite pašalinti šią ataskaitą?</string>
     <string name="toast_reports_upload_failed">Nepavyko išsiųsti ataskaitų</string>
     <plurals name="toast_reports_uploaded">
-        <item quantity="other">Išsiųsta ataskaitų: %d</item>
+        <item quantity="one">Išsiųsta %d ataskaita</item>
+        <item quantity="few">Išsiųsta %d ataskaitos</item>
+        <item quantity="other">Išsiųsta %d ataskaitų</item>
     </plurals>
     <string name="wifi_scan_frequency">Belaidžių tinklų skenavimo dažnis</string>
     <string name="movement_detection_location_description">Pristabdyti skenavimą, kol nepasikeičia vietovė. Naudojamas GPS signalas</string>
@@ -44,7 +46,9 @@
     <string name="notification_sending_reports">Siunčiamos ataskaitos</string>
     <string name="notification_wireless_scanning_title">Belaidžių tinklų skenavimas aktyvus</string>
     <plurals name="notification_wireless_scanning_content_reports_created">
-        <item quantity="other">Sukurta ataskaitų: %d</item>
+        <item quantity="one">Sukurta %d ataskaita</item>
+        <item quantity="few">Sukurtos %d ataskaitos</item>
+        <item quantity="other">Sukurta %d ataskaitų</item>
     </plurals>
     <string name="notification_wireless_scanning_content_satellite_stats">Naudojama palydovų: %1$d/%2$d</string>
     <string name="ignore_battery_optimizations_title">Nepaisyti akumuliatoriaus optimizacijų</string>
@@ -63,7 +67,9 @@
     <string name="import_raw_database_description">Importuojant neapdorotą duomenų bazę, joje esantys duomenys perrašys dabar turimus</string>
     <string name="import_database_not_valid">Pasirinktame faile neaptikta tinkama duomenų bazė</string>
     <plurals name="import_database_successful">
-        <item quantity="other">Duomenų bazė importuota. Iš viso įrašų: %d</item>
+        <item quantity="one">Duomenų bazė su %d įrašu importuota</item>
+        <item quantity="few">Duomenų bazė su %d įrašais importuota</item>
+        <item quantity="other">Duomenų bazė su %d įrašų importuota</item>
     </plurals>
     <string name="reupload_data">Iš naujo išsiųsti duomenis</string>
     <string name="wifis">Belaidžiai tinklai</string>
@@ -113,7 +119,9 @@
     <string name="delete_all_reports">Šalinti visas ataskaitas</string>
     <string name="delete_all_reports_confirmation">Ar tikrai norite pašalinti visas ataskaitas?</string>
     <plurals name="toast_deleted_reports">
-        <item quantity="other">Pašalinta ataskaitų: %d</item>
+        <item quantity="one">Pašalinta %d ataskaita</item>
+        <item quantity="few">Pašalintos %d ataskaitos</item>
+        <item quantity="other">Pašalinta %d ataskaitų</item>
     </plurals>
     <string name="toast_deleted_all_reports">Visos ataskaitos pašalintos</string>
     <string name="about_app">Apie „NeoStumbler“</string>
@@ -139,4 +147,5 @@
     <string name="troubleshooting_accurate_location_available">Prieiga prie tikslios vietovės gauta</string>
     <string name="troubleshooting_wifi_scan_always_available">Nuolatinis belaidžių tinklų skenavimas galimas</string>
     <string name="troubleshooting_permissions_granted">Leidimai suteikti</string>
+    <string name="map_tile_source">Žemėlapio plytelių šaltinis</string>
 </resources>

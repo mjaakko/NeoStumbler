@@ -32,14 +32,14 @@
     <string name="delete_report">删除报告</string>
     <string name="delete_report_confirmation">是否确实要删除报告？</string>
     <plurals name="toast_reports_uploaded">
-        <item quantity="other">已上传 %d 个报告</item>
+        <item quantity="other">已上传%d个报告</item>
     </plurals>
     <string name="toast_reports_upload_failed">上传报告失败</string>
     <string name="report_upload_notification_channel_name">报告上传</string>
     <string name="notification_sending_reports">正在上传报告</string>
     <string name="notification_wireless_scanning_title">无线扫描活动中</string>
     <plurals name="notification_wireless_scanning_content_reports_created">
-        <item quantity="other">%d 个报告已创建</item>
+        <item quantity="other">%d个报告已创建</item>
     </plurals>
     <string name="send_reports_automatically">自动上传报告</string>
     <string name="export_no_file_chosen">无法导出数据，因为未创建任何文件</string>
@@ -132,7 +132,12 @@
     <string name="import_raw_database_description">导入新数据库的会替换当前的</string>
     <string name="import_database_not_valid">所选文件未包含有效数据库</string>
     <plurals name="import_database_successful">
-        <item quantity="other">已导入有 %d 份报告的数据库</item>
+        <item quantity="other">已导入有%d份报告的数据库</item>
     </plurals>
     <string name="no_data">无数据</string>
+    <string name="settings_ignore_wifi_scan_throttling_description">受限时，两分钟只能执行四次扫描</string>
+    <string name="wifi_scan_frequency">Wi-Fi 扫描频率</string>
+    <string name="cell_tower_scan_frequency">信号塔扫描频率</string>
+    <string name="every_x_meters">每过%d米</string>
+    <string name="map_tile_source">地图瓦片源</string>
 </resources>
