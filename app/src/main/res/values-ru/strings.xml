@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plurals name="notification_wireless_scanning_content_reports_created">
+        <item quantity="one">%d отчёт создан</item>
+        <item quantity="few">%d отчёта создано</item>
         <item quantity="many">%d отчётов создано</item>
+        <item quantity="other">%d отчётов создано</item>
     </plurals>
     <string name="warning_icon_description">Иконка предупреждения</string>
     <string name="reports_not_uploaded">Отчётов не отправлено: %s</string>
@@ -35,7 +38,10 @@
     <string name="stop_scanning">Прекратить сканирование</string>
     <string name="delete_report_confirmation">Вы уверены, что хотите удалить отчёт?</string>
     <plurals name="toast_reports_uploaded">
+        <item quantity="one">Отправлен %d отчёт</item>
+        <item quantity="few">Отправлено %d отчёта</item>
         <item quantity="many">Отправлено %d отчётов</item>
+        <item quantity="other">Отправлено %d отчётов</item>
     </plurals>
     <string name="toast_reports_upload_failed">Не удалось отправить отчёты</string>
     <string name="report_upload_notification_channel_name">Отправки отчётов</string>
@@ -49,7 +55,10 @@
     <string name="export_raw_database">Экспортировать сырую базу данных</string>
     <string name="import_raw_database_description">Импортирование сырой базы данных перезапишет имеющуюся базу данных</string>
     <plurals name="import_database_successful">
+        <item quantity="one">Импортивана база данных с %d отчётом</item>
+        <item quantity="few">Импортивана база данных с %d отчётами</item>
         <item quantity="many">Импортивана база данных с %d отчётами</item>
+        <item quantity="other">Импортивана база данных с %d отчётами</item>
     </plurals>
     <string name="reupload_data">Заново отправить данные</string>
     <string name="wifis">Wi-Fi сети</string>
@@ -127,7 +136,10 @@
     <string name="wifi_scan_throttling_explanation">Вам нужно отключить неточности сканирования Wi-Fi в настройках вашего устройства, чтобы включить эту функцию. Обычно это можно сделать в настройках для разработчиков</string>
     <string name="troubleshooting_accurate_location_available">Точное местоположение доступно</string>
     <plurals name="toast_deleted_reports">
+        <item quantity="one">Удален %d отчёт</item>
+        <item quantity="few">Удалено %d отчёта</item>
         <item quantity="many">Удалено %d отчётов</item>
+        <item quantity="other">Удалено %d отчётов</item>
     </plurals>
     <string name="add_quick_settings_tile">Добавить плитку быстрой настройки для лёгкого старта сканирования?</string>
     <string name="settings_group_scanning">Сканирование</string>
@@ -135,4 +147,9 @@
     <string name="settings_group_reports">Отчёты</string>
     <string name="delete_all_reports">Удалить все отчёты</string>
     <string name="suggested_service_terms_of_use">Условия использования</string>
+    <string name="settings_ignore_wifi_scan_throttling_description">Если сканирование неточное, только четыре сканирования могут быть сделано в двух-минутный период</string>
+    <string name="wifi_scan_frequency">Частота сканирования Wi-Fi</string>
+    <string name="cell_tower_scan_frequency">Частота сканирование вышек связи</string>
+    <string name="every_x_meters">Каждые %d метров</string>
+    <string name="map_tile_source">Источники плиток карты</string>
 </resources>
