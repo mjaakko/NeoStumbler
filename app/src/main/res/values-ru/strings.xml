@@ -109,7 +109,7 @@
     <string name="app_version">Версия: %s</string>
     <string name="app_variant">Вариант: %s</string>
     <string name="author_text">Сделано с ❤️ %1$s и %2$s</string>
-    <string name="contributors">внёсшие вклад</string>
+    <string name="contributors">контрибьюторы</string>
     <string name="db_size">Размер базы данных: %s</string>
     <string name="update_translations_button">Обновить переводы</string>
     <string name="scanner_status_notification_channel_name">Статус сканирования</string>
