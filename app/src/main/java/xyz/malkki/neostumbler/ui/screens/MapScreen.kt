@@ -87,10 +87,6 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
         mutableStateOf(false)
     }
 
-    val loadedStyle = remember {
-        mutableStateOf<MapViewModel.MapStyle?>(null)
-    }
-
     val fillManager = remember {
         mutableStateOf<FillManager?>(null)
     }
@@ -219,7 +215,7 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
                             }
                         }
 
-                        if (myLocation.value != null) {
+                        if (myLocation.value != null && map.locationComponent.isLocationComponentActivated) {
                             map.locationComponent.forceLocationUpdate(myLocation.value!!.location)
 
                             if (trackMyLocation.value) {
