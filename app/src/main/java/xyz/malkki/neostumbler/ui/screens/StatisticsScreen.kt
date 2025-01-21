@@ -15,6 +15,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.LineBreak
@@ -23,11 +24,15 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
+import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLine
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
 import com.patrykandpatrick.vico.compose.common.ProvideVicoTheme
+import com.patrykandpatrick.vico.compose.common.fill
+import com.patrykandpatrick.vico.compose.common.shader.verticalGradient
+import com.patrykandpatrick.vico.compose.common.vicoTheme
 import com.patrykandpatrick.vico.compose.m3.common.rememberM3VicoTheme
 import com.patrykandpatrick.vico.core.cartesian.Scroll
 import com.patrykandpatrick.vico.core.cartesian.Zoom
@@ -35,6 +40,9 @@ import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
+import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
+import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer.LineProvider.Companion.series
+import com.patrykandpatrick.vico.core.common.shader.ShaderProvider
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.extensions.defaultLocale
 import xyz.malkki.neostumbler.ui.viewmodel.StatisticsViewModel
@@ -65,7 +73,17 @@ private fun StationsByDayChart(entryModel: CartesianChartModelProducer) {
         scrollState = rememberVicoScrollState(initialScroll = Scroll.Absolute.End),
         zoomState = rememberVicoZoomState(initialZoom = remember { Zoom.min(Zoom.fixed(), Zoom.Content) }),
         chart = rememberCartesianChart(
-            rememberLineCartesianLayer(),
+            rememberLineCartesianLayer(
+                lineProvider = series(LineCartesianLayer.rememberLine(
+                    areaFill = LineCartesianLayer.AreaFill.single(
+                        fill = fill(
+                            shaderProvider = ShaderProvider.verticalGradient(
+                                colors = arrayOf(vicoTheme.lineCartesianLayerColors.first().copy(alpha = 0.4f), Color.Transparent)
+                            )
+                        )
+                    )
+                ))
+            ),
             startAxis = VerticalAxis.rememberStart(
                 itemPlacer = remember {
                     VerticalAxis.ItemPlacer.step(step = { extras ->
