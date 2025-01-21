@@ -154,7 +154,7 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
                 }
         }
         .flowOn(Dispatchers.Default)
-        .shareIn(viewModelScope, started = SharingStarted.Lazily)
+        .shareIn(viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
     val myLocation = showMyLocation
         .flatMapLatest {

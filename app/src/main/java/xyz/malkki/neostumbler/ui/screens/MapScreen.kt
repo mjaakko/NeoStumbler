@@ -87,10 +87,6 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
         mutableStateOf(false)
     }
 
-    val loadedStyle = remember {
-        mutableStateOf<MapViewModel.MapStyle?>(null)
-    }
-
     val fillManager = remember {
         mutableStateOf<FillManager?>(null)
     }
