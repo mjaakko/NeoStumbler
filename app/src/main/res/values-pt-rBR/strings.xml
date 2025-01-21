@@ -145,8 +145,8 @@
         <item quantity="other">O banco de dados foi importado com %d relatórios</item>
     </plurals>
     <string name="no_data">Sem dados</string>
-    <string name="settings_ignore_wifi_scan_throttling_description">Se o scan é limitado, somente 4 scans podem ser feitos em um período de 2 minutos</string>
-    <string name="wifi_scan_frequency">Frequência de scan Wi-Fi</string>
+    <string name="settings_ignore_wifi_scan_throttling_description">Se a busca estiver limitada, somente 4 scans poderão ser feitos em um período de 2 minutos</string>
+    <string name="wifi_scan_frequency">Frequência de scan de redes Wi-Fi</string>
     <string name="every_x_meters">A cada %d metros</string>
     <string name="cell_tower_scan_frequency">Frequência de scan de torres de celular</string>
     <string name="map_tile_source">Fonte das ladrilhas do mapa</string>

@@ -144,4 +144,6 @@
     <string name="every_x_meters">Alle %d Meter</string>
     <string name="wifi_scan_frequency">Häufigkeit des Wi-Fi Scans</string>
     <string name="cell_tower_scan_frequency">Häufigkeit des Funkzellen-Scans</string>
+    <string name="map_tile_source">Quelle der Kartendaten</string>
+    <string name="settings_ignore_wifi_scan_throttling_description">Wenn das Scannen gedrosselt ist, können nur vier Scans innerhalb von zwei Minuten durchgeführt werden</string>
 </resources>

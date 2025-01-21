@@ -34,6 +34,8 @@
     <string name="delete_report">Supprimer le rapport</string>
     <string name="delete_report_confirmation">Êtes-vous sûr de vouloir supprimer ce rapport ?</string>
     <plurals name="toast_reports_uploaded">
+        <item quantity="one">%d rapport envoyé</item>
+        <item quantity="many">%d rapports envoyés</item>
         <item quantity="other">%d rapports envoyés</item>
     </plurals>
     <string name="toast_reports_upload_failed">Échec de l\'envoi des rapports</string>
@@ -41,6 +43,8 @@
     <string name="notification_sending_reports">Téléversement des rapports</string>
     <string name="notification_wireless_scanning_title">Mesure sans fil active</string>
     <plurals name="notification_wireless_scanning_content_reports_created">
+        <item quantity="one">%d rapport créé</item>
+        <item quantity="many">%d rapports créés</item>
         <item quantity="other">%d rapports créés</item>
     </plurals>
     <string name="ignore_battery_optimizations_title">Ignorer les optimisations de batterie</string>
@@ -114,6 +118,8 @@
     <string name="notification_style_basic_description">Affiche le nombre de rapports créés</string>
     <string name="delete_all_reports">Supprimer tous les rapports</string>
     <plurals name="toast_deleted_reports">
+        <item quantity="one">%d rapport supprimé</item>
+        <item quantity="many">%d rapports supprimés</item>
         <item quantity="other">%d rapports supprimés</item>
     </plurals>
     <string name="about_app">À propos de NeoStumbler</string>
@@ -147,10 +153,17 @@
     <string name="failed_to_open_selected_file">Échec de l\'ouverture du fichier sélectionné</string>
     <string name="import_data">Importer les données</string>
     <plurals name="import_database_successful">
+        <item quantity="one">Base de données importée avec %d rapport</item>
+        <item quantity="many">Base de données importée avec %d rapports</item>
         <item quantity="other">Base de données importée avec %d rapports</item>
     </plurals>
     <string name="import_database_not_valid">Le fichier sélectionné ne contenait pas de base de données valide</string>
     <string name="import_raw_database">Importer une base de données brute</string>
     <string name="import_raw_database_description">Importer une base de données brute va remplacer celle existante</string>
     <string name="no_data">Pas de données</string>
+    <string name="map_tile_source">Source des tuiles de carte</string>
+    <string name="settings_ignore_wifi_scan_throttling_description">Si les mesures sont limitées, seulement quatre scans peuvent être effectués en deux minutes</string>
+    <string name="wifi_scan_frequency">Fréquence de mesure Wi-Fi</string>
+    <string name="cell_tower_scan_frequency">Fréquence de mesure cellulaire</string>
+    <string name="every_x_meters">Tous les %d mètres</string>
 </resources>
