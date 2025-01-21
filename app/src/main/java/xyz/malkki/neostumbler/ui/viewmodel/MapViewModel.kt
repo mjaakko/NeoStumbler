@@ -37,14 +37,13 @@ import xyz.malkki.neostumbler.extensions.get
 import xyz.malkki.neostumbler.extensions.parallelMap
 import xyz.malkki.neostumbler.location.LocationSourceProvider
 import kotlin.math.abs
+import kotlin.math.floor
 import kotlin.time.Duration.Companion.seconds
 
 //The "size" of one report relative to the geohex size. The idea is that hexes with lower resolution need more reports to show the same color
 private const val REPORT_SIZE = 4
 
-private const val GEOHEX_RESOLUTION_HIGH = 9
-private const val GEOHEX_RESOLUTION_MEDIUM = 8
-private const val GEOHEX_RESOLUTION_LOW = 7
+private val GEOHEX_RESOLUTION_RANGE = 3..9
 
 class MapViewModel(application: Application) : AndroidViewModel(application) {
     private val locationSource = LocationSourceProvider(getApplication()).getLocationSource()
@@ -128,13 +127,8 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
         .combine(
             flow = zoom
                 .map { zoom ->
-                    if (zoom >= 13) {
-                        GEOHEX_RESOLUTION_HIGH
-                    } else if (zoom >= 11) {
-                        GEOHEX_RESOLUTION_MEDIUM
-                    } else {
-                        GEOHEX_RESOLUTION_LOW
-                    }
+                    //Convert map zoom level to a suitable geohex resolution
+                    floor(zoom * 0.5 + 3).toInt().coerceIn(GEOHEX_RESOLUTION_RANGE)
                 }
                 .distinctUntilChanged(),
             transform = { a, b -> a to b }
