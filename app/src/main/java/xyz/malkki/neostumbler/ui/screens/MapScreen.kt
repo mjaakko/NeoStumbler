@@ -219,7 +219,7 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
                             }
                         }
 
-                        if (myLocation.value != null) {
+                        if (myLocation.value != null && map.locationComponent.isLocationComponentActivated) {
                             map.locationComponent.forceLocationUpdate(myLocation.value!!.location)
 
                             if (trackMyLocation.value) {
