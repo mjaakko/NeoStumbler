@@ -11,6 +11,7 @@ import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.isActive
@@ -22,7 +23,11 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
-private val MIN_INTERVAL = 1.5.seconds
+/**
+ * Android seems to throttle cell scans to about once every 5 seconds.
+ * Trying to scan more often than that will just return the old cell tower data.
+ */
+private val MIN_INTERVAL = 5.seconds
 
 private val MAX_INTERVAL = 1.minutes
 
@@ -74,7 +79,6 @@ class TelephonyManagerCellInfoSource(
                     .filter { it.hasEnoughData() }
 
                 trySendBlocking(cellTowers)
-
                 rendezvousQueue.trySendBlocking(Unit)
             }
 
@@ -96,6 +100,12 @@ class TelephonyManagerCellInfoSource(
 
         awaitClose {
             rendezvousQueue.close()
+        }
+    }
+    .distinctUntilChangedBy { cellTowers ->
+        //Check the timestamp to make sure that we have received new data
+        cellTowers.maxOfOrNull { cellTower ->
+            cellTower.timestamp
         }
     }
 }
