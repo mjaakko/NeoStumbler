@@ -63,7 +63,7 @@
     <string name="wifi_scan_throttling_explanation">Você precisa desativar as limitações de busca por Wi-Fi nas configurações do seu dispositivo para usar esta funcionalidade. Isto normalmente pode ser feito pelas opções de desenvolvedor</string>
     <string name="show_my_location">Mostrar minha localização</string>
     <string name="permission_rationale_fine_location">Para obter acesso à localização atual, é necessário a permissão de localização precisa</string>
-    <string name="permission_rationale_read_phone_state">Acesso ao status do telefone é necessário para o scan de torres de celular com todos os cartões SIMs no dispositivo</string>
+    <string name="permission_rationale_read_phone_state">Acesso ao status do telefone é necessário para o scan de torres de celular</string>
     <string name="permission_rationale_bluetooth">Para fazer o scan de beacons Bluetooth, é necessária a permissão de Bluetooth</string>
     <string name="permission_rationale_post_notifications">Para mostrar a notificação de status, é necessária a permissão de notificações</string>
     <string name="permission_rationale_background_location_quick_settings">Para começar o scan pelas configurações rápidas, é necessário acesso à localização em segundo plano</string>

@@ -72,7 +72,7 @@
         L\'autorisation d\'accéder à la position exacte est nécessaire pour afficher l\'emplacement actuel
     </string>
     <string name="permission_rationale_read_phone_state">
-        L\'accès à l\'état du téléphone est nécessaire pour la mesure des antennes téléphoniques à partir de toutes les cartes SIM de cet appareil
+        L\'accès à l\'état du téléphone est nécessaire pour la mesure des antennes téléphoniques
     </string>
     <string name="permission_rationale_bluetooth">
         L\'autorisation d\'accéder au Bluetooth est nécessaire pour mesurer les balises Bluetooth

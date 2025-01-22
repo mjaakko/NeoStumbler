@@ -17,7 +17,6 @@ import android.os.IBinder
 import android.os.PowerManager
 import android.os.PowerManager.PARTIAL_WAKE_LOCK
 import android.os.PowerManager.WakeLock
-import android.telephony.TelephonyManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.FOREGROUND_SERVICE_DEFERRED
 import androidx.core.app.NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE
@@ -51,6 +50,7 @@ import xyz.malkki.neostumbler.MainActivity
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.domain.CellTower
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.get
 import xyz.malkki.neostumbler.extensions.getQuantityString
@@ -68,7 +68,6 @@ import xyz.malkki.neostumbler.scanner.source.CellInfoSource
 import xyz.malkki.neostumbler.scanner.source.MultiSubscriptionCellInfoSource
 import xyz.malkki.neostumbler.scanner.source.PressureSensorAirPressureSource
 import xyz.malkki.neostumbler.scanner.source.SmoothenedGpsSpeedSource
-import xyz.malkki.neostumbler.scanner.source.TelephonyManagerCellInfoSource
 import xyz.malkki.neostumbler.scanner.source.WifiManagerWifiAccessPointSource
 import xyz.malkki.neostumbler.utils.GpsStats
 import xyz.malkki.neostumbler.utils.getGpsStatsFlow
@@ -320,7 +319,9 @@ class ScannerService : Service() {
         return if (hasReadPhoneStatePermission()) {
             MultiSubscriptionCellInfoSource(this@ScannerService)
         } else {
-            TelephonyManagerCellInfoSource(this@ScannerService.getSystemService<TelephonyManager>()!!)
+            CellInfoSource {
+                emptyFlow<List<CellTower>>()
+            }
         }
     }
 

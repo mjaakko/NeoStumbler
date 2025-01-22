@@ -42,7 +42,7 @@
     <string name="wifi_scan_throttling">Begrensning av Wi-Fi-skanning</string>
     <string name="permission_rationale_fine_location">Innhenting av nåværende posisjon krever tilgang til nøyaktig posisjon</string>
     <string name="wifi_scan_throttling_explanation">Du trenger å skru av begrensning av Wi-Fi-skannning i enhetsinnstillingene for å skru på denne funksjonen. Vanligvis kan dette gjøres i utviklerinnstillingene.</string>
-    <string name="permission_rationale_read_phone_state">Tilgang til telefontilstand kreves for skanning av mobilmaster med alle SIM-kort på enheten</string>
+    <string name="permission_rationale_read_phone_state">Tilgang til telefontilstand kreves for skanning av mobilmaster</string>
     <string name="cancel">Avbryt</string>
     <string name="use">Bruk</string>
     <string name="bluetooth_icon_description">Blåtannsikon</string>
