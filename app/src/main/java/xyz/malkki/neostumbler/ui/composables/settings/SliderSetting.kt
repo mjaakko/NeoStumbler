@@ -28,16 +28,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 
-private fun DataStore<Preferences>.getValue(preferenceKey: String): Flow<Int?> = data.map {
-    it[intPreferencesKey(preferenceKey)]
-}
+private fun DataStore<Preferences>.getValue(preferenceKey: String): Flow<Int?> = data
+    .map {
+        it[intPreferencesKey(preferenceKey)]
+    }
+    .distinctUntilChanged()
 
 @Composable
 fun SliderSetting(
@@ -65,6 +69,9 @@ fun SliderSetting(
         BasicAlertDialog(
             onDismissRequest = {
                 dialogOpen.value = false
+
+                //Reset slider value to default when dialog is closed without saving
+                sliderValue.intValue = preferenceValue.value ?: default
             }
         ) {
             Surface(
@@ -105,14 +112,12 @@ fun SliderSetting(
                     TextButton(
                         modifier = Modifier.align(Alignment.End),
                         onClick = {
-                            dialogOpen.value = false
-
                             coroutineScope.launch {
-                                settingsStore.updateData { prefs ->
-                                    prefs.toMutablePreferences().apply {
-                                        set(intPreferencesKey(preferenceKey), sliderValue.intValue)
-                                    }
+                                settingsStore.edit { prefs ->
+                                    prefs[intPreferencesKey(preferenceKey)] = sliderValue.intValue
                                 }
+
+                                dialogOpen.value = false
                             }
                         },
                     ) {
