@@ -12,7 +12,7 @@
     <string name="notification_wireless_scanning_content_satellite_stats">%1$d/%2$d спутников используется</string>
     <string name="import_database_not_valid">Выбранный файл не содержит не содержит действительной базы данных</string>
     <string name="ignore_battery_optimizations_title">Игнорировать оптимизацию батареи</string>
-    <string name="import_data">Импорт данных</string>
+    <string name="import_data">Импортировать данные</string>
     <string name="statistics_tab_title">Статистика</string>
     <string name="reports_last_uploaded">Отчётов недавно отправлено: %s</string>
     <string name="no">Нет</string>
@@ -48,7 +48,7 @@
     <string name="notification_wireless_scanning_title">Беспроводное сканирование активно</string>
     <string name="ignore_battery_optimizations_description">Для наилучших результатов необходимо отключить оптимизацию батареи. Беспроводное сканирование и доступ к геолокации будут заметно хуже, когда включена оптимизация батареи и выключен экран</string>
     <string name="battery_optimizations_not_disabled_warning">Оптимизации батареи не были отключены</string>
-    <string name="export_data">Экспорт данных</string>
+    <string name="export_data">Экспортировать данные</string>
     <string name="export_no_file_chosen">Не удалось экспортировать, потому что файл не был создан</string>
     <string name="export_started">Экспортируем данные из %s в %s</string>
     <string name="export_csv">Экспортировать как CSV</string>
