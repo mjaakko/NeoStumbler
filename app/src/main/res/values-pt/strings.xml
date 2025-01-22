@@ -31,7 +31,7 @@
     <string name="endpoint">Ponto de recolha</string>
     <string name="api_key">API key (opcional)</string>
     <string name="wifi_scan_throttling">Restrição dos scans de redes Wi-Fi</string>
-    <string name="permission_rationale_read_phone_state">Acesso ao estado do telefone é necessário para fazer scans das redes móveis com todos os SIMs no dispositivo</string>
+    <string name="permission_rationale_read_phone_state">Acesso ao estado do telefone é necessário para fazer scans das redes móveis</string>
     <string name="permission_rationale_post_notifications">Mostrar notificações com o estado do scan requer permissão para enviar notificações</string>
     <string name="ok">OK</string>
     <string name="yes">Sim</string>

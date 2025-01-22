@@ -165,7 +165,7 @@ class WirelessScanner(
 
                 age <= LOCATION_MAX_AGE
             }
-            //Collect locations in pairs so that we can choose the best one based on timestamp
+            //Collect locations to a list so that we can choose the best based on timestamp
             .runningFold(listOf<LocationWithAirPressure>()) { list, newLocation ->
                 (list + listOf(newLocation)).takeLast(MAX_LOCATIONS)
             }

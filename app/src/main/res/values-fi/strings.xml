@@ -196,7 +196,7 @@
     </string>
 
     <string name="permission_rationale_read_phone_state">
-        Käyttölupa puhelimeen tarvitaan puhelinmastojen skannaamiseen laitteen kaikilla SIM-korteilla
+        Käyttölupa puhelimeen tarvitaan puhelinmastojen skannaamiseen
     </string>
 
     <string name="permission_rationale_bluetooth">

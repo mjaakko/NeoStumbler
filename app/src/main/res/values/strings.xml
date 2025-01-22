@@ -189,7 +189,7 @@
     </string>
 
     <string name="permission_rationale_read_phone_state">
-        Access to phone state is needed for scanning cell towers with all SIM cards on the device
+        Access to phone state is needed for scanning cell towers
     </string>
 
     <string name="permission_rationale_bluetooth">
