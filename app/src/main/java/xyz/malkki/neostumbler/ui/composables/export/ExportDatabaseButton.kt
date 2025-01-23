@@ -18,6 +18,7 @@ import xyz.malkki.neostumbler.export.DatabaseExportWorker
 import xyz.malkki.neostumbler.extensions.showToast
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 private const val DB_MIME_TYPE = "application/vnd.sqlite3"
 
@@ -47,7 +48,7 @@ fun ExportDatabaseButton() {
     Button(
         enabled = true,
         onClick = {
-            val timestamp = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+            val timestamp = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
 
             activityLauncher.launch("neostumbler_reports_$timestamp.db")
         }
