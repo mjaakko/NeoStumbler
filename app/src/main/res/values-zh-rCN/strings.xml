@@ -76,7 +76,7 @@
     <string name="notification_style_detailed_description">显示报告和 GNSS 卫星数量</string>
     <string name="show_my_location">显示我的位置</string>
     <string name="permission_rationale_fine_location">获取当前位置需要精确位置权限</string>
-    <string name="permission_rationale_read_phone_state">扫描本机 SIM 所连接之信号塔需要获取手机状态权限</string>
+    <string name="permission_rationale_read_phone_state">扫描信号塔需要获取电话状态权限</string>
     <string name="permission_rationale_bluetooth">扫描蓝牙信标需要蓝牙权限</string>
     <string name="permission_rationale_post_notifications">显示状态通知需要通知权限</string>
     <string name="permission_rationale_background_location_quick_settings">从快捷开关启动扫描需要后台位置权限</string>
