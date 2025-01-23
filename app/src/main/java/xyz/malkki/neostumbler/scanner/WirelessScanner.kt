@@ -4,15 +4,12 @@ import android.os.SystemClock
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.runningFold
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -25,6 +22,7 @@ import xyz.malkki.neostumbler.domain.CellTower
 import xyz.malkki.neostumbler.domain.ObservedDevice
 import xyz.malkki.neostumbler.domain.Position
 import xyz.malkki.neostumbler.domain.WifiAccessPoint
+import xyz.malkki.neostumbler.extensions.buffer
 import xyz.malkki.neostumbler.extensions.combineWithLatestFrom
 import xyz.malkki.neostumbler.extensions.elapsedRealtimeMillisCompat
 import xyz.malkki.neostumbler.scanner.data.ReportData
@@ -47,8 +45,8 @@ private val OBSERVED_DEVICE_MAX_AGE = 30.seconds
 //Maximum age of air pressure data, relative to the location timestamp
 private val AIR_PRESSURE_MAX_AGE = 2.seconds
 
-//Retain up to 10 latest locations to match the scan results to the best location
-private const val MAX_LOCATIONS = 10
+//Retain locations in the last 10 seconds
+private val LOCATION_BUFFER_DURATION = 10.seconds
 
 /**
  * @param timeSource Time source used in the data, defaults to [SystemClock.elapsedRealtime]
@@ -166,13 +164,11 @@ class WirelessScanner(
                 age <= LOCATION_MAX_AGE
             }
             //Collect locations to a list so that we can choose the best based on timestamp
-            .runningFold(listOf<LocationWithAirPressure>()) { list, newLocation ->
-                (list + listOf(newLocation)).takeLast(MAX_LOCATIONS)
-            }
+            .buffer(LOCATION_BUFFER_DURATION)
             .filter {
                 it.isNotEmpty()
             }
-            .flatMapConcat { locations ->
+            .map { locations ->
                 val (cells, wifis, bluetooths) = mutex.withLock {
                     val cells = cellTowersByKey.values.toList()
                     cellTowersByKey.clear()
@@ -212,12 +208,15 @@ class WirelessScanner(
                     .map { location ->
                         createReport(location, cellsByLocation[location] ?: emptyList(), wifisByLocation[location] ?: emptyList(), bluetoothsByLocation[location] ?: emptyList())
                     }
-                    .asFlow()
+                    .filter {
+                        it.bluetoothBeacons.isNotEmpty() || it.cellTowers.isNotEmpty() || it.wifiAccessPoints.isNotEmpty()
+                    }
             }
-            .filter {
-                it.bluetoothBeacons.isNotEmpty() || it.cellTowers.isNotEmpty() || it.wifiAccessPoints.isNotEmpty()
+            .collect { reports ->
+                reports.forEach {
+                    send(it)
+                }
             }
-            .collect(::send)
     }
 
     private val CellTower.key: String
