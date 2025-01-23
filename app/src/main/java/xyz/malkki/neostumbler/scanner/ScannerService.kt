@@ -67,8 +67,8 @@ import xyz.malkki.neostumbler.scanner.source.BluetoothBeaconSource
 import xyz.malkki.neostumbler.scanner.source.CellInfoSource
 import xyz.malkki.neostumbler.scanner.source.MultiSubscriptionCellInfoSource
 import xyz.malkki.neostumbler.scanner.source.PressureSensorAirPressureSource
-import xyz.malkki.neostumbler.scanner.source.SmoothenedGpsSpeedSource
 import xyz.malkki.neostumbler.scanner.source.WifiManagerWifiAccessPointSource
+import xyz.malkki.neostumbler.scanner.speed.SmoothenedGpsSpeedSource
 import xyz.malkki.neostumbler.utils.GpsStats
 import xyz.malkki.neostumbler.utils.getGpsStatsFlow
 import kotlin.time.Duration.Companion.seconds
