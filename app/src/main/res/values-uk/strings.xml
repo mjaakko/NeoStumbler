@@ -69,7 +69,7 @@
     <string name="notification_style_basic_description">Показує кількість створених звітів</string>
     <string name="notification_style_detailed_description">Показує кількість створених звітів та кількість супутників GNSS</string>
     <string name="notification_style_detailed_title">Детально</string>
-    <string name="permission_rationale_read_phone_state">Для сканування базових станцій з усіма SIM-картками на пристрої потрібен доступ до стану телефону</string>
+    <string name="permission_rationale_read_phone_state">Доступ до стану телефону потрібен для сканування стільникових веж</string>
     <string name="app_language">Мова</string>
     <string name="show_my_location">Показати моє місцезнаходження</string>
     <string name="permission_rationale_fine_location">Отримання доступу до поточного місцезнаходження вимагає дозволу для точного визначення місцезнаходження</string>
