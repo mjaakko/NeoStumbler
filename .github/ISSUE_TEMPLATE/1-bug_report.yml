@@ -9,14 +9,11 @@ body:
       description: Describe what happened and what did you expect to happen 
     validations:
       required: true
-  - type: dropdown
+  - type: input
     id: variant
     attributes:
       label: App variant
-      description: Which variant of NeoStumbler are you using?
-      options:
-        - full
-        - fdroid
+      description: Which variant of NeoStumbler are you using? (`full` or `fdroid`)
     validations:
       required: true
   - type: input

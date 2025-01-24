@@ -1,0 +1,11 @@
+name: Question
+description: General question about NeoStumbler
+labels: ["question"]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: General question about NeoStumbler. Note that we also have a [chat room in Matrix](https://matrix.to/#/%23neostumbler:matrix.org), where you can get the answer faster
+    validations:
+      required: true
