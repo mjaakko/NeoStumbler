@@ -1,2 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="autoscan_when_moving">Automatyczne skanowanie podczas ruchu</string>
+    <string name="permission_rationale_activity_recognition">Automatyczny start skanowania wymaga dostępu do aktualnej aktywności</string>
+    <string name="autoscan_failed_to_enable">Wystąpił błąd automatycznego skanowania</string>
+    <string name="prefer_fused_location">Preferuj lokalizację zespoloną</string>
+    <string name="permission_rationale_background_location_autoscan">Automatyczny start skanowania wymaga otrzymywanie lokalizacji, gdy aplikacja jest tle</string>
+</resources>
