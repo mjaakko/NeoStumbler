@@ -3,14 +3,13 @@ package xyz.malkki.neostumbler.scanner
 import android.os.SystemClock
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -76,11 +75,7 @@ class WirelessScanner(
                     Timber.i("Moving stopped, pausing scanning")
                 }
             }
-            .shareIn(
-                scope = this,
-                started = SharingStarted.Eagerly,
-                replay = 1
-            )
+            .stateIn(this)
 
         launch(Dispatchers.Default) {
             isMovingFlow
