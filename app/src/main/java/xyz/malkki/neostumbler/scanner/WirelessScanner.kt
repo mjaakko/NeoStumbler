@@ -3,17 +3,13 @@ package xyz.malkki.neostumbler.scanner
 import android.os.SystemClock
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.runningFold
-import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -25,6 +21,7 @@ import xyz.malkki.neostumbler.domain.CellTower
 import xyz.malkki.neostumbler.domain.ObservedDevice
 import xyz.malkki.neostumbler.domain.Position
 import xyz.malkki.neostumbler.domain.WifiAccessPoint
+import xyz.malkki.neostumbler.extensions.buffer
 import xyz.malkki.neostumbler.extensions.combineWithLatestFrom
 import xyz.malkki.neostumbler.extensions.elapsedRealtimeMillisCompat
 import xyz.malkki.neostumbler.scanner.data.ReportData
@@ -38,17 +35,14 @@ import kotlin.time.Duration.Companion.seconds
 //Maximum accuracy for locations, used for filtering bad locations
 private const val LOCATION_MAX_ACCURACY = 200
 
-//Maximum age for locations
-private val LOCATION_MAX_AGE = 20.seconds
-
 //Maximum age for observed devices. This is used to filter out old data when e.g. there is no GPS signal and there's a gap between two locations
 private val OBSERVED_DEVICE_MAX_AGE = 30.seconds
 
 //Maximum age of air pressure data, relative to the location timestamp
 private val AIR_PRESSURE_MAX_AGE = 2.seconds
 
-//Retain up to 10 latest locations to match the scan results to the best location
-private const val MAX_LOCATIONS = 10
+//Retain locations in the last 10 seconds
+private val LOCATION_BUFFER_DURATION = 10.seconds
 
 /**
  * @param timeSource Time source used in the data, defaults to [SystemClock.elapsedRealtime]
@@ -78,11 +72,7 @@ class WirelessScanner(
                     Timber.i("Moving stopped, pausing scanning")
                 }
             }
-            .shareIn(
-                scope = this,
-                started = SharingStarted.Eagerly,
-                replay = 1
-            )
+            .stateIn(this)
 
         launch(Dispatchers.Default) {
             isMovingFlow
@@ -160,19 +150,12 @@ class WirelessScanner(
             .filter { (location, _) ->
                 location.location.hasAccuracy() && location.location.accuracy <= LOCATION_MAX_ACCURACY
             }
-            .filter { (location, _) ->
-                val age = (timeSource.invoke() - location.location.elapsedRealtimeMillisCompat).milliseconds
-
-                age <= LOCATION_MAX_AGE
-            }
             //Collect locations to a list so that we can choose the best based on timestamp
-            .runningFold(listOf<LocationWithAirPressure>()) { list, newLocation ->
-                (list + listOf(newLocation)).takeLast(MAX_LOCATIONS)
-            }
+            .buffer(LOCATION_BUFFER_DURATION)
             .filter {
                 it.isNotEmpty()
             }
-            .flatMapConcat { locations ->
+            .map { locations ->
                 val (cells, wifis, bluetooths) = mutex.withLock {
                     val cells = cellTowersByKey.values.toList()
                     cellTowersByKey.clear()
@@ -192,19 +175,17 @@ class WirelessScanner(
                     Triple(cells, wifis, bluetooths)
                 }
 
-                val now = timeSource.invoke()
-
                 val cellsByLocation = cells
-                    .filterOldData(now)
                     .groupByLocation(locations)
+                    .filterOldData()
 
                 val wifisByLocation = wifis
-                    .filterOldData(now)
                     .groupByLocation(locations)
+                    .filterOldData()
 
                 val bluetoothsByLocation = bluetooths
-                    .filterOldData(now)
                     .groupByLocation(locations)
+                    .filterOldData()
 
                 val locationsWithData = cellsByLocation.keys + wifisByLocation.keys + bluetoothsByLocation.keys
 
@@ -212,12 +193,15 @@ class WirelessScanner(
                     .map { location ->
                         createReport(location, cellsByLocation[location] ?: emptyList(), wifisByLocation[location] ?: emptyList(), bluetoothsByLocation[location] ?: emptyList())
                     }
-                    .asFlow()
+                    .filter {
+                        it.bluetoothBeacons.isNotEmpty() || it.cellTowers.isNotEmpty() || it.wifiAccessPoints.isNotEmpty()
+                    }
             }
-            .filter {
-                it.bluetoothBeacons.isNotEmpty() || it.cellTowers.isNotEmpty() || it.wifiAccessPoints.isNotEmpty()
+            .collect { reports ->
+                reports.forEach {
+                    send(it)
+                }
             }
-            .collect(::send)
     }
 
     private val CellTower.key: String
@@ -248,8 +232,10 @@ class WirelessScanner(
         !ssid.isNullOrBlank() && !ssid.endsWith("_nomap")
     }
 
-    private fun <T : ObservedDevice> List<T>.filterOldData(currentTimestamp: Long): List<T> = filter { device ->
-        (currentTimestamp - device.timestamp).milliseconds <= OBSERVED_DEVICE_MAX_AGE
+    private fun <T : ObservedDevice> Map<LocationWithAirPressure, List<T>>.filterOldData(): Map<LocationWithAirPressure, List<T>> = mapValues { entry ->
+        val location = entry.key.first
+
+        entry.value.filter { abs(it.timestamp - location.location.elapsedRealtimeMillisCompat).milliseconds <= OBSERVED_DEVICE_MAX_AGE }
     }
 
     private fun <T : ObservedDevice> List<T>.groupByLocation(locations: List<LocationWithAirPressure>): Map<LocationWithAirPressure, List<T>> = groupBy {

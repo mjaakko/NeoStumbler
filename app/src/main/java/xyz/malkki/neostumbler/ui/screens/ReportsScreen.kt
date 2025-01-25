@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -38,7 +37,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -62,6 +60,7 @@ import xyz.malkki.neostumbler.scanner.quicksettings.ScannerTileService
 import xyz.malkki.neostumbler.ui.composables.AddQSTileDialog
 import xyz.malkki.neostumbler.ui.composables.BatteryOptimizationsDialog
 import xyz.malkki.neostumbler.ui.composables.ConfirmationDialog
+import xyz.malkki.neostumbler.ui.composables.Link
 import xyz.malkki.neostumbler.ui.composables.MLSWarningDialog
 import xyz.malkki.neostumbler.ui.composables.PermissionsDialog
 import xyz.malkki.neostumbler.ui.composables.ReportUploadButton
@@ -384,9 +383,13 @@ private fun Report(report: ReportWithStats, geocoder: Geocoder, onDeleteReport: 
             StationCount(iconRes = R.drawable.bluetooth_14sp, iconDescription = stringResource(R.string.bluetooth_icon_description), count = report.bluetoothBeaconCount)
         }
         if (canShowMap) {
-            ClickableText(text = AnnotatedString(address.value), style = TextStyle(fontSize = 14.sp, color = Color.Blue), onClick = {
-                context.startActivity(intent)
-            })
+            Link(
+                text = address.value,
+                onClick = {
+                    context.startActivity(intent)
+                },
+                style = TextStyle(fontSize = 14.sp)
+            )
         } else {
             Text(text = address.value, style = TextStyle(fontSize = 14.sp))
         }

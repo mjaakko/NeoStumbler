@@ -226,6 +226,10 @@ fabric.properties
 
 app/release/
 
+## attach_pid files
+
+**/.attach_pid*
+
 ## Kotlin 2.0
 .kotlin/
 

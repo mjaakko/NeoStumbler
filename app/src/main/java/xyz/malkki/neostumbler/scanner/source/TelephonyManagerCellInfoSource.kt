@@ -55,6 +55,12 @@ class TelephonyManagerCellInfoSource(
             return this
         } else {
             val mcc = mobileCountryCodes.first()
+
+            if (!serviceState.operatorNumeric.startsWith(mcc)) {
+                //Service state is for a different mobile country code, we can't use the MNC
+                return this
+            }
+
             val mnc = serviceState.operatorNumeric.replaceFirst(mcc, "")
 
             return map { cellTower ->

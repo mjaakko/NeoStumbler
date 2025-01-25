@@ -1,11 +1,10 @@
-package xyz.malkki.neostumbler.scanner.source
+package xyz.malkki.neostumbler.scanner.speed
 
 import android.location.Location
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import xyz.malkki.neostumbler.extensions.elapsedRealtimeMillisCompat
 import xyz.malkki.neostumbler.extensions.pairwise
-import xyz.malkki.neostumbler.scanner.speed.SpeedSource
 import kotlin.math.abs
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds

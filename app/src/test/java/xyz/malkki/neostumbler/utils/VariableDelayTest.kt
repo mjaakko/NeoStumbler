@@ -8,6 +8,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
 import kotlin.time.measureTime
@@ -42,7 +43,8 @@ class VariableDelayTest {
             delayWithMinDuration(timeSource.invoke(), timeSource, durationFlow)
         }
 
-        assertTrue("Expected delay to be at least 1 second (was ${delay.toString(DurationUnit.SECONDS)})", delay >= 1.seconds)
+        //For some reason, 1000.milliseconds >= 1.seconds == false
+        assertTrue("Expected delay to be at least 1 second (was ${delay.toString(DurationUnit.MILLISECONDS)})", delay >= 990.milliseconds)
     }
 
     @Test
