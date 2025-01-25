@@ -52,7 +52,7 @@ class WirelessScannerTest {
 
         assertThrows(TimeoutCancellationException::class.java) {
             runBlocking {
-                withTimeout(1.seconds) {
+                withTimeout(12.seconds) {
                     reportFlow.first()
                 }
             }
@@ -98,7 +98,7 @@ class WirelessScannerTest {
 
         assertThrows(TimeoutCancellationException::class.java) {
             runBlocking {
-                withTimeout(1.seconds) {
+                withTimeout(12.seconds) {
                     reportFlow.first()
                 }
             }
@@ -153,7 +153,7 @@ class WirelessScannerTest {
 
         assertThrows(TimeoutCancellationException::class.java) {
             runBlocking {
-                withTimeout(1.seconds) {
+                withTimeout(12.seconds) {
                     reportFlow.first()
                 }
             }
@@ -206,7 +206,7 @@ class WirelessScannerTest {
             val output = mutableListOf<ReportData>()
 
             reportFlow
-                .timeout(5.seconds)
+                .timeout(12.seconds)
                 .catch {
                     if (it !is TimeoutCancellationException) {
                         throw it
