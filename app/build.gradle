@@ -142,6 +142,16 @@ android {
         }
     }
 
+    splits {
+        abi {
+            enable project.hasProperty("enableAbiSplit")
+
+            reset()
+            include 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+
+            universalApk true
+        }
+    }
 
     //These are not needed because the app is not published to Google Play
     dependenciesInfo {
@@ -157,8 +167,6 @@ android {
         warning 'MissingQuantity'
     }
 }
-
-
 
 tasks.register('printVersionName') {
     print project.android.defaultConfig.versionName
