@@ -35,9 +35,6 @@ import kotlin.time.Duration.Companion.seconds
 //Maximum accuracy for locations, used for filtering bad locations
 private const val LOCATION_MAX_ACCURACY = 200
 
-//Maximum age for locations
-private val LOCATION_MAX_AGE = 20.seconds
-
 //Maximum age for observed devices. This is used to filter out old data when e.g. there is no GPS signal and there's a gap between two locations
 private val OBSERVED_DEVICE_MAX_AGE = 30.seconds
 
@@ -153,11 +150,6 @@ class WirelessScanner(
             .filter { (location, _) ->
                 location.location.hasAccuracy() && location.location.accuracy <= LOCATION_MAX_ACCURACY
             }
-            .filter { (location, _) ->
-                val age = (timeSource.invoke() - location.location.elapsedRealtimeMillisCompat).milliseconds
-
-                age <= LOCATION_MAX_AGE
-            }
             //Collect locations to a list so that we can choose the best based on timestamp
             .buffer(LOCATION_BUFFER_DURATION)
             .filter {
@@ -183,19 +175,17 @@ class WirelessScanner(
                     Triple(cells, wifis, bluetooths)
                 }
 
-                val now = timeSource.invoke()
-
                 val cellsByLocation = cells
-                    .filterOldData(now)
                     .groupByLocation(locations)
+                    .filterOldData()
 
                 val wifisByLocation = wifis
-                    .filterOldData(now)
                     .groupByLocation(locations)
+                    .filterOldData()
 
                 val bluetoothsByLocation = bluetooths
-                    .filterOldData(now)
                     .groupByLocation(locations)
+                    .filterOldData()
 
                 val locationsWithData = cellsByLocation.keys + wifisByLocation.keys + bluetoothsByLocation.keys
 
@@ -242,8 +232,10 @@ class WirelessScanner(
         !ssid.isNullOrBlank() && !ssid.endsWith("_nomap")
     }
 
-    private fun <T : ObservedDevice> List<T>.filterOldData(currentTimestamp: Long): List<T> = filter { device ->
-        (currentTimestamp - device.timestamp).milliseconds <= OBSERVED_DEVICE_MAX_AGE
+    private fun <T : ObservedDevice> Map<LocationWithAirPressure, List<T>>.filterOldData(): Map<LocationWithAirPressure, List<T>> = mapValues { entry ->
+        val location = entry.key.first
+
+        entry.value.filter { abs(it.timestamp - location.location.elapsedRealtimeMillisCompat).milliseconds <= OBSERVED_DEVICE_MAX_AGE }
     }
 
     private fun <T : ObservedDevice> List<T>.groupByLocation(locations: List<LocationWithAirPressure>): Map<LocationWithAirPressure, List<T>> = groupBy {
