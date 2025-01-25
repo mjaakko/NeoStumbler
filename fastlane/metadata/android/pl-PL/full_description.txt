@@ -1,0 +1,1 @@
+<b>NeoStumbler</b> to aplikacja do zbierania informacji o sieciach Wi-Fi, wieżach komórkowych i sygnałach nawigacyjnych Bluetooth dla usług geolokalizacyjnych zgodnych z interfejsem API Mozilla Location Services
