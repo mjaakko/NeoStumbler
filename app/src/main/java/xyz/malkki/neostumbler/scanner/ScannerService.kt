@@ -82,8 +82,19 @@ class ScannerService : Service() {
 
         private const val EXTRA_AUTOSTART = "autostart"
 
-        //Try to get new locations every second
-        private val LOCATION_INTERVAL = 1.seconds
+        /**
+         * Try to get new locations every 3 seconds
+         *
+         * If the interval is too high, data quality will be worse because of
+         * the distance traveled between the scan and the location fix. Also there can be some gaps on the map
+         *
+         * If the interval is too low, there will be many reports with just a few observations which will decrease
+         * DB performance in the long term and the reports UI will be cluttered. Also there seems to be a noticeable
+         * effect on battery life
+         *
+         * 3 seconds seems to give a reasonably good balance between these
+         */
+        private val LOCATION_INTERVAL = 3.seconds
 
         //By default, try to scan Wi-Fis every 50 meters
         const val DEFAULT_WIFI_SCAN_DISTANCE: Int = 50
