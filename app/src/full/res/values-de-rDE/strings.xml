@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="prefer_fused_location">Fused-Location-Provider bevorzugen</string>
+    <string name="prefer_fused_location_title">Fused-Location-Provider bevorzugen</string>
     <string name="autoscan_when_moving">Automatisch scannen, wenn in Bewegung</string>
     <string name="autoscan_failed_to_enable">Konnte automatisches Scannen nicht einschalten</string>
     <string name="permission_rationale_background_location_autoscan">Das Scannen automatisch zu starten, benötigt die Berechtigung für Hintergrund-Standort</string>
