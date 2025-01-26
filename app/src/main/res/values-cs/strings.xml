@@ -145,7 +145,7 @@
     <string name="troubleshooting_title">Řešení problémů</string>
     <string name="import_database_not_valid">Vybraný soubor neobsahuje platnou databázi</string>
     <string name="no_data">Žádná data</string>
-    <string name="settings_ignore_wifi_scan_throttling_description">Pokud je přibrždění vyhledávání Wi-Fi zapnuté, bude možně vytvořit jen 2 skeny za minutu</string>
+    <string name="settings_ignore_wifi_scan_throttling_description">Pokud je přibrždění vyhledávání Wi-Fi zapnuté, bude možně vytvořit jen 2 reporty za minutu</string>
     <string name="wifi_scan_frequency">Frekvence skenování Wi-Fi</string>
     <string name="cell_tower_scan_frequency">Frekvence vyhledávání mobilních věží</string>
     <string name="every_x_meters">Každých %d metrů</string>

@@ -20,6 +20,8 @@
     <string name="notification_sending_reports">Enviando relatórios</string>
     <string name="notification_wireless_scanning_title">Scan wireless ativo</string>
     <plurals name="notification_wireless_scanning_content_reports_created">
+        <item quantity="one">%d relatório criado</item>
+        <item quantity="many">%d relatórios criados</item>
         <item quantity="other">%d relatórios criados</item>
     </plurals>
     <string name="export_notification_channel_name">Exportação de dados</string>
@@ -48,6 +50,8 @@
     <string name="cell_tower_icon_description">Ícone da torre de redes móveis</string>
     <string name="scanner_status_notification_channel_name">Estado do scan</string>
     <plurals name="toast_reports_uploaded">
+        <item quantity="one">Enviado %d relatório</item>
+        <item quantity="many">Enviados %d relatórios</item>
         <item quantity="other">Enviados %d relatórios</item>
     </plurals>
     <string name="toast_reports_upload_failed">O envio dos relatórios falhou</string>
@@ -99,6 +103,8 @@
     <string name="import_raw_database">Importar base de dados</string>
     <string name="import_database_not_valid">O ficheiro selecionado não contém uma base de dados válida</string>
     <plurals name="import_database_successful">
+        <item quantity="one">Base de dados importada com %d relatório</item>
+        <item quantity="many">Base de dados importada com %d relatórios</item>
         <item quantity="other">Base de dados importada com %d relatórios</item>
     </plurals>
     <string name="delete_all_reports">Apagar todos os relatórios</string>
@@ -107,6 +113,8 @@
     <string name="export_csv">Exportar como CSV</string>
     <string name="troubleshooting_title">Resolução de problemas</string>
     <plurals name="toast_deleted_reports">
+        <item quantity="one">%d relatório apagado</item>
+        <item quantity="many">%d relatórios apagados</item>
         <item quantity="other">%d relatórios apagados</item>
     </plurals>
     <string name="toast_deleted_all_reports">Todos os relatórios foram apagados</string>
@@ -135,4 +143,9 @@
     <string name="manage_storage_title">Gerir armazenamento</string>
     <string name="delete_reports_by_date">Apagar relatórios por data</string>
     <string name="db_size">Tamanho da base de dados: %s</string>
+    <string name="every_x_meters">A cada %d metros</string>
+    <string name="settings_ignore_wifi_scan_throttling_description">Se o scanning é limitado, apenas 4 scans podem ser feitos a cada 2 minutos</string>
+    <string name="cell_tower_scan_frequency">Frequência do scan das redes móveis</string>
+    <string name="wifi_scan_frequency">Frequência do scan das redes Wi-Fi</string>
+    <string name="map_tile_source">Fonte dos mapas</string>
 </resources>
