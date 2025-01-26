@@ -3,6 +3,6 @@
     <string name="autoscan_when_moving">\"المسح التلقائي أثناء الحركة</string>
     <string name="autoscan_failed_to_enable">فشل في تمكين المسح التلقائي</string>
     <string name="permission_rationale_activity_recognition">المسح التلقائي يحتاج إلى إذن للوصول إلى النشاط الحالي</string>
-    <string name="prefer_fused_location">يفضل استخدام موفر الموقع المدمج</string>
+    <string name="prefer_fused_location_title">يفضل استخدام موفر الموقع المدمج</string>
     <string name="permission_rationale_background_location_autoscan">المسح التلقائي يحتاج إلى إذن لاستخدام الموقع في الخلفية</string>
 </resources>

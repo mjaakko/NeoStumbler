@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="permission_rationale_background_location_autoscan">Scans automáticos precisam da permissão para aceder a localização em segundo plano</string>
-    <string name="prefer_fused_location">Preferir provedor de localização combinada</string>
+    <string name="prefer_fused_location_title">Preferir provedor de localização combinada</string>
     <string name="autoscan_when_moving">Scan automático durante movimento</string>
     <string name="autoscan_failed_to_enable">Houve uma falha ao ativar o scan automático</string>
     <string name="permission_rationale_activity_recognition">Os scans automáticos precisam de acesso à atividade corrente</string>

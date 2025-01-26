@@ -50,7 +50,8 @@ fun SettingsScreen() {
         ) {
             MovementDetectorSettings()
             SettingsToggle(
-                title = stringResource(id = R.string.prefer_fused_location),
+                title = stringResource(id = R.string.prefer_fused_location_title),
+                description = stringResource(id = R.string.prefer_fused_location_description),
                 preferenceKey = PreferenceKeys.PREFER_FUSED_LOCATION,
                 default = true
             )

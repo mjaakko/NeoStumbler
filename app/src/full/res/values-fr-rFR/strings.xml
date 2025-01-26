@@ -1,5 +1,5 @@
 <resources>
-    <string name="prefer_fused_location">Préférer fused location provider</string>
+    <string name="prefer_fused_location_title">Préférer fused location provider</string>
     <string name="autoscan_when_moving">Mesures automatiques pendant le déplacement</string>
 
     <string name="autoscan_failed_to_enable">Échec de l\'activation des mesures automatiques</string>
