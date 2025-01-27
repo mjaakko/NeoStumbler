@@ -137,7 +137,7 @@
     <string name="db_prune_six_months">Po šešių mėnesių</string>
     <string name="db_prune_never">Niekada</string>
     <string name="manage_storage_title">Tvarkyti saugyklą</string>
-    <string name="permission_rationale_read_phone_state">Prieigos prie telefono būsenos reikia, kad galėtume skenuoti mobiliojo ryšio bokštus, naudodamiesi visomis įrenginyje esančiomis SIM kortelėmis</string>
+    <string name="permission_rationale_read_phone_state">Prieigos prie telefono būsenos reikia, kad galėtume skenuoti mobiliojo ryšio bokštus</string>
     <string name="permission_rationale_bluetooth">Prieigos prie „Bluetooh“ reikia, kad galėtume skenuoti netoliese esančius „Bluetooth“ siųstuvus</string>
     <string name="permission_rationale_post_notifications">Leidimo siųsti pranešimus reikia, kad tam, kad galėtume pranešti jums apie programos veiklą</string>
     <string name="permission_rationale_location_map">Jūsų vietai žemėlapyje parodyti reikia leidimo pasiekti vietovės duomenis</string>
