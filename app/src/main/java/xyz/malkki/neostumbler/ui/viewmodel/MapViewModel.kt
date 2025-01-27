@@ -222,7 +222,7 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
     enum class MapTileSource(val title: String, val sourceUrl: String?, val sourceAsset: String?) {
         OPENSTREETMAP("OpenStreetMap", null, "osm_raster_style.json"),
         OPENFREEMAP("OpenFreeMap", "https://tiles.openfreemap.org/styles/liberty", null),
-        VERSATILES("VersaTiles", "https://tiles.versatiles.org/assets/styles/colorful.json", null)
+        VERSATILES("VersaTiles", "https://tiles.versatiles.org/assets/styles/colorful/style.json", null)
     }
 
     data class MapStyle(val styleUrl: String?, val styleJson: String?)
