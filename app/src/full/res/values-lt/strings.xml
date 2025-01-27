@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="prefer_fused_location_title">Teikti prioritetą jungtinei vietovės tarnybai</string>
+    <string name="prefer_fused_location_title">Teikti pirmenybę jungtinei vietovės tarnybai</string>
     <string name="autoscan_when_moving">Automatiškai skenuoti, kai judama</string>
     <string name="autoscan_failed_to_enable">Nepavyko įgalinti automatinio skenavimo</string>
     <string name="permission_rationale_background_location_autoscan">Automatiniam skenavimui reikalingas leidimas pasiekti vietovės duomenis, programai veikiant fone</string>
     <string name="permission_rationale_activity_recognition">Automatiniam skenavimui reikalingas leidimas prieigai prie fizinės veiklos</string>
+    <string name="prefer_fused_location_description">Jungtinė vietovės tarnyba gali kombinuoti vietovės nustatymo duomenis iš kitų šaltinių nei GPS</string>
 </resources>
