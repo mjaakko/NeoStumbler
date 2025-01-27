@@ -5,4 +5,5 @@
     <string name="autoscan_failed_to_enable">Не вдалося увімкнути автоматичне сканування</string>
     <string name="permission_rationale_background_location_autoscan">Автоматичне запускання сканування потребує дозволу на доступ до місцезнаходження у фоновому режимі</string>
     <string name="permission_rationale_activity_recognition">Автоматичне запускання сканування потребує доступу до поточної активності</string>
+    <string name="prefer_fused_location_description">Провайдер об\'єднаного визначення місця розташування може використовувати дані з інших джерел, окрім GPS, для визначення місцезнаходження</string>
 </resources>
