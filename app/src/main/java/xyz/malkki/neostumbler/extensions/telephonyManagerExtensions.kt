@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION") //PhoneStateListener is deprecated on Android 12+ś
+
 package xyz.malkki.neostumbler.extensions
 
 import android.Manifest
@@ -24,7 +26,6 @@ fun TelephonyManager.getServiceStateFlow(): Flow<ServiceState> {
     }
 }
 
-@Suppress("DEPRECATION")
 private fun TelephonyManager.getServiceStateFlowLegacy(): Flow<ServiceState> = callbackFlow {
     var listener: PhoneStateListener? = null
 
