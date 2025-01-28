@@ -42,7 +42,7 @@
     <string name="bluetooth_icon_description">Ikona Bluetooth</string>
     <string name="wireless_scanning">Skenování</string>
     <string name="export_no_file_chosen">Nelze exportovat data, protože nebyl vytvořen žádný soubor</string>
-    <string name="export_started">Probíhá exportování dat od %s do %s</string>
+    <string name="export_started">Probíhá exportování dat od %1$s do %2$s</string>
     <string name="reupload_data">Znovu odeslat reporty</string>
     <string name="wifis">WiFi sítě</string>
     <string name="beacons">Bluetooth majáky</string>

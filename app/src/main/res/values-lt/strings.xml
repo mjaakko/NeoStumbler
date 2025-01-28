@@ -59,7 +59,7 @@
     <string name="notification_exporting_data">Duomenys eksportuojami…</string>
     <string name="export_data">Duomenų eksportas</string>
     <string name="export_no_file_chosen">Nepavyko sukurti failo duomenų eksportui</string>
-    <string name="export_started">Eksportuojami duomenys nuo %s iki %s</string>
+    <string name="export_started">Eksportuojami duomenys nuo %1$s iki %2$s</string>
     <string name="export_csv">Eksportuoti CSV formatu</string>
     <string name="export_raw_database">Eksportuoti neapdorotą duomenų bazę</string>
     <string name="import_data">Duomenų importas</string>

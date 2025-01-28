@@ -27,7 +27,7 @@
     <string name="export_notification_channel_name">Exportação de dados</string>
     <string name="export_data">Exportar dados</string>
     <string name="export_no_file_chosen">Não foi possível exportar os dados porque nenhum ficheiro foi criado</string>
-    <string name="export_started">Exportando dados desde %s até %s</string>
+    <string name="export_started">Exportando dados desde %1$s até %2$s</string>
     <string name="cells">Torres de redes móveis</string>
     <string name="beacons">Bluetooth beacons</string>
     <string name="endpoint">Ponto de recolha</string>

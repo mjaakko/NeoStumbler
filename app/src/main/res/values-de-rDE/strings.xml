@@ -47,7 +47,7 @@
     <string name="notification_exporting_data">Exportiere Daten…</string>
     <string name="export_data">Daten exportieren</string>
     <string name="export_no_file_chosen">Kann Daten nicht exportieren, da keine Datei erstellt wurde</string>
-    <string name="export_started">Exportiere Daten von %s bis %s</string>
+    <string name="export_started">Exportiere Daten von %1$s bis %2$s</string>
     <string name="reupload_data">Daten erneut hochladen</string>
     <string name="wifis">WLANs</string>
     <string name="cells">Funkzellen</string>

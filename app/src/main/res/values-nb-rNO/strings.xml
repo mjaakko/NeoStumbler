@@ -15,7 +15,7 @@
     <string name="wifi_icon_description">Wi-Fi-ikon</string>
     <string name="reports">Rapporter:</string>
     <string name="reports_total">Totalt antall rapporter: %s</string>
-    <string name="export_started">Eksporterer data fra %s til %s</string>
+    <string name="export_started">Eksporterer data fra %1$s til %2$s</string>
     <string name="wifis">Trådløsnett</string>
     <string name="suggested_service_hosted_by">Vertstjent av:</string>
     <string name="movement_detection_location_title">Posisjonsbasert</string>

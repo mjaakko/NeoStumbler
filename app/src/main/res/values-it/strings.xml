@@ -44,7 +44,7 @@
     <string name="notification_exporting_data">Esportazione dati in corso…</string>
     <string name="export_data">Esportazione dati</string>
     <string name="export_no_file_chosen">Impossibile esportare i dati in quanto un file non è stato creato</string>
-    <string name="export_started">Esportazione dati da %s a %s</string>
+    <string name="export_started">Esportazione dati da %1$s a %2$s</string>
     <string name="export_csv">Esporta come CSV</string>
     <string name="export_raw_database">Esporta database grezzo</string>
     <string name="import_data">Importazione dati</string>

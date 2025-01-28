@@ -118,7 +118,7 @@
     <string name="about_app">O NeoStumblerze</string>
     <string name="ignore_battery_optimizations_description">Dla najlepszych osiągów optymalizacja baterii powinna być wyłączona. Skanowanie bezprzewodowe i dostęp do lokalizacji jest znacznie ograniczany kiedy jest ona włączona i ekran jest wyłączony</string>
     <string name="export_no_file_chosen">Nie można wyeksportować danych, ponieważ plik nie został stworzony</string>
-    <string name="export_started">Eksportowanie danych z %s do %s</string>
+    <string name="export_started">Eksportowanie danych z %1$s do %2$s</string>
     <string name="mls_warning_title">MLS został wyłączony</string>
     <string name="use_dynamic_color_ui">Użyj dynamicznych kolorów w UI</string>
     <string name="delete_all_reports">Usuń wszystkie raporty</string>

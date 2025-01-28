@@ -59,7 +59,7 @@
     <string name="notification_exporting_data">Gegevens exporteren…</string>
     <string name="export_data">Gegevens exporteren</string>
     <string name="export_no_file_chosen">Kan gegevens niet exporteren, omdat er geen bestand is aangemaakt</string>
-    <string name="export_started">Gegevens van %s naar %s exporteren</string>
+    <string name="export_started">Gegevens van %1$s naar %2$s exporteren</string>
     <string name="export_csv">Exporteren als CSV</string>
     <string name="export_raw_database">Ruwe database exporteren</string>
     <plurals name="import_database_successful">

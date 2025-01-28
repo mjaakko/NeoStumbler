@@ -102,7 +102,7 @@
     <string name="ok">OK</string>
     <string name="no">Nem</string>
     <string name="stop_scanning">Szkennelés leállítása</string>
-    <string name="export_started">Adatexportálás forrása: %s célja: %s</string>
+    <string name="export_started">Adatexportálás forrása: %1$s célja: %2$s</string>
     <string name="import_raw_database_description">A nyers adatbázis importálása felül fogja írni a jelenlegit</string>
     <string name="path">Útvonal</string>
     <string name="cell_tower_icon_description">Mobil bázisállomás ikon</string>

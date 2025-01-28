@@ -50,7 +50,7 @@
     <string name="battery_optimizations_not_disabled_warning">Оптимизации батареи не были отключены</string>
     <string name="export_data">Экспортировать данные</string>
     <string name="export_no_file_chosen">Не удалось экспортировать, потому что файл не был создан</string>
-    <string name="export_started">Экспортируем данные из %s в %s</string>
+    <string name="export_started">Экспортируем данные из %1$s в %2$s</string>
     <string name="export_csv">Экспортировать как CSV</string>
     <string name="export_raw_database">Экспортировать сырую базу данных</string>
     <string name="import_raw_database_description">Импортирование сырой базы данных перезапишет имеющуюся базу данных</string>
