@@ -5,4 +5,5 @@
     <string name="autoscan_failed_to_enable">Falha ao ativar o scan automático</string>
     <string name="permission_rationale_background_location_autoscan">Para começar o scan automaticamente, é necessário a permissão de localização em segundo plano</string>
     <string name="permission_rationale_activity_recognition">Para começar o scan automaticamente, é necessário acesso à atividade atual</string>
+    <string name="prefer_fused_location_description">O fornecedor de localização fundido pode combinar dados de outras fontes do que só o GPS para determinar a localização</string>
 </resources>
