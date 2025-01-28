@@ -55,7 +55,7 @@
     <string name="notification_exporting_data">Exportation des données…</string>
     <string name="export_data">Exporter les données</string>
     <string name="export_no_file_chosen">Les données ne peuvent être exportées, car aucun fichier n\'a été créé</string>
-    <string name="export_started">Export des données à partir de %s vers %s</string>
+    <string name="export_started">Export des données à partir de %1$s vers %2$s</string>
     <string name="reupload_data">Renvoyer les données</string>
     <string name="wifis">Wi-Fi</string>
     <string name="cells">Réseaux mobiles</string>

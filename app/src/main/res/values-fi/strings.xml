@@ -88,7 +88,7 @@
     <string name="export_data">Vie dataa</string>
 
     <string name="export_no_file_chosen">Datan vieminen ei onnistunut, koska tiedostoa ei valittu</string>
-    <string name="export_started">Viedään datat ajanjaksolta %s - %s</string>
+    <string name="export_started">Viedään datat ajanjaksolta %1$s - %2$s</string>
 
     <string name="export_csv">Vie CSV:nä</string>
     <string name="export_raw_database">Vie raaka tietokanta</string>

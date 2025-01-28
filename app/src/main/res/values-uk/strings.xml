@@ -34,7 +34,7 @@
     <string name="notification_exporting_data">Експортування даних…</string>
     <string name="export_data">Експортувати дані</string>
     <string name="export_no_file_chosen">Не вдалося експортувати дані, оскільки файл не було створено</string>
-    <string name="export_started">Експорт даних з %s до %s</string>
+    <string name="export_started">Експорт даних з %1$s до %2$s</string>
     <string name="export_csv">Експорт як CSV</string>
     <string name="export_raw_database">Експорт сирої бази даних</string>
     <string name="import_raw_database">Імпортувати сиру базу даних</string>

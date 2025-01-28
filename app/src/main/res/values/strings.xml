@@ -89,7 +89,7 @@
     <string name="export_data">Export data</string>
 
     <string name="export_no_file_chosen">Cannot export data, because no file was created</string>
-    <string name="export_started">Exporting data from %s to %s</string>
+    <string name="export_started">Exporting data from %1$s to %2$s</string>
 
     <string name="export_csv">Export as CSV</string>
     <string name="export_raw_database">Export raw database</string>

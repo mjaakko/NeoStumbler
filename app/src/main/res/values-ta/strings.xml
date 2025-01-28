@@ -58,7 +58,7 @@
     <string name="toast_reports_upload_failed">அறிக்கைகளைப் பதிவேற்றத் தவறிவிட்டது</string>
     <string name="report_upload_notification_channel_name">பதிவேற்றங்களைப் புகாரளிக்கவும்</string>
     <string name="export_no_file_chosen">தரவை ஏற்றுமதி செய்ய முடியாது, ஏனெனில் எந்த கோப்பும் உருவாக்கப்படவில்லை</string>
-    <string name="export_started">%s முதல் %s வரை தரவை ஏற்றுமதி செய்தல்</string>
+    <string name="export_started">%1$s முதல் %2$s வரை தரவை ஏற்றுமதி செய்தல்</string>
     <string name="export_csv">காபிம ஆக ஏற்றுமதி</string>
     <string name="export_raw_database">மூல தரவுத்தளத்தை ஏற்றுமதி செய்யுங்கள்</string>
     <string name="import_data">தரவை இறக்குமதி செய்யுங்கள்</string>
