@@ -43,8 +43,8 @@
     <string name="send_reports">Lähetä raportit</string>
 
     <string name="reports">Raportit:</string>
-    <string name="reports_total">Raportteja yhteensä: %s</string>
-    <string name="reports_not_uploaded">Raportteja lähettämättä: %s</string>
+    <string name="reports_total">Raportteja yhteensä: %d</string>
+    <string name="reports_not_uploaded">Raportteja lähettämättä: %d</string>
     <string name="reports_last_uploaded">Raportit lähetetty viimeksi: %s</string>
 
     <string name="start_scanning">Aloita skannaus</string>

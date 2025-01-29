@@ -26,8 +26,8 @@
     <string name="reports_tab_title">报告</string>
     <string name="send_reports">上传报告</string>
     <string name="reports">报告:</string>
-    <string name="reports_total">报告总数: %s</string>
-    <string name="reports_not_uploaded">未上传报告: %s</string>
+    <string name="reports_total">报告总数: %d</string>
+    <string name="reports_not_uploaded">未上传报告: %d</string>
     <string name="reports_last_uploaded">最后上传报告: %s</string>
     <string name="delete_report">删除报告</string>
     <string name="delete_report_confirmation">是否确实要删除报告？</string>

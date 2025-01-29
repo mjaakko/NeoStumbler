@@ -20,8 +20,8 @@
     <string name="settings_tab_title">Configurações</string>
     <string name="send_reports">Enviar relatórios</string>
     <string name="reports">Relatórios:</string>
-    <string name="reports_total">Total de relatórios: %s</string>
-    <string name="reports_not_uploaded">Relatórios não enviados: %s</string>
+    <string name="reports_total">Total de relatórios: %d</string>
+    <string name="reports_not_uploaded">Relatórios não enviados: %d</string>
     <string name="reports_last_uploaded">Último envio: %s</string>
     <string name="start_scanning">Iniciar scan</string>
     <string name="stop_scanning">Parar scan</string>

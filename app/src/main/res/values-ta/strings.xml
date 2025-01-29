@@ -43,8 +43,8 @@
     <string name="settings_tab_title">அமைப்புகள்</string>
     <string name="send_reports">அறிக்கைகளை அனுப்பவும்</string>
     <string name="reports">அறிக்கைகள்:</string>
-    <string name="reports_total">அறிக்கைகள் மொத்தம்: %s</string>
-    <string name="reports_not_uploaded">அறிக்கைகள் பதிவேற்றப்படவில்லை: %s</string>
+    <string name="reports_total">அறிக்கைகள் மொத்தம்: %d</string>
+    <string name="reports_not_uploaded">அறிக்கைகள் பதிவேற்றப்படவில்லை: %d</string>
     <string name="reports_last_uploaded">கடைசியாக பதிவேற்றப்பட்ட அறிக்கைகள்: %s</string>
     <string name="start_scanning">ச்கேன் செய்யத் தொடங்குங்கள்</string>
     <string name="stop_scanning">ச்கேன் செய்வதை நிறுத்துங்கள்</string>

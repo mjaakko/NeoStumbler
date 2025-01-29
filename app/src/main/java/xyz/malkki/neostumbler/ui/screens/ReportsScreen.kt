@@ -73,6 +73,7 @@ import xyz.malkki.neostumbler.utils.geocoder.CachingGeocoder
 import xyz.malkki.neostumbler.utils.geocoder.Geocoder
 import xyz.malkki.neostumbler.utils.geocoder.PlatformGeocoder
 import xyz.malkki.neostumbler.utils.showMapWithMarkerIntent
+import java.text.DecimalFormat
 import java.util.Date
 import android.location.Geocoder as AndroidGeocoder
 
@@ -107,10 +108,11 @@ private fun ReportStats(reportsViewModel: ReportsViewModel = viewModel()) {
         DateFormat.getMediumDateFormat(context).format(millis) + " " + DateFormat.getTimeFormat(context).format(millis)
     }
 
-    Column(modifier = Modifier
-        .wrapContentHeight()) {
-        Text(text = stringResource(R.string.reports_total, reportsTotal.value ?: ""))
-        Text(text = stringResource(R.string.reports_not_uploaded, reportsNotUploaded.value ?: ""))
+    Column(
+        modifier = Modifier.wrapContentHeight()
+    ) {
+        Text(text = stringResource(R.string.reports_total, reportsTotal.value ?: 0))
+        Text(text = stringResource(R.string.reports_not_uploaded, reportsNotUploaded.value ?: 0))
         Text(text = stringResource(R.string.reports_last_uploaded, lastUploadedText ?: ""))
     }
 }
@@ -398,6 +400,8 @@ private fun Report(report: ReportWithStats, geocoder: Geocoder, onDeleteReport: 
 
 @Composable
 private fun StationCount(iconRes: Int, iconDescription: String, count: Int) {
+    val decimalFormat = remember { DecimalFormat("0") }
+
     Row(modifier = Modifier.wrapContentSize(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
         Icon(painter = painterResource(iconRes), contentDescription = iconDescription)
         Spacer(modifier = Modifier.width(2.dp))
@@ -405,7 +409,7 @@ private fun StationCount(iconRes: Int, iconDescription: String, count: Int) {
             modifier = Modifier
                 .wrapContentWidth()
                 .fillMaxHeight(),
-            text = count.toString(),
+            text = decimalFormat.format(count),
             style = TextStyle(fontSize = 14.sp)
         )
     }

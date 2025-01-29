@@ -3,7 +3,7 @@
     <string name="stop_scanning">Nutraukti skenavimą</string>
     <string name="no_thanks">Ačiū, ne</string>
     <string name="reports_last_uploaded">Ataskaitos paskiausiai išsiųstos: %s</string>
-    <string name="reports_total">Iš viso ataskaitų: %s</string>
+    <string name="reports_total">Iš viso ataskaitų: %d</string>
     <string name="ok">Gerai</string>
     <string name="permissions_not_granted">Būtinieji leidimai nesuteikti</string>
     <string name="yes">Taip</string>
@@ -29,7 +29,7 @@
     <string name="settings_tab_title">Nustatymai</string>
     <string name="send_reports">Siųsti ataskaitas</string>
     <string name="reports">Ataskaitos:</string>
-    <string name="reports_not_uploaded">Neišsiųstų ataskaitų: %s</string>
+    <string name="reports_not_uploaded">Neišsiųstų ataskaitų: %d</string>
     <string name="start_scanning">Pradėti skenavimą</string>
     <string name="delete_report">Šalinti ataskaitą</string>
     <string name="delete_report_confirmation">Ar tikrai norite pašalinti šią ataskaitą?</string>

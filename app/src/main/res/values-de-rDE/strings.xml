@@ -20,8 +20,8 @@
     <string name="settings_tab_title">Einstellungen</string>
     <string name="send_reports">Berichte senden</string>
     <string name="reports">Berichte:</string>
-    <string name="reports_total">Berichte insgesamt: %s</string>
-    <string name="reports_not_uploaded">Nicht hochgeladene Berichte: %s</string>
+    <string name="reports_total">Berichte insgesamt: %d</string>
+    <string name="reports_not_uploaded">Nicht hochgeladene Berichte: %d</string>
     <string name="reports_last_uploaded">Berichte zuletzt hochgeladen: %s</string>
     <string name="start_scanning">Scan starten</string>
     <string name="stop_scanning">Scan stoppen</string>

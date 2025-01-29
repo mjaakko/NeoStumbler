@@ -48,6 +48,7 @@ import xyz.malkki.neostumbler.extensions.defaultLocale
 import xyz.malkki.neostumbler.ui.viewmodel.StatisticsViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.format.DecimalStyle
 import kotlin.math.floor
 import kotlin.math.log10
 import kotlin.math.pow
@@ -59,7 +60,9 @@ private fun StationsByDayChart(entryModel: CartesianChartModelProducer) {
     val dateFormat = remember(locale) {
         val pattern = DateFormat.getBestDateTimePattern(locale, "d MMM")
 
-        DateTimeFormatter.ofPattern(pattern)
+        DateTimeFormatter.ofPattern(pattern, locale).run {
+            withDecimalStyle(DecimalStyle.of(locale))
+        }
     }
 
     CartesianChartHost(
