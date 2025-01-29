@@ -127,7 +127,7 @@
     <string name="db_prune_two_months">Na twee maanden</string>
     <string name="wifi_scan_throttling_explanation">U moet ‘Wifi-scannen beperken’ uitschakelen in de instellingen van uw apparaat om deze functie in te schakelen. Meestal kan dit worden gedaan in de ontwikkelaars­opties</string>
     <string name="movement_detection_location_title">Via locatie</string>
-    <string name="permission_rationale_read_phone_state">Toegang tot de telefoonstatus is nodig om zendmasten te scannen met alle simkaarten op het apparaat</string>
+    <string name="permission_rationale_read_phone_state">Toegang tot de telefoon­status is nodig om zend­masten te scannen</string>
     <string name="troubleshooting_title">Probleem­oplossing</string>
     <string name="db_prune_six_months">Na zes maanden</string>
     <string name="db_prune_never">Nooit</string>
@@ -140,8 +140,8 @@
     <string name="delete_data">Gegevens verwijderen</string>
     <string name="update_translations_button">Vertalingen bewerken</string>
     <string name="settings_ignore_wifi_scan_throttling_description">Wanneer het zoeken is beperkt, kunnen maar vier opdrachten per twee minuten worden uitgevoerd</string>
-    <string name="wifi_scan_frequency">Wi-Fi zoek frequentie</string>
-    <string name="cell_tower_scan_frequency">Telefoonmast zoek frequentie</string>
+    <string name="wifi_scan_frequency">Scan­frequentie voor wifi</string>
+    <string name="cell_tower_scan_frequency">Scan­frequentie voor zend­masten</string>
     <string name="every_x_meters">Elke %d meter</string>
     <string name="map_tile_source">Kaart bron</string>
 </resources>
