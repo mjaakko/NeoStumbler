@@ -24,8 +24,8 @@
     <string name="send_reports">Invia rilevamenti</string>
     <string name="reports">Rilevamenti:</string>
     <string name="stop_scanning">Ferma scansione</string>
-    <string name="reports_total">Totale rilevamenti: %s</string>
-    <string name="reports_not_uploaded">Rilevamenti non inviate: %s</string>
+    <string name="reports_total">Totale rilevamenti: %d</string>
+    <string name="reports_not_uploaded">Rilevamenti non inviate: %d</string>
     <string name="reports_last_uploaded">Data ultimo invio: %s</string>
     <string name="delete_report">Elimina rilevazione</string>
     <plurals name="toast_reports_uploaded">

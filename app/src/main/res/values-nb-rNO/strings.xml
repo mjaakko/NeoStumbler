@@ -14,7 +14,7 @@
     <string name="stop">Stopp</string>
     <string name="wifi_icon_description">Wi-Fi-ikon</string>
     <string name="reports">Rapporter:</string>
-    <string name="reports_total">Totalt antall rapporter: %s</string>
+    <string name="reports_total">Totalt antall rapporter: %d</string>
     <string name="export_started">Eksporterer data fra %1$s til %2$s</string>
     <string name="wifis">Trådløsnett</string>
     <string name="suggested_service_hosted_by">Vertstjent av:</string>
@@ -50,7 +50,7 @@
     <string name="wireless_scanning">Trådløs skanning</string>
     <string name="reports_tab_title">Rapporter</string>
     <string name="send_reports">Send rapporter</string>
-    <string name="reports_not_uploaded">Rapporter som ikke har blitt opplastet: %s</string>
+    <string name="reports_not_uploaded">Rapporter som ikke har blitt opplastet: %d</string>
     <string name="reports_last_uploaded">Sist opplastede rapporter: %s</string>
     <string name="start_scanning">Start skanning</string>
     <string name="stop_scanning">Stopp skanning</string>

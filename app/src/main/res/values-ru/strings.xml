@@ -7,7 +7,7 @@
         <item quantity="other">%d отчётов создано</item>
     </plurals>
     <string name="warning_icon_description">Иконка предупреждения</string>
-    <string name="reports_not_uploaded">Отчётов не отправлено: %s</string>
+    <string name="reports_not_uploaded">Отчётов не отправлено: %d</string>
     <string name="delete_report">Удалить отчёт</string>
     <string name="notification_wireless_scanning_content_satellite_stats">%1$d/%2$d спутников используется</string>
     <string name="import_database_not_valid">Выбранный файл не содержит не содержит действительной базы данных</string>
@@ -33,7 +33,7 @@
     <string name="settings_tab_title">Настройки</string>
     <string name="send_reports">Отправить отчёты</string>
     <string name="reports">Отчёты:</string>
-    <string name="reports_total">Всего отчётов: %s</string>
+    <string name="reports_total">Всего отчётов: %d</string>
     <string name="start_scanning">Начать сканирование</string>
     <string name="stop_scanning">Прекратить сканирование</string>
     <string name="delete_report_confirmation">Вы уверены, что хотите удалить отчёт?</string>

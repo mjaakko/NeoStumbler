@@ -19,7 +19,7 @@
     <string name="statistics_tab_title">Statisztikák</string>
     <string name="settings_tab_title">Beállítások</string>
     <string name="reports_tab_title">Eredmények</string>
-    <string name="reports_not_uploaded">Feltöltetlen eredmények: %s</string>
+    <string name="reports_not_uploaded">Feltöltetlen eredmények: %d</string>
     <string name="reports_last_uploaded">Utoljára feltöltött eredmények: %s</string>
     <string name="start_scanning">Szkennelés indítása</string>
     <string name="delete_report">Eredmények törlése</string>
@@ -98,7 +98,7 @@
     <string name="failed_to_open_selected_file">A kiválasztott fájl megnyitása sikertelen</string>
     <string name="send_reports">Eredmények elküldése</string>
     <string name="reports">Eredmények:</string>
-    <string name="reports_total">Összes eredmény: %s</string>
+    <string name="reports_total">Összes eredmény: %d</string>
     <string name="ok">OK</string>
     <string name="no">Nem</string>
     <string name="stop_scanning">Szkennelés leállítása</string>

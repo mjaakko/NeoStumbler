@@ -102,8 +102,8 @@
     <string name="send_reports_automatically">Wysyłaj raporty automatycznie</string>
     <string name="settings_group_reports">Raporty</string>
     <string name="report_upload_notification_channel_name">Wysyłki raportów</string>
-    <string name="reports_total">Całkowita ilość raportów: %s</string>
-    <string name="reports_not_uploaded">Liczba raportów do wysłania: %s</string>
+    <string name="reports_total">Całkowita ilość raportów: %d</string>
+    <string name="reports_not_uploaded">Liczba raportów do wysłania: %d</string>
     <string name="stop_scanning">Zatrzymaj skanowanie</string>
     <string name="notification_style_minimal_title">Minimalne</string>
     <string name="toast_reports_upload_failed">Nie udało się wysłać raportów</string>

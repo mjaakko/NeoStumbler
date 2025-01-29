@@ -36,8 +36,8 @@
     <string name="settings_tab_title">Instellingen</string>
     <string name="send_reports">Rapporten versturen</string>
     <string name="reports">Rapporten:</string>
-    <string name="reports_total">Aantal rapporten: %s</string>
-    <string name="reports_not_uploaded">Niet-geüploade rapporten: %s</string>
+    <string name="reports_total">Aantal rapporten: %d</string>
+    <string name="reports_not_uploaded">Niet-geüploade rapporten: %d</string>
     <string name="reports_last_uploaded">Laatst geüploade rapporten: %s</string>
     <string name="start_scanning">Scannen starten</string>
     <string name="reports_tab_title">Rapporten</string>

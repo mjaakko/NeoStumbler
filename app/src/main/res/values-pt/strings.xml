@@ -13,7 +13,7 @@
     <string name="reports_tab_title">Relatórios</string>
     <string name="settings_tab_title">Opções</string>
     <string name="send_reports">Enviar relatórios</string>
-    <string name="reports_not_uploaded">Relatórios não enviados: %s</string>
+    <string name="reports_not_uploaded">Relatórios não enviados: %d</string>
     <string name="reports_last_uploaded">Último envio: %s</string>
     <string name="delete_report">Apagar relatório</string>
     <string name="delete_report_confirmation">Tem a certeza que quer apagar o relatório?</string>
@@ -45,7 +45,7 @@
     <string name="wifi_icon_description">Ícone de Wi-Fi</string>
     <string name="statistics_tab_title">Estatísticas</string>
     <string name="reports">Relatórios:</string>
-    <string name="reports_total">Total de relatórios: %s</string>
+    <string name="reports_total">Total de relatórios: %d</string>
     <string name="start_scanning">Iniciar scan</string>
     <string name="cell_tower_icon_description">Ícone da torre de redes móveis</string>
     <string name="scanner_status_notification_channel_name">Estado do scan</string>
