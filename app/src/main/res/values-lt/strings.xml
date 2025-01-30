@@ -92,7 +92,7 @@
     <string name="settings_group_other">Kita</string>
     <string name="movement_detection_significant_motion_description">Pristabdyti skenavimą ir GPS stebėjimą kol neaptinkamas rimtesnis judesys. Tai taupo akumuliatoriaus įkrovą, tačiau ne visuose įrenginiuose veikia patikimai</string>
     <string name="cell_tower_scan_frequency">Mobiliojo ryšio bokštų skenavimo dažnis</string>
-    <string name="every_x_meters">Kas %d metrus (-ų)</string>
+    <string name="every_x_meters">Kas %d metrų</string>
     <string name="movement_detection">Judesio aptikimas</string>
     <string name="movement_detection_none_title">Išjungtas</string>
     <string name="movement_detection_none_description">Skenuoti ir tada, kai nejudama</string>
