@@ -115,14 +115,14 @@ private fun ReportStats(reportsViewModel: ReportsViewModel = viewModel()) {
         val millis = it.toEpochMilli()
 
         DateFormat.getMediumDateFormat(context).format(millis) + " " + DateFormat.getTimeFormat(context).format(millis)
-    }
+    } ?: stringResource(R.string.reports_last_uploaded_never)
 
     Column(
         modifier = Modifier.wrapContentHeight()
     ) {
         Text(text = stringResource(R.string.reports_total, reportsTotal.value ?: 0))
         Text(text = stringResource(R.string.reports_not_uploaded, reportsNotUploaded.value ?: 0))
-        Text(text = stringResource(R.string.reports_last_uploaded, lastUploadedText ?: ""))
+        Text(text = stringResource(R.string.reports_last_uploaded, lastUploadedText))
     }
 }
 
