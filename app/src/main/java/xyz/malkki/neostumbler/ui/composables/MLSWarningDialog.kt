@@ -9,15 +9,26 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.DialogProperties
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
+import xyz.malkki.neostumbler.geosubmit.GeosubmitParams.Companion.MLS_BASE_URL
+import xyz.malkki.neostumbler.geosubmit.geosubmitParamsFlow
 import xyz.malkki.neostumbler.utils.OneTimeActionHelper
 
 private const val MLS_WARNING = "mls_warning"
 
 @Composable
 fun MLSWarningDialog() {
+    val application = (LocalContext.current.applicationContext as StumblerApplication)
+    val isUploadingToMls = application.geosubmitParamsFlow().map { params ->
+        params.baseUrl.startsWith(MLS_BASE_URL)
+    }.collectAsState(false)
+    if (!isUploadingToMls.value) {
+        return
+    }
+
     val context = LocalContext.current
 
     val coroutineScope = rememberCoroutineScope()

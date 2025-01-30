@@ -1,7 +1,13 @@
 package xyz.malkki.neostumbler.geosubmit
 
+import androidx.datastore.preferences.core.stringPreferencesKey
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import xyz.malkki.neostumbler.StumblerApplication
+import xyz.malkki.neostumbler.constants.PreferenceKeys
 
 
 data class GeosubmitParams(
@@ -10,8 +16,8 @@ data class GeosubmitParams(
     val apiKey: String?
 ) {
     companion object {
-        //NOTE: MLS does not accept data submissions anymore, this is used as a default just to show an example
-        const val DEFAULT_BASE_URL = "https://location.services.mozilla.com"
+        const val DEFAULT_BASE_URL = "https://api.beacondb.net"
+        const val MLS_BASE_URL = "https://location.services.mozilla.com"
 
         const val DEFAULT_PATH = "/v2/geosubmit"
     }
@@ -43,4 +49,17 @@ data class GeosubmitParams(
             }
         }.joinToString("")
     }
+}
+
+fun StumblerApplication.geosubmitParamsFlow(): Flow<GeosubmitParams> {
+    return this.settingsStore.data
+        .map { prefs ->
+            val endpoint = prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)]
+                ?: GeosubmitParams.DEFAULT_BASE_URL
+            val path = prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH)]
+                ?: GeosubmitParams.DEFAULT_PATH
+            val apiKey = prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY)]
+
+            GeosubmitParams(endpoint, path, apiKey)
+        }
 }

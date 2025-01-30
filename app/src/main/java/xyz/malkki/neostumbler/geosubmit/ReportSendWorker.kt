@@ -5,18 +5,15 @@ import android.content.Context
 import android.content.pm.ServiceInfo
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.hasKeyWithValueOfType
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import timber.log.Timber
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
-import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.db.entities.ReportWithData
 import java.net.SocketTimeoutException
 import java.time.Instant
@@ -45,23 +42,11 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
     private val db = application.reportDb.value
 
     private suspend fun getGeosubmitApi(): Geosubmit {
-        val geosubmitParams = getGeosubmitParams()
+        val geosubmitParams = application.geosubmitParamsFlow().first()
 
         Timber.d("Using endpoint ${geosubmitParams.path} with API key ${geosubmitParams.apiKey} for Geosubmit")
 
         return MLSGeosubmit(application.httpClientProvider.await(), geosubmitParams)
-    }
-
-    private suspend fun getGeosubmitParams(): GeosubmitParams {
-        return application.settingsStore.data
-            .map { prefs ->
-                val endpoint = prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)] ?: GeosubmitParams.DEFAULT_BASE_URL
-                val path = prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH)] ?: GeosubmitParams.DEFAULT_PATH
-                val apiKey = prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY)]
-
-                GeosubmitParams(endpoint, path, apiKey)
-            }
-            .first()
     }
 
     override suspend fun doWork(): Result {
