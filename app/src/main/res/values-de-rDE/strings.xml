@@ -23,6 +23,7 @@
     <string name="reports_total">Berichte insgesamt: %d</string>
     <string name="reports_not_uploaded">Nicht hochgeladene Berichte: %d</string>
     <string name="reports_last_uploaded">Berichte zuletzt hochgeladen: %s</string>
+    <string name="reports_empty">Noch keine Berichte</string>
     <string name="start_scanning">Scan starten</string>
     <string name="stop_scanning">Scan stoppen</string>
     <string name="delete_report">Bericht löschen</string>

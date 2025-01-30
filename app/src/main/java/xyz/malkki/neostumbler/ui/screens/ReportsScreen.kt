@@ -339,22 +339,26 @@ private fun Reports(reportsViewModel: ReportsViewModel = viewModel()) {
             text = stringResource(R.string.reports),
             style = MaterialTheme.typography.titleMedium,
         )
-        LazyColumn {
-            items(
-                reports.itemCount,
-                key = reports.itemKey { it.reportId }
-            ) { index ->
-                val report = reports.get(index)
+        if (reports.itemCount == 0) {
+            Text(stringResource(R.string.reports_empty))
+        } else {
+            LazyColumn {
+                items(
+                    reports.itemCount,
+                    key = reports.itemKey { it.reportId }
+                ) { index ->
+                    val report = reports.get(index)
 
-                if (report != null) {
-                    Report(
-                        report = report,
-                        geocoder = geocoder,
-                        onDeleteReport = { reportId ->
-                            reportToDelete.value = reportId
-                        })
-                } else {
-                    ReportPlaceholder()
+                    if (report != null) {
+                        Report(
+                            report = report,
+                            geocoder = geocoder,
+                            onDeleteReport = { reportId ->
+                                reportToDelete.value = reportId
+                            })
+                    } else {
+                        ReportPlaceholder()
+                    }
                 }
             }
         }
