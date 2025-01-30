@@ -329,8 +329,13 @@ private fun Reports(reportsViewModel: ReportsViewModel = viewModel()) {
             })
     }
 
-    Column(modifier = Modifier.padding(top = 8.dp)) {
-        Text(text = stringResource(R.string.reports), style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold))
+    Column(
+        modifier = Modifier.padding(top = 8.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.reports),
+            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+        )
         LazyColumn {
             items(
                 reports.itemCount,
@@ -356,13 +361,26 @@ private fun Reports(reportsViewModel: ReportsViewModel = viewModel()) {
 @Composable
 private fun ReportPlaceholder() {
     val density = LocalDensity.current
-
     val height = with(density) { 14.sp.toDp() }
 
-    Column(modifier = Modifier.wrapContentHeight().padding(vertical = 4.dp)) {
-        Shimmer(modifier = Modifier.height(height).fillMaxWidth().background(Color.LightGray, shape = RoundedCornerShape(2.dp)))
+    Column(
+        modifier = Modifier
+            .wrapContentHeight()
+            .padding(vertical = 4.dp)
+    ) {
+        Shimmer(
+            modifier = Modifier
+                .height(height)
+                .fillMaxWidth()
+                .background(Color.LightGray, shape = RoundedCornerShape(2.dp))
+        )
         Spacer(modifier = Modifier.height(2.dp))
-        Shimmer(modifier = Modifier.height(height).fillMaxWidth().background(Color.LightGray, shape = RoundedCornerShape(2.dp)))
+        Shimmer(
+            modifier = Modifier
+                .height(height)
+                .fillMaxWidth()
+                .background(Color.LightGray, shape = RoundedCornerShape(2.dp))
+        )
     }
 }
 
@@ -396,13 +414,29 @@ private fun Report(report: ReportWithStats, geocoder: Geocoder, onDeleteReport: 
                 .fillMaxWidth()
                 .wrapContentHeight()
         ) {
-            Text(modifier = Modifier.wrapContentSize(), text = dateStr, style = TextStyle(fontSize = 14.sp))
+            Text(
+                modifier = Modifier.wrapContentSize(),
+                text = dateStr,
+                style = TextStyle(fontSize = 14.sp),
+            )
             Spacer(modifier = Modifier.weight(1.0f))
-            StationCount(iconRes = R.drawable.wifi_14sp, iconDescription = stringResource(R.string.wifi_icon_description), count = report.wifiAccessPointCount)
+            StationCount(
+                iconRes = R.drawable.wifi_14sp,
+                iconDescription = stringResource(R.string.wifi_icon_description),
+                count = report.wifiAccessPointCount,
+            )
             Spacer(modifier = Modifier.width(2.dp))
-            StationCount(iconRes = R.drawable.cell_tower_14sp, iconDescription = stringResource(R.string.cell_tower_icon_description), count = report.cellTowerCount)
+            StationCount(
+                iconRes = R.drawable.cell_tower_14sp,
+                iconDescription = stringResource(R.string.cell_tower_icon_description),
+                count = report.cellTowerCount,
+            )
             Spacer(modifier = Modifier.width(2.dp))
-            StationCount(iconRes = R.drawable.bluetooth_14sp, iconDescription = stringResource(R.string.bluetooth_icon_description), count = report.bluetoothBeaconCount)
+            StationCount(
+                iconRes = R.drawable.bluetooth_14sp,
+                iconDescription = stringResource(R.string.bluetooth_icon_description),
+                count = report.bluetoothBeaconCount,
+            )
         }
         if (canShowMap) {
             Link(
@@ -422,7 +456,11 @@ private fun Report(report: ReportWithStats, geocoder: Geocoder, onDeleteReport: 
 private fun StationCount(iconRes: Int, iconDescription: String, count: Int) {
     val decimalFormat = remember { DecimalFormat("0") }
 
-    Row(modifier = Modifier.wrapContentSize(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+    Row(
+        modifier = Modifier.wrapContentSize(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
         Icon(painter = painterResource(iconRes), contentDescription = iconDescription)
         Spacer(modifier = Modifier.width(2.dp))
         Text(
