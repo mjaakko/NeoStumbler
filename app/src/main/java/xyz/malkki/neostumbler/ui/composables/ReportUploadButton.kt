@@ -21,6 +21,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.ExistingWorkPolicy
@@ -39,6 +41,7 @@ import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.extensions.getQuantityString
 import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.geosubmit.ReportSendWorker
+import xyz.malkki.neostumbler.ui.viewmodel.ReportsViewModel
 import java.util.UUID
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
@@ -57,13 +60,14 @@ private fun WorkManager.getCanUploadFlow(): Flow<Boolean> = getWorkInfosForUniqu
     .distinctUntilChanged()
 
 @Composable
-fun ReportUploadButton() {
+fun ReportUploadButton(reportsViewModel: ReportsViewModel = viewModel()) {
     val context = LocalContext.current
     val workManager = WorkManager.getInstance(context)
 
     val coroutineScope = rememberCoroutineScope()
 
     val canUpload = workManager.getCanUploadFlow().collectAsState(initial = false)
+    val reportsNotUploaded = reportsViewModel.reportsNotUploaded.collectAsStateWithLifecycle(0)
 
     val enqueuing = remember {
         mutableStateOf(false)
@@ -97,7 +101,7 @@ fun ReportUploadButton() {
     )
 
     Button(
-        enabled = canUpload.value && !enqueuing.value,
+        enabled = reportsNotUploaded.value > 0 && canUpload.value && !enqueuing.value,
         onClick = {
             coroutineScope.launch {
                 enqueuing.value = true
