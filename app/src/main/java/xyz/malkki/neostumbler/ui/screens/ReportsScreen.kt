@@ -28,6 +28,7 @@ import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,8 +44,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
@@ -334,7 +333,7 @@ private fun Reports(reportsViewModel: ReportsViewModel = viewModel()) {
     ) {
         Text(
             text = stringResource(R.string.reports),
-            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+            style = MaterialTheme.typography.titleMedium,
         )
         LazyColumn {
             items(
@@ -417,7 +416,7 @@ private fun Report(report: ReportWithStats, geocoder: Geocoder, onDeleteReport: 
             Text(
                 modifier = Modifier.wrapContentSize(),
                 text = dateStr,
-                style = TextStyle(fontSize = 14.sp),
+                style = MaterialTheme.typography.bodySmall,
             )
             Spacer(modifier = Modifier.weight(1.0f))
             StationCount(
@@ -444,10 +443,13 @@ private fun Report(report: ReportWithStats, geocoder: Geocoder, onDeleteReport: 
                 onClick = {
                     context.startActivity(intent)
                 },
-                style = TextStyle(fontSize = 14.sp)
+                style = MaterialTheme.typography.bodySmall,
             )
         } else {
-            Text(text = address.value, style = TextStyle(fontSize = 14.sp))
+            Text(
+                text = address.value,
+                style = MaterialTheme.typography.bodySmall,
+            )
         }
     }
 }
@@ -468,7 +470,7 @@ private fun StationCount(iconRes: Int, iconDescription: String, count: Int) {
                 .wrapContentWidth()
                 .fillMaxHeight(),
             text = decimalFormat.format(count),
-            style = TextStyle(fontSize = 14.sp)
+            style = MaterialTheme.typography.bodySmall,
         )
     }
 }
