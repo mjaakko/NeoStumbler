@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.ui.composables.settings.geosubmit
+package xyz.malkki.neostumbler.ui.composables.settings
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.sp
 import xyz.malkki.neostumbler.R
 
 @Composable
-fun UnencryptedEndpointWarning() {
+fun Warning(stringResource: Int) {
     Row(
         modifier = Modifier
             .wrapContentSize()
@@ -38,7 +38,7 @@ fun UnencryptedEndpointWarning() {
         Text(modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight(),
-            text = stringResource(id = R.string.unencrypted_endpoint_warning),
+            text = stringResource(id = stringResource),
             style = MaterialTheme.typography.labelSmall.copy(fontSize = 14.sp),
             color = MaterialTheme.colorScheme.onErrorContainer
         )

@@ -16,6 +16,8 @@ object PreferenceKeys {
     const val GEOSUBMIT_PATH = "geosubmit_path"
     const val GEOSUBMIT_API_KEY = "geosubmit_api_key"
 
+    const val COVERAGE_TILE_JSON_URL = "coverage_tile_json_url"
+
     const val MOVEMENT_DETECTOR = "movement_detector"
 
     const val SCANNER_NOTIFICATION_STYLE = "scanner_notification_style"

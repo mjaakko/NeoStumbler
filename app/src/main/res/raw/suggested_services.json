@@ -8,6 +8,7 @@
     "endpoint": {
       "baseUrl": "https://api.beacondb.net",
       "path": "/v2/geosubmit"
-    }
+    },
+    "coverageTileJsonUrl": "https://cdn.beacondb.net/tiles/beacondb.json"
   }
 ]

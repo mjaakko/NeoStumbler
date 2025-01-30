@@ -17,7 +17,8 @@ data class SuggestedService(
     val website: String,
     val termsOfUse: String,
     val hostedBy: String,
-    val endpoint: Endpoint
+    val endpoint: Endpoint,
+    val coverageTileJsonUrl: String
 ) {
     companion object {
         fun getSuggestedServices(context: Context): List<SuggestedService> {

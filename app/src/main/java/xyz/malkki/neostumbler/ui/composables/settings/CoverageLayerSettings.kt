@@ -1,5 +1,6 @@
-package xyz.malkki.neostumbler.ui.composables.settings.geosubmit
+package xyz.malkki.neostumbler.ui.composables.settings
 
+import android.util.Patterns
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -36,57 +37,40 @@ import kotlinx.coroutines.launch
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
-import xyz.malkki.neostumbler.geosubmit.GeosubmitParams
 import xyz.malkki.neostumbler.ui.composables.settings.SettingsItem
-import xyz.malkki.neostumbler.ui.composables.settings.Warning
+import xyz.malkki.neostumbler.ui.composables.settings.geosubmit.SuggestedServicesDialog
 
-private fun DataStore<Preferences>.geosubmitParams(): Flow<GeosubmitParams?> = data
+private fun DataStore<Preferences>.coverageLayerTileJsonUrl(): Flow<String?> = data
     .map { preferences ->
-        val endpoint = preferences[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)]
-        val path = preferences[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH)] ?: GeosubmitParams.DEFAULT_PATH
-        val apiKey = preferences[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY)]
-
-        if (endpoint != null) {
-            GeosubmitParams(endpoint, path, apiKey)
-        } else {
-            null
-        }
+        preferences[stringPreferencesKey(PreferenceKeys.COVERAGE_TILE_JSON_URL)]
     }
     .distinctUntilChanged()
 
 @Composable
-fun GeosubmitEndpointSettings() {
+fun CoverageLayerSettings() {
     val context = LocalContext.current
 
     val coroutineScope = rememberCoroutineScope()
 
     val settingsStore = (context.applicationContext as StumblerApplication).settingsStore
-    val params = settingsStore.geosubmitParams().collectAsState(initial = null)
+    val tileJsonUrl = settingsStore.coverageLayerTileJsonUrl().collectAsState(initial = null)
 
     val dialogOpen = rememberSaveable { mutableStateOf(false) }
 
     if (dialogOpen.value) {
-        GeosubmitEndpointDialog(
-            currentParams = params.value,
-            onDialogClose = { newParams ->
-                if (newParams != null) {
-                    coroutineScope.launch {
-                        settingsStore.updateData { prefs ->
-                            prefs.toMutablePreferences().apply {
-                                set(stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT), newParams.baseUrl)
-                                set(stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH), newParams.path)
-
-                                if (newParams.apiKey != null) {
-                                    set(stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY), newParams.apiKey)
-                                } else {
-                                    remove(stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY))
-                                }
+        CoverageLayerDialog(
+            currentTileJsonUrl = tileJsonUrl.value,
+            onDialogClose = { newTileJsonUrl ->
+                coroutineScope.launch {
+                    settingsStore.updateData { prefs ->
+                        prefs.toMutablePreferences().apply {
+                            if (newTileJsonUrl.isNullOrEmpty()) {
+                                remove(stringPreferencesKey(PreferenceKeys.COVERAGE_TILE_JSON_URL))
+                            } else {
+                                set(stringPreferencesKey(PreferenceKeys.COVERAGE_TILE_JSON_URL), newTileJsonUrl)
                             }
                         }
-
-                        dialogOpen.value = false
                     }
-                } else {
                     dialogOpen.value = false
                 }
             }
@@ -94,8 +78,8 @@ fun GeosubmitEndpointSettings() {
     }
 
     SettingsItem(
-        title = stringResource(R.string.endpoint),
-        description = params.value?.baseUrl ?: stringResource(R.string.no_endpoint_configured),
+        title = stringResource(R.string.coverage_layer),
+        description = tileJsonUrl.value ?: stringResource(R.string.coverage_layer_no_configured_tile_json_url),
         onClick = {
             dialogOpen.value = true
         }
@@ -103,15 +87,9 @@ fun GeosubmitEndpointSettings() {
 }
 
 @Composable
-private fun GeosubmitEndpointDialog(currentParams: GeosubmitParams?, onDialogClose: (GeosubmitParams?) -> Unit) {
-    val endpoint = rememberSaveable {
-        mutableStateOf(currentParams?.baseUrl)
-    }
-    val path = rememberSaveable {
-        mutableStateOf(currentParams?.path ?: GeosubmitParams.DEFAULT_PATH)
-    }
-    val apiKey = rememberSaveable {
-        mutableStateOf(currentParams?.apiKey)
+private fun CoverageLayerDialog(currentTileJsonUrl: String?, onDialogClose: (String?) -> Unit) {
+    val tileJsonUrl = rememberSaveable {
+        mutableStateOf(currentTileJsonUrl)
     }
 
     val showSuggestedServicesDialog = rememberSaveable {
@@ -122,9 +100,7 @@ private fun GeosubmitEndpointDialog(currentParams: GeosubmitParams?, onDialogClo
         SuggestedServicesDialog(
             onServiceSelected = { service ->
                 if (service != null)  {
-                    endpoint.value = service.endpoint.baseUrl
-                    path.value = service.endpoint.path
-                    apiKey.value = service.endpoint.apiKey
+                    tileJsonUrl.value = service.coverageTileJsonUrl
                 }
 
                 showSuggestedServicesDialog.value = false
@@ -145,51 +121,32 @@ private fun GeosubmitEndpointDialog(currentParams: GeosubmitParams?, onDialogClo
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
                     style = MaterialTheme.typography.titleLarge,
-                    text = stringResource(id = R.string.endpoint),
+                    text = stringResource(id = R.string.coverage_layer),
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                //TODO: would be nice to have a validator here
+
                 TextField(
                     modifier = Modifier.fillMaxWidth(),
-                    value = endpoint.value ?: "",
-                    onValueChange = { newEndpoint ->
-                        endpoint.value = newEndpoint
+                    value = tileJsonUrl.value ?: "",
+                    onValueChange = { newTileJsonUrl ->
+                        tileJsonUrl.value = newTileJsonUrl
                     },
-                    label = { Text(text = stringResource(id = R.string.endpoint)) },
+                    label = { Text(text = stringResource(id = R.string.coverage_layer_tile_json_url)) },
                     singleLine = true
                 )
 
-                if (endpoint.value.isUnencryptedUrl) {
+                if (!tileJsonUrl.value.isValidUrl) {
+                    Warning(R.string.no_valid_url_warning)
+                }
+
+                if (tileJsonUrl.value.isUnencryptedUrl) {
                     Warning(R.string.unencrypted_endpoint_warning)
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
-
-                TextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = path.value ?: "",
-                    onValueChange = { newPath ->
-                        path.value = newPath
-                    },
-                    label = { Text(text = stringResource(id = R.string.path)) },
-                    singleLine = true
-                )
 
                 Spacer(modifier = Modifier.height(8.dp))
-
-                TextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = apiKey.value ?: "",
-                    onValueChange = { newApiKey ->
-                        apiKey.value = newApiKey
-                    },
-                    label = { Text(text = stringResource(id = R.string.api_key)) },
-                    singleLine = true
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
 
                 Button(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -206,8 +163,8 @@ private fun GeosubmitEndpointDialog(currentParams: GeosubmitParams?, onDialogClo
                     Spacer(modifier = Modifier.weight(1.0f))
 
                     TextButton(
-                        onClick = { onDialogClose(GeosubmitParams(endpoint.value!!, path.value!!, apiKey.value)) },
-                        enabled = !endpoint.value.isNullOrBlank() && !path.value.isNullOrBlank()
+                        onClick = { onDialogClose(tileJsonUrl.value) },
+                        enabled = tileJsonUrl.value?.isValidUrl ?: false || tileJsonUrl.value?.isEmpty() ?: false
                     ) {
                         Text(text = stringResource(id = R.string.save))
                     }
@@ -217,5 +174,8 @@ private fun GeosubmitEndpointDialog(currentParams: GeosubmitParams?, onDialogClo
     }
 }
 
+private val String?.isValidUrl: Boolean
+    get() = Patterns.WEB_URL.matcher(this ?: "").matches()
+
 private val String?.isUnencryptedUrl: Boolean
-    get() = this?.startsWith("http:") == true
+    get() = this?.startsWith("http:") ?: false

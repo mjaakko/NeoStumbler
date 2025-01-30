@@ -23,6 +23,7 @@ import xyz.malkki.neostumbler.ui.composables.SettingsToggle
 import xyz.malkki.neostumbler.ui.composables.TroubleshootingSettingsItem
 import xyz.malkki.neostumbler.ui.composables.settings.AutoScanToggle
 import xyz.malkki.neostumbler.ui.composables.settings.AutoUploadToggle
+import xyz.malkki.neostumbler.ui.composables.settings.CoverageLayerSettings
 import xyz.malkki.neostumbler.ui.composables.settings.DbPruneSettings
 import xyz.malkki.neostumbler.ui.composables.settings.FusedLocationToggle
 import xyz.malkki.neostumbler.ui.composables.settings.IgnoreScanThrottlingToggle
@@ -48,6 +49,7 @@ fun SettingsScreen() {
             title = stringResource(id = R.string.settings_group_reports)
         ) {
             GeosubmitEndpointSettings()
+            CoverageLayerSettings()
             AutoUploadToggle()
             DbPruneSettings()
         }

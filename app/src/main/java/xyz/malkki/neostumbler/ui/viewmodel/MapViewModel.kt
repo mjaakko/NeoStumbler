@@ -36,6 +36,7 @@ import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.get
 import xyz.malkki.neostumbler.extensions.parallelMap
 import xyz.malkki.neostumbler.location.LocationSourceProvider
+import xyz.malkki.neostumbler.utils.getTileJsonLayerIds
 import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.time.Duration.Companion.seconds
@@ -71,6 +72,14 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
         .shareIn(viewModelScope, started = SharingStarted.Eagerly, replay = 1)
+
+    val coverageTileJsonUrl: Flow<String?> = settingsStore.data
+        .map { prefs ->
+            prefs.get(stringPreferencesKey(PreferenceKeys.COVERAGE_TILE_JSON_URL))
+        }
+
+    private val _coverageTileJsonLayerIds = MutableStateFlow<List<String>>(emptyList<String>())
+    val coverageTileJsonLayerIds: StateFlow<List<String>> = _coverageTileJsonLayerIds
 
     private val showMyLocation = MutableStateFlow(getApplication<StumblerApplication>().checkMissingPermissions(Manifest.permission.ACCESS_COARSE_LOCATION).isEmpty())
 
@@ -169,6 +178,11 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             val httpClient = (application as StumblerApplication).httpClientProvider.await()
             _httpClient.value = httpClient
+            coverageTileJsonUrl.collect { coverageTileJsonUrl ->
+                getTileJsonLayerIds(coverageTileJsonUrl, httpClient) { layerIds ->
+                    _coverageTileJsonLayerIds.value = layerIds
+                }
+            }
         }
     }
 
