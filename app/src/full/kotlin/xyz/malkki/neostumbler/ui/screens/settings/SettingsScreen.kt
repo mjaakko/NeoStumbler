@@ -36,7 +36,13 @@ import xyz.malkki.neostumbler.ui.composables.settings.geosubmit.GeosubmitEndpoin
 fun SettingsScreen() {
     val context = LocalContext.current
 
-    Column(modifier = Modifier.padding(16.dp).verticalScroll(rememberScrollState())) {
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .verticalScroll(rememberScrollState())
+    ) {
+        Spacer(modifier = Modifier.height(16.dp))
+
         SettingsGroup(
             title = stringResource(id = R.string.settings_group_reports)
         ) {
@@ -103,5 +109,7 @@ fun SettingsScreen() {
         Spacer(modifier = Modifier.height(8.dp))
 
         AboutNeoStumbler()
+
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
