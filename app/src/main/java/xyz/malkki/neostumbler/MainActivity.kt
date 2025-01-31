@@ -41,10 +41,11 @@ import xyz.malkki.neostumbler.ui.screens.StatisticsScreen
 import xyz.malkki.neostumbler.ui.screens.settings.SettingsScreen
 import xyz.malkki.neostumbler.ui.theme.NeoStumblerTheme
 
-private fun Context.useDynamicColor(): Flow<Boolean> = (applicationContext as StumblerApplication).settingsStore.data
-    .map { prefs ->
-        prefs[booleanPreferencesKey(PreferenceKeys.DYNAMIC_COLOR_THEME)] == true
-    }
+private fun Context.useDynamicColor(): Flow<Boolean> =
+    (applicationContext as StumblerApplication).settingsStore.data
+        .map { prefs ->
+            prefs[booleanPreferencesKey(PreferenceKeys.DYNAMIC_COLOR_THEME)] == true
+        }
 
 class MainActivity : AppCompatActivity() {
     companion object {
@@ -53,7 +54,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val dynamicColorFlow = useDynamicColor().stateIn(lifecycleScope, started = SharingStarted.Eagerly, initialValue = null)
+        val dynamicColorFlow = useDynamicColor().stateIn(
+            lifecycleScope,
+            started = SharingStarted.Eagerly,
+            initialValue = null,
+        )
 
         installSplashScreen().apply {
             setKeepOnScreenCondition {
@@ -75,7 +80,7 @@ class MainActivity : AppCompatActivity() {
                         stringResource(R.string.map_tab_title) to rememberVectorPainter(Icons.Filled.Place),
                         stringResource(R.string.reports_tab_title) to rememberVectorPainter(Icons.AutoMirrored.Default.List),
                         stringResource(R.string.statistics_tab_title) to painterResource(id = R.drawable.statistics_24),
-                        stringResource(R.string.settings_tab_title)  to rememberVectorPainter(Icons.Filled.Settings),
+                        stringResource(R.string.settings_tab_title) to rememberVectorPainter(Icons.Filled.Settings),
                     )
 
                     val selectedTabIndex = rememberSaveable { mutableIntStateOf(1) }
@@ -114,21 +119,10 @@ class MainActivity : AppCompatActivity() {
                                     .padding(paddingValues = it)
                             ) {
                                 when (selectedTabIndex.intValue) {
-                                    0 -> {
-                                        MapScreen()
-                                    }
-
-                                    1 -> {
-                                        ReportsScreen()
-                                    }
-
-                                    2 -> {
-                                        StatisticsScreen()
-                                    }
-
-                                    3 -> {
-                                        SettingsScreen()
-                                    }
+                                    0 -> MapScreen()
+                                    1 -> ReportsScreen()
+                                    2 -> StatisticsScreen()
+                                    3 -> SettingsScreen()
                                 }
                             }
                         }

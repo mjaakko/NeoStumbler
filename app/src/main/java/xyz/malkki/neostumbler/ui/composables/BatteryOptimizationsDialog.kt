@@ -3,18 +3,13 @@ package xyz.malkki.neostumbler.ui.composables
 import android.os.PowerManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import kotlinx.coroutines.launch
@@ -84,9 +79,5 @@ fun BatteryOptimizationsDialog(onBatteryOptimizationsDisabled: (Boolean) -> Unit
                 Text(text = stringResource(R.string.ok))
             }
         },
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight(),
-        shape = RoundedCornerShape(4.dp)
     )
 }

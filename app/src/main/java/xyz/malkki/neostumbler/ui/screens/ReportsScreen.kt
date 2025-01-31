@@ -15,30 +15,39 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
@@ -106,14 +115,14 @@ private fun ReportStats(reportsViewModel: ReportsViewModel = viewModel()) {
         val millis = it.toEpochMilli()
 
         DateFormat.getMediumDateFormat(context).format(millis) + " " + DateFormat.getTimeFormat(context).format(millis)
-    }
+    } ?: stringResource(R.string.reports_last_uploaded_never)
 
     Column(
         modifier = Modifier.wrapContentHeight()
     ) {
         Text(text = stringResource(R.string.reports_total, reportsTotal.value ?: 0))
         Text(text = stringResource(R.string.reports_not_uploaded, reportsNotUploaded.value ?: 0))
-        Text(text = stringResource(R.string.reports_last_uploaded, lastUploadedText ?: ""))
+        Text(text = stringResource(R.string.reports_last_uploaded, lastUploadedText))
     }
 }
 
@@ -272,11 +281,25 @@ fun ForegroundScanningButton() {
             startScanning()
         }
     ) {
-        val stringResId = if (serviceConnection.value != null) {
+        val isScanning = serviceConnection.value != null
+
+        val stringResId = if (isScanning) {
             R.string.stop_scanning
         } else {
             R.string.start_scanning
         }
+        val icon = if (isScanning) {
+            Icons.Default.Stop
+        } else {
+            Icons.Default.PlayArrow
+        }
+
+        Icon(
+            painter = rememberVectorPainter(icon),
+            contentDescription = null,
+            modifier = Modifier.size(ButtonDefaults.IconSize)
+        )
+        Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
 
         Text(text = stringResource(stringResId))
     }
@@ -309,24 +332,33 @@ private fun Reports(reportsViewModel: ReportsViewModel = viewModel()) {
             })
     }
 
-    Column(modifier = Modifier.padding(top = 8.dp)) {
-        Text(text = stringResource(R.string.reports), style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold))
-        LazyColumn {
-            items(
-                reports.itemCount,
-                key = reports.itemKey { it.reportId }
-            ) { index ->
-                val report = reports.get(index)
+    Column(
+        modifier = Modifier.padding(top = 8.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.reports),
+            style = MaterialTheme.typography.titleMedium,
+        )
+        if (reports.itemCount == 0) {
+            Text(stringResource(R.string.reports_empty))
+        } else {
+            LazyColumn {
+                items(
+                    reports.itemCount,
+                    key = reports.itemKey { it.reportId }
+                ) { index ->
+                    val report = reports.get(index)
 
-                if (report != null) {
-                    Report(
-                        report = report,
-                        geocoder = geocoder,
-                        onDeleteReport = { reportId ->
-                            reportToDelete.value = reportId
-                        })
-                } else {
-                    ReportPlaceholder()
+                    if (report != null) {
+                        Report(
+                            report = report,
+                            geocoder = geocoder,
+                            onDeleteReport = { reportId ->
+                                reportToDelete.value = reportId
+                            })
+                    } else {
+                        ReportPlaceholder()
+                    }
                 }
             }
         }
@@ -336,13 +368,26 @@ private fun Reports(reportsViewModel: ReportsViewModel = viewModel()) {
 @Composable
 private fun ReportPlaceholder() {
     val density = LocalDensity.current
-
     val height = with(density) { 14.sp.toDp() }
 
-    Column(modifier = Modifier.wrapContentHeight().padding(vertical = 4.dp)) {
-        Shimmer(modifier = Modifier.height(height).fillMaxWidth().background(Color.LightGray, shape = RoundedCornerShape(2.dp)))
+    Column(
+        modifier = Modifier
+            .wrapContentHeight()
+            .padding(vertical = 4.dp)
+    ) {
+        Shimmer(
+            modifier = Modifier
+                .height(height)
+                .fillMaxWidth()
+                .background(Color.LightGray, shape = RoundedCornerShape(2.dp))
+        )
         Spacer(modifier = Modifier.height(2.dp))
-        Shimmer(modifier = Modifier.height(height).fillMaxWidth().background(Color.LightGray, shape = RoundedCornerShape(2.dp)))
+        Shimmer(
+            modifier = Modifier
+                .height(height)
+                .fillMaxWidth()
+                .background(Color.LightGray, shape = RoundedCornerShape(2.dp))
+        )
     }
 }
 
@@ -376,13 +421,29 @@ private fun Report(report: ReportWithStats, geocoder: Geocoder, onDeleteReport: 
                 .fillMaxWidth()
                 .wrapContentHeight()
         ) {
-            Text(modifier = Modifier.wrapContentSize(), text = dateStr, style = TextStyle(fontSize = 14.sp))
+            Text(
+                modifier = Modifier.wrapContentSize(),
+                text = dateStr,
+                style = MaterialTheme.typography.bodySmall,
+            )
             Spacer(modifier = Modifier.weight(1.0f))
-            StationCount(iconRes = R.drawable.wifi_14sp, iconDescription = stringResource(R.string.wifi_icon_description), count = report.wifiAccessPointCount)
+            StationCount(
+                iconRes = R.drawable.wifi_14sp,
+                iconDescription = stringResource(R.string.wifi_icon_description),
+                count = report.wifiAccessPointCount,
+            )
             Spacer(modifier = Modifier.width(2.dp))
-            StationCount(iconRes = R.drawable.cell_tower_14sp, iconDescription = stringResource(R.string.cell_tower_icon_description), count = report.cellTowerCount)
+            StationCount(
+                iconRes = R.drawable.cell_tower_14sp,
+                iconDescription = stringResource(R.string.cell_tower_icon_description),
+                count = report.cellTowerCount,
+            )
             Spacer(modifier = Modifier.width(2.dp))
-            StationCount(iconRes = R.drawable.bluetooth_14sp, iconDescription = stringResource(R.string.bluetooth_icon_description), count = report.bluetoothBeaconCount)
+            StationCount(
+                iconRes = R.drawable.bluetooth_14sp,
+                iconDescription = stringResource(R.string.bluetooth_icon_description),
+                count = report.bluetoothBeaconCount,
+            )
         }
         if (canShowMap) {
             Link(
@@ -390,10 +451,13 @@ private fun Report(report: ReportWithStats, geocoder: Geocoder, onDeleteReport: 
                 onClick = {
                     context.startActivity(intent)
                 },
-                style = TextStyle(fontSize = 14.sp)
+                style = MaterialTheme.typography.bodySmall,
             )
         } else {
-            Text(text = address.value, style = TextStyle(fontSize = 14.sp))
+            Text(
+                text = address.value,
+                style = MaterialTheme.typography.bodySmall,
+            )
         }
     }
 }
@@ -402,15 +466,31 @@ private fun Report(report: ReportWithStats, geocoder: Geocoder, onDeleteReport: 
 private fun StationCount(iconRes: Int, iconDescription: String, count: Int) {
     val decimalFormat = remember { DecimalFormat("0") }
 
-    Row(modifier = Modifier.wrapContentSize(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-        Icon(painter = painterResource(iconRes), contentDescription = iconDescription)
+    val localDensity = LocalDensity.current
+    var textHeightDp by remember { mutableStateOf(0.dp) }
+
+    Row(
+        modifier = Modifier.wrapContentSize(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Icon(
+            painter = painterResource(iconRes),
+            contentDescription = iconDescription,
+            modifier = Modifier.requiredSize(textHeightDp)
+        )
         Spacer(modifier = Modifier.width(2.dp))
         Text(
             modifier = Modifier
                 .wrapContentWidth()
-                .fillMaxHeight(),
+                .fillMaxHeight()
+                .onGloballyPositioned {
+                    textHeightDp = with(localDensity) {
+                        it.size.height.toDp()
+                    }
+                },
             text = decimalFormat.format(count),
-            style = TextStyle(fontSize = 14.sp)
+            style = MaterialTheme.typography.bodySmall,
         )
     }
 }
