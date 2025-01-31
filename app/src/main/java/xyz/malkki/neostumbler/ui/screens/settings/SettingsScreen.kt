@@ -21,9 +21,10 @@ import xyz.malkki.neostumbler.ui.composables.ReportReuploadButton
 import xyz.malkki.neostumbler.ui.composables.SettingsGroup
 import xyz.malkki.neostumbler.ui.composables.SettingsToggle
 import xyz.malkki.neostumbler.ui.composables.TroubleshootingSettingsItem
-import xyz.malkki.neostumbler.ui.composables.autoscan.AutoScanToggle
+import xyz.malkki.neostumbler.ui.composables.settings.AutoScanToggle
 import xyz.malkki.neostumbler.ui.composables.settings.AutoUploadToggle
 import xyz.malkki.neostumbler.ui.composables.settings.DbPruneSettings
+import xyz.malkki.neostumbler.ui.composables.settings.FusedLocationToggle
 import xyz.malkki.neostumbler.ui.composables.settings.IgnoreScanThrottlingToggle
 import xyz.malkki.neostumbler.ui.composables.settings.LanguageSwitcher
 import xyz.malkki.neostumbler.ui.composables.settings.ManageStorageSettingsItem
@@ -55,12 +56,7 @@ fun SettingsScreen() {
             title = stringResource(id = R.string.settings_group_scanning)
         ) {
             MovementDetectorSettings()
-            SettingsToggle(
-                title = stringResource(id = R.string.prefer_fused_location_title),
-                description = stringResource(id = R.string.prefer_fused_location_description),
-                preferenceKey = PreferenceKeys.PREFER_FUSED_LOCATION,
-                default = true
-            )
+            FusedLocationToggle()
             IgnoreScanThrottlingToggle()
             SliderSetting(
                 title = stringResource(R.string.wifi_scan_frequency),
