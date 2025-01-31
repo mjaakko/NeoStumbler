@@ -201,19 +201,16 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
                     mapView.lifecycle = lifecycle
 
                     mapView.getMapAsync { map ->
-                        if (map.cameraPosition.target == null || (map.cameraPosition.target?.latitude == 0.0 && map.cameraPosition.target?.longitude == 0.0)) {
-                            if (latestReportPosition.value != null) {
-                                map.cameraPosition = CameraPosition.Builder()
-                                    .target(latestReportPosition.value?.let { LatLng(it.latitude, it.longitude) })
-                                    .zoom(10.0)
-                                    .build()
-                            } else {
-                                map.cameraPosition = CameraPosition.Builder()
-                                    .target(LatLng(mapViewModel.mapCenter.value.latitude, mapViewModel.mapCenter.value.longitude))
-                                    .zoom(mapViewModel.zoom.value)
-                                    .build()
-                            }
+                        // Call repeatedly in update() because latestReportPosition may not be available in factory()
+                        val target = if (mapViewModel.mapCenter.value.isOrigin()) {
+                            latestReportPosition.value
+                        } else {
+                            mapViewModel.mapCenter.value
                         }
+                        map.cameraPosition = CameraPosition.Builder()
+                            .target(target?.asMapLibreLatLng())
+                            .zoom(mapViewModel.zoom.value)
+                            .build()
 
                         if (myLocation.value != null && map.locationComponent.isLocationComponentActivated) {
                             map.locationComponent.forceLocationUpdate(myLocation.value!!.location)

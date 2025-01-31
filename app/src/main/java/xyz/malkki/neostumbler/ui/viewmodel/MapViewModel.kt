@@ -74,11 +74,11 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
 
     private val showMyLocation = MutableStateFlow(getApplication<StumblerApplication>().checkMissingPermissions(Manifest.permission.ACCESS_COARSE_LOCATION).isEmpty())
 
-    private val _mapCenter = MutableStateFlow<LatLng>(LatLng(0.0, 0.0))
+    private val _mapCenter = MutableStateFlow<LatLng>(LatLng.ORIGIN)
     val mapCenter: StateFlow<LatLng>
         get() = _mapCenter.asStateFlow()
 
-    private val _zoom = MutableStateFlow(5.0)
+    private val _zoom = MutableStateFlow(12.0)
     val zoom: StateFlow<Double>
         get() = _zoom.asStateFlow()
 
