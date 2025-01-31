@@ -139,6 +139,10 @@ android {
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
+            //We don't use these codec - they are probably pulled in with some library
+            excludes += '**/apache/**/codec/**/*'
+            //No need for beacon distance models used by Android Beacon Library
+            excludes += '**/model-distance-calculations.json'
         }
     }
 
