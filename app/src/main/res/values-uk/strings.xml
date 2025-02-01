@@ -152,4 +152,6 @@
     <string name="cell_tower_scan_frequency">Частота сканування стільникових веж</string>
     <string name="every_x_meters">Кожні %d метрів</string>
     <string name="map_tile_source">Джерела плиток карти</string>
+    <string name="reports_last_uploaded_never">ніколи</string>
+    <string name="reports_empty">Ще немає звітів</string>
 </resources>
