@@ -234,7 +234,7 @@ dependencies {
 
     fullImplementation 'com.google.android.gms:play-services-location:21.3.0'
 
-    implementation "androidx.datastore:datastore-preferences:1.1.1"
+    implementation "androidx.datastore:datastore-preferences:1.1.2"
 
     def room_version = "2.6.1"
 
