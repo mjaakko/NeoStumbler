@@ -259,7 +259,7 @@ dependencies {
 
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3'
 
-    implementation 'org.altbeacon:android-beacon-library:2.20.6'
+    implementation 'org.altbeacon:android-beacon-library:2.21.0'
 
     implementation 'org.maplibre.gl:android-sdk:11.8.0'
     implementation 'org.maplibre.gl:android-plugin-annotation-v9:3.0.2'
