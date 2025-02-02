@@ -46,6 +46,7 @@
     <string name="export_started">正从 %1$s 到 %2$s 导出数据</string>
     <string name="no_thanks">不用了，谢谢</string>
     <string name="beacons">蓝牙信标</string>
+    <string name="use">使用</string>
     <string name="add_quick_settings_tile">要添加快捷开关以方便启动扫描吗？</string>
     <string name="mls_warning_title">MLS 已经退役</string>
     <string name="endpoint">端点</string>
