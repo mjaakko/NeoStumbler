@@ -68,9 +68,7 @@
     <string name="wifi_scan_throttling">Limitations de mesures du Wi-Fi</string>
     <string name="wifi_scan_throttling_explanation">Pour activer cette option, vous devez désactiver la limitation de mesure du Wi-Fi dans les paramètres de votre appareil. Elle se trouve généralement dans les options pour les développeurs</string>
     <string name="show_my_location">Afficher mon emplacement</string>
-    <string name="permission_rationale_fine_location">
-        L\'autorisation d\'accéder à la position exacte est nécessaire pour afficher l\'emplacement actuel
-    </string>
+    <string name="permission_rationale_fine_location">L\'autorisation d\'accéder à la position exacte est nécessaire pour afficher l\'emplacement actuel</string>
     <string name="permission_rationale_read_phone_state">
         L\'accès à l\'état du téléphone est nécessaire pour la mesure des antennes téléphoniques
     </string>
