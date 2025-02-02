@@ -118,7 +118,7 @@
 
     <string name="mls_warning_title">MLS on poistunut käytöstä</string>
     <string name="mls_warning_text">
-        Mozillan sijaintipalvelu on poistunut käytöstä ja ei enää ota vastaan dataa. MLS:n sijasta voit lähettää dataa beaconDB:hen, joka tarjoaa MLS:n kanssa yhteensopivan palvelun\n\nHuomaathan, että beaconDB on edelleen kehityksessä ja tällä on vaikutusta siihen, kuinka dataasi käsitellään. <annotation link="privacy_policy">Tietosuojaselosteesta</annotation> löydät lisää tietoja aiheesta\n\nHaluatko asettaa beaconDB:n palvelimeksi? Tämän voi myöhemmin vaihtaa asetuksista
+        Mozillan sijaintipalvelu on poistunut käytöstä eikä enää ota vastaan dataa. MLS:n sijasta voit lähettää dataa beaconDB:hen, joka tarjoaa MLS:n kanssa yhteensopivan palvelun\n\nHuomaathan, että beaconDB on edelleen kehityksessä ja tällä on vaikutusta siihen, kuinka dataasi käsitellään. <annotation link="privacy_policy">Tietosuojaselosteesta</annotation> löydät lisää tietoja aiheesta\n\nHaluatko asettaa beaconDB:n palvelimeksi? Tämän voi myöhemmin vaihtaa asetuksista
     </string>
 
     <string name="settings_group_reports">Raportit</string>
