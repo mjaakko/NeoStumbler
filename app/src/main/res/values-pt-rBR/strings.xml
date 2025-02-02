@@ -150,4 +150,6 @@
     <string name="every_x_meters">A cada %d metros</string>
     <string name="cell_tower_scan_frequency">Frequência de scan de redes móveis</string>
     <string name="map_tile_source">Fonte das ladrilhas do mapa</string>
+    <string name="reports_last_uploaded_never">nunca</string>
+    <string name="reports_empty">Nenhum relatório ainda</string>
 </resources>
