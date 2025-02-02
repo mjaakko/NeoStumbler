@@ -41,7 +41,6 @@
     </plurals>
     <string name="wifi_scan_frequency">Belaidžių tinklų skenavimo dažnis</string>
     <string name="movement_detection_location_description">Pristabdyti skenavimą, kol nepasikeičia vietovė. Naudojamas GPS signalas</string>
-    <string name="mls_warning_text">„Mozilla Location Services“ tarnyba išjungta ir naujų duomenų nebepriima. Naudojamą tarnybą turite pakeisti kita. Nustatymuose tam turime pasiūlymų.\n\nTaip pat nustatymuose galite eksportuoti duomenis kaip ZIP failą</string>
     <string name="report_upload_notification_channel_name">Išsiųstos ataskaitos</string>
     <string name="notification_sending_reports">Siunčiamos ataskaitos</string>
     <string name="notification_wireless_scanning_title">Belaidžių tinklų skenavimas aktyvus</string>

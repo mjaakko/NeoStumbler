@@ -130,7 +130,6 @@
     <string name="ignore_battery_optimizations_description">A legjobb eredmény elérése érdekében az akkumulátor optimalizálását ki kell kapcsolni. A vezeték nélküli szkennelés és a helymeghatározás jelentősen lassul, ha az akkumulátor-optimalizálás aktív és a képernyő ki van kapcsolva</string>
     <string name="suggested_services_title">Ajánlott szolgáltatások</string>
     <string name="add_quick_settings_tile">Hozzáadjunk gyors beállítási csempét a szkennelés egyszerű indításához?</string>
-    <string name="mls_warning_text">A Mozilla Location Services-t leállították és nem fogad többé adatot. A végpontot egy másik szolgáltatásra kell cserélni, amire a beállításokban vannak javaslatok.\n\nAz adatok ZIP-elt csomagként is exportálhatók a beállításokban</string>
     <string name="unencrypted_endpoint_warning">Titkosítatlan végpont</string>
     <string name="wifi_scan_throttling">Wi-Fi szkennelés korlátozása</string>
     <string name="notification_wireless_scanning_title">Vezetéknélküli szkennelés aktív</string>

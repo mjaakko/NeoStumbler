@@ -92,7 +92,6 @@
     <string name="notification_style_detailed_description">Affiche le nombre de rapports créés et le nombre de satellites GNSS</string>
     <string name="db_prune_two_months">Après deux mois</string>
     <string name="delete_reports_by_date">Supprimer les rapports par date</string>
-    <string name="mls_warning_text">Les services de localisation Mozilla (MLS) ont été fermés et n’acceptent plus de soumissions de données. Vous devez changer le point de terminaison et définir un autre service, pour lequel il y a des suggestions dans les paramètres.\n\nLes données peuvent également être exportées sous forme de fichier ZIP depuis les paramètres</string>
     <string name="suggested_service_website">Site web</string>
     <string name="notification_style_detailed_title">Détaillé</string>
     <string name="suggested_services_title">Services suggérés</string>

@@ -95,7 +95,6 @@
     <string name="scanner_status_notification_channel_name">Status skanowania</string>
     <string name="wireless_scanning">Skanowanie bezprzewodowe</string>
     <string name="every_x_meters">Co %dm</string>
-    <string name="mls_warning_text">Mozilla Location Service zostało wyłączone i przyjmuje już danych. Musisz zmienić endpoint na inny serwis, dla których sugestie znajdziesz w ustawieniach.\n\nDane mogą również zostać wyeksportowanie jako paczka ZIP z panelu ustawień</string>
     <string name="map_tab_title">Mapa</string>
     <string name="statistics_tab_title">Statystyki</string>
     <string name="reports">Raporty:</string>

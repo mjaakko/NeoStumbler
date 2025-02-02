@@ -37,35 +37,47 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
         const val INPUT_REUPLOAD_TO = "reupload_to"
 
         const val OUTPUT_REPORTS_SENT = "reports_sent"
+        const val OUTPUT_ERROR_TYPE = "error_type"
         const val OUTPUT_ERROR_MESSAGE = "error_message"
+
+        const val ERROR_TYPE_NO_ENDPOINT_CONFIGURED: Int = 1000
     }
 
     private val application = applicationContext as StumblerApplication
 
     private val db = application.reportDb.value
 
-    private suspend fun getGeosubmitApi(): Geosubmit {
-        val geosubmitParams = getGeosubmitParams()
+    private suspend fun getGeosubmitApi(): Geosubmit? {
+        return getGeosubmitParams()?.let { geosubmitParams ->
+            Timber.d("Using endpoint ${geosubmitParams.path} with API key ${geosubmitParams.apiKey} for Geosubmit")
 
-        Timber.d("Using endpoint ${geosubmitParams.path} with API key ${geosubmitParams.apiKey} for Geosubmit")
-
-        return MLSGeosubmit(application.httpClientProvider.await(), geosubmitParams)
+            MLSGeosubmit(application.httpClientProvider.await(), geosubmitParams)
+        }
     }
 
-    private suspend fun getGeosubmitParams(): GeosubmitParams {
+    private suspend fun getGeosubmitParams(): GeosubmitParams? {
         return application.settingsStore.data
             .map { prefs ->
-                val endpoint = prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)] ?: GeosubmitParams.DEFAULT_BASE_URL
-                val path = prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH)] ?: GeosubmitParams.DEFAULT_PATH
-                val apiKey = prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY)]
+                val endpoint = prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)]
 
-                GeosubmitParams(endpoint, path, apiKey)
+                if (endpoint == null) {
+                    null
+                } else {
+                    val path = prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH)] ?: GeosubmitParams.DEFAULT_PATH
+                    val apiKey = prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY)]
+
+                    GeosubmitParams(endpoint, path, apiKey)
+                }
             }
             .first()
     }
 
     override suspend fun doWork(): Result {
         val geosubmit = getGeosubmitApi()
+
+        if (geosubmit == null) {
+            return Result.failure(Data.Builder().putInt(OUTPUT_ERROR_TYPE, ERROR_TYPE_NO_ENDPOINT_CONFIGURED).build())
+        }
 
         val reupload =
             inputData.hasKeyWithValueOfType<Long>(INPUT_REUPLOAD_FROM)

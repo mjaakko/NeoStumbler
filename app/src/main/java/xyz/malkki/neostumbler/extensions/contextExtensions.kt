@@ -10,6 +10,7 @@ import android.provider.Settings
 import android.widget.Toast
 import androidx.annotation.IntDef
 import androidx.annotation.PluralsRes
+import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.core.os.LocaleListCompat
@@ -79,4 +80,8 @@ fun Context.showToast(text: String, @ToastLength length: Int = Toast.LENGTH_SHOR
  */
 fun Context.getQuantityString(@PluralsRes resId: Int, quantity: Int, vararg formatArgs: Any = emptyArray<Any>()): String {
     return ContextCompat.getContextForLanguage(this).resources.getQuantityString(resId, quantity, *formatArgs)
+}
+
+fun Context.getTextCompat(@StringRes resId: Int): CharSequence {
+    return ContextCompat.getContextForLanguage(this).resources.getText(resId)
 }

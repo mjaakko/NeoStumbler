@@ -39,13 +39,17 @@ import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.geosubmit.GeosubmitParams
 import xyz.malkki.neostumbler.ui.composables.settings.SettingsItem
 
-private fun DataStore<Preferences>.geosubmitParams(): Flow<GeosubmitParams> = data
+private fun DataStore<Preferences>.geosubmitParams(): Flow<GeosubmitParams?> = data
     .map { preferences ->
-        val endpoint = preferences[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)] ?: GeosubmitParams.DEFAULT_BASE_URL
+        val endpoint = preferences[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)]
         val path = preferences[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH)] ?: GeosubmitParams.DEFAULT_PATH
         val apiKey = preferences[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY)]
 
-        GeosubmitParams(endpoint, path, apiKey)
+        if (endpoint != null) {
+            GeosubmitParams(endpoint, path, apiKey)
+        } else {
+            null
+        }
     }
     .distinctUntilChanged()
 
@@ -90,7 +94,7 @@ fun GeosubmitEndpointSettings() {
 
     SettingsItem(
         title = stringResource(R.string.endpoint),
-        description = params.value?.baseUrl ?: "",
+        description = params.value?.baseUrl ?: stringResource(R.string.no_endpoint_configured),
         onClick = {
             dialogOpen.value = true
         }
@@ -103,7 +107,7 @@ private fun GeosubmitEndpointDialog(currentParams: GeosubmitParams?, onDialogClo
         mutableStateOf(currentParams?.baseUrl)
     }
     val path = rememberSaveable {
-        mutableStateOf(currentParams?.path)
+        mutableStateOf(currentParams?.path ?: GeosubmitParams.DEFAULT_PATH)
     }
     val apiKey = rememberSaveable {
         mutableStateOf(currentParams?.apiKey)

@@ -59,6 +59,7 @@
         <item quantity="other">Lähetetty %d raporttia</item>
     </plurals>
     <string name="toast_reports_upload_failed">Raporttien lähettäminen epäonnistui</string>
+    <string name="toast_reports_upload_failed_no_endpoint">Raporttien lähettäminen epäonnistui, koska palvelinta ei ole määritetty</string>
 
     <string name="report_upload_notification_channel_name">Raporttien lähetys</string>
     <string name="notification_sending_reports">Lähetetään raportteja</string>
@@ -117,7 +118,7 @@
 
     <string name="mls_warning_title">MLS on poistunut käytöstä</string>
     <string name="mls_warning_text">
-        Mozillan sijaintipalvelu on poistunut käytöstä eikä enää hyväksy datalähetyksiä. Vaihda palvelin johonkin korvaavaan palveluun, jolle löytyy ehdotuksia asetuksista.\n\nDatat voi myös viedä ZIP-pakettina asetuksista
+        Mozillan sijaintipalvelu on poistunut käytöstä eikä enää ota vastaan dataa. MLS:n sijasta voit lähettää dataa beaconDB:hen, joka tarjoaa MLS:n kanssa yhteensopivan palvelun\n\nHuomaathan, että beaconDB on edelleen kehityksessä ja tällä on vaikutusta siihen, kuinka dataasi käsitellään. <annotation link="privacy_policy">Tietosuojaselosteesta</annotation> löydät lisää tietoja aiheesta\n\nHaluatko asettaa beaconDB:n palvelimeksi? Tämän voi myöhemmin vaihtaa asetuksista
     </string>
 
     <string name="settings_group_reports">Raportit</string>
@@ -127,6 +128,8 @@
     <string name="endpoint">Palvelin</string>
     <string name="path">Polku</string>
     <string name="api_key">API-avain (vapaaehtoinen)</string>
+
+    <string name="no_endpoint_configured">Palvelinta ei määritetty</string>
 
     <string name="unencrypted_endpoint_warning">Salaamaton palvelin</string>
 

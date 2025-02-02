@@ -92,9 +92,6 @@
     <string name="mls_warning_title">Polohová služba Mozilla končí</string>
     <string name="cancel">Zrušit</string>
     <string name="use">Použít</string>
-    <string name="mls_warning_text">Polohová Služba Mozilla (MLS) byla vypnutá, a nepřijímá nová data. Musíte změnit koncový bod na jinou službu, pro kterou jsou v nastavení návrhy.
-\n
-\nData je možné exportovat jako ZIP soubor v nastavení.</string>
     <string name="suggested_services_title">Navrhované služby</string>
     <string name="suggested_service_website">Webová stránka</string>
     <string name="suggested_service_hosted_by">Provozovatel:</string>

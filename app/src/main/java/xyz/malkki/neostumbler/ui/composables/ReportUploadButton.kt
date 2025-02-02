@@ -84,17 +84,27 @@ fun ReportUploadButton(reportsViewModel: ReportsViewModel = viewModel()) {
             enqueuedUploadWork.value = null
         },
         onWorkFailed = { workInfo ->
-            val errorMessage = workInfo.outputData.getString(ReportSendWorker.OUTPUT_ERROR_MESSAGE)
+            val errorType = workInfo.outputData.getInt(ReportSendWorker.OUTPUT_ERROR_TYPE, -1)
 
-            val toastText = buildString {
-                append(ContextCompat.getString(context, R.string.toast_reports_upload_failed))
+            when (errorType) {
+                ReportSendWorker.ERROR_TYPE_NO_ENDPOINT_CONFIGURED -> {
+                    context.showToast(ContextCompat.getString(context, R.string.toast_reports_upload_failed_no_endpoint))
+                }
+                else -> {
+                    val errorMessage = workInfo.outputData.getString(ReportSendWorker.OUTPUT_ERROR_MESSAGE)
 
-                if (errorMessage != null) {
-                    append("\n\n")
-                    append(errorMessage)
+                    val toastText = buildString {
+                        append(ContextCompat.getString(context, R.string.toast_reports_upload_failed))
+
+                        if (errorMessage != null) {
+                            append("\n\n")
+                            append(errorMessage)
+                        }
+                    }
+                    context.showToast(toastText, length = Toast.LENGTH_LONG)
+
                 }
             }
-            context.showToast(toastText, length = Toast.LENGTH_LONG)
 
             enqueuedUploadWork.value = null
         }

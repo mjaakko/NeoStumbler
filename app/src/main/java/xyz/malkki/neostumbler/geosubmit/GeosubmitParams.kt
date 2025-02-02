@@ -10,9 +10,6 @@ data class GeosubmitParams(
     val apiKey: String?
 ) {
     companion object {
-        //NOTE: MLS does not accept data submissions anymore, this is used as a default just to show an example
-        const val DEFAULT_BASE_URL = "https://location.services.mozilla.com"
-
         const val DEFAULT_PATH = "/v2/geosubmit"
     }
 

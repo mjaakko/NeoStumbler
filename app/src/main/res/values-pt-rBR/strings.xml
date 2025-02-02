@@ -71,7 +71,6 @@
         Para mostrar sua localização no mapa, é necessário a permissão de localização
     </string>
     <string name="warning_icon_description">Ícone de alerta</string>
-    <string name="mls_warning_text">O serviço de localização da Mozilla (Mozilla Location Services) foi encerrado e não aceita mais novos envios. Você precisa mudar para outro serviço, dos quais temos sugestões nas configurações.\n\nOs dados também podem ser exportados como um pacote ZIP pelas configurações</string>
     <string name="mls_warning_title">O MLS foi encerrado</string>
     <string name="cancel">Cancelar</string>
     <string name="use">Usar</string>

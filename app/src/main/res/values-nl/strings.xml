@@ -118,7 +118,6 @@
     <string name="delete_all_reports_confirmation">Weet u zeker dat u alle rapporten wilt verwijderen?</string>
     <string name="notification_style_detailed_description">Toont het aantal verzamelde rapporten en het aantal GNSS-satellieten</string>
     <string name="troubleshooting_accurate_location_available">Exacte locatie beschikbaar</string>
-    <string name="mls_warning_text">Mozilla Location Services is gestopt en accepteert geen nieuwe gegevens meer. U moet de ontvangst­locatie wijzigen naar een andere dienst, waarvoor er een aantal suggesties zijn in de instellingen.\n\nGegevens kunnen vanuit de instellingen ook worden geëxporteerd als een ZIP-bestand</string>
     <string name="toast_reports_upload_failed">Rapporten uploaden mislukt</string>
     <string name="toast_deleted_all_reports">Alle rapporten verwijderd</string>
     <string name="app_variant">Variant: %s</string>
