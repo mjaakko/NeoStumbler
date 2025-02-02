@@ -8,10 +8,12 @@ import android.text.format.DateFormat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -344,8 +346,13 @@ private fun Reports(reportsViewModel: ReportsViewModel = viewModel()) {
             text = stringResource(R.string.reports),
             style = MaterialTheme.typography.titleMedium,
         )
-        if (reports.itemCount == 0) {
-            Text(stringResource(R.string.reports_empty))
+        if (reports.loadState.isIdle && reports.itemCount == 0) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(stringResource(R.string.reports_empty))
+            }
         } else {
             LazyColumn {
                 items(
