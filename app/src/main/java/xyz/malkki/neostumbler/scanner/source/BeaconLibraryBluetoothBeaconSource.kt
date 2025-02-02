@@ -1,10 +1,12 @@
 package xyz.malkki.neostumbler.scanner.source
 
 import android.content.Context
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.BeaconManager
@@ -50,6 +52,7 @@ class BeaconLibraryBluetoothBeaconSource(context: Context) : BluetoothBeaconSour
     }
 
     override fun getBluetoothBeaconFlow(): Flow<List<BluetoothBeacon>> = getBeaconFlow(appContext)
+        .flowOn(Dispatchers.Main) //Beacon listener has to run on the main thread because of Android Beacon Library
         .map { beacons ->
             beacons.map { beacon ->
                 BluetoothBeacon.fromBeacon(beacon)
@@ -70,4 +73,5 @@ class BeaconLibraryBluetoothBeaconSource(context: Context) : BluetoothBeaconSour
                 .values
                 .toList()
         }
+        .flowOn(Dispatchers.Default)
 }
