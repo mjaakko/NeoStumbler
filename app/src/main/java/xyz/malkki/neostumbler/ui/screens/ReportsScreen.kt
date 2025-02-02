@@ -24,8 +24,11 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bluetooth
+import androidx.compose.material.icons.filled.CellTower
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Stop
+import androidx.compose.material.icons.filled.Wifi
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -42,11 +45,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -430,19 +433,19 @@ private fun Report(report: ReportWithStats, geocoder: Geocoder, onDeleteReport: 
             )
             Spacer(modifier = Modifier.weight(1.0f))
             StationCount(
-                iconRes = R.drawable.wifi_14sp,
+                icon = Icons.Default.Wifi,
                 iconDescription = stringResource(R.string.wifi_icon_description),
                 count = report.wifiAccessPointCount,
             )
             Spacer(modifier = Modifier.width(2.dp))
             StationCount(
-                iconRes = R.drawable.cell_tower_14sp,
+                icon = Icons.Default.CellTower,
                 iconDescription = stringResource(R.string.cell_tower_icon_description),
                 count = report.cellTowerCount,
             )
             Spacer(modifier = Modifier.width(2.dp))
             StationCount(
-                iconRes = R.drawable.bluetooth_14sp,
+                icon = Icons.Default.Bluetooth,
                 iconDescription = stringResource(R.string.bluetooth_icon_description),
                 count = report.bluetoothBeaconCount,
             )
@@ -465,7 +468,7 @@ private fun Report(report: ReportWithStats, geocoder: Geocoder, onDeleteReport: 
 }
 
 @Composable
-private fun StationCount(iconRes: Int, iconDescription: String, count: Int) {
+private fun StationCount(icon: ImageVector, iconDescription: String, count: Int) {
     val decimalFormat = remember { DecimalFormat("0") }
 
     val localDensity = LocalDensity.current
@@ -477,7 +480,7 @@ private fun StationCount(iconRes: Int, iconDescription: String, count: Int) {
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Icon(
-            painter = painterResource(iconRes),
+            painter = rememberVectorPainter(icon),
             contentDescription = iconDescription,
             modifier = Modifier.requiredSize(textHeightDp)
         )
