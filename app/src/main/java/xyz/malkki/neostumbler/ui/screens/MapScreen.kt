@@ -18,6 +18,9 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationSearching
+import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.FilledIconButton
@@ -35,6 +38,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -268,7 +272,11 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
                 }
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.my_location_24),
+                    painter = if (trackMyLocation.value) {
+                        rememberVectorPainter(Icons.Default.MyLocation)
+                    } else {
+                        rememberVectorPainter(Icons.Default.LocationSearching)
+                    },
                     contentDescription = stringResource(id = R.string.show_my_location)
                 )
             }

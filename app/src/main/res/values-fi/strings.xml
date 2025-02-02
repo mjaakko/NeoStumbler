@@ -47,6 +47,7 @@
     <string name="reports_not_uploaded">Raportteja lähettämättä: %d</string>
     <string name="reports_last_uploaded">Raportit lähetetty viimeksi: %s</string>
 
+    <string name="reports_empty">Ei raportteja vielä</string>
     <string name="start_scanning">Aloita skannaus</string>
     <string name="stop_scanning">Lopeta skannaus</string>
 
@@ -192,7 +193,7 @@
     <string name="show_my_location">Näytä oma sijainti</string>
 
     <string name="permission_rationale_fine_location">
-        Käyttölupa tarkkaan sijaintiin tarvitaan laitteen sijaintia varten
+        Käyttölupa tarkkaan sijaintiin tarvitaan raporttien luomiseen tarkalla paikkatiedolla
     </string>
 
     <string name="permission_rationale_read_phone_state">
@@ -260,4 +261,5 @@
 
     <string name="bug_report_button">Ilmoita bugista</string>
     <string name="update_translations_button">Päivitä käännöksiä</string>
+    <string name="reports_last_uploaded_never">ei ikinä</string>
 </resources>

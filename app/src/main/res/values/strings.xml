@@ -187,7 +187,7 @@
     <string name="show_my_location">Show my location</string>
 
     <string name="permission_rationale_fine_location">
-        Getting access to the current location needs permission for accurate location
+        Creating reports with useful location data needs permission for accurate location
     </string>
 
     <string name="permission_rationale_read_phone_state">
