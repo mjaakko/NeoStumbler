@@ -8,6 +8,10 @@ import xyz.malkki.neostumbler.R
 
 @Serializable
 data class SuggestedService(
+    /**
+     * Used for uniquely identifying the specific service
+     */
+    val id: String,
     val name: String,
     val description: String? = null,
     val website: String,

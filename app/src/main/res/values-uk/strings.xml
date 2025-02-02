@@ -134,7 +134,6 @@
     <string name="reupload_data">Перезавантажити дані</string>
     <string name="toast_deleted_all_reports">Видалено всі звіти</string>
     <string name="ignore_battery_optimizations_description">Для досягнення найкращих результатів, оптимізацію батареї слід вимкнути. Без оптимізації батареї бездротове сканування та доступ до місцезнаходження значно обмежуються, коли екран вимкнено</string>
-    <string name="mls_warning_text">Служба Mozilla Location Services припинила свою роботу і більше не приймає дані. Вам потрібно змінити кінцеву точку на інший сервіс, варіанти якого можна знайти в налаштуваннях.\n\nДані також можна експортувати у вигляді ZIP-пакету з налаштувань</string>
     <string name="import_raw_database_description">Імпортування сирої бази даних замінить існуючу базу даних</string>
     <string name="movement_detection_significant_motion_description">Призупиняє сканування та GPS, коли не виявляється значного руху. Економить заряд батареї, але не працює надійно на деяких пристроях</string>
     <string name="db_prune_never">Ніколи</string>

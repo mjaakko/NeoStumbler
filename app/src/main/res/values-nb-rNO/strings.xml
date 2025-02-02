@@ -22,9 +22,7 @@
     <string name="notification_style_basic_title">Grunnleggende</string>
     <string name="notification_style_basic_description">Viser antall opprettede rapporter</string>
     <string name="permission_rationale_post_notifications">Visning av statusmerknader krever tilgang til merknader</string>
-    <string name="mls_warning_text">Mozilla posisjontjenester har bitt avsluttet og mottar ikke datainnsendelser. Du må endre endepunktet til en annen tjeneste, der noen forslag er å finne i innstillingene.
-\n
-\nData kan også eksporteres som en ZIP-pakke fra innstillinene.</string>
+
     <string name="settings_group_reports">Rapporter</string>
     <string name="settings_group_scanning">Skanning</string>
     <string name="movement_detection_significant_motion_title">Bevegelsessensor</string>

@@ -76,7 +76,6 @@
     <string name="beacons">ஊடலை பீக்கான்கள்</string>
     <string name="add_quick_settings_tile">ச்கேனிங்கை எளிதாக தொடங்க விரைவான அமைப்புகள் ஓடு சேர்க்கவா?</string>
     <string name="mls_warning_title">எம்.எல்.எச் மூடப்பட்டுள்ளது</string>
-    <string name="mls_warning_text">மொசில்லா இருப்பிட சேவைகள் மூடப்பட்டுள்ளன, மேலும் தரவு சமர்ப்பிப்புகளை இனி ஏற்காது. நீங்கள் இறுதிப் புள்ளியை மற்றொரு சேவைக்கு மாற்ற வேண்டும், அதற்காக அமைப்புகளில் பரிந்துரைகள் உள்ளன.\n\n அமைப்புகளிலிருந்து ஒரு சிப் தொகுப்பாகவும் தரவை ஏற்றுமதி செய்யலாம்</string>
     <string name="endpoint">முனைப்புள்ளி</string>
     <string name="path">பாதை</string>
     <string name="api_key">பநிஇ விசை (விரும்பினால்)</string>

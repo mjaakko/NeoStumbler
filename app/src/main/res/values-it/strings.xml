@@ -70,7 +70,6 @@
     <string name="settings_ignore_wifi_scan_throttling_title">Ignora limitazioni scansione Wi-Fi</string>
     <string name="settings_group_reports">Rilevamenti</string>
     <string name="start_scanning">Inizia scansione</string>
-    <string name="mls_warning_text">Mozilla Location Services è stato chiuso e non accetta più invii. È necessario impostare l\'endpoint su un altro servizio (nelle impostazioni sono presenti alcuni suggerimenti).\n\nI dati possono anche essere exportati sotto forma di pacchetto ZIP dalle impostazioni</string>
     <string name="wifi_scan_throttling_explanation">È necessario disabilitare le limitazioni scansione Wi-Fi nelle impostazioni del dispositivo per attivare questa funzione. In genere si trova nelle impostazioni sviluppatore</string>
     <string name="permissions_needed">Autorizzazioni negate</string>
     <string name="ignore_battery_optimizations_description">Per migliorare i risultati, le ottimizzazzioni batteria dovrebbero essere disabilitate. La scansione wireless e l\'accesso alla posizione sono significativamente rallentati quando le ottimizzazioni batteria sono attive e lo schermo è spento</string>

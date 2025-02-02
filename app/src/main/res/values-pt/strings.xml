@@ -90,7 +90,6 @@
     <string name="notification_style_detailed_description">Mostra o número de relatórios criados e o número de satélites GNSS</string>
     <string name="mls_warning_title">O MLS encerrou</string>
     <string name="suggested_service_terms_of_use">Termos de uso</string>
-    <string name="mls_warning_text">O Mozilla Location Services encerrou e não recebe mais submissões. Mude o ponto de recolha para outro serviço. Algumas sugestões estão disponíveis nas opções da app.\n\nOs dados locais também podem ser exportados como ZIP nas opções da app</string>
     <string name="cancel">Cancelar</string>
     <string name="use">Usar</string>
     <string name="suggested_services_title">Serviços sugeridos</string>

@@ -77,9 +77,6 @@
     <string name="movement_detection_significant_motion_description">Pausiert Scannen und GPS wenn keine signifikante Bewegung erkannt wird. Spart Akku aber funktioniert auf manchen Geräten nicht zuverlässig</string>
     <string name="notification_style_detailed_description">Zeigt die Anzahl der erstellen Berichte und Anzahl der GNSS Satelliten</string>
     <string name="mls_warning_title">MLS hat den Betrieb eingestellt</string>
-    <string name="mls_warning_text">Mozilla Location Services hat den Betrieb eingestellt und akzeptiert keine Datenübermittlung mehr. Du musst den Endpunkt zu einem anderen Dienst ändern, dazu gibts es Vorschläge in den Einstellungen.
-\n
-\nDaten können in den Einstellungen auch als ZIP-Paket exportiert werden</string>
     <string name="cancel">Abbrechen</string>
     <string name="use">Benutzen</string>
     <string name="notification_wireless_scanning_content_satellite_stats">%1$d/%2$d Satelliten werden verwendet</string>

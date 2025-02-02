@@ -45,11 +45,9 @@
     <string name="export_no_file_chosen">无法导出数据，因为未创建任何文件</string>
     <string name="export_started">正从 %1$s 到 %2$s 导出数据</string>
     <string name="no_thanks">不用了，谢谢</string>
-    <string name="use">使用</string>
     <string name="beacons">蓝牙信标</string>
     <string name="add_quick_settings_tile">要添加快捷开关以方便启动扫描吗？</string>
     <string name="mls_warning_title">MLS 已经退役</string>
-    <string name="mls_warning_text">Mozilla 位置服务（Mozilla Location Services）已经退役，不再接受数据提交。你必须将端点更改为其他服务，设置中有建议选项。\n\n你也可以在设置中将数据导出为 ZIP 压缩包</string>
     <string name="endpoint">端点</string>
     <string name="path">路径</string>
     <string name="api_key">API 密钥（可选）</string>
