@@ -61,8 +61,8 @@
     <string name="wifi_scan_throttling">WLAN-Suchdrosselung</string>
     <string name="wifi_scan_throttling_explanation">Sie müssen die Drosselung der WLAN-Suche in Ihren Geräteeinstellungen deaktivieren, um diese Funktion zu ermöglichen. Normalerweise kann dies in den Entwicklereinstellungen getan werden</string>
     <string name="show_my_location">Zeige meinen Standort</string>
-    <string name="permission_rationale_fine_location">Zugriff auf den aktuellen Standort benötigt die Berechtigung für den genauen Standort</string>
-    <string name="permission_rationale_read_phone_state">Zugriff auf das Telefon wird benötigt, um Funkzellen mit allen SIM-Karten zu scannen</string>
+    <string name="permission_rationale_fine_location">Für die Erstellung nützlicher Standortdaten-Reports wird die Berechtigung \"genauer Standort\" benötigt</string>
+    <string name="permission_rationale_read_phone_state">Zugriff auf das Telefon wird benötigt, um Funkzellen zu scannen</string>
     <string name="permission_rationale_bluetooth">Das Scannen von Bluetooth-Beacons benötigt die Bluetooth-Berechtigung</string>
     <string name="permission_rationale_post_notifications">Die Status-Benachrichtigung anzuzeigen, benötigt die Benachrichtigungsberechtigung</string>
     <string name="permission_rationale_background_location_quick_settings">Das Scannen von den Schnelleinstellungen aus zu starten, benötigt im Hintergrund Zugriff auf den Standort</string>
@@ -144,4 +144,8 @@
     <string name="cell_tower_scan_frequency">Häufigkeit des Funkzellen-Scans</string>
     <string name="map_tile_source">Quelle der Kartendaten</string>
     <string name="settings_ignore_wifi_scan_throttling_description">Wenn das Scannen gedrosselt ist, können nur vier Scans innerhalb von zwei Minuten durchgeführt werden</string>
+    <string name="mls_warning_text">\"Mozilla Location Service\" wurde abgeschalter und akzeptiert keine Datenbeiträge mehr. Alternativ zu MLS können Daten zu beaconDB gesendet werden, was einen Service ähnlich zu MLS bereitstellt\n\nBeachte bitte, dass sich beaconDB noch in der Entwicklung befindet, was die Art beeinflusst, wie die Daten verarbeitet werden. Lese die \u0020<annotation link="privacy_policy">Privacy Policy</annotation> für weitere Informationen\n\nMöchtest du beaconDB als Endpunkt setzen? Dies kann später in den Einstellung geändert werden</string>
+    <string name="toast_reports_upload_failed_no_endpoint">Hochladen fehlgeschlagen, weil kein Endpunkt eingerichtet ist</string>
+    <string name="no_endpoint_configured">Kein Endpunkt eingerichtet</string>
+    <string name="reports_last_uploaded_never">niemals</string>
 </resources>
