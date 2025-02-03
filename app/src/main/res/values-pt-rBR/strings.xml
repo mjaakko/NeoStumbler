@@ -29,7 +29,7 @@
     <string name="delete_report_confirmation">Você tem certeza que deseja excluir o relatório?</string>
     <plurals name="toast_reports_uploaded">
         <item quantity="one">%d relatório enviado</item>
-        <item quantity="many">%dM relatórios enviados</item>
+        <item quantity="many">%d de relatórios enviados</item>
         <item quantity="other">%d relatórios enviados</item>
     </plurals>
     <string name="toast_reports_upload_failed">Falha ao enviar relatórios</string>
@@ -38,7 +38,7 @@
     <string name="notification_wireless_scanning_title">Scan de redes sem-fio ativo</string>
     <plurals name="notification_wireless_scanning_content_reports_created">
         <item quantity="one">%d relatório criado</item>
-        <item quantity="many">%dM relatórios criados</item>
+        <item quantity="many">%d de relatórios criados</item>
         <item quantity="other">%d relatórios criados</item>
     </plurals>
     <string name="ignore_battery_optimizations_title">Ignorar otimizações de bateria</string>
@@ -62,7 +62,7 @@
     <string name="wifi_scan_throttling">Limitações de busca por Wi-Fi</string>
     <string name="wifi_scan_throttling_explanation">Você precisa desativar as limitações de busca por Wi-Fi nas configurações do seu dispositivo para usar esta funcionalidade. Isto normalmente pode ser feito pelas opções de desenvolvedor</string>
     <string name="show_my_location">Mostrar minha localização</string>
-    <string name="permission_rationale_fine_location">Para obter acesso à localização atual, é necessário a permissão de localização precisa</string>
+    <string name="permission_rationale_fine_location">Criar relatórios com dados de localização úteis requer a permissão de localização precisa</string>
     <string name="permission_rationale_read_phone_state">Acesso ao status do telefone é necessário para o scan de redes móveis</string>
     <string name="permission_rationale_bluetooth">Para fazer o scan de beacons Bluetooth, é necessária a permissão de Bluetooth</string>
     <string name="permission_rationale_post_notifications">Para mostrar a notificação de status, é necessária a permissão de notificações</string>
@@ -110,7 +110,7 @@
     <string name="delete_all_reports_confirmation">Você tem certeza que deseja excluir todos os relatórios?</string>
     <plurals name="toast_deleted_reports">
         <item quantity="one">%d relatório foi excluído</item>
-        <item quantity="many">%dM relatórios foram excluídos</item>
+        <item quantity="many">%d de relatórios foram excluídos</item>
         <item quantity="other">%d relatórios foram excluídos</item>
     </plurals>
     <string name="db_prune_never">Nunca</string>
@@ -140,7 +140,7 @@
     <string name="import_database_not_valid">O arquivo selecionado não contém um banco de dados válido</string>
     <plurals name="import_database_successful">
         <item quantity="one">O banco de dados foi importado com %d relatório</item>
-        <item quantity="many">O banco de dados foi importado com %dM relatórios</item>
+        <item quantity="many">O banco de dados foi importado com %d de relatórios</item>
         <item quantity="other">O banco de dados foi importado com %d relatórios</item>
     </plurals>
     <string name="no_data">Sem dados</string>
@@ -151,4 +151,7 @@
     <string name="map_tile_source">Fonte das ladrilhas do mapa</string>
     <string name="reports_last_uploaded_never">nunca</string>
     <string name="reports_empty">Nenhum relatório ainda</string>
+    <string name="no_endpoint_configured">Nenhum serviço configurado</string>
+    <string name="toast_reports_upload_failed_no_endpoint">Falha ao enviar relatórios, pois nenhum serviço foi configurado</string>
+    <string name="mls_warning_text">O Mozilla Location Services foi encerrado e não aceita mais envios. Como uma alternativa, você pode enviar dados ao beaconDB, que fornece um serviço compatível com o MLS\n\nNote que o beaconDB ainda está em desenvolvimento e isso afeta como seus dados são tratados. Você pode ler a <annotation link="privacy_policy">política de privacidade</annotation> para mais informações\n\nVocê gostaria de configurar o beaconDB como o serviço? Isso pode ser alterado mais tarde nas configurações</string>
 </resources>
