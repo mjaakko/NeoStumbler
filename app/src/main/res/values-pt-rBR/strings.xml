@@ -151,4 +151,7 @@
     <string name="map_tile_source">Fonte das ladrilhas do mapa</string>
     <string name="reports_last_uploaded_never">nunca</string>
     <string name="reports_empty">Nenhum relatório ainda</string>
+    <string name="no_endpoint_configured">Nenhum serviço configurado</string>
+    <string name="toast_reports_upload_failed_no_endpoint">Falha ao enviar relatórios, pois nenhum serviço foi configurado</string>
+    <string name="mls_warning_text">O Mozilla Location Services foi encerrado e não aceita mais envios. Como uma alternativa, você pode enviar dados ao beaconDB, que fornece um serviço compatível com o MLS\n\nNote que o beaconDB ainda está em desenvolvimento e isso afeta como seus dados são tratados. Você pode ler a <annotation link="privacy_policy">política de privacidade</annotation> para mais informações\n\nVocê gostaria de configurar o beaconDB como o serviço? Isso pode ser alterado mais tarde nas configurações</string>
 </resources>
