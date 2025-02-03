@@ -147,4 +147,9 @@
     <string name="troubleshooting_wifi_scan_always_available">Nuolatinis belaidžių tinklų skenavimas galimas</string>
     <string name="troubleshooting_permissions_granted">Leidimai suteikti</string>
     <string name="map_tile_source">Žemėlapio plytelių šaltinis</string>
+    <string name="toast_reports_upload_failed_no_endpoint">Ataskaitų nepavyko išsiųsti, nes nustatymuose nenurodytas serveris</string>
+    <string name="no_endpoint_configured">Serveris nenurodytas</string>
+    <string name="mls_warning_text">„Mozilla Location Services“ tarnyba išjungta ir naujų duomenų nebepriima. Vietoje jos galite naudoti „beaconDB“ tarnybą, suderinamą su MLS.\n\nAtkreipkite dėmesį, jog „beaconDB“ vis dar vystoma ir tai turi įtakos jūsų duomenų tvarkymui. Išsamiau apie tai galite paskaityti <annotation link="privacy_policy">privatumo nuostatuose</annotation>.\n\nAr norite naudoti „beaconDB“ tarnybą? Šį pasirinkimą vėliau galite pakeisti nustatymuose.</string>
+    <string name="reports_last_uploaded_never">niekada</string>
+    <string name="reports_empty">Kol kas ataskaitų nėra</string>
 </resources>
