@@ -139,4 +139,7 @@
     <string name="cell_tower_scan_frequency">信号塔扫描频率</string>
     <string name="every_x_meters">每过%d米</string>
     <string name="map_tile_source">地图瓦片源</string>
+    <string name="toast_reports_upload_failed_no_endpoint">没有上传报告，因为没有配置端点</string>
+    <string name="reports_last_uploaded_never">从未</string>
+    <string name="reports_empty">尚无报告</string>
 </resources>
