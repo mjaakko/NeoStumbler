@@ -115,48 +115,7 @@ class StumblerApplication : Application() {
 
         deleteOsmDroidFiles()
 
-        //Disable manifest checking, which seems to cause crashes on certain devices
-        BeaconManager.setManifestCheckingDisabled(true)
-
-        //Use stub distance calculator to avoid making unnecessary requests for fetching distance calibrations used by the Beacon Library
-        Beacon.setDistanceCalculator(StubDistanceCalculator)
-
-        try {
-            val beaconManager = BeaconManager.getInstanceForApplication(this)
-
-            //Try forcing foreground mode (this doesn't seem to work)
-            beaconManager.setEnableScheduledScanJobs(false)
-            @Suppress("DEPRECATION")
-            beaconManager.backgroundMode = false
-
-            beaconManager.backgroundBetweenScanPeriod = 5 * 1000
-            beaconManager.backgroundScanPeriod = 1100
-
-            beaconManager.foregroundBetweenScanPeriod = 5 * 1000
-            beaconManager.foregroundScanPeriod = 1100
-            //Max age for beacons: 10 seconds
-            beaconManager.setMaxTrackingAge(10 * 1000)
-
-            //Add parsers for common beacons types
-            beaconManager.beaconParsers.apply {
-                add(IBeaconParser)
-                add(AltBeaconParser())
-                add(BeaconParser(BeaconParser.URI_BEACON_LAYOUT))
-                add(BeaconParser(BeaconParser.EDDYSTONE_TLM_LAYOUT))
-                add(BeaconParser(BeaconParser.EDDYSTONE_UID_LAYOUT))
-                add(BeaconParser(BeaconParser.EDDYSTONE_URL_LAYOUT))
-            }
-
-            bluetoothScanAvailable = true
-        } catch (ex: Exception) {
-            /**
-             * Configuring beacon manager can throw an exception when the service has been disabled,
-             * e.g. when using a custom ROM to block trackers
-             */
-            Timber.w(ex, "Failed to configure BeaconManager")
-
-            bluetoothScanAvailable = false
-        }
+        setupBeaconLibrary()
 
         val workManager = WorkManager.getInstance(this)
 
@@ -213,11 +172,56 @@ class StumblerApplication : Application() {
         }
         notificationManager.createNotificationChannel(exportNotificationChannel)
     }
+    
+    private fun setupBeaconLibrary() {
+        //Disable manifest checking, which seems to cause crashes on certain devices
+        BeaconManager.setManifestCheckingDisabled(true)
+
+        //Use stub distance calculator to avoid making unnecessary requests for fetching distance calibrations used by the Beacon Library
+        Beacon.setDistanceCalculator(StubDistanceCalculator)
+
+        try {
+            val beaconManager = BeaconManager.getInstanceForApplication(this)
+
+            //Try forcing foreground mode (this doesn't seem to work)
+            beaconManager.setEnableScheduledScanJobs(false)
+            @Suppress("DEPRECATION")
+            beaconManager.backgroundMode = false
+
+            beaconManager.backgroundBetweenScanPeriod = 5 * 1000
+            beaconManager.backgroundScanPeriod = 1100
+
+            beaconManager.foregroundBetweenScanPeriod = 5 * 1000
+            beaconManager.foregroundScanPeriod = 1100
+            //Max age for beacons: 10 seconds
+            beaconManager.setMaxTrackingAge(10 * 1000)
+
+            //Add parsers for common beacons types
+            beaconManager.beaconParsers.apply {
+                add(IBeaconParser)
+                add(AltBeaconParser())
+                add(BeaconParser(BeaconParser.URI_BEACON_LAYOUT))
+                add(BeaconParser(BeaconParser.EDDYSTONE_TLM_LAYOUT))
+                add(BeaconParser(BeaconParser.EDDYSTONE_UID_LAYOUT))
+                add(BeaconParser(BeaconParser.EDDYSTONE_URL_LAYOUT))
+            }
+
+            bluetoothScanAvailable = true
+        } catch (ex: Exception) {
+            /**
+             * Configuring beacon manager can throw an exception when the service has been disabled,
+             * e.g. when using a custom ROM to block trackers
+             */
+            Timber.w(ex, "Failed to configure BeaconManager")
+
+            bluetoothScanAvailable = false
+        }
+    }
 
     /**
      * Deletes files used by Osmdroid library (no longer used by NeoStumbler)
      */
-    fun deleteOsmDroidFiles() {
+    private fun deleteOsmDroidFiles() {
         val dataDirPath = dataDir.toPath()
 
         val osmdroidDir = dataDirPath.resolve("files").resolve("osmdroid")
