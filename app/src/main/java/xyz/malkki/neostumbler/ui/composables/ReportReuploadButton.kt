@@ -1,6 +1,5 @@
 package xyz.malkki.neostumbler.ui.composables
 
-import android.content.Context
 import android.widget.Toast
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -20,8 +19,9 @@ import androidx.work.WorkManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.StumblerApplication
+import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.extensions.getQuantityString
 import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.geosubmit.ReportSendWorker
@@ -31,8 +31,8 @@ import java.util.UUID
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
 
-private fun getSelectableDatesSet(context: Context): Flow<Set<LocalDate>> {
-    return (context.applicationContext as StumblerApplication).reportDb
+private fun ReportDatabaseManager.getSelectableDatesSet(): Flow<Set<LocalDate>> {
+    return reportDb
         .flatMapLatest { it.reportDao().getReportDates() }
         .map { it.toSet() }
 }
@@ -40,6 +40,8 @@ private fun getSelectableDatesSet(context: Context): Flow<Set<LocalDate>> {
 @Composable
 fun ReportReuploadButton() {
     val context = LocalContext.current
+
+    val reportDatabaseManager: ReportDatabaseManager = koinInject()
 
     val enqueuedUploadWork = rememberSaveable { mutableStateOf<UUID?>(null) }
 
@@ -77,7 +79,7 @@ fun ReportReuploadButton() {
         }
     )
 
-    val selectableDates = getSelectableDatesSet(context).collectAsStateWithLifecycle(null)
+    val selectableDates = reportDatabaseManager.getSelectableDatesSet().collectAsStateWithLifecycle(null)
 
     val dialogOpen = rememberSaveable { mutableStateOf(false) }
 

@@ -57,13 +57,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.MainActivity
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.db.entities.ReportWithStats
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.defaultLocale
@@ -92,7 +92,7 @@ import java.util.Date
 import android.location.Geocoder as AndroidGeocoder
 
 @Composable
-fun ReportsScreen() {
+fun ReportsScreen(viewModel: ReportsViewModel = koinViewModel()) {
     MLSWarningDialog()
 
     Column(modifier = Modifier.padding(16.dp)) {
@@ -101,15 +101,15 @@ fun ReportsScreen() {
 
             Spacer(modifier = Modifier.weight(1.0f))
 
-            ReportUploadButton()
+            ReportUploadButton(viewModel)
         }
-        ReportStats()
-        Reports()
+        ReportStats(viewModel)
+        Reports(viewModel)
     }
 }
 
 @Composable
-private fun ReportStats(reportsViewModel: ReportsViewModel = viewModel()) {
+private fun ReportStats(reportsViewModel: ReportsViewModel) {
     val context = LocalContext.current
 
     val reportsTotal = reportsViewModel.reportsTotal.collectAsStateWithLifecycle(null)
@@ -154,7 +154,7 @@ fun ForegroundScanningButton() {
     val intent = context.getActivity()?.intent
 
     val coroutineScope = rememberCoroutineScope()
-    val oneTimeActionHelper = OneTimeActionHelper(context.applicationContext as StumblerApplication)
+    val oneTimeActionHelper = koinInject<OneTimeActionHelper>()
 
     val serviceConnection = rememberServiceConnection(getService = ScannerService.ScannerServiceBinder::getService)
 
@@ -313,7 +313,7 @@ fun ForegroundScanningButton() {
 }
 
 @Composable
-private fun Reports(reportsViewModel: ReportsViewModel = viewModel()) {
+private fun Reports(reportsViewModel: ReportsViewModel) {
     val reports = reportsViewModel.reports.collectAsLazyPagingItems()
 
     val context = LocalContext.current

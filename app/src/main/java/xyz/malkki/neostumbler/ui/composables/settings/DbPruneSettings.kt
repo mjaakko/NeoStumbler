@@ -11,8 +11,9 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
+import org.koin.compose.koinInject
+import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 
 private val TITLES = mapOf(
@@ -32,7 +33,7 @@ private fun DataStore<Preferences>.dbPruneMaxAgeDays(): Flow<Int> = data
 fun DbPruneSettings() {
     val context = LocalContext.current
 
-    val settingsStore = (context.applicationContext as StumblerApplication).settingsStore
+    val settingsStore = koinInject<DataStore<Preferences>>(PREFERENCES)
 
     val dbPruneMaxAgeDays = settingsStore.dbPruneMaxAgeDays().collectAsState(initial = null)
 

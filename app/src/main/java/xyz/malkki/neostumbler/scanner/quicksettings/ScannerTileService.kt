@@ -17,10 +17,10 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import timber.log.Timber
 import xyz.malkki.neostumbler.MainActivity
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.getQuantityString
 import xyz.malkki.neostumbler.scanner.ScannerService
@@ -40,7 +40,7 @@ class ScannerTileService : TileService() {
 
     private lateinit var coroutineScope: CoroutineScope
 
-    private lateinit var oneTimeActionHelper: OneTimeActionHelper
+    private val oneTimeActionHelper: OneTimeActionHelper by inject()
 
     private var updaterJob: Job? = null
 
@@ -48,8 +48,6 @@ class ScannerTileService : TileService() {
         super.onCreate()
 
         coroutineScope = CoroutineScope(Dispatchers.Default)
-
-        oneTimeActionHelper = OneTimeActionHelper(application as StumblerApplication)
     }
 
     override fun onDestroy() {

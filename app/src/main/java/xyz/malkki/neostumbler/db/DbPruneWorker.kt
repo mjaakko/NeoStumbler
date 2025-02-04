@@ -1,14 +1,18 @@
 package xyz.malkki.neostumbler.db
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.WorkerParameters
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import timber.log.Timber
-import xyz.malkki.neostumbler.StumblerApplication
+import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import java.time.ZonedDateTime
 import kotlin.time.DurationUnit
@@ -17,15 +21,19 @@ import kotlin.time.measureTimedValue
 /**
  * Worker for deleting old scan reports from the local DB
  */
-class DbPruneWorker(appContext: Context, params: WorkerParameters) : CoroutineWorker(appContext, params) {
+class DbPruneWorker(appContext: Context, params: WorkerParameters) : CoroutineWorker(appContext, params), KoinComponent {
     companion object {
         const val PERIODIC_WORK_NAME = "db_prune_periodic"
 
         const val OUTPUT_REPORTS_DELETED = "reports_deleted"
     }
 
+    private val reportDatabaseManager: ReportDatabaseManager by inject()
+
+    private val settingsStore: DataStore<Preferences> by inject<DataStore<Preferences>>(PREFERENCES)
+
     private suspend fun getMaxAgeDays(): Long? {
-        return (applicationContext as StumblerApplication).settingsStore.data
+        return settingsStore.data
             .map { prefs ->
                 prefs[intPreferencesKey(PreferenceKeys.DB_PRUNE_DATA_MAX_AGE_DAYS)]?.toLong()
             }
@@ -33,8 +41,7 @@ class DbPruneWorker(appContext: Context, params: WorkerParameters) : CoroutineWo
     }
 
     override suspend fun doWork(): Result {
-        val db = (applicationContext as StumblerApplication).reportDb.value
-        val reportDao = db.reportDao()
+        val reportDao = reportDatabaseManager.reportDb.value.reportDao()
 
         //By default delete reports older than 60 days
         val maxAgeDays = getMaxAgeDays() ?: 60

@@ -45,8 +45,10 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import timber.log.Timber
 import xyz.malkki.neostumbler.MainActivity
+import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
@@ -133,9 +135,9 @@ class ScannerService : Service() {
 
     private lateinit var notificationManager: NotificationManager
 
-    private lateinit var settingsStore: DataStore<Preferences>
+    private val settingsStore: DataStore<Preferences> by inject<DataStore<Preferences>>(PREFERENCES)
 
-    private lateinit var scanReportCreator: ScanReportCreator
+    private val scanReportCreator: ScanReportCreator by inject()
 
     private lateinit var coroutineScope: CoroutineScope
 
@@ -162,10 +164,6 @@ class ScannerService : Service() {
         }
 
         notificationManager = getSystemService()!!
-
-        settingsStore = (application as StumblerApplication).settingsStore
-
-        scanReportCreator = ScanReportCreator(this)
 
         coroutineScope = CoroutineScope(Dispatchers.Default)
     }

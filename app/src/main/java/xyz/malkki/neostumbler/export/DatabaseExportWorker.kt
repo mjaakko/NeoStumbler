@@ -10,20 +10,25 @@ import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.hasKeyWithValueOfType
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import timber.log.Timber
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
+import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.extensions.copyTo
 import java.nio.file.Files
 import kotlin.io.path.createTempFile
 import kotlin.io.path.deleteIfExists
 
-class DatabaseExportWorker(appContext: Context, private val params: WorkerParameters) : CoroutineWorker(appContext, params)  {
+class DatabaseExportWorker(appContext: Context, private val params: WorkerParameters) : CoroutineWorker(appContext, params), KoinComponent {
     companion object {
         const val INPUT_OUTPUT_URI = "uri"
 
         private const val DATABASE_EXPORT_NOTIFICATION_ID = 200001
     }
+
+    private val reportDatabaseManager: ReportDatabaseManager by inject()
 
     private fun createNotification(): Notification {
         return NotificationCompat.Builder(applicationContext, StumblerApplication.EXPORT_NOTIFICATION_CHANNEL_ID)
@@ -52,7 +57,7 @@ class DatabaseExportWorker(appContext: Context, private val params: WorkerParame
         val tempFile = createTempFile(applicationContext.cacheDir.toPath(), "export", "db")
 
         try {
-            val reportDb = (applicationContext as StumblerApplication).reportDb.value
+            val reportDb = reportDatabaseManager.reportDb.value
 
             reportDb.openHelper.writableDatabase.copyTo(tempFile)
 

@@ -189,6 +189,11 @@ kotlin {
 }
 
 dependencies {
+    implementation platform('io.insert-koin:koin-bom:4.1.0-Beta5')
+    implementation "io.insert-koin:koin-core"
+    implementation "io.insert-koin:koin-android"
+    implementation "io.insert-koin:koin-androidx-compose"
+
     implementation 'androidx.core:core-ktx:1.15.0'
     implementation 'androidx.activity:activity-compose:1.10.0'
 

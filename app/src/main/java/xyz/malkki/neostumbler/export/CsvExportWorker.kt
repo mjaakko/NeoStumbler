@@ -10,6 +10,8 @@ import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.hasKeyWithValueOfType
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import timber.log.Timber
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
@@ -17,7 +19,7 @@ import java.time.Instant
 import kotlin.time.DurationUnit
 import kotlin.time.measureTime
 
-class CsvExportWorker(appContext: Context, private val params: WorkerParameters) : CoroutineWorker(appContext, params) {
+class CsvExportWorker(appContext: Context, private val params: WorkerParameters) : CoroutineWorker(appContext, params), KoinComponent {
     companion object {
         const val INPUT_FROM = "from"
         const val INPUT_TO = "to"
@@ -26,7 +28,7 @@ class CsvExportWorker(appContext: Context, private val params: WorkerParameters)
         private const val DATA_EXPORT_NOTIFICATION_ID = 200000
     }
 
-    private val csvExporter = CsvExporter(applicationContext as StumblerApplication)
+    private val csvExporter: CsvExporter by inject()
 
     private fun createNotification(): Notification {
         return NotificationCompat.Builder(applicationContext, StumblerApplication.EXPORT_NOTIFICATION_CHANNEL_ID)

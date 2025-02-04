@@ -5,25 +5,34 @@ import android.content.Context
 import android.content.pm.ServiceInfo
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.hasKeyWithValueOfType
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import okhttp3.Call
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import timber.log.Timber
+import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.db.entities.ReportWithData
 import java.net.SocketTimeoutException
 import java.time.Instant
 import kotlin.collections.isNotEmpty
 import kotlin.collections.map
+import kotlin.getValue
 
-class ReportSendWorker(appContext: Context, params: WorkerParameters) : CoroutineWorker(appContext, params) {
+class ReportSendWorker(appContext: Context, params: WorkerParameters) : CoroutineWorker(appContext, params), KoinComponent {
     companion object {
         private const val REPORT_SEND_NOTIFICATION_ID = 55555
 
@@ -43,20 +52,24 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
         const val ERROR_TYPE_NO_ENDPOINT_CONFIGURED: Int = 1000
     }
 
-    private val application = applicationContext as StumblerApplication
+    private val httpClientProvider: Deferred<Call.Factory> by inject<Deferred<Call.Factory>>()
 
-    private val db = application.reportDb.value
+    private val settingsStore: DataStore<Preferences> by inject<DataStore<Preferences>>(PREFERENCES)
+
+    private val reportDatabaseManager: ReportDatabaseManager by inject()
+
+    private val reportDao = reportDatabaseManager.reportDb.value.reportDao()
 
     private suspend fun getGeosubmitApi(): Geosubmit? {
         return getGeosubmitParams()?.let { geosubmitParams ->
             Timber.d("Using endpoint ${geosubmitParams.path} with API key ${geosubmitParams.apiKey} for Geosubmit")
 
-            MLSGeosubmit(application.httpClientProvider.await(), geosubmitParams)
+            MLSGeosubmit(httpClientProvider.await(), geosubmitParams)
         }
     }
 
     private suspend fun getGeosubmitParams(): GeosubmitParams? {
-        return application.settingsStore.data
+        return settingsStore.data
             .map { prefs ->
                 val endpoint = prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)]
 
@@ -84,12 +97,12 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
                 && inputData.hasKeyWithValueOfType<Long>(INPUT_REUPLOAD_TO)
 
         val reportsToUpload = if (!reupload) {
-            db.reportDao().getAllReportsNotUploaded()
+            reportDao.getAllReportsNotUploaded()
         } else {
             val from = Instant.ofEpochMilli(inputData.getLong(INPUT_REUPLOAD_FROM, 0))
             val to = Instant.ofEpochMilli(inputData.getLong(INPUT_REUPLOAD_TO, 0))
 
-            db.reportDao().getAllReportsForTimerange(from, to)
+            reportDao.getAllReportsForTimerange(from, to)
         }
 
         if (reportsToUpload.isEmpty()) {
@@ -152,7 +165,8 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
                 it.report.copy(uploaded = true, uploadTimestamp = now)
             }
             .toTypedArray()
-        db.reportDao().update(*updatedReports)
+
+        reportDao.update(*updatedReports)
     }
 
     private fun createResultData(reportsSent: Int, errorMessage: String? = null): Data {

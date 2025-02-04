@@ -34,8 +34,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
+import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.StumblerApplication
 
 private fun DataStore<Preferences>.getValue(preferenceKey: String): Flow<Int?> = data
     .map {
@@ -56,7 +57,7 @@ fun SliderSetting(
 
     val coroutineScope = rememberCoroutineScope()
 
-    val settingsStore = (context.applicationContext as StumblerApplication).settingsStore
+    val settingsStore = koinInject<DataStore<Preferences>>(PREFERENCES)
     val preferenceValue = settingsStore.getValue(preferenceKey).collectAsState(initial = default)
 
     val sliderValue = remember(preferenceValue.value) {

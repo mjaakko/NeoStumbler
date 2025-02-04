@@ -2,9 +2,12 @@ package xyz.malkki.neostumbler.ui.viewmodel
 
 import android.Manifest
 import android.app.Application
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.trySendBlocking
@@ -32,6 +35,7 @@ import org.geohex.geohex4j.GeoHex
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.common.LatLng
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.get
 import xyz.malkki.neostumbler.extensions.parallelMap
@@ -46,12 +50,13 @@ private const val REPORT_SIZE = 4
 
 private val GEOHEX_RESOLUTION_RANGE = 3..9
 
-class MapViewModel(application: Application) : AndroidViewModel(application) {
+class MapViewModel(
+    application: Application,
+    private val settingsStore: DataStore<Preferences>,
+    private val httpClientProvider: Deferred<Call.Factory>,
+    private val reportDatabaseManager: ReportDatabaseManager
+) : AndroidViewModel(application) {
     private val locationSource = LocationSourceProvider(getApplication()).getLocationSource()
-
-    private val settingsStore = getApplication<StumblerApplication>().settingsStore
-
-    private val db = getApplication<StumblerApplication>().reportDb
 
     private val _httpClient = MutableStateFlow<Call.Factory?>(null)
     val httpClient: StateFlow<Call.Factory?>
@@ -94,7 +99,7 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
     private val mapBounds = Channel<Pair<LatLng, LatLng>>(capacity = Channel.Factory.CONFLATED)
 
     val latestReportPosition = flow {
-        emit(db.value.positionDao().getLatestPosition())
+        emit(reportDatabaseManager.reportDb.value.positionDao().getLatestPosition())
     }
 
     val heatMapTiles = mapBounds.receiveAsFlow()
@@ -103,7 +108,7 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
             val (minLat, minLon) = bounds.first
             val (maxLat, maxLon) = bounds.second
 
-            val dao = db.value.reportDao()
+            val dao = reportDatabaseManager.reportDb.value.reportDao()
 
             if (minLon > maxLon) {
                 //Handle crossing the 180th meridian
@@ -176,7 +181,7 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         viewModelScope.launch {
-            val httpClient = (application as StumblerApplication).httpClientProvider.await()
+            val httpClient = httpClientProvider.await()
             _httpClient.value = httpClient
             coverageTileJsonUrl.collect { coverageTileJsonUrl ->
                 getTileJsonLayerIds(coverageTileJsonUrl, httpClient) { layerIds ->

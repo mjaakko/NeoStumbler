@@ -1,6 +1,5 @@
 package xyz.malkki.neostumbler.ui.composables.export
 
-import android.content.Context
 import android.text.format.DateFormat
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -21,8 +20,9 @@ import androidx.work.WorkManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.StumblerApplication
+import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.export.CsvExportWorker
 import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.ui.composables.DateRangePickerDialog
@@ -31,8 +31,8 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Date
 
-private fun getSelectableDatesSet(context: Context): Flow<Set<LocalDate>> {
-    return (context.applicationContext as StumblerApplication).reportDb
+private fun ReportDatabaseManager.getSelectableDatesSet(): Flow<Set<LocalDate>> {
+    return reportDb
         .flatMapLatest { it.reportDao().getReportDates() }
         .map { it.toSet() }
 }
@@ -41,7 +41,9 @@ private fun getSelectableDatesSet(context: Context): Flow<Set<LocalDate>> {
 fun ExportCsvButton() {
     val context = LocalContext.current
 
-    val selectableDates = getSelectableDatesSet(context).collectAsStateWithLifecycle(null)
+    val reportDatabaseManager: ReportDatabaseManager = koinInject()
+
+    val selectableDates = reportDatabaseManager.getSelectableDatesSet().collectAsStateWithLifecycle(null)
 
     val dialogOpen = rememberSaveable {
         mutableStateOf(false)

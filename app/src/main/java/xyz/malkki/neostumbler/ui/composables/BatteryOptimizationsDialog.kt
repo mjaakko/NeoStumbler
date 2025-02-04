@@ -14,8 +14,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.utils.OneTimeActionHelper
 import xyz.malkki.neostumbler.utils.requestIgnoreBatteryOptimizations
@@ -28,7 +28,7 @@ fun BatteryOptimizationsDialog(onBatteryOptimizationsDisabled: (Boolean) -> Unit
 
     val powerManager = context.getSystemService<PowerManager>()!!
 
-    val oneTimeActionHelper = OneTimeActionHelper(context.applicationContext as StumblerApplication)
+    val oneTimeActionHelper = koinInject<OneTimeActionHelper>()
 
     val coroutineScope = rememberCoroutineScope()
 

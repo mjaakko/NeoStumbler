@@ -51,7 +51,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import org.koin.androidx.compose.koinViewModel
 import org.maplibre.android.MapLibre
 import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.geometry.LatLng
@@ -91,7 +91,7 @@ private val COVERAGE_COLOR = "#ff8000"
 private val COVERAGE_OPACITY = 0.4f
 
 @Composable
-fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
+fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
     val context = LocalContext.current
 
     val lifecycle = LocalLifecycleOwner.current.lifecycle

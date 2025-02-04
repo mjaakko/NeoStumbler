@@ -30,8 +30,8 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.db.ReportDatabase
 import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.extensions.getEstimatedSize
@@ -66,7 +66,9 @@ private fun Flow<ReportDatabase>.selectableDates(): Flow<Set<LocalDate>> {
 @Composable
 fun ManageStorage() {
     val context = LocalContext.current
-    val reportDb = (context.applicationContext as StumblerApplication).reportDb
+
+    val reportDatabaseManager: ReportDatabaseManager = koinInject()
+    val reportDb = reportDatabaseManager.reportDb
 
     val dbSize = remember(reportDb) { reportDb.dbSizeFlow() }.collectAsState(null)
 
@@ -203,6 +205,9 @@ private fun DeleteAllReportsButton(reportDb: StateFlow<ReportDatabase>) {
 @Composable
 private fun ImportDb() {
     val context = LocalContext.current
+
+    val reportDatabaseManager: ReportDatabaseManager = koinInject()
+
     val coroutineContext = rememberCoroutineScope()
 
     val confirmationDialogOpen = rememberSaveable {
@@ -234,11 +239,9 @@ private fun ImportDb() {
                 }
 
                 if (ReportDatabaseManager.validateDatabase(context, tempDbFile)) {
-                    val app = context.applicationContext as StumblerApplication
+                    reportDatabaseManager.importDb(tempDbFile)
 
-                    app.reportDatabaseManager.importDb(tempDbFile)
-
-                    val reportCount = app.reportDb.value.reportDao().getReportCount().first()
+                    val reportCount = reportDatabaseManager.reportDb.value.reportDao().getReportCount().first()
                     context.showToast(context.getQuantityString(R.plurals.import_database_successful, reportCount, reportCount))
                 } else {
                     context.showToast(ContextCompat.getString(context, R.string.import_database_not_valid))

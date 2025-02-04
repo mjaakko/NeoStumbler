@@ -60,7 +60,7 @@ private fun WorkManager.getCanUploadFlow(): Flow<Boolean> = getWorkInfosForUniqu
     .distinctUntilChanged()
 
 @Composable
-fun ReportUploadButton(reportsViewModel: ReportsViewModel = viewModel()) {
+fun ReportUploadButton(reportsViewModel: ReportsViewModel) {
     val context = LocalContext.current
     val workManager = WorkManager.getInstance(context)
 

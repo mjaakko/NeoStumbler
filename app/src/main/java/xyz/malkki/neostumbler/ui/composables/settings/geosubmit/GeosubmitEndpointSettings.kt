@@ -23,7 +23,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
@@ -33,8 +32,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
+import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.geosubmit.GeosubmitParams
 import xyz.malkki.neostumbler.ui.composables.settings.SettingsItem
@@ -56,11 +56,9 @@ private fun DataStore<Preferences>.geosubmitParams(): Flow<GeosubmitParams?> = d
 
 @Composable
 fun GeosubmitEndpointSettings() {
-    val context = LocalContext.current
-
     val coroutineScope = rememberCoroutineScope()
 
-    val settingsStore = (context.applicationContext as StumblerApplication).settingsStore
+    val settingsStore = koinInject<DataStore<Preferences>>(PREFERENCES)
     val params = settingsStore.geosubmitParams().collectAsState(initial = null)
 
     val dialogOpen = rememberSaveable { mutableStateOf(false) }

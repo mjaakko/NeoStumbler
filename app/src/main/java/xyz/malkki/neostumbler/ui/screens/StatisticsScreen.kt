@@ -43,6 +43,7 @@ import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
 import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer.LineProvider.Companion.series
 import com.patrykandpatrick.vico.core.common.shader.ShaderProvider
+import org.koin.androidx.compose.koinViewModel
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.extensions.defaultLocale
 import xyz.malkki.neostumbler.ui.viewmodel.StatisticsViewModel
@@ -109,7 +110,7 @@ private fun StationsByDayChart(entryModel: CartesianChartModelProducer) {
 }
 
 @Composable
-fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = viewModel()) {
+fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = koinViewModel()) {
     val selectedDataType = statisticsViewModel.selectedDataType.collectAsState(initial = StatisticsViewModel.DataType.WIFIS)
 
     val loading = statisticsViewModel.loading.collectAsState(initial = StatisticsViewModel.State.LOADING)

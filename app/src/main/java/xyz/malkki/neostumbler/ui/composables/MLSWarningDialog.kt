@@ -16,12 +16,15 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.text.getSpans
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.compose.koinInject
+import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.extensions.getTextCompat
 import xyz.malkki.neostumbler.utils.OneTimeActionHelper
@@ -37,9 +40,10 @@ fun MLSWarningDialog() {
     val context = LocalContext.current
 
     val coroutineScope = rememberCoroutineScope()
-    val oneTimeActionHelper = OneTimeActionHelper(context.applicationContext as StumblerApplication)
 
-    val settingsStore = (context.applicationContext as StumblerApplication).settingsStore
+    val settingsStore = koinInject<DataStore<Preferences>>(PREFERENCES)
+
+    val oneTimeActionHelper = koinInject<OneTimeActionHelper>()
 
     val warningShown = oneTimeActionHelper.hasActionBeenShownFlow(MLS_WARNING).collectAsState(
         initial = true

@@ -1,5 +1,6 @@
 package xyz.malkki.neostumbler.export
 
+import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import kotlinx.coroutines.Dispatchers
@@ -7,7 +8,7 @@ import kotlinx.coroutines.withContext
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVPrinter
 import timber.log.Timber
-import xyz.malkki.neostumbler.StumblerApplication
+import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import java.io.IOException
 import java.io.OutputStream
 import java.io.OutputStreamWriter
@@ -23,14 +24,14 @@ import java.util.zip.ZipOutputStream
 /**
  * Helper for exporting scan data as CSV files
  */
-class CsvExporter(private val application: StumblerApplication) {
+class CsvExporter(private val context: Context, private val reportDatabaseManager: ReportDatabaseManager) {
     companion object {
         private const val BEACONS_FILE_NAME = "beacons.csv"
         private const val WIFIS_FILE_NAME = "wifis.csv"
         private const val CELLS_FILE_NAME = "cells.csv"
     }
 
-    private val exportDao = application.reportDb.value.exportDao()
+    private val exportDao = reportDatabaseManager.reportDb.value.exportDao()
 
     private val decimalFormat = DecimalFormat("0", DecimalFormatSymbols(Locale.ROOT)).apply {
         roundingMode = RoundingMode.HALF_UP
@@ -106,7 +107,7 @@ class CsvExporter(private val application: StumblerApplication) {
      * Exports data to the specified URI (content://)
      */
     suspend fun exportToFile(uri: Uri, from: Instant, to: Instant) {
-        application.contentResolver.openOutputStream(uri, "wt").use { os ->
+        context.contentResolver.openOutputStream(uri, "wt").use { os ->
             if (os == null) {
                 Timber.w("OutputStream was null, maybe the content provider handling %s crashed", uri.toString())
 

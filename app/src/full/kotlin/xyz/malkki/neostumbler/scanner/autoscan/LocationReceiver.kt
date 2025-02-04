@@ -19,14 +19,16 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import kotlinx.coroutines.runBlocking
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import timber.log.Timber
-import xyz.malkki.neostumbler.StumblerApplication
+import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.scanner.ScannerService
 import java.time.Duration
 import java.time.Instant
 
 
-class LocationReceiver : BroadcastReceiver() {
+class LocationReceiver : BroadcastReceiver(), KoinComponent {
     companion object {
         const val AUTOSCAN_GEOFENCE_REQUEST_ID = "autoscan"
 
@@ -67,6 +69,8 @@ class LocationReceiver : BroadcastReceiver() {
         }
     }
 
+    private val reportDatabaseManager: ReportDatabaseManager by inject()
+
     override fun onReceive(context: Context, intent: Intent) {
         if (LocationAvailability.hasLocationAvailability(intent)) {
             val isLocationAvailable = LocationAvailability.extractLocationAvailability(intent)?.isLocationAvailable
@@ -87,7 +91,7 @@ class LocationReceiver : BroadcastReceiver() {
 
     @SuppressLint("MissingPermission")
     private fun tryStartAutoscan(context: Context, currentLocation: Location) {
-        val reportDao = (context.applicationContext as StumblerApplication).reportDb.value.reportDao()
+        val reportDao = reportDatabaseManager.reportDb.value.reportDao()
 
         val reportMinTimestamp = Instant.now().minus(Duration.ofDays(30))
         Timber.d("Querying reports newer than $reportMinTimestamp")

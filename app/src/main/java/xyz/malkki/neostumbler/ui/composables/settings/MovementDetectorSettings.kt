@@ -15,8 +15,9 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
+import org.koin.compose.koinInject
+import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.extensions.get
 import xyz.malkki.neostumbler.scanner.movement.MovementDetectorType
@@ -44,7 +45,7 @@ private fun DataStore<Preferences>.movementDetector(): Flow<MovementDetectorType
 fun MovementDetectorSettings() {
     val context = LocalContext.current
 
-    val settingsStore = (context.applicationContext as StumblerApplication).settingsStore
+    val settingsStore = koinInject<DataStore<Preferences>>(PREFERENCES)
 
     val movementDetectorType = settingsStore.movementDetector().collectAsState(initial = null)
 

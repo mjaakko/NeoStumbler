@@ -26,9 +26,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
+import org.koin.compose.koinInject
 import timber.log.Timber
+import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.getActivity
@@ -55,7 +56,7 @@ fun AutoScanToggle() {
 
     val coroutineScope = rememberCoroutineScope()
 
-    val settingsStore = (context.applicationContext as StumblerApplication).settingsStore
+    val settingsStore = koinInject<DataStore<Preferences>>(PREFERENCES)
     val enabled = settingsStore.autoScanEnabled().collectAsState(initial = false)
 
     val missingPermissionsBasic = remember {

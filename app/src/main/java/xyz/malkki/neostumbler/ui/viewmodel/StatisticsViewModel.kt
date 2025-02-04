@@ -1,7 +1,6 @@
 package xyz.malkki.neostumbler.ui.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
@@ -18,13 +17,13 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import xyz.malkki.neostumbler.StumblerApplication
+import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.db.dao.StatisticsDao
 import xyz.malkki.neostumbler.ui.viewmodel.StatisticsViewModel.DataType
 import java.time.LocalDate
 import java.util.SortedMap
 
-class StatisticsViewModel(application: Application) : AndroidViewModel(application) {
+class StatisticsViewModel(reportDatabaseManager: ReportDatabaseManager) : ViewModel() {
     enum class DataType {
         WIFIS, CELLS, BEACONS
     }
@@ -37,7 +36,7 @@ class StatisticsViewModel(application: Application) : AndroidViewModel(applicati
         val MAX_Y_VALUE_KEY = ExtraStore.Key<Long>()
     }
 
-    private val statisticsDao: Flow<StatisticsDao> = (application as StumblerApplication).reportDb.mapLatest { it.statisticsDao() }
+    private val statisticsDao: Flow<StatisticsDao> = reportDatabaseManager.reportDb.mapLatest { it.statisticsDao() }
 
     private val _selectedDataType = MutableStateFlow(DataType.WIFIS)
     val selectedDataType: StateFlow<DataType>
