@@ -57,7 +57,7 @@ fun Context.isWifiScanThrottled(): Boolean? {
     }
 }
 
-@IntDef(flag = true, value = [
+@IntDef(value = [
     Toast.LENGTH_SHORT,
     Toast.LENGTH_LONG
 ])
