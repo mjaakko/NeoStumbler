@@ -11,6 +11,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import xyz.malkki.neostumbler.geosubmit.dto.ReportDto
 import java.nio.charset.StandardCharsets
 import java.util.zip.GZIPInputStream
 import kotlin.time.Duration.Companion.seconds
@@ -43,9 +44,9 @@ class IchnaeaGeosubmitTest {
         )
 
         val reports = listOf(
-            Report(
+            ReportDto(
                 timestamp = 0L,
-                position = Report.Position(
+                position = ReportDto.PositionDto(
                     latitude = 56.3612,
                     longitude = 12.5166,
                     accuracy = 100.0,
@@ -60,7 +61,7 @@ class IchnaeaGeosubmitTest {
                 wifiAccessPoints = null,
                 cellTowers = null,
                 bluetoothBeacons = listOf(
-                    Report.BluetoothBeacon(
+                    ReportDto.BluetoothBeaconDto(
                         macAddress = "01:01:01:01:01:01",
                         name = null,
                         beaconType = null,

@@ -1,17 +1,21 @@
-package xyz.malkki.neostumbler.geosubmit
+package xyz.malkki.neostumbler.geosubmit.dto
 
 import kotlinx.serialization.Serializable
+import xyz.malkki.neostumbler.db.entities.BluetoothBeaconEntity
+import xyz.malkki.neostumbler.db.entities.CellTowerEntity
+import xyz.malkki.neostumbler.db.entities.PositionEntity
+import xyz.malkki.neostumbler.db.entities.WifiAccessPointEntity
 
 @Serializable
-data class Report(
+data class ReportDto(
     val timestamp: Long,
-    val position: Position,
-    val wifiAccessPoints: List<WifiAccessPoint>?,
-    val cellTowers: List<CellTower>?,
-    val bluetoothBeacons: List<BluetoothBeacon>?
+    val position: PositionDto,
+    val wifiAccessPoints: List<WifiAccessPointDto>?,
+    val cellTowers: List<CellTowerDto>?,
+    val bluetoothBeacons: List<BluetoothBeaconDto>?
 ) {
     @Serializable
-    data class Position(
+    data class PositionDto(
         val latitude: Double,
         val longitude: Double,
         val accuracy: Double?,
@@ -24,8 +28,8 @@ data class Report(
         val source: String
     ) {
         companion object {
-            fun fromDbEntity(positionEntity: xyz.malkki.neostumbler.db.entities.PositionEntity): Position {
-                return Position(
+            fun fromDbEntity(positionEntity: PositionEntity): PositionDto {
+                return PositionDto(
                     positionEntity.latitude,
                     positionEntity.longitude,
                     positionEntity.accuracy?.takeUnless { it.isNaN() },
@@ -42,7 +46,7 @@ data class Report(
     }
 
     @Serializable
-    data class WifiAccessPoint(
+    data class WifiAccessPointDto(
         val macAddress: String,
         val radioType: String?,
         val age: Long,
@@ -53,8 +57,8 @@ data class Report(
         val ssid: String?
     ) {
         companion object {
-            fun fromDbEntity(wifiAccessPointEntity: xyz.malkki.neostumbler.db.entities.WifiAccessPointEntity): WifiAccessPoint {
-                return WifiAccessPoint(
+            fun fromDbEntity(wifiAccessPointEntity: WifiAccessPointEntity): WifiAccessPointDto {
+                return WifiAccessPointDto(
                     wifiAccessPointEntity.macAddress,
                     wifiAccessPointEntity.radioType,
                     wifiAccessPointEntity.age,
@@ -69,7 +73,7 @@ data class Report(
     }
 
     @Serializable
-    data class CellTower(
+    data class CellTowerDto(
         val radioType: String,
         val mobileCountryCode: Int?,
         val mobileCountryCodeStr: String?,
@@ -86,8 +90,8 @@ data class Report(
         val arfcn: Int?
     ) {
         companion object {
-            fun fromDbEntity(cellTowerEntity: xyz.malkki.neostumbler.db.entities.CellTowerEntity): CellTower {
-                return CellTower(
+            fun fromDbEntity(cellTowerEntity: CellTowerEntity): CellTowerDto {
+                return CellTowerDto(
                     cellTowerEntity.radioType,
                     cellTowerEntity.mobileCountryCode?.toIntOrNull(),
                     cellTowerEntity.mobileCountryCode,
@@ -108,7 +112,7 @@ data class Report(
     }
 
     @Serializable
-    data class BluetoothBeacon(
+    data class BluetoothBeaconDto(
         val macAddress: String,
         val name: String?,
         val beaconType: Int?,
@@ -119,8 +123,8 @@ data class Report(
         val signalStrength: Int?
     ) {
         companion object {
-            fun fromDbEntity(beacon: xyz.malkki.neostumbler.db.entities.BluetoothBeaconEntity): BluetoothBeacon {
-                return BluetoothBeacon(
+            fun fromDbEntity(beacon: BluetoothBeaconEntity): BluetoothBeaconDto {
+                return BluetoothBeaconDto(
                     macAddress = beacon.macAddress,
                     name = beacon.name,
                     beaconType = beacon.beaconType,

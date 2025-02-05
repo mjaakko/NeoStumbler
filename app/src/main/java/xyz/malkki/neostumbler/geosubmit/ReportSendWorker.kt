@@ -26,6 +26,7 @@ import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.db.entities.ReportWithData
+import xyz.malkki.neostumbler.geosubmit.dto.ReportDto
 import java.net.SocketTimeoutException
 import java.time.Instant
 import kotlin.collections.isNotEmpty
@@ -137,17 +138,17 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
 
     private suspend fun sendReports(geosubmitApi: Geosubmit, reports: List<ReportWithData>) {
         val geosubmitReports = reports.map { report ->
-            Report(
+            ReportDto(
                 timestamp = report.report.timestamp.toEpochMilli(),
-                position = Report.Position.fromDbEntity(report.positionEntity),
+                position = ReportDto.PositionDto.fromDbEntity(report.positionEntity),
                 wifiAccessPoints = report.wifiAccessPointEntities
-                    .map(Report.WifiAccessPoint::fromDbEntity)
+                    .map(ReportDto.WifiAccessPointDto::fromDbEntity)
                     .takeIf { it.isNotEmpty() },
                 cellTowers = report.cellTowerEntities
-                    .map(Report.CellTower::fromDbEntity)
+                    .map(ReportDto.CellTowerDto::fromDbEntity)
                     .takeIf { it.isNotEmpty() },
                 bluetoothBeacons = report.bluetoothBeaconEntities
-                    .map(Report.BluetoothBeacon::fromDbEntity)
+                    .map(ReportDto.BluetoothBeaconDto::fromDbEntity)
                     .takeIf { it.isNotEmpty() }
             )
         }

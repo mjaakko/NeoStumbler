@@ -11,6 +11,7 @@ import okhttp3.RequestBody
 import okio.BufferedSink
 import org.apache.commons.io.output.CloseShieldOutputStream
 import xyz.malkki.neostumbler.extensions.executeSuspending
+import xyz.malkki.neostumbler.geosubmit.dto.ReportDto
 import java.io.IOException
 import java.util.zip.GZIPOutputStream
 
@@ -29,7 +30,7 @@ class IchnaeaGeosubmit(
         private val JSON_ENCODER = Json { explicitNulls = false }
     }
 
-    override suspend fun sendReports(reports: List<Report>) {
+    override suspend fun sendReports(reports: List<ReportDto>) {
         val url = geosubmitParams.toUrl()
         require(url != null) {
             "Failed to create URL from params $geosubmitParams"
@@ -49,7 +50,7 @@ class IchnaeaGeosubmit(
         }
     }
 
-    private fun createRequestBody(reports: List<Report>): RequestBody {
+    private fun createRequestBody(reports: List<ReportDto>): RequestBody {
         return object : RequestBody() {
             override fun contentType(): MediaType = "application/json".toMediaType()
 
@@ -66,5 +67,5 @@ class IchnaeaGeosubmit(
     class IchnaeaGeosubmitException(message: String, val httpStatusCode: Int) : IOException(message)
 
     @Serializable
-    private data class ReportItems(val items: List<Report>)
+    private data class ReportItems(val items: List<ReportDto>)
 }
