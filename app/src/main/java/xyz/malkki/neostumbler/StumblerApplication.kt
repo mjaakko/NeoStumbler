@@ -33,6 +33,7 @@ import xyz.malkki.neostumbler.db.DbPruneWorker
 import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.export.CsvExporter
 import xyz.malkki.neostumbler.http.getCallFactory
+import xyz.malkki.neostumbler.location.LocationSourceProvider
 import xyz.malkki.neostumbler.scanner.ScanReportCreator
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
 import xyz.malkki.neostumbler.ui.viewmodel.ReportsViewModel
@@ -89,6 +90,12 @@ class StumblerApplication : Application() {
             })
 
             modules(module {
+                single {
+                    LocationSourceProvider(get(PREFERENCES))
+                }
+            })
+
+            modules(module {
                 single(PREFERENCES) {
                     settingsStore
                 }
@@ -100,7 +107,7 @@ class StumblerApplication : Application() {
 
             modules(module {
                 viewModel {
-                    MapViewModel(get(), get(PREFERENCES), get(), get())
+                    MapViewModel(get(), get(PREFERENCES), get(), get(), get())
                 }
 
                 viewModel {

@@ -131,17 +131,19 @@ class ScannerService : Service() {
             get() = _serviceRunning.asStateFlow()
     }
 
-    private lateinit var wakeLock: WakeLock
-
-    private lateinit var notificationManager: NotificationManager
+    private val startedAt = System.currentTimeMillis()
 
     private val settingsStore: DataStore<Preferences> by inject<DataStore<Preferences>>(PREFERENCES)
 
     private val scanReportCreator: ScanReportCreator by inject()
 
-    private lateinit var coroutineScope: CoroutineScope
+    private val locationSourceProvider: LocationSourceProvider by inject()
 
-    private val startedAt = System.currentTimeMillis()
+    private lateinit var wakeLock: WakeLock
+
+    private lateinit var notificationManager: NotificationManager
+
+    private lateinit var coroutineScope: CoroutineScope
 
     private var autostarted = true
 
@@ -213,7 +215,7 @@ class ScannerService : Service() {
                 }
             }
 
-        val locationSource = LocationSourceProvider(this@ScannerService).getLocationSource()
+        val locationSource = locationSourceProvider.getLocationSource(this@ScannerService)
 
         val locationFlow = locationSource
             .getLocations(LOCATION_INTERVAL)

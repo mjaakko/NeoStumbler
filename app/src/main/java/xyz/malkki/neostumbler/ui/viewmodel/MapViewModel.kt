@@ -33,9 +33,9 @@ import kotlinx.coroutines.withContext
 import okhttp3.Call
 import org.geohex.geohex4j.GeoHex
 import xyz.malkki.neostumbler.StumblerApplication
-import xyz.malkki.neostumbler.domain.LatLng
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.db.ReportDatabaseManager
+import xyz.malkki.neostumbler.domain.LatLng
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.get
 import xyz.malkki.neostumbler.extensions.parallelMap
@@ -54,9 +54,10 @@ class MapViewModel(
     application: Application,
     private val settingsStore: DataStore<Preferences>,
     private val httpClientProvider: Deferred<Call.Factory>,
-    private val reportDatabaseManager: ReportDatabaseManager
+    private val reportDatabaseManager: ReportDatabaseManager,
+    locationSourceProvider: LocationSourceProvider
 ) : AndroidViewModel(application) {
-    private val locationSource = LocationSourceProvider(getApplication()).getLocationSource()
+    private val locationSource = locationSourceProvider.getLocationSource(application)
 
     private val _httpClient = MutableStateFlow<Call.Factory?>(null)
     val httpClient: StateFlow<Call.Factory?>
