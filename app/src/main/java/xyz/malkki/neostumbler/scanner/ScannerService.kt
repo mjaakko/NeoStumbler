@@ -228,7 +228,7 @@ class ScannerService : Service() {
                 started = SharingStarted.WhileSubscribed()
             )
 
-        val speedFlow = SmoothenedGpsSpeedSource(locationFlow.map { it.location }).getSpeedFlow()
+        val speedFlow = SmoothenedGpsSpeedSource(locationFlow).getSpeedFlow()
 
         val cellInfoSource = getCellInfoSource()
 
@@ -251,12 +251,12 @@ class ScannerService : Service() {
         val movementDetector = when (movementDetectorType) {
             MovementDetectorType.NONE -> ConstantMovementDetector
             MovementDetectorType.LOCATION -> LocationBasedMovementDetector {
-                locationFlow.map { it.location }
+                locationFlow
             }
             MovementDetectorType.SIGNIFICANT_MOTION -> SignificantMotionMovementDetector(
                 sensorManager = sensorManager,
                 locationSource = {
-                    locationFlow.map { it.location }
+                    locationFlow
                 }
             )
         }

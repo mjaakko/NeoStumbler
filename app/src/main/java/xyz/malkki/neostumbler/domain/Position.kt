@@ -6,15 +6,21 @@ import xyz.malkki.neostumbler.extensions.elapsedRealtimeMillisCompat
 data class Position(
     val latitude: Double,
     val longitude: Double,
-    val accuracy: Double?,
-    val altitude: Double?,
-    val altitudeAccuracy: Double?,
-    val heading: Double?,
-    val speed: Double?,
-    val pressure: Double?,
+    val accuracy: Double? = null,
+    val altitude: Double? = null,
+    val altitudeAccuracy: Double? = null,
+    val heading: Double? = null,
+    val speed: Double? = null,
+    val pressure: Double? = null,
     val source: String,
+    /**
+     * Timestamp in milliseconds since boot
+     */
     val timestamp: Long
 ) {
+    val latLng: LatLng
+        get() = LatLng(latitude, longitude)
+
     companion object {
         fun fromLocation(location: Location, source: String, airPressure: Double? = null): Position {
             return Position(

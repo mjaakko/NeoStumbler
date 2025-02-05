@@ -4,7 +4,6 @@ import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.hardware.TriggerEvent
 import android.hardware.TriggerEventListener
-import android.location.Location
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -15,6 +14,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.timeout
 import kotlinx.coroutines.suspendCancellableCoroutine
+import xyz.malkki.neostumbler.domain.Position
 import kotlin.coroutines.resume
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -32,7 +32,7 @@ private const val DISTANCE_THRESHOLD = 200
 class SignificantMotionMovementDetector(
     private val sensorManager: SensorManager,
     private val notMovingDelay: Duration = 30.seconds,
-    private val locationSource: () -> Flow<Location>
+    private val locationSource: () -> Flow<Position>
 ) : MovementDetector {
     private val significantMotionSensor = sensorManager.getDefaultSensor(Sensor.TYPE_SIGNIFICANT_MOTION)!!
 
@@ -68,7 +68,7 @@ class SignificantMotionMovementDetector(
 
                 locationSource.invoke()
                     //Emit values only when the location changes significantly
-                    .distinctUntilChanged { a, b -> a.distanceTo(b) <= DISTANCE_THRESHOLD }
+                    .distinctUntilChanged { a, b -> a.latLng.distanceTo(b.latLng) <= DISTANCE_THRESHOLD }
                     .map {}
                     //Complete the flow if no value was emitted within the limit
                     .timeout(notMovingDelay)

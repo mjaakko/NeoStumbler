@@ -1,12 +1,12 @@
 package xyz.malkki.neostumbler.scanner.movement
 
-import android.location.Location
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.runningFold
+import xyz.malkki.neostumbler.domain.Position
 import kotlin.math.abs
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -22,13 +22,13 @@ private const val VERTICAL_DIFFERENCE_THRESHOLD = 15.0
  *
  * Determines whether the device is moving by checking the difference in coordinates and altitude
  */
-class LocationBasedMovementDetector(private val notMovingDelay: Duration = 45.seconds, private val locationFlowProvider: () -> Flow<Location>) : MovementDetector {
+class LocationBasedMovementDetector(private val notMovingDelay: Duration = 45.seconds, private val locationFlowProvider: () -> Flow<Position>) : MovementDetector {
     override fun getIsMovingFlow(): Flow<Boolean> {
         return locationFlowProvider.invoke()
-            .runningFold<Location, Pair<Location?, Boolean>>(null to true) { (oldLocation, _), newLocation ->
+            .runningFold<Position, Pair<Position?, Boolean>>(null to true) { (oldLocation, _), newLocation ->
                 if (oldLocation == null
-                    || oldLocation.distanceTo(newLocation) >= HORIZONTAL_DIFFERENCE_THRESHOLD
-                    || abs(oldLocation.altitude - newLocation.altitude) >= VERTICAL_DIFFERENCE_THRESHOLD) {
+                    || oldLocation.latLng.distanceTo(newLocation.latLng) >= HORIZONTAL_DIFFERENCE_THRESHOLD
+                    || abs((oldLocation.altitude ?: 0.0) - (newLocation.altitude ?: 0.0)) >= VERTICAL_DIFFERENCE_THRESHOLD) {
                     newLocation to true
                 } else {
                     oldLocation to false

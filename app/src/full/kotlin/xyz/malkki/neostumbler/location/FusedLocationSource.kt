@@ -14,7 +14,7 @@ import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
-import xyz.malkki.neostumbler.common.LocationWithSource
+import xyz.malkki.neostumbler.domain.Position
 import xyz.malkki.neostumbler.utils.ImmediateExecutor
 import kotlin.time.Duration
 
@@ -22,7 +22,7 @@ class FusedLocationSource(context: Context) : LocationSource {
     private val appContext = context.applicationContext
 
     @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-    override fun getLocations(interval: Duration): Flow<LocationWithSource> = callbackFlow {
+    override fun getLocations(interval: Duration): Flow<Position> = callbackFlow {
         val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(appContext)
 
         val locationIntervalMillis = interval.inWholeMilliseconds
@@ -37,7 +37,7 @@ class FusedLocationSource(context: Context) : LocationSource {
         val locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 locationResult.locations.forEach { location ->
-                    trySendBlocking(LocationWithSource(location, LocationWithSource.LocationSource.FUSED))
+                    trySendBlocking(Position.fromLocation(location, "fused"))
                 }
             }
         }

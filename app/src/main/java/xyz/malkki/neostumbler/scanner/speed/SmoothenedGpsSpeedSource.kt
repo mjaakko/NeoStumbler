@@ -1,9 +1,8 @@
 package xyz.malkki.neostumbler.scanner.speed
 
-import android.location.Location
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import xyz.malkki.neostumbler.extensions.elapsedRealtimeMillisCompat
+import xyz.malkki.neostumbler.domain.Position
 import xyz.malkki.neostumbler.extensions.pairwise
 import kotlin.math.abs
 import kotlin.time.Duration.Companion.milliseconds
@@ -19,14 +18,14 @@ private const val B = 1 - A
 /**
  * Calculates smoothened speed by using data from two consecutive locations
  */
-class SmoothenedGpsSpeedSource(private val locationFlow: Flow<Location>) : SpeedSource {
+class SmoothenedGpsSpeedSource(private val positionFlow: Flow<Position>) : SpeedSource {
     override fun getSpeedFlow(): Flow<Double> {
-        return locationFlow
+        return positionFlow
             .pairwise()
             .map { (prevLocation, currentLocation) ->
-                if (currentLocation.hasSpeed()) {
+                if (currentLocation.speed != null) {
                     //Smoothen the speed value by using data from two consecutive locations
-                    if (prevLocation.hasSpeed() && abs(prevLocation.elapsedRealtimeMillisCompat - currentLocation.elapsedRealtimeMillisCompat).milliseconds <= LOCATION_MAX_AGE_DIFF) {
+                    if (prevLocation.speed != null && abs(prevLocation.timestamp - currentLocation.timestamp).milliseconds <= LOCATION_MAX_AGE_DIFF) {
                         prevLocation.speed * A + currentLocation.speed * B
                     } else {
                         currentLocation.speed.toDouble()

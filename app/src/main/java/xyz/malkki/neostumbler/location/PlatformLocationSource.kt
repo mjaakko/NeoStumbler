@@ -14,7 +14,7 @@ import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import timber.log.Timber
-import xyz.malkki.neostumbler.common.LocationWithSource
+import xyz.malkki.neostumbler.domain.Position
 import xyz.malkki.neostumbler.utils.ImmediateExecutor
 import kotlin.time.Duration
 
@@ -22,12 +22,12 @@ class PlatformLocationSource(context: Context) : LocationSource {
     private val appContext = context.applicationContext
 
     @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-    override fun getLocations(interval: Duration): Flow<LocationWithSource> = callbackFlow {
+    override fun getLocations(interval: Duration): Flow<Position> = callbackFlow {
         val locationManager = appContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         val locationListener = object : LocationListener {
             override fun onLocationChanged(location: Location) {
-                trySendBlocking(LocationWithSource(location, LocationWithSource.LocationSource.GPS))
+                trySendBlocking(Position.fromLocation(location, "gps"))
             }
 
             override fun onProviderDisabled(provider: String) {

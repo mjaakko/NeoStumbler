@@ -3,6 +3,7 @@ package xyz.malkki.neostumbler.ui.screens
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.location.Location
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -194,7 +195,10 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
 
                         map.addOnCameraMoveListener(object : MapLibreMap.OnCameraMoveListener {
                             override fun onCameraMove() {
-                                val mapCenter = xyz.malkki.neostumbler.common.LatLng(map.cameraPosition.target!!.latitude, map.cameraPosition.target!!.longitude)
+                                val mapCenter = xyz.malkki.neostumbler.domain.LatLng(
+                                    map.cameraPosition.target!!.latitude,
+                                    map.cameraPosition.target!!.longitude
+                                )
 
                                 mapViewModel.setMapCenter(mapCenter)
                                 mapViewModel.setZoom(map.cameraPosition.zoom)
@@ -252,10 +256,17 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                             .build()
 
                         if (myLocation.value != null && map.locationComponent.isLocationComponentActivated) {
-                            map.locationComponent.forceLocationUpdate(myLocation.value!!.location)
+                            map.locationComponent.forceLocationUpdate(Location("manual").apply {
+                                latitude = myLocation.value!!.latitude
+                                longitude = myLocation.value!!.longitude
+
+                                myLocation.value!!.accuracy?.toFloat()?.let {
+                                    accuracy = it
+                                }
+                            })
 
                             if (trackMyLocation.value) {
-                                map.cameraPosition = CameraPosition.Builder().target(LatLng(myLocation.value!!.location.latitude, myLocation.value!!.location.longitude)).build()
+                                map.cameraPosition = CameraPosition.Builder().target(myLocation.value!!.latLng.asMapLibreLatLng()).build()
                             }
                         }
 

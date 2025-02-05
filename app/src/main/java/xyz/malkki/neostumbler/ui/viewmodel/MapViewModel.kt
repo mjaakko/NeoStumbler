@@ -33,7 +33,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.Call
 import org.geohex.geohex4j.GeoHex
 import xyz.malkki.neostumbler.StumblerApplication
-import xyz.malkki.neostumbler.common.LatLng
+import xyz.malkki.neostumbler.domain.LatLng
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
