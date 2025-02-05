@@ -64,7 +64,7 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
         return getGeosubmitParams()?.let { geosubmitParams ->
             Timber.d("Using endpoint ${geosubmitParams.path} with API key ${geosubmitParams.apiKey} for Geosubmit")
 
-            MLSGeosubmit(httpClientProvider.await(), geosubmitParams)
+            IchnaeaGeosubmit(httpClientProvider.await(), geosubmitParams)
         }
     }
 
@@ -193,7 +193,7 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
             return true
         }
 
-        if (exception is MLSGeosubmit.MLSException && exception.httpStatusCode in 500..599) {
+        if (exception is IchnaeaGeosubmit.IchnaeaGeosubmitException && exception.httpStatusCode in 500..599) {
             //Retry server-side errors (HTTP status 5xx)
             return true
         }

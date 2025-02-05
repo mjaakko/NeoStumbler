@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets
 import java.util.zip.GZIPInputStream
 import kotlin.time.Duration.Companion.seconds
 
-class MLSGeosubmitTest {
+class IchnaeaGeosubmitTest {
     private lateinit var mockServer: MockWebServer
 
     @Before
@@ -33,7 +33,7 @@ class MLSGeosubmitTest {
 
     @Test
     fun `Test sending a report`() = runTest {
-        val geosubmit: Geosubmit = MLSGeosubmit(
+        val geosubmit: Geosubmit = IchnaeaGeosubmit(
             httpClient = OkHttpClient(),
             geosubmitParams = GeosubmitParams(
                 baseUrl = mockServer.url("/").toString(),

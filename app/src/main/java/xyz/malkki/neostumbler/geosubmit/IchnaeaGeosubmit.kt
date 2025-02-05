@@ -16,7 +16,12 @@ import java.util.zip.GZIPOutputStream
 
 private const val BUFFER_SIZE = 8 * 1024
 
-class MLSGeosubmit(
+/**
+ * Geosubmit implementation for sending data to an Ichnaea endpoint
+ *
+ * See [https://ichnaea.readthedocs.io/en/latest/api/geosubmit2.html](https://ichnaea.readthedocs.io/en/latest/api/geosubmit2.html)
+ */
+class IchnaeaGeosubmit(
     private val httpClient: Call.Factory,
     private val geosubmitParams: GeosubmitParams
 ) : Geosubmit {
@@ -39,7 +44,7 @@ class MLSGeosubmit(
         val response = httpClient.newCall(request).executeSuspending()
         response.use {
             if (response.code !in 200..299) {
-                throw MLSException("HTTP request to ${request.url} failed, status: ${response.code}", response.code)
+                throw IchnaeaGeosubmitException("HTTP request to ${request.url} failed, status: ${response.code}", response.code)
             }
         }
     }
@@ -58,7 +63,7 @@ class MLSGeosubmit(
         }
     }
 
-    class MLSException(message: String, val httpStatusCode: Int) : IOException(message)
+    class IchnaeaGeosubmitException(message: String, val httpStatusCode: Int) : IOException(message)
 
     @Serializable
     private data class ReportItems(val items: List<Report>)
