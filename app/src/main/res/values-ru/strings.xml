@@ -86,7 +86,7 @@
     <string name="notification_style_detailed_title">Детализированный</string>
     <string name="app_language">Язык</string>
     <string name="show_my_location">Показывать моё местоположение</string>
-    <string name="permission_rationale_fine_location">Получение доступа к текущему местоположению требует разрешения для точной геолокации</string>
+    <string name="permission_rationale_fine_location">Создание отчётов с полезными данными геолокации требуют разрешения точного местоположения</string>
     <string name="permission_rationale_bluetooth">Сканирование Bluetooth маячков требует доступа к Bluetooth</string>
     <string name="permission_rationale_post_notifications">Показ уведомлений статуса требует разрешения уведомлений</string>
     <string name="permission_rationale_location_map">Показ вашего местоположения на карте требует разрешения для геолокации</string>
@@ -126,7 +126,7 @@
     <string name="notification_style_detailed_description">Показывает число созданных отчётов и число спутников GNSS</string>
     <string name="movement_detection_significant_motion_description">Ставит на паузу сканирование когда не было зарегистрировано сильное движение. Сохраняет батарею, но не работает на некоторых устройствах</string>
     <string name="notification_style">Стиль уведомления</string>
-    <string name="permission_rationale_read_phone_state">Доступ к телефону необходим для сканирования вышек связи со всеми сим-картами в устройстве</string>
+    <string name="permission_rationale_read_phone_state">Доступ к телефону необходим для сканирования вышек связи</string>
     <string name="permission_rationale_background_location_quick_settings">Старт сканирования с помощью плитки быстрых настроек требует доступа к геолокации в фоновом режиме</string>
     <string name="troubleshooting_fix">Исправить</string>
     <string name="db_prune_one_month">После одного месяца</string>
@@ -151,4 +151,9 @@
     <string name="cell_tower_scan_frequency">Частота сканирование вышек связи</string>
     <string name="every_x_meters">Каждые %d метров</string>
     <string name="map_tile_source">Источники плиток карты</string>
+    <string name="toast_reports_upload_failed_no_endpoint">Не удалось выгрузить отчёты, потому что не была настроена точка назначения</string>
+    <string name="no_endpoint_configured">Не была настроена точка назначения</string>
+    <string name="mls_warning_text">Сервисы Геолокации Mozilla были закрыты и больше не принимают данные. Как альтернативу для СГM, вы можете отправлять данные в beaconDB, где предоставляется сервис совместимый с СГM\n\nПросьба заметить, что beaconDB всё ещё в разработке и это может повлиять на то, как ваши данные обрабатываются. Вы можете прочитать <annotation link="privacy_policy">политику конфиденциальности</annotation> для получения дальнейшей информации\n\nВы хотите установить beaconDB как точку назначения? Это может быть настроено позже в настройках</string>
+    <string name="reports_last_uploaded_never">никогда</string>
+    <string name="reports_empty">Нет отчётов пока что</string>
 </resources>
