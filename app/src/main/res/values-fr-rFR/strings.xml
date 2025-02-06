@@ -165,4 +165,5 @@
     <string name="every_x_meters">Tous les %d mètres</string>
     <string name="reports_last_uploaded_never">jamais</string>
     <string name="reports_empty">Pas encore de rapports</string>
+    <string name="mls_warning_text">Les services de localisation Mozilla (MLS) ont été fermés et n’acceptent plus de soumissions de données. En alternative à MLS, vous pouvez envoyer les données à beaconDB, qui fournit à un service compatible avec MLS.\n\nVeuillez noter que beaconDB est toujours en développement ce qui affecte la manière dont vos données sont traitées. Vous pouvez lire la <annotation link="privacy_policy">politique de confidentialité</annotation> pour plus d\'informations.\n\nVoulez-vous utiliser beaconDB en service de destination ? Vous pouvez changer cela à tout moment depuis les paramètres</string>
 </resources>

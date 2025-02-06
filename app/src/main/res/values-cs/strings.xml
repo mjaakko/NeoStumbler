@@ -57,7 +57,7 @@
     <string name="settings_ignore_wifi_scan_throttling_title">Vypnout přibrždění vyhledávání Wi-Fi</string>
     <string name="wifi_scan_throttling">Přibrždění hledání Wi-Fi</string>
     <string name="wifi_scan_throttling_explanation">Pro odemčení této možnosti je třeba vypnout přibrždění vyhledávání Wi-Fi (Wi-Fi scan throttling) v nastavení zařízení. Toto nastavení lze většinou najít v nastavení pro vývojáře</string>
-    <string name="permission_rationale_fine_location">Povolení pro přístup k přesné poloze je nutné k vytváření užitečných reportů</string>
+    <string name="permission_rationale_fine_location">Povolení pro přístup k přesné poloze je nutné pro vytváření užitečných reportů</string>
     <string name="permission_rationale_read_phone_state">Oprávnění přístupu k telefonu je potřeba pro skenování telefonních věží</string>
     <string name="permission_rationale_post_notifications">Zobrazení stavu skenování potřebuje oprávnění k zobrazování oznámení</string>
     <string name="add_quick_settings_tile">Přidat dlaždici do rychlých nastavení pro rychlé spuštění skenování?</string>
@@ -147,4 +147,9 @@
     <string name="cell_tower_scan_frequency">Frekvence vyhledávání mobilních věží</string>
     <string name="every_x_meters">Každých %d metrů</string>
     <string name="map_tile_source">Zdroj mapy</string>
+    <string name="no_endpoint_configured">Není zvolen žádný server</string>
+    <string name="toast_reports_upload_failed_no_endpoint">Nelze odeslat reporty protože žádný server není zvolený</string>
+    <string name="reports_last_uploaded_never">Nikdy</string>
+    <string name="reports_empty">Žádné reporty</string>
+    <string name="mls_warning_text">Polohová služba Mozilla (MLS) byla ukončena a nepřijímá nová data. Jako alternativu k MLS můžete odesílat data do beaconDB, která poskytuje službu kompatibilní s MLS\n\nVezměte na vědomí, že beaconDB je stále ve vývoji což ovlivňuje jak může s být s vašemi daty nakládáno. Informace můžete najít v <annotation link="privacy_policy"> zásadách ochrany soukromí</annotation>\n\nChcete nastavil beaconDB jako server? Server lze později změnit v nastavení</string>
 </resources>
