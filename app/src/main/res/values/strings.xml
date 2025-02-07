@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false">NeoStumbler</string>
     <string name="author" translatable="false">Jaakko Malkki</string>
     <string name="ok">OK</string>
@@ -162,6 +162,9 @@
     <string name="troubleshooting_accurate_location_available">Accurate location available</string>
     <string name="troubleshooting_wifi_scan_always_available">Wi-Fi scanning always available</string>
     <string name="troubleshooting_fix">Fix</string>
+
+    <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Ok</string>
+    <string name="troubleshooting_not_ok" tools:ignore="Typos">Not ok</string>
     <string name="use_dynamic_color_ui">Use dynamic colors in the UI</string>
     <string name="db_prune_title">Delete sent reports</string>
     <string name="db_prune_one_month">After one month</string>

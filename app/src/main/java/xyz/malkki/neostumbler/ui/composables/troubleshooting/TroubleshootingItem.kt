@@ -49,7 +49,12 @@ fun TroubleshootingItem(title: String, stateFlow: Flow<Boolean>, fixAction: () -
                     } else {
                         Color.Red
                     },
-                contentDescription = "",
+                contentDescription =
+                    if (isOk) {
+                        stringResource(R.string.troubleshooting_ok)
+                    } else {
+                        stringResource(R.string.troubleshooting_not_ok)
+                    },
             )
 
             Button(enabled = !isOk, onClick = { fixAction.invoke() }) {
