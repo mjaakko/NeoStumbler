@@ -22,24 +22,29 @@ import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.extensions.get
 import xyz.malkki.neostumbler.scanner.movement.MovementDetectorType
 
-private val TITLES = mapOf(
-    MovementDetectorType.NONE to R.string.movement_detection_none_title,
-    MovementDetectorType.LOCATION to R.string.movement_detection_location_title,
-    MovementDetectorType.SIGNIFICANT_MOTION to R.string.movement_detection_significant_motion_title,
-)
+private val TITLES =
+    mapOf(
+        MovementDetectorType.NONE to R.string.movement_detection_none_title,
+        MovementDetectorType.LOCATION to R.string.movement_detection_location_title,
+        MovementDetectorType.SIGNIFICANT_MOTION to
+            R.string.movement_detection_significant_motion_title,
+    )
 
-private val DESCRIPTIONS = mapOf(
-    MovementDetectorType.NONE to R.string.movement_detection_none_description,
-    MovementDetectorType.LOCATION to R.string.movement_detection_location_description,
-    MovementDetectorType.SIGNIFICANT_MOTION to R.string.movement_detection_significant_motion_description
-)
+private val DESCRIPTIONS =
+    mapOf(
+        MovementDetectorType.NONE to R.string.movement_detection_none_description,
+        MovementDetectorType.LOCATION to R.string.movement_detection_location_description,
+        MovementDetectorType.SIGNIFICANT_MOTION to
+            R.string.movement_detection_significant_motion_description,
+    )
 
-private fun DataStore<Preferences>.movementDetector(): Flow<MovementDetectorType> = data
-    .map { preferences ->
-        preferences.get<MovementDetectorType>(PreferenceKeys.MOVEMENT_DETECTOR)
-            ?: MovementDetectorType.LOCATION
-    }
-    .distinctUntilChanged()
+private fun DataStore<Preferences>.movementDetector(): Flow<MovementDetectorType> =
+    data
+        .map { preferences ->
+            preferences.get<MovementDetectorType>(PreferenceKeys.MOVEMENT_DETECTOR)
+                ?: MovementDetectorType.LOCATION
+        }
+        .distinctUntilChanged()
 
 @Composable
 fun MovementDetectorSettings() {
@@ -54,24 +59,29 @@ fun MovementDetectorSettings() {
             title = stringResource(id = R.string.movement_detection),
             options = MovementDetectorType.entries,
             selectedOption = movementDetectorType.value!!,
-            disabledOptions = if (context.significantMotionSensorAvailable()) {
-                emptySet()
-            } else {
-                setOf(MovementDetectorType.SIGNIFICANT_MOTION)
-            },
+            disabledOptions =
+                if (context.significantMotionSensorAvailable()) {
+                    emptySet()
+                } else {
+                    setOf(MovementDetectorType.SIGNIFICANT_MOTION)
+                },
             titleProvider = { ContextCompat.getString(context, TITLES[it]!!) },
             descriptionProvider = { ContextCompat.getString(context, DESCRIPTIONS[it]!!) },
             onValueSelected = { newMovementDetectorType ->
                 settingsStore.updateData { prefs ->
                     prefs.toMutablePreferences().apply {
-                        set(stringPreferencesKey(PreferenceKeys.MOVEMENT_DETECTOR), newMovementDetectorType.name)
+                        set(
+                            stringPreferencesKey(PreferenceKeys.MOVEMENT_DETECTOR),
+                            newMovementDetectorType.name,
+                        )
                     }
                 }
-            }
+            },
         )
     }
 }
 
 private fun Context.significantMotionSensorAvailable(): Boolean {
-    return getSystemService<SensorManager>()!!.getDefaultSensor(Sensor.TYPE_SIGNIFICANT_MOTION) != null
+    return getSystemService<SensorManager>()!!.getDefaultSensor(Sensor.TYPE_SIGNIFICANT_MOTION) !=
+        null
 }

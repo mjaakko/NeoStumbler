@@ -27,6 +27,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -73,7 +74,6 @@ import xyz.malkki.neostumbler.scanner.source.WifiManagerWifiAccessPointSource
 import xyz.malkki.neostumbler.scanner.speed.SmoothenedGpsSpeedSource
 import xyz.malkki.neostumbler.utils.GpsStats
 import xyz.malkki.neostumbler.utils.getGpsStatsFlow
-import kotlin.time.Duration.Companion.seconds
 
 class ScannerService : Service() {
     companion object {
@@ -87,21 +87,21 @@ class ScannerService : Service() {
         /**
          * Try to get new locations every 3 seconds
          *
-         * If the interval is too high, data quality will be worse because of
-         * the distance traveled between the scan and the location fix. Also there can be some gaps on the map
+         * If the interval is too high, data quality will be worse because of the distance traveled
+         * between the scan and the location fix. Also there can be some gaps on the map
          *
-         * If the interval is too low, there will be many reports with just a few observations which will decrease
-         * DB performance in the long term and the reports UI will be cluttered. Also there seems to be a noticeable
-         * effect on battery life
+         * If the interval is too low, there will be many reports with just a few observations which
+         * will decrease DB performance in the long term and the reports UI will be cluttered. Also
+         * there seems to be a noticeable effect on battery life
          *
          * 3 seconds seems to give a reasonably good balance between these
          */
         private val LOCATION_INTERVAL = 3.seconds
 
-        //By default, try to scan Wi-Fis every 50 meters
+        // By default, try to scan Wi-Fis every 50 meters
         const val DEFAULT_WIFI_SCAN_DISTANCE: Int = 50
 
-        //By default, try to scan cells every 120 meters
+        // By default, try to scan cells every 120 meters
         const val DEFAULT_CELL_SCAN_DISTANCE: Int = 120
 
         fun startIntent(context: Context, autostart: Boolean = false): Intent {
@@ -119,7 +119,9 @@ class ScannerService : Service() {
         }
 
         enum class NotificationStyle(val detailLevel: Int) {
-            MINIMAL(1), BASIC(2), DETAILED(3)
+            MINIMAL(1),
+            BASIC(2),
+            DETAILED(3),
         }
 
         private val _reportsCreated = MutableStateFlow(0)
@@ -153,7 +155,7 @@ class ScannerService : Service() {
 
     private val binder = ScannerServiceBinder()
 
-    @SuppressLint("WakelockTimeout") //We don't know how long the service runs for -> no timeout
+    @SuppressLint("WakelockTimeout") // We don't know how long the service runs for -> no timeout
     override fun onCreate() {
         super.onCreate()
 
@@ -161,9 +163,10 @@ class ScannerService : Service() {
 
         ScannerTileService.updateTile(this)
 
-        wakeLock = getSystemService<PowerManager>()!!.newWakeLock(PARTIAL_WAKE_LOCK, this::class.java.canonicalName).apply {
-            acquire()
-        }
+        wakeLock =
+            getSystemService<PowerManager>()!!
+                .newWakeLock(PARTIAL_WAKE_LOCK, this::class.java.canonicalName)
+                .apply { acquire() }
 
         notificationManager = getSystemService()!!
 
@@ -175,169 +178,191 @@ class ScannerService : Service() {
     }
 
     @SuppressLint("MissingPermission")
-    private fun startScanning() = coroutineScope.launch {
-        if (scanning) {
-            return@launch
-        }
-
-        scanning = true
-
-        notificationStyle = settingsStore.data
-            .map { prefs ->
-                prefs.get<NotificationStyle>(PreferenceKeys.SCANNER_NOTIFICATION_STYLE) ?: NotificationStyle.BASIC
-            }
-            .first()
-
-        val wifiScanDistance = settingsStore.data
-            .map { prefs ->
-                prefs[intPreferencesKey(PreferenceKeys.WIFI_SCAN_DISTANCE)] ?: DEFAULT_WIFI_SCAN_DISTANCE
-            }
-            .first()
-
-        val cellScanDistance = settingsStore.data
-            .map { prefs ->
-                prefs[intPreferencesKey(PreferenceKeys.CELL_SCAN_DISTANCE)] ?: DEFAULT_CELL_SCAN_DISTANCE
-            }
-            .first()
-
-        Timber.d("Scan distances: ${wifiScanDistance}m - Wi-Fis, ${cellScanDistance}m - cell towers")
-
-        val sensorManager = this@ScannerService.getSystemService<SensorManager>()!!
-
-        val gpsActiveChannel = MutableStateFlow(value = false)
-
-        val gpsStatsFlow = gpsActiveChannel
-            .flatMapLatest { gpsActive ->
-                if (gpsActive) {
-                    getGpsStatsFlow(this@ScannerService)
-                } else {
-                    flowOf(null)
-                }
+    private fun startScanning() =
+        coroutineScope.launch {
+            if (scanning) {
+                return@launch
             }
 
-        val locationSource = locationSourceProvider.getLocationSource(this@ScannerService)
+            scanning = true
 
-        val locationFlow = locationSource
-            .getLocations(LOCATION_INTERVAL)
-            .onStart {
-                gpsActiveChannel.emit(true)
-            }
-            .onCompletion {
-                gpsActiveChannel.emit(false)
-            }
-            .shareIn(
-                scope = this,
-                started = SharingStarted.WhileSubscribed()
+            notificationStyle =
+                settingsStore.data
+                    .map { prefs ->
+                        prefs.get<NotificationStyle>(PreferenceKeys.SCANNER_NOTIFICATION_STYLE)
+                            ?: NotificationStyle.BASIC
+                    }
+                    .first()
+
+            val wifiScanDistance =
+                settingsStore.data
+                    .map { prefs ->
+                        prefs[intPreferencesKey(PreferenceKeys.WIFI_SCAN_DISTANCE)]
+                            ?: DEFAULT_WIFI_SCAN_DISTANCE
+                    }
+                    .first()
+
+            val cellScanDistance =
+                settingsStore.data
+                    .map { prefs ->
+                        prefs[intPreferencesKey(PreferenceKeys.CELL_SCAN_DISTANCE)]
+                            ?: DEFAULT_CELL_SCAN_DISTANCE
+                    }
+                    .first()
+
+            Timber.d(
+                "Scan distances: ${wifiScanDistance}m - Wi-Fis, ${cellScanDistance}m - cell towers"
             )
 
-        val speedFlow = SmoothenedGpsSpeedSource(locationFlow).getSpeedFlow()
+            val sensorManager = this@ScannerService.getSystemService<SensorManager>()!!
 
-        val cellInfoSource = getCellInfoSource()
+            val gpsActiveChannel = MutableStateFlow(value = false)
 
-        val ignoreScanThrottlingPreference = settingsStore.data
-            .map { it[booleanPreferencesKey(PreferenceKeys.IGNORE_SCAN_THROTTLING)] }
-            .first() == true
-
-        val wifiScanThrottled = !ignoreScanThrottlingPreference || isWifiScanThrottled() == true
-
-        val wifiAccessPointSource = WifiManagerWifiAccessPointSource(this@ScannerService, wifiScanThrottled = wifiScanThrottled)
-
-        val bluetoothBeaconSource = getBluetoothBeaconSource()
-
-        val movementDetectorType = settingsStore.data
-            .map { prefs ->
-                prefs.get<MovementDetectorType>(PreferenceKeys.MOVEMENT_DETECTOR) ?: MovementDetectorType.LOCATION
-            }
-            .first()
-
-        val movementDetector = when (movementDetectorType) {
-            MovementDetectorType.NONE -> ConstantMovementDetector
-            MovementDetectorType.LOCATION -> LocationBasedMovementDetector {
-                locationFlow
-            }
-            MovementDetectorType.SIGNIFICANT_MOTION -> SignificantMotionMovementDetector(
-                sensorManager = sensorManager,
-                locationSource = {
-                    locationFlow
-                }
-            )
-        }
-
-        Timber.i("Using ${movementDetector::class.simpleName} for detecting movement")
-
-        val airPressureSource = if (sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE) != null) {
-            PressureSensorAirPressureSource(sensorManager)
-        } else {
-            Timber.w("Device does not have an air pressure sensor, not collecting air pressure data")
-
-            AirPressureSource { emptyFlow() }
-        }
-
-        launch {
-            WirelessScanner(
-                locationSource = {
-                    locationFlow
-                },
-                cellInfoSource = {
-                    val scanFrequencyFlow = speedFlow
-                        .map { speed -> (cellScanDistance.toDouble() / speed).seconds }
-
-                    cellInfoSource.getCellInfoFlow(scanFrequencyFlow)
-                },
-                bluetoothBeaconSource = {
-                    bluetoothBeaconSource.getBluetoothBeaconFlow()
-                },
-                wifiAccessPointSource = {
-                    val scanFrequencyFlow = speedFlow
-                        .map { speed -> (wifiScanDistance.toDouble() / speed).seconds }
-
-                    wifiAccessPointSource.getWifiAccessPointFlow(scanFrequencyFlow)
-                },
-                airPressureSource = { airPressureSource.getAirPressureFlow(LOCATION_INTERVAL / 2) },
-                movementDetector = movementDetector
-            )
-                .createReports()
-                .collect { reportData ->
-                    scanReportCreator.createReport(
-                        position = reportData.position,
-                        cellTowers = reportData.cellTowers,
-                        wifiScanResults = reportData.wifiAccessPoints,
-                        beacons = reportData.bluetoothBeacons
-                    )
-
-                    _reportsCreated.update { it + 1 }
-
-                    ScannerTileService.updateTile(this@ScannerService)
-                }
-        }
-
-        launch {
-            reportsCreated
-                .combine(gpsStatsFlow) { reportsCount, gpsStats ->
-                    reportsCount to gpsStats
-                }
-                .collect { (reportsCount, gpsStats) ->
-                    if (notificationManager.areNotificationsEnabled()) {
-                        notificationManager.notify(NOTIFICATION_ID, createNotification(reportsCreated = reportsCount, gpsStats = gpsStats))
+            val gpsStatsFlow =
+                gpsActiveChannel.flatMapLatest { gpsActive ->
+                    if (gpsActive) {
+                        getGpsStatsFlow(this@ScannerService)
+                    } else {
+                        flowOf(null)
                     }
                 }
-        }
 
-        startForeground(NOTIFICATION_ID, createNotification(reportsCreated = 0), ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION)
-    }
+            val locationSource = locationSourceProvider.getLocationSource(this@ScannerService)
+
+            val locationFlow =
+                locationSource
+                    .getLocations(LOCATION_INTERVAL)
+                    .onStart { gpsActiveChannel.emit(true) }
+                    .onCompletion { gpsActiveChannel.emit(false) }
+                    .shareIn(scope = this, started = SharingStarted.WhileSubscribed())
+
+            val speedFlow = SmoothenedGpsSpeedSource(locationFlow).getSpeedFlow()
+
+            val cellInfoSource = getCellInfoSource()
+
+            val ignoreScanThrottlingPreference =
+                settingsStore.data
+                    .map { it[booleanPreferencesKey(PreferenceKeys.IGNORE_SCAN_THROTTLING)] }
+                    .first() == true
+
+            val wifiScanThrottled = !ignoreScanThrottlingPreference || isWifiScanThrottled() == true
+
+            val wifiAccessPointSource =
+                WifiManagerWifiAccessPointSource(
+                    this@ScannerService,
+                    wifiScanThrottled = wifiScanThrottled,
+                )
+
+            val bluetoothBeaconSource = getBluetoothBeaconSource()
+
+            val movementDetectorType =
+                settingsStore.data
+                    .map { prefs ->
+                        prefs.get<MovementDetectorType>(PreferenceKeys.MOVEMENT_DETECTOR)
+                            ?: MovementDetectorType.LOCATION
+                    }
+                    .first()
+
+            val movementDetector =
+                when (movementDetectorType) {
+                    MovementDetectorType.NONE -> ConstantMovementDetector
+                    MovementDetectorType.LOCATION -> LocationBasedMovementDetector { locationFlow }
+                    MovementDetectorType.SIGNIFICANT_MOTION ->
+                        SignificantMotionMovementDetector(
+                            sensorManager = sensorManager,
+                            locationSource = { locationFlow },
+                        )
+                }
+
+            Timber.i("Using ${movementDetector::class.simpleName} for detecting movement")
+
+            val airPressureSource =
+                if (sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE) != null) {
+                    PressureSensorAirPressureSource(sensorManager)
+                } else {
+                    Timber.w(
+                        "Device does not have an air pressure sensor, not collecting air pressure data"
+                    )
+
+                    AirPressureSource { emptyFlow() }
+                }
+
+            launch {
+                WirelessScanner(
+                        locationSource = { locationFlow },
+                        cellInfoSource = {
+                            val scanFrequencyFlow =
+                                speedFlow.map { speed ->
+                                    (cellScanDistance.toDouble() / speed).seconds
+                                }
+
+                            cellInfoSource.getCellInfoFlow(scanFrequencyFlow)
+                        },
+                        bluetoothBeaconSource = { bluetoothBeaconSource.getBluetoothBeaconFlow() },
+                        wifiAccessPointSource = {
+                            val scanFrequencyFlow =
+                                speedFlow.map { speed ->
+                                    (wifiScanDistance.toDouble() / speed).seconds
+                                }
+
+                            wifiAccessPointSource.getWifiAccessPointFlow(scanFrequencyFlow)
+                        },
+                        airPressureSource = {
+                            airPressureSource.getAirPressureFlow(LOCATION_INTERVAL / 2)
+                        },
+                        movementDetector = movementDetector,
+                    )
+                    .createReports()
+                    .collect { reportData ->
+                        scanReportCreator.createReport(
+                            position = reportData.position,
+                            cellTowers = reportData.cellTowers,
+                            wifiScanResults = reportData.wifiAccessPoints,
+                            beacons = reportData.bluetoothBeacons,
+                        )
+
+                        _reportsCreated.update { it + 1 }
+
+                        ScannerTileService.updateTile(this@ScannerService)
+                    }
+            }
+
+            launch {
+                reportsCreated
+                    .combine(gpsStatsFlow) { reportsCount, gpsStats -> reportsCount to gpsStats }
+                    .collect { (reportsCount, gpsStats) ->
+                        if (notificationManager.areNotificationsEnabled()) {
+                            notificationManager.notify(
+                                NOTIFICATION_ID,
+                                createNotification(
+                                    reportsCreated = reportsCount,
+                                    gpsStats = gpsStats,
+                                ),
+                            )
+                        }
+                    }
+            }
+
+            startForeground(
+                NOTIFICATION_ID,
+                createNotification(reportsCreated = 0),
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION,
+            )
+        }
 
     private fun getCellInfoSource(): CellInfoSource {
         return if (hasReadPhoneStatePermission()) {
             MultiSubscriptionCellInfoSource(this@ScannerService)
         } else {
-            CellInfoSource {
-                emptyFlow<List<CellTower>>()
-            }
+            CellInfoSource { emptyFlow<List<CellTower>>() }
         }
     }
 
     private fun getBluetoothBeaconSource(): BluetoothBeaconSource {
-        return if (hasBluetoothScanPermission() && (application as StumblerApplication).bluetoothScanAvailable) {
+        return if (
+            hasBluetoothScanPermission() &&
+                (application as StumblerApplication).bluetoothScanAvailable
+        ) {
             BeaconLibraryBluetoothBeaconSource(this@ScannerService)
         } else {
             BluetoothBeaconSource { emptyFlow() }
@@ -362,7 +387,7 @@ class ScannerService : Service() {
 
             startScanning()
         } else {
-            //If autostop request is made, stop service only if it was started automatically
+            // If autostop request is made, stop service only if it was started automatically
             val autostart = intent.getBooleanExtra(EXTRA_AUTOSTART, false)
 
             if (!autostart || autostarted == autostart) {
@@ -389,43 +414,73 @@ class ScannerService : Service() {
     }
 
     private fun createNotification(reportsCreated: Int, gpsStats: GpsStats? = null): Notification {
-        val intent = PendingIntentCompat.getActivity(
-            this@ScannerService,
-            MAIN_ACTIVITY_PENDING_INTENT_REQUEST_CODE,
-            Intent(this@ScannerService, MainActivity::class.java),
-            PendingIntent.FLAG_UPDATE_CURRENT,
-            false
-        )
+        val intent =
+            PendingIntentCompat.getActivity(
+                this@ScannerService,
+                MAIN_ACTIVITY_PENDING_INTENT_REQUEST_CODE,
+                Intent(this@ScannerService, MainActivity::class.java),
+                PendingIntent.FLAG_UPDATE_CURRENT,
+                false,
+            )
 
-        val stopScanningPendingIntent = PendingIntentCompat.getService(
-            this@ScannerService,
-            STOP_SCANNER_SERVICE_PENDING_INTENT_REQUEST_CODE,
-            stopIntent(this@ScannerService, false),
-            PendingIntent.FLAG_UPDATE_CURRENT,
-            false
-        )
+        val stopScanningPendingIntent =
+            PendingIntentCompat.getService(
+                this@ScannerService,
+                STOP_SCANNER_SERVICE_PENDING_INTENT_REQUEST_CODE,
+                stopIntent(this@ScannerService, false),
+                PendingIntent.FLAG_UPDATE_CURRENT,
+                false,
+            )
 
-        val reportsCreatedText = applicationContext.getQuantityString(R.plurals.notification_wireless_scanning_content_reports_created, reportsCreated, reportsCreated)
-        val satellitesInUseText = gpsStats?.let {
-            ContextCompat.getString(applicationContext, R.string.notification_wireless_scanning_content_satellite_stats).format(it.satellitesUsedInFix, it.satellitesTotal)
-        }
+        val reportsCreatedText =
+            applicationContext.getQuantityString(
+                R.plurals.notification_wireless_scanning_content_reports_created,
+                reportsCreated,
+                reportsCreated,
+            )
+        val satellitesInUseText =
+            gpsStats?.let {
+                ContextCompat.getString(
+                        applicationContext,
+                        R.string.notification_wireless_scanning_content_satellite_stats,
+                    )
+                    .format(it.satellitesUsedInFix, it.satellitesTotal)
+            }
 
-        return NotificationCompat.Builder(this@ScannerService, StumblerApplication.STUMBLING_NOTIFICATION_CHANNEL_ID)
+        return NotificationCompat.Builder(
+                this@ScannerService,
+                StumblerApplication.STUMBLING_NOTIFICATION_CHANNEL_ID,
+            )
             .apply {
                 setSmallIcon(R.drawable.radar_24)
 
-                setContentTitle(ContextCompat.getString(applicationContext, R.string.notification_wireless_scanning_title))
+                setContentTitle(
+                    ContextCompat.getString(
+                        applicationContext,
+                        R.string.notification_wireless_scanning_title,
+                    )
+                )
 
-                if (notificationStyle == NotificationStyle.BASIC || (notificationStyle >= NotificationStyle.BASIC && satellitesInUseText == null)) {
+                if (
+                    notificationStyle == NotificationStyle.BASIC ||
+                        (notificationStyle >= NotificationStyle.BASIC &&
+                            satellitesInUseText == null)
+                ) {
                     setContentText(reportsCreatedText)
                 } else if (notificationStyle.detailLevel >= NotificationStyle.BASIC.detailLevel) {
                     setContentText("$reportsCreatedText | $satellitesInUseText")
 
-                    setStyle(NotificationCompat.BigTextStyle().bigText("""
+                    setStyle(
+                        NotificationCompat.BigTextStyle()
+                            .bigText(
+                                """
                         $reportsCreatedText
                        
                         $satellitesInUseText
-                    """.trimIndent()))
+                    """
+                                    .trimIndent()
+                            )
+                    )
                 }
 
                 setPriority(NotificationCompat.PRIORITY_LOW)
@@ -437,23 +492,40 @@ class ScannerService : Service() {
 
                 setCategory(Notification.CATEGORY_SERVICE)
 
-                setForegroundServiceBehavior(if (autostarted) { FOREGROUND_SERVICE_DEFERRED } else { FOREGROUND_SERVICE_IMMEDIATE })
+                setForegroundServiceBehavior(
+                    if (autostarted) {
+                        FOREGROUND_SERVICE_DEFERRED
+                    } else {
+                        FOREGROUND_SERVICE_IMMEDIATE
+                    }
+                )
 
                 setUsesChronometer(true)
                 setShowWhen(true)
                 setWhen(startedAt)
 
                 setContentIntent(intent)
-                addAction(NotificationCompat.Action(R.drawable.stop_24, ContextCompat.getString(applicationContext, R.string.stop), stopScanningPendingIntent))
+                addAction(
+                    NotificationCompat.Action(
+                        R.drawable.stop_24,
+                        ContextCompat.getString(applicationContext, R.string.stop),
+                        stopScanningPendingIntent,
+                    )
+                )
             }
             .build()
     }
 
-    private fun hasBluetoothScanPermission(): Boolean = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        checkMissingPermissions(Manifest.permission.BLUETOOTH_SCAN).isEmpty()
-    } else {
-        checkMissingPermissions(Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN).isEmpty()
-    }
+    private fun hasBluetoothScanPermission(): Boolean =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            checkMissingPermissions(Manifest.permission.BLUETOOTH_SCAN).isEmpty()
+        } else {
+            checkMissingPermissions(
+                    Manifest.permission.BLUETOOTH,
+                    Manifest.permission.BLUETOOTH_ADMIN,
+                )
+                .isEmpty()
+        }
 
     private fun hasReadPhoneStatePermission(): Boolean {
         return checkMissingPermissions(Manifest.permission.READ_PHONE_STATE).isEmpty()

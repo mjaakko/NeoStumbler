@@ -21,18 +21,20 @@ import java.util.Locale
  *
  * @return List of missing permissions
  */
-fun Context.checkMissingPermissions(vararg permissions: String): List<String> = permissions.filter { checkSelfPermission(it) == PackageManager.PERMISSION_DENIED }
+fun Context.checkMissingPermissions(vararg permissions: String): List<String> =
+    permissions.filter { checkSelfPermission(it) == PackageManager.PERMISSION_DENIED }
 
 /**
  * Returns activity of the context or null when the context is not an activity
  *
  * @return Activity or null
  */
-fun Context.getActivity(): Activity? = when (this) {
-    is Activity -> this
-    is ContextWrapper -> baseContext.getActivity()
-    else -> null
-}
+fun Context.getActivity(): Activity? =
+    when (this) {
+        is Activity -> this
+        is ContextWrapper -> baseContext.getActivity()
+        else -> null
+    }
 
 val Context.localeList: LocaleListCompat
     get() = LocaleListCompat.wrap(resources.configuration.locales)
@@ -57,13 +59,9 @@ fun Context.isWifiScanThrottled(): Boolean? {
     }
 }
 
-@IntDef(value = [
-    Toast.LENGTH_SHORT,
-    Toast.LENGTH_LONG
-])
+@IntDef(value = [Toast.LENGTH_SHORT, Toast.LENGTH_LONG])
 @Retention(AnnotationRetention.SOURCE)
 annotation class ToastLength
-
 
 /**
  * Shows a toast message with the specified text
@@ -76,10 +74,17 @@ fun Context.showToast(text: String, @ToastLength length: Int = Toast.LENGTH_SHOR
 }
 
 /**
- * Returns the quantity string with support for user-configured language ([androidx.appcompat.app.AppCompatDelegate])
+ * Returns the quantity string with support for user-configured language
+ * ([androidx.appcompat.app.AppCompatDelegate])
  */
-fun Context.getQuantityString(@PluralsRes resId: Int, quantity: Int, vararg formatArgs: Any = emptyArray<Any>()): String {
-    return ContextCompat.getContextForLanguage(this).resources.getQuantityString(resId, quantity, *formatArgs)
+fun Context.getQuantityString(
+    @PluralsRes resId: Int,
+    quantity: Int,
+    vararg formatArgs: Any = emptyArray<Any>(),
+): String {
+    return ContextCompat.getContextForLanguage(this)
+        .resources
+        .getQuantityString(resId, quantity, *formatArgs)
 }
 
 fun Context.getTextCompat(@StringRes resId: Int): CharSequence {

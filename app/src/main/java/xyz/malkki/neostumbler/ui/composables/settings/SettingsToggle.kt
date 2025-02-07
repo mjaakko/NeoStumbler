@@ -13,18 +13,26 @@ import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.ui.composables.ToggleWithAction
 
-private fun DataStore<Preferences>.preferenceEnabled(preferenceKey: String, default: Boolean): Flow<Boolean> = data
-    .map { it[booleanPreferencesKey(preferenceKey)] }
-    .distinctUntilChanged()
-    .map {
-        it ?: default
-    }
+private fun DataStore<Preferences>.preferenceEnabled(
+    preferenceKey: String,
+    default: Boolean,
+): Flow<Boolean> =
+    data
+        .map { it[booleanPreferencesKey(preferenceKey)] }
+        .distinctUntilChanged()
+        .map { it ?: default }
 
 @Composable
-fun SettingsToggle(title: String, description: String? = null, preferenceKey: String, default: Boolean = false) {
+fun SettingsToggle(
+    title: String,
+    description: String? = null,
+    preferenceKey: String,
+    default: Boolean = false,
+) {
     val settingsStore = koinInject<DataStore<Preferences>>(PREFERENCES)
 
-    val enabled = settingsStore.preferenceEnabled(preferenceKey, default).collectAsState(initial = default)
+    val enabled =
+        settingsStore.preferenceEnabled(preferenceKey, default).collectAsState(initial = default)
 
     ToggleWithAction(
         title = title,
@@ -32,9 +40,7 @@ fun SettingsToggle(title: String, description: String? = null, preferenceKey: St
         enabled = true,
         checked = enabled.value,
         action = { checked ->
-            settingsStore.edit {
-                it[booleanPreferencesKey(preferenceKey)] = checked
-            }
-        }
+            settingsStore.edit { it[booleanPreferencesKey(preferenceKey)] = checked }
+        },
     )
 }

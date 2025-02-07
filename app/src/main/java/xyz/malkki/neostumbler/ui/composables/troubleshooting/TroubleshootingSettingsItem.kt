@@ -24,35 +24,24 @@ import xyz.malkki.neostumbler.ui.composables.settings.SettingsItem
 
 @Composable
 fun TroubleshootingSettingsItem() {
-    val showDialog = rememberSaveable {
-        mutableStateOf(false)
-    }
+    val showDialog = rememberSaveable { mutableStateOf(false) }
 
     if (showDialog.value) {
-        BasicAlertDialog(
-            onDismissRequest = {
-                showDialog.value = false
-            }
-        ) {
+        BasicAlertDialog(onDismissRequest = { showDialog.value = false }) {
             Surface(
-                modifier = Modifier
-                    .sizeIn(maxWidth = 400.dp)
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
+                modifier = Modifier.sizeIn(maxWidth = 400.dp).fillMaxWidth().wrapContentHeight(),
                 shape = MaterialTheme.shapes.medium,
-                tonalElevation = AlertDialogDefaults.TonalElevation
+                tonalElevation = AlertDialogDefaults.TonalElevation,
             ) {
-                Column(
-                    modifier = Modifier.padding(all = 24.dp)
-                ) {
+                Column(modifier = Modifier.padding(all = 24.dp)) {
                     Text(
                         style = MaterialTheme.typography.titleLarge,
-                        text = stringResource(id = R.string.troubleshooting_title)
+                        text = stringResource(id = R.string.troubleshooting_title),
                     )
 
                     Column(
                         modifier = Modifier.padding(top = 8.dp, bottom = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(space = 8.dp)
+                        verticalArrangement = Arrangement.spacedBy(space = 8.dp),
                     ) {
                         PermissionsTroubleshootingItem()
 
@@ -65,9 +54,7 @@ fun TroubleshootingSettingsItem() {
 
                     TextButton(
                         modifier = Modifier.align(Alignment.End),
-                        onClick = {
-                            showDialog.value = false
-                        },
+                        onClick = { showDialog.value = false },
                     ) {
                         Text(text = stringResource(R.string.cancel))
                     }
@@ -79,8 +66,6 @@ fun TroubleshootingSettingsItem() {
     SettingsItem(
         title = stringResource(R.string.troubleshooting_title),
         description = stringResource(R.string.troubleshooting_description),
-        onClick = {
-            showDialog.value = true
-        }
+        onClick = { showDialog.value = true },
     )
 }

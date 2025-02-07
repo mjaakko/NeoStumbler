@@ -15,25 +15,20 @@ import xyz.malkki.neostumbler.db.entities.ReportWithStats
 class ReportsViewModel(reportDatabaseManager: ReportDatabaseManager) : ViewModel() {
     private val db = reportDatabaseManager.reportDb
 
-    val reportsTotal = db
-        .flatMapLatest { it.reportDao().getReportCount() }
-        .distinctUntilChanged()
-    val reportsNotUploaded = db
-        .flatMapLatest { it.reportDao().getReportCountNotUploaded() }
-        .distinctUntilChanged()
+    val reportsTotal = db.flatMapLatest { it.reportDao().getReportCount() }.distinctUntilChanged()
+    val reportsNotUploaded =
+        db.flatMapLatest { it.reportDao().getReportCountNotUploaded() }.distinctUntilChanged()
 
-    val reports: Flow<PagingData<ReportWithStats>> = db
-        .flatMapLatest {
+    val reports: Flow<PagingData<ReportWithStats>> =
+        db.flatMapLatest {
             Pager(PagingConfig(pageSize = 40, prefetchDistance = 5)) {
-                it.reportDao().getAllReportsWithStats()
-            }.flow
+                    it.reportDao().getAllReportsWithStats()
+                }
+                .flow
         }
 
-    val lastUpload = db
-        .flatMapLatest { it.reportDao().getLastUploadTime() }
-        .distinctUntilChanged()
+    val lastUpload = db.flatMapLatest { it.reportDao().getLastUploadTime() }.distinctUntilChanged()
 
-    fun deleteReport(reportId: Long) = viewModelScope.launch {
-        db.value.reportDao().delete(reportId)
-    }
+    fun deleteReport(reportId: Long) =
+        viewModelScope.launch { db.value.reportDao().delete(reportId) }
 }

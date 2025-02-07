@@ -22,6 +22,11 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.room.invalidationTrackerFlow
+import java.time.LocalDate
+import java.time.ZoneOffset
+import kotlin.io.path.createTempFile
+import kotlin.io.path.deleteIfExists
+import kotlin.io.path.outputStream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
@@ -42,27 +47,17 @@ import xyz.malkki.neostumbler.ui.composables.export.ExportCsvButton
 import xyz.malkki.neostumbler.ui.composables.export.ExportDatabaseButton
 import xyz.malkki.neostumbler.ui.composables.shared.ConfirmationDialog
 import xyz.malkki.neostumbler.ui.composables.shared.DateRangePickerDialog
-import java.time.LocalDate
-import java.time.ZoneOffset
-import kotlin.io.path.createTempFile
-import kotlin.io.path.deleteIfExists
-import kotlin.io.path.outputStream
 
 private fun Flow<ReportDatabase>.dbSizeFlow(): Flow<Long> = flatMapLatest { db ->
     val tableNames = db.openHelper.readableDatabase.getTableNames()
 
-    db.invalidationTrackerFlow(*tableNames.toTypedArray(), emitInitialState = true)
-        .map {
-            db.openHelper.readableDatabase.getEstimatedSize()
-        }
+    db.invalidationTrackerFlow(*tableNames.toTypedArray(), emitInitialState = true).map {
+        db.openHelper.readableDatabase.getEstimatedSize()
+    }
 }
 
 private fun Flow<ReportDatabase>.selectableDates(): Flow<Set<LocalDate>> {
-    return flatMapLatest { db ->
-        db.reportDao()
-            .getReportDates()
-            .map { it.toSet() }
-    }
+    return flatMapLatest { db -> db.reportDao().getReportDates().map { it.toSet() } }
 }
 
 @Composable
@@ -79,7 +74,7 @@ fun ManageStorage() {
     Column {
         Text(
             text = stringResource(id = R.string.db_size, dbSizeFormatted),
-            style = MaterialTheme.typography.bodySmall
+            style = MaterialTheme.typography.bodySmall,
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -87,7 +82,7 @@ fun ManageStorage() {
         Column {
             Text(
                 text = stringResource(id = R.string.delete_data),
-                style = MaterialTheme.typography.titleSmall
+                style = MaterialTheme.typography.titleSmall,
             )
 
             DeleteReportsByDate(reportDb = reportDb)
@@ -100,7 +95,7 @@ fun ManageStorage() {
         Column {
             Text(
                 text = stringResource(id = R.string.export_data),
-                style = MaterialTheme.typography.titleSmall
+                style = MaterialTheme.typography.titleSmall,
             )
 
             ExportCsvButton()
@@ -113,7 +108,7 @@ fun ManageStorage() {
         Column {
             Text(
                 text = stringResource(id = R.string.import_data),
-                style = MaterialTheme.typography.titleSmall
+                style = MaterialTheme.typography.titleSmall,
             )
 
             ImportDb()
@@ -127,12 +122,11 @@ private fun DeleteReportsByDate(reportDb: StateFlow<ReportDatabase>) {
 
     val coroutineScope = rememberCoroutineScope()
 
-    val showDatePicker = rememberSaveable {
-        mutableStateOf(false)
-    }
+    val showDatePicker = rememberSaveable { mutableStateOf(false) }
 
-    val selectableDates = remember(reportDb) { reportDb.selectableDates() }
-        .collectAsStateWithLifecycle(initialValue = null)
+    val selectableDates =
+        remember(reportDb) { reportDb.selectableDates() }
+            .collectAsStateWithLifecycle(initialValue = null)
 
     if (showDatePicker.value) {
         DateRangePickerDialog(
@@ -145,7 +139,10 @@ private fun DeleteReportsByDate(reportDb: StateFlow<ReportDatabase>) {
                 if (dateRange != null) {
                     val from = dateRange.start.atStartOfDay().atOffset(ZoneOffset.UTC).toInstant()
                     val to =
-                        dateRange.endInclusive.plusDays(1).atStartOfDay().atOffset(ZoneOffset.UTC)
+                        dateRange.endInclusive
+                            .plusDays(1)
+                            .atStartOfDay()
+                            .atOffset(ZoneOffset.UTC)
                             .toInstant()
 
                     coroutineScope.launch {
@@ -155,20 +152,16 @@ private fun DeleteReportsByDate(reportDb: StateFlow<ReportDatabase>) {
                             context.getQuantityString(
                                 R.plurals.toast_deleted_reports,
                                 deletedCount,
-                                deletedCount
+                                deletedCount,
                             )
                         )
                     }
                 }
-            }
+            },
         )
     }
 
-    Button(
-        onClick = {
-            showDatePicker.value = true
-        }
-    ) {
+    Button(onClick = { showDatePicker.value = true }) {
         Text(text = stringResource(id = R.string.delete_reports_by_date))
     }
 }
@@ -190,29 +183,18 @@ private fun DeleteAllReportsButton(reportDb: StateFlow<ReportDatabase>) {
                 showConfirmationDialog.value = false
 
                 coroutineScope.launch {
-                    withContext(Dispatchers.IO) {
-                        reportDb.value.clearAllTables()
-                    }
+                    withContext(Dispatchers.IO) { reportDb.value.clearAllTables() }
 
                     context.showToast(
-                        ContextCompat.getString(
-                            context,
-                            R.string.toast_deleted_all_reports
-                        )
+                        ContextCompat.getString(context, R.string.toast_deleted_all_reports)
                     )
                 }
             },
-            onNegativeAction = {
-                showConfirmationDialog.value = false
-            }
+            onNegativeAction = { showConfirmationDialog.value = false },
         )
     }
 
-    Button(
-        onClick = {
-            showConfirmationDialog.value = true
-        }
-    ) {
+    Button(onClick = { showConfirmationDialog.value = true }) {
         Text(text = stringResource(id = R.string.delete_all_reports))
     }
 }
@@ -225,49 +207,64 @@ private fun ImportDb() {
 
     val coroutineContext = rememberCoroutineScope()
 
-    val confirmationDialogOpen = rememberSaveable {
-        mutableStateOf(false)
-    }
+    val confirmationDialogOpen = rememberSaveable { mutableStateOf(false) }
 
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        if (uri == null) {
-            //No file was chosen
-            return@rememberLauncherForActivityResult
-        }
+    val launcher =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            if (uri == null) {
+                // No file was chosen
+                return@rememberLauncherForActivityResult
+            }
 
-        coroutineContext.launch {
-            val tempDbFile = createTempFile(context.cacheDir.toPath(), "temp", ".db")
+            coroutineContext.launch {
+                val tempDbFile = createTempFile(context.cacheDir.toPath(), "temp", ".db")
 
-            try {
-                val inputStream = context.contentResolver.openInputStream(uri)
-                if (inputStream == null) {
-                    context.showToast(ContextCompat.getString(context, R.string.failed_to_open_selected_file))
-                    return@launch
-                }
+                try {
+                    val inputStream = context.contentResolver.openInputStream(uri)
+                    if (inputStream == null) {
+                        context.showToast(
+                            ContextCompat.getString(context, R.string.failed_to_open_selected_file)
+                        )
+                        return@launch
+                    }
 
-                withContext(Dispatchers.IO) {
-                    inputStream.use { input ->
-                        tempDbFile.outputStream().buffered().use { output ->
-                            input.copyTo(output)
+                    withContext(Dispatchers.IO) {
+                        inputStream.use { input ->
+                            tempDbFile.outputStream().buffered().use { output ->
+                                input.copyTo(output)
+                            }
                         }
                     }
-                }
 
-                if (ReportDatabaseManager.validateDatabase(context, tempDbFile)) {
-                    reportDatabaseManager.importDb(tempDbFile)
+                    if (ReportDatabaseManager.validateDatabase(context, tempDbFile)) {
+                        reportDatabaseManager.importDb(tempDbFile)
 
-                    val reportCount = reportDatabaseManager.reportDb.value.reportDao().getReportCount().first()
-                    context.showToast(context.getQuantityString(R.plurals.import_database_successful, reportCount, reportCount))
-                } else {
-                    context.showToast(ContextCompat.getString(context, R.string.import_database_not_valid))
+                        val reportCount =
+                            reportDatabaseManager.reportDb.value
+                                .reportDao()
+                                .getReportCount()
+                                .first()
+                        context.showToast(
+                            context.getQuantityString(
+                                R.plurals.import_database_successful,
+                                reportCount,
+                                reportCount,
+                            )
+                        )
+                    } else {
+                        context.showToast(
+                            ContextCompat.getString(context, R.string.import_database_not_valid)
+                        )
+                    }
+                } catch (_: Exception) {
+                    context.showToast(
+                        ContextCompat.getString(context, R.string.failed_to_open_selected_file)
+                    )
+                } finally {
+                    tempDbFile.deleteIfExists()
                 }
-            } catch (_: Exception) {
-                context.showToast(ContextCompat.getString(context, R.string.failed_to_open_selected_file))
-            } finally {
-                tempDbFile.deleteIfExists()
             }
         }
-    }
 
     if (confirmationDialogOpen.value) {
         ConfirmationDialog(
@@ -278,20 +275,16 @@ private fun ImportDb() {
             onPositiveAction = {
                 confirmationDialogOpen.value = false
 
-                //Specifying correct mime type seems to cause DB files to not be selectable in some cases -> use wildcard
+                // Specifying correct mime type seems to cause DB files to not be selectable in some
+                // cases
+                // -> use wildcard
                 launcher.launch("*/*")
             },
-            onNegativeAction = {
-                confirmationDialogOpen.value = false
-            }
+            onNegativeAction = { confirmationDialogOpen.value = false },
         )
     }
 
-    Button(
-        onClick = {
-            confirmationDialogOpen.value = true
-        }
-    ) {
+    Button(onClick = { confirmationDialogOpen.value = true }) {
         Text(text = stringResource(id = R.string.import_raw_database))
     }
 }

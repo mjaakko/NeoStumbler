@@ -13,6 +13,11 @@ import androidx.work.Data
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.hasKeyWithValueOfType
+import java.net.SocketTimeoutException
+import java.time.Instant
+import kotlin.collections.isNotEmpty
+import kotlin.collections.map
+import kotlin.getValue
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -27,17 +32,13 @@ import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.db.entities.ReportWithData
 import xyz.malkki.neostumbler.geosubmit.dto.ReportDto
-import java.net.SocketTimeoutException
-import java.time.Instant
-import kotlin.collections.isNotEmpty
-import kotlin.collections.map
-import kotlin.getValue
 
-class ReportSendWorker(appContext: Context, params: WorkerParameters) : CoroutineWorker(appContext, params), KoinComponent {
+class ReportSendWorker(appContext: Context, params: WorkerParameters) :
+    CoroutineWorker(appContext, params), KoinComponent {
     companion object {
         private const val REPORT_SEND_NOTIFICATION_ID = 55555
 
-        //Send max 2000 reports in one request to avoid creating too large payloads
+        // Send max 2000 reports in one request to avoid creating too large payloads
         private const val MAX_REPORTS_PER_BATCH = 2000
 
         const val PERIODIC_WORK_NAME = "report_upload_periodic"
@@ -63,7 +64,9 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
 
     private suspend fun getGeosubmitApi(): Geosubmit? {
         return getGeosubmitParams()?.let { geosubmitParams ->
-            Timber.d("Using endpoint ${geosubmitParams.path} with API key ${geosubmitParams.apiKey} for Geosubmit")
+            Timber.d(
+                "Using endpoint ${geosubmitParams.path} with API key ${geosubmitParams.apiKey} for Geosubmit"
+            )
 
             IchnaeaGeosubmit(httpClientProvider.await(), geosubmitParams)
         }
@@ -77,7 +80,9 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
                 if (endpoint == null) {
                     null
                 } else {
-                    val path = prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH)] ?: GeosubmitParams.DEFAULT_PATH
+                    val path =
+                        prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH)]
+                            ?: GeosubmitParams.DEFAULT_PATH
                     val apiKey = prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY)]
 
                     GeosubmitParams(endpoint, path, apiKey)
@@ -90,21 +95,24 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
         val geosubmit = getGeosubmitApi()
 
         if (geosubmit == null) {
-            return Result.failure(Data.Builder().putInt(OUTPUT_ERROR_TYPE, ERROR_TYPE_NO_ENDPOINT_CONFIGURED).build())
+            return Result.failure(
+                Data.Builder().putInt(OUTPUT_ERROR_TYPE, ERROR_TYPE_NO_ENDPOINT_CONFIGURED).build()
+            )
         }
 
         val reupload =
-            inputData.hasKeyWithValueOfType<Long>(INPUT_REUPLOAD_FROM)
-                && inputData.hasKeyWithValueOfType<Long>(INPUT_REUPLOAD_TO)
+            inputData.hasKeyWithValueOfType<Long>(INPUT_REUPLOAD_FROM) &&
+                inputData.hasKeyWithValueOfType<Long>(INPUT_REUPLOAD_TO)
 
-        val reportsToUpload = if (!reupload) {
-            reportDao.getAllReportsNotUploaded()
-        } else {
-            val from = Instant.ofEpochMilli(inputData.getLong(INPUT_REUPLOAD_FROM, 0))
-            val to = Instant.ofEpochMilli(inputData.getLong(INPUT_REUPLOAD_TO, 0))
+        val reportsToUpload =
+            if (!reupload) {
+                reportDao.getAllReportsNotUploaded()
+            } else {
+                val from = Instant.ofEpochMilli(inputData.getLong(INPUT_REUPLOAD_FROM, 0))
+                val to = Instant.ofEpochMilli(inputData.getLong(INPUT_REUPLOAD_TO, 0))
 
-            reportDao.getAllReportsForTimerange(from, to)
-        }
+                reportDao.getAllReportsForTimerange(from, to)
+            }
 
         if (reportsToUpload.isEmpty()) {
             Timber.i("No Geosubmit reports to send")
@@ -114,15 +122,13 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
         var reportsSent = 0
 
         return try {
-            reportsToUpload
-                .chunked(MAX_REPORTS_PER_BATCH)
-                .forEach {
-                    sendReports(geosubmit, it)
+            reportsToUpload.chunked(MAX_REPORTS_PER_BATCH).forEach {
+                sendReports(geosubmit, it)
 
-                    reportsSent += it.size
+                reportsSent += it.size
 
-                    setProgress(createResultData(reportsSent))
-                }
+                setProgress(createResultData(reportsSent))
+            }
 
             Result.success(createResultData(reportsSent))
         } catch (ex: Exception) {
@@ -137,35 +143,38 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
     }
 
     private suspend fun sendReports(geosubmitApi: Geosubmit, reports: List<ReportWithData>) {
-        val geosubmitReports = reports.map { report ->
-            ReportDto(
-                timestamp = report.report.timestamp.toEpochMilli(),
-                position = ReportDto.PositionDto.fromDbEntity(report.positionEntity),
-                wifiAccessPoints = report.wifiAccessPointEntities
-                    .map(ReportDto.WifiAccessPointDto::fromDbEntity)
-                    .takeIf { it.isNotEmpty() },
-                cellTowers = report.cellTowerEntities
-                    .map(ReportDto.CellTowerDto::fromDbEntity)
-                    .takeIf { it.isNotEmpty() },
-                bluetoothBeacons = report.bluetoothBeaconEntities
-                    .map(ReportDto.BluetoothBeaconDto::fromDbEntity)
-                    .takeIf { it.isNotEmpty() }
-            )
-        }
+        val geosubmitReports =
+            reports.map { report ->
+                ReportDto(
+                    timestamp = report.report.timestamp.toEpochMilli(),
+                    position = ReportDto.PositionDto.fromDbEntity(report.positionEntity),
+                    wifiAccessPoints =
+                        report.wifiAccessPointEntities
+                            .map(ReportDto.WifiAccessPointDto::fromDbEntity)
+                            .takeIf { it.isNotEmpty() },
+                    cellTowers =
+                        report.cellTowerEntities.map(ReportDto.CellTowerDto::fromDbEntity).takeIf {
+                            it.isNotEmpty()
+                        },
+                    bluetoothBeacons =
+                        report.bluetoothBeaconEntities
+                            .map(ReportDto.BluetoothBeaconDto::fromDbEntity)
+                            .takeIf { it.isNotEmpty() },
+                )
+            }
 
         geosubmitApi.sendReports(geosubmitReports)
 
         val now = Instant.now()
 
-        val updatedReports = reports
-            .filter {
-                //Do not update upload timestamp for reports which were reuploaded
-                !it.report.uploaded
-            }
-            .map {
-                it.report.copy(uploaded = true, uploadTimestamp = now)
-            }
-            .toTypedArray()
+        val updatedReports =
+            reports
+                .filter {
+                    // Do not update upload timestamp for reports which were reuploaded
+                    !it.report.uploaded
+                }
+                .map { it.report.copy(uploaded = true, uploadTimestamp = now) }
+                .toTypedArray()
 
         reportDao.update(*updatedReports)
     }
@@ -183,19 +192,23 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
     }
 
     private fun shouldRetry(exception: Exception): Boolean {
-        //By default, WorkManager will retry indefinitely
-        //If uploading hasn't been successful after 5 retries, just return a failure to stop retrying
+        // By default, WorkManager will retry indefinitely
+        // If uploading hasn't been successful after 5 retries, just return a failure to stop
+        // retrying
         if (runAttemptCount >= 5) {
             return false
         }
 
         if (exception is SocketTimeoutException) {
-            //Retry timeouts because most likely we are just temporarily disconnected
+            // Retry timeouts because most likely we are just temporarily disconnected
             return true
         }
 
-        if (exception is IchnaeaGeosubmit.IchnaeaGeosubmitException && exception.httpStatusCode in 500..599) {
-            //Retry server-side errors (HTTP status 5xx)
+        if (
+            exception is IchnaeaGeosubmit.IchnaeaGeosubmitException &&
+                exception.httpStatusCode in 500..599
+        ) {
+            // Retry server-side errors (HTTP status 5xx)
             return true
         }
 
@@ -206,16 +219,21 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) : Coroutin
         return ForegroundInfo(
             REPORT_SEND_NOTIFICATION_ID,
             createNotification(),
-            ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+            ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC,
         )
     }
 
     private fun createNotification(): Notification {
-        return NotificationCompat.Builder(applicationContext, StumblerApplication.REPORT_UPLOAD_NOTIFICATION_CHANNEL_ID)
+        return NotificationCompat.Builder(
+                applicationContext,
+                StumblerApplication.REPORT_UPLOAD_NOTIFICATION_CHANNEL_ID,
+            )
             .setOngoing(true)
             .setLocalOnly(true)
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_DEFERRED)
-            .setContentTitle(ContextCompat.getString(applicationContext, R.string.notification_sending_reports))
+            .setContentTitle(
+                ContextCompat.getString(applicationContext, R.string.notification_sending_reports)
+            )
             .setSmallIcon(R.drawable.sync_24)
             .build()
     }

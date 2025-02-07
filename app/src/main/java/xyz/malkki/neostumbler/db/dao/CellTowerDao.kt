@@ -6,8 +6,5 @@ import xyz.malkki.neostumbler.db.entities.CellTowerEntity
 
 @Dao
 interface CellTowerDao {
-    @Insert
-    suspend fun insertAll(vararg cellTowerEntities: CellTowerEntity)
-
-
+    @Insert suspend fun insertAll(vararg cellTowerEntities: CellTowerEntity)
 }

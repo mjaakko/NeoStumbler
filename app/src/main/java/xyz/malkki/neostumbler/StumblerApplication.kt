@@ -13,6 +13,11 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import java.time.Duration
+import kotlin.io.path.deleteIfExists
+import kotlin.io.path.deleteRecursively
+import kotlin.io.path.exists
+import kotlin.properties.Delegates
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -39,18 +44,14 @@ import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
 import xyz.malkki.neostumbler.ui.viewmodel.ReportsViewModel
 import xyz.malkki.neostumbler.ui.viewmodel.StatisticsViewModel
 import xyz.malkki.neostumbler.utils.OneTimeActionHelper
-import java.time.Duration
-import kotlin.io.path.deleteIfExists
-import kotlin.io.path.deleteRecursively
-import kotlin.io.path.exists
-import kotlin.properties.Delegates
 
 val PREFERENCES = named("preferences")
 
 class StumblerApplication : Application() {
     private val settingsStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
-    private val oneTimeActionsStore: DataStore<Preferences> by preferencesDataStore(name = "one_time_actions")
+    private val oneTimeActionsStore: DataStore<Preferences> by
+        preferencesDataStore(name = "one_time_actions")
 
     var bluetoothScanAvailable by Delegates.notNull<Boolean>()
 
@@ -64,60 +65,46 @@ class StumblerApplication : Application() {
         startKoin {
             androidContext(this@StumblerApplication)
 
-            modules(module {
-                single {
-                    ReportDatabaseManager(get())
-                }
-            })
+            modules(module { single { ReportDatabaseManager(get()) } })
 
-            modules(module {
-                factory {
-                    CsvExporter(get(), get())
-                }
+            modules(
+                module {
+                    factory { CsvExporter(get(), get()) }
 
-                single {
-                    ScanReportCreator(get())
+                    single { ScanReportCreator(get()) }
                 }
-            })
+            )
 
-            modules(module {
-                single {
-                    @OptIn(DelicateCoroutinesApi::class)
-                    GlobalScope.async(start = CoroutineStart.LAZY) {
-                        getCallFactory(this@StumblerApplication)
+            modules(
+                module {
+                    single {
+                        @OptIn(DelicateCoroutinesApi::class)
+                        GlobalScope.async(start = CoroutineStart.LAZY) {
+                            getCallFactory(this@StumblerApplication)
+                        }
                     }
                 }
-            })
+            )
 
-            modules(module {
-                single {
-                    LocationSourceProvider(get(PREFERENCES))
-                }
-            })
+            modules(module { single { LocationSourceProvider(get(PREFERENCES)) } })
 
-            modules(module {
-                single(PREFERENCES) {
-                    settingsStore
-                }
+            modules(
+                module {
+                    single(PREFERENCES) { settingsStore }
 
-                single {
-                    OneTimeActionHelper(oneTimeActionsStore)
+                    single { OneTimeActionHelper(oneTimeActionsStore) }
                 }
-            })
+            )
 
-            modules(module {
-                viewModel {
-                    MapViewModel(get(), get(PREFERENCES), get(), get(), get())
-                }
+            modules(
+                module {
+                    viewModel { MapViewModel(get(), get(PREFERENCES), get(), get(), get()) }
 
-                viewModel {
-                    StatisticsViewModel(get())
-                }
+                    viewModel { StatisticsViewModel(get()) }
 
-                viewModel {
-                    ReportsViewModel(get())
+                    viewModel { ReportsViewModel(get()) }
                 }
-            })
+            )
         }
 
         deleteOsmDroidFiles()
@@ -126,7 +113,7 @@ class StumblerApplication : Application() {
 
         val workManager = WorkManager.getInstance(this)
 
-        //Schedule worker for removing old reports
+        // Schedule worker for removing old reports
         workManager.enqueueUniquePeriodicWork(
             DbPruneWorker.PERIODIC_WORK_NAME,
             ExistingPeriodicWorkPolicy.UPDATE,
@@ -137,10 +124,10 @@ class StumblerApplication : Application() {
                         requiresCharging = false,
                         requiresStorageNotLow = false,
                         requiresDeviceIdle = true,
-                        requiresBatteryNotLow = true
+                        requiresBatteryNotLow = true,
                     )
                 )
-                .build()
+                .build(),
         )
 
         setupNotificationChannels()
@@ -149,48 +136,58 @@ class StumblerApplication : Application() {
     private fun setupNotificationChannels() {
         val notificationManager = getSystemService<NotificationManager>()!!
 
-        val scannerNotificationChannel = NotificationChannel(
-            STUMBLING_NOTIFICATION_CHANNEL_ID,
-            ContextCompat.getString(this, R.string.scanner_status_notification_channel_name),
-            NotificationManager.IMPORTANCE_LOW
-        ).apply {
-            setShowBadge(false)
-            setBypassDnd(false)
-        }
+        val scannerNotificationChannel =
+            NotificationChannel(
+                    STUMBLING_NOTIFICATION_CHANNEL_ID,
+                    ContextCompat.getString(
+                        this,
+                        R.string.scanner_status_notification_channel_name,
+                    ),
+                    NotificationManager.IMPORTANCE_LOW,
+                )
+                .apply {
+                    setShowBadge(false)
+                    setBypassDnd(false)
+                }
         notificationManager.createNotificationChannel(scannerNotificationChannel)
 
-        val reportUploadNotificationChannel = NotificationChannel(
-            REPORT_UPLOAD_NOTIFICATION_CHANNEL_ID,
-            ContextCompat.getString(this, R.string.report_upload_notification_channel_name),
-            NotificationManager.IMPORTANCE_LOW
-        ).apply {
-            setShowBadge(false)
-            setBypassDnd(false)
-        }
+        val reportUploadNotificationChannel =
+            NotificationChannel(
+                    REPORT_UPLOAD_NOTIFICATION_CHANNEL_ID,
+                    ContextCompat.getString(this, R.string.report_upload_notification_channel_name),
+                    NotificationManager.IMPORTANCE_LOW,
+                )
+                .apply {
+                    setShowBadge(false)
+                    setBypassDnd(false)
+                }
         notificationManager.createNotificationChannel(reportUploadNotificationChannel)
 
-        val exportNotificationChannel = NotificationChannel(
-            EXPORT_NOTIFICATION_CHANNEL_ID,
-            ContextCompat.getString(this, R.string.export_notification_channel_name),
-            NotificationManager.IMPORTANCE_DEFAULT
-        ).apply {
-            setShowBadge(false)
-            setBypassDnd(false)
-        }
+        val exportNotificationChannel =
+            NotificationChannel(
+                    EXPORT_NOTIFICATION_CHANNEL_ID,
+                    ContextCompat.getString(this, R.string.export_notification_channel_name),
+                    NotificationManager.IMPORTANCE_DEFAULT,
+                )
+                .apply {
+                    setShowBadge(false)
+                    setBypassDnd(false)
+                }
         notificationManager.createNotificationChannel(exportNotificationChannel)
     }
-    
+
     private fun setupBeaconLibrary() {
-        //Disable manifest checking, which seems to cause crashes on certain devices
+        // Disable manifest checking, which seems to cause crashes on certain devices
         BeaconManager.setManifestCheckingDisabled(true)
 
-        //Use stub distance calculator to avoid making unnecessary requests for fetching distance calibrations used by the Beacon Library
+        // Use stub distance calculator to avoid making unnecessary requests for fetching distance
+        // calibrations used by the Beacon Library
         Beacon.setDistanceCalculator(StubDistanceCalculator)
 
         try {
             val beaconManager = BeaconManager.getInstanceForApplication(this)
 
-            //Try forcing foreground mode (this doesn't seem to work)
+            // Try forcing foreground mode (this doesn't seem to work)
             beaconManager.setEnableScheduledScanJobs(false)
             @Suppress("DEPRECATION")
             beaconManager.backgroundMode = false
@@ -200,10 +197,10 @@ class StumblerApplication : Application() {
 
             beaconManager.foregroundBetweenScanPeriod = 5 * 1000
             beaconManager.foregroundScanPeriod = 1100
-            //Max age for beacons: 10 seconds
+            // Max age for beacons: 10 seconds
             beaconManager.setMaxTrackingAge(10 * 1000)
 
-            //Add parsers for common beacons types
+            // Add parsers for common beacons types
             beaconManager.beaconParsers.apply {
                 add(IBeaconParser)
                 add(AltBeaconParser())
@@ -225,9 +222,7 @@ class StumblerApplication : Application() {
         }
     }
 
-    /**
-     * Deletes files used by Osmdroid library (no longer used by NeoStumbler)
-     */
+    /** Deletes files used by Osmdroid library (no longer used by NeoStumbler) */
     private fun deleteOsmDroidFiles() {
         val dataDirPath = dataDir.toPath()
 

@@ -32,7 +32,7 @@ import xyz.malkki.neostumbler.utils.SuggestedService
 
 private const val MLS_WARNING = "mls_warning"
 
-//ID from suggested_services.json
+// ID from suggested_services.json
 private const val DEFAULT_SERVICE_ID = "beacondb"
 
 @Composable
@@ -45,34 +45,38 @@ fun MLSWarningDialog() {
 
     val oneTimeActionHelper = koinInject<OneTimeActionHelper>()
 
-    val warningShown = oneTimeActionHelper.hasActionBeenShownFlow(MLS_WARNING).collectAsState(
-        initial = true
-    )
+    val warningShown =
+        oneTimeActionHelper.hasActionBeenShownFlow(MLS_WARNING).collectAsState(initial = true)
 
-    val defaultServiceParams = produceState<SuggestedService?>(null) {
-        value = withContext(Dispatchers.IO) {
-            SuggestedService.getSuggestedServices(context).find { it.id == DEFAULT_SERVICE_ID }
+    val defaultServiceParams =
+        produceState<SuggestedService?>(null) {
+            value =
+                withContext(Dispatchers.IO) {
+                    SuggestedService.getSuggestedServices(context).find {
+                        it.id == DEFAULT_SERVICE_ID
+                    }
+                }
         }
-    }
 
-    val mlsWarningText = (context.getTextCompat(R.string.mls_warning_text) as SpannedString).let { spannedString ->
-        val privacyPolicyLink = spannedString.getSpans<android.text.Annotation>().first()
+    val mlsWarningText =
+        (context.getTextCompat(R.string.mls_warning_text) as SpannedString).let { spannedString ->
+            val privacyPolicyLink = spannedString.getSpans<android.text.Annotation>().first()
 
-        buildAnnotatedString {
-            append(spannedString)
+            buildAnnotatedString {
+                append(spannedString)
 
-            addLink(
-                url = LinkAnnotation.Url(defaultServiceParams.value?.termsOfUse ?: ""),
-                start = spannedString.getSpanStart(privacyPolicyLink),
-                end = spannedString.getSpanEnd(privacyPolicyLink)
-            )
-            addStyle(
-                style = SpanStyle(color = MaterialTheme.colorScheme.primary),
-                start = spannedString.getSpanStart(privacyPolicyLink),
-                end = spannedString.getSpanEnd(privacyPolicyLink)
-            )
+                addLink(
+                    url = LinkAnnotation.Url(defaultServiceParams.value?.termsOfUse ?: ""),
+                    start = spannedString.getSpanStart(privacyPolicyLink),
+                    end = spannedString.getSpanEnd(privacyPolicyLink),
+                )
+                addStyle(
+                    style = SpanStyle(color = MaterialTheme.colorScheme.primary),
+                    start = spannedString.getSpanStart(privacyPolicyLink),
+                    end = spannedString.getSpanEnd(privacyPolicyLink),
+                )
+            }
         }
-    }
 
     if (!warningShown.value) {
         AlertDialog(
@@ -88,7 +92,10 @@ fun MLSWarningDialog() {
                                 val (baseUrl, path) = defaultServiceParams.value!!.endpoint
 
                                 prefs.toMutablePreferences().apply {
-                                    set(stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT), baseUrl)
+                                    set(
+                                        stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT),
+                                        baseUrl,
+                                    )
                                     set(stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH), path)
 
                                     remove(stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY))
@@ -102,7 +109,7 @@ fun MLSWarningDialog() {
 
                             oneTimeActionHelper.markActionShown(MLS_WARNING)
                         }
-                    }
+                    },
                 ) {
                     Text(stringResource(id = R.string.yes))
                 }
@@ -110,15 +117,13 @@ fun MLSWarningDialog() {
             dismissButton = {
                 TextButton(
                     onClick = {
-                        coroutineScope.launch {
-                            oneTimeActionHelper.markActionShown(MLS_WARNING)
-                        }
+                        coroutineScope.launch { oneTimeActionHelper.markActionShown(MLS_WARNING) }
                     }
                 ) {
                     Text(stringResource(id = R.string.no))
                 }
             },
-            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false),
         )
     }
 }

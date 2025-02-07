@@ -24,71 +24,72 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.utils.SelectableDatesFromSet
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
+import xyz.malkki.neostumbler.R
+import xyz.malkki.neostumbler.utils.SelectableDatesFromSet
 
 private val DATE_FORMATTER = DatePickerDefaults.dateFormatter(selectedDateSkeleton = "d/MM/yyyy")
 
 /**
- * @param onDatesSelected Callback for when the button is clicked. If no dates have been selected, the parameter is null
+ * @param onDatesSelected Callback for when the button is clicked. If no dates have been selected,
+ *   the parameter is null
  */
 @Composable
 fun DateRangePickerDialog(
     title: String,
     selectButtonText: String,
     selectableDates: State<Set<LocalDate>?>,
-    onDatesSelected: (ClosedRange<LocalDate>?) -> Unit
+    onDatesSelected: (ClosedRange<LocalDate>?) -> Unit,
 ) {
-    val dateRangePickerState = rememberDateRangePickerState(selectableDates = SelectableDatesFromSet(selectableDates::value))
+    val dateRangePickerState =
+        rememberDateRangePickerState(
+            selectableDates = SelectableDatesFromSet(selectableDates::value)
+        )
 
     LaunchedEffect(
         dateRangePickerState.selectedStartDateMillis,
         dateRangePickerState.selectedEndDateMillis,
-        selectableDates.value
+        selectableDates.value,
     ) {
-        if (selectableDates.value?.size == 1 && dateRangePickerState.selectedStartDateMillis != null) {
-            //If there is only one day of data, automatically select the end date
-            dateRangePickerState.setSelection(dateRangePickerState.selectedStartDateMillis, dateRangePickerState.selectedStartDateMillis)
+        if (
+            selectableDates.value?.size == 1 && dateRangePickerState.selectedStartDateMillis != null
+        ) {
+            // If there is only one day of data, automatically select the end date
+            dateRangePickerState.setSelection(
+                dateRangePickerState.selectedStartDateMillis,
+                dateRangePickerState.selectedStartDateMillis,
+            )
         }
     }
 
     DatePickerDialog(
-        onDismissRequest = {
-            onDatesSelected(null)
-        },
+        onDismissRequest = { onDatesSelected(null) },
         dismissButton = {
-            TextButton(
-                onClick = {
-                    onDatesSelected(null)
-                }
-            ) {
+            TextButton(onClick = { onDatesSelected(null) }) {
                 Text(text = stringResource(R.string.cancel))
             }
         },
         confirmButton = {
             TextButton(
                 enabled = dateRangePickerState.isValid,
-                onClick = {
-                    onDatesSelected(dateRangePickerState.selectedDateRange())
-                }
+                onClick = { onDatesSelected(dateRangePickerState.selectedDateRange()) },
             ) {
                 Text(text = selectButtonText)
             }
-        }
+        },
     ) {
         Column {
             Text(
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(24.dp, 24.dp, 12.dp, 8.dp),
-                text = title
+                text = title,
             )
             if (selectableDates.value == null) {
                 Box(
                     modifier = Modifier.height(400.dp).fillMaxWidth(),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     CircularProgressIndicator()
                 }
@@ -98,22 +99,21 @@ fun DateRangePickerDialog(
                     modifier = Modifier.height(400.dp),
                     dateFormatter = DATE_FORMATTER,
                     headline = {
-                        //Wrap headline in a box to center the text on a single line
+                        // Wrap headline in a box to center the text on a single line
                         Box(
-                            Modifier
-                                .wrapContentHeight()
-                                .fillMaxWidth(),
-                            contentAlignment = Alignment.Center
+                            Modifier.wrapContentHeight().fillMaxWidth(),
+                            contentAlignment = Alignment.Center,
                         ) {
                             DateRangePickerDefaults.DateRangePickerHeadline(
-                                selectedStartDateMillis = dateRangePickerState.selectedStartDateMillis,
+                                selectedStartDateMillis =
+                                    dateRangePickerState.selectedStartDateMillis,
                                 selectedEndDateMillis = dateRangePickerState.selectedEndDateMillis,
                                 displayMode = dateRangePickerState.displayMode,
                                 dateFormatter = DATE_FORMATTER,
-                                modifier = Modifier.scale(0.9f)
+                                modifier = Modifier.scale(0.9f),
                             )
                         }
-                    }
+                    },
                 )
             }
         }
@@ -133,7 +133,8 @@ private fun DateRangePickerState.selectedDateRange(): ClosedRange<LocalDate>? {
         return null
     }
 
-    val from = Instant.ofEpochMilli(selectedStartDateMillis!!).atOffset(ZoneOffset.UTC).toLocalDate()
+    val from =
+        Instant.ofEpochMilli(selectedStartDateMillis!!).atOffset(ZoneOffset.UTC).toLocalDate()
     val to = Instant.ofEpochMilli(selectedEndDateMillis!!).atOffset(ZoneOffset.UTC).toLocalDate()
 
     return from..to

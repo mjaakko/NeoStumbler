@@ -4,6 +4,10 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import java.nio.file.Path
+import kotlin.io.path.outputStream
+import kotlin.io.path.writeBytes
+import kotlin.random.Random
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -12,16 +16,10 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 import org.junit.runner.RunWith
-import java.nio.file.Path
-import kotlin.io.path.outputStream
-import kotlin.io.path.writeBytes
-import kotlin.random.Random
 
 @RunWith(AndroidJUnit4::class)
 class ReportDatabaseManagerTest {
-    @Rule
-    @JvmField
-    val tmpFolder = TemporaryFolder()
+    @Rule @JvmField val tmpFolder = TemporaryFolder()
 
     private lateinit var context: Context
 
@@ -36,12 +34,10 @@ class ReportDatabaseManagerTest {
 
     @Test
     fun testValidatingValidDatabaseFile() = runTest {
-        InstrumentationRegistry.getInstrumentation().context.assets.open("valid_reports.db")
-            .use { input ->
-                dbFile.outputStream().use { output ->
-                    input.copyTo(output)
-                }
-            }
+        InstrumentationRegistry.getInstrumentation().context.assets.open("valid_reports.db").use {
+            input ->
+            dbFile.outputStream().use { output -> input.copyTo(output) }
+        }
 
         val isValid = ReportDatabaseManager.validateDatabase(context, dbFile)
 

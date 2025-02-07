@@ -1,5 +1,8 @@
 package xyz.malkki.neostumbler.scanner
 
+import kotlin.math.abs
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
@@ -24,20 +27,18 @@ import xyz.malkki.neostumbler.extensions.combineWithLatestFrom
 import xyz.malkki.neostumbler.scanner.data.ReportData
 import xyz.malkki.neostumbler.scanner.movement.ConstantMovementDetector
 import xyz.malkki.neostumbler.scanner.movement.MovementDetector
-import kotlin.math.abs
-import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Duration.Companion.seconds
 
-//Maximum accuracy for locations, used for filtering bad locations
+// Maximum accuracy for locations, used for filtering bad locations
 private const val LOCATION_MAX_ACCURACY = 200
 
-//Maximum age for observed devices. This is used to filter out old data when e.g. there is no GPS signal and there's a gap between two locations
+// Maximum age for observed devices. This is used to filter out old data when e.g. there is no GPS
+// signal and there's a gap between two locations
 private val OBSERVED_DEVICE_MAX_AGE = 30.seconds
 
-//Maximum age of air pressure data, relative to the location timestamp
+// Maximum age of air pressure data, relative to the location timestamp
 private val AIR_PRESSURE_MAX_AGE = 2.seconds
 
-//Retain locations in the last 10 seconds
+// Retain locations in the last 10 seconds
 private val LOCATION_BUFFER_DURATION = 10.seconds
 
 class WirelessScanner(
@@ -46,7 +47,7 @@ class WirelessScanner(
     private val cellInfoSource: () -> Flow<List<CellTower>>,
     private val wifiAccessPointSource: () -> Flow<List<WifiAccessPoint>>,
     private val bluetoothBeaconSource: () -> Flow<List<BluetoothBeacon>>,
-    private val movementDetector: MovementDetector = ConstantMovementDetector
+    private val movementDetector: MovementDetector = ConstantMovementDetector,
 ) {
     fun createReports(): Flow<ReportData> = channelFlow {
         val mutex = Mutex()
@@ -55,16 +56,17 @@ class WirelessScanner(
         val bluetoothBeaconsByMacAddr = mutableMapOf<String, BluetoothBeacon>()
         val cellTowersByKey = mutableMapOf<String, CellTower>()
 
-        val isMovingFlow = movementDetector
-            .getIsMovingFlow()
-            .onEach {
-                if (it) {
-                    Timber.i("Moving started, resuming scanning")
-                } else {
-                    Timber.i("Moving stopped, pausing scanning")
+        val isMovingFlow =
+            movementDetector
+                .getIsMovingFlow()
+                .onEach {
+                    if (it) {
+                        Timber.i("Moving started, resuming scanning")
+                    } else {
+                        Timber.i("Moving stopped, pausing scanning")
+                    }
                 }
-            }
-            .stateIn(this)
+                .stateIn(this)
 
         launch(Dispatchers.Default) {
             isMovingFlow
@@ -75,9 +77,7 @@ class WirelessScanner(
                         emptyFlow()
                     }
                 }
-                .map {
-                    it.filterHiddenNetworks()
-                }
+                .map { it.filterHiddenNetworks() }
                 .collect { wifiAccessPoints ->
                     mutex.withLock {
                         wifiAccessPoints.forEach { wifiAccessPoint ->
@@ -131,10 +131,15 @@ class WirelessScanner(
 
                     locationFlow.combineWithLatestFrom(airPressureFlow) { location, airPressure ->
                         location.copy(
-                            pressure = airPressure?.takeIf {
-                                //Use air pressure data only if it's not too old
-                                abs(location.timestamp - it.timestamp).milliseconds <= AIR_PRESSURE_MAX_AGE
-                            }?.airPressure?.toDouble()
+                            pressure =
+                                airPressure
+                                    ?.takeIf {
+                                        // Use air pressure data only if it's not too old
+                                        abs(location.timestamp - it.timestamp).milliseconds <=
+                                            AIR_PRESSURE_MAX_AGE
+                                    }
+                                    ?.airPressure
+                                    ?.toDouble()
                         )
                     }
                 } else {
@@ -144,91 +149,110 @@ class WirelessScanner(
             .filter { location ->
                 location.accuracy != null && location.accuracy <= LOCATION_MAX_ACCURACY
             }
-            //Collect locations to a list so that we can choose the best based on timestamp
+            // Collect locations to a list so that we can choose the best based on timestamp
             .buffer(LOCATION_BUFFER_DURATION)
-            .filter {
-                it.isNotEmpty()
-            }
+            .filter { it.isNotEmpty() }
             .map { locations ->
-                val (cells, wifis, bluetooths) = mutex.withLock {
-                    val cells = cellTowersByKey.values.toList()
-                    cellTowersByKey.clear()
+                val (cells, wifis, bluetooths) =
+                    mutex.withLock {
+                        val cells = cellTowersByKey.values.toList()
+                        cellTowersByKey.clear()
 
-                    //Take Wi-Fis only if there's at least two, because two are needed for a valid Geosubmit report
-                    val wifis = if (wifiAccessPointByMacAddr.size >= 2) {
-                        wifiAccessPointByMacAddr.values.toList().apply {
-                            wifiAccessPointByMacAddr.clear()
-                        }
-                    } else {
-                        emptyList()
+                        // Take Wi-Fis only if there's at least two, because two are needed for a
+                        // valid
+                        // Geosubmit report
+                        val wifis =
+                            if (wifiAccessPointByMacAddr.size >= 2) {
+                                wifiAccessPointByMacAddr.values.toList().apply {
+                                    wifiAccessPointByMacAddr.clear()
+                                }
+                            } else {
+                                emptyList()
+                            }
+
+                        val bluetooths = bluetoothBeaconsByMacAddr.values.toList()
+                        bluetoothBeaconsByMacAddr.clear()
+
+                        Triple(cells, wifis, bluetooths)
                     }
 
-                    val bluetooths = bluetoothBeaconsByMacAddr.values.toList()
-                    bluetoothBeaconsByMacAddr.clear()
+                val cellsByLocation = cells.groupByLocation(locations).filterOldData()
 
-                    Triple(cells, wifis, bluetooths)
-                }
+                val wifisByLocation = wifis.groupByLocation(locations).filterOldData()
 
-                val cellsByLocation = cells
-                    .groupByLocation(locations)
-                    .filterOldData()
+                val bluetoothsByLocation = bluetooths.groupByLocation(locations).filterOldData()
 
-                val wifisByLocation = wifis
-                    .groupByLocation(locations)
-                    .filterOldData()
-
-                val bluetoothsByLocation = bluetooths
-                    .groupByLocation(locations)
-                    .filterOldData()
-
-                val locationsWithData = cellsByLocation.keys + wifisByLocation.keys + bluetoothsByLocation.keys
+                val locationsWithData =
+                    cellsByLocation.keys + wifisByLocation.keys + bluetoothsByLocation.keys
 
                 locationsWithData
                     .map { location ->
-                        createReport(location, cellsByLocation[location] ?: emptyList(), wifisByLocation[location] ?: emptyList(), bluetoothsByLocation[location] ?: emptyList())
+                        createReport(
+                            location,
+                            cellsByLocation[location] ?: emptyList(),
+                            wifisByLocation[location] ?: emptyList(),
+                            bluetoothsByLocation[location] ?: emptyList(),
+                        )
                     }
                     .filter {
-                        it.bluetoothBeacons.isNotEmpty() || it.cellTowers.isNotEmpty() || it.wifiAccessPoints.isNotEmpty()
+                        it.bluetoothBeacons.isNotEmpty() ||
+                            it.cellTowers.isNotEmpty() ||
+                            it.wifiAccessPoints.isNotEmpty()
                     }
             }
-            .collect { reports ->
-                reports.forEach {
-                    send(it)
-                }
-            }
+            .collect { reports -> reports.forEach { send(it) } }
     }
 
     private val CellTower.key: String
-        get() = listOf(mobileCountryCode, mobileNetworkCode, locationAreaCode, cellId, primaryScramblingCode).joinToString("/")
+        get() =
+            listOf(
+                    mobileCountryCode,
+                    mobileNetworkCode,
+                    locationAreaCode,
+                    cellId,
+                    primaryScramblingCode,
+                )
+                .joinToString("/")
 
-    private fun createReport(position: Position, cells: List<CellTower>, wifis: List<WifiAccessPoint>, bluetooths: List<BluetoothBeacon>): ReportData {
+    private fun createReport(
+        position: Position,
+        cells: List<CellTower>,
+        wifis: List<WifiAccessPoint>,
+        bluetooths: List<BluetoothBeacon>,
+    ): ReportData {
         return ReportData(
             position = position,
             cellTowers = cells,
             wifiAccessPoints = wifis.takeIf { it.size >= 2 } ?: emptyList(),
-            bluetoothBeacons = bluetooths
+            bluetoothBeacons = bluetooths,
         )
     }
 
     /**
-     * Filters Wi-Fi networks that should not be sent to geolocation services, i.e.
-     * hidden networks with empty SSID or those with SSID ending in "_nomap"
+     * Filters Wi-Fi networks that should not be sent to geolocation services, i.e. hidden networks
+     * with empty SSID or those with SSID ending in "_nomap"
      *
      * @return Filtered list of scan results
      */
-    private fun List<WifiAccessPoint>.filterHiddenNetworks(): List<WifiAccessPoint> = filter { wifiAccessPoint ->
-        val ssid = wifiAccessPoint.ssid
+    private fun List<WifiAccessPoint>.filterHiddenNetworks(): List<WifiAccessPoint> =
+        filter { wifiAccessPoint ->
+            val ssid = wifiAccessPoint.ssid
 
-        !ssid.isNullOrBlank() && !ssid.endsWith("_nomap")
-    }
+            !ssid.isNullOrBlank() && !ssid.endsWith("_nomap")
+        }
 
-    private fun <T : ObservedDevice> Map<Position, List<T>>.filterOldData(): Map<Position, List<T>> = mapValues { entry ->
+    private fun <T : ObservedDevice> Map<Position, List<T>>.filterOldData():
+        Map<Position, List<T>> = mapValues { entry ->
         val location = entry.key
 
-        entry.value.filter { abs(it.timestamp - location.timestamp).milliseconds <= OBSERVED_DEVICE_MAX_AGE }
+        entry.value.filter {
+            abs(it.timestamp - location.timestamp).milliseconds <= OBSERVED_DEVICE_MAX_AGE
+        }
     }
 
-    private fun <T : ObservedDevice> List<T>.groupByLocation(locations: List<Position>): Map<Position, List<T>> = groupBy {
+    private fun <T : ObservedDevice> List<T>.groupByLocation(
+        locations: List<Position>
+    ): Map<Position, List<T>> = groupBy {
         locations.minBy { location -> abs(it.timestamp - location.timestamp) }
     }
 }

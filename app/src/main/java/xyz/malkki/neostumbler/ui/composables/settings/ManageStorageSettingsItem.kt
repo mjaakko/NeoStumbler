@@ -28,25 +28,16 @@ fun ManageStorageSettingsItem() {
     val showDialog = rememberSaveable { mutableStateOf(false) }
 
     if (showDialog.value) {
-        BasicAlertDialog(
-            onDismissRequest = {
-                showDialog.value = false
-            }
-        ) {
+        BasicAlertDialog(onDismissRequest = { showDialog.value = false }) {
             Surface(
-                modifier = Modifier
-                    .sizeIn(maxWidth = 400.dp)
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
+                modifier = Modifier.sizeIn(maxWidth = 400.dp).fillMaxWidth().wrapContentHeight(),
                 shape = AlertDialogDefaults.shape,
-                tonalElevation = AlertDialogDefaults.TonalElevation
+                tonalElevation = AlertDialogDefaults.TonalElevation,
             ) {
-                Column(
-                    modifier = Modifier.padding(all = 24.dp)
-                ) {
+                Column(modifier = Modifier.padding(all = 24.dp)) {
                     Text(
                         text = stringResource(R.string.manage_storage_title),
-                        style = MaterialTheme.typography.titleLarge
+                        style = MaterialTheme.typography.titleLarge,
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -55,9 +46,7 @@ fun ManageStorageSettingsItem() {
 
                     TextButton(
                         modifier = Modifier.align(Alignment.End),
-                        onClick = {
-                            showDialog.value = false
-                        },
+                        onClick = { showDialog.value = false },
                     ) {
                         Text(text = stringResource(R.string.cancel))
                     }
@@ -68,8 +57,6 @@ fun ManageStorageSettingsItem() {
 
     SettingsItem(
         title = stringResource(R.string.manage_storage_title),
-        onClick = {
-            showDialog.value = true
-        }
+        onClick = { showDialog.value = true },
     )
 }

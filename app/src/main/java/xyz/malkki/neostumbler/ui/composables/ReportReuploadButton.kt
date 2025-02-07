@@ -16,6 +16,11 @@ import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
+import java.time.LocalDate
+import java.time.ZoneId
+import java.util.UUID
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.toJavaDuration
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -27,16 +32,9 @@ import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.geosubmit.ReportSendWorker
 import xyz.malkki.neostumbler.ui.composables.shared.DateRangePickerDialog
 import xyz.malkki.neostumbler.ui.composables.shared.EffectOnWorkCompleted
-import java.time.LocalDate
-import java.time.ZoneId
-import java.util.UUID
-import kotlin.time.Duration.Companion.seconds
-import kotlin.time.toJavaDuration
 
 private fun ReportDatabaseManager.getSelectableDatesSet(): Flow<Set<LocalDate>> {
-    return reportDb
-        .flatMapLatest { it.reportDao().getReportDates() }
-        .map { it.toSet() }
+    return reportDb.flatMapLatest { it.reportDao().getReportDates() }.map { it.toSet() }
 }
 
 @Composable
@@ -56,7 +54,7 @@ fun ReportReuploadButton() {
                 context.getQuantityString(
                     R.plurals.toast_reports_uploaded,
                     reportsUploaded,
-                    reportsUploaded
+                    reportsUploaded,
                 )
             )
 
@@ -70,7 +68,7 @@ fun ReportReuploadButton() {
                     context.showToast(
                         ContextCompat.getString(
                             context,
-                            R.string.toast_reports_upload_failed_no_endpoint
+                            R.string.toast_reports_upload_failed_no_endpoint,
                         )
                     )
                 }
@@ -81,10 +79,7 @@ fun ReportReuploadButton() {
 
                     val toastText = buildString {
                         append(
-                            ContextCompat.getString(
-                                context,
-                                R.string.toast_reports_upload_failed
-                            )
+                            ContextCompat.getString(context, R.string.toast_reports_upload_failed)
                         )
 
                         if (errorMessage != null) {
@@ -97,10 +92,11 @@ fun ReportReuploadButton() {
             }
 
             enqueuedUploadWork.value = null
-        }
+        },
     )
 
-    val selectableDates = reportDatabaseManager.getSelectableDatesSet().collectAsStateWithLifecycle(null)
+    val selectableDates =
+        reportDatabaseManager.getSelectableDatesSet().collectAsStateWithLifecycle(null)
 
     val dialogOpen = rememberSaveable { mutableStateOf(false) }
 
@@ -115,44 +111,44 @@ fun ReportReuploadButton() {
                 if (dateRange != null) {
                     val localTimeZone = ZoneId.systemDefault()
 
-                    //Convert to local time
+                    // Convert to local time
                     val from =
                         dateRange.start.atStartOfDay(localTimeZone).toInstant().toEpochMilli()
-                    val to = dateRange.endInclusive
-                        //Add one day to include data for the last day in the selected range
-                        .plusDays(1)
-                        .atStartOfDay(localTimeZone)
-                        .toInstant()
-                        .toEpochMilli()
+                    val to =
+                        dateRange.endInclusive
+                            // Add one day to include data for the last day in the selected range
+                            .plusDays(1)
+                            .atStartOfDay(localTimeZone)
+                            .toInstant()
+                            .toEpochMilli()
 
                     val workId = UUID.randomUUID()
 
-                    WorkManager.getInstance(context).enqueue(
-                        OneTimeWorkRequest.Builder(ReportSendWorker::class.java)
-                            .setId(workId)
-                            .setBackoffCriteria(BackoffPolicy.LINEAR, 30.seconds.toJavaDuration())
-                            .setInputData(
-                                Data.Builder()
-                                    .putLong(ReportSendWorker.INPUT_REUPLOAD_FROM, from)
-                                    .putLong(ReportSendWorker.INPUT_REUPLOAD_TO, to)
-                                    .build()
-                            )
-                            .setConstraints(Constraints.NONE)
-                            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-                            .build()
-                    )
+                    WorkManager.getInstance(context)
+                        .enqueue(
+                            OneTimeWorkRequest.Builder(ReportSendWorker::class.java)
+                                .setId(workId)
+                                .setBackoffCriteria(
+                                    BackoffPolicy.LINEAR,
+                                    30.seconds.toJavaDuration(),
+                                )
+                                .setInputData(
+                                    Data.Builder()
+                                        .putLong(ReportSendWorker.INPUT_REUPLOAD_FROM, from)
+                                        .putLong(ReportSendWorker.INPUT_REUPLOAD_TO, to)
+                                        .build()
+                                )
+                                .setConstraints(Constraints.NONE)
+                                .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+                                .build()
+                        )
                     enqueuedUploadWork.value = workId
                 }
-            }
+            },
         )
     }
 
-    Button(
-        enabled = true,
-        onClick = {
-            dialogOpen.value = true
-        }
-    ) {
+    Button(enabled = true, onClick = { dialogOpen.value = true }) {
         Text(text = stringResource(id = R.string.reupload_data))
     }
 }

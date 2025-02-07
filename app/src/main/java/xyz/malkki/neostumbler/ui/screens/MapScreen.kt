@@ -67,10 +67,10 @@ import org.maplibre.android.module.http.HttpRequestUtil
 import org.maplibre.android.plugins.annotation.FillManager
 import org.maplibre.android.plugins.annotation.FillOptions
 import org.maplibre.android.style.expressions.Expression
-import org.maplibre.android.style.layers.PropertyFactory.textField
-import org.maplibre.android.style.layers.SymbolLayer
 import org.maplibre.android.style.layers.FillLayer
 import org.maplibre.android.style.layers.PropertyFactory
+import org.maplibre.android.style.layers.PropertyFactory.textField
+import org.maplibre.android.style.layers.SymbolLayer
 import org.maplibre.android.style.sources.VectorSource
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
@@ -79,9 +79,7 @@ import xyz.malkki.neostumbler.ui.composables.shared.KeepScreenOn
 import xyz.malkki.neostumbler.ui.composables.shared.PermissionsDialog
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel.MapTileSource
-
 import java.util.Locale
-import xyz.malkki.neostumbler.utils.getTileJsonLayerIds
 
 private val HEAT_LOW = ColorUtils.setAlphaComponent(0xd278ff, 120)
 private val HEAT_HIGH = ColorUtils.setAlphaComponent(0xaa00ff, 120)
@@ -99,17 +97,11 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
 
     val density = LocalDensity.current
 
-    val showPermissionDialog = rememberSaveable {
-        mutableStateOf(false)
-    }
+    val showPermissionDialog = rememberSaveable { mutableStateOf(false) }
 
-    val trackMyLocation = rememberSaveable {
-        mutableStateOf(false)
-    }
+    val trackMyLocation = rememberSaveable { mutableStateOf(false) }
 
-    val fillManager = remember {
-        mutableStateOf<FillManager?>(null)
-    }
+    val fillManager = remember { mutableStateOf<FillManager?>(null) }
 
     val httpClient = mapViewModel.httpClient.collectAsState(initial = null)
 
@@ -125,30 +117,37 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
 
     val heatMapTiles = mapViewModel.heatMapTiles.collectAsState(initial = emptyList())
 
-    val myLocation = mapViewModel.myLocation.collectAsStateWithLifecycle(initialValue = null, minActiveState = Lifecycle.State.RESUMED)
+    val myLocation =
+        mapViewModel.myLocation.collectAsStateWithLifecycle(
+            initialValue = null,
+            minActiveState = Lifecycle.State.RESUMED,
+        )
 
     if (showPermissionDialog.value) {
         PermissionsDialog(
             missingPermissions = listOf(Manifest.permission.ACCESS_FINE_LOCATION),
-            permissionRationales = mapOf(
-                Manifest.permission.ACCESS_FINE_LOCATION to stringResource(R.string.permission_rationale_location_map)
-            ),
+            permissionRationales =
+                mapOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION to
+                        stringResource(R.string.permission_rationale_location_map)
+                ),
             onPermissionsGranted = {
                 showPermissionDialog.value = false
 
-                val hasPermission = context.checkMissingPermissions(Manifest.permission.ACCESS_COARSE_LOCATION).isEmpty()
+                val hasPermission =
+                    context
+                        .checkMissingPermissions(Manifest.permission.ACCESS_COARSE_LOCATION)
+                        .isEmpty()
 
                 mapViewModel.setShowMyLocation(hasPermission)
                 trackMyLocation.value = hasPermission
-            }
+            },
         )
     }
 
     KeepScreenOn()
 
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
+    Box(modifier = Modifier.fillMaxSize()) {
         if (mapStyle.value != null && httpClient.value != null) {
             AndroidView(
                 modifier = Modifier.fillMaxSize(),
@@ -172,15 +171,17 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                     }
 
                     mapView.getMapAsync { map ->
-                        map.addOnMoveListener(object : MapLibreMap.OnMoveListener {
-                            override fun onMoveBegin(p0: MoveGestureDetector) {
-                                trackMyLocation.value = false
+                        map.addOnMoveListener(
+                            object : MapLibreMap.OnMoveListener {
+                                override fun onMoveBegin(p0: MoveGestureDetector) {
+                                    trackMyLocation.value = false
+                                }
+
+                                override fun onMove(p0: MoveGestureDetector) {}
+
+                                override fun onMoveEnd(p0: MoveGestureDetector) {}
                             }
-
-                            override fun onMove(p0: MoveGestureDetector) {}
-
-                            override fun onMoveEnd(p0: MoveGestureDetector) {}
-                        })
+                        )
 
                         map.setMinZoomPreference(3.0)
                         map.setMaxZoomPreference(15.0)
@@ -188,42 +189,56 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                         val attributionMargin = density.run { 8.dp.roundToPx() }
 
                         map.uiSettings.isLogoEnabled = false
-                        map.uiSettings.setAttributionMargins(attributionMargin, 0, 0, attributionMargin)
+                        map.uiSettings.setAttributionMargins(
+                            attributionMargin,
+                            0,
+                            0,
+                            attributionMargin,
+                        )
                         map.uiSettings.isAttributionEnabled = true
 
                         map.uiSettings.isRotateGesturesEnabled = false
 
-                        map.addOnCameraMoveListener(object : MapLibreMap.OnCameraMoveListener {
-                            override fun onCameraMove() {
-                                val mapCenter = xyz.malkki.neostumbler.domain.LatLng(
-                                    map.cameraPosition.target!!.latitude,
-                                    map.cameraPosition.target!!.longitude
-                                )
+                        map.addOnCameraMoveListener(
+                            object : MapLibreMap.OnCameraMoveListener {
+                                override fun onCameraMove() {
+                                    val mapCenter =
+                                        xyz.malkki.neostumbler.domain.LatLng(
+                                            map.cameraPosition.target!!.latitude,
+                                            map.cameraPosition.target!!.longitude,
+                                        )
 
-                                mapViewModel.setMapCenter(mapCenter)
-                                mapViewModel.setZoom(map.cameraPosition.zoom)
+                                    mapViewModel.setMapCenter(mapCenter)
+                                    mapViewModel.setZoom(map.cameraPosition.zoom)
 
-                                mapViewModel.setMapBounds(
-                                    minLatitude = map.projection.visibleRegion.latLngBounds.latitudeSouth,
-                                    maxLatitude = map.projection.visibleRegion.latLngBounds.latitudeNorth,
-                                    minLongitude = map.projection.visibleRegion.latLngBounds.longitudeWest,
-                                    maxLongitude = map.projection.visibleRegion.latLngBounds.longitudeEast
-                                )
+                                    mapViewModel.setMapBounds(
+                                        minLatitude =
+                                            map.projection.visibleRegion.latLngBounds.latitudeSouth,
+                                        maxLatitude =
+                                            map.projection.visibleRegion.latLngBounds.latitudeNorth,
+                                        minLongitude =
+                                            map.projection.visibleRegion.latLngBounds.longitudeWest,
+                                        maxLongitude =
+                                            map.projection.visibleRegion.latLngBounds.longitudeEast,
+                                    )
+                                }
                             }
-                        })
+                        )
 
-                        val styleBuilder = Style.Builder().apply {
-                            if (mapStyle.value!!.styleJson != null) {
-                                fromJson(mapStyle.value!!.styleJson!!)
-                            } else {
-                                fromUri(mapStyle.value!!.styleUrl!!)
+                        val styleBuilder =
+                            Style.Builder().apply {
+                                if (mapStyle.value!!.styleJson != null) {
+                                    fromJson(mapStyle.value!!.styleJson!!)
+                                } else {
+                                    fromUri(mapStyle.value!!.styleUrl!!)
+                                }
                             }
-                        }
 
                         map.setStyle(styleBuilder) { style ->
                             map.locationComponent.activateLocationComponent(
                                 LocationComponentActivationOptions.builder(context, style)
-                                    //Set location engine to null, because we provide locations by ourself
+                                    // Set location engine to null, because we provide locations by
+                                    // ourself
                                     .locationEngine(null)
                                     .useDefaultLocationEngine(false)
                                     .build()
@@ -232,7 +247,14 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                             map.locationComponent.isLocationComponentEnabled = true
                             map.locationComponent.renderMode = RenderMode.COMPASS
 
-                            fillManager.value = FillManager(mapView, map, style, LocationComponentConstants.SHADOW_LAYER, null)
+                            fillManager.value =
+                                FillManager(
+                                    mapView,
+                                    map,
+                                    style,
+                                    LocationComponentConstants.SHADOW_LAYER,
+                                    null,
+                                )
                         }
 
                         addCoverage(map, coverageTileJsonUrl.value, coverageTileJsonLayerIds.value)
@@ -244,38 +266,55 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                     mapView.lifecycle = lifecycle
 
                     mapView.getMapAsync { map ->
-                        // Call repeatedly in update() because latestReportPosition may not be available in factory()
-                        val target = if (mapViewModel.mapCenter.value.isOrigin()) {
-                            latestReportPosition.value
-                        } else {
-                            mapViewModel.mapCenter.value
-                        }
-                        map.cameraPosition = CameraPosition.Builder()
-                            .target(target?.asMapLibreLatLng())
-                            .zoom(mapViewModel.zoom.value)
-                            .build()
+                        // Call repeatedly in update() because latestReportPosition may not be
+                        // available in
+                        // factory()
+                        val target =
+                            if (mapViewModel.mapCenter.value.isOrigin()) {
+                                latestReportPosition.value
+                            } else {
+                                mapViewModel.mapCenter.value
+                            }
+                        map.cameraPosition =
+                            CameraPosition.Builder()
+                                .target(target?.asMapLibreLatLng())
+                                .zoom(mapViewModel.zoom.value)
+                                .build()
 
-                        if (myLocation.value != null && map.locationComponent.isLocationComponentActivated) {
-                            map.locationComponent.forceLocationUpdate(Location("manual").apply {
-                                latitude = myLocation.value!!.latitude
-                                longitude = myLocation.value!!.longitude
+                        if (
+                            myLocation.value != null &&
+                                map.locationComponent.isLocationComponentActivated
+                        ) {
+                            map.locationComponent.forceLocationUpdate(
+                                Location("manual").apply {
+                                    latitude = myLocation.value!!.latitude
+                                    longitude = myLocation.value!!.longitude
 
-                                myLocation.value!!.accuracy?.toFloat()?.let {
-                                    accuracy = it
+                                    myLocation.value!!.accuracy?.toFloat()?.let { accuracy = it }
                                 }
-                            })
+                            )
 
                             if (trackMyLocation.value) {
-                                map.cameraPosition = CameraPosition.Builder().target(myLocation.value!!.latLng.asMapLibreLatLng()).build()
+                                map.cameraPosition =
+                                    CameraPosition.Builder()
+                                        .target(myLocation.value!!.latLng.asMapLibreLatLng())
+                                        .build()
                             }
                         }
 
-                        //Ugly, but we don't want to update the map style unless it has actually changed
-                        //TODO: think about a better way to do this
+                        // Ugly, but we don't want to update the map style unless it has actually
+                        // changed
+                        // TODO: think about a better way to do this
                         if (map.style != null) {
-                            if (mapStyle.value!!.styleUrl != null && map.style!!.uri != mapStyle.value!!.styleUrl) {
+                            if (
+                                mapStyle.value!!.styleUrl != null &&
+                                    map.style!!.uri != mapStyle.value!!.styleUrl
+                            ) {
                                 map.setStyle(Style.Builder().fromUri(mapStyle.value!!.styleUrl!!))
-                            } else if (mapStyle.value!!.styleJson != null && map.style!!.json != mapStyle.value!!.styleJson) {
+                            } else if (
+                                mapStyle.value!!.styleJson != null &&
+                                    map.style!!.json != mapStyle.value!!.styleJson
+                            ) {
                                 map.setStyle(Style.Builder().fromJson(mapStyle.value!!.styleJson!!))
                             }
                         }
@@ -289,43 +328,42 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                         it.create(createHeatMapFill(heatMapTiles.value))
                     }
                 },
-                onRelease = { view ->
-                    view.lifecycle = null
-                }
+                onRelease = { view -> view.lifecycle = null },
             )
         }
 
-        Box(
-            modifier = Modifier.fillMaxSize().padding(16.dp)
-        ) {
+        Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
             if (selectedMapTileSource.value != null) {
                 MapTileSourceButton(
                     modifier = Modifier.size(32.dp).align(Alignment.TopEnd),
                     selectedMapTileSource = selectedMapTileSource.value!!,
-                    onMapTileSourceSelected = { mapViewModel.setMapTileSource(it) }
+                    onMapTileSourceSelected = { mapViewModel.setMapTileSource(it) },
                 )
             }
 
             FilledIconButton(
-                modifier = Modifier
-                    .size(48.dp)
-                    .align(Alignment.BottomEnd),
+                modifier = Modifier.size(48.dp).align(Alignment.BottomEnd),
                 onClick = {
-                    if (context.checkMissingPermissions(Manifest.permission.ACCESS_FINE_LOCATION).isEmpty()) {
+                    if (
+                        context
+                            .checkMissingPermissions(Manifest.permission.ACCESS_FINE_LOCATION)
+                            .isEmpty()
+                    ) {
                         mapViewModel.setShowMyLocation(true)
                         trackMyLocation.value = true
                     } else {
                         showPermissionDialog.value = true
                     }
-                }
+                },
             ) {
                 Icon(
-                    painter = if (trackMyLocation.value) {
-                        rememberVectorPainter(Icons.Default.MyLocation)
-                    } else {
-                        rememberVectorPainter(Icons.Default.LocationSearching)
-                    },
-                    contentDescription = stringResource(id = R.string.show_my_location)
+                    painter =
+                        if (trackMyLocation.value) {
+                            rememberVectorPainter(Icons.Default.MyLocation)
+                        } else {
+                            rememberVectorPainter(Icons.Default.LocationSearching)
+                        },
+                    contentDescription = stringResource(id = R.string.show_my_location),
                 )
             }
         }
@@ -403,29 +441,29 @@ private fun createHeatMapFill(tiles: Collection<MapViewModel.HeatMapTile>): List
 
         FillOptions()
             .withFillColor(org.maplibre.android.utils.ColorUtils.colorToRgbaString(color))
-            .withFillOutlineColor(org.maplibre.android.utils.ColorUtils.colorToRgbaString(ColorUtils.setAlphaComponent(0, 0)))
-            .withLatLngs(listOf(tile.outline.map {
-                LatLng(it.latitude, it.longitude)
-            }))
+            .withFillOutlineColor(
+                org.maplibre.android.utils.ColorUtils.colorToRgbaString(
+                    ColorUtils.setAlphaComponent(0, 0)
+                )
+            )
+            .withLatLngs(listOf(tile.outline.map { LatLng(it.latitude, it.longitude) }))
     }
 }
 
 @Composable
-private fun MapTileSourceButton(modifier: Modifier, selectedMapTileSource: MapTileSource, onMapTileSourceSelected: (MapTileSource) -> Unit) {
+private fun MapTileSourceButton(
+    modifier: Modifier,
+    selectedMapTileSource: MapTileSource,
+    onMapTileSourceSelected: (MapTileSource) -> Unit,
+) {
     val dialogOpen = rememberSaveable { mutableStateOf(false) }
 
     if (dialogOpen.value) {
-        BasicAlertDialog(
-            onDismissRequest = {
-                dialogOpen.value = false
-            }
-        ) {
+        BasicAlertDialog(onDismissRequest = { dialogOpen.value = false }) {
             Surface(
-                modifier = Modifier
-                    .wrapContentWidth()
-                    .wrapContentHeight(),
+                modifier = Modifier.wrapContentWidth().wrapContentHeight(),
                 shape = MaterialTheme.shapes.small,
-                tonalElevation = AlertDialogDefaults.TonalElevation
+                tonalElevation = AlertDialogDefaults.TonalElevation,
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
@@ -436,15 +474,12 @@ private fun MapTileSourceButton(modifier: Modifier, selectedMapTileSource: MapTi
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Column(
-                        modifier = Modifier
-                            .selectableGroup()
-                            .padding(bottom = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        modifier = Modifier.selectableGroup().padding(bottom = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         MapTileSource.entries.forEach { mapTileSource ->
                             Row(
-                                Modifier
-                                    .fillMaxWidth()
+                                Modifier.fillMaxWidth()
                                     .wrapContentHeight()
                                     .defaultMinSize(minHeight = 36.dp)
                                     .selectable(
@@ -454,25 +489,25 @@ private fun MapTileSourceButton(modifier: Modifier, selectedMapTileSource: MapTi
 
                                             dialogOpen.value = false
                                         },
-                                        role = Role.RadioButton
+                                        role = Role.RadioButton,
                                     )
                                     .padding(horizontal = 16.dp, vertical = 4.dp),
-                                verticalAlignment = Alignment.CenterVertically
+                                verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 RadioButton(
-                                    modifier = Modifier
-                                        .align(Alignment.CenterVertically)
-                                        .padding(top = 4.dp),
+                                    modifier =
+                                        Modifier.align(Alignment.CenterVertically)
+                                            .padding(top = 4.dp),
                                     selected = mapTileSource == selectedMapTileSource,
-                                    onClick = null
+                                    onClick = null,
                                 )
 
                                 Text(
-                                    modifier = Modifier
-                                        .align(Alignment.CenterVertically)
-                                        .padding(start = 16.dp),
+                                    modifier =
+                                        Modifier.align(Alignment.CenterVertically)
+                                            .padding(start = 16.dp),
                                     text = mapTileSource.title,
-                                    style = MaterialTheme.typography.bodyMedium.merge()
+                                    style = MaterialTheme.typography.bodyMedium.merge(),
                                 )
                             }
                         }
@@ -484,14 +519,12 @@ private fun MapTileSourceButton(modifier: Modifier, selectedMapTileSource: MapTi
 
     FilledTonalIconButton(
         modifier = modifier,
-        onClick = {
-            dialogOpen.value = true
-        },
-        colors = IconButtonDefaults.filledTonalIconButtonColors()
+        onClick = { dialogOpen.value = true },
+        colors = IconButtonDefaults.filledTonalIconButtonColors(),
     ) {
         Icon(
             painter = painterResource(id = R.drawable.layers_18),
-            contentDescription = stringResource(id = R.string.map_tile_source)
+            contentDescription = stringResource(id = R.string.map_tile_source),
         )
     }
 }

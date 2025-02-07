@@ -20,7 +20,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
@@ -43,100 +42,119 @@ import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
 import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer.LineProvider.Companion.series
 import com.patrykandpatrick.vico.core.common.shader.ShaderProvider
-import org.koin.androidx.compose.koinViewModel
-import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.extensions.defaultLocale
-import xyz.malkki.neostumbler.ui.viewmodel.StatisticsViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DecimalStyle
 import kotlin.math.floor
 import kotlin.math.log10
 import kotlin.math.pow
+import org.koin.androidx.compose.koinViewModel
+import xyz.malkki.neostumbler.R
+import xyz.malkki.neostumbler.extensions.defaultLocale
+import xyz.malkki.neostumbler.ui.viewmodel.StatisticsViewModel
 
 @Composable
 private fun StationsByDayChart(entryModel: CartesianChartModelProducer) {
     val locale = LocalContext.current.defaultLocale
 
-    val dateFormat = remember(locale) {
-        val pattern = DateFormat.getBestDateTimePattern(locale, "d MMM")
+    val dateFormat =
+        remember(locale) {
+            val pattern = DateFormat.getBestDateTimePattern(locale, "d MMM")
 
-        DateTimeFormatter.ofPattern(pattern, locale).run {
-            withDecimalStyle(DecimalStyle.of(locale))
+            DateTimeFormatter.ofPattern(pattern, locale).run {
+                withDecimalStyle(DecimalStyle.of(locale))
+            }
         }
-    }
 
     CartesianChartHost(
-        modifier = Modifier
-            .padding(
-                start = 8.dp,
-                top = 8.dp,
-                bottom = 8.dp
-            )
-            .fillMaxSize(),
+        modifier = Modifier.padding(start = 8.dp, top = 8.dp, bottom = 8.dp).fillMaxSize(),
         scrollState = rememberVicoScrollState(initialScroll = Scroll.Absolute.End),
-        zoomState = rememberVicoZoomState(initialZoom = remember { Zoom.min(Zoom.fixed(), Zoom.Content) }),
-        chart = rememberCartesianChart(
-            rememberLineCartesianLayer(
-                lineProvider = series(LineCartesianLayer.rememberLine(
-                    areaFill = LineCartesianLayer.AreaFill.single(
-                        fill = fill(
-                            shaderProvider = ShaderProvider.verticalGradient(
-                                colors = arrayOf(vicoTheme.lineCartesianLayerColors.first().copy(alpha = 0.4f), Color.Transparent)
+        zoomState =
+            rememberVicoZoomState(initialZoom = remember { Zoom.min(Zoom.fixed(), Zoom.Content) }),
+        chart =
+            rememberCartesianChart(
+                rememberLineCartesianLayer(
+                    lineProvider =
+                        series(
+                            LineCartesianLayer.rememberLine(
+                                areaFill =
+                                    LineCartesianLayer.AreaFill.single(
+                                        fill =
+                                            fill(
+                                                shaderProvider =
+                                                    ShaderProvider.verticalGradient(
+                                                        colors =
+                                                            arrayOf(
+                                                                vicoTheme.lineCartesianLayerColors
+                                                                    .first()
+                                                                    .copy(alpha = 0.4f),
+                                                                Color.Transparent,
+                                                            )
+                                                    )
+                                            )
+                                    )
                             )
                         )
-                    )
-                ))
-            ),
-            startAxis = VerticalAxis.rememberStart(
-                itemPlacer = remember {
-                    VerticalAxis.ItemPlacer.step(step = { extras ->
-                        val max = extras[StatisticsViewModel.MAX_Y_VALUE_KEY]
+                ),
+                startAxis =
+                    VerticalAxis.rememberStart(
+                        itemPlacer =
+                            remember {
+                                VerticalAxis.ItemPlacer.step(
+                                    step = { extras ->
+                                        val max = extras[StatisticsViewModel.MAX_Y_VALUE_KEY]
 
-                        (10.0.pow(floor(log10(max.toDouble()))) / 10).coerceAtLeast(1.0)
-                    })
-                }
+                                        (10.0.pow(floor(log10(max.toDouble()))) / 10).coerceAtLeast(
+                                            1.0
+                                        )
+                                    }
+                                )
+                            }
+                    ),
+                bottomAxis =
+                    HorizontalAxis.rememberBottom(
+                        valueFormatter =
+                            remember {
+                                CartesianValueFormatter { context, value, pos ->
+                                    LocalDate.ofEpochDay(value.toLong()).format(dateFormat)
+                                }
+                            }
+                    ),
             ),
-            bottomAxis = HorizontalAxis.rememberBottom(
-                valueFormatter = remember {
-                    CartesianValueFormatter { context, value, pos ->
-                        LocalDate.ofEpochDay(value.toLong()).format(dateFormat)
-                    }
-                }
-            ),
-        ),
-        modelProducer = entryModel
+        modelProducer = entryModel,
     )
 }
 
 @Composable
 fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = koinViewModel()) {
-    val selectedDataType = statisticsViewModel.selectedDataType.collectAsState(initial = StatisticsViewModel.DataType.WIFIS)
+    val selectedDataType =
+        statisticsViewModel.selectedDataType.collectAsState(
+            initial = StatisticsViewModel.DataType.WIFIS
+        )
 
-    val loading = statisticsViewModel.loading.collectAsState(initial = StatisticsViewModel.State.LOADING)
+    val loading =
+        statisticsViewModel.loading.collectAsState(initial = StatisticsViewModel.State.LOADING)
 
     Column {
-        PrimaryTabRow(
-            selectedTabIndex = selectedDataType.value.ordinal
-        ) {
+        PrimaryTabRow(selectedTabIndex = selectedDataType.value.ordinal) {
             StatisticsViewModel.DataType.entries.map { dataType ->
                 Tab(
                     selected = selectedDataType.value == dataType,
-                    onClick = {
-                        statisticsViewModel.setDataType(dataType)
-                    },
+                    onClick = { statisticsViewModel.setDataType(dataType) },
                     text = {
                         Text(
-                            text = when (dataType) {
-                                StatisticsViewModel.DataType.WIFIS -> stringResource(id = R.string.wifis)
-                                StatisticsViewModel.DataType.CELLS -> stringResource(id = R.string.cells)
-                                StatisticsViewModel.DataType.BEACONS -> stringResource(id = R.string.beacons)
-                            },
-                            style = LocalTextStyle.current.copy(
-                                lineBreak = LineBreak.Heading
-                            )
+                            text =
+                                when (dataType) {
+                                    StatisticsViewModel.DataType.WIFIS ->
+                                        stringResource(id = R.string.wifis)
+                                    StatisticsViewModel.DataType.CELLS ->
+                                        stringResource(id = R.string.cells)
+                                    StatisticsViewModel.DataType.BEACONS ->
+                                        stringResource(id = R.string.beacons)
+                                },
+                            style = LocalTextStyle.current.copy(lineBreak = LineBreak.Heading),
                         )
-                    }
+                    },
                 )
             }
         }
@@ -144,23 +162,15 @@ fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = koinViewModel())
         ProvideVicoTheme(rememberM3VicoTheme()) {
             when (loading.value) {
                 StatisticsViewModel.State.LOADING -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         CircularProgressIndicator()
                     }
                 }
                 StatisticsViewModel.State.LOADED -> {
-                    StationsByDayChart(
-                        entryModel = statisticsViewModel.chartModelProducer
-                    )
+                    StationsByDayChart(entryModel = statisticsViewModel.chartModelProducer)
                 }
                 StatisticsViewModel.State.NO_DATA -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         Text(text = stringResource(id = R.string.no_data))
                     }
                 }

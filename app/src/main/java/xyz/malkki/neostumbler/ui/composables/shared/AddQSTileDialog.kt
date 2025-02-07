@@ -24,7 +24,11 @@ import xyz.malkki.neostumbler.utils.ImmediateExecutor
  */
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
-fun AddQSTileDialog(componentName: ComponentName, dialogText: String, onDialogDismissed: () -> Unit) {
+fun AddQSTileDialog(
+    componentName: ComponentName,
+    dialogText: String,
+    onDialogDismissed: () -> Unit,
+) {
     val context = LocalContext.current
 
     val packageManager = context.packageManager
@@ -41,7 +45,7 @@ fun AddQSTileDialog(componentName: ComponentName, dialogText: String, onDialogDi
                         componentName,
                         serviceInfo.loadLabel(packageManager),
                         Icon.createWithResource(context, serviceInfo.icon),
-                        ImmediateExecutor
+                        ImmediateExecutor,
                     ) {
                         onDialogDismissed()
                     }
@@ -51,14 +55,10 @@ fun AddQSTileDialog(componentName: ComponentName, dialogText: String, onDialogDi
             }
         },
         dismissButton = {
-            TextButton(
-                onClick = onDialogDismissed
-            ) {
+            TextButton(onClick = onDialogDismissed) {
                 Text(stringResource(id = R.string.no_thanks))
             }
         },
-        text = {
-            Text(text = dialogText)
-        }
+        text = { Text(text = dialogText) },
     )
 }

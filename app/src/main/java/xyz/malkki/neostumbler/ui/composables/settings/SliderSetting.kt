@@ -38,11 +38,8 @@ import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
 
-private fun DataStore<Preferences>.getValue(preferenceKey: String): Flow<Int?> = data
-    .map {
-        it[intPreferencesKey(preferenceKey)]
-    }
-    .distinctUntilChanged()
+private fun DataStore<Preferences>.getValue(preferenceKey: String): Flow<Int?> =
+    data.map { it[intPreferencesKey(preferenceKey)] }.distinctUntilChanged()
 
 @Composable
 fun SliderSetting(
@@ -51,7 +48,7 @@ fun SliderSetting(
     range: IntRange,
     step: Int,
     valueFormatter: (Int) -> String,
-    default: Int
+    default: Int,
 ) {
     val context = LocalContext.current
 
@@ -60,9 +57,8 @@ fun SliderSetting(
     val settingsStore = koinInject<DataStore<Preferences>>(PREFERENCES)
     val preferenceValue = settingsStore.getValue(preferenceKey).collectAsState(initial = default)
 
-    val sliderValue = remember(preferenceValue.value) {
-        mutableIntStateOf(preferenceValue.value ?: default)
-    }
+    val sliderValue =
+        remember(preferenceValue.value) { mutableIntStateOf(preferenceValue.value ?: default) }
 
     val dialogOpen = rememberSaveable { mutableStateOf(false) }
 
@@ -71,42 +67,34 @@ fun SliderSetting(
             onDismissRequest = {
                 dialogOpen.value = false
 
-                //Reset slider value to default when dialog is closed without saving
+                // Reset slider value to default when dialog is closed without saving
                 sliderValue.intValue = preferenceValue.value ?: default
             }
         ) {
             Surface(
-                modifier = Modifier
-                    .wrapContentWidth()
-                    .wrapContentHeight(),
+                modifier = Modifier.wrapContentWidth().wrapContentHeight(),
                 shape = MaterialTheme.shapes.large,
-                tonalElevation = AlertDialogDefaults.TonalElevation
+                tonalElevation = AlertDialogDefaults.TonalElevation,
             ) {
                 Column(modifier = Modifier.padding(24.dp)) {
-                    Text(
-                        style = MaterialTheme.typography.titleLarge,
-                        text = title,
-                    )
+                    Text(style = MaterialTheme.typography.titleLarge, text = title)
 
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Column(
-                        modifier = Modifier
-                            .padding(bottom = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        modifier = Modifier.padding(bottom = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         Slider(
                             value = sliderValue.intValue.toFloat(),
-                            onValueChange = {
-                                sliderValue.intValue = it.toInt()
-                            },
+                            onValueChange = { sliderValue.intValue = it.toInt() },
                             steps = ((range.endInclusive - range.start) / step) - 1,
-                            valueRange = range.start.toFloat()..range.endInclusive.toFloat()
+                            valueRange = range.start.toFloat()..range.endInclusive.toFloat(),
                         )
 
                         Text(
                             text = valueFormatter.invoke(sliderValue.intValue),
-                            style = MaterialTheme.typography.bodySmall
+                            style = MaterialTheme.typography.bodySmall,
                         )
                     }
 
@@ -132,8 +120,6 @@ fun SliderSetting(
     SettingsItem(
         title = title,
         description = valueFormatter.invoke(preferenceValue.value ?: default),
-        onClick = {
-            dialogOpen.value = true
-        }
+        onClick = { dialogOpen.value = true },
     )
 }

@@ -6,6 +6,5 @@ import xyz.malkki.neostumbler.db.entities.BluetoothBeaconEntity
 
 @Dao
 interface BluetoothBeaconDao {
-    @Insert
-    suspend fun insertAll(vararg bluetoothBeaconEntities: BluetoothBeaconEntity)
+    @Insert suspend fun insertAll(vararg bluetoothBeaconEntities: BluetoothBeaconEntity)
 }

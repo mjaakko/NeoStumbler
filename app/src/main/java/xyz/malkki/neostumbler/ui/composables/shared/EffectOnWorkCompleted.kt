@@ -5,10 +5,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import java.util.UUID
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
-import java.util.UUID
 
 /**
  * Helper composable for running an effect when work is completed
@@ -18,15 +18,22 @@ import java.util.UUID
  * @param onWorkFailed Callback to be called when the work is finished with a failure
  */
 @Composable
-fun EffectOnWorkCompleted(workId: UUID?, onWorkSuccess: (WorkInfo) -> Unit, onWorkFailed: (WorkInfo) -> Unit) {
+fun EffectOnWorkCompleted(
+    workId: UUID?,
+    onWorkSuccess: (WorkInfo) -> Unit,
+    onWorkFailed: (WorkInfo) -> Unit,
+) {
     val context = LocalContext.current
     val workManager = WorkManager.getInstance(context)
-    
+
     LaunchedEffect(workId) {
         if (workId != null) {
-            workManager.getWorkInfoByIdFlow(workId)
+            workManager
+                .getWorkInfoByIdFlow(workId)
                 .filterNotNull()
-                .filter { it.state == WorkInfo.State.SUCCEEDED || it.state == WorkInfo.State.FAILED }
+                .filter {
+                    it.state == WorkInfo.State.SUCCEEDED || it.state == WorkInfo.State.FAILED
+                }
                 .collectLatest {
                     if (it.state == WorkInfo.State.SUCCEEDED) {
                         onWorkSuccess(it)

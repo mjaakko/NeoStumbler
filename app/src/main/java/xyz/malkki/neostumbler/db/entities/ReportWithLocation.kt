@@ -6,5 +6,5 @@ data class ReportWithLocation(
     val id: Long,
     val timestamp: Instant,
     val latitude: Double,
-    val longitude: Double
+    val longitude: Double,
 )

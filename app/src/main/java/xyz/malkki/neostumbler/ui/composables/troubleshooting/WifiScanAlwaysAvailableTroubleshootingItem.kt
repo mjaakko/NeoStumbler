@@ -19,15 +19,18 @@ fun WifiScanAlwaysAvailableTroubleshootingItem() {
     val wifiManager = context.getSystemService<WifiManager>()!!
 
     val wifiScanAlwaysAvailable = MutableStateFlow(wifiManager.isScanAlwaysAvailable)
-    val wifiScanAlwaysAvailableLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { _ ->
-        wifiScanAlwaysAvailable.tryEmit(wifiManager.isScanAlwaysAvailable)
-    }
+    val wifiScanAlwaysAvailableLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { _ ->
+            wifiScanAlwaysAvailable.tryEmit(wifiManager.isScanAlwaysAvailable)
+        }
 
     TroubleshootingItem(
         title = stringResource(id = R.string.troubleshooting_wifi_scan_always_available),
         stateFlow = wifiScanAlwaysAvailable,
         fixAction = {
-            wifiScanAlwaysAvailableLauncher.launch(Intent(WifiManager.ACTION_REQUEST_SCAN_ALWAYS_AVAILABLE))
-        }
+            wifiScanAlwaysAvailableLauncher.launch(
+                Intent(WifiManager.ACTION_REQUEST_SCAN_ALWAYS_AVAILABLE)
+            )
+        },
     )
 }

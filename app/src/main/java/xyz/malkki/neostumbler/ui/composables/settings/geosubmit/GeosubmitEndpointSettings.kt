@@ -40,19 +40,22 @@ import xyz.malkki.neostumbler.geosubmit.GeosubmitParams
 import xyz.malkki.neostumbler.ui.composables.settings.SettingsItem
 import xyz.malkki.neostumbler.ui.composables.settings.Warning
 
-private fun DataStore<Preferences>.geosubmitParams(): Flow<GeosubmitParams?> = data
-    .map { preferences ->
-        val endpoint = preferences[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)]
-        val path = preferences[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH)] ?: GeosubmitParams.DEFAULT_PATH
-        val apiKey = preferences[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY)]
+private fun DataStore<Preferences>.geosubmitParams(): Flow<GeosubmitParams?> =
+    data
+        .map { preferences ->
+            val endpoint = preferences[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)]
+            val path =
+                preferences[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH)]
+                    ?: GeosubmitParams.DEFAULT_PATH
+            val apiKey = preferences[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY)]
 
-        if (endpoint != null) {
-            GeosubmitParams(endpoint, path, apiKey)
-        } else {
-            null
+            if (endpoint != null) {
+                GeosubmitParams(endpoint, path, apiKey)
+            } else {
+                null
+            }
         }
-    }
-    .distinctUntilChanged()
+        .distinctUntilChanged()
 
 @Composable
 fun GeosubmitEndpointSettings() {
@@ -71,11 +74,20 @@ fun GeosubmitEndpointSettings() {
                     coroutineScope.launch {
                         settingsStore.updateData { prefs ->
                             prefs.toMutablePreferences().apply {
-                                set(stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT), newParams.baseUrl)
-                                set(stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH), newParams.path)
+                                set(
+                                    stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT),
+                                    newParams.baseUrl,
+                                )
+                                set(
+                                    stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH),
+                                    newParams.path,
+                                )
 
                                 if (newParams.apiKey != null) {
-                                    set(stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY), newParams.apiKey)
+                                    set(
+                                        stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY),
+                                        newParams.apiKey,
+                                    )
                                 } else {
                                     remove(stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY))
                                 }
@@ -87,39 +99,34 @@ fun GeosubmitEndpointSettings() {
                 } else {
                     dialogOpen.value = false
                 }
-            }
+            },
         )
     }
 
     SettingsItem(
         title = stringResource(R.string.endpoint),
         description = params.value?.baseUrl ?: stringResource(R.string.no_endpoint_configured),
-        onClick = {
-            dialogOpen.value = true
-        }
+        onClick = { dialogOpen.value = true },
     )
 }
 
 @Composable
-private fun GeosubmitEndpointDialog(currentParams: GeosubmitParams?, onDialogClose: (GeosubmitParams?) -> Unit) {
-    val endpoint = rememberSaveable {
-        mutableStateOf(currentParams?.baseUrl)
-    }
+private fun GeosubmitEndpointDialog(
+    currentParams: GeosubmitParams?,
+    onDialogClose: (GeosubmitParams?) -> Unit,
+) {
+    val endpoint = rememberSaveable { mutableStateOf(currentParams?.baseUrl) }
     val path = rememberSaveable {
         mutableStateOf(currentParams?.path ?: GeosubmitParams.DEFAULT_PATH)
     }
-    val apiKey = rememberSaveable {
-        mutableStateOf(currentParams?.apiKey)
-    }
+    val apiKey = rememberSaveable { mutableStateOf(currentParams?.apiKey) }
 
-    val showSuggestedServicesDialog = rememberSaveable {
-        mutableStateOf(false)
-    }
+    val showSuggestedServicesDialog = rememberSaveable { mutableStateOf(false) }
 
     if (showSuggestedServicesDialog.value) {
         SuggestedServicesDialog(
             onServiceSelected = { service ->
-                if (service != null)  {
+                if (service != null) {
                     endpoint.value = service.endpoint.baseUrl
                     path.value = service.endpoint.path
                     apiKey.value = service.endpoint.apiKey
@@ -130,15 +137,11 @@ private fun GeosubmitEndpointDialog(currentParams: GeosubmitParams?, onDialogClo
         )
     }
 
-    BasicAlertDialog(
-        onDismissRequest = { onDialogClose(null) }
-    ) {
+    BasicAlertDialog(onDismissRequest = { onDialogClose(null) }) {
         Surface(
-            modifier = Modifier
-                .wrapContentWidth()
-                .wrapContentHeight(),
+            modifier = Modifier.wrapContentWidth().wrapContentHeight(),
             shape = MaterialTheme.shapes.large,
-            tonalElevation = AlertDialogDefaults.TonalElevation
+            tonalElevation = AlertDialogDefaults.TonalElevation,
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
@@ -148,15 +151,13 @@ private fun GeosubmitEndpointDialog(currentParams: GeosubmitParams?, onDialogClo
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                //TODO: would be nice to have a validator here
+                // TODO: would be nice to have a validator here
                 TextField(
                     modifier = Modifier.fillMaxWidth(),
                     value = endpoint.value ?: "",
-                    onValueChange = { newEndpoint ->
-                        endpoint.value = newEndpoint
-                    },
+                    onValueChange = { newEndpoint -> endpoint.value = newEndpoint },
                     label = { Text(text = stringResource(id = R.string.endpoint)) },
-                    singleLine = true
+                    singleLine = true,
                 )
 
                 if (endpoint.value.isUnencryptedUrl) {
@@ -168,11 +169,9 @@ private fun GeosubmitEndpointDialog(currentParams: GeosubmitParams?, onDialogClo
                 TextField(
                     modifier = Modifier.fillMaxWidth(),
                     value = path.value ?: "",
-                    onValueChange = { newPath ->
-                        path.value = newPath
-                    },
+                    onValueChange = { newPath -> path.value = newPath },
                     label = { Text(text = stringResource(id = R.string.path)) },
-                    singleLine = true
+                    singleLine = true,
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -180,32 +179,30 @@ private fun GeosubmitEndpointDialog(currentParams: GeosubmitParams?, onDialogClo
                 TextField(
                     modifier = Modifier.fillMaxWidth(),
                     value = apiKey.value ?: "",
-                    onValueChange = { newApiKey ->
-                        apiKey.value = newApiKey
-                    },
+                    onValueChange = { newApiKey -> apiKey.value = newApiKey },
                     label = { Text(text = stringResource(id = R.string.api_key)) },
-                    singleLine = true
+                    singleLine = true,
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Button(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
-                    onClick = {
-                        showSuggestedServicesDialog.value = true
-                    }
+                    onClick = { showSuggestedServicesDialog.value = true },
                 ) {
-                    Text(
-                        text = stringResource(id = R.string.suggested_services_title)
-                    )
+                    Text(text = stringResource(id = R.string.suggested_services_title))
                 }
 
                 Row {
                     Spacer(modifier = Modifier.weight(1.0f))
 
                     TextButton(
-                        onClick = { onDialogClose(GeosubmitParams(endpoint.value!!, path.value!!, apiKey.value)) },
-                        enabled = !endpoint.value.isNullOrBlank() && !path.value.isNullOrBlank()
+                        onClick = {
+                            onDialogClose(
+                                GeosubmitParams(endpoint.value!!, path.value!!, apiKey.value)
+                            )
+                        },
+                        enabled = !endpoint.value.isNullOrBlank() && !path.value.isNullOrBlank(),
                     ) {
                         Text(text = stringResource(id = R.string.save))
                     }

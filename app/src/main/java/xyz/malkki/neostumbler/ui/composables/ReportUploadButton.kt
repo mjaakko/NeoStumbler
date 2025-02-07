@@ -31,6 +31,9 @@ import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.await
+import java.util.UUID
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.toJavaDuration
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -42,22 +45,18 @@ import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.geosubmit.ReportSendWorker
 import xyz.malkki.neostumbler.ui.composables.shared.EffectOnWorkCompleted
 import xyz.malkki.neostumbler.ui.viewmodel.ReportsViewModel
-import java.util.UUID
-import kotlin.time.Duration.Companion.seconds
-import kotlin.time.toJavaDuration
 
-/**
- * Returns a flow which emits booleans indicating whether an upload can be started
- */
-private fun WorkManager.getCanUploadFlow(): Flow<Boolean> = getWorkInfosForUniqueWorkFlow(ReportSendWorker.ONE_TIME_WORK_NAME)
-    .map { workInfos ->
-        workInfos.none { workInfo ->
-            workInfo.state == WorkInfo.State.ENQUEUED
-                || workInfo.state == WorkInfo.State.RUNNING
-                || workInfo.state == WorkInfo.State.BLOCKED
+/** Returns a flow which emits booleans indicating whether an upload can be started */
+private fun WorkManager.getCanUploadFlow(): Flow<Boolean> =
+    getWorkInfosForUniqueWorkFlow(ReportSendWorker.ONE_TIME_WORK_NAME)
+        .map { workInfos ->
+            workInfos.none { workInfo ->
+                workInfo.state == WorkInfo.State.ENQUEUED ||
+                    workInfo.state == WorkInfo.State.RUNNING ||
+                    workInfo.state == WorkInfo.State.BLOCKED
+            }
         }
-    }
-    .distinctUntilChanged()
+        .distinctUntilChanged()
 
 @Composable
 fun ReportUploadButton(reportsViewModel: ReportsViewModel) {
@@ -69,9 +68,7 @@ fun ReportUploadButton(reportsViewModel: ReportsViewModel) {
     val canUpload = workManager.getCanUploadFlow().collectAsState(initial = false)
     val reportsNotUploaded = reportsViewModel.reportsNotUploaded.collectAsStateWithLifecycle(0)
 
-    val enqueuing = remember {
-        mutableStateOf(false)
-    }
+    val enqueuing = remember { mutableStateOf(false) }
 
     val enqueuedUploadWork = rememberSaveable { mutableStateOf<UUID?>(null) }
 
@@ -84,7 +81,7 @@ fun ReportUploadButton(reportsViewModel: ReportsViewModel) {
                 context.getQuantityString(
                     R.plurals.toast_reports_uploaded,
                     reportsUploaded,
-                    reportsUploaded
+                    reportsUploaded,
                 )
             )
 
@@ -98,7 +95,7 @@ fun ReportUploadButton(reportsViewModel: ReportsViewModel) {
                     context.showToast(
                         ContextCompat.getString(
                             context,
-                            R.string.toast_reports_upload_failed_no_endpoint
+                            R.string.toast_reports_upload_failed_no_endpoint,
                         )
                     )
                 }
@@ -109,10 +106,7 @@ fun ReportUploadButton(reportsViewModel: ReportsViewModel) {
 
                     val toastText = buildString {
                         append(
-                            ContextCompat.getString(
-                                context,
-                                R.string.toast_reports_upload_failed
-                            )
+                            ContextCompat.getString(context, R.string.toast_reports_upload_failed)
                         )
 
                         if (errorMessage != null) {
@@ -121,12 +115,11 @@ fun ReportUploadButton(reportsViewModel: ReportsViewModel) {
                         }
                     }
                     context.showToast(toastText, length = Toast.LENGTH_LONG)
-
                 }
             }
 
             enqueuedUploadWork.value = null
-        }
+        },
     )
 
     Button(
@@ -150,35 +143,35 @@ fun ReportUploadButton(reportsViewModel: ReportsViewModel) {
                                     requiresStorageNotLow = false,
                                     requiresDeviceIdle = false,
                                     requiresCharging = false,
-                                    requiresBatteryNotLow = false
+                                    requiresBatteryNotLow = false,
                                 )
                             )
                             .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-                            .build()
+                            .build(),
                     )
                     .await()
 
                 enqueuedUploadWork.value = workId
 
-                //Add small delay to avoid flickering the button
+                // Add small delay to avoid flickering the button
                 delay(0.3.seconds)
 
                 enqueuing.value = false
             }
         },
-        contentPadding = ButtonDefaults.ButtonWithIconContentPadding
+        contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
     ) {
         Icon(
             painter = rememberVectorPainter(Icons.AutoMirrored.Default.Send),
             contentDescription = null,
-            modifier = Modifier.size(ButtonDefaults.IconSize)
+            modifier = Modifier.size(ButtonDefaults.IconSize),
         )
         Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
 
         Text(
             text = stringResource(R.string.send_reports),
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
         )
     }
 }

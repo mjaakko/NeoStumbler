@@ -1,4 +1,4 @@
-@file:Suppress("DEPRECATION") //PhoneStateListener is deprecated on Android 12+ś
+@file:Suppress("DEPRECATION") // PhoneStateListener is deprecated on Android 12+ś
 
 package xyz.malkki.neostumbler.extensions
 
@@ -29,27 +29,23 @@ fun TelephonyManager.getServiceStateFlow(): Flow<ServiceState> {
 private fun TelephonyManager.getServiceStateFlowLegacy(): Flow<ServiceState> = callbackFlow {
     var listener: PhoneStateListener? = null
 
-    val handlerThread = object : HandlerThread("PhoneStateHandler") {
-            override fun onLooperPrepared() {
-                listener = object : PhoneStateListener() {
-                    override fun onServiceStateChanged(serviceState: ServiceState?) {
-                        serviceState?.let {
-                            trySendBlocking(it)
+    val handlerThread =
+        object : HandlerThread("PhoneStateHandler") {
+                override fun onLooperPrepared() {
+                    listener =
+                        object : PhoneStateListener() {
+                            override fun onServiceStateChanged(serviceState: ServiceState?) {
+                                serviceState?.let { trySendBlocking(it) }
+                            }
                         }
-                    }
-                }
 
-                listen(listener, PhoneStateListener.LISTEN_SERVICE_STATE)
+                    listen(listener, PhoneStateListener.LISTEN_SERVICE_STATE)
+                }
             }
-        }
-        .apply {
-            start()
-        }
+            .apply { start() }
 
     awaitClose {
-        listener?.let {
-            listen(it, PhoneStateListener.LISTEN_NONE)
-        }
+        listener?.let { listen(it, PhoneStateListener.LISTEN_NONE) }
 
         handlerThread.quit()
     }
@@ -57,15 +53,14 @@ private fun TelephonyManager.getServiceStateFlowLegacy(): Flow<ServiceState> = c
 
 @RequiresApi(Build.VERSION_CODES.S)
 private fun TelephonyManager.getServiceStateFlowS(): Flow<ServiceState> = callbackFlow {
-    val listener = object : TelephonyCallback.ServiceStateListener, TelephonyCallback() {
-        override fun onServiceStateChanged(serviceState: ServiceState) {
-            trySendBlocking(serviceState)
+    val listener =
+        object : TelephonyCallback.ServiceStateListener, TelephonyCallback() {
+            override fun onServiceStateChanged(serviceState: ServiceState) {
+                trySendBlocking(serviceState)
+            }
         }
-    }
 
     registerTelephonyCallback(ImmediateExecutor, listener)
 
-    awaitClose {
-        unregisterTelephonyCallback(listener)
-    }
+    awaitClose { unregisterTelephonyCallback(listener) }
 }

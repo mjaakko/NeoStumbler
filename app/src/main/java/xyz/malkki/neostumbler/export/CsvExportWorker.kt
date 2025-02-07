@@ -10,16 +10,17 @@ import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.hasKeyWithValueOfType
+import java.time.Instant
+import kotlin.time.DurationUnit
+import kotlin.time.measureTime
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import timber.log.Timber
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
-import java.time.Instant
-import kotlin.time.DurationUnit
-import kotlin.time.measureTime
 
-class CsvExportWorker(appContext: Context, private val params: WorkerParameters) : CoroutineWorker(appContext, params), KoinComponent {
+class CsvExportWorker(appContext: Context, private val params: WorkerParameters) :
+    CoroutineWorker(appContext, params), KoinComponent {
     companion object {
         const val INPUT_FROM = "from"
         const val INPUT_TO = "to"
@@ -31,21 +32,33 @@ class CsvExportWorker(appContext: Context, private val params: WorkerParameters)
     private val csvExporter: CsvExporter by inject()
 
     private fun createNotification(): Notification {
-        return NotificationCompat.Builder(applicationContext, StumblerApplication.EXPORT_NOTIFICATION_CHANNEL_ID)
+        return NotificationCompat.Builder(
+                applicationContext,
+                StumblerApplication.EXPORT_NOTIFICATION_CHANNEL_ID,
+            )
             .setOngoing(true)
             .setLocalOnly(true)
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
-            .setContentTitle(ContextCompat.getString(applicationContext, R.string.notification_exporting_data))
+            .setContentTitle(
+                ContextCompat.getString(applicationContext, R.string.notification_exporting_data)
+            )
             .setSmallIcon(R.drawable.upload_file_24)
             .build()
     }
 
     override suspend fun getForegroundInfo(): ForegroundInfo {
-        return ForegroundInfo(DATA_EXPORT_NOTIFICATION_ID, createNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+        return ForegroundInfo(
+            DATA_EXPORT_NOTIFICATION_ID,
+            createNotification(),
+            ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC,
+        )
     }
 
     override suspend fun doWork(): Result {
-        if (!params.inputData.hasKeyWithValueOfType<Long>(INPUT_FROM) || !params.inputData.hasKeyWithValueOfType<Long>(INPUT_TO)) {
+        if (
+            !params.inputData.hasKeyWithValueOfType<Long>(INPUT_FROM) ||
+                !params.inputData.hasKeyWithValueOfType<Long>(INPUT_TO)
+        ) {
             Timber.e("Cannot export data because time period is not specified")
             return Result.failure()
         }
@@ -62,11 +75,11 @@ class CsvExportWorker(appContext: Context, private val params: WorkerParameters)
         val from = Instant.ofEpochMilli(params.inputData.getLong(INPUT_FROM, 0))
         val to = Instant.ofEpochMilli(params.inputData.getLong(INPUT_TO, 0))
 
-        val time = measureTime {
-            csvExporter.exportToFile(uri, from, to)
-        }
+        val time = measureTime { csvExporter.exportToFile(uri, from, to) }
 
-        Timber.i("Exported data for time period [$from, $to] to $uri in ${time.toString(DurationUnit.SECONDS, 1)}")
+        Timber.i(
+            "Exported data for time period [$from, $to] to $uri in ${time.toString(DurationUnit.SECONDS, 1)}"
+        )
 
         return Result.success()
     }

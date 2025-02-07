@@ -22,10 +22,8 @@ data class CellTower(
     val signalStrength: Int?,
     val timingAdvance: Int?,
     val arfcn: Int?,
-    /**
-     * Timestamp when the cell tower was observed in milliseconds since boot
-     */
-    override val timestamp: Long
+    /** Timestamp when the cell tower was observed in milliseconds since boot */
+    override val timestamp: Long,
 ) : ObservedDevice {
     companion object {
         private fun CellInfo.serving(): Int? {
@@ -33,7 +31,10 @@ data class CellTower(
                 return null
             }
 
-            return if (cellConnectionStatus == CellInfo.CONNECTION_PRIMARY_SERVING || cellConnectionStatus == CellInfo.CONNECTION_SECONDARY_SERVING) {
+            return if (
+                cellConnectionStatus == CellInfo.CONNECTION_PRIMARY_SERVING ||
+                    cellConnectionStatus == CellInfo.CONNECTION_SECONDARY_SERVING
+            ) {
                 1
             } else {
                 0
@@ -45,7 +46,6 @@ data class CellTower(
                 is CellInfoNr -> {
                     val cellSignalStrength = cellInfo.cellSignalStrength as CellSignalStrengthNr
                     val cellIdentity = cellInfo.cellIdentity as CellIdentityNr
-
 
                     CellTower(
                         RadioType.NR,
@@ -59,7 +59,7 @@ data class CellTower(
                         cellSignalStrength.dbm.takeIf { it != CellInfo.UNAVAILABLE },
                         null,
                         cellIdentity.nrarfcn.takeIf { it != CellInfo.UNAVAILABLE },
-                        cellInfo.timestampMillisCompat
+                        cellInfo.timestampMillisCompat,
                     )
                 }
 
@@ -79,7 +79,7 @@ data class CellTower(
                         cellSignalStrength.rssi.takeIf { it != CellInfo.UNAVAILABLE },
                         cellSignalStrength.timingAdvance.takeIf { it != CellInfo.UNAVAILABLE },
                         cellIdentity.earfcn.takeIf { it != CellInfo.UNAVAILABLE },
-                        cellInfo.timestampMillisCompat
+                        cellInfo.timestampMillisCompat,
                     )
                 }
 
@@ -103,7 +103,7 @@ data class CellTower(
                         },
                         cellSignalStrength.timingAdvance.takeIf { it != CellInfo.UNAVAILABLE },
                         cellIdentity.arfcn.takeIf { it != CellInfo.UNAVAILABLE },
-                        cellInfo.timestampMillisCompat
+                        cellInfo.timestampMillisCompat,
                     )
                 }
 
@@ -123,7 +123,7 @@ data class CellTower(
                         cellSignalStrength.dbm.takeIf { it != CellInfo.UNAVAILABLE },
                         null,
                         cellIdentity.uarfcn.takeIf { it != CellInfo.UNAVAILABLE },
-                        cellInfo.timestampMillisCompat
+                        cellInfo.timestampMillisCompat,
                     )
                 }
 
@@ -133,6 +133,9 @@ data class CellTower(
     }
 
     enum class RadioType {
-        GSM, WCDMA, LTE, NR
+        GSM,
+        WCDMA,
+        LTE,
+        NR,
     }
 }

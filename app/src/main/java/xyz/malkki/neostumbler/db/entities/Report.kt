@@ -10,5 +10,5 @@ data class Report(
     @PrimaryKey(autoGenerate = true) val id: Long?,
     @ColumnInfo(index = true) val timestamp: Instant,
     @ColumnInfo(index = true) val uploaded: Boolean,
-    val uploadTimestamp: Instant?
+    val uploadTimestamp: Instant?,
 )

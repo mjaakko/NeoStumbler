@@ -10,11 +10,13 @@ data class BluetoothBeacon(
     val id2: String?,
     val id3: String?,
     val signalStrength: Int,
-    override val timestamp: Long
+    override val timestamp: Long,
 ) : ObservedDevice {
     companion object {
         fun fromBeacon(beacon: Beacon): BluetoothBeacon {
-            val timestamp = SystemClock.elapsedRealtime() - (System.currentTimeMillis() - beacon.lastCycleDetectionTimestamp)
+            val timestamp =
+                SystemClock.elapsedRealtime() -
+                    (System.currentTimeMillis() - beacon.lastCycleDetectionTimestamp)
 
             return BluetoothBeacon(
                 macAddress = beacon.bluetoothAddress,
@@ -23,7 +25,7 @@ data class BluetoothBeacon(
                 id2 = beacon.id2?.toString(),
                 id3 = beacon.id3?.toString(),
                 signalStrength = beacon.rssi,
-                timestamp = timestamp
+                timestamp = timestamp,
             )
         }
     }

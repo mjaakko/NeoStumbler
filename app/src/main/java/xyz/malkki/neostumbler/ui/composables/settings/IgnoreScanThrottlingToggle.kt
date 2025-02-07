@@ -30,12 +30,11 @@ import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.extensions.isWifiScanThrottled
 import xyz.malkki.neostumbler.ui.composables.ToggleWithAction
 
-private fun DataStore<Preferences>.ignoringWifiScanThrottling(): Flow<Boolean> = data
-    .map { it[booleanPreferencesKey(PreferenceKeys.IGNORE_SCAN_THROTTLING)] }
-    .distinctUntilChanged()
-    .map {
-        it == true
-    }
+private fun DataStore<Preferences>.ignoringWifiScanThrottling(): Flow<Boolean> =
+    data
+        .map { it[booleanPreferencesKey(PreferenceKeys.IGNORE_SCAN_THROTTLING)] }
+        .distinctUntilChanged()
+        .map { it == true }
 
 @Composable
 fun IgnoreScanThrottlingToggle() {
@@ -48,50 +47,52 @@ fun IgnoreScanThrottlingToggle() {
 
     val showExplanationDialog = rememberSaveable { mutableStateOf(false) }
 
-    val developerSettingsLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        if (context.isWifiScanThrottled() == false) {
-            coroutineScope.launch {
-                settingsStore.edit {
-                    it[booleanPreferencesKey(PreferenceKeys.IGNORE_SCAN_THROTTLING)] = true
+    val developerSettingsLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (context.isWifiScanThrottled() == false) {
+                coroutineScope.launch {
+                    settingsStore.edit {
+                        it[booleanPreferencesKey(PreferenceKeys.IGNORE_SCAN_THROTTLING)] = true
+                    }
                 }
             }
         }
-    }
     if (showExplanationDialog.value) {
         AlertDialog(
-            onDismissRequest = {
-                showExplanationDialog.value = false
-            },
+            onDismissRequest = { showExplanationDialog.value = false },
             title = { Text(stringResource(id = R.string.wifi_scan_throttling)) },
             text = { Text(stringResource(id = R.string.wifi_scan_throttling_explanation)) },
             dismissButton = {
-                TextButton(onClick = {
-                    showExplanationDialog.value = false
-                }) {
+                TextButton(onClick = { showExplanationDialog.value = false }) {
                     Text(stringResource(id = R.string.no_thanks))
                 }
             },
             confirmButton = {
-                TextButton(onClick = {
-                    val developerSettingsIntent = Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS)
-                    val canOpenDeveloperSettings = developerSettingsIntent.resolveActivity(context.packageManager) != null
+                TextButton(
+                    onClick = {
+                        val developerSettingsIntent =
+                            Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS)
+                        val canOpenDeveloperSettings =
+                            developerSettingsIntent.resolveActivity(context.packageManager) != null
 
-                    if (canOpenDeveloperSettings) {
-                        developerSettingsLauncher.launch(developerSettingsIntent)
+                        if (canOpenDeveloperSettings) {
+                            developerSettingsLauncher.launch(developerSettingsIntent)
+                        }
+
+                        showExplanationDialog.value = false
                     }
-
-                    showExplanationDialog.value = false
-                }) {
+                ) {
                     Text(stringResource(id = R.string.ok))
                 }
             },
-            properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
+            properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true),
         )
     }
 
     ToggleWithAction(
         title = stringResource(id = R.string.settings_ignore_wifi_scan_throttling_title),
-        description = stringResource(id = R.string.settings_ignore_wifi_scan_throttling_description),
+        description =
+            stringResource(id = R.string.settings_ignore_wifi_scan_throttling_description),
         enabled = true,
         checked = enabled.value,
         action = { checked ->
@@ -102,6 +103,6 @@ fun IgnoreScanThrottlingToggle() {
                     it[booleanPreferencesKey(PreferenceKeys.IGNORE_SCAN_THROTTLING)] = checked
                 }
             }
-        }
+        },
     )
 }

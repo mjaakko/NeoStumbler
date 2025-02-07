@@ -12,7 +12,7 @@ data class ReportDto(
     val position: PositionDto,
     val wifiAccessPoints: List<WifiAccessPointDto>?,
     val cellTowers: List<CellTowerDto>?,
-    val bluetoothBeacons: List<BluetoothBeaconDto>?
+    val bluetoothBeacons: List<BluetoothBeaconDto>?,
 ) {
     @Serializable
     data class PositionDto(
@@ -25,7 +25,7 @@ data class ReportDto(
         val heading: Double?,
         val pressure: Double?,
         val speed: Double?,
-        val source: String
+        val source: String,
     ) {
         companion object {
             fun fromDbEntity(positionEntity: PositionEntity): PositionDto {
@@ -39,7 +39,7 @@ data class ReportDto(
                     positionEntity.heading?.takeUnless { it.isNaN() },
                     positionEntity.pressure?.takeUnless { it.isNaN() },
                     positionEntity.speed?.takeUnless { it.isNaN() },
-                    positionEntity.source
+                    positionEntity.source,
                 )
             }
         }
@@ -54,7 +54,7 @@ data class ReportDto(
         val frequency: Int?,
         val signalStrength: Int?,
         val signalToNoiseRatio: Int?,
-        val ssid: String?
+        val ssid: String?,
     ) {
         companion object {
             fun fromDbEntity(wifiAccessPointEntity: WifiAccessPointEntity): WifiAccessPointDto {
@@ -66,7 +66,7 @@ data class ReportDto(
                     wifiAccessPointEntity.frequency,
                     wifiAccessPointEntity.signalStrength,
                     wifiAccessPointEntity.signalToNoiseRatio,
-                    wifiAccessPointEntity.ssid
+                    wifiAccessPointEntity.ssid,
                 )
             }
         }
@@ -87,7 +87,7 @@ data class ReportDto(
         val serving: Int?,
         val signalStrength: Int?,
         val timingAdvance: Int?,
-        val arfcn: Int?
+        val arfcn: Int?,
     ) {
         companion object {
             fun fromDbEntity(cellTowerEntity: CellTowerEntity): CellTowerDto {
@@ -105,7 +105,7 @@ data class ReportDto(
                     cellTowerEntity.serving,
                     cellTowerEntity.signalStrength,
                     cellTowerEntity.timingAdvance,
-                    cellTowerEntity.arfcn
+                    cellTowerEntity.arfcn,
                 )
             }
         }
@@ -120,7 +120,7 @@ data class ReportDto(
         val id2: String?,
         val id3: String?,
         val age: Long,
-        val signalStrength: Int?
+        val signalStrength: Int?,
     ) {
         companion object {
             fun fromDbEntity(beacon: BluetoothBeaconEntity): BluetoothBeaconDto {
@@ -132,7 +132,7 @@ data class ReportDto(
                     id2 = beacon.id2,
                     id3 = beacon.id3,
                     age = beacon.age,
-                    signalStrength = beacon.signalStrength
+                    signalStrength = beacon.signalStrength,
                 )
             }
         }

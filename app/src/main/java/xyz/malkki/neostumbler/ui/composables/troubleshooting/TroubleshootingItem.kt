@@ -23,50 +23,37 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
 import xyz.malkki.neostumbler.R
 
-
 @Composable
-fun TroubleshootingItem(
-    title: String,
-    stateFlow: Flow<Boolean>,
-    fixAction: () -> Unit
-) {
+fun TroubleshootingItem(title: String, stateFlow: Flow<Boolean>, fixAction: () -> Unit) {
     val state = stateFlow.collectAsState(initial = null)
 
     Row(
         modifier = Modifier.defaultMinSize(minHeight = 48.dp).fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        Text(
-            modifier = Modifier.wrapContentHeight().weight(1.0f),
-            text = title
-        )
+        Text(modifier = Modifier.wrapContentHeight().weight(1.0f), text = title)
 
         state.value?.let { isOk ->
             Icon(
                 modifier = Modifier.padding(horizontal = 8.dp),
-                painter = if (isOk) {
-                    rememberVectorPainter(Icons.Default.CheckCircle)
-                } else {
-                    rememberVectorPainter(Icons.Default.Error)
-                },
-                tint = if (isOk) {
-                    Color.Green
-                } else {
-                    Color.Red
-                },
-                contentDescription = ""
+                painter =
+                    if (isOk) {
+                        rememberVectorPainter(Icons.Default.CheckCircle)
+                    } else {
+                        rememberVectorPainter(Icons.Default.Error)
+                    },
+                tint =
+                    if (isOk) {
+                        Color.Green
+                    } else {
+                        Color.Red
+                    },
+                contentDescription = "",
             )
 
-            Button(
-                enabled = !isOk,
-                onClick = {
-                    fixAction.invoke()
-                }
-            ) {
-                Text(
-                    text = stringResource(id = R.string.troubleshooting_fix)
-                )
+            Button(enabled = !isOk, onClick = { fixAction.invoke() }) {
+                Text(text = stringResource(id = R.string.troubleshooting_fix))
             }
         }
     }

@@ -13,26 +13,18 @@ fun ConfirmationDialog(
     positiveButtonText: String,
     negativeButtonText: String,
     onPositiveAction: () -> Unit,
-    onNegativeAction: () -> Unit
+    onNegativeAction: () -> Unit,
 ) {
     AlertDialog(
         properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true),
         onDismissRequest = onNegativeAction,
-        title = {
-            Text(text = title)
-        },
-        text = {
-            Text(text = description)
-        },
+        title = { Text(text = title) },
+        text = { Text(text = description) },
         confirmButton = {
-            TextButton(onClick = onPositiveAction) {
-                Text(text = positiveButtonText)
-            }
+            TextButton(onClick = onPositiveAction) { Text(text = positiveButtonText) }
         },
         dismissButton = {
-            TextButton(onClick = onNegativeAction) {
-                Text(text = negativeButtonText)
-            }
-        }
+            TextButton(onClick = onNegativeAction) { Text(text = negativeButtonText) }
+        },
     )
 }

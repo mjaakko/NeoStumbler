@@ -15,20 +15,25 @@ import androidx.compose.ui.text.withLink
 @Composable
 fun Link(text: String, onClick: () -> Unit, style: TextStyle = MaterialTheme.typography.bodySmall) {
     Text(
-        text = buildAnnotatedString {
-            withLink(
-                link = LinkAnnotation.Clickable(
-                    tag = "link",
-                    styles = TextLinkStyles(style.copy(color = MaterialTheme.colorScheme.primary).toSpanStyle()),
-                    linkInteractionListener = {
-                        onClick.invoke()
-                    }
-                )
-            ) {
-                append(text)
-            }
-        },
-        style = style
+        text =
+            buildAnnotatedString {
+                withLink(
+                    link =
+                        LinkAnnotation.Clickable(
+                            tag = "link",
+                            styles =
+                                TextLinkStyles(
+                                    style
+                                        .copy(color = MaterialTheme.colorScheme.primary)
+                                        .toSpanStyle()
+                                ),
+                            linkInteractionListener = { onClick.invoke() },
+                        )
+                ) {
+                    append(text)
+                }
+            },
+        style = style,
     )
 }
 
@@ -42,6 +47,6 @@ fun Link(text: String, url: String, style: TextStyle = MaterialTheme.typography.
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             context.startActivity(intent)
         },
-        style = style
+        style = style,
     )
 }

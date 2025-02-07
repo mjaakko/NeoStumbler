@@ -1,8 +1,8 @@
 package xyz.malkki.neostumbler.db.entities
 
 import androidx.room.TypeConverters
-import xyz.malkki.neostumbler.db.converters.InstantConverters
 import java.time.Instant
+import xyz.malkki.neostumbler.db.converters.InstantConverters
 
 @TypeConverters(InstantConverters::class)
 data class ReportWithStats(
@@ -12,5 +12,5 @@ data class ReportWithStats(
     val longitude: Double,
     val wifiAccessPointCount: Int,
     val cellTowerCount: Int,
-    val bluetoothBeaconCount: Int
+    val bluetoothBeaconCount: Int,
 )

@@ -17,16 +17,22 @@ fun BatteryOptimizationTroubleshootingItem() {
 
     val powerManager = context.getSystemService<PowerManager>()!!
 
-    val batteryOptimizationsDisabled = MutableStateFlow(powerManager.isIgnoringBatteryOptimizations(context.packageName))
-    val batteryOptimizationsLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { _ ->
-        batteryOptimizationsDisabled.tryEmit(powerManager.isIgnoringBatteryOptimizations(context.packageName))
-    }
+    val batteryOptimizationsDisabled =
+        MutableStateFlow(powerManager.isIgnoringBatteryOptimizations(context.packageName))
+    val batteryOptimizationsLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { _ ->
+            batteryOptimizationsDisabled.tryEmit(
+                powerManager.isIgnoringBatteryOptimizations(context.packageName)
+            )
+        }
 
     TroubleshootingItem(
         title = stringResource(id = R.string.troubleshooting_battery_optimizations_disabled),
         stateFlow = batteryOptimizationsDisabled,
         fixAction = {
-            batteryOptimizationsLauncher.launch(requestIgnoreBatteryOptimizations(context.packageName))
-        }
+            batteryOptimizationsLauncher.launch(
+                requestIgnoreBatteryOptimizations(context.packageName)
+            )
+        },
     )
 }

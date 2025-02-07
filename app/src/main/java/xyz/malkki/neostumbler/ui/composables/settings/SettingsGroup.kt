@@ -10,18 +10,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SettingsGroup(
-    title: String,
-    content: @Composable () -> Unit
-) {
+fun SettingsGroup(title: String, content: @Composable () -> Unit) {
     Text(
         text = title,
-        style = MaterialTheme.typography.titleSmall.copy(color = MaterialTheme.colorScheme.primary)
+        style = MaterialTheme.typography.titleSmall.copy(color = MaterialTheme.colorScheme.primary),
     )
 
     Column(
         modifier = Modifier.padding(vertical = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         content()
     }

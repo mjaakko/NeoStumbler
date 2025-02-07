@@ -5,6 +5,7 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.compose'
     id 'org.jetbrains.kotlin.plugin.serialization'
     id 'app.accrescent.tools.bundletool'
+    id 'com.ncorti.ktfmt.gradle'
 }
 
 def DB_SCHEMAS_DIR =  "$projectDir/schemas"
@@ -282,4 +283,8 @@ dependencies {
     fullImplementation 'com.google.net.cronet:cronet-okhttp:0.1.0'
 
     testImplementation "org.mockito.kotlin:mockito-kotlin:5.4.0"
+}
+
+ktfmt {
+    kotlinLangStyle()
 }

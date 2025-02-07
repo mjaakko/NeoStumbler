@@ -41,7 +41,7 @@ fun <O> MultiChoiceSettings(
     disabledOptions: Set<O> = emptySet(),
     titleProvider: (O) -> String,
     descriptionProvider: ((O) -> String)? = null,
-    onValueSelected: suspend (O) -> Unit
+    onValueSelected: suspend (O) -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
 
@@ -61,15 +61,14 @@ fun <O> MultiChoiceSettings(
 
                     dialogOpen.value = false
                 }
-            })
+            },
+        )
     }
 
     SettingsItem(
         title = title,
         description = titleProvider.invoke(selectedOption),
-        onClick = {
-            dialogOpen.value = true
-        }
+        onClick = { dialogOpen.value = true },
     )
 }
 
@@ -81,85 +80,82 @@ private fun <O> MultiChoiceSettingsDialog(
     disabledOptions: Set<O>,
     titleProvider: (O) -> String,
     descriptionProvider: ((O) -> String)?,
-    onValueSelected: (O) -> Unit
+    onValueSelected: (O) -> Unit,
 ) {
-    BasicAlertDialog(
-        onDismissRequest = { onValueSelected(selectedOption) }
-    ) {
+    BasicAlertDialog(onDismissRequest = { onValueSelected(selectedOption) }) {
         Surface(
-            modifier = Modifier
-                .wrapContentWidth()
-                .wrapContentHeight()
-                .sizeIn(maxHeight = 380.dp),
+            modifier = Modifier.wrapContentWidth().wrapContentHeight().sizeIn(maxHeight = 380.dp),
             shape = MaterialTheme.shapes.large,
-            tonalElevation = AlertDialogDefaults.TonalElevation
+            tonalElevation = AlertDialogDefaults.TonalElevation,
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
-                Text(
-                    style = MaterialTheme.typography.titleLarge,
-                    text = title,
-                )
+                Text(style = MaterialTheme.typography.titleLarge, text = title)
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Column(
-                    modifier = Modifier
-                        .selectableGroup()
-                        .padding(bottom = 8.dp)
-                        .verticalScroll(state = rememberScrollState()),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    modifier =
+                        Modifier.selectableGroup()
+                            .padding(bottom = 8.dp)
+                            .verticalScroll(state = rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     options.forEach { option ->
                         val enabled = option !in disabledOptions
 
                         Row(
-                            Modifier
-                                .fillMaxWidth()
+                            Modifier.fillMaxWidth()
                                 .wrapContentHeight()
                                 .defaultMinSize(minHeight = 36.dp)
                                 .selectable(
                                     enabled = enabled,
                                     selected = option == selectedOption,
                                     onClick = { onValueSelected(option) },
-                                    role = Role.RadioButton
+                                    role = Role.RadioButton,
                                 )
                                 .padding(horizontal = 16.dp, vertical = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
                             RadioButton(
-                                modifier = Modifier
-                                    .align(Alignment.Top)
-                                    .padding(top = 4.dp),
+                                modifier = Modifier.align(Alignment.Top).padding(top = 4.dp),
                                 enabled = enabled,
                                 selected = option == selectedOption,
-                                onClick = null
+                                onClick = null,
                             )
 
                             val description = descriptionProvider?.invoke(option)
 
                             Column(
-                                modifier = Modifier
-                                    //Disabled -> alpha 0.38f https://developer.android.com/develop/ui/compose/designsystems/material2-material3#emphasis-and
-                                    .alpha(
-                                        if (enabled) {
-                                            1f
-                                        } else {
-                                            0.38f
-                                        }
-                                    )
-                                    .align(if (description != null) { Alignment.Top } else { Alignment.CenterVertically })
-                                    .padding(start = 16.dp)
+                                modifier =
+                                    Modifier
+                                        // Disabled -> alpha 0.38f
+                                        // https://developer.android.com/develop/ui/compose/designsystems/material2-material3#emphasis-and
+                                        .alpha(
+                                            if (enabled) {
+                                                1f
+                                            } else {
+                                                0.38f
+                                            }
+                                        )
+                                        .align(
+                                            if (description != null) {
+                                                Alignment.Top
+                                            } else {
+                                                Alignment.CenterVertically
+                                            }
+                                        )
+                                        .padding(start = 16.dp)
                             ) {
                                 Text(
                                     text = titleProvider.invoke(option),
-                                    style = MaterialTheme.typography.bodyMedium.merge()
+                                    style = MaterialTheme.typography.bodyMedium.merge(),
                                 )
 
                                 if (description != null) {
                                     Text(
                                         text = description,
                                         fontWeight = FontWeight.Light,
-                                        style = MaterialTheme.typography.bodySmall.merge()
+                                        style = MaterialTheme.typography.bodySmall.merge(),
                                     )
                                 }
                             }

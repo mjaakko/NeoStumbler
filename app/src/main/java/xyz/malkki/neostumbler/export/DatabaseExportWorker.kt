@@ -10,6 +10,9 @@ import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.hasKeyWithValueOfType
+import java.nio.file.Files
+import kotlin.io.path.createTempFile
+import kotlin.io.path.deleteIfExists
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import timber.log.Timber
@@ -17,11 +20,9 @@ import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.extensions.copyTo
-import java.nio.file.Files
-import kotlin.io.path.createTempFile
-import kotlin.io.path.deleteIfExists
 
-class DatabaseExportWorker(appContext: Context, private val params: WorkerParameters) : CoroutineWorker(appContext, params), KoinComponent {
+class DatabaseExportWorker(appContext: Context, private val params: WorkerParameters) :
+    CoroutineWorker(appContext, params), KoinComponent {
     companion object {
         const val INPUT_OUTPUT_URI = "uri"
 
@@ -31,17 +32,26 @@ class DatabaseExportWorker(appContext: Context, private val params: WorkerParame
     private val reportDatabaseManager: ReportDatabaseManager by inject()
 
     private fun createNotification(): Notification {
-        return NotificationCompat.Builder(applicationContext, StumblerApplication.EXPORT_NOTIFICATION_CHANNEL_ID)
+        return NotificationCompat.Builder(
+                applicationContext,
+                StumblerApplication.EXPORT_NOTIFICATION_CHANNEL_ID,
+            )
             .setOngoing(true)
             .setLocalOnly(true)
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
-            .setContentTitle(ContextCompat.getString(applicationContext, R.string.notification_exporting_data))
+            .setContentTitle(
+                ContextCompat.getString(applicationContext, R.string.notification_exporting_data)
+            )
             .setSmallIcon(R.drawable.upload_file_24)
             .build()
     }
 
     override suspend fun getForegroundInfo(): ForegroundInfo {
-        return ForegroundInfo(DATABASE_EXPORT_NOTIFICATION_ID, createNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+        return ForegroundInfo(
+            DATABASE_EXPORT_NOTIFICATION_ID,
+            createNotification(),
+            ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC,
+        )
     }
 
     override suspend fun doWork(): Result {
@@ -61,11 +71,10 @@ class DatabaseExportWorker(appContext: Context, private val params: WorkerParame
 
             reportDb.openHelper.writableDatabase.copyTo(tempFile)
 
-            applicationContext.contentResolver.openOutputStream(uri)!!
-                .buffered()
-                .use { outputStream ->
-                    Files.copy(tempFile, outputStream)
-                }
+            applicationContext.contentResolver.openOutputStream(uri)!!.buffered().use { outputStream
+                ->
+                Files.copy(tempFile, outputStream)
+            }
 
             return Result.success()
         } finally {

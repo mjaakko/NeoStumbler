@@ -11,8 +11,6 @@ fun KeepScreenOn() {
     DisposableEffect(view) {
         view.keepScreenOn = true
 
-        onDispose {
-            view.keepScreenOn = false
-        }
+        onDispose { view.keepScreenOn = false }
     }
 }

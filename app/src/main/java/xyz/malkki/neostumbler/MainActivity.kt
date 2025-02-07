@@ -44,10 +44,8 @@ import xyz.malkki.neostumbler.ui.screens.SettingsScreen
 import xyz.malkki.neostumbler.ui.screens.StatisticsScreen
 import xyz.malkki.neostumbler.ui.theme.NeoStumblerTheme
 
-private fun DataStore<Preferences>.useDynamicColor(): Flow<Boolean> = data
-        .map { prefs ->
-            prefs[booleanPreferencesKey(PreferenceKeys.DYNAMIC_COLOR_THEME)] == true
-        }
+private fun DataStore<Preferences>.useDynamicColor(): Flow<Boolean> =
+    data.map { prefs -> prefs[booleanPreferencesKey(PreferenceKeys.DYNAMIC_COLOR_THEME)] == true }
 
 class MainActivity : AppCompatActivity() {
     companion object {
@@ -58,17 +56,12 @@ class MainActivity : AppCompatActivity() {
     private val dataStore: DataStore<Preferences> by inject<DataStore<Preferences>>(PREFERENCES)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val dynamicColorFlow = dataStore.useDynamicColor().stateIn(
-            lifecycleScope,
-            started = SharingStarted.Eagerly,
-            initialValue = null,
-        )
+        val dynamicColorFlow =
+            dataStore
+                .useDynamicColor()
+                .stateIn(lifecycleScope, started = SharingStarted.Eagerly, initialValue = null)
 
-        installSplashScreen().apply {
-            setKeepOnScreenCondition {
-                dynamicColorFlow.value == null
-            }
-        }
+        installSplashScreen().apply { setKeepOnScreenCondition { dynamicColorFlow.value == null } }
 
         super.onCreate(savedInstanceState)
 
@@ -78,15 +71,18 @@ class MainActivity : AppCompatActivity() {
             KoinContext {
                 NeoStumblerTheme(dynamicColor = dynamicColorState.value == true) {
                     // A surface container using the 'background' color from the theme
-                    Surface(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        val items = listOf(
-                            stringResource(R.string.map_tab_title) to rememberVectorPainter(Icons.Filled.Place),
-                            stringResource(R.string.reports_tab_title) to rememberVectorPainter(Icons.AutoMirrored.Default.List),
-                            stringResource(R.string.statistics_tab_title) to painterResource(id = R.drawable.statistics_24),
-                            stringResource(R.string.settings_tab_title) to rememberVectorPainter(Icons.Filled.Settings),
-                        )
+                    Surface(modifier = Modifier.fillMaxSize()) {
+                        val items =
+                            listOf(
+                                stringResource(R.string.map_tab_title) to
+                                    rememberVectorPainter(Icons.Filled.Place),
+                                stringResource(R.string.reports_tab_title) to
+                                    rememberVectorPainter(Icons.AutoMirrored.Default.List),
+                                stringResource(R.string.statistics_tab_title) to
+                                    painterResource(id = R.drawable.statistics_24),
+                                stringResource(R.string.settings_tab_title) to
+                                    rememberVectorPainter(Icons.Filled.Settings),
+                            )
 
                         val selectedTabIndex = rememberSaveable { mutableIntStateOf(1) }
 
@@ -94,34 +90,29 @@ class MainActivity : AppCompatActivity() {
                             topBar = {
                                 TopAppBar(
                                     title = { Text(text = stringResource(R.string.app_name)) },
-                                    colors = TopAppBarDefaults.topAppBarColors(
-                                        containerColor = MaterialTheme.colorScheme.primary,
-                                        titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                                    ),
-                                    actions = {
-
-                                    }
+                                    colors =
+                                        TopAppBarDefaults.topAppBarColors(
+                                            containerColor = MaterialTheme.colorScheme.primary,
+                                            titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                                        ),
+                                    actions = {},
                                 )
                             },
                             bottomBar = {
                                 NavigationBar {
                                     items.forEachIndexed { index, (title, icon) ->
                                         NavigationBarItem(
-                                            icon = {
-                                                Icon(icon, contentDescription = title)
-                                            },
+                                            icon = { Icon(icon, contentDescription = title) },
                                             label = { Text(title) },
                                             selected = selectedTabIndex.intValue == index,
-                                            onClick = { selectedTabIndex.intValue = index }
+                                            onClick = { selectedTabIndex.intValue = index },
                                         )
                                     }
                                 }
                             },
                             content = {
                                 Column(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(paddingValues = it)
+                                    modifier = Modifier.fillMaxSize().padding(paddingValues = it)
                                 ) {
                                     when (selectedTabIndex.intValue) {
                                         0 -> MapScreen()
@@ -130,7 +121,7 @@ class MainActivity : AppCompatActivity() {
                                         3 -> SettingsScreen()
                                     }
                                 }
-                            }
+                            },
                         )
                     }
                 }

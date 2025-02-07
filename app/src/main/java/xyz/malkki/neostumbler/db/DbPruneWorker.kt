@@ -7,6 +7,9 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.WorkerParameters
+import java.time.ZonedDateTime
+import kotlin.time.DurationUnit
+import kotlin.time.measureTimedValue
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import org.koin.core.component.KoinComponent
@@ -14,14 +17,10 @@ import org.koin.core.component.inject
 import timber.log.Timber
 import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.constants.PreferenceKeys
-import java.time.ZonedDateTime
-import kotlin.time.DurationUnit
-import kotlin.time.measureTimedValue
 
-/**
- * Worker for deleting old scan reports from the local DB
- */
-class DbPruneWorker(appContext: Context, params: WorkerParameters) : CoroutineWorker(appContext, params), KoinComponent {
+/** Worker for deleting old scan reports from the local DB */
+class DbPruneWorker(appContext: Context, params: WorkerParameters) :
+    CoroutineWorker(appContext, params), KoinComponent {
     companion object {
         const val PERIODIC_WORK_NAME = "db_prune_periodic"
 
@@ -43,10 +42,11 @@ class DbPruneWorker(appContext: Context, params: WorkerParameters) : CoroutineWo
     override suspend fun doWork(): Result {
         val reportDao = reportDatabaseManager.reportDb.value.reportDao()
 
-        //By default delete reports older than 60 days
+        // By default delete reports older than 60 days
         val maxAgeDays = getMaxAgeDays() ?: 60
         if (maxAgeDays < 0) {
-            //If the max age is negative, DB pruning has been disabled in the settings -> succeed immediately
+            // If the max age is negative, DB pruning has been disabled in the settings -> succeed
+            // immediately
             return Result.success()
         }
 
@@ -54,9 +54,7 @@ class DbPruneWorker(appContext: Context, params: WorkerParameters) : CoroutineWo
 
         Timber.i("Deleting reports older than $minTimestamp")
 
-        val (deleteCount, duration) = measureTimedValue {
-            reportDao.deleteOlderThan(minTimestamp)
-        }
+        val (deleteCount, duration) = measureTimedValue { reportDao.deleteOlderThan(minTimestamp) }
 
         Timber.i("Deleted $deleteCount reports in ${duration.toString(DurationUnit.SECONDS, 1)}")
 

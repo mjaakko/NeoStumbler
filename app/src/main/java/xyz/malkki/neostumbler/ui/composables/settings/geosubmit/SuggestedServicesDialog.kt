@@ -47,36 +47,25 @@ import xyz.malkki.neostumbler.utils.SuggestedService
 fun SuggestedServicesDialog(onServiceSelected: (SuggestedService?) -> Unit) {
     val context = LocalContext.current
 
-    val suggestedServices = remember {
-        mutableStateListOf<SuggestedService>()
-    }
+    val suggestedServices = remember { mutableStateListOf<SuggestedService>() }
 
-    val expanded = rememberSaveable {
-        mutableStateOf(false)
-    }
+    val expanded = rememberSaveable { mutableStateOf(false) }
 
-    val selectedService = rememberSaveable {
-        mutableStateOf<Int?>(null)
-    }
+    val selectedService = rememberSaveable { mutableStateOf<Int?>(null) }
 
     LaunchedEffect(key1 = Unit) {
-        withContext(Dispatchers.IO) {
-            SuggestedService.getSuggestedServices(context)
-        }.let {
-            suggestedServices.addAll(it)
-            selectedService.value = 0
-        }
+        withContext(Dispatchers.IO) { SuggestedService.getSuggestedServices(context) }
+            .let {
+                suggestedServices.addAll(it)
+                selectedService.value = 0
+            }
     }
 
-    BasicAlertDialog(
-        onDismissRequest = { onServiceSelected(null) }
-    ) {
+    BasicAlertDialog(onDismissRequest = { onServiceSelected(null) }) {
         Surface(
-            modifier = Modifier
-                .wrapContentWidth()
-                .wrapContentHeight(),
+            modifier = Modifier.wrapContentWidth().wrapContentHeight(),
             shape = MaterialTheme.shapes.large,
-            tonalElevation = AlertDialogDefaults.TonalElevation
+            tonalElevation = AlertDialogDefaults.TonalElevation,
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
@@ -88,48 +77,41 @@ fun SuggestedServicesDialog(onServiceSelected: (SuggestedService?) -> Unit) {
 
                 if (selectedService.value == null) {
                     Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(100.dp),
-                        contentAlignment = Alignment.Center
+                        modifier = Modifier.fillMaxWidth().height(100.dp),
+                        contentAlignment = Alignment.Center,
                     ) {
                         CircularProgressIndicator()
                     }
                 } else {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight()
-                    ) {
+                    Column(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
                         ExposedDropdownMenuBox(
                             expanded = expanded.value,
-                            onExpandedChange = {
-                                expanded.value = it
-                            }
+                            onExpandedChange = { expanded.value = it },
                         ) {
                             TextField(
                                 value = suggestedServices[selectedService.value!!].name,
                                 onValueChange = {},
                                 readOnly = true,
-                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded.value) },
-                                modifier = Modifier.menuAnchor(type = MenuAnchorType.PrimaryNotEditable)
+                                trailingIcon = {
+                                    ExposedDropdownMenuDefaults.TrailingIcon(
+                                        expanded = expanded.value
+                                    )
+                                },
+                                modifier =
+                                    Modifier.menuAnchor(type = MenuAnchorType.PrimaryNotEditable),
                             )
 
                             ExposedDropdownMenu(
                                 expanded = expanded.value,
-                                onDismissRequest = {
-                                    expanded.value = false
-                                }
+                                onDismissRequest = { expanded.value = false },
                             ) {
                                 suggestedServices.forEachIndexed { index, suggestedService ->
                                     DropdownMenuItem(
-                                        text = {
-                                            Text(text = suggestedService.name)
-                                        },
+                                        text = { Text(text = suggestedService.name) },
                                         onClick = {
                                             selectedService.value = index
                                             expanded.value = false
-                                        }
+                                        },
                                     )
                                 }
                             }
@@ -146,20 +128,14 @@ fun SuggestedServicesDialog(onServiceSelected: (SuggestedService?) -> Unit) {
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Row {
-                    TextButton(
-                        onClick = {
-                            onServiceSelected(null)
-                        }
-                    ) {
+                    TextButton(onClick = { onServiceSelected(null) }) {
                         Text(text = stringResource(id = R.string.cancel))
                     }
-                    
+
                     Spacer(modifier = Modifier.weight(1.0f))
 
                     TextButton(
-                        onClick = {
-                            onServiceSelected(suggestedServices[selectedService.value!!])
-                        }
+                        onClick = { onServiceSelected(suggestedServices[selectedService.value!!]) }
                     ) {
                         Text(text = stringResource(id = R.string.use))
                     }
@@ -171,33 +147,28 @@ fun SuggestedServicesDialog(onServiceSelected: (SuggestedService?) -> Unit) {
 
 @Composable
 private fun SuggestedServiceDetails(service: SuggestedService) {
-    Text(
-        text = service.name,
-        style = MaterialTheme.typography.titleMedium
-    )
+    Text(text = service.name, style = MaterialTheme.typography.titleMedium)
 
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(
-            text = buildAnnotatedString {
-                append(stringResource(id = R.string.suggested_service_hosted_by))
+            text =
+                buildAnnotatedString {
+                    append(stringResource(id = R.string.suggested_service_hosted_by))
 
-                append(" ")
+                    append(" ")
 
-                withStyle(style = SpanStyle(fontStyle = FontStyle.Italic)) {
-                    append(service.hostedBy)
-                }
-            },
-            style = MaterialTheme.typography.bodySmall
+                    withStyle(style = SpanStyle(fontStyle = FontStyle.Italic)) {
+                        append(service.hostedBy)
+                    }
+                },
+            style = MaterialTheme.typography.bodySmall,
         )
 
-        Link(
-            text = stringResource(id = R.string.suggested_service_website),
-            url = service.website
-        )
+        Link(text = stringResource(id = R.string.suggested_service_website), url = service.website)
 
         Link(
             text = stringResource(id = R.string.suggested_service_terms_of_use),
-            url = service.termsOfUse
+            url = service.termsOfUse,
         )
     }
 }

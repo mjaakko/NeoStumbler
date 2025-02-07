@@ -3,6 +3,7 @@ package xyz.malkki.neostumbler.ui.screens
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ComponentName
+import android.location.Geocoder as AndroidGeocoder
 import android.os.Build
 import android.text.format.DateFormat
 import androidx.compose.foundation.background
@@ -59,6 +60,8 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
+import java.text.DecimalFormat
+import java.util.Date
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
@@ -71,13 +74,13 @@ import xyz.malkki.neostumbler.extensions.getActivity
 import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.scanner.ScannerService
 import xyz.malkki.neostumbler.scanner.quicksettings.ScannerTileService
-import xyz.malkki.neostumbler.ui.composables.shared.AddQSTileDialog
 import xyz.malkki.neostumbler.ui.composables.BatteryOptimizationsDialog
+import xyz.malkki.neostumbler.ui.composables.MLSWarningDialog
+import xyz.malkki.neostumbler.ui.composables.ReportUploadButton
+import xyz.malkki.neostumbler.ui.composables.shared.AddQSTileDialog
 import xyz.malkki.neostumbler.ui.composables.shared.ConfirmationDialog
 import xyz.malkki.neostumbler.ui.composables.shared.Link
-import xyz.malkki.neostumbler.ui.composables.MLSWarningDialog
 import xyz.malkki.neostumbler.ui.composables.shared.PermissionsDialog
-import xyz.malkki.neostumbler.ui.composables.ReportUploadButton
 import xyz.malkki.neostumbler.ui.composables.shared.Shimmer
 import xyz.malkki.neostumbler.ui.composables.shared.getAddress
 import xyz.malkki.neostumbler.ui.composables.shared.rememberServiceConnection
@@ -87,9 +90,6 @@ import xyz.malkki.neostumbler.utils.geocoder.CachingGeocoder
 import xyz.malkki.neostumbler.utils.geocoder.Geocoder
 import xyz.malkki.neostumbler.utils.geocoder.PlatformGeocoder
 import xyz.malkki.neostumbler.utils.showMapWithMarkerIntent
-import java.text.DecimalFormat
-import java.util.Date
-import android.location.Geocoder as AndroidGeocoder
 
 @Composable
 fun ReportsScreen(viewModel: ReportsViewModel = koinViewModel()) {
@@ -116,36 +116,38 @@ private fun ReportStats(reportsViewModel: ReportsViewModel) {
     val reportsNotUploaded = reportsViewModel.reportsNotUploaded.collectAsStateWithLifecycle(null)
     val reportsLastUploaded = reportsViewModel.lastUpload.collectAsStateWithLifecycle(null)
 
-    val lastUploadedText = reportsLastUploaded.value?.let {
-        val millis = it.toEpochMilli()
+    val lastUploadedText =
+        reportsLastUploaded.value?.let {
+            val millis = it.toEpochMilli()
 
-        DateFormat.getMediumDateFormat(context).format(millis) + " " + DateFormat.getTimeFormat(context).format(millis)
-    } ?: stringResource(R.string.reports_last_uploaded_never)
+            DateFormat.getMediumDateFormat(context).format(millis) +
+                " " +
+                DateFormat.getTimeFormat(context).format(millis)
+        } ?: stringResource(R.string.reports_last_uploaded_never)
 
-    Column(
-        modifier = Modifier.wrapContentHeight()
-    ) {
+    Column(modifier = Modifier.wrapContentHeight()) {
         Text(text = stringResource(R.string.reports_total, reportsTotal.value ?: 0))
         Text(text = stringResource(R.string.reports_not_uploaded, reportsNotUploaded.value ?: 0))
         Text(text = stringResource(R.string.reports_last_uploaded, lastUploadedText))
     }
 }
 
-private val requiredPermissions = mutableListOf<String>()
-    .apply {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            add(Manifest.permission.POST_NOTIFICATIONS)
+private val requiredPermissions =
+    mutableListOf<String>()
+        .apply {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                add(Manifest.permission.POST_NOTIFICATIONS)
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                add(Manifest.permission.BLUETOOTH_SCAN)
+            } else {
+                add(Manifest.permission.BLUETOOTH)
+                add(Manifest.permission.BLUETOOTH_ADMIN)
+            }
+            add(Manifest.permission.ACCESS_FINE_LOCATION)
+            add(Manifest.permission.READ_PHONE_STATE)
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            add(Manifest.permission.BLUETOOTH_SCAN)
-        } else {
-            add(Manifest.permission.BLUETOOTH)
-            add(Manifest.permission.BLUETOOTH_ADMIN)
-        }
-        add(Manifest.permission.ACCESS_FINE_LOCATION)
-        add(Manifest.permission.READ_PHONE_STATE)
-    }
-    .toTypedArray()
+        .toTypedArray()
 
 @SuppressLint("NewApi")
 @Composable
@@ -156,23 +158,16 @@ fun ForegroundScanningButton() {
     val coroutineScope = rememberCoroutineScope()
     val oneTimeActionHelper = koinInject<OneTimeActionHelper>()
 
-    val serviceConnection = rememberServiceConnection(getService = ScannerService.ScannerServiceBinder::getService)
+    val serviceConnection =
+        rememberServiceConnection(getService = ScannerService.ScannerServiceBinder::getService)
 
-    val showBatteryOptimizationsDialog = rememberSaveable {
-        mutableStateOf(false)
-    }
+    val showBatteryOptimizationsDialog = rememberSaveable { mutableStateOf(false) }
 
-    val showPermissionDialog = rememberSaveable {
-        mutableStateOf(false)
-    }
+    val showPermissionDialog = rememberSaveable { mutableStateOf(false) }
 
-    val showBackgroundLocationPermissionDialog = rememberSaveable {
-        mutableStateOf(false)
-    }
+    val showBackgroundLocationPermissionDialog = rememberSaveable { mutableStateOf(false) }
 
-    val showQuickSettingsDialog = rememberSaveable {
-        mutableStateOf(false)
-    }
+    val showQuickSettingsDialog = rememberSaveable { mutableStateOf(false) }
 
     val missingPermissions = rememberSaveable {
         context.checkMissingPermissions(*requiredPermissions)
@@ -183,17 +178,28 @@ fun ForegroundScanningButton() {
             context.startService(ScannerService.stopIntent(context))
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                //Prompt user to add the quick settings tile for scanning
+                // Prompt user to add the quick settings tile for scanning
                 coroutineScope.launch {
-                    if (!oneTimeActionHelper.hasActionBeenShown(ScannerTileService.ADD_QS_TILE_ACTION_NAME)) {
+                    if (
+                        !oneTimeActionHelper.hasActionBeenShown(
+                            ScannerTileService.ADD_QS_TILE_ACTION_NAME
+                        )
+                    ) {
                         showQuickSettingsDialog.value = true
                     }
                 }
             }
         } else {
             if (Manifest.permission.ACCESS_FINE_LOCATION !in missingPermissions) {
-                if (intent?.getBooleanExtra(MainActivity.EXTRA_REQUEST_BACKGROUND_PERMISSION, false) == true
-                    && context.checkMissingPermissions(Manifest.permission.ACCESS_BACKGROUND_LOCATION).isNotEmpty()) {
+                if (
+                    intent?.getBooleanExtra(
+                        MainActivity.EXTRA_REQUEST_BACKGROUND_PERMISSION,
+                        false,
+                    ) == true &&
+                        context
+                            .checkMissingPermissions(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+                            .isNotEmpty()
+                ) {
                     showBackgroundLocationPermissionDialog.value = true
                 } else {
                     showBatteryOptimizationsDialog.value = true
@@ -208,8 +214,13 @@ fun ForegroundScanningButton() {
         showPermissionDialog.value = false
 
         if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true) {
-            if (intent?.getBooleanExtra(MainActivity.EXTRA_REQUEST_BACKGROUND_PERMISSION, false) == true
-                && context.checkMissingPermissions(Manifest.permission.ACCESS_BACKGROUND_LOCATION).isNotEmpty()) {
+            if (
+                intent?.getBooleanExtra(MainActivity.EXTRA_REQUEST_BACKGROUND_PERMISSION, false) ==
+                    true &&
+                    context
+                        .checkMissingPermissions(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+                        .isNotEmpty()
+            ) {
                 showBackgroundLocationPermissionDialog.value = true
             } else {
                 showBatteryOptimizationsDialog.value = true
@@ -229,50 +240,76 @@ fun ForegroundScanningButton() {
                 }
 
                 showQuickSettingsDialog.value = false
-            }
+            },
         )
     }
 
     if (showPermissionDialog.value) {
         PermissionsDialog(
             missingPermissions = missingPermissions,
-            permissionRationales = mutableMapOf<String, String>().apply {
-                put(Manifest.permission.ACCESS_FINE_LOCATION, stringResource(id = R.string.permission_rationale_fine_location))
-                put(Manifest.permission.READ_PHONE_STATE, stringResource(id = R.string.permission_rationale_read_phone_state))
+            permissionRationales =
+                mutableMapOf<String, String>().apply {
+                    put(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        stringResource(id = R.string.permission_rationale_fine_location),
+                    )
+                    put(
+                        Manifest.permission.READ_PHONE_STATE,
+                        stringResource(id = R.string.permission_rationale_read_phone_state),
+                    )
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    put(Manifest.permission.POST_NOTIFICATIONS, stringResource(id = R.string.permission_rationale_post_notifications))
-                }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        put(
+                            Manifest.permission.POST_NOTIFICATIONS,
+                            stringResource(id = R.string.permission_rationale_post_notifications),
+                        )
+                    }
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    put(Manifest.permission.BLUETOOTH_SCAN, stringResource(id = R.string.permission_rationale_bluetooth))
-                } else {
-                    put(Manifest.permission.BLUETOOTH, stringResource(id = R.string.permission_rationale_bluetooth))
-                    put(Manifest.permission.BLUETOOTH_ADMIN, stringResource(id = R.string.permission_rationale_bluetooth))
-                }
-            },
-            onPermissionsGranted = onPermissionsGranted
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        put(
+                            Manifest.permission.BLUETOOTH_SCAN,
+                            stringResource(id = R.string.permission_rationale_bluetooth),
+                        )
+                    } else {
+                        put(
+                            Manifest.permission.BLUETOOTH,
+                            stringResource(id = R.string.permission_rationale_bluetooth),
+                        )
+                        put(
+                            Manifest.permission.BLUETOOTH_ADMIN,
+                            stringResource(id = R.string.permission_rationale_bluetooth),
+                        )
+                    }
+                },
+            onPermissionsGranted = onPermissionsGranted,
         )
     }
 
     if (showBackgroundLocationPermissionDialog.value) {
         PermissionsDialog(
             missingPermissions = listOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION),
-            permissionRationales = mapOf(
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION to stringResource(id = R.string.permission_rationale_background_location_quick_settings)
-            ),
+            permissionRationales =
+                mapOf(
+                    Manifest.permission.ACCESS_BACKGROUND_LOCATION to
+                        stringResource(
+                            id = R.string.permission_rationale_background_location_quick_settings
+                        )
+                ),
             onPermissionsGranted = {
                 showBackgroundLocationPermissionDialog.value = false
 
                 showBatteryOptimizationsDialog.value = true
-            })
+            },
+        )
     }
 
     if (showBatteryOptimizationsDialog.value) {
-        BatteryOptimizationsDialog(onBatteryOptimizationsDisabled = {
-            showBatteryOptimizationsDialog.value = false
-            context.startForegroundService(ScannerService.startIntent(context))
-        })
+        BatteryOptimizationsDialog(
+            onBatteryOptimizationsDisabled = {
+                showBatteryOptimizationsDialog.value = false
+                context.startForegroundService(ScannerService.startIntent(context))
+            }
+        )
     }
 
     LaunchedEffect(intent) {
@@ -282,28 +319,28 @@ fun ForegroundScanningButton() {
     }
 
     Button(
-        onClick = {
-            startScanning()
-        },
-        contentPadding = ButtonDefaults.ButtonWithIconContentPadding
+        onClick = { startScanning() },
+        contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
     ) {
         val isScanning = serviceConnection.value != null
 
-        val stringResId = if (isScanning) {
-            R.string.stop_scanning
-        } else {
-            R.string.start_scanning
-        }
-        val icon = if (isScanning) {
-            Icons.Default.Stop
-        } else {
-            Icons.Default.PlayArrow
-        }
+        val stringResId =
+            if (isScanning) {
+                R.string.stop_scanning
+            } else {
+                R.string.start_scanning
+            }
+        val icon =
+            if (isScanning) {
+                Icons.Default.Stop
+            } else {
+                Icons.Default.PlayArrow
+            }
 
         Icon(
             painter = rememberVectorPainter(icon),
             contentDescription = null,
-            modifier = Modifier.size(ButtonDefaults.IconSize)
+            modifier = Modifier.size(ButtonDefaults.IconSize),
         )
 
         Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
@@ -334,40 +371,27 @@ private fun Reports(reportsViewModel: ReportsViewModel) {
 
                 reportToDelete.value = null
             },
-            onNegativeAction = {
-                reportToDelete.value = null
-            })
+            onNegativeAction = { reportToDelete.value = null },
+        )
     }
 
-    Column(
-        modifier = Modifier.padding(top = 8.dp)
-    ) {
-        Text(
-            text = stringResource(R.string.reports),
-            style = MaterialTheme.typography.titleMedium,
-        )
+    Column(modifier = Modifier.padding(top = 8.dp)) {
+        Text(text = stringResource(R.string.reports), style = MaterialTheme.typography.titleMedium)
         if (reports.loadState.isIdle && reports.itemCount == 0) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(stringResource(R.string.reports_empty))
             }
         } else {
             LazyColumn {
-                items(
-                    reports.itemCount,
-                    key = reports.itemKey { it.reportId }
-                ) { index ->
+                items(reports.itemCount, key = reports.itemKey { it.reportId }) { index ->
                     val report = reports.get(index)
 
                     if (report != null) {
                         Report(
                             report = report,
                             geocoder = geocoder,
-                            onDeleteReport = { reportId ->
-                                reportToDelete.value = reportId
-                            })
+                            onDeleteReport = { reportId -> reportToDelete.value = reportId },
+                        )
                     } else {
                         ReportPlaceholder()
                     }
@@ -382,23 +406,19 @@ private fun ReportPlaceholder() {
     val density = LocalDensity.current
     val height = with(density) { 14.sp.toDp() }
 
-    Column(
-        modifier = Modifier
-            .wrapContentHeight()
-            .padding(vertical = 4.dp)
-    ) {
+    Column(modifier = Modifier.wrapContentHeight().padding(vertical = 4.dp)) {
         Shimmer(
-            modifier = Modifier
-                .height(height)
-                .fillMaxWidth()
-                .background(Color.LightGray, shape = RoundedCornerShape(2.dp))
+            modifier =
+                Modifier.height(height)
+                    .fillMaxWidth()
+                    .background(Color.LightGray, shape = RoundedCornerShape(2.dp))
         )
         Spacer(modifier = Modifier.height(2.dp))
         Shimmer(
-            modifier = Modifier
-                .height(height)
-                .fillMaxWidth()
-                .background(Color.LightGray, shape = RoundedCornerShape(2.dp))
+            modifier =
+                Modifier.height(height)
+                    .fillMaxWidth()
+                    .background(Color.LightGray, shape = RoundedCornerShape(2.dp))
         )
     }
 }
@@ -410,29 +430,24 @@ private fun Report(report: ReportWithStats, geocoder: Geocoder, onDeleteReport: 
     val address = getAddress(report.latitude, report.longitude, geocoder = geocoder)
 
     val date = Date.from(report.timestamp)
-    val dateStr = "${DateFormat.getMediumDateFormat(context).format(date)} ${DateFormat.getTimeFormat(context).format(date)}"
+    val dateStr =
+        "${DateFormat.getMediumDateFormat(context).format(date)} ${DateFormat.getTimeFormat(context).format(date)}"
 
     val intent = showMapWithMarkerIntent(report.latitude, report.longitude)
     val canShowMap = intent.resolveActivity(context.packageManager) != null
 
     Column(
-        modifier = Modifier
-            .combinedClickable(
-                enabled = true,
-                onClick = {},
-                onLongClickLabel = stringResource(id = R.string.delete_report),
-                onLongClick = {
-                    onDeleteReport(report.reportId)
-                }
-            )
-            .padding(vertical = 4.dp)
-            .wrapContentHeight()
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
+        modifier =
+            Modifier.combinedClickable(
+                    enabled = true,
+                    onClick = {},
+                    onLongClickLabel = stringResource(id = R.string.delete_report),
+                    onLongClick = { onDeleteReport(report.reportId) },
+                )
+                .padding(vertical = 4.dp)
                 .wrapContentHeight()
-        ) {
+    ) {
+        Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
             Text(
                 modifier = Modifier.wrapContentSize(),
                 text = dateStr,
@@ -460,16 +475,11 @@ private fun Report(report: ReportWithStats, geocoder: Geocoder, onDeleteReport: 
         if (canShowMap) {
             Link(
                 text = address.value,
-                onClick = {
-                    context.startActivity(intent)
-                },
+                onClick = { context.startActivity(intent) },
                 style = MaterialTheme.typography.bodySmall,
             )
         } else {
-            Text(
-                text = address.value,
-                style = MaterialTheme.typography.bodySmall,
-            )
+            Text(text = address.value, style = MaterialTheme.typography.bodySmall)
         }
     }
 }
@@ -489,17 +499,13 @@ private fun StationCount(icon: ImageVector, iconDescription: String, count: Int)
         Icon(
             painter = rememberVectorPainter(icon),
             contentDescription = iconDescription,
-            modifier = Modifier.requiredSize(textHeightDp)
+            modifier = Modifier.requiredSize(textHeightDp),
         )
         Spacer(modifier = Modifier.width(2.dp))
         Text(
-            modifier = Modifier
-                .wrapContentWidth()
-                .fillMaxHeight()
-                .onGloballyPositioned {
-                    textHeightDp = with(localDensity) {
-                        it.size.height.toDp()
-                    }
+            modifier =
+                Modifier.wrapContentWidth().fillMaxHeight().onGloballyPositioned {
+                    textHeightDp = with(localDensity) { it.size.height.toDp() }
                 },
             text = decimalFormat.format(count),
             style = MaterialTheme.typography.bodySmall,

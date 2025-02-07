@@ -18,45 +18,39 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
-fun Shimmer(
-    modifier: Modifier,
-    duration: Duration = 1.seconds,
-) {
-    val shimmerColors = listOf(
-        Color.White.copy(alpha = 0.3f),
-        Color.White.copy(alpha = 0.5f),
-        Color.White.copy(alpha = 1.0f),
-        Color.White.copy(alpha = 0.5f),
-        Color.White.copy(alpha = 0.3f),
-    )
+fun Shimmer(modifier: Modifier, duration: Duration = 1.seconds) {
+    val shimmerColors =
+        listOf(
+            Color.White.copy(alpha = 0.3f),
+            Color.White.copy(alpha = 0.5f),
+            Color.White.copy(alpha = 1.0f),
+            Color.White.copy(alpha = 0.5f),
+            Color.White.copy(alpha = 0.3f),
+        )
 
     val transition = rememberInfiniteTransition()
 
-    val translateAnimation = transition.animateFloat(
-        initialValue = 0f,
-        targetValue = (duration.inWholeMilliseconds + 500).toFloat(),
-        animationSpec = infiniteRepeatable(
-            animation = tween(
-                durationMillis = duration.inWholeMilliseconds.toInt(),
-                easing = LinearEasing,
-            ),
-            repeatMode = RepeatMode.Restart,
+    val translateAnimation =
+        transition.animateFloat(
+            initialValue = 0f,
+            targetValue = (duration.inWholeMilliseconds + 500).toFloat(),
+            animationSpec =
+                infiniteRepeatable(
+                    animation =
+                        tween(
+                            durationMillis = duration.inWholeMilliseconds.toInt(),
+                            easing = LinearEasing,
+                        ),
+                    repeatMode = RepeatMode.Restart,
+                ),
         )
-    )
 
-    val brush = Brush.linearGradient(
-        colors = shimmerColors,
-        start = Offset(x = translateAnimation.value - 500, y = 0.0f),
-        end = Offset(x = translateAnimation.value, y = 270f),
-    )
-
-    Box(
-        modifier = modifier
-    ) {
-        Spacer(
-            modifier = Modifier
-                .matchParentSize()
-                .background(brush)
+    val brush =
+        Brush.linearGradient(
+            colors = shimmerColors,
+            start = Offset(x = translateAnimation.value - 500, y = 0.0f),
+            end = Offset(x = translateAnimation.value, y = 270f),
         )
-    }
+
+    Box(modifier = modifier) { Spacer(modifier = Modifier.matchParentSize().background(brush)) }
 }

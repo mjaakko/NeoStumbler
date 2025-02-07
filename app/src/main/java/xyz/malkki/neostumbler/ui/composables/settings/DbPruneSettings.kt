@@ -16,18 +16,20 @@ import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 
-private val TITLES = mapOf(
-    30 to R.string.db_prune_one_month,
-    60 to R.string.db_prune_two_months,
-    180 to R.string.db_prune_six_months,
-    -1 to R.string.db_prune_never
-)
+private val TITLES =
+    mapOf(
+        30 to R.string.db_prune_one_month,
+        60 to R.string.db_prune_two_months,
+        180 to R.string.db_prune_six_months,
+        -1 to R.string.db_prune_never,
+    )
 
-private fun DataStore<Preferences>.dbPruneMaxAgeDays(): Flow<Int> = data
-    .map { preferences ->
-        preferences[intPreferencesKey(PreferenceKeys.DB_PRUNE_DATA_MAX_AGE_DAYS)] ?: 60
-    }
-    .distinctUntilChanged()
+private fun DataStore<Preferences>.dbPruneMaxAgeDays(): Flow<Int> =
+    data
+        .map { preferences ->
+            preferences[intPreferencesKey(PreferenceKeys.DB_PRUNE_DATA_MAX_AGE_DAYS)] ?: 60
+        }
+        .distinctUntilChanged()
 
 @Composable
 fun DbPruneSettings() {
@@ -49,7 +51,7 @@ fun DbPruneSettings() {
                         set(intPreferencesKey(PreferenceKeys.DB_PRUNE_DATA_MAX_AGE_DAYS), value)
                     }
                 }
-            }
+            },
         )
     }
 }

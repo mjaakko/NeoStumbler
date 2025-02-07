@@ -18,31 +18,41 @@ import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.extensions.get
 import xyz.malkki.neostumbler.scanner.ScannerService
 
-private val TITLES = mapOf(
-    ScannerService.Companion.NotificationStyle.MINIMAL to R.string.notification_style_minimal_title,
-    ScannerService.Companion.NotificationStyle.BASIC to R.string.notification_style_basic_title,
-    ScannerService.Companion.NotificationStyle.DETAILED to R.string.notification_style_detailed_title,
-)
+private val TITLES =
+    mapOf(
+        ScannerService.Companion.NotificationStyle.MINIMAL to
+            R.string.notification_style_minimal_title,
+        ScannerService.Companion.NotificationStyle.BASIC to R.string.notification_style_basic_title,
+        ScannerService.Companion.NotificationStyle.DETAILED to
+            R.string.notification_style_detailed_title,
+    )
 
-private val DESCRIPTIONS = mapOf(
-    ScannerService.Companion.NotificationStyle.MINIMAL to R.string.notification_style_minimal_description,
-    ScannerService.Companion.NotificationStyle.BASIC to R.string.notification_style_basic_description,
-    ScannerService.Companion.NotificationStyle.DETAILED to R.string.notification_style_detailed_description
-)
+private val DESCRIPTIONS =
+    mapOf(
+        ScannerService.Companion.NotificationStyle.MINIMAL to
+            R.string.notification_style_minimal_description,
+        ScannerService.Companion.NotificationStyle.BASIC to
+            R.string.notification_style_basic_description,
+        ScannerService.Companion.NotificationStyle.DETAILED to
+            R.string.notification_style_detailed_description,
+    )
 
-private fun DataStore<Preferences>.scannerNotificationStyle(): Flow<ScannerService.Companion.NotificationStyle> = data
-    .map { preferences ->
-        preferences.get<ScannerService.Companion.NotificationStyle>(PreferenceKeys.SCANNER_NOTIFICATION_STYLE)
-            ?: ScannerService.Companion.NotificationStyle.BASIC
-    }
-    .distinctUntilChanged()
+private fun DataStore<Preferences>.scannerNotificationStyle():
+    Flow<ScannerService.Companion.NotificationStyle> =
+    data
+        .map { preferences ->
+            preferences.get<ScannerService.Companion.NotificationStyle>(
+                PreferenceKeys.SCANNER_NOTIFICATION_STYLE
+            ) ?: ScannerService.Companion.NotificationStyle.BASIC
+        }
+        .distinctUntilChanged()
 
 @Composable
 fun ScannerNotificationStyleSettings() {
     val context = LocalContext.current
 
     val settingsStore = koinInject<DataStore<Preferences>>(PREFERENCES)
-    
+
     val notificationStyle = settingsStore.scannerNotificationStyle().collectAsState(initial = null)
 
     if (notificationStyle.value != null) {
@@ -55,10 +65,13 @@ fun ScannerNotificationStyleSettings() {
             onValueSelected = { newNotificationStyle ->
                 settingsStore.updateData { prefs ->
                     prefs.toMutablePreferences().apply {
-                        set(stringPreferencesKey(PreferenceKeys.SCANNER_NOTIFICATION_STYLE), newNotificationStyle.name)
+                        set(
+                            stringPreferencesKey(PreferenceKeys.SCANNER_NOTIFICATION_STYLE),
+                            newNotificationStyle.name,
+                        )
                     }
                 }
-            }
+            },
         )
     }
 }

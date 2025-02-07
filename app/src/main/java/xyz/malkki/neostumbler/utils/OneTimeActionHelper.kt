@@ -22,8 +22,7 @@ class OneTimeActionHelper(private val oneTimeActionsStore: DataStore<Preferences
     }
 
     fun hasActionBeenShownFlow(actionName: String): Flow<Boolean> {
-        return oneTimeActionsStore.data
-            .map { it[booleanPreferencesKey(actionName)] == true }
+        return oneTimeActionsStore.data.map { it[booleanPreferencesKey(actionName)] == true }
     }
 
     /**

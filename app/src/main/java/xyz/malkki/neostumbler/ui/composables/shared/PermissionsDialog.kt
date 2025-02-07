@@ -20,52 +20,56 @@ import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.extensions.getActivity
 
 @Composable
-fun PermissionsDialog(missingPermissions: List<String>, permissionRationales: Map<String, String>, onPermissionsGranted: (Map<String, Boolean>) -> Unit) {
+fun PermissionsDialog(
+    missingPermissions: List<String>,
+    permissionRationales: Map<String, String>,
+    onPermissionsGranted: (Map<String, Boolean>) -> Unit,
+) {
     if (missingPermissions.isEmpty()) {
         return
     }
 
     val context = LocalContext.current
 
-    val permissionsLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-        onPermissionsGranted(permissions)
-    }
-
-    val permissionRationaleText = missingPermissions
-        .mapNotNull {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(context.getActivity()!!, it)) {
-                permissionRationales[it]
-            } else {
-                null
-            }
+    val permissionsLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            onPermissionsGranted(permissions)
         }
-        .distinct()
-        .joinToString("\n\n")
+
+    val permissionRationaleText =
+        missingPermissions
+            .mapNotNull {
+                if (
+                    ActivityCompat.shouldShowRequestPermissionRationale(context.getActivity()!!, it)
+                ) {
+                    permissionRationales[it]
+                } else {
+                    null
+                }
+            }
+            .distinct()
+            .joinToString("\n\n")
 
     if (permissionRationaleText.isNotBlank()) {
         AlertDialog(
-            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false),
+            properties =
+                DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false),
             onDismissRequest = {},
             title = { Text(text = stringResource(R.string.permissions_needed)) },
-            text = {
-                Text(permissionRationaleText)
-            },
+            text = { Text(permissionRationaleText) },
             confirmButton = {
                 TextButton(
-                    onClick = {
-                        permissionsLauncher.launch(missingPermissions.toTypedArray())
-                    }) {
+                    onClick = { permissionsLauncher.launch(missingPermissions.toTypedArray()) }
+                ) {
                     Text(text = stringResource(R.string.ok))
                 }
             },
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight(),
-            shape = RoundedCornerShape(4.dp)
+            modifier = Modifier.fillMaxWidth().wrapContentHeight(),
+            shape = RoundedCornerShape(4.dp),
         )
     } else {
-        SideEffect {
-            permissionsLauncher.launch(missingPermissions.toTypedArray())
-        }
+        SideEffect { permissionsLauncher.launch(missingPermissions.toTypedArray()) }
     }
 }

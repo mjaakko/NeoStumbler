@@ -9,7 +9,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
-
 class UserAgentInterceptorTest {
     private lateinit var mockServer: MockWebServer
 

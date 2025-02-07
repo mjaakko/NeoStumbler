@@ -11,15 +11,15 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.await
+import java.time.Duration
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.geosubmit.ReportSendWorker
 import xyz.malkki.neostumbler.ui.composables.ToggleWithAction
-import java.time.Duration
 
-private fun WorkManager.autoUploadEnabled(): Flow<Boolean> = getWorkInfosForUniqueWorkFlow(ReportSendWorker.PERIODIC_WORK_NAME)
-    .map { workInfos ->
+private fun WorkManager.autoUploadEnabled(): Flow<Boolean> =
+    getWorkInfosForUniqueWorkFlow(ReportSendWorker.PERIODIC_WORK_NAME).map { workInfos ->
         workInfos.any { workInfo ->
             workInfo.state != WorkInfo.State.CANCELLED && workInfo.state != WorkInfo.State.FAILED
         }
@@ -36,10 +36,10 @@ fun AutoUploadToggle() {
     ToggleWithAction(
         title = stringResource(R.string.send_reports_automatically),
         enabled = autoUploadEnabled.value != null,
-        checked = autoUploadEnabled.value == true ,
+        checked = autoUploadEnabled.value == true,
         action = { checked ->
             if (checked) {
-                //Schedule report uploading to MLS
+                // Schedule report uploading to MLS
                 workManager
                     .enqueueUniquePeriodicWork(
                         ReportSendWorker.PERIODIC_WORK_NAME,
@@ -51,15 +51,15 @@ fun AutoUploadToggle() {
                                     requiresCharging = false,
                                     requiresStorageNotLow = false,
                                     requiresDeviceIdle = true,
-                                    requiresBatteryNotLow = true
+                                    requiresBatteryNotLow = true,
                                 )
                             )
-                            .build()
+                            .build(),
                     )
                     .await()
             } else {
                 workManager.cancelUniqueWork(ReportSendWorker.PERIODIC_WORK_NAME).await()
             }
-        }
+        },
     )
 }

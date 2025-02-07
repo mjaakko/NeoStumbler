@@ -15,38 +15,47 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import xyz.malkki.neostumbler.utils.ImmediateExecutor
 
 @RequiresPermission(Manifest.permission.READ_PHONE_STATE)
-fun SubscriptionManager.getActiveSubscriptionIds(): Flow<List<Int>> = callbackFlow {
-    var listener: OnSubscriptionsChangedListener? = null
+fun SubscriptionManager.getActiveSubscriptionIds(): Flow<List<Int>> =
+    callbackFlow {
+            var listener: OnSubscriptionsChangedListener? = null
 
-    val handlerThread = object : HandlerThread("ActiveSubscriptionHandler") {
-            override fun onLooperPrepared() {
-                listener = object : OnSubscriptionsChangedListener() {
-                    @SuppressLint("MissingPermission")
-                    override fun onSubscriptionsChanged() {
-                        val subscriptions = this@getActiveSubscriptionIds.activeSubscriptionInfoList ?: emptyList()
+            val handlerThread =
+                object : HandlerThread("ActiveSubscriptionHandler") {
+                        override fun onLooperPrepared() {
+                            listener =
+                                object : OnSubscriptionsChangedListener() {
+                                    @SuppressLint("MissingPermission")
+                                    override fun onSubscriptionsChanged() {
+                                        val subscriptions =
+                                            this@getActiveSubscriptionIds.activeSubscriptionInfoList
+                                                ?: emptyList()
 
-                        trySendBlocking(subscriptions.map { it.subscriptionId })
+                                        trySendBlocking(subscriptions.map { it.subscriptionId })
+                                    }
+                                }
+
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                                this@getActiveSubscriptionIds.addOnSubscriptionsChangedListener(
+                                    ImmediateExecutor,
+                                    listener,
+                                )
+                            } else {
+                                @Suppress("DEPRECATION")
+                                this@getActiveSubscriptionIds.addOnSubscriptionsChangedListener(
+                                    listener
+                                )
+                            }
+                        }
                     }
-                }
+                    .apply { start() }
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    this@getActiveSubscriptionIds.addOnSubscriptionsChangedListener(ImmediateExecutor, listener)
-                } else {
-                    @Suppress("DEPRECATION")
-                    this@getActiveSubscriptionIds.addOnSubscriptionsChangedListener(listener)
-                }
+            awaitClose {
+                this@getActiveSubscriptionIds.removeOnSubscriptionsChangedListener(listener)
+
+                handlerThread.quit()
             }
         }
-        .apply {
-            start()
+        .distinctUntilChanged { old, new ->
+            // Only emit new values if the IDs have changed
+            HashSet(old) == HashSet(new)
         }
-
-    awaitClose {
-        this@getActiveSubscriptionIds.removeOnSubscriptionsChangedListener(listener)
-
-        handlerThread.quit()
-    }
-}.distinctUntilChanged { old, new ->
-    //Only emit new values if the IDs have changed
-    HashSet(old) == HashSet(new)
-}
