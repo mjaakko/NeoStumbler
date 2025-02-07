@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.ui.composables
+package xyz.malkki.neostumbler.ui.composables.shared
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts

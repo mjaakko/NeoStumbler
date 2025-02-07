@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.ui.composables.Link
+import xyz.malkki.neostumbler.ui.composables.shared.Link
 import xyz.malkki.neostumbler.utils.SuggestedService
 
 @Composable

@@ -25,7 +25,7 @@ import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.export.CsvExportWorker
 import xyz.malkki.neostumbler.extensions.showToast
-import xyz.malkki.neostumbler.ui.composables.DateRangePickerDialog
+import xyz.malkki.neostumbler.ui.composables.shared.DateRangePickerDialog
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter

@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.ui.composables
+package xyz.malkki.neostumbler.ui.composables.shared
 
 import android.app.Service
 import android.content.ComponentName

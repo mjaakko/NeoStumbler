@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.ui.composables
+package xyz.malkki.neostumbler.ui.composables.troubleshooting
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,10 +21,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.ui.composables.settings.SettingsItem
-import xyz.malkki.neostumbler.ui.composables.troubleshooting.AccurateLocationTroubleshootingItem
-import xyz.malkki.neostumbler.ui.composables.troubleshooting.BatteryOptimizationTroubleshootingItem
-import xyz.malkki.neostumbler.ui.composables.troubleshooting.PermissionsTroubleshootingItem
-import xyz.malkki.neostumbler.ui.composables.troubleshooting.WifiScanAlwaysAvailableTroubleshootingItem
 
 @Composable
 fun TroubleshootingSettingsItem() {

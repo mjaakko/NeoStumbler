@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.ui.composables
+package xyz.malkki.neostumbler.ui.composables.settings
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.PREFERENCES
+import xyz.malkki.neostumbler.ui.composables.ToggleWithAction
 
 private fun DataStore<Preferences>.preferenceEnabled(preferenceKey: String, default: Boolean): Flow<Boolean> = data
     .map { it[booleanPreferencesKey(preferenceKey)] }

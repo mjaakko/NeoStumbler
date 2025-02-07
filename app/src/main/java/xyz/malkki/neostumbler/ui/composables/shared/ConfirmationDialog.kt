@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.ui.composables
+package xyz.malkki.neostumbler.ui.composables.shared
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text

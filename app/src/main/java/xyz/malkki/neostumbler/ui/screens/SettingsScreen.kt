@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.ui.screens.settings
+package xyz.malkki.neostumbler.ui.screens
 
 import android.os.Build
 import androidx.compose.foundation.layout.Column
@@ -18,9 +18,9 @@ import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.scanner.ScannerService
 import xyz.malkki.neostumbler.ui.composables.AboutNeoStumbler
 import xyz.malkki.neostumbler.ui.composables.ReportReuploadButton
-import xyz.malkki.neostumbler.ui.composables.SettingsGroup
-import xyz.malkki.neostumbler.ui.composables.SettingsToggle
-import xyz.malkki.neostumbler.ui.composables.TroubleshootingSettingsItem
+import xyz.malkki.neostumbler.ui.composables.settings.SettingsGroup
+import xyz.malkki.neostumbler.ui.composables.settings.SettingsToggle
+import xyz.malkki.neostumbler.ui.composables.troubleshooting.TroubleshootingSettingsItem
 import xyz.malkki.neostumbler.ui.composables.settings.AutoScanToggle
 import xyz.malkki.neostumbler.ui.composables.settings.AutoUploadToggle
 import xyz.malkki.neostumbler.ui.composables.settings.CoverageLayerSettings

@@ -40,8 +40,8 @@ import org.koin.compose.KoinContext
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.ui.screens.MapScreen
 import xyz.malkki.neostumbler.ui.screens.ReportsScreen
+import xyz.malkki.neostumbler.ui.screens.SettingsScreen
 import xyz.malkki.neostumbler.ui.screens.StatisticsScreen
-import xyz.malkki.neostumbler.ui.screens.settings.SettingsScreen
 import xyz.malkki.neostumbler.ui.theme.NeoStumblerTheme
 
 private fun DataStore<Preferences>.useDynamicColor(): Flow<Boolean> = data

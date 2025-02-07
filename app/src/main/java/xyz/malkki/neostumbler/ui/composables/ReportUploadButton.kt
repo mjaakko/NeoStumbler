@@ -22,7 +22,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.ExistingWorkPolicy
@@ -41,6 +40,7 @@ import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.extensions.getQuantityString
 import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.geosubmit.ReportSendWorker
+import xyz.malkki.neostumbler.ui.composables.shared.EffectOnWorkCompleted
 import xyz.malkki.neostumbler.ui.viewmodel.ReportsViewModel
 import java.util.UUID
 import kotlin.time.Duration.Companion.seconds
@@ -78,8 +78,15 @@ fun ReportUploadButton(reportsViewModel: ReportsViewModel) {
     EffectOnWorkCompleted(
         workId = enqueuedUploadWork.value,
         onWorkSuccess = { workInfo ->
-            val reportsUploaded = workInfo.outputData.getInt(ReportSendWorker.OUTPUT_REPORTS_SENT, 0)
-            context.showToast(context.getQuantityString(R.plurals.toast_reports_uploaded, reportsUploaded, reportsUploaded))
+            val reportsUploaded =
+                workInfo.outputData.getInt(ReportSendWorker.OUTPUT_REPORTS_SENT, 0)
+            context.showToast(
+                context.getQuantityString(
+                    R.plurals.toast_reports_uploaded,
+                    reportsUploaded,
+                    reportsUploaded
+                )
+            )
 
             enqueuedUploadWork.value = null
         },
@@ -88,13 +95,25 @@ fun ReportUploadButton(reportsViewModel: ReportsViewModel) {
 
             when (errorType) {
                 ReportSendWorker.ERROR_TYPE_NO_ENDPOINT_CONFIGURED -> {
-                    context.showToast(ContextCompat.getString(context, R.string.toast_reports_upload_failed_no_endpoint))
+                    context.showToast(
+                        ContextCompat.getString(
+                            context,
+                            R.string.toast_reports_upload_failed_no_endpoint
+                        )
+                    )
                 }
+
                 else -> {
-                    val errorMessage = workInfo.outputData.getString(ReportSendWorker.OUTPUT_ERROR_MESSAGE)
+                    val errorMessage =
+                        workInfo.outputData.getString(ReportSendWorker.OUTPUT_ERROR_MESSAGE)
 
                     val toastText = buildString {
-                        append(ContextCompat.getString(context, R.string.toast_reports_upload_failed))
+                        append(
+                            ContextCompat.getString(
+                                context,
+                                R.string.toast_reports_upload_failed
+                            )
+                        )
 
                         if (errorMessage != null) {
                             append("\n\n")

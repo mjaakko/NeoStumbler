@@ -40,6 +40,8 @@ import xyz.malkki.neostumbler.extensions.getTableNames
 import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.ui.composables.export.ExportCsvButton
 import xyz.malkki.neostumbler.ui.composables.export.ExportDatabaseButton
+import xyz.malkki.neostumbler.ui.composables.shared.ConfirmationDialog
+import xyz.malkki.neostumbler.ui.composables.shared.DateRangePickerDialog
 import java.time.LocalDate
 import java.time.ZoneOffset
 import kotlin.io.path.createTempFile
@@ -142,12 +144,20 @@ private fun DeleteReportsByDate(reportDb: StateFlow<ReportDatabase>) {
 
                 if (dateRange != null) {
                     val from = dateRange.start.atStartOfDay().atOffset(ZoneOffset.UTC).toInstant()
-                    val to = dateRange.endInclusive.plusDays(1).atStartOfDay().atOffset(ZoneOffset.UTC).toInstant()
+                    val to =
+                        dateRange.endInclusive.plusDays(1).atStartOfDay().atOffset(ZoneOffset.UTC)
+                            .toInstant()
 
                     coroutineScope.launch {
                         val deletedCount = reportDb.value.reportDao().deleteFromTimeRange(from, to)
 
-                        context.showToast(context.getQuantityString(R.plurals.toast_deleted_reports, deletedCount, deletedCount))
+                        context.showToast(
+                            context.getQuantityString(
+                                R.plurals.toast_deleted_reports,
+                                deletedCount,
+                                deletedCount
+                            )
+                        )
                     }
                 }
             }
@@ -184,7 +194,12 @@ private fun DeleteAllReportsButton(reportDb: StateFlow<ReportDatabase>) {
                         reportDb.value.clearAllTables()
                     }
 
-                    context.showToast(ContextCompat.getString(context, R.string.toast_deleted_all_reports))
+                    context.showToast(
+                        ContextCompat.getString(
+                            context,
+                            R.string.toast_deleted_all_reports
+                        )
+                    )
                 }
             },
             onNegativeAction = {

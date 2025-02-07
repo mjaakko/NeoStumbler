@@ -25,6 +25,8 @@ import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.extensions.getQuantityString
 import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.geosubmit.ReportSendWorker
+import xyz.malkki.neostumbler.ui.composables.shared.DateRangePickerDialog
+import xyz.malkki.neostumbler.ui.composables.shared.EffectOnWorkCompleted
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.UUID
@@ -48,8 +50,15 @@ fun ReportReuploadButton() {
     EffectOnWorkCompleted(
         workId = enqueuedUploadWork.value,
         onWorkSuccess = { workInfo ->
-            val reportsUploaded = workInfo.outputData.getInt(ReportSendWorker.OUTPUT_REPORTS_SENT, 0)
-            context.showToast(context.getQuantityString(R.plurals.toast_reports_uploaded, reportsUploaded, reportsUploaded))
+            val reportsUploaded =
+                workInfo.outputData.getInt(ReportSendWorker.OUTPUT_REPORTS_SENT, 0)
+            context.showToast(
+                context.getQuantityString(
+                    R.plurals.toast_reports_uploaded,
+                    reportsUploaded,
+                    reportsUploaded
+                )
+            )
 
             enqueuedUploadWork.value = null
         },
@@ -58,13 +67,25 @@ fun ReportReuploadButton() {
 
             when (errorType) {
                 ReportSendWorker.ERROR_TYPE_NO_ENDPOINT_CONFIGURED -> {
-                    context.showToast(ContextCompat.getString(context, R.string.toast_reports_upload_failed_no_endpoint))
+                    context.showToast(
+                        ContextCompat.getString(
+                            context,
+                            R.string.toast_reports_upload_failed_no_endpoint
+                        )
+                    )
                 }
+
                 else -> {
-                    val errorMessage = workInfo.outputData.getString(ReportSendWorker.OUTPUT_ERROR_MESSAGE)
+                    val errorMessage =
+                        workInfo.outputData.getString(ReportSendWorker.OUTPUT_ERROR_MESSAGE)
 
                     val toastText = buildString {
-                        append(ContextCompat.getString(context, R.string.toast_reports_upload_failed))
+                        append(
+                            ContextCompat.getString(
+                                context,
+                                R.string.toast_reports_upload_failed
+                            )
+                        )
 
                         if (errorMessage != null) {
                             append("\n\n")
@@ -95,7 +116,8 @@ fun ReportReuploadButton() {
                     val localTimeZone = ZoneId.systemDefault()
 
                     //Convert to local time
-                    val from = dateRange.start.atStartOfDay(localTimeZone).toInstant().toEpochMilli()
+                    val from =
+                        dateRange.start.atStartOfDay(localTimeZone).toInstant().toEpochMilli()
                     val to = dateRange.endInclusive
                         //Add one day to include data for the last day in the selected range
                         .plusDays(1)
@@ -113,7 +135,8 @@ fun ReportReuploadButton() {
                                 Data.Builder()
                                     .putLong(ReportSendWorker.INPUT_REUPLOAD_FROM, from)
                                     .putLong(ReportSendWorker.INPUT_REUPLOAD_TO, to)
-                                    .build())
+                                    .build()
+                            )
                             .setConstraints(Constraints.NONE)
                             .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                             .build()

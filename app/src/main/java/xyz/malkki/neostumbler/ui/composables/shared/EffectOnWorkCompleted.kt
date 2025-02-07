@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.ui.composables
+package xyz.malkki.neostumbler.ui.composables.shared
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect

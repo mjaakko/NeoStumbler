@@ -75,8 +75,8 @@ import org.maplibre.android.style.sources.VectorSource
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.defaultLocale
-import xyz.malkki.neostumbler.ui.composables.KeepScreenOn
-import xyz.malkki.neostumbler.ui.composables.PermissionsDialog
+import xyz.malkki.neostumbler.ui.composables.shared.KeepScreenOn
+import xyz.malkki.neostumbler.ui.composables.shared.PermissionsDialog
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel.MapTileSource
 
