@@ -65,12 +65,17 @@ import org.maplibre.android.maps.Style
 import org.maplibre.android.module.http.HttpRequestUtil
 import org.maplibre.android.plugins.annotation.FillManager
 import org.maplibre.android.plugins.annotation.FillOptions
+import org.maplibre.android.style.expressions.Expression
+import org.maplibre.android.style.layers.PropertyFactory.textField
+import org.maplibre.android.style.layers.SymbolLayer
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
+import xyz.malkki.neostumbler.extensions.defaultLocale
 import xyz.malkki.neostumbler.ui.composables.KeepScreenOn
 import xyz.malkki.neostumbler.ui.composables.PermissionsDialog
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel.MapTileSource
+import java.util.Locale
 
 private val HEAT_LOW = ColorUtils.setAlphaComponent(0xd278ff, 120)
 private val HEAT_HIGH = ColorUtils.setAlphaComponent(0xaa00ff, 120)
@@ -137,6 +142,20 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
                     HttpRequestUtil.setOkHttpClient(httpClient.value)
 
                     val mapView = LifecycleAwareMap(context)
+                    mapView.addOnDidFinishLoadingStyleListener {
+                        mapView.getMapAsync { map ->
+                            map.getStyle { style ->
+                                style.layers.forEach { layer ->
+                                    if (layer is SymbolLayer) {
+                                        if (layer.textField.isExpression && layer.textField.expression?.toString()?.contains("name") == true) {
+                                            layer.setProperties(textField(getLocalizedLabelExpression(context.defaultLocale)))
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     mapView.getMapAsync { map ->
                         map.addOnMoveListener(object : MapLibreMap.OnMoveListener {
                             override fun onMoveBegin(p0: MoveGestureDetector) {
@@ -282,6 +301,39 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
             }
         }
     }
+}
+
+private fun getLocalizedLabelExpression(locale: Locale): Expression {
+    val preferredLanguage = if (locale.language == "zh") {
+        //Handle different Chinese scripts by preferring the simplified script if it's chosen by the user or if the country is China
+        if (locale.script == "Hans" || (locale.script.isEmpty() && locale.country == "CN")) {
+            arrayOf(
+                Expression.get("name:zh-Hans"),
+                Expression.get("name:zh-Hant"),
+                Expression.get("name:zh")
+            )
+        } else {
+            arrayOf(
+                Expression.get("name:zh-Hant"),
+                Expression.get("name:zh-Hans"),
+                Expression.get("name:zh")
+            )
+        }
+    } else {
+        arrayOf(Expression.get("name:${locale.language}"))
+    }
+
+    return Expression.format(
+        Expression.formatEntry(
+            Expression.coalesce(
+                *preferredLanguage,
+                Expression.get("name:en"),
+                //VersaTiles does not seem to support localized labels and uses underscore instead in the expression
+                Expression.get("name_en"),
+                Expression.get("name"),
+            )
+        )
+    )
 }
 
 private fun createHeatMapFill(tiles: Collection<MapViewModel.HeatMapTile>): List<FillOptions> {
