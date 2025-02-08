@@ -25,17 +25,21 @@
     <string name="reports">Rilevamenti:</string>
     <string name="stop_scanning">Ferma scansione</string>
     <string name="reports_total">Totale rilevamenti: %d</string>
-    <string name="reports_not_uploaded">Rilevamenti non inviate: %d</string>
+    <string name="reports_not_uploaded">Rilevamenti non inviati: %d</string>
     <string name="reports_last_uploaded">Data ultimo invio: %s</string>
     <string name="delete_report">Elimina rilevazione</string>
     <plurals name="toast_reports_uploaded">
-        <item quantity="other">%d rilevamenti inviate</item>
+        <item quantity="one">%d rilevamento inviato</item>
+        <item quantity="many">%d di rilevamenti inviati</item>
+        <item quantity="other">%d rilevamenti inviati</item>
     </plurals>
     <string name="toast_reports_upload_failed">Impossibile inviare rilevamenti</string>
     <string name="report_upload_notification_channel_name">Invio rilevamenti</string>
     <string name="notification_sending_reports">Invio rilevamenti in corso</string>
     <string name="notification_wireless_scanning_title">Scansione wireless attiva</string>
     <plurals name="notification_wireless_scanning_content_reports_created">
+        <item quantity="one">%d rilevamento creato</item>
+        <item quantity="many">%d di rilevamenti creati</item>
         <item quantity="other">%d rilevamenti creati</item>
     </plurals>
     <string name="ignore_battery_optimizations_title">Ignora ottimizzazioni batteria</string>
@@ -51,7 +55,9 @@
     <string name="import_raw_database">Importa database grezzo</string>
     <string name="import_raw_database_description">L\'importazione di un database grezzo sostituirà il database esistente</string>
     <plurals name="import_database_successful">
-        <item quantity="other">Database importato con %d rilevamenti</item>
+        <item quantity="one">Importato database con %d rilevamento</item>
+        <item quantity="many">Importato database con %d di rilevamenti</item>
+        <item quantity="other">Importato database con %d rilevamenti</item>
     </plurals>
     <string name="reupload_data">Re-invia dati</string>
     <string name="wifis">Wi-Fi</string>
@@ -86,6 +92,8 @@
     <string name="troubleshooting_fix">Risolvi</string>
     <string name="db_prune_never">Mai</string>
     <plurals name="toast_deleted_reports">
+        <item quantity="one">%d rilevamento eliminato</item>
+        <item quantity="many">%d di rilevamenti eliminati</item>
         <item quantity="other">%d rilevamenti eliminati</item>
     </plurals>
     <string name="delete_all_reports_confirmation">Confermi di voler eliminare tutti i rilevamenti?</string>
@@ -131,7 +139,16 @@
     <string name="app_language">Lingua</string>
     <string name="toast_deleted_all_reports">Tutti i rilevamenti eliminati</string>
     <string name="no_data">Nessun dato</string>
-    <string name="permission_rationale_fine_location">Per accedere alla posizione corrente è necessaria l\'autorizzazione posizione esatta</string>
+    <string name="permission_rationale_fine_location">Per creare rilevamenti con dati sulla posizione utili è necessaria l\'autorizzazione per la posizione esatta</string>
     <string name="permission_rationale_background_location_quick_settings">L\'avvio della scansione dalle impostazioni rapide richiede l\'accesso alla posizione in background</string>
     <string name="movement_detection_significant_motion_description">Ferma la scansione e il GPS quando non vi è movimento significativo. Risparmia batteria, ma non è affidabile su alcuni dispositivi</string>
+    <string name="toast_reports_upload_failed_no_endpoint">Impossibile inviare rilevamenti in quanto non è stato configurato un endpoint</string>
+    <string name="no_endpoint_configured">Nessun endpoint configurato</string>
+    <string name="every_x_meters">Ogni %d metri</string>
+    <string name="map_tile_source">Fonte riquadri mappa</string>
+    <string name="mls_warning_text">Mozilla Location Service è stato chiuso e non accetta più invii di dati. Come alternative a MLS, è possibile inviare dati a beaconDB, che fornisce un servizio compatibile con MLS\n\nNotare che beaconDB è ancora in fase di sviluppo e questo può avere effetti sul modo in cui i dati forniti vengono gestiti. Leggere la \u0020<annotation link="privacy_policy">politica sulla privacy</annotation> per ulteriori informazioni\n\nImpostare beaconDB come endpoint? Sarà possibile modificare questa impostazione in futuro</string>
+    <string name="reports_last_uploaded_never">mai</string>
+    <string name="reports_empty">Nessun rilevamento finora</string>
+    <string name="wifi_scan_frequency">Frequenza scansione Wi-Fi</string>
+    <string name="cell_tower_scan_frequency">Frequenza scansione celle</string>
 </resources>
