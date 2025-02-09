@@ -176,6 +176,7 @@ class StumblerApplication : Application() {
         notificationManager.createNotificationChannel(exportNotificationChannel)
     }
 
+    @Suppress("MagicNumber", "TooGenericExceptionCaught")
     private fun setupBeaconLibrary() {
         // Disable manifest checking, which seems to cause crashes on certain devices
         BeaconManager.setManifestCheckingDisabled(true)

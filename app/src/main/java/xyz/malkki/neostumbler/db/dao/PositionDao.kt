@@ -18,7 +18,15 @@ interface PositionDao {
      */
     @Transaction
     @Query(
-        "SELECT p.latitude AS latitude, p.longitude AS longitude FROM PositionEntity p JOIN Report r ON p.reportId = r.id ORDER BY r.timestamp DESC LIMIT 1"
+        """
+            SELECT
+                p.latitude AS latitude,
+                p.longitude AS longitude
+            FROM PositionEntity p
+                JOIN Report r ON p.reportId = r.id
+            ORDER BY r.timestamp DESC
+            LIMIT 1
+            """
     )
     suspend fun getLatestPosition(): LatLng?
 }

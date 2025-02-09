@@ -10,6 +10,8 @@ import timber.log.Timber
 import xyz.malkki.neostumbler.extensions.roundToString
 import xyz.malkki.neostumbler.utils.geocoder.Geocoder
 
+private const val FRACTION_DIGITS = 4
+
 @Composable
 @SuppressLint("ProduceStateDoesNotAssignValue") // https://issuetracker.google.com/issues/349411310
 fun getAddress(latitude: Double, longitude: Double, geocoder: Geocoder): State<String> =
@@ -32,7 +34,7 @@ fun getAddress(latitude: Double, longitude: Double, geocoder: Geocoder): State<S
 
             value =
                 if (addresses.isEmpty()) {
-                    "${latitude.roundToString(4)}, ${longitude.roundToString(4)}"
+                    "${latitude.roundToString(FRACTION_DIGITS)}, ${longitude.roundToString(FRACTION_DIGITS)}"
                 } else {
                     addresses.first().format()
                 }

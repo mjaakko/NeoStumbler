@@ -11,7 +11,10 @@ data class BluetoothBeacon(
     val id3: String?,
     val signalStrength: Int,
     override val timestamp: Long,
-) : ObservedDevice {
+) : ObservedDevice<String> {
+    override val uniqueKey: String
+        get() = macAddress
+
     companion object {
         fun fromBeacon(beacon: Beacon): BluetoothBeacon {
             val timestamp =

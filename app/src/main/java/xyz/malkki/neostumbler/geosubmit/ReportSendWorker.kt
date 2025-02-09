@@ -13,6 +13,7 @@ import androidx.work.Data
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.hasKeyWithValueOfType
+import java.io.IOException
 import java.net.SocketTimeoutException
 import java.time.Instant
 import kotlin.collections.isNotEmpty
@@ -33,13 +34,20 @@ import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.db.entities.ReportWithData
 import xyz.malkki.neostumbler.geosubmit.dto.ReportDto
 
+// Send max 2000 reports in one request to avoid creating too large payloads
+private const val MAX_REPORTS_PER_BATCH = 2000
+
+// By default, WorkManager will retry indefinitely.
+// If uploading hasn't been successful after 5 retries,
+// just return a failure to stop retrying
+private const val MAX_RETRIES = 5
+
+private val HTTP_STATUS_CODE_SERVER_ERROR = 500..599
+
 class ReportSendWorker(appContext: Context, params: WorkerParameters) :
     CoroutineWorker(appContext, params), KoinComponent {
     companion object {
         private const val REPORT_SEND_NOTIFICATION_ID = 55555
-
-        // Send max 2000 reports in one request to avoid creating too large payloads
-        private const val MAX_REPORTS_PER_BATCH = 2000
 
         const val PERIODIC_WORK_NAME = "report_upload_periodic"
         const val ONE_TIME_WORK_NAME = "report_upload_one_time"
@@ -131,7 +139,7 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) :
             }
 
             Result.success(createResultData(reportsSent))
-        } catch (ex: Exception) {
+        } catch (ex: IOException) {
             Timber.w(ex, "Failed to send Geosubmit reports")
 
             if (shouldRetry(ex)) {
@@ -191,11 +199,8 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) :
             .build()
     }
 
-    private fun shouldRetry(exception: Exception): Boolean {
-        // By default, WorkManager will retry indefinitely
-        // If uploading hasn't been successful after 5 retries, just return a failure to stop
-        // retrying
-        if (runAttemptCount >= 5) {
+    private fun shouldRetry(exception: IOException): Boolean {
+        if (runAttemptCount >= MAX_RETRIES) {
             return false
         }
 
@@ -206,7 +211,7 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) :
 
         if (
             exception is IchnaeaGeosubmit.IchnaeaGeosubmitException &&
-                exception.httpStatusCode in 500..599
+                exception.httpStatusCode in HTTP_STATUS_CODE_SERVER_ERROR
         ) {
             // Retry server-side errors (HTTP status 5xx)
             return true

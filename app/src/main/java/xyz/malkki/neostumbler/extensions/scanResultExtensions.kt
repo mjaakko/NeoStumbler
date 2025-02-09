@@ -3,6 +3,8 @@ package xyz.malkki.neostumbler.extensions
 import android.net.wifi.ScanResult
 import android.os.Build
 
+private const val S_IN_MS = 1000
+
 /** SSID of the network without quotation marks and surrounding whitespace */
 val ScanResult.ssidString: String?
     get() {
@@ -19,4 +21,4 @@ val ScanResult.ssidString: String?
     }
 
 val ScanResult.timestampMillis: Long
-    get() = timestamp / 1000
+    get() = timestamp / S_IN_MS

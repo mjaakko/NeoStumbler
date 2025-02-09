@@ -21,6 +21,8 @@ import org.apache.commons.csv.CSVPrinter
 import timber.log.Timber
 import xyz.malkki.neostumbler.db.ReportDatabaseManager
 
+private const val MAXIMUM_FRACTION_DIGITS = 7
+
 /** Helper for exporting scan data as CSV files */
 class CsvExporter(
     private val context: Context,
@@ -37,7 +39,7 @@ class CsvExporter(
     private val decimalFormat =
         DecimalFormat("0", DecimalFormatSymbols(Locale.ROOT)).apply {
             roundingMode = RoundingMode.HALF_UP
-            maximumFractionDigits = 7
+            maximumFractionDigits = MAXIMUM_FRACTION_DIGITS
         }
 
     /**

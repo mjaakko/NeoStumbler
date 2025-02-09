@@ -25,32 +25,32 @@ class DbPruneWorker(appContext: Context, params: WorkerParameters) :
         const val PERIODIC_WORK_NAME = "db_prune_periodic"
 
         const val OUTPUT_REPORTS_DELETED = "reports_deleted"
+
+        // By default delete reports older than 60 days
+        const val DEFAULT_MAX_AGE_DAYS: Int = 60
     }
 
     private val reportDatabaseManager: ReportDatabaseManager by inject()
 
     private val settingsStore: DataStore<Preferences> by inject<DataStore<Preferences>>(PREFERENCES)
 
-    private suspend fun getMaxAgeDays(): Long? {
+    private suspend fun getMaxAgeDays(): Int? {
         return settingsStore.data
-            .map { prefs ->
-                prefs[intPreferencesKey(PreferenceKeys.DB_PRUNE_DATA_MAX_AGE_DAYS)]?.toLong()
-            }
+            .map { prefs -> prefs[intPreferencesKey(PreferenceKeys.DB_PRUNE_DATA_MAX_AGE_DAYS)] }
             .firstOrNull()
     }
 
     override suspend fun doWork(): Result {
         val reportDao = reportDatabaseManager.reportDb.value.reportDao()
 
-        // By default delete reports older than 60 days
-        val maxAgeDays = getMaxAgeDays() ?: 60
+        val maxAgeDays = getMaxAgeDays() ?: DEFAULT_MAX_AGE_DAYS
         if (maxAgeDays < 0) {
             // If the max age is negative, DB pruning has been disabled in the settings -> succeed
             // immediately
             return Result.success()
         }
 
-        val minTimestamp = ZonedDateTime.now().minusDays(maxAgeDays).toInstant()
+        val minTimestamp = ZonedDateTime.now().minusDays(maxAgeDays.toLong()).toInstant()
 
         Timber.i("Deleting reports older than $minTimestamp")
 

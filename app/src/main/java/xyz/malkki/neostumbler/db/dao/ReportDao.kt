@@ -68,7 +68,15 @@ interface ReportDao {
     suspend fun getAllReportsForTimerange(from: Instant, to: Instant): List<ReportWithData>
 
     @Query(
-        "SELECT r.id, r.timestamp, p.latitude, p.longitude FROM Report r JOIN PositionEntity p ON r.id = p.reportId WHERE r.timestamp >= :timestamp"
+        """
+        SELECT
+            r.id,
+            r.timestamp,
+            p.latitude,
+            p.longitude
+        FROM Report r
+            JOIN PositionEntity p ON r.id = p.reportId
+        WHERE r.timestamp >= :timestamp"""
     )
     suspend fun getReportsNewerThan(timestamp: Instant): List<ReportWithLocation>
 

@@ -17,6 +17,8 @@ import xyz.malkki.neostumbler.geosubmit.dto.ReportDto
 
 private const val BUFFER_SIZE = 8 * 1024
 
+private val HTTP_STATUS_CODE_SUCCESS = 200..299
+
 /**
  * Geosubmit implementation for sending data to an Ichnaea endpoint
  *
@@ -44,7 +46,7 @@ class IchnaeaGeosubmit(
 
         val response = httpClient.newCall(request).executeSuspending()
         response.use {
-            if (response.code !in 200..299) {
+            if (response.code !in HTTP_STATUS_CODE_SUCCESS) {
                 throw IchnaeaGeosubmitException(
                     "HTTP request to ${request.url} failed, status: ${response.code}",
                     response.code,

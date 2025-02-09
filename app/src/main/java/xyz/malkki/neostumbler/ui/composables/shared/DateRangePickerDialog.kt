@@ -32,6 +32,9 @@ import xyz.malkki.neostumbler.utils.SelectableDatesFromSet
 
 private val DATE_FORMATTER = DatePickerDefaults.dateFormatter(selectedDateSkeleton = "d/MM/yyyy")
 
+// Scale the headline to be slightly smaller so that the content fits nicely
+private const val HEADLINE_SCALE = 0.9f
+
 /**
  * @param onDatesSelected Callback for when the button is clicked. If no dates have been selected,
  *   the parameter is null
@@ -110,7 +113,7 @@ fun DateRangePickerDialog(
                                 selectedEndDateMillis = dateRangePickerState.selectedEndDateMillis,
                                 displayMode = dateRangePickerState.displayMode,
                                 dateFormatter = DATE_FORMATTER,
-                                modifier = Modifier.scale(0.9f),
+                                modifier = Modifier.scale(HEADLINE_SCALE),
                             )
                         }
                     },

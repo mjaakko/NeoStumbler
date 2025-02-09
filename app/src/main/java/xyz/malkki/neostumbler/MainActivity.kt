@@ -19,10 +19,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -72,16 +74,28 @@ class MainActivity : AppCompatActivity() {
                 NeoStumblerTheme(dynamicColor = dynamicColorState.value == true) {
                     // A surface container using the 'background' color from the theme
                     Surface(modifier = Modifier.fillMaxSize()) {
-                        val items =
+                        val tabs =
                             listOf(
-                                stringResource(R.string.map_tab_title) to
-                                    rememberVectorPainter(Icons.Filled.Place),
-                                stringResource(R.string.reports_tab_title) to
-                                    rememberVectorPainter(Icons.AutoMirrored.Default.List),
-                                stringResource(R.string.statistics_tab_title) to
-                                    painterResource(id = R.drawable.statistics_24),
-                                stringResource(R.string.settings_tab_title) to
-                                    rememberVectorPainter(Icons.Filled.Settings),
+                                Tab(
+                                    title = stringResource(R.string.map_tab_title),
+                                    icon = rememberVectorPainter(Icons.Filled.Place),
+                                    render = { MapScreen() },
+                                ),
+                                Tab(
+                                    title = stringResource(R.string.reports_tab_title),
+                                    icon = rememberVectorPainter(Icons.AutoMirrored.Default.List),
+                                    render = { ReportsScreen() },
+                                ),
+                                Tab(
+                                    title = stringResource(R.string.statistics_tab_title),
+                                    icon = painterResource(id = R.drawable.statistics_24),
+                                    render = { StatisticsScreen() },
+                                ),
+                                Tab(
+                                    title = stringResource(R.string.settings_tab_title),
+                                    icon = rememberVectorPainter(Icons.Filled.Settings),
+                                    render = { SettingsScreen() },
+                                ),
                             )
 
                         val selectedTabIndex = rememberSaveable { mutableIntStateOf(1) }
@@ -100,7 +114,7 @@ class MainActivity : AppCompatActivity() {
                             },
                             bottomBar = {
                                 NavigationBar {
-                                    items.forEachIndexed { index, (title, icon) ->
+                                    tabs.forEachIndexed { index, (title, icon) ->
                                         NavigationBarItem(
                                             icon = { Icon(icon, contentDescription = title) },
                                             label = { Text(title) },
@@ -114,12 +128,7 @@ class MainActivity : AppCompatActivity() {
                                 Column(
                                     modifier = Modifier.fillMaxSize().padding(paddingValues = it)
                                 ) {
-                                    when (selectedTabIndex.intValue) {
-                                        0 -> MapScreen()
-                                        1 -> ReportsScreen()
-                                        2 -> StatisticsScreen()
-                                        3 -> SettingsScreen()
-                                    }
+                                    tabs[selectedTabIndex.intValue].render()
                                 }
                             },
                         )
@@ -128,4 +137,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    private data class Tab(
+        val title: String,
+        val icon: Painter,
+        val render: @Composable () -> Unit,
+    )
 }

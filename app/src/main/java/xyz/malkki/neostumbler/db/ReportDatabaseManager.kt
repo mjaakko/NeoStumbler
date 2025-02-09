@@ -26,6 +26,8 @@ class ReportDatabaseManager(context: Context) {
          * @param dbFile File that contains the database
          * @return true if the file contains valid report database
          */
+        // If an generic exception is caught, it's assumed that the database is not valid
+        @Suppress("TooGenericExceptionCaught")
         suspend fun validateDatabase(context: Context, dbFile: Path): Boolean =
             withContext(Dispatchers.IO) {
                 val tempFile = createTempFile(context.cacheDir.toPath(), "temp", ".db")

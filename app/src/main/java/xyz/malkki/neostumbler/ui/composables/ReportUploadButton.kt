@@ -1,6 +1,5 @@
 package xyz.malkki.neostumbler.ui.composables
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -20,7 +19,6 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.work.BackoffPolicy
 import androidx.work.Constraints
@@ -40,10 +38,8 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.extensions.getQuantityString
-import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.geosubmit.ReportSendWorker
-import xyz.malkki.neostumbler.ui.composables.shared.EffectOnWorkCompleted
+import xyz.malkki.neostumbler.ui.composables.reports.ToastOnReportUpload
 import xyz.malkki.neostumbler.ui.viewmodel.ReportsViewModel
 
 /** Returns a flow which emits booleans indicating whether an upload can be started */
@@ -72,55 +68,7 @@ fun ReportUploadButton(reportsViewModel: ReportsViewModel) {
 
     val enqueuedUploadWork = rememberSaveable { mutableStateOf<UUID?>(null) }
 
-    EffectOnWorkCompleted(
-        workId = enqueuedUploadWork.value,
-        onWorkSuccess = { workInfo ->
-            val reportsUploaded =
-                workInfo.outputData.getInt(ReportSendWorker.OUTPUT_REPORTS_SENT, 0)
-            context.showToast(
-                context.getQuantityString(
-                    R.plurals.toast_reports_uploaded,
-                    reportsUploaded,
-                    reportsUploaded,
-                )
-            )
-
-            enqueuedUploadWork.value = null
-        },
-        onWorkFailed = { workInfo ->
-            val errorType = workInfo.outputData.getInt(ReportSendWorker.OUTPUT_ERROR_TYPE, -1)
-
-            when (errorType) {
-                ReportSendWorker.ERROR_TYPE_NO_ENDPOINT_CONFIGURED -> {
-                    context.showToast(
-                        ContextCompat.getString(
-                            context,
-                            R.string.toast_reports_upload_failed_no_endpoint,
-                        )
-                    )
-                }
-
-                else -> {
-                    val errorMessage =
-                        workInfo.outputData.getString(ReportSendWorker.OUTPUT_ERROR_MESSAGE)
-
-                    val toastText = buildString {
-                        append(
-                            ContextCompat.getString(context, R.string.toast_reports_upload_failed)
-                        )
-
-                        if (errorMessage != null) {
-                            append("\n\n")
-                            append(errorMessage)
-                        }
-                    }
-                    context.showToast(toastText, length = Toast.LENGTH_LONG)
-                }
-            }
-
-            enqueuedUploadWork.value = null
-        },
-    )
+    ToastOnReportUpload(workId = enqueuedUploadWork)
 
     Button(
         enabled = reportsNotUploaded.value > 0 && canUpload.value && !enqueuing.value,

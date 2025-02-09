@@ -11,12 +11,15 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.await
-import java.time.Duration
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.toJavaDuration
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.geosubmit.ReportSendWorker
 import xyz.malkki.neostumbler.ui.composables.ToggleWithAction
+
+private val UPLOAD_INTERVAL = 8.hours
 
 private fun WorkManager.autoUploadEnabled(): Flow<Boolean> =
     getWorkInfosForUniqueWorkFlow(ReportSendWorker.PERIODIC_WORK_NAME).map { workInfos ->
@@ -44,7 +47,9 @@ fun AutoUploadToggle() {
                     .enqueueUniquePeriodicWork(
                         ReportSendWorker.PERIODIC_WORK_NAME,
                         ExistingPeriodicWorkPolicy.UPDATE,
-                        PeriodicWorkRequestBuilder<ReportSendWorker>(Duration.ofHours(8))
+                        PeriodicWorkRequestBuilder<ReportSendWorker>(
+                                UPLOAD_INTERVAL.toJavaDuration()
+                            )
                             .setConstraints(
                                 Constraints(
                                     requiredNetworkType = NetworkType.CONNECTED,

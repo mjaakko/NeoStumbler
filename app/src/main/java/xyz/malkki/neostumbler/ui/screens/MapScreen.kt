@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Location
+import androidx.annotation.ColorInt
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -81,14 +82,20 @@ import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel.MapTileSource
 import java.util.Locale
 
-private val HEAT_LOW = ColorUtils.setAlphaComponent(0xd278ff, 120)
-private val HEAT_HIGH = ColorUtils.setAlphaComponent(0xaa00ff, 120)
+@ColorInt private const val HEAT_LOW: Int = 0x78d278ff
+@ColorInt private const val HEAT_HIGH: Int = 0x78aa00ff
 
-private val COVERAGE_SOURCE_ID = "coverage-source"
-private val COVERAGE_LAYER_PREFIX = "coverage-layer-"
-private val COVERAGE_COLOR = "#ff8000"
-private val COVERAGE_OPACITY = 0.4f
+private const val COVERAGE_SOURCE_ID = "coverage-source"
+private const val COVERAGE_LAYER_PREFIX = "coverage-layer-"
+private const val COVERAGE_COLOR = "#ff8000"
+private const val COVERAGE_OPACITY = 0.4f
 
+private const val MIN_ZOOM = 3.0
+private const val MAX_ZOOM = 15.0
+
+// This method is long and complex because we are mixing Compose with Views
+// FIXME: try to break this into smaller pieces and then remove these suppressions
+@Suppress("LongMethod", "CyclomaticComplexMethod")
 @Composable
 fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
     val context = LocalContext.current
@@ -183,8 +190,8 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                             }
                         )
 
-                        map.setMinZoomPreference(3.0)
-                        map.setMaxZoomPreference(15.0)
+                        map.setMinZoomPreference(MIN_ZOOM)
+                        map.setMaxZoomPreference(MAX_ZOOM)
 
                         val attributionMargin = density.run { 8.dp.roundToPx() }
 

@@ -24,7 +24,18 @@ data class CellTower(
     val arfcn: Int?,
     /** Timestamp when the cell tower was observed in milliseconds since boot */
     override val timestamp: Long,
-) : ObservedDevice {
+) : ObservedDevice<String> {
+    override val uniqueKey: String
+        get() =
+            listOf(
+                    mobileCountryCode,
+                    mobileNetworkCode,
+                    locationAreaCode,
+                    cellId,
+                    primaryScramblingCode,
+                )
+                .joinToString("/")
+
     companion object {
         private fun CellInfo.serving(): Int? {
             if (cellConnectionStatus == CellInfo.CONNECTION_UNKNOWN) {
@@ -41,92 +52,96 @@ data class CellTower(
             }
         }
 
+        private fun fromCellInfoNr(cellInfoNr: CellInfoNr): CellTower {
+            val cellSignalStrength = cellInfoNr.cellSignalStrength as CellSignalStrengthNr
+            val cellIdentity = cellInfoNr.cellIdentity as CellIdentityNr
+
+            return CellTower(
+                RadioType.NR,
+                cellIdentity.mccString,
+                cellIdentity.mncString,
+                cellIdentity.nci.takeIf { it != CellInfo.UNAVAILABLE_LONG && it != 0L },
+                cellIdentity.tac.takeIf { it != CellInfo.UNAVAILABLE && it != 0 },
+                cellSignalStrength.asuLevel.takeIf { it != CellInfo.UNAVAILABLE },
+                cellIdentity.pci.takeIf { it != CellInfo.UNAVAILABLE },
+                cellInfoNr.serving(),
+                cellSignalStrength.dbm.takeIf { it != CellInfo.UNAVAILABLE },
+                null,
+                cellIdentity.nrarfcn.takeIf { it != CellInfo.UNAVAILABLE },
+                cellInfoNr.timestampMillisCompat,
+            )
+        }
+
+        private fun fromCellInfoLte(cellInfoLte: CellInfoLte): CellTower {
+            val cellSignalStrength = cellInfoLte.cellSignalStrength
+            val cellIdentity = cellInfoLte.cellIdentity
+
+            return CellTower(
+                RadioType.LTE,
+                cellIdentity.mccString,
+                cellIdentity.mncString,
+                cellIdentity.ci.takeIf { it != CellInfo.UNAVAILABLE && it != 0 }?.toLong(),
+                cellIdentity.tac.takeIf { it != CellInfo.UNAVAILABLE && it != 0 },
+                cellSignalStrength.asuLevel.takeIf { it != CellInfo.UNAVAILABLE },
+                cellIdentity.pci.takeIf { it != CellInfo.UNAVAILABLE },
+                cellInfoLte.serving(),
+                cellSignalStrength.rssi.takeIf { it != CellInfo.UNAVAILABLE },
+                cellSignalStrength.timingAdvance.takeIf { it != CellInfo.UNAVAILABLE },
+                cellIdentity.earfcn.takeIf { it != CellInfo.UNAVAILABLE },
+                cellInfoLte.timestampMillisCompat,
+            )
+        }
+
+        private fun fromCellInfoGsm(cellInfoGsm: CellInfoGsm): CellTower {
+            val cellSignalStrength = cellInfoGsm.cellSignalStrength
+            val cellIdentity = cellInfoGsm.cellIdentity
+
+            return CellTower(
+                RadioType.GSM,
+                cellIdentity.mccString,
+                cellIdentity.mncString,
+                cellIdentity.cid.takeIf { it != CellInfo.UNAVAILABLE && it != 0 }?.toLong(),
+                cellIdentity.lac.takeIf { it != CellInfo.UNAVAILABLE && it != 0 },
+                cellSignalStrength.asuLevel.takeIf { it != CellInfo.UNAVAILABLE },
+                null,
+                cellInfoGsm.serving(),
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    cellSignalStrength.rssi.takeIf { it != CellInfo.UNAVAILABLE }
+                } else {
+                    null
+                },
+                cellSignalStrength.timingAdvance.takeIf { it != CellInfo.UNAVAILABLE },
+                cellIdentity.arfcn.takeIf { it != CellInfo.UNAVAILABLE },
+                cellInfoGsm.timestampMillisCompat,
+            )
+        }
+
+        private fun fromCellInfoWcdma(cellInfoWcdma: CellInfoWcdma): CellTower {
+            val cellSignalStrength = cellInfoWcdma.cellSignalStrength
+            val cellIdentity = cellInfoWcdma.cellIdentity
+
+            return CellTower(
+                RadioType.WCDMA,
+                cellIdentity.mccString,
+                cellIdentity.mncString,
+                cellIdentity.cid.takeIf { it != CellInfo.UNAVAILABLE && it != 0 }?.toLong(),
+                cellIdentity.lac.takeIf { it != CellInfo.UNAVAILABLE && it != 0 },
+                cellSignalStrength.asuLevel.takeIf { it != CellInfo.UNAVAILABLE },
+                cellIdentity.psc.takeIf { it != CellInfo.UNAVAILABLE },
+                cellInfoWcdma.serving(),
+                cellSignalStrength.dbm.takeIf { it != CellInfo.UNAVAILABLE },
+                null,
+                cellIdentity.uarfcn.takeIf { it != CellInfo.UNAVAILABLE },
+                cellInfoWcdma.timestampMillisCompat,
+            )
+        }
+
         fun fromCellInfo(cellInfo: CellInfo): CellTower? {
             return when (cellInfo) {
-                is CellInfoNr -> {
-                    val cellSignalStrength = cellInfo.cellSignalStrength as CellSignalStrengthNr
-                    val cellIdentity = cellInfo.cellIdentity as CellIdentityNr
-
-                    CellTower(
-                        RadioType.NR,
-                        cellIdentity.mccString,
-                        cellIdentity.mncString,
-                        cellIdentity.nci.takeIf { it != CellInfo.UNAVAILABLE_LONG && it != 0L },
-                        cellIdentity.tac.takeIf { it != CellInfo.UNAVAILABLE && it != 0 },
-                        cellSignalStrength.asuLevel.takeIf { it != CellInfo.UNAVAILABLE },
-                        cellIdentity.pci.takeIf { it != CellInfo.UNAVAILABLE },
-                        cellInfo.serving(),
-                        cellSignalStrength.dbm.takeIf { it != CellInfo.UNAVAILABLE },
-                        null,
-                        cellIdentity.nrarfcn.takeIf { it != CellInfo.UNAVAILABLE },
-                        cellInfo.timestampMillisCompat,
-                    )
-                }
-
-                is CellInfoLte -> {
-                    val cellSignalStrength = cellInfo.cellSignalStrength
-                    val cellIdentity = cellInfo.cellIdentity
-
-                    CellTower(
-                        RadioType.LTE,
-                        cellIdentity.mccString,
-                        cellIdentity.mncString,
-                        cellIdentity.ci.takeIf { it != CellInfo.UNAVAILABLE && it != 0 }?.toLong(),
-                        cellIdentity.tac.takeIf { it != CellInfo.UNAVAILABLE && it != 0 },
-                        cellSignalStrength.asuLevel.takeIf { it != CellInfo.UNAVAILABLE },
-                        cellIdentity.pci.takeIf { it != CellInfo.UNAVAILABLE },
-                        cellInfo.serving(),
-                        cellSignalStrength.rssi.takeIf { it != CellInfo.UNAVAILABLE },
-                        cellSignalStrength.timingAdvance.takeIf { it != CellInfo.UNAVAILABLE },
-                        cellIdentity.earfcn.takeIf { it != CellInfo.UNAVAILABLE },
-                        cellInfo.timestampMillisCompat,
-                    )
-                }
-
-                is CellInfoGsm -> {
-                    val cellSignalStrength = cellInfo.cellSignalStrength
-                    val cellIdentity = cellInfo.cellIdentity
-
-                    CellTower(
-                        RadioType.GSM,
-                        cellIdentity.mccString,
-                        cellIdentity.mncString,
-                        cellIdentity.cid.takeIf { it != CellInfo.UNAVAILABLE && it != 0 }?.toLong(),
-                        cellIdentity.lac.takeIf { it != CellInfo.UNAVAILABLE && it != 0 },
-                        cellSignalStrength.asuLevel.takeIf { it != CellInfo.UNAVAILABLE },
-                        null,
-                        cellInfo.serving(),
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                            cellSignalStrength.rssi.takeIf { it != CellInfo.UNAVAILABLE }
-                        } else {
-                            null
-                        },
-                        cellSignalStrength.timingAdvance.takeIf { it != CellInfo.UNAVAILABLE },
-                        cellIdentity.arfcn.takeIf { it != CellInfo.UNAVAILABLE },
-                        cellInfo.timestampMillisCompat,
-                    )
-                }
-
-                is CellInfoWcdma -> {
-                    val cellSignalStrength = cellInfo.cellSignalStrength
-                    val cellIdentity = cellInfo.cellIdentity
-
-                    CellTower(
-                        RadioType.WCDMA,
-                        cellIdentity.mccString,
-                        cellIdentity.mncString,
-                        cellIdentity.cid.takeIf { it != CellInfo.UNAVAILABLE && it != 0 }?.toLong(),
-                        cellIdentity.lac.takeIf { it != CellInfo.UNAVAILABLE && it != 0 },
-                        cellSignalStrength.asuLevel.takeIf { it != CellInfo.UNAVAILABLE },
-                        cellIdentity.psc.takeIf { it != CellInfo.UNAVAILABLE },
-                        cellInfo.serving(),
-                        cellSignalStrength.dbm.takeIf { it != CellInfo.UNAVAILABLE },
-                        null,
-                        cellIdentity.uarfcn.takeIf { it != CellInfo.UNAVAILABLE },
-                        cellInfo.timestampMillisCompat,
-                    )
-                }
-
+                is CellInfoNr -> fromCellInfoNr(cellInfo)
+                is CellInfoLte -> fromCellInfoLte(cellInfo)
+                is CellInfoGsm -> fromCellInfoGsm(cellInfo)
+                is CellInfoWcdma -> fromCellInfoWcdma(cellInfo)
                 else -> null
             }
         }

@@ -35,6 +35,7 @@ class BeaconLibraryBluetoothBeaconSource(context: Context) : BluetoothBeaconSour
         val region =
             Region("all_beacons_${Random.Default.nextInt(0, Int.MAX_VALUE)}", null, null, null)
 
+        @Suppress("TooGenericExceptionCaught")
         try {
             beaconManager.startRangingBeacons(region)
         } catch (ex: Exception) {
@@ -57,13 +58,14 @@ class BeaconLibraryBluetoothBeaconSource(context: Context) : BluetoothBeaconSour
     override fun getBluetoothBeaconFlow(): Flow<List<BluetoothBeacon>> =
         getBeaconFlow(appContext)
             .flowOn(
+                // Beacon listener has to run on the main thread because of Android Beacon Library
                 Dispatchers.Main
-            ) // Beacon listener has to run on the main thread because of Android Beacon
-            // Library
+            )
             .map { beacons -> beacons.map { beacon -> BluetoothBeacon.fromBeacon(beacon) } }
             /*
              * Beacon library can give us the same beacon many times in a short succession
-             * To avoid creating a lot of reports with just a single beacon, buffer them here and only publish the latest data by MAC address
+             * To avoid creating a lot of reports with just a single beacon,
+             * buffer them here and only publish the latest data by MAC address
              */
             .buffer(BEACON_BUFFER_WINDOW)
             .map { beacons ->

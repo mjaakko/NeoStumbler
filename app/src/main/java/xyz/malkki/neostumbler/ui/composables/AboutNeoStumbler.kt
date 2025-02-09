@@ -138,8 +138,11 @@ private fun String.urlEncode(): String {
 
 private fun getBugReportUrl(): String {
     return buildString {
-        val device =
-            "${Build.BRAND.takeIf { !it.isNullOrBlank() }?.replaceFirstChar { it.uppercaseChar() } ?: Build.MANUFACTURER} ${Build.MODEL}"
+        val manufacturer =
+            Build.BRAND.takeIf { !it.isNullOrBlank() }?.replaceFirstChar { it.uppercaseChar() }
+                ?: Build.MANUFACTURER
+
+        val device = "$manufacturer ${Build.MODEL}"
 
         append(
             "https://github.com/mjaakko/NeoStumbler/issues/new?labels=bug&template=1-bug_report.yml"

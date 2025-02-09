@@ -28,7 +28,13 @@ suspend fun SupportSQLiteDatabase.getEstimatedSize(): Long =
 suspend fun SupportSQLiteDatabase.getTableNames(): Collection<String> =
     withContext(Dispatchers.IO) {
         query(
-                "SELECT name FROM sqlite_master WHERE type = 'table' AND name != 'android_metadata' AND name != 'sqlite_sequence' AND name != 'room_master_table'"
+                """
+                    SELECT name FROM sqlite_master
+                        WHERE type = 'table
+                            AND name != 'android_metadata'
+                            AND name != 'sqlite_sequence'
+                            AND name != 'room_master_table'
+                """
             )
             .use { cursor ->
                 buildList {

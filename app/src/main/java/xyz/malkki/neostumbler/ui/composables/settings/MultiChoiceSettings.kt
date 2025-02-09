@@ -72,14 +72,18 @@ fun <O> MultiChoiceSettings(
     )
 }
 
+// Disabled -> alpha 0.38f
+// https://developer.android.com/develop/ui/compose/designsystems/material2-material3#emphasis-and
+private const val ALPHA_DISABLED = 0.38f
+
 @Composable
 private fun <O> MultiChoiceSettingsDialog(
     title: String,
     options: Collection<O>,
     selectedOption: O,
-    disabledOptions: Set<O>,
+    disabledOptions: Set<O> = emptySet(),
     titleProvider: (O) -> String,
-    descriptionProvider: ((O) -> String)?,
+    descriptionProvider: ((O) -> String)? = null,
     onValueSelected: (O) -> Unit,
 ) {
     BasicAlertDialog(onDismissRequest = { onValueSelected(selectedOption) }) {
@@ -127,14 +131,11 @@ private fun <O> MultiChoiceSettingsDialog(
 
                             Column(
                                 modifier =
-                                    Modifier
-                                        // Disabled -> alpha 0.38f
-                                        // https://developer.android.com/develop/ui/compose/designsystems/material2-material3#emphasis-and
-                                        .alpha(
+                                    Modifier.alpha(
                                             if (enabled) {
                                                 1f
                                             } else {
-                                                0.38f
+                                                ALPHA_DISABLED
                                             }
                                         )
                                         .align(

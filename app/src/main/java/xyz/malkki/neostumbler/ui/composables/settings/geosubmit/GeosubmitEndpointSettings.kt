@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -58,10 +59,11 @@ private fun DataStore<Preferences>.geosubmitParams(): Flow<GeosubmitParams?> =
         .distinctUntilChanged()
 
 @Composable
-fun GeosubmitEndpointSettings() {
+fun GeosubmitEndpointSettings(
+    settingsStore: DataStore<Preferences> = koinInject<DataStore<Preferences>>(PREFERENCES)
+) {
     val coroutineScope = rememberCoroutineScope()
 
-    val settingsStore = koinInject<DataStore<Preferences>>(PREFERENCES)
     val params = settingsStore.geosubmitParams().collectAsState(initial = null)
 
     val dialogOpen = rememberSaveable { mutableStateOf(false) }
@@ -117,7 +119,7 @@ private fun GeosubmitEndpointDialog(
 ) {
     val endpoint = rememberSaveable { mutableStateOf(currentParams?.baseUrl) }
     val path = rememberSaveable {
-        mutableStateOf(currentParams?.path ?: GeosubmitParams.DEFAULT_PATH)
+        mutableStateOf<String?>(currentParams?.path ?: GeosubmitParams.DEFAULT_PATH)
     }
     val apiKey = rememberSaveable { mutableStateOf(currentParams?.apiKey) }
 
@@ -152,13 +154,7 @@ private fun GeosubmitEndpointDialog(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // TODO: would be nice to have a validator here
-                TextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = endpoint.value ?: "",
-                    onValueChange = { newEndpoint -> endpoint.value = newEndpoint },
-                    label = { Text(text = stringResource(id = R.string.endpoint)) },
-                    singleLine = true,
-                )
+                ParamField(label = stringResource(R.string.endpoint), state = endpoint)
 
                 if (endpoint.value.isUnencryptedUrl) {
                     Warning(R.string.unencrypted_endpoint_warning)
@@ -166,23 +162,11 @@ private fun GeosubmitEndpointDialog(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                TextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = path.value ?: "",
-                    onValueChange = { newPath -> path.value = newPath },
-                    label = { Text(text = stringResource(id = R.string.path)) },
-                    singleLine = true,
-                )
+                ParamField(label = stringResource(R.string.path), state = path)
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                TextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = apiKey.value ?: "",
-                    onValueChange = { newApiKey -> apiKey.value = newApiKey },
-                    label = { Text(text = stringResource(id = R.string.api_key)) },
-                    singleLine = true,
-                )
+                ParamField(label = stringResource(R.string.api_key), state = apiKey)
 
                 Spacer(modifier = Modifier.height(24.dp))
 
@@ -210,6 +194,17 @@ private fun GeosubmitEndpointDialog(
             }
         }
     }
+}
+
+@Composable
+private fun ParamField(label: String, state: MutableState<String?>) {
+    TextField(
+        modifier = Modifier.fillMaxWidth(),
+        value = state.value ?: "",
+        onValueChange = { newValue -> state.value = newValue },
+        label = { Text(text = label) },
+        singleLine = true,
+    )
 }
 
 private val String?.isUnencryptedUrl: Boolean

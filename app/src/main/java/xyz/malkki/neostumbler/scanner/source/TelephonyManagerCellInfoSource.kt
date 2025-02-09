@@ -53,24 +53,24 @@ class TelephonyManagerCellInfoSource(
         }
 
         val mobileCountryCodes = mapNotNull { it.mobileCountryCode }.toSet()
-        if (mobileCountryCodes.size != 1) {
+        return if (mobileCountryCodes.size != 1) {
             // MCC not unique, we can't extract MNC from the service state
-            return this
+            this
         } else {
             val mcc = mobileCountryCodes.first()
 
             if (!serviceState.operatorNumeric.startsWith(mcc)) {
                 // Service state is for a different mobile country code, we can't use the MNC
-                return this
-            }
+                this
+            } else {
+                val mnc = serviceState.operatorNumeric.replaceFirst(mcc, "")
 
-            val mnc = serviceState.operatorNumeric.replaceFirst(mcc, "")
-
-            return map { cellTower ->
-                if (cellTower.mobileNetworkCode == null) {
-                    cellTower.copy(mobileNetworkCode = mnc)
-                } else {
-                    cellTower
+                map { cellTower ->
+                    if (cellTower.mobileNetworkCode == null) {
+                        cellTower.copy(mobileNetworkCode = mnc)
+                    } else {
+                        cellTower
+                    }
                 }
             }
         }

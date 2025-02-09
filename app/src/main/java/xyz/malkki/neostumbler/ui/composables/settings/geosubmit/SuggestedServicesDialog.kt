@@ -23,10 +23,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,19 +46,14 @@ import xyz.malkki.neostumbler.utils.SuggestedService
 fun SuggestedServicesDialog(onServiceSelected: (SuggestedService?) -> Unit) {
     val context = LocalContext.current
 
-    val suggestedServices = remember { mutableStateListOf<SuggestedService>() }
+    val suggestedServices =
+        produceState<List<SuggestedService>?>(null) {
+            value = withContext(Dispatchers.IO) { SuggestedService.getSuggestedServices(context) }
+        }
 
     val expanded = rememberSaveable { mutableStateOf(false) }
 
-    val selectedService = rememberSaveable { mutableStateOf<Int?>(null) }
-
-    LaunchedEffect(key1 = Unit) {
-        withContext(Dispatchers.IO) { SuggestedService.getSuggestedServices(context) }
-            .let {
-                suggestedServices.addAll(it)
-                selectedService.value = 0
-            }
-    }
+    val selectedService = rememberSaveable { mutableIntStateOf(0) }
 
     BasicAlertDialog(onDismissRequest = { onServiceSelected(null) }) {
         Surface(
@@ -75,13 +69,8 @@ fun SuggestedServicesDialog(onServiceSelected: (SuggestedService?) -> Unit) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                if (selectedService.value == null) {
-                    Box(
-                        modifier = Modifier.fillMaxWidth().height(100.dp),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        CircularProgressIndicator()
-                    }
+                if (suggestedServices.value == null) {
+                    LoadingIndicator()
                 } else {
                     Column(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
                         ExposedDropdownMenuBox(
@@ -89,7 +78,7 @@ fun SuggestedServicesDialog(onServiceSelected: (SuggestedService?) -> Unit) {
                             onExpandedChange = { expanded.value = it },
                         ) {
                             TextField(
-                                value = suggestedServices[selectedService.value!!].name,
+                                value = suggestedServices.value!![selectedService.intValue].name,
                                 onValueChange = {},
                                 readOnly = true,
                                 trailingIcon = {
@@ -105,11 +94,12 @@ fun SuggestedServicesDialog(onServiceSelected: (SuggestedService?) -> Unit) {
                                 expanded = expanded.value,
                                 onDismissRequest = { expanded.value = false },
                             ) {
-                                suggestedServices.forEachIndexed { index, suggestedService ->
+                                suggestedServices.value!!.forEachIndexed { index, suggestedService
+                                    ->
                                     DropdownMenuItem(
                                         text = { Text(text = suggestedService.name) },
                                         onClick = {
-                                            selectedService.value = index
+                                            selectedService.intValue = index
                                             expanded.value = false
                                         },
                                     )
@@ -120,7 +110,7 @@ fun SuggestedServicesDialog(onServiceSelected: (SuggestedService?) -> Unit) {
                         Spacer(modifier = Modifier.height(12.dp))
 
                         SuggestedServiceDetails(
-                            service = suggestedServices[selectedService.value!!]
+                            service = suggestedServices.value!![selectedService.intValue]
                         )
                     }
                 }
@@ -135,13 +125,22 @@ fun SuggestedServicesDialog(onServiceSelected: (SuggestedService?) -> Unit) {
                     Spacer(modifier = Modifier.weight(1.0f))
 
                     TextButton(
-                        onClick = { onServiceSelected(suggestedServices[selectedService.value!!]) }
+                        onClick = {
+                            onServiceSelected(suggestedServices.value!![selectedService.intValue])
+                        }
                     ) {
                         Text(text = stringResource(id = R.string.use))
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun LoadingIndicator() {
+    Box(modifier = Modifier.fillMaxWidth().height(100.dp), contentAlignment = Alignment.Center) {
+        CircularProgressIndicator()
     }
 }
 

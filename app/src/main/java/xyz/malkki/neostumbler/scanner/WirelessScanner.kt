@@ -49,6 +49,42 @@ class WirelessScanner(
     private val bluetoothBeaconSource: () -> Flow<List<BluetoothBeacon>>,
     private val movementDetector: MovementDetector = ConstantMovementDetector,
 ) {
+    private fun getLocationsWithAirPressure(): Flow<Position> {
+        val locationFlow = locationSource.invoke()
+        val airPressureFlow = airPressureSource.invoke()
+
+        return locationFlow.combineWithLatestFrom(airPressureFlow) { location, airPressure ->
+            location.copy(
+                pressure =
+                    airPressure
+                        ?.takeIf {
+                            // Use air pressure data only if it's not too old
+                            abs(location.timestamp - it.timestamp).milliseconds <=
+                                AIR_PRESSURE_MAX_AGE
+                        }
+                        ?.airPressure
+                        ?.toDouble()
+            )
+        }
+    }
+
+    private suspend fun <K, V : ObservedDevice<K>> startCollectingData(
+        isMovingFlow: Flow<Boolean>,
+        dataSource: () -> Flow<List<V>>,
+        mapMutex: Mutex,
+        map: MutableMap<K, V>,
+    ) {
+        isMovingFlow
+            .flatMapLatest { isMoving ->
+                if (isMoving) {
+                    dataSource.invoke()
+                } else {
+                    emptyFlow()
+                }
+            }
+            .collect { data -> mapMutex.withLock { data.forEach { map[it.uniqueKey] = it } } }
+    }
+
     fun createReports(): Flow<ReportData> = channelFlow {
         val mutex = Mutex()
 
@@ -69,79 +105,31 @@ class WirelessScanner(
                 .stateIn(this)
 
         launch(Dispatchers.Default) {
-            isMovingFlow
-                .flatMapLatest { isMoving ->
-                    if (isMoving) {
-                        wifiAccessPointSource.invoke()
-                    } else {
-                        emptyFlow()
-                    }
-                }
-                .map { it.filterHiddenNetworks() }
-                .collect { wifiAccessPoints ->
-                    mutex.withLock {
-                        wifiAccessPoints.forEach { wifiAccessPoint ->
-                            wifiAccessPointByMacAddr[wifiAccessPoint.macAddress] = wifiAccessPoint
-                        }
-                    }
-                }
+            startCollectingData(
+                isMovingFlow,
+                wifiAccessPointSource,
+                mutex,
+                wifiAccessPointByMacAddr,
+            )
         }
 
         launch(Dispatchers.Default) {
-            isMovingFlow
-                .flatMapLatest { isMoving ->
-                    if (isMoving) {
-                        bluetoothBeaconSource.invoke()
-                    } else {
-                        emptyFlow()
-                    }
-                }
-                .collect { bluetoothBeacons ->
-                    mutex.withLock {
-                        bluetoothBeacons.forEach { bluetoothBeacon ->
-                            bluetoothBeaconsByMacAddr[bluetoothBeacon.macAddress] = bluetoothBeacon
-                        }
-                    }
-                }
+            startCollectingData(
+                isMovingFlow,
+                bluetoothBeaconSource,
+                mutex,
+                bluetoothBeaconsByMacAddr,
+            )
         }
 
         launch(Dispatchers.Default) {
-            isMovingFlow
-                .flatMapLatest { isMoving ->
-                    if (isMoving) {
-                        cellInfoSource.invoke()
-                    } else {
-                        emptyFlow()
-                    }
-                }
-                .collect { cellTowers ->
-                    mutex.withLock {
-                        cellTowers.forEach { cellTower ->
-                            cellTowersByKey[cellTower.key] = cellTower
-                        }
-                    }
-                }
+            startCollectingData(isMovingFlow, cellInfoSource, mutex, cellTowersByKey)
         }
 
         isMovingFlow
             .flatMapLatest { isMoving ->
                 if (isMoving) {
-                    val locationFlow = locationSource.invoke()
-                    val airPressureFlow = airPressureSource.invoke()
-
-                    locationFlow.combineWithLatestFrom(airPressureFlow) { location, airPressure ->
-                        location.copy(
-                            pressure =
-                                airPressure
-                                    ?.takeIf {
-                                        // Use air pressure data only if it's not too old
-                                        abs(location.timestamp - it.timestamp).milliseconds <=
-                                            AIR_PRESSURE_MAX_AGE
-                                    }
-                                    ?.airPressure
-                                    ?.toDouble()
-                        )
-                    }
+                    getLocationsWithAirPressure()
                 } else {
                     emptyFlow()
                 }
@@ -178,7 +166,8 @@ class WirelessScanner(
 
                 val cellsByLocation = cells.groupByLocation(locations).filterOldData()
 
-                val wifisByLocation = wifis.groupByLocation(locations).filterOldData()
+                val wifisByLocation =
+                    wifis.filterHiddenNetworks().groupByLocation(locations).filterOldData()
 
                 val bluetoothsByLocation = bluetooths.groupByLocation(locations).filterOldData()
 
@@ -202,17 +191,6 @@ class WirelessScanner(
             }
             .collect { reports -> reports.forEach { send(it) } }
     }
-
-    private val CellTower.key: String
-        get() =
-            listOf(
-                    mobileCountryCode,
-                    mobileNetworkCode,
-                    locationAreaCode,
-                    cellId,
-                    primaryScramblingCode,
-                )
-                .joinToString("/")
 
     private fun createReport(
         position: Position,
@@ -241,7 +219,7 @@ class WirelessScanner(
             !ssid.isNullOrBlank() && !ssid.endsWith("_nomap")
         }
 
-    private fun <T : ObservedDevice> Map<Position, List<T>>.filterOldData():
+    private fun <T : ObservedDevice<*>> Map<Position, List<T>>.filterOldData():
         Map<Position, List<T>> = mapValues { entry ->
         val location = entry.key
 
@@ -250,7 +228,7 @@ class WirelessScanner(
         }
     }
 
-    private fun <T : ObservedDevice> List<T>.groupByLocation(
+    private fun <T : ObservedDevice<*>> List<T>.groupByLocation(
         locations: List<Position>
     ): Map<Position, List<T>> = groupBy {
         locations.minBy { location -> abs(it.timestamp - location.timestamp) }

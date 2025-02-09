@@ -49,7 +49,10 @@ import xyz.malkki.neostumbler.utils.getTileJsonLayerIds
 // resolution need more reports to show the same color
 private const val REPORT_SIZE = 4
 
-private val GEOHEX_RESOLUTION_RANGE = 3..9
+private const val DEFAULT_MAP_ZOOM = 12.0
+
+private const val MIN_GEOHEX_RESOLUTION = 3
+private const val MAX_GEOHEX_RESOLUTION = 9
 
 class MapViewModel(
     application: Application,
@@ -105,7 +108,7 @@ class MapViewModel(
     val mapCenter: StateFlow<LatLng>
         get() = _mapCenter.asStateFlow()
 
-    private val _zoom = MutableStateFlow(12.0)
+    private val _zoom = MutableStateFlow(DEFAULT_MAP_ZOOM)
     val zoom: StateFlow<Double>
         get() = _zoom.asStateFlow()
 
@@ -154,13 +157,7 @@ class MapViewModel(
             }
             .distinctUntilChanged()
             .combine(
-                flow =
-                    zoom
-                        .map { zoom ->
-                            // Convert map zoom level to a suitable geohex resolution
-                            floor(zoom * 0.5 + 3).toInt().coerceIn(GEOHEX_RESOLUTION_RANGE)
-                        }
-                        .distinctUntilChanged(),
+                flow = zoom.map { zoom -> mapZoomToGeohexResolution(zoom) }.distinctUntilChanged(),
                 transform = { a, b -> a to b },
             )
             .map { (reportsWithLocation, resolution) ->
@@ -221,6 +218,7 @@ class MapViewModel(
         this._zoom.value = zoom
     }
 
+    @Suppress("MagicNumber")
     fun setMapBounds(
         minLatitude: Double,
         minLongitude: Double,
@@ -259,6 +257,14 @@ class MapViewModel(
                 it.readBytes().decodeToString()
             }
         }
+
+    @Suppress("MagicNumber")
+    private fun mapZoomToGeohexResolution(mapZoom: Double): Int {
+        // Convert map zoom level to a suitable geohex resolution
+        return floor(mapZoom * 0.5 + 3)
+            .toInt()
+            .coerceIn(MIN_GEOHEX_RESOLUTION, MAX_GEOHEX_RESOLUTION)
+    }
 
     /** @property heatPct From 0.0 to 1.0 */
     data class HeatMapTile(val outline: List<LatLng>, val heatPct: Float)

@@ -13,7 +13,10 @@ data class WifiAccessPoint(
     val signalStrength: Int?,
     val ssid: String?,
     override val timestamp: Long,
-) : ObservedDevice {
+) : ObservedDevice<String> {
+    override val uniqueKey: String
+        get() = macAddress
+
     companion object {
         fun fromScanResult(scanResult: ScanResult): WifiAccessPoint {
             val radioType =

@@ -6,6 +6,7 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.serialization'
     id 'app.accrescent.tools.bundletool'
     id 'com.ncorti.ktfmt.gradle'
+    id 'io.gitlab.arturbosch.detekt'
 }
 
 def DB_SCHEMAS_DIR =  "$projectDir/schemas"
@@ -175,6 +176,11 @@ android {
 
 tasks.register('printVersionName') {
     print project.android.defaultConfig.versionName
+}
+
+// Run Detekt task separately
+check.configure {
+    dependsOn = dependsOn.findAll { it.name != 'detekt' }
 }
 
 kotlin {

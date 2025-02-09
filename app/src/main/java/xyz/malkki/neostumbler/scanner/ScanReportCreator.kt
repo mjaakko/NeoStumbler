@@ -48,7 +48,10 @@ class ScanReportCreator(private val reportDatabaseManager: ReportDatabaseManager
                 db.bluetoothBeaconDao().insertAll(*bluetoothBeaconEntities.toTypedArray())
 
                 Timber.i(
-                    "Inserted report with ${wifiAccessPointEntities.size} Wi-Fi access points, ${cellTowerEntities.size} cell towers and ${bluetoothBeaconEntities.size} Bluetooth beacons to DB"
+                    "Inserted report with %d Wi-Fi access points, %d cell towers and %d Bluetooth beacons to DB",
+                    wifiAccessPointEntities.size,
+                    cellTowerEntities.size,
+                    bluetoothBeaconEntities.size,
                 )
             }
         }

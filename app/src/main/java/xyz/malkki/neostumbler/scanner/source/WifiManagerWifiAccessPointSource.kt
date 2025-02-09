@@ -39,10 +39,18 @@ private const val ANDROID_WIFI_SCAN_THROTTLE_COUNT = 4
 
 private val MAX_INTERVAL = 1.minutes
 
+/**
+ * How much "burstiness" to allow when scanning is throttled. If 0, no scan bursts are allowed and
+ * Wi-Fi scans are done at most every 30 seconds. If 1, all allowed scans can be done in
+ * immediately, but then there will be a two-minute delay until we can do more scans.
+ */
+private const val THROTTLED_SCAN_BURST_FACTOR = 0.25
+
 // Minimum scan interval that can be used when Wi-Fi scan throttling is active.
 // This is slightly lower than the throttle period divided by number of scans to allow for bursts
 private val MIN_INTERVAL_THROTTLED: Duration =
-    (ANDROID_WIFI_SCAN_THROTTLE_PERIOD / ANDROID_WIFI_SCAN_THROTTLE_COUNT) * 0.75
+    (ANDROID_WIFI_SCAN_THROTTLE_PERIOD / ANDROID_WIFI_SCAN_THROTTLE_COUNT) *
+        (1 - THROTTLED_SCAN_BURST_FACTOR)
 
 // Minimum scan interval when WI-Fi scanning is not throttled
 private val MIN_INTERVAL_UNTHROTTLED = 1.5.seconds
