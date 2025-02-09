@@ -129,6 +129,14 @@
 
     <string name="no_endpoint_configured">No endpoint configured</string>
 
+    <string name="coverage_layer">Coverage layer on map</string>
+
+    <string name="coverage_layer_tile_json_url">TileJSON URL for coverage map (optional)</string>
+
+    <string name="coverage_layer_no_configured_tile_json_url">No configured TileJSON URL for coverage map"</string>
+
+    <string name="no_valid_url_warning">No valid URL</string>
+
     <string name="unencrypted_endpoint_warning">Unencrypted endpoint</string>
 
     <string name="suggested_services_title">Suggested services</string>
