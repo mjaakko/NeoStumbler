@@ -1,5 +1,6 @@
 package xyz.malkki.neostumbler.ui.composables
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -35,6 +36,7 @@ import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import xyz.malkki.neostumbler.BuildConfig
 import xyz.malkki.neostumbler.R
+import xyz.malkki.neostumbler.extensions.defaultLocale
 
 @Composable
 fun AboutNeoStumbler() {
@@ -83,7 +85,7 @@ fun AboutNeoStumbler() {
                             Text(text = stringResource(R.string.bug_report_button))
                         }
 
-                        Button(onClick = { openUrl(getTranslationsUrl()) }) {
+                        Button(onClick = { openUrl(getTranslationsUrl(context)) }) {
                             Text(text = stringResource(R.string.update_translations_button))
                         }
                     }
@@ -143,13 +145,12 @@ private fun getBugReportUrl(): String {
             "https://github.com/mjaakko/NeoStumbler/issues/new?labels=bug&template=1-bug_report.yml"
         )
         append("&version=${BuildConfig.VERSION_NAME.urlEncode()}")
-        // TODO: autoselecting the variant doesn't seem to work
         append("&variant=${BuildConfig.FLAVOR.urlEncode()}")
         append("&android-version=${Build.VERSION.RELEASE.urlEncode()}")
         append("&device=${device.urlEncode()}")
     }
 }
 
-private fun getTranslationsUrl(): String {
-    return "https://hosted.weblate.org/projects/neostumbler/"
+private fun getTranslationsUrl(context: Context): String {
+    return "https://hosted.weblate.org/projects/neostumbler/-/${context.defaultLocale.language}/"
 }
