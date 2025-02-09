@@ -142,4 +142,5 @@
     <string name="toast_reports_upload_failed_no_endpoint">没有上传报告，因为没有配置端点</string>
     <string name="reports_last_uploaded_never">从未</string>
     <string name="reports_empty">尚无报告</string>
+    <string name="no_endpoint_configured">未配置端点</string>
 </resources>

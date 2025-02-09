@@ -68,6 +68,9 @@ import org.maplibre.android.plugins.annotation.FillOptions
 import org.maplibre.android.style.expressions.Expression
 import org.maplibre.android.style.layers.PropertyFactory.textField
 import org.maplibre.android.style.layers.SymbolLayer
+import org.maplibre.android.style.layers.FillLayer
+import org.maplibre.android.style.layers.PropertyFactory
+import org.maplibre.android.style.sources.VectorSource
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.defaultLocale
@@ -75,10 +78,17 @@ import xyz.malkki.neostumbler.ui.composables.KeepScreenOn
 import xyz.malkki.neostumbler.ui.composables.PermissionsDialog
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel.MapTileSource
+
 import java.util.Locale
+import xyz.malkki.neostumbler.utils.getTileJsonLayerIds
 
 private val HEAT_LOW = ColorUtils.setAlphaComponent(0xd278ff, 120)
 private val HEAT_HIGH = ColorUtils.setAlphaComponent(0xaa00ff, 120)
+
+private val COVERAGE_SOURCE_ID = "coverage-source"
+private val COVERAGE_LAYER_PREFIX = "coverage-layer-"
+private val COVERAGE_COLOR = "#ff8000"
+private val COVERAGE_OPACITY = 0.4f
 
 @Composable
 fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
@@ -105,6 +115,10 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
     val selectedMapTileSource = mapViewModel.mapTileSource.collectAsState(initial = null)
 
     val mapStyle = mapViewModel.mapStyle.collectAsState(initial = null)
+
+    val coverageTileJsonUrl = mapViewModel.coverageTileJsonUrl.collectAsState(initial = null)
+    
+    val coverageTileJsonLayerIds = mapViewModel.coverageTileJsonLayerIds.collectAsState(initial = emptyList<String>())
 
     val latestReportPosition = mapViewModel.latestReportPosition.collectAsState(initial = null)
 
@@ -216,6 +230,8 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
 
                             fillManager.value = FillManager(mapView, map, style, LocationComponentConstants.SHADOW_LAYER, null)
                         }
+
+                        addCoverage(map, coverageTileJsonUrl.value, coverageTileJsonLayerIds.value)
                     }
 
                     mapView
@@ -252,6 +268,8 @@ fun MapScreen(mapViewModel: MapViewModel = viewModel()) {
                                 map.setStyle(Style.Builder().fromJson(mapStyle.value!!.styleJson!!))
                             }
                         }
+
+                        addCoverage(map, coverageTileJsonUrl.value, coverageTileJsonLayerIds.value)
                     }
 
                     fillManager.value?.let {
@@ -334,6 +352,38 @@ private fun getLocalizedLabelExpression(locale: Locale): Expression {
             )
         )
     )
+}
+
+private fun addCoverageLayer(style: Style, layerIds: List<String>) {
+    for (id in layerIds) {
+        val layer = style.getLayer(COVERAGE_LAYER_PREFIX + id)
+        if (layer == null) {
+            style.addLayer(
+                FillLayer(COVERAGE_LAYER_PREFIX + id, COVERAGE_SOURCE_ID).apply {
+                    withProperties(
+                        PropertyFactory.fillColor(COVERAGE_COLOR),
+                        PropertyFactory.fillOpacity(COVERAGE_OPACITY)
+                    )
+                    setSourceLayer(id)
+                }
+            )
+        } else {
+            (layer as? FillLayer)?.setSourceLayer(id)
+        }
+    }
+}
+
+private fun addCoverage(mapLibreMap: MapLibreMap, tileJsonUrl: String?, layerIds: List<String>) {
+    if (tileJsonUrl != null) {
+        mapLibreMap.getStyle { style ->
+            val vectorSource = style.getSource(COVERAGE_SOURCE_ID) as? VectorSource
+            if (vectorSource == null || vectorSource.uri != tileJsonUrl) {
+                style.removeSource(COVERAGE_SOURCE_ID)
+                style.addSource(VectorSource(COVERAGE_SOURCE_ID, tileJsonUrl))
+            }
+            addCoverageLayer(style, layerIds)
+        }
+    }
 }
 
 private fun createHeatMapFill(tiles: Collection<MapViewModel.HeatMapTile>): List<FillOptions> {

@@ -11,7 +11,7 @@
     <string name="save">Zapisz</string>
     <string name="ok">Ok</string>
     <string name="failed_to_open_selected_file">Nie udało się otworzyć wybranego pliku</string>
-    <string name="permissions_needed">Wymagane są dodatkowe pozwolenia</string>
+    <string name="permissions_needed">Wymagane są dodatkowe uprawnienia</string>
     <string name="cell_tower_icon_description">Ikona BTS</string>
     <string name="reports_tab_title">Raporty</string>
     <string name="send_reports">Wyślij raporty</string>
@@ -73,7 +73,7 @@
     <string name="bug_report_button">Zgłoś błąd</string>
     <string name="notification_style">Styl powiadomień</string>
     <string name="stop">Stop</string>
-    <string name="permissions_not_granted">Wymagane pozwolenia nie zostały przyznane</string>
+    <string name="permissions_not_granted">Wymagane uprawnienia nie zostały przyznane</string>
     <string name="reset">Reset</string>
     <string name="bluetooth_icon_description">Ikona Bluetooth</string>
     <plurals name="import_database_successful">
@@ -84,7 +84,7 @@
     </plurals>
     <string name="import_raw_database_description">Importowanie bazy danych nadpisze obecną bazę</string>
     <string name="use">Użyj</string>
-    <string name="permission_rationale_post_notifications">Pokazywanie powiadomien o statusie wgmaga pozwolenia powiadomień</string>
+    <string name="permission_rationale_post_notifications">Pokazywanie powiadomień o statusie wymaga uprawnienia dostępu do powiadomień</string>
     <string name="db_prune_six_months">Po sześciu miesiącach</string>
     <string name="delete">Usuń</string>
     <string name="import_data">Importuj dane</string>
@@ -106,7 +106,7 @@
     <string name="stop_scanning">Zatrzymaj skanowanie</string>
     <string name="notification_style_minimal_title">Minimalne</string>
     <string name="toast_reports_upload_failed">Nie udało się wysłać raportów</string>
-    <string name="permission_rationale_fine_location">Dostęp do aktualnej lokalizacji wymaga pozwolenia dokładnej lokalizacji</string>
+    <string name="permission_rationale_fine_location">Tworzenie raportów z przydatnymi danymi lokalizacji wymaga uprawnienia do dokładnej lokalizacji</string>
     <string name="ignore_battery_optimizations_title">Ignoruj optymalizację baterii</string>
     <string name="battery_optimizations_not_disabled_warning">Optymalizacja baterii nie została wyłączona</string>
     <string name="notification_exporting_data">Eksportowanie danych…</string>
@@ -119,12 +119,12 @@
     <string name="export_no_file_chosen">Nie można wyeksportować danych, ponieważ plik nie został stworzony</string>
     <string name="export_started">Eksportowanie danych z %1$s do %2$s</string>
     <string name="mls_warning_title">MLS został wyłączony</string>
-    <string name="use_dynamic_color_ui">Użyj dynamicznych kolorów w UI</string>
+    <string name="use_dynamic_color_ui">Używaj dynamicznych kolorów interfejsu</string>
     <string name="delete_all_reports">Usuń wszystkie raporty</string>
-    <string name="path">Ścieżka</string>
+    <string name="path">Adres</string>
     <string name="wifi_scan_throttling">Ograniczenie skanowania Wi-Fi</string>
     <string name="settings_group_scanning">Skanowanie</string>
-    <string name="api_key">Klucz API (opcjonalny)</string>
+    <string name="api_key">Klucz API (opcjonalnie)</string>
     <string name="settings_ignore_wifi_scan_throttling_description">Jeśli skanowanie jest ograniczone, tylko cztery skany mogą zostać wykonane przez okres dwóch minut</string>
     <string name="wifi_scan_frequency">Częstotliwość skanowania Wi-Fi</string>
     <string name="unencrypted_endpoint_warning">Nieszyfrowany endpoint</string>
@@ -133,22 +133,27 @@
     <string name="app_language">Język</string>
     <string name="movement_detection_location_description">Zatrzymuje skanowanie jeśli lokalizacja się nie zmieni. GPS zostaje aktywny</string>
     <string name="movement_detection_significant_motion_title">Czujnik ruchu</string>
-    <string name="movement_detection_significant_motion_description">Zatrzymuje skanowanie i GPS jeśli nie wykryto wystarczającego ruchu. Oszczędza baterie, ale może działać gorzej na niektórych urządzeniach</string>
-    <string name="permission_rationale_location_map">Pokazywanie twojej lokalizacji na mapie wymaga pozwolenia do lokalizacji</string>
+    <string name="movement_detection_significant_motion_description">Zatrzymuje skanowanie i GPS, jeśli nie wykryto znacznego ruchu. Oszczędza baterię, ale może działać gorzej na niektórych urządzeniach</string>
+    <string name="permission_rationale_location_map">Pokazywanie twojej lokalizacji na mapie wymaga uprawnienia do lokalizacji</string>
     <string name="notification_style_minimal_description">Pokazuj powiadomienia bez detali</string>
     <string name="notification_style_basic_title">Podstawowe</string>
     <string name="notification_style_detailed_description">Pokazuje liczbę stworzonych raportów oraz liczbę satelit GNSS</string>
-    <string name="permission_rationale_bluetooth">Skanowanie beaconów Bluetooth wymaga pozwolenia Bluetooth</string>
+    <string name="permission_rationale_bluetooth">Skanowanie beaconów Bluetooth wymaga uprawnienia Bluetooth</string>
     <string name="delete_data">Usuń dane</string>
-    <string name="permission_rationale_background_location_quick_settings">Rozpoczynanie skanowania z szybkich ustawień wymaga pozwolenia do lokalizacji w tle</string>
+    <string name="permission_rationale_background_location_quick_settings">Rozpoczynanie skanowania z paska szybkich ustawień wymaga uprawnienia do lokalizacji w tle</string>
     <string name="troubleshooting_description">Napraw częste problemy ze skanowaniem</string>
     <string name="delete_all_reports_confirmation">Czy jesteś pewny że chcesz usunąć wszystkie raporty?</string>
     <string name="app_variant">Wariant: %s</string>
-    <string name="troubleshooting_permissions_granted">Pozwolenie udzielone</string>
+    <string name="troubleshooting_permissions_granted">Uprawnienie udzielone</string>
     <string name="troubleshooting_wifi_scan_always_available">Skanowanie Wi-Fi jest zawsze dostępne</string>
     <string name="troubleshooting_fix">Napraw</string>
     <string name="app_version">Wersja: %s</string>
     <string name="settings_tab_title">Ustawienia</string>
     <string name="update_translations_button">Aktualizuj tłumaczenia</string>
     <string name="export_notification_channel_name">Eksport danych</string>
+    <string name="toast_reports_upload_failed_no_endpoint">Nie udało się wysłać raportów, gdyż żaden serwer docelowy nie został ustawiony</string>
+    <string name="no_endpoint_configured">Nie ustawiono żadnego endpointa</string>
+    <string name="mls_warning_text">Serwis lokalizacji Mozilli (MLS) został wyłączony i nie przyjmuje już nowych danych. Alternatywą dla MLS może być przesyłanie danych do beaconDB, które udostępnia usługę kompatybilną z MLS.\n\nProszę zauważyć, że beaconDB wciąż jest w fazie rozwoju i ma to wpływ na przetwarzanie Twoich danych. Możesz przeczytać <annotation link="privacy_policy">politykę prywatności (angielski)</annotation> w celu zapoznania się ze szczegółami.\n\nCzy chcesz ustawić beaconDB jako endpoint? Tę opcję można póżniej zmienić w ustawieniach</string>
+    <string name="reports_last_uploaded_never">nigdy</string>
+    <string name="reports_empty">Jeszcze nie ma żadnych raportów</string>
 </resources>

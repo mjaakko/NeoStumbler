@@ -88,6 +88,11 @@ fun MLSWarningDialog() {
                                     set(stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH), path)
 
                                     remove(stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY))
+
+                                    set(stringPreferencesKey(
+                                        PreferenceKeys.COVERAGE_TILE_JSON_URL),
+                                        defaultServiceParams.value!!.coverageTileJsonUrl
+                                    )
                                 }
                             }
 
