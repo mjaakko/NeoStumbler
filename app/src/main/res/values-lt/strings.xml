@@ -152,4 +152,8 @@
     <string name="mls_warning_text">„Mozilla Location Services“ tarnyba išjungta ir naujų duomenų nebepriima. Vietoje jos galite naudoti „beaconDB“ tarnybą, suderinamą su MLS.\n\nAtkreipkite dėmesį, jog „beaconDB“ vis dar vystoma ir tai turi įtakos jūsų duomenų tvarkymui. Išsamiau apie tai galite paskaityti <annotation link="privacy_policy">privatumo nuostatuose</annotation>.\n\nAr norite naudoti „beaconDB“ tarnybą? Šį pasirinkimą vėliau galite pakeisti nustatymuose.</string>
     <string name="reports_last_uploaded_never">niekada</string>
     <string name="reports_empty">Kol kas ataskaitų nėra</string>
+    <string name="coverage_layer">Aprėpties sluoksnis žemėlapyje</string>
+    <string name="coverage_layer_tile_json_url">„TileJSON“ aprėpties žemėlapio URL (neprivalomas)</string>
+    <string name="no_valid_url_warning">Tinkamo URL nėra</string>
+    <string name="coverage_layer_no_configured_tile_json_url">„TileJSON“ aprėpties žemėlapio URL nenurodytas</string>
 </resources>

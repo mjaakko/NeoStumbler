@@ -72,7 +72,7 @@
     <string name="permission_rationale_read_phone_state">Доступ до стану телефону потрібен для сканування стільникових веж</string>
     <string name="app_language">Мова</string>
     <string name="show_my_location">Показати моє місцезнаходження</string>
-    <string name="permission_rationale_fine_location">Отримання доступу до поточного місцезнаходження вимагає дозволу для точного визначення місцезнаходження</string>
+    <string name="permission_rationale_fine_location">Створення звітів з корисними даними про місцезнаходження потребує дозволу на точне визначення місцезнаходження</string>
     <string name="permission_rationale_bluetooth">Для сканування Bluetooth-маяків потрібен дозвіл на Bluetooth</string>
     <string name="permission_rationale_post_notifications">Для показу сповіщень про статус потрібен дозвіл на сповіщення</string>
     <string name="permission_rationale_background_location_quick_settings">Для запуску сканування з швидких налаштувань потрібен доступ до місцезнаходження у фоновому режимі</string>
@@ -153,4 +153,11 @@
     <string name="map_tile_source">Джерела плиток карти</string>
     <string name="reports_last_uploaded_never">ніколи</string>
     <string name="reports_empty">Ще немає звітів</string>
+    <string name="toast_reports_upload_failed_no_endpoint">Не вдалося завантажити звіти, оскільки кінцева точка не налаштована</string>
+    <string name="no_endpoint_configured">Кінцева точка не налаштована</string>
+    <string name="coverage_layer">Шар покриття на карті</string>
+    <string name="coverage_layer_tile_json_url">TileJSON URL для карти покриття (необов\'язково)</string>
+    <string name="coverage_layer_no_configured_tile_json_url">Не налаштовано TileJSON URL для карти покриття</string>
+    <string name="no_valid_url_warning">Невірний URL</string>
+    <string name="mls_warning_text">Служба Mozilla Location була закрита і більше не приймає подачу даних. Як альтернативу MLS, ви можете відправляти дані до beaconDB, який надає сумісну з MLS службу.\n\nЗверніть увагу, що beaconDB все ще знаходиться на етапі розробки, і це впливає на обробку ваших даних. Ви можете прочитати <annotation link="privacy_policy">політику конфіденційності</annotation> для додаткової інформації.\n\nВи хочете встановити beaconDB як кінцеву точку? Це можна налаштувати пізніше в налаштуваннях</string>
 </resources>

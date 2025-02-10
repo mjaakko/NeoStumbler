@@ -156,4 +156,8 @@
     <string name="mls_warning_text">Сервисы Геолокации Mozilla были закрыты и больше не принимают данные. Как альтернативу для СГM, вы можете отправлять данные в beaconDB, где предоставляется сервис совместимый с СГM\n\nПросьба заметить, что beaconDB всё ещё в разработке и это может повлиять на то, как ваши данные обрабатываются. Вы можете прочитать <annotation link="privacy_policy">политику конфиденциальности</annotation> для получения дальнейшей информации\n\nВы хотите установить beaconDB как точку назначения? Это может быть настроено позже в настройках</string>
     <string name="reports_last_uploaded_never">никогда</string>
     <string name="reports_empty">Нет отчётов пока что</string>
+    <string name="coverage_layer">Слой покрытия на карте</string>
+    <string name="coverage_layer_tile_json_url">Ссылка TileJSON для карты покрытия (необязательно)</string>
+    <string name="coverage_layer_no_configured_tile_json_url">Не была сконфигурирована ссылка TileJSON для карты покрытия</string>
+    <string name="no_valid_url_warning">Нет действительной ссылки</string>
 </resources>
