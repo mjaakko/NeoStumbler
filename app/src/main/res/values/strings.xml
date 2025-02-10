@@ -1,75 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name" translatable="false">NeoStumbler</string>
     <string name="author" translatable="false">Jaakko Malkki</string>
-
     <string name="ok">OK</string>
-
     <string name="no_thanks">No thanks</string>
-
     <string name="yes">Yes</string>
     <string name="no">No</string>
-
     <string name="reset">Reset</string>
     <string name="save">Save</string>
-
     <string name="cancel">Cancel</string>
     <string name="use">Use</string>
-
     <string name="stop">Stop</string>
-
     <string name="delete">Delete</string>
-
     <string name="no_data">No data</string>
-
     <string name="failed_to_open_selected_file">
         Failed to open the selected file
     </string>
-
     <string name="permissions_needed">Permissions needed</string>
     <string name="permissions_not_granted">Permissions that are required were not granted</string>
-
     <string name="wifi_icon_description">Wi-Fi icon</string>
     <string name="cell_tower_icon_description">Cell tower icon</string>
     <string name="bluetooth_icon_description">Bluetooth icon</string>
-
     <string name="warning_icon_description">Warning icon</string>
-
     <string name="scanner_status_notification_channel_name">Scanning status</string>
-
     <string name="wireless_scanning">Wireless scanning</string>
-
     <string name="map_tab_title">Map</string>
     <string name="reports_tab_title">Reports</string>
     <string name="statistics_tab_title">Statistics</string>
     <string name="settings_tab_title">Settings</string>
-
     <string name="send_reports">Send reports</string>
-
     <string name="reports">Reports:</string>
     <string name="reports_total">Reports total: %d</string>
     <string name="reports_not_uploaded">Reports not uploaded: %d</string>
     <string name="reports_last_uploaded">Reports last uploaded: %s</string>
     <string name="reports_last_uploaded_never">never</string>
     <string name="reports_empty">No reports yet</string>
-
     <string name="start_scanning">Start scanning</string>
     <string name="stop_scanning">Stop scanning</string>
-
     <string name="delete_report">Delete report</string>
     <string name="delete_report_confirmation">Are you sure you want to delete the report?</string>
-
     <plurals name="toast_reports_uploaded">
         <item quantity="one">Uploaded %d report</item>
         <item quantity="other">Uploaded %d reports</item>
     </plurals>
     <string name="toast_reports_upload_failed">Failed to upload reports</string>
     <string name="toast_reports_upload_failed_no_endpoint">Failed to upload reports, because no endpoint has been configured</string>
-
     <string name="report_upload_notification_channel_name">Report uploads</string>
     <string name="notification_sending_reports">Sending reports</string>
-
     <string name="notification_wireless_scanning_title">Wireless scanning active</string>
-
     <plurals name="notification_wireless_scanning_content_reports_created">
         <item quantity="one">%d report created</item>
         <item quantity="other">%d reports created</item>
@@ -77,193 +55,135 @@
     <string name="notification_wireless_scanning_content_satellite_stats">
         %1$d/%2$d satellites in use
     </string>
-
     <string name="ignore_battery_optimizations_title">Ignore battery optimizations</string>
     <string name="ignore_battery_optimizations_description">For best results, battery optimizations should be disabled. Wireless scanning and location access is significantly throttled when battery optimization is active and the screen is off</string>
-
     <string name="battery_optimizations_not_disabled_warning">Battery optimizations were not disabled</string>
-
     <string name="send_reports_automatically">Send reports automatically</string>
-
     <string name="export_notification_channel_name">Data export</string>
-
     <string name="notification_exporting_data">Exporting data…</string>
-
     <string name="export_data">Export data</string>
-
     <string name="export_no_file_chosen">Cannot export data, because no file was created</string>
     <string name="export_started">Exporting data from %1$s to %2$s</string>
-
     <string name="export_csv">Export as CSV</string>
     <string name="export_raw_database">Export raw database</string>
-
     <string name="import_data">Import data</string>
-
     <string name="import_raw_database">Import raw database</string>
     <string name="import_raw_database_description">
         Importing a raw database will replace the existing database
     </string>
-
     <string name="import_database_not_valid">The selected file did not contain a valid database</string>
     <plurals name="import_database_successful">
         <item quantity="one">Imported database with %d report</item>
         <item quantity="other">Imported database with %d reports</item>
     </plurals>
-
     <string name="reupload_data">Reupload data</string>
-
     <string name="wifis">Wi-Fis</string>
     <string name="cells">Cells</string>
     <string name="beacons">Bluetooth beacons</string>
-  
     <string name="add_quick_settings_tile">Add quick settings tile to easily start scanning?</string>
-
     <string name="mls_warning_title">MLS has shut down</string>
     <string name="mls_warning_text">
         Mozilla Location Service has shut down and no longer accepts data submissions. As an alternative to MLS, you can send data to beaconDB, which provides a service compatible with MLS\n\nPlease note that beaconDB is still under development and this affects how your data is handled. You can read the <annotation link="privacy_policy">privacy policy</annotation> for further information\n\nDo you want to set beaconDB as the endpoint? This can later be configured in the settings
     </string>
-
     <string name="endpoint">Endpoint</string>
     <string name="path">Path</string>
     <string name="api_key">API key (optional)</string>
-
     <string name="no_endpoint_configured">No endpoint configured</string>
-
     <string name="coverage_layer">Coverage layer on map</string>
-
     <string name="coverage_layer_tile_json_url">TileJSON URL for coverage map (optional)</string>
-
-    <string name="coverage_layer_no_configured_tile_json_url">No configured TileJSON URL for coverage map"</string>
-
+    <string name="coverage_layer_no_configured_tile_json_url">No configured TileJSON URL for coverage map</string>
     <string name="no_valid_url_warning">No valid URL</string>
-
     <string name="unencrypted_endpoint_warning">Unencrypted endpoint</string>
-
     <string name="suggested_services_title">Suggested services</string>
-
     <string name="suggested_service_hosted_by">Hosted by:</string>
     <string name="suggested_service_website">Website</string>
     <string name="suggested_service_terms_of_use">Terms of use</string>
-
     <string name="settings_ignore_wifi_scan_throttling_title">Ignore Wi-Fi scan throttling</string>
     <string name="settings_ignore_wifi_scan_throttling_description">If scanning is throttled, only four scans can be done in a two-minute period</string>
-
     <string name="wifi_scan_throttling">Wi-Fi scan throttling</string>
     <string name="wifi_scan_throttling_explanation">
         You need to disable Wi-Fi scan throttling in your device\'s settings to enable this feature. Usually this can be done in the developer settings
     </string>
-
     <string name="settings_group_reports">Reports</string>
     <string name="settings_group_scanning">Scanning</string>
     <string name="settings_group_other">Other</string>
-
     <string name="wifi_scan_frequency">Wi-Fi scan frequency</string>
     <string name="cell_tower_scan_frequency">Cell tower scan frequency</string>
-
     <string name="every_x_meters">Every %d meters</string>
-
     <string name="movement_detection">Movement detection</string>
-
     <string name="movement_detection_none_title">None</string>
     <string name="movement_detection_none_description">Keep scanning even when not moving</string>
-
     <string name="movement_detection_location_title">Location based</string>
     <string name="movement_detection_location_description">
         Pauses scanning when location does not change. Keeps GPS active
     </string>
-
     <string name="movement_detection_significant_motion_title">Motion sensor</string>
     <string name="movement_detection_significant_motion_description">
         Pauses scanning and GPS when no significant motion is detected. Saves battery, but does not work reliably on some devices
     </string>
-
     <string name="notification_style">Notification style</string>
-
     <string name="notification_style_minimal_title">Minimal</string>
     <string name="notification_style_minimal_description">
         Shows the notification with no details
     </string>
-
     <string name="notification_style_basic_title">Basic</string>
     <string name="notification_style_basic_description">
         Shows the number of reports created
     </string>
-
     <string name="notification_style_detailed_title">Detailed</string>
     <string name="notification_style_detailed_description">
         Shows the number of reports created and the number of GNSS satellites
     </string>
-
     <string name="app_language">Language</string>
-
     <string name="map_tile_source">Map tile source</string>
     <string name="show_my_location">Show my location</string>
-
     <string name="permission_rationale_fine_location">
         Creating reports with useful location data needs permission for accurate location
     </string>
-
     <string name="permission_rationale_read_phone_state">
         Access to phone state is needed for scanning cell towers
     </string>
-
     <string name="permission_rationale_bluetooth">
         Scanning Bluetooth beacons needs permission for Bluetooth
     </string>
-
     <string name="permission_rationale_post_notifications">
         Showing status notification needs permission for notifications
     </string>
-
     <string name="permission_rationale_background_location_quick_settings">
         Starting scanning from the quick settings needs access to location in the background
     </string>
     <string name="permission_rationale_location_map">
         Showing your location on the map needs permission for location
     </string>
-
     <string name="troubleshooting_title">Troubleshooting</string>
     <string name="troubleshooting_description">Fix common issues in scanning</string>
-
     <string name="troubleshooting_permissions_granted">Permissions granted</string>
     <string name="troubleshooting_battery_optimizations_disabled">Battery optimizations disabled</string>
     <string name="troubleshooting_accurate_location_available">Accurate location available</string>
     <string name="troubleshooting_wifi_scan_always_available">Wi-Fi scanning always available</string>
-
     <string name="troubleshooting_fix">Fix</string>
-
     <string name="use_dynamic_color_ui">Use dynamic colors in the UI</string>
-
     <string name="db_prune_title">Delete sent reports</string>
     <string name="db_prune_one_month">After one month</string>
     <string name="db_prune_two_months">After two months</string>
     <string name="db_prune_six_months">After six months</string>
     <string name="db_prune_never">Never</string>
-
     <string name="manage_storage_title">Manage storage</string>
-
     <string name="db_size">Database size: %s</string>
-
     <string name="delete_data">Delete data</string>
-
     <string name="delete_reports_by_date">Delete reports by date</string>
     <string name="delete_all_reports">Delete all reports</string>
-
     <string name="delete_all_reports_confirmation">Are you sure you want to delete all reports?</string>
-
     <plurals name="toast_deleted_reports">
         <item quantity="one">Deleted %d report</item>
         <item quantity="other">Deleted %d reports</item>
     </plurals>
     <string name="toast_deleted_all_reports">Deleted all reports</string>
-
     <string name="about_app">About NeoStumbler</string>
     <string name="app_version">Version: %s</string>
     <string name="app_variant">Variant: %s</string>
-
     <string name="author_text">Made with ❤️ by %1$s and %2$s</string>
     <string name="contributors">contributors</string>
-
     <string name="bug_report_button">Report a bug</string>
     <string name="update_translations_button">Update translations</string>
 </resources>
