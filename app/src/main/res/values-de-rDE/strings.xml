@@ -106,7 +106,7 @@
     <string name="delete_data">Lösche Daten</string>
     <string name="failed_to_open_selected_file">Öffnen der Datei fehlgeschlagen</string>
     <string name="export_raw_database">Exportiere RAW Datenbank</string>
-    <string name="import_raw_database">RAW Datenbank importieren</string>
+    <string name="import_raw_database">Rohdatenbank importieren</string>
     <string name="import_raw_database_description">Der Import einer Rohdatenbank ersetzt die bestehende Datenbank</string>
     <string name="import_database_not_valid">Die ausgewähle Datei beinhaltet keine gültige Datenbank</string>
     <plurals name="import_database_successful">
@@ -144,8 +144,12 @@
     <string name="cell_tower_scan_frequency">Häufigkeit des Funkzellen-Scans</string>
     <string name="map_tile_source">Quelle der Kartendaten</string>
     <string name="settings_ignore_wifi_scan_throttling_description">Wenn das Scannen gedrosselt ist, können nur vier Scans innerhalb von zwei Minuten durchgeführt werden</string>
-    <string name="mls_warning_text">\"Mozilla Location Service\" wurde abgeschalter und akzeptiert keine Datenbeiträge mehr. Alternativ zu MLS können Daten zu beaconDB gesendet werden, was einen Service ähnlich zu MLS bereitstellt\n\nBeachte bitte, dass sich beaconDB noch in der Entwicklung befindet, was die Art beeinflusst, wie die Daten verarbeitet werden. Lese die \u0020<annotation link="privacy_policy">Privacy Policy</annotation> für weitere Informationen\n\nMöchtest du beaconDB als Endpunkt setzen? Dies kann später in den Einstellung geändert werden</string>
+    <string name="mls_warning_text">\"Mozilla Location Service\" wurde abgeschalter und akzeptiert keine Datenbeiträge mehr. Alternativ zu MLS können Daten zu beaconDB gesendet werden, was einen Service ähnlich zu MLS bereitstellt\n\nBeachte bitte, dass sich beaconDB noch in der Entwicklung befindet, was die Art beeinflusst, wie die Daten verarbeitet werden. Lese die <annotation link="privacy_policy">Privacy Policy</annotation> für weitere Informationen\n\nMöchtest du beaconDB als Endpunkt setzen? Dies kann später in den Einstellung geändert werden</string>
     <string name="toast_reports_upload_failed_no_endpoint">Hochladen fehlgeschlagen, weil kein Endpunkt eingerichtet ist</string>
     <string name="no_endpoint_configured">Kein Endpunkt eingerichtet</string>
     <string name="reports_last_uploaded_never">niemals</string>
+    <string name="no_valid_url_warning">Keine valide URL</string>
+    <string name="coverage_layer_tile_json_url">TileJSON-URL für die Abdeckungskarte (optional)</string>
+    <string name="coverage_layer">Abdeckungsekarte (Ebene) auf der Karte</string>
+    <string name="coverage_layer_no_configured_tile_json_url">Keine TileJSON-URL für die Abdeckungskarte konfiguriert</string>
 </resources>
