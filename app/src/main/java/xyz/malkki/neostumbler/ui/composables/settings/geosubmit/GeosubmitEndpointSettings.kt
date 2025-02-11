@@ -3,7 +3,6 @@ package xyz.malkki.neostumbler.ui.composables.settings.geosubmit
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -15,9 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -38,8 +35,9 @@ import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.geosubmit.GeosubmitParams
+import xyz.malkki.neostumbler.ui.composables.settings.ParamField
 import xyz.malkki.neostumbler.ui.composables.settings.SettingsItem
-import xyz.malkki.neostumbler.ui.composables.settings.Warning
+import xyz.malkki.neostumbler.ui.composables.settings.UrlField
 
 private fun DataStore<Preferences>.geosubmitParams(): Flow<GeosubmitParams?> =
     data
@@ -153,12 +151,7 @@ private fun GeosubmitEndpointDialog(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // TODO: would be nice to have a validator here
-                ParamField(label = stringResource(R.string.endpoint), state = endpoint)
-
-                if (endpoint.value.isUnencryptedUrl) {
-                    Warning(R.string.unencrypted_endpoint_warning)
-                }
+                UrlField(label = stringResource(R.string.endpoint), state = endpoint)
 
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -195,17 +188,3 @@ private fun GeosubmitEndpointDialog(
         }
     }
 }
-
-@Composable
-private fun ParamField(label: String, state: MutableState<String?>) {
-    TextField(
-        modifier = Modifier.fillMaxWidth(),
-        value = state.value ?: "",
-        onValueChange = { newValue -> state.value = newValue },
-        label = { Text(text = label) },
-        singleLine = true,
-    )
-}
-
-private val String?.isUnencryptedUrl: Boolean
-    get() = this?.startsWith("http:") == true

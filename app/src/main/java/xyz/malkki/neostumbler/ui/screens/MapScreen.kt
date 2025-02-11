@@ -53,6 +53,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import java.util.Locale
 import org.koin.androidx.compose.koinViewModel
 import org.maplibre.android.MapLibre
 import org.maplibre.android.camera.CameraPosition
@@ -80,7 +81,6 @@ import xyz.malkki.neostumbler.ui.composables.shared.KeepScreenOn
 import xyz.malkki.neostumbler.ui.composables.shared.PermissionsDialog
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel.MapTileSource
-import java.util.Locale
 
 @ColorInt private const val HEAT_LOW: Int = 0x78d278ff
 @ColorInt private const val HEAT_HIGH: Int = 0x78aa00ff
@@ -117,8 +117,9 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
     val mapStyle = mapViewModel.mapStyle.collectAsState(initial = null)
 
     val coverageTileJsonUrl = mapViewModel.coverageTileJsonUrl.collectAsState(initial = null)
-    
-    val coverageTileJsonLayerIds = mapViewModel.coverageTileJsonLayerIds.collectAsState(initial = emptyList<String>())
+
+    val coverageTileJsonLayerIds =
+        mapViewModel.coverageTileJsonLayerIds.collectAsState(initial = emptyList<String>())
 
     val latestReportPosition = mapViewModel.latestReportPosition.collectAsState(initial = null)
 
@@ -168,8 +169,19 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                             map.getStyle { style ->
                                 style.layers.forEach { layer ->
                                     if (layer is SymbolLayer) {
-                                        if (layer.textField.isExpression && layer.textField.expression?.toString()?.contains("name") == true) {
-                                            layer.setProperties(textField(getLocalizedLabelExpression(context.defaultLocale)))
+                                        if (
+                                            layer.textField.isExpression &&
+                                                layer.textField.expression
+                                                    ?.toString()
+                                                    ?.contains("name") == true
+                                        ) {
+                                            layer.setProperties(
+                                                textField(
+                                                    getLocalizedLabelExpression(
+                                                        context.defaultLocale
+                                                    )
+                                                )
+                                            )
                                         }
                                     }
                                 }
@@ -378,31 +390,34 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
 }
 
 private fun getLocalizedLabelExpression(locale: Locale): Expression {
-    val preferredLanguage = if (locale.language == "zh") {
-        //Handle different Chinese scripts by preferring the simplified script if it's chosen by the user or if the country is China
-        if (locale.script == "Hans" || (locale.script.isEmpty() && locale.country == "CN")) {
-            arrayOf(
-                Expression.get("name:zh-Hans"),
-                Expression.get("name:zh-Hant"),
-                Expression.get("name:zh")
-            )
+    val preferredLanguage =
+        if (locale.language == "zh") {
+            // Handle different Chinese scripts by preferring the simplified script if it's chosen
+            // by the user or if the country is China
+            if (locale.script == "Hans" || (locale.script.isEmpty() && locale.country == "CN")) {
+                arrayOf(
+                    Expression.get("name:zh-Hans"),
+                    Expression.get("name:zh-Hant"),
+                    Expression.get("name:zh"),
+                )
+            } else {
+                arrayOf(
+                    Expression.get("name:zh-Hant"),
+                    Expression.get("name:zh-Hans"),
+                    Expression.get("name:zh"),
+                )
+            }
         } else {
-            arrayOf(
-                Expression.get("name:zh-Hant"),
-                Expression.get("name:zh-Hans"),
-                Expression.get("name:zh")
-            )
+            arrayOf(Expression.get("name:${locale.language}"))
         }
-    } else {
-        arrayOf(Expression.get("name:${locale.language}"))
-    }
 
     return Expression.format(
         Expression.formatEntry(
             Expression.coalesce(
                 *preferredLanguage,
                 Expression.get("name:en"),
-                //VersaTiles does not seem to support localized labels and uses underscore instead in the expression
+                // VersaTiles does not seem to support localized labels and uses underscore instead
+                // in the expression
                 Expression.get("name_en"),
                 Expression.get("name"),
             )
@@ -418,7 +433,7 @@ private fun addCoverageLayer(style: Style, layerIds: List<String>) {
                 FillLayer(COVERAGE_LAYER_PREFIX + id, COVERAGE_SOURCE_ID).apply {
                     withProperties(
                         PropertyFactory.fillColor(COVERAGE_COLOR),
-                        PropertyFactory.fillOpacity(COVERAGE_OPACITY)
+                        PropertyFactory.fillOpacity(COVERAGE_OPACITY),
                     )
                     setSourceLayer(id)
                 }

@@ -1,44 +1,43 @@
 package xyz.malkki.neostumbler.utils
 
-import java.io.IOException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.Call
-import okhttp3.Callback
 import okhttp3.Request
-import okhttp3.Response
+import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
+import xyz.malkki.neostumbler.extensions.executeSuspending
 
-fun getTileJsonLayerIds(tileJsonUrl: String?, httpClient: Call.Factory, callback: (List<String>) -> Unit) {
-    val layerIds = mutableListOf<String>()
-    if (tileJsonUrl != null) {
-        httpClient.newCall(Request.Builder().url(tileJsonUrl).build()).enqueue(object : Callback {
-            override fun onFailure(call: Call, error: IOException) {
-                Timber.e(error, "TileJSON request failed")
-                callback(layerIds)
-            }
+suspend fun getTileJsonLayerIds(tileJsonUrl: String, httpClient: Call.Factory): List<String> {
+    val response =
+        httpClient.newCall(Request.Builder().url(tileJsonUrl).build()).executeSuspending()
 
-            override fun onResponse(call: Call, response: Response) {
-                response.use {
-                    if (response.isSuccessful) {
-                        response.body?.string()?.let { jsonString ->
-                            runCatching {
-                                JSONObject(jsonString).optJSONArray("vector_layers")
-                            }.onSuccess { vectorLayers ->
-                                vectorLayers?.let {
-                                    for (i in 0 until it.length()) {
-                                        layerIds.add(it.getJSONObject(i).getString("id"))
-                                    }
+    return withContext(Dispatchers.IO) {
+        response.use {
+            if (!it.isSuccessful) {
+                Timber.w("TileJSON request failed (HTTP status: %d)", it.code)
+
+                emptyList<String>()
+            } else {
+                it.body?.string()?.let { jsonString ->
+                    try {
+                        val vectorLayers = JSONObject(jsonString).optJSONArray("vector_layers")
+
+                        buildList<String> {
+                            vectorLayers?.let {
+                                for (i in 0 until it.length()) {
+                                    add(it.getJSONObject(i).getString("id"))
                                 }
-                            }.onFailure { error ->
-                                Timber.e(error, "TileJSON parser failed")
                             }
                         }
+                    } catch (ex: JSONException) {
+                        Timber.e(ex, "TileJSON parser failed")
+
+                        emptyList<String>()
                     }
-                }
-                callback(layerIds)
+                } ?: emptyList<String>()
             }
-        })
-    } else {
-        callback(layerIds)
+        }
     }
 }

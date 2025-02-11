@@ -24,10 +24,12 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.toList
@@ -75,13 +77,16 @@ class MapViewModel(
             }
             .distinctUntilChanged()
 
-    val coverageTileJsonUrl: Flow<String?> = settingsStore.data
-        .map { prefs ->
-            prefs.get(stringPreferencesKey(PreferenceKeys.COVERAGE_TILE_JSON_URL))
+    val coverageTileJsonUrl: Flow<String?> =
+        settingsStore.data.map { prefs ->
+            prefs[stringPreferencesKey(PreferenceKeys.COVERAGE_TILE_JSON_URL)]
         }
 
-    private val _coverageTileJsonLayerIds = MutableStateFlow<List<String>>(emptyList<String>())
-    val coverageTileJsonLayerIds: StateFlow<List<String>> = _coverageTileJsonLayerIds
+    val coverageTileJsonLayerIds: Flow<List<String>> =
+        combine(coverageTileJsonUrl.filterNotNull(), httpClient.filterNotNull()) { a, b -> a to b }
+            .mapLatest { (coverageTileJsonUrl, httpClient) ->
+                getTileJsonLayerIds(coverageTileJsonUrl, httpClient)
+            }
 
     val mapStyle: Flow<MapStyle> =
         mapTileSource
@@ -198,11 +203,6 @@ class MapViewModel(
         viewModelScope.launch {
             val httpClient = httpClientProvider.await()
             _httpClient.value = httpClient
-            coverageTileJsonUrl.collect { coverageTileJsonUrl ->
-                getTileJsonLayerIds(coverageTileJsonUrl, httpClient) { layerIds ->
-                    _coverageTileJsonLayerIds.value = layerIds
-                }
-            }
         }
     }
 
