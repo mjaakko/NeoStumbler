@@ -157,7 +157,7 @@
     <string name="no_endpoint_configured">Кінцева точка не налаштована</string>
     <string name="coverage_layer">Шар покриття на карті</string>
     <string name="coverage_layer_tile_json_url">TileJSON URL для карти покриття (необов\'язково)</string>
-    <string name="coverage_layer_no_configured_tile_json_url">Не налаштовано TileJSON URL для карти покриття</string>
-    <string name="no_valid_url_warning">Невірний URL</string>
+    <string name="coverage_layer_no_configured">Не налаштовано TileJSON URL для карти покриття</string>
+    <string name="invalid_url">Невірний URL</string>
     <string name="mls_warning_text">Служба Mozilla Location була закрита і більше не приймає подачу даних. Як альтернативу MLS, ви можете відправляти дані до beaconDB, який надає сумісну з MLS службу.\n\nЗверніть увагу, що beaconDB все ще знаходиться на етапі розробки, і це впливає на обробку ваших даних. Ви можете прочитати <annotation link="privacy_policy">політику конфіденційності</annotation> для додаткової інформації.\n\nВи хочете встановити beaconDB як кінцеву точку? Це можна налаштувати пізніше в налаштуваннях</string>
 </resources>

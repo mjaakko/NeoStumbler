@@ -37,7 +37,7 @@ fun UrlField(
         ParamField(label = label, state = state, modifier = modifier)
 
         if (!state.value.isValidUrl) {
-            Warning(warningText = R.string.no_valid_url_warning)
+            Warning(warningText = R.string.invalid_url)
         } else if (state.value.isUnencryptedUrl) {
             Warning(warningText = R.string.unencrypted_endpoint_warning)
         }

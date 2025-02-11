@@ -18,10 +18,10 @@ class UrlFieldTest {
 
         composeTestRule.setContent { UrlField(label = "url", state = remember { state }) }
 
-        composeTestRule.onNodeWithText("No valid URL").assertIsNotDisplayed()
+        composeTestRule.onNodeWithText("Invalid URL").assertIsNotDisplayed()
 
-        state.value = "invalid url"
+        state.value = "not a valid url"
 
-        composeTestRule.onNodeWithText("No valid URL").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Invalid URL").assertIsDisplayed()
     }
 }

@@ -149,7 +149,7 @@
     <string name="reports_last_uploaded_never">nooit</string>
     <string name="reports_empty">Nog geen rapporten</string>
     <string name="coverage_layer_tile_json_url">TileJSON-URL voor dekkings­kaart (optioneel)</string>
-    <string name="coverage_layer_no_configured_tile_json_url">Geen geconfigureerde TileJSON-URL voor dekkings­kaart</string>
+    <string name="coverage_layer_no_configured">Geen geconfigureerde TileJSON-URL voor dekkings­kaart</string>
     <string name="coverage_layer">Dekkings­laag op kaart</string>
-    <string name="no_valid_url_warning">Geen geldige URL</string>
+    <string name="invalid_url">Geen geldige URL</string>
 </resources>
