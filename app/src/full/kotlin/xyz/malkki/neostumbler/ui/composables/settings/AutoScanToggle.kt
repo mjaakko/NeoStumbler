@@ -36,8 +36,8 @@ import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.getActivity
 import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.scanner.autoscan.ActivityTransitionReceiver
-import xyz.malkki.neostumbler.ui.composables.PermissionsDialog
 import xyz.malkki.neostumbler.ui.composables.ToggleWithAction
+import xyz.malkki.neostumbler.ui.composables.shared.PermissionsDialog
 
 private fun DataStore<Preferences>.autoScanEnabled(): Flow<Boolean?> =
     data.map { it[booleanPreferencesKey(PreferenceKeys.AUTOSCAN_ENABLED)] }.distinctUntilChanged()
