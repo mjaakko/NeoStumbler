@@ -30,11 +30,11 @@ suspend fun SupportSQLiteDatabase.getTableNames(): Collection<String> =
         query(
                 """
                     SELECT name FROM sqlite_master
-                        WHERE type = 'table
+                        WHERE type = 'table'
                             AND name != 'android_metadata'
                             AND name != 'sqlite_sequence'
                             AND name != 'room_master_table'
-                """
+                    """
             )
             .use { cursor ->
                 buildList {
