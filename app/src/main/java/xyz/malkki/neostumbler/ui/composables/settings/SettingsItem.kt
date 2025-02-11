@@ -16,33 +16,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun SettingsItem(
-    title: String,
-    description: String? = null,
-    onClick: () -> Unit
-) {
+fun SettingsItem(title: String, description: String? = null, onClick: () -> Unit) {
     Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .defaultMinSize(minHeight = 48.dp)
-            .clickable {
-                onClick.invoke()
-            }
+        modifier =
+            Modifier.fillMaxWidth()
+                .wrapContentHeight()
+                .defaultMinSize(minHeight = 48.dp)
+                .clickable { onClick.invoke() }
     ) {
         Column(verticalArrangement = Arrangement.Center) {
-            Text(
-                text = title,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+            Text(text = title, maxLines = 1, overflow = TextOverflow.Ellipsis)
             if (description != null) {
                 Text(
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Light,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    text = description
+                    text = description,
                 )
             }
         }

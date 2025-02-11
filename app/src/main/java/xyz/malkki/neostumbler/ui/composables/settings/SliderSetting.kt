@@ -23,7 +23,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
@@ -34,34 +33,29 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
+import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.StumblerApplication
 
-private fun DataStore<Preferences>.getValue(preferenceKey: String): Flow<Int?> = data
-    .map {
-        it[intPreferencesKey(preferenceKey)]
-    }
-    .distinctUntilChanged()
+private fun DataStore<Preferences>.getValue(preferenceKey: String): Flow<Int?> =
+    data.map { it[intPreferencesKey(preferenceKey)] }.distinctUntilChanged()
 
 @Composable
 fun SliderSetting(
     title: String,
     preferenceKey: String,
     range: IntRange,
-    step: Int,
-    valueFormatter: (Int) -> String,
-    default: Int
+    step: Int = 1,
+    valueFormatter: (Int) -> String = { it.toString() },
+    default: Int,
 ) {
-    val context = LocalContext.current
-
     val coroutineScope = rememberCoroutineScope()
 
-    val settingsStore = (context.applicationContext as StumblerApplication).settingsStore
+    val settingsStore = koinInject<DataStore<Preferences>>(PREFERENCES)
     val preferenceValue = settingsStore.getValue(preferenceKey).collectAsState(initial = default)
 
-    val sliderValue = remember(preferenceValue.value) {
-        mutableIntStateOf(preferenceValue.value ?: default)
-    }
+    val sliderValue =
+        remember(preferenceValue.value) { mutableIntStateOf(preferenceValue.value ?: default) }
 
     val dialogOpen = rememberSaveable { mutableStateOf(false) }
 
@@ -70,42 +64,34 @@ fun SliderSetting(
             onDismissRequest = {
                 dialogOpen.value = false
 
-                //Reset slider value to default when dialog is closed without saving
+                // Reset slider value to default when dialog is closed without saving
                 sliderValue.intValue = preferenceValue.value ?: default
             }
         ) {
             Surface(
-                modifier = Modifier
-                    .wrapContentWidth()
-                    .wrapContentHeight(),
+                modifier = Modifier.wrapContentWidth().wrapContentHeight(),
                 shape = MaterialTheme.shapes.large,
-                tonalElevation = AlertDialogDefaults.TonalElevation
+                tonalElevation = AlertDialogDefaults.TonalElevation,
             ) {
                 Column(modifier = Modifier.padding(24.dp)) {
-                    Text(
-                        style = MaterialTheme.typography.titleLarge,
-                        text = title,
-                    )
+                    Text(style = MaterialTheme.typography.titleLarge, text = title)
 
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Column(
-                        modifier = Modifier
-                            .padding(bottom = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        modifier = Modifier.padding(bottom = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         Slider(
                             value = sliderValue.intValue.toFloat(),
-                            onValueChange = {
-                                sliderValue.intValue = it.toInt()
-                            },
+                            onValueChange = { sliderValue.intValue = it.toInt() },
                             steps = ((range.endInclusive - range.start) / step) - 1,
-                            valueRange = range.start.toFloat()..range.endInclusive.toFloat()
+                            valueRange = range.start.toFloat()..range.endInclusive.toFloat(),
                         )
 
                         Text(
                             text = valueFormatter.invoke(sliderValue.intValue),
-                            style = MaterialTheme.typography.bodySmall
+                            style = MaterialTheme.typography.bodySmall,
                         )
                     }
 
@@ -131,8 +117,6 @@ fun SliderSetting(
     SettingsItem(
         title = title,
         description = valueFormatter.invoke(preferenceValue.value ?: default),
-        onClick = {
-            dialogOpen.value = true
-        }
+        onClick = { dialogOpen.value = true },
     )
 }

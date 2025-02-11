@@ -6,6 +6,5 @@ import xyz.malkki.neostumbler.db.entities.WifiAccessPointEntity
 
 @Dao
 interface WifiAccessPointDao {
-    @Insert
-    suspend fun insertAll(vararg wifiAccessPointEntity: WifiAccessPointEntity)
+    @Insert suspend fun insertAll(vararg wifiAccessPointEntity: WifiAccessPointEntity)
 }

@@ -24,32 +24,41 @@ fun AccurateLocationTroubleshootingItem() {
     val locationManager = context.getSystemService<LocationManager>()!!
 
     val accurateLocationAvailableState = callbackFlow {
-        val receiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                trySendBlocking(locationManager.isLocationEnabled && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+        val receiver =
+            object : BroadcastReceiver() {
+                override fun onReceive(context: Context, intent: Intent) {
+                    trySendBlocking(
+                        locationManager.isLocationEnabled &&
+                            locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+                    )
+                }
             }
-        }
 
-        context.registerReceiver(receiver, IntentFilter().apply {
-            addAction(LocationManager.MODE_CHANGED_ACTION)
-            addAction(LocationManager.PROVIDERS_CHANGED_ACTION)
-        })
+        context.registerReceiver(
+            receiver,
+            IntentFilter().apply {
+                addAction(LocationManager.MODE_CHANGED_ACTION)
+                addAction(LocationManager.PROVIDERS_CHANGED_ACTION)
+            },
+        )
 
-        send(locationManager.isLocationEnabled && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+        send(
+            locationManager.isLocationEnabled &&
+                locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        )
 
-        awaitClose {
-            context.unregisterReceiver(receiver)
-        }
+        awaitClose { context.unregisterReceiver(receiver) }
     }
-    val accurateLocationAvailableLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-
-    }
+    val accurateLocationAvailableLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
 
     TroubleshootingItem(
         title = stringResource(id = R.string.troubleshooting_accurate_location_available),
         stateFlow = accurateLocationAvailableState,
         fixAction = {
-            accurateLocationAvailableLauncher.launch(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
-        }
+            accurateLocationAvailableLauncher.launch(
+                Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+            )
+        },
     )
 }

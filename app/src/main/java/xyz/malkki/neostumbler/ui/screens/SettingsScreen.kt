@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.ui.screens.settings
+package xyz.malkki.neostumbler.ui.screens
 
 import android.os.Build
 import androidx.compose.foundation.layout.Column
@@ -18,9 +18,6 @@ import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.scanner.ScannerService
 import xyz.malkki.neostumbler.ui.composables.AboutNeoStumbler
 import xyz.malkki.neostumbler.ui.composables.ReportReuploadButton
-import xyz.malkki.neostumbler.ui.composables.SettingsGroup
-import xyz.malkki.neostumbler.ui.composables.SettingsToggle
-import xyz.malkki.neostumbler.ui.composables.TroubleshootingSettingsItem
 import xyz.malkki.neostumbler.ui.composables.settings.AutoScanToggle
 import xyz.malkki.neostumbler.ui.composables.settings.AutoUploadToggle
 import xyz.malkki.neostumbler.ui.composables.settings.CoverageLayerSettings
@@ -31,32 +28,27 @@ import xyz.malkki.neostumbler.ui.composables.settings.LanguageSwitcher
 import xyz.malkki.neostumbler.ui.composables.settings.ManageStorageSettingsItem
 import xyz.malkki.neostumbler.ui.composables.settings.MovementDetectorSettings
 import xyz.malkki.neostumbler.ui.composables.settings.ScannerNotificationStyleSettings
+import xyz.malkki.neostumbler.ui.composables.settings.SettingsGroup
+import xyz.malkki.neostumbler.ui.composables.settings.SettingsToggle
 import xyz.malkki.neostumbler.ui.composables.settings.SliderSetting
 import xyz.malkki.neostumbler.ui.composables.settings.geosubmit.GeosubmitEndpointSettings
+import xyz.malkki.neostumbler.ui.composables.troubleshooting.TroubleshootingSettingsItem
 
 @Composable
 fun SettingsScreen() {
     val context = LocalContext.current
 
-    Column(
-        modifier = Modifier
-            .padding(horizontal = 16.dp)
-            .verticalScroll(rememberScrollState())
-    ) {
+    Column(modifier = Modifier.padding(horizontal = 16.dp).verticalScroll(rememberScrollState())) {
         Spacer(modifier = Modifier.height(16.dp))
 
-        SettingsGroup(
-            title = stringResource(id = R.string.settings_group_reports)
-        ) {
+        SettingsGroup(title = stringResource(id = R.string.settings_group_reports)) {
             GeosubmitEndpointSettings()
             CoverageLayerSettings()
             AutoUploadToggle()
             DbPruneSettings()
         }
 
-        SettingsGroup(
-            title = stringResource(id = R.string.settings_group_scanning)
-        ) {
+        SettingsGroup(title = stringResource(id = R.string.settings_group_scanning)) {
             MovementDetectorSettings()
             FusedLocationToggle()
             IgnoreScanThrottlingToggle()
@@ -92,7 +84,7 @@ fun SettingsScreen() {
                 SettingsToggle(
                     title = stringResource(id = R.string.use_dynamic_color_ui),
                     preferenceKey = PreferenceKeys.DYNAMIC_COLOR_THEME,
-                    default = false
+                    default = false,
                 )
             }
 

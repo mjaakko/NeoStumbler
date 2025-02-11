@@ -6,6 +6,7 @@ import androidx.room.RoomDatabase
 import androidx.room.withTransaction
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import java.time.Instant
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -27,7 +28,6 @@ import xyz.malkki.neostumbler.db.entities.Report
 import xyz.malkki.neostumbler.extensions.copyTo
 import xyz.malkki.neostumbler.extensions.getEstimatedSize
 import xyz.malkki.neostumbler.extensions.getTableNames
-import java.time.Instant
 
 @RunWith(AndroidJUnit4::class)
 class ReportDatabaseTest {
@@ -37,9 +37,7 @@ class ReportDatabaseTest {
     private lateinit var positionDao: PositionDao
     private lateinit var cellTowerDao: CellTowerDao
 
-    @Rule
-    @JvmField
-    val tmpFolder = TemporaryFolder()
+    @Rule @JvmField val tmpFolder = TemporaryFolder()
 
     @Before
     fun setup() {
@@ -66,7 +64,15 @@ class ReportDatabaseTest {
 
     private suspend fun RoomDatabase.addReport() {
         withTransaction {
-            val reportId = reportDao.insert(Report(id = null, timestamp = Instant.now(), uploaded = false, uploadTimestamp = null))
+            val reportId =
+                reportDao.insert(
+                    Report(
+                        id = null,
+                        timestamp = Instant.now(),
+                        uploaded = false,
+                        uploadTimestamp = null,
+                    )
+                )
 
             positionDao.insert(
                 PositionEntity(
@@ -100,7 +106,7 @@ class ReportDatabaseTest {
                     signalStrength = -100,
                     timingAdvance = null,
                     arfcn = null,
-                    age = 500
+                    age = 500,
                 )
             )
         }
@@ -114,7 +120,7 @@ class ReportDatabaseTest {
         assertNotEquals(0, estimatedDbSize)
     }
 
-    //Note: this test requires min. Android 11
+    // Note: this test requires min. Android 11
     @Test
     fun testCopyingDbToFile() = runTest {
         db.addReport()
@@ -124,10 +130,17 @@ class ReportDatabaseTest {
         db.openHelper.writableDatabase.copyTo(tempFile)
 
         val context = ApplicationProvider.getApplicationContext<Context>()
-        val exportedDb = Room.databaseBuilder(context, ReportDatabase::class.java, tempFile.toAbsolutePath().toString()).build()
+        val exportedDb =
+            Room.databaseBuilder(
+                    context,
+                    ReportDatabase::class.java,
+                    tempFile.toAbsolutePath().toString(),
+                )
+                .build()
 
         try {
-            val reportsWithLocation =  exportedDb.reportDao().getAllReportsWithLocation().firstOrNull()
+            val reportsWithLocation =
+                exportedDb.reportDao().getAllReportsWithLocation().firstOrNull()
             assertNotNull(reportsWithLocation)
             assertEquals(1, reportsWithLocation?.size)
             assertEquals(78.2356, reportsWithLocation?.first()?.latitude)

@@ -12,16 +12,15 @@ class ReportDatabaseMigrationTest {
     private val TEST_DB = "report-db-migration-test"
 
     @get:Rule
-    val helper: MigrationTestHelper = MigrationTestHelper(
-        InstrumentationRegistry.getInstrumentation(),
-        ReportDatabase::class.java
-    )
+    val helper: MigrationTestHelper =
+        MigrationTestHelper(
+            InstrumentationRegistry.getInstrumentation(),
+            ReportDatabase::class.java,
+        )
 
     @Test
     fun testRunningAllMigrations() {
-        helper.createDatabase(TEST_DB, 1).apply {
-            close()
-        }
+        helper.createDatabase(TEST_DB, 1).apply { close() }
 
         helper.runMigrationsAndValidate(TEST_DB, REPORT_DB_VERSION, true)
     }

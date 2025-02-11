@@ -158,6 +158,6 @@
     <string name="reports_empty">Нет отчётов пока что</string>
     <string name="coverage_layer">Слой покрытия на карте</string>
     <string name="coverage_layer_tile_json_url">Ссылка TileJSON для карты покрытия (необязательно)</string>
-    <string name="coverage_layer_no_configured_tile_json_url">Не была сконфигурирована ссылка TileJSON для карты покрытия</string>
-    <string name="no_valid_url_warning">Нет действительной ссылки</string>
+    <string name="coverage_layer_no_configured">Не была сконфигурирована ссылка TileJSON для карты покрытия</string>
+    <string name="invalid_url">Нет действительной ссылки</string>
 </resources>

@@ -1,5 +1,10 @@
 package xyz.malkki.neostumbler.extensions
 
+import kotlin.math.sqrt
+import kotlin.random.Random
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.measureTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.asFlow
@@ -14,11 +19,6 @@ import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import kotlin.math.sqrt
-import kotlin.random.Random
-import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Duration.Companion.seconds
-import kotlin.time.measureTime
 
 class FlowExtensionsTest {
     @Test
@@ -50,15 +50,9 @@ class FlowExtensionsTest {
             delay(1000)
             emit(3)
         }
-        val c = flow {
-            emit(1)
-        }
+        val c = flow { emit(1) }
 
-        val output = listOf(a, b, c)
-            .combineAny {
-                it
-            }
-            .toList()
+        val output = listOf(a, b, c).combineAny { it }.toList()
 
         assertEquals(4, output.size)
         assertArrayEquals(arrayOf(null, 1, null), output[0])
@@ -66,22 +60,19 @@ class FlowExtensionsTest {
 
     @Test
     fun `Test parallel map`() = runBlocking {
-        val flow = flow {
-            repeat(10) {
-                emit(Random.Default.nextDouble(0.0, Double.MAX_VALUE))
-            }
-        }
+        val flow = flow { repeat(10) { emit(Random.Default.nextDouble(0.0, Double.MAX_VALUE)) } }
 
-        val duration = withContext(Dispatchers.IO) {
-            measureTime {
-                flow
-                    .parallelMap {
-                        delay(100)
-                        sqrt(it)
-                    }
-                    .collect {}
+        val duration =
+            withContext(Dispatchers.IO) {
+                measureTime {
+                    flow
+                        .parallelMap {
+                            delay(100)
+                            sqrt(it)
+                        }
+                        .collect {}
+                }
             }
-        }
 
         assertTrue(duration <= 500.milliseconds)
     }

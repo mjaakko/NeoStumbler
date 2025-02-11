@@ -6,24 +6,21 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import java.time.Instant
+import java.time.LocalDate
 import kotlinx.coroutines.flow.Flow
 import xyz.malkki.neostumbler.db.entities.Report
 import xyz.malkki.neostumbler.db.entities.ReportWithData
 import xyz.malkki.neostumbler.db.entities.ReportWithLocation
 import xyz.malkki.neostumbler.db.entities.ReportWithStats
-import java.time.Instant
-import java.time.LocalDate
 
 @Dao
 interface ReportDao {
-    @Insert
-    suspend fun insert(report: Report): Long
+    @Insert suspend fun insert(report: Report): Long
 
-    @Update
-    suspend fun update(vararg reports: Report)
+    @Update suspend fun update(vararg reports: Report)
 
-    @Query("DELETE FROM Report WHERE id IN (:reportIds)")
-    suspend fun delete(vararg reportIds: Long)
+    @Query("DELETE FROM Report WHERE id IN (:reportIds)") suspend fun delete(vararg reportIds: Long)
 
     @Query("DELETE FROM Report WHERE timestamp >= :minTimestamp AND timestamp <= :maxTimestamp")
     suspend fun deleteFromTimeRange(minTimestamp: Instant, maxTimestamp: Instant): Int
@@ -31,8 +28,7 @@ interface ReportDao {
     @Query("DELETE FROM Report WHERE timestamp <= :timestamp")
     suspend fun deleteOlderThan(timestamp: Instant): Int
 
-    @Query("SELECT COUNT(*) FROM Report")
-    fun getReportCount(): Flow<Int>
+    @Query("SELECT COUNT(*) FROM Report") fun getReportCount(): Flow<Int>
 
     @Query("SELECT COUNT(*) FROM Report WHERE uploaded = 0")
     fun getReportCountNotUploaded(): Flow<Int>
@@ -71,15 +67,28 @@ interface ReportDao {
     @Query("SELECT * FROM Report WHERE timestamp >= :from AND timestamp <= :to")
     suspend fun getAllReportsForTimerange(from: Instant, to: Instant): List<ReportWithData>
 
-    @Query("SELECT r.id, r.timestamp, p.latitude, p.longitude FROM Report r JOIN PositionEntity p ON r.id = p.reportId WHERE r.timestamp >= :timestamp")
+    @Query(
+        """
+        SELECT
+            r.id,
+            r.timestamp,
+            p.latitude,
+            p.longitude
+        FROM Report r
+            JOIN PositionEntity p ON r.id = p.reportId
+        WHERE r.timestamp >= :timestamp"""
+    )
     suspend fun getReportsNewerThan(timestamp: Instant): List<ReportWithLocation>
 
     @Transaction
-    @Query("SELECT r.id, r.timestamp, p.latitude, p.longitude FROM Report r JOIN PositionEntity p ON r.id = p.reportId")
+    @Query(
+        "SELECT r.id, r.timestamp, p.latitude, p.longitude FROM Report r JOIN PositionEntity p ON r.id = p.reportId"
+    )
     fun getAllReportsWithLocation(): Flow<List<ReportWithLocation>>
 
     @Transaction
-    @Query("""
+    @Query(
+        """
         SELECT
             r.id, r.timestamp, p.latitude, p.longitude
         FROM Report r
@@ -88,12 +97,13 @@ interface ReportDao {
             AND p.latitude <= :maxLatitude
             AND p.longitude >= :minLongitude
             AND p.longitude <= :maxLongitude
-    """)
+    """
+    )
     fun getAllReportsWithLocationInsideBoundingBox(
         minLatitude: Double,
         minLongitude: Double,
         maxLatitude: Double,
-        maxLongitude: Double
+        maxLongitude: Double,
     ): Flow<List<ReportWithLocation>>
 
     @Query("SELECT DISTINCT DATE(ROUND(r.timestamp / 1000), 'unixepoch') FROM Report r")

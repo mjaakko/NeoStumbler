@@ -5,12 +5,20 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import xyz.malkki.neostumbler.domain.CellTower
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import xyz.malkki.neostumbler.domain.CellTower
 
 @Entity(
-    foreignKeys = [ForeignKey(entity = Report::class, parentColumns = ["id"], childColumns = ["reportId"], onDelete = ForeignKey.CASCADE)]
+    foreignKeys =
+        [
+            ForeignKey(
+                entity = Report::class,
+                parentColumns = ["id"],
+                childColumns = ["reportId"],
+                onDelete = ForeignKey.CASCADE,
+            )
+        ]
 )
 data class CellTowerEntity(
     @PrimaryKey(autoGenerate = true) val id: Long?,
@@ -26,12 +34,22 @@ data class CellTowerEntity(
     val timingAdvance: Int?,
     val arfcn: Int?,
     val age: Long,
-    @ColumnInfo(index = true) val reportId: Long?
+    @ColumnInfo(index = true) val reportId: Long?,
 ) {
     companion object {
-        fun fromCellTower(cellTower: CellTower, reportTimestamp: Instant, reportId: Long): CellTowerEntity {
-            //Report time is truncated to seconds -> age can be negative by some milliseconds
-            val age = maxOf(0, Instant.now().minusMillis(SystemClock.elapsedRealtime() - cellTower.timestamp).until(reportTimestamp, ChronoUnit.MILLIS))
+        fun fromCellTower(
+            cellTower: CellTower,
+            reportTimestamp: Instant,
+            reportId: Long,
+        ): CellTowerEntity {
+            // Report time is truncated to seconds -> age can be negative by some milliseconds
+            val age =
+                maxOf(
+                    0,
+                    Instant.now()
+                        .minusMillis(SystemClock.elapsedRealtime() - cellTower.timestamp)
+                        .until(reportTimestamp, ChronoUnit.MILLIS),
+                )
 
             return CellTowerEntity(
                 id = null,
@@ -47,7 +65,7 @@ data class CellTowerEntity(
                 timingAdvance = cellTower.timingAdvance,
                 arfcn = cellTower.arfcn,
                 age = age,
-                reportId = reportId
+                reportId = reportId,
             )
         }
     }

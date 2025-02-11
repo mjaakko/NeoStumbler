@@ -1,5 +1,6 @@
 package xyz.malkki.neostumbler.ui.composables.settings
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,26 +22,24 @@ import androidx.compose.ui.unit.sp
 import xyz.malkki.neostumbler.R
 
 @Composable
-fun Warning(stringResource: Int) {
+fun Warning(@StringRes warningText: Int) {
     Row(
-        modifier = Modifier
-            .wrapContentSize()
-            .padding(top = 2.dp),
+        modifier = Modifier.wrapContentSize().padding(top = 2.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Icon(
             painter = painterResource(id = R.drawable.warning_14sp),
             tint = MaterialTheme.colorScheme.onErrorContainer,
-            contentDescription = stringResource(id = R.string.warning_icon_description)
+            contentDescription = stringResource(id = R.string.warning_icon_description),
         )
         Spacer(modifier = Modifier.width(2.dp))
-        Text(modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight(),
-            text = stringResource(id = stringResource),
+
+        Text(
+            modifier = Modifier.fillMaxWidth().wrapContentHeight(),
+            text = stringResource(id = warningText),
             style = MaterialTheme.typography.labelSmall.copy(fontSize = 14.sp),
-            color = MaterialTheme.colorScheme.onErrorContainer
+            color = MaterialTheme.colorScheme.onErrorContainer,
         )
     }
 }

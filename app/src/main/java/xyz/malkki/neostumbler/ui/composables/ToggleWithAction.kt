@@ -23,46 +23,43 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 
 @Composable
-fun ToggleWithAction(title: String, description: String? = null, enabled: Boolean, checked: Boolean, action: suspend (Boolean) -> Unit) {
-    val changingState = remember {
-        mutableStateOf(false)
-    }
+fun ToggleWithAction(
+    title: String,
+    description: String? = null,
+    enabled: Boolean,
+    checked: Boolean,
+    action: suspend (Boolean) -> Unit,
+) {
+    val changingState = remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
 
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .clickable(
-                enabled = enabled && !changingState.value,
-                onClick = {
-                    coroutineScope.launch {
-                        changingState.value = true
-                        action(!checked)
-                        changingState.value = false
-                    }
-                }
-            )
-            .defaultMinSize(minHeight = 48.dp),
+        modifier =
+            Modifier.fillMaxWidth()
+                .wrapContentHeight()
+                .clickable(
+                    enabled = enabled && !changingState.value,
+                    onClick = {
+                        coroutineScope.launch {
+                            changingState.value = true
+                            action(!checked)
+                            changingState.value = false
+                        }
+                    },
+                )
+                .defaultMinSize(minHeight = 48.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        Column(
-            modifier = Modifier.weight(1.0f),
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = title,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+        Column(modifier = Modifier.weight(1.0f), verticalArrangement = Arrangement.Center) {
+            Text(text = title, maxLines = 1, overflow = TextOverflow.Ellipsis)
             if (description != null) {
                 Text(
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Light,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    text = description
+                    text = description,
                 )
             }
         }
@@ -70,7 +67,7 @@ fun ToggleWithAction(title: String, description: String? = null, enabled: Boolea
             modifier = Modifier.wrapContentSize(),
             enabled = enabled && !changingState.value,
             checked = checked,
-            onCheckedChange = null
+            onCheckedChange = null,
         )
     }
 }

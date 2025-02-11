@@ -129,7 +129,13 @@
     <string name="path">Polku</string>
     <string name="api_key">API-avain (vapaaehtoinen)</string>
 
-    <string name="no_endpoint_configured">Palvelinta ei määritetty</string>
+    <string name="no_endpoint_configured">Palvelinta ei määriteltey</string>
+
+    <string name="coverage_layer">Kartan kattavuustaso</string>
+    <string name="coverage_layer_tile_json_url">Kartan kattavuustason TileJSON:n URL-osoite</string>
+    <string name="coverage_layer_no_configured">Kartan kattavuustasoa ei määritelty</string>
+
+    <string name="invalid_url">Virheellinen URL-osoite</string>
 
     <string name="unencrypted_endpoint_warning">Salaamaton palvelin</string>
 
@@ -229,6 +235,7 @@
 
     <string name="troubleshooting_fix">Korjaa</string>
 
+    <string name="troubleshooting_not_ok">Ei kunnossa</string>
     <string name="use_dynamic_color_ui">Käytä dynaamisia värejä käyttöliittymässä</string>
 
     <string name="db_prune_title">Poista lähetetyt raportit</string>
@@ -265,4 +272,5 @@
     <string name="bug_report_button">Ilmoita bugista</string>
     <string name="update_translations_button">Päivitä käännöksiä</string>
     <string name="reports_last_uploaded_never">ei ikinä</string>
+    <string name="troubleshooting_ok">Kunnossa</string>
 </resources>

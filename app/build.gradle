@@ -5,6 +5,8 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.compose'
     id 'org.jetbrains.kotlin.plugin.serialization'
     id 'app.accrescent.tools.bundletool'
+    id 'com.ncorti.ktfmt.gradle'
+    id 'io.gitlab.arturbosch.detekt'
 }
 
 def DB_SCHEMAS_DIR =  "$projectDir/schemas"
@@ -176,6 +178,11 @@ tasks.register('printVersionName') {
     print project.android.defaultConfig.versionName
 }
 
+// Run Detekt task separately
+check.configure {
+    dependsOn = dependsOn.findAll { it.name != 'detekt' }
+}
+
 kotlin {
     compilerOptions {
         freeCompilerArgs.add("-opt-in=kotlin.io.path.ExperimentalPathApi")
@@ -189,6 +196,11 @@ kotlin {
 }
 
 dependencies {
+    implementation platform('io.insert-koin:koin-bom:4.1.0-Beta5')
+    implementation "io.insert-koin:koin-core"
+    implementation "io.insert-koin:koin-android"
+    implementation "io.insert-koin:koin-androidx-compose"
+
     implementation 'androidx.core:core-ktx:1.15.0'
     implementation 'androidx.activity:activity-compose:1.10.0'
 
@@ -208,7 +220,10 @@ dependencies {
     implementation "androidx.paging:paging-common-ktx:$paging_version"
     implementation "androidx.paging:paging-compose:$paging_version"
 
-    implementation platform('androidx.compose:compose-bom:2025.01.01')
+    def compose_bom = platform('androidx.compose:compose-bom:2025.01.01')
+    implementation compose_bom
+    androidTestImplementation compose_bom
+
     implementation 'androidx.compose.ui:ui'
     implementation 'androidx.compose.ui:ui-graphics'
     implementation 'androidx.compose.ui:ui-tooling-preview'
@@ -219,7 +234,7 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
-    //androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
+    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
 
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
@@ -277,4 +292,8 @@ dependencies {
     fullImplementation 'com.google.net.cronet:cronet-okhttp:0.1.0'
 
     testImplementation "org.mockito.kotlin:mockito-kotlin:5.4.0"
+}
+
+ktfmt {
+    kotlinLangStyle()
 }

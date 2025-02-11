@@ -7,11 +7,8 @@ import androidx.datastore.preferences.core.edit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
-import xyz.malkki.neostumbler.StumblerApplication
 
 class OneTimeActionHelper(private val oneTimeActionsStore: DataStore<Preferences>) {
-    constructor(app: StumblerApplication) : this(app.oneTimeActionsStore)
-
     /**
      * Checks if the specified action has already been shown to the user
      *
@@ -25,8 +22,7 @@ class OneTimeActionHelper(private val oneTimeActionsStore: DataStore<Preferences
     }
 
     fun hasActionBeenShownFlow(actionName: String): Flow<Boolean> {
-        return oneTimeActionsStore.data
-            .map { it[booleanPreferencesKey(actionName)] == true }
+        return oneTimeActionsStore.data.map { it[booleanPreferencesKey(actionName)] == true }
     }
 
     /**

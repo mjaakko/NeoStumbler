@@ -5,24 +5,11 @@ import androidx.room.Relation
 
 data class ReportWithData(
     @Embedded val report: Report,
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "reportId"
-    )
-    val positionEntity: PositionEntity,
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "reportId"
-    )
+    @Relation(parentColumn = "id", entityColumn = "reportId") val positionEntity: PositionEntity,
+    @Relation(parentColumn = "id", entityColumn = "reportId")
     val wifiAccessPointEntities: List<WifiAccessPointEntity>,
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "reportId"
-    )
+    @Relation(parentColumn = "id", entityColumn = "reportId")
     val cellTowerEntities: List<CellTowerEntity>,
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "reportId"
-    )
-    val bluetoothBeaconEntities: List<BluetoothBeaconEntity>
+    @Relation(parentColumn = "id", entityColumn = "reportId")
+    val bluetoothBeaconEntities: List<BluetoothBeaconEntity>,
 )

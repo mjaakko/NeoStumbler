@@ -5,12 +5,20 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import xyz.malkki.neostumbler.domain.WifiAccessPoint
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import xyz.malkki.neostumbler.domain.WifiAccessPoint
 
 @Entity(
-    foreignKeys = [ForeignKey(entity = Report::class, parentColumns = ["id"], childColumns = ["reportId"], onDelete = ForeignKey.CASCADE)]
+    foreignKeys =
+        [
+            ForeignKey(
+                entity = Report::class,
+                parentColumns = ["id"],
+                childColumns = ["reportId"],
+                onDelete = ForeignKey.CASCADE,
+            )
+        ]
 )
 data class WifiAccessPointEntity(
     @PrimaryKey(autoGenerate = true) val id: Long?,
@@ -22,31 +30,42 @@ data class WifiAccessPointEntity(
     val signalStrength: Int?,
     val signalToNoiseRatio: Int?,
     val ssid: String?,
-    @ColumnInfo(index = true) val reportId: Long?
+    @ColumnInfo(index = true) val reportId: Long?,
 ) {
     companion object {
-        fun fromWifiAccessPoint(wifiAccessPoint: WifiAccessPoint, reportTimestamp: Instant, reportId: Long): WifiAccessPointEntity {
-            //Report time is truncated to seconds -> age can be negative by some milliseconds
-            val age = maxOf(0, Instant.now().minusMillis(SystemClock.elapsedRealtime() - (wifiAccessPoint.timestamp)).until(reportTimestamp, ChronoUnit.MILLIS))
+        fun fromWifiAccessPoint(
+            wifiAccessPoint: WifiAccessPoint,
+            reportTimestamp: Instant,
+            reportId: Long,
+        ): WifiAccessPointEntity {
+            // Report time is truncated to seconds -> age can be negative by some milliseconds
+            val age =
+                maxOf(
+                    0,
+                    Instant.now()
+                        .minusMillis(SystemClock.elapsedRealtime() - (wifiAccessPoint.timestamp))
+                        .until(reportTimestamp, ChronoUnit.MILLIS),
+                )
 
             return WifiAccessPointEntity(
                 id = null,
                 macAddress = wifiAccessPoint.macAddress,
-                radioType = when (wifiAccessPoint.radioType) {
-                    WifiAccessPoint.RadioType.BE -> "802.11be"
-                    WifiAccessPoint.RadioType.AX -> "802.11ax"
-                    WifiAccessPoint.RadioType.AC -> "802.11ac"
-                    WifiAccessPoint.RadioType.N -> "802.11n"
-                    WifiAccessPoint.RadioType.G -> "802.11g"
-                    else -> null
-                },
+                radioType =
+                    when (wifiAccessPoint.radioType) {
+                        WifiAccessPoint.RadioType.BE -> "802.11be"
+                        WifiAccessPoint.RadioType.AX -> "802.11ax"
+                        WifiAccessPoint.RadioType.AC -> "802.11ac"
+                        WifiAccessPoint.RadioType.N -> "802.11n"
+                        WifiAccessPoint.RadioType.G -> "802.11g"
+                        else -> null
+                    },
                 age = age,
                 channel = wifiAccessPoint.channel,
                 frequency = wifiAccessPoint.frequency,
                 signalStrength = wifiAccessPoint.signalStrength,
                 signalToNoiseRatio = null,
                 ssid = wifiAccessPoint.ssid,
-                reportId = reportId
+                reportId = reportId,
             )
         }
     }

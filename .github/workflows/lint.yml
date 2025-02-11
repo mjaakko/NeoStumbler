@@ -1,4 +1,4 @@
-name: Run lint checks
+name: Run static analysis and lint checks
 
 on:
   pull_request:
@@ -8,10 +8,27 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  static-analysis:
+    name: Check formatting and code quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+      - name: Check code formatting with ktfmt
+        run: ./gradlew ktfmtCheck
+      - name: Analyze code quality with Detekt
+        run: ./gradlew detekt
+  lint:
+    needs: static-analysis
     strategy:
       matrix:
-        version: [full, fdroid]
+        version: [ full, fdroid ]
     name: Run lint checks (${{ matrix.version }})
     runs-on: ubuntu-latest
     steps:
@@ -21,12 +38,12 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
       - name: Capitalize version name
         id: capitalize-version
         uses: ASzc/change-string-case-action@v6
         with:
           string: ${{ matrix.version }}
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
-      - name: Run lint checks
+      - name: Run Android lint checks
         run: ./gradlew lint${{ steps.capitalize-version.outputs.capitalized }}Debug

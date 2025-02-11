@@ -3,8 +3,8 @@ package xyz.malkki.neostumbler.db.dao
 import androidx.room.Dao
 import androidx.room.MapColumn
 import androidx.room.Query
-import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface StatisticsDao {

@@ -13,12 +13,12 @@ import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
-import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.export.DatabaseExportWorker
-import xyz.malkki.neostumbler.extensions.showToast
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import xyz.malkki.neostumbler.R
+import xyz.malkki.neostumbler.export.DatabaseExportWorker
+import xyz.malkki.neostumbler.extensions.showToast
 
 private const val DB_MIME_TYPE = "application/vnd.sqlite3"
 
@@ -26,32 +26,44 @@ private const val DB_MIME_TYPE = "application/vnd.sqlite3"
 fun ExportDatabaseButton() {
     val context = LocalContext.current
 
-    val activityLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.CreateDocument(DB_MIME_TYPE),
-        onResult = { uri ->
-            if (uri == null) {
-                context.showToast(ContextCompat.getString(context, R.string.export_no_file_chosen))
-            } else {
-                WorkManager.getInstance(context).enqueue(
-                    OneTimeWorkRequest.Builder(DatabaseExportWorker::class.java)
-                        .setInputData(Data.Builder()
-                            .putString(DatabaseExportWorker.INPUT_OUTPUT_URI, uri.toString())
-                            .build())
-                        .setConstraints(Constraints.NONE)
-                        .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-                        .build()
-                )
-            }
-        }
-    )
+    val activityLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.CreateDocument(DB_MIME_TYPE),
+            onResult = { uri ->
+                if (uri == null) {
+                    context.showToast(
+                        ContextCompat.getString(context, R.string.export_no_file_chosen)
+                    )
+                } else {
+                    WorkManager.getInstance(context)
+                        .enqueue(
+                            OneTimeWorkRequest.Builder(DatabaseExportWorker::class.java)
+                                .setInputData(
+                                    Data.Builder()
+                                        .putString(
+                                            DatabaseExportWorker.INPUT_OUTPUT_URI,
+                                            uri.toString(),
+                                        )
+                                        .build()
+                                )
+                                .setConstraints(Constraints.NONE)
+                                .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+                                .build()
+                        )
+                }
+            },
+        )
 
     Button(
         enabled = true,
         onClick = {
-            val timestamp = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+            val timestamp =
+                LocalDateTime.now()
+                    .truncatedTo(ChronoUnit.SECONDS)
+                    .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
 
             activityLauncher.launch("neostumbler_reports_$timestamp.db")
-        }
+        },
     ) {
         Text(text = stringResource(id = R.string.export_raw_database))
     }

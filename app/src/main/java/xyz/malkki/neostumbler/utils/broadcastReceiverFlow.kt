@@ -12,23 +12,23 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.isActive
 
-fun Context.broadcastReceiverFlow(intentFilter: IntentFilter): Flow<Intent> = callbackFlow<Intent> {
-    val broadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            if (isActive) {
-                trySendBlocking(intent)
+fun Context.broadcastReceiverFlow(intentFilter: IntentFilter): Flow<Intent> =
+    callbackFlow<Intent> {
+        val broadcastReceiver =
+            object : BroadcastReceiver() {
+                override fun onReceive(context: Context, intent: Intent) {
+                    if (isActive) {
+                        trySendBlocking(intent)
+                    }
+                }
             }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(broadcastReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            @SuppressLint("UnspecifiedRegisterReceiverFlag")
+            registerReceiver(broadcastReceiver, intentFilter)
         }
-    }
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        registerReceiver(broadcastReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED)
-    } else {
-        @SuppressLint("UnspecifiedRegisterReceiverFlag")
-        registerReceiver(broadcastReceiver, intentFilter)
+        awaitClose { unregisterReceiver(broadcastReceiver) }
     }
-
-    awaitClose {
-        unregisterReceiver(broadcastReceiver)
-    }
-}

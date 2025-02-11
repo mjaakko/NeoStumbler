@@ -18,7 +18,8 @@ import androidx.compose.ui.unit.dp
 import xyz.malkki.neostumbler.ui.composables.ManageStorage
 import xyz.malkki.neostumbler.ui.theme.NeoStumblerTheme
 
-//TODO: investigate if it's possible to use a single activity, e.g. with activity-alias in the manifest
+// TODO: investigate if it's possible to use a single activity, e.g. with activity-alias in the
+// manifest
 class ManageStorageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,23 +30,22 @@ class ManageStorageActivity : AppCompatActivity() {
                     Scaffold(
                         topBar = {
                             TopAppBar(
-                                title = { Text(text = stringResource(R.string.manage_storage_title)) },
-                                colors = TopAppBarDefaults.topAppBarColors(
-                                    containerColor = MaterialTheme.colorScheme.primary,
-                                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                                ),
-                                actions = {
-
-                                }
+                                title = {
+                                    Text(text = stringResource(R.string.manage_storage_title))
+                                },
+                                colors =
+                                    TopAppBarDefaults.topAppBarColors(
+                                        containerColor = MaterialTheme.colorScheme.primary,
+                                        titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                                    ),
+                                actions = {},
                             )
                         },
                         content = {
                             Box(modifier = Modifier.padding(paddingValues = it)) {
-                                Box(modifier = Modifier.padding(all = 16.dp)) {
-                                    ManageStorage()
-                                }
+                                Box(modifier = Modifier.padding(all = 16.dp)) { ManageStorage() }
                             }
-                        }
+                        },
                     )
                 }
             }

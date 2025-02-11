@@ -1,19 +1,23 @@
 package xyz.malkki.neostumbler.utils
 
+import kotlin.time.Duration
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlin.time.Duration
 
 /**
- * Rate limiter, which allows to do an action N times within the specified time period.
- * Supports bursting within the time period
+ * Rate limiter, which allows to do an action N times within the specified time period. Supports
+ * bursting within the time period
  *
  * @param permits Number of times the action can be performed
  * @param timePeriod Time period
  * @param timeSource Source for timing. Must return milliseconds
  */
-class RateLimiter(private val permits: Int, private val timePeriod: Duration, private val timeSource: () -> Long) {
+class RateLimiter(
+    private val permits: Int,
+    private val timePeriod: Duration,
+    private val timeSource: () -> Long,
+) {
     private val mutex = Mutex()
 
     private var permitsRemaining = permits
@@ -26,7 +30,10 @@ class RateLimiter(private val permits: Int, private val timePeriod: Duration, pr
             }
 
             if (permitsRemaining-- == 0) {
-                delay(((startedTimestamp!! + timePeriod.inWholeMilliseconds) - timeSource.invoke()).coerceAtLeast(0L))
+                delay(
+                    ((startedTimestamp!! + timePeriod.inWholeMilliseconds) - timeSource.invoke())
+                        .coerceAtLeast(0L)
+                )
                 startedTimestamp = timeSource.invoke()
                 permitsRemaining = permits - 1
             }

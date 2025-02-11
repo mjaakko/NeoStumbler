@@ -1,6 +1,5 @@
 package xyz.malkki.neostumbler.ui.composables
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -20,9 +19,7 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.ExistingWorkPolicy
@@ -32,35 +29,33 @@ import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.await
+import java.util.UUID
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.toJavaDuration
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.extensions.getQuantityString
-import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.geosubmit.ReportSendWorker
+import xyz.malkki.neostumbler.ui.composables.reports.ToastOnReportUpload
 import xyz.malkki.neostumbler.ui.viewmodel.ReportsViewModel
-import java.util.UUID
-import kotlin.time.Duration.Companion.seconds
-import kotlin.time.toJavaDuration
 
-/**
- * Returns a flow which emits booleans indicating whether an upload can be started
- */
-private fun WorkManager.getCanUploadFlow(): Flow<Boolean> = getWorkInfosForUniqueWorkFlow(ReportSendWorker.ONE_TIME_WORK_NAME)
-    .map { workInfos ->
-        workInfos.none { workInfo ->
-            workInfo.state == WorkInfo.State.ENQUEUED
-                || workInfo.state == WorkInfo.State.RUNNING
-                || workInfo.state == WorkInfo.State.BLOCKED
+/** Returns a flow which emits booleans indicating whether an upload can be started */
+private fun WorkManager.getCanUploadFlow(): Flow<Boolean> =
+    getWorkInfosForUniqueWorkFlow(ReportSendWorker.ONE_TIME_WORK_NAME)
+        .map { workInfos ->
+            workInfos.none { workInfo ->
+                workInfo.state == WorkInfo.State.ENQUEUED ||
+                    workInfo.state == WorkInfo.State.RUNNING ||
+                    workInfo.state == WorkInfo.State.BLOCKED
+            }
         }
-    }
-    .distinctUntilChanged()
+        .distinctUntilChanged()
 
 @Composable
-fun ReportUploadButton(reportsViewModel: ReportsViewModel = viewModel()) {
+fun ReportUploadButton(reportsViewModel: ReportsViewModel) {
     val context = LocalContext.current
     val workManager = WorkManager.getInstance(context)
 
@@ -69,46 +64,11 @@ fun ReportUploadButton(reportsViewModel: ReportsViewModel = viewModel()) {
     val canUpload = workManager.getCanUploadFlow().collectAsState(initial = false)
     val reportsNotUploaded = reportsViewModel.reportsNotUploaded.collectAsStateWithLifecycle(0)
 
-    val enqueuing = remember {
-        mutableStateOf(false)
-    }
+    val enqueuing = remember { mutableStateOf(false) }
 
     val enqueuedUploadWork = rememberSaveable { mutableStateOf<UUID?>(null) }
 
-    EffectOnWorkCompleted(
-        workId = enqueuedUploadWork.value,
-        onWorkSuccess = { workInfo ->
-            val reportsUploaded = workInfo.outputData.getInt(ReportSendWorker.OUTPUT_REPORTS_SENT, 0)
-            context.showToast(context.getQuantityString(R.plurals.toast_reports_uploaded, reportsUploaded, reportsUploaded))
-
-            enqueuedUploadWork.value = null
-        },
-        onWorkFailed = { workInfo ->
-            val errorType = workInfo.outputData.getInt(ReportSendWorker.OUTPUT_ERROR_TYPE, -1)
-
-            when (errorType) {
-                ReportSendWorker.ERROR_TYPE_NO_ENDPOINT_CONFIGURED -> {
-                    context.showToast(ContextCompat.getString(context, R.string.toast_reports_upload_failed_no_endpoint))
-                }
-                else -> {
-                    val errorMessage = workInfo.outputData.getString(ReportSendWorker.OUTPUT_ERROR_MESSAGE)
-
-                    val toastText = buildString {
-                        append(ContextCompat.getString(context, R.string.toast_reports_upload_failed))
-
-                        if (errorMessage != null) {
-                            append("\n\n")
-                            append(errorMessage)
-                        }
-                    }
-                    context.showToast(toastText, length = Toast.LENGTH_LONG)
-
-                }
-            }
-
-            enqueuedUploadWork.value = null
-        }
-    )
+    ToastOnReportUpload(workId = enqueuedUploadWork)
 
     Button(
         enabled = reportsNotUploaded.value > 0 && canUpload.value && !enqueuing.value,
@@ -131,35 +91,35 @@ fun ReportUploadButton(reportsViewModel: ReportsViewModel = viewModel()) {
                                     requiresStorageNotLow = false,
                                     requiresDeviceIdle = false,
                                     requiresCharging = false,
-                                    requiresBatteryNotLow = false
+                                    requiresBatteryNotLow = false,
                                 )
                             )
                             .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-                            .build()
+                            .build(),
                     )
                     .await()
 
                 enqueuedUploadWork.value = workId
 
-                //Add small delay to avoid flickering the button
+                // Add small delay to avoid flickering the button
                 delay(0.3.seconds)
 
                 enqueuing.value = false
             }
         },
-        contentPadding = ButtonDefaults.ButtonWithIconContentPadding
+        contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
     ) {
         Icon(
             painter = rememberVectorPainter(Icons.AutoMirrored.Default.Send),
             contentDescription = null,
-            modifier = Modifier.size(ButtonDefaults.IconSize)
+            modifier = Modifier.size(ButtonDefaults.IconSize),
         )
         Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
 
         Text(
             text = stringResource(R.string.send_reports),
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
         )
     }
 }

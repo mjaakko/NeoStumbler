@@ -11,28 +11,38 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
+import org.koin.compose.koinInject
+import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.db.DbPruneWorker
 
-private val TITLES = mapOf(
-    30 to R.string.db_prune_one_month,
-    60 to R.string.db_prune_two_months,
-    180 to R.string.db_prune_six_months,
-    -1 to R.string.db_prune_never
-)
+private const val ONE_MONTH = 30
+private const val TWO_MONTHS = 60
+private const val SIX_MONTHS = 180
+private const val NEVER = -1
 
-private fun DataStore<Preferences>.dbPruneMaxAgeDays(): Flow<Int> = data
-    .map { preferences ->
-        preferences[intPreferencesKey(PreferenceKeys.DB_PRUNE_DATA_MAX_AGE_DAYS)] ?: 60
-    }
-    .distinctUntilChanged()
+private val TITLES =
+    mapOf(
+        ONE_MONTH to R.string.db_prune_one_month,
+        TWO_MONTHS to R.string.db_prune_two_months,
+        SIX_MONTHS to R.string.db_prune_six_months,
+        NEVER to R.string.db_prune_never,
+    )
+
+private fun DataStore<Preferences>.dbPruneMaxAgeDays(): Flow<Int> =
+    data
+        .map { preferences ->
+            preferences[intPreferencesKey(PreferenceKeys.DB_PRUNE_DATA_MAX_AGE_DAYS)]
+                ?: DbPruneWorker.DEFAULT_MAX_AGE_DAYS
+        }
+        .distinctUntilChanged()
 
 @Composable
 fun DbPruneSettings() {
     val context = LocalContext.current
 
-    val settingsStore = (context.applicationContext as StumblerApplication).settingsStore
+    val settingsStore = koinInject<DataStore<Preferences>>(PREFERENCES)
 
     val dbPruneMaxAgeDays = settingsStore.dbPruneMaxAgeDays().collectAsState(initial = null)
 
@@ -48,7 +58,7 @@ fun DbPruneSettings() {
                         set(intPreferencesKey(PreferenceKeys.DB_PRUNE_DATA_MAX_AGE_DAYS), value)
                     }
                 }
-            }
+            },
         )
     }
 }

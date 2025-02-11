@@ -1,8 +1,8 @@
 package xyz.malkki.neostumbler.db.converters
 
+import java.time.LocalDate
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.time.LocalDate
 
 class LocalDateConvertersTest {
     @Test

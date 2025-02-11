@@ -10,5 +10,6 @@ import com.google.android.gms.common.GoogleApiAvailability
  * @return true is Google APIs are available, false if not
  */
 fun Context.isGoogleApisAvailable(): Boolean {
-    return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(applicationContext) == ConnectionResult.SUCCESS
+    return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(applicationContext) ==
+        ConnectionResult.SUCCESS
 }

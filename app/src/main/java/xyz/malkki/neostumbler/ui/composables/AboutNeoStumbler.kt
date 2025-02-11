@@ -1,5 +1,6 @@
 package xyz.malkki.neostumbler.ui.composables
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -31,10 +32,11 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import xyz.malkki.neostumbler.BuildConfig
-import xyz.malkki.neostumbler.R
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
+import xyz.malkki.neostumbler.BuildConfig
+import xyz.malkki.neostumbler.R
+import xyz.malkki.neostumbler.extensions.defaultLocale
 
 @Composable
 fun AboutNeoStumbler() {
@@ -47,37 +49,26 @@ fun AboutNeoStumbler() {
     val showDialog = rememberSaveable { mutableStateOf(false) }
 
     if (showDialog.value) {
-        BasicAlertDialog(
-            onDismissRequest = {
-                showDialog.value = false
-            }
-        ) {
+        BasicAlertDialog(onDismissRequest = { showDialog.value = false }) {
             Surface(
-                modifier = Modifier
-                    .sizeIn(maxWidth = 400.dp)
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
+                modifier = Modifier.sizeIn(maxWidth = 400.dp).fillMaxWidth().wrapContentHeight(),
                 shape = AlertDialogDefaults.shape,
-                tonalElevation = AlertDialogDefaults.TonalElevation
+                tonalElevation = AlertDialogDefaults.TonalElevation,
             ) {
-                Column(
-                    modifier = Modifier.padding(all = 24.dp)
-                ) {
+                Column(modifier = Modifier.padding(all = 24.dp)) {
                     Text(
                         text = stringResource(R.string.app_name),
-                        style = MaterialTheme.typography.titleLarge
+                        style = MaterialTheme.typography.titleLarge,
                     )
 
-                    Column(
-                        modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)
-                    ) {
+                    Column(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)) {
                         Text(
                             text = stringResource(R.string.app_version, BuildConfig.VERSION_NAME),
-                            style = MaterialTheme.typography.bodyMedium
+                            style = MaterialTheme.typography.bodyMedium,
                         )
                         Text(
                             text = stringResource(R.string.app_variant, BuildConfig.FLAVOR),
-                            style = MaterialTheme.typography.bodyMedium
+                            style = MaterialTheme.typography.bodyMedium,
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
@@ -85,24 +76,16 @@ fun AboutNeoStumbler() {
                         Text(
                             text = getAuthorsText(),
                             fontStyle = FontStyle.Italic,
-                            style = MaterialTheme.typography.bodySmall
+                            style = MaterialTheme.typography.bodySmall,
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        Button(
-                            onClick = {
-                                openUrl(getBugReportUrl())
-                            }
-                        ) {
+                        Button(onClick = { openUrl(getBugReportUrl()) }) {
                             Text(text = stringResource(R.string.bug_report_button))
                         }
 
-                        Button(
-                            onClick = {
-                                openUrl(getTranslationsUrl())
-                            }
-                        ) {
+                        Button(onClick = { openUrl(getTranslationsUrl(context)) }) {
                             Text(text = stringResource(R.string.update_translations_button))
                         }
                     }
@@ -112,13 +95,11 @@ fun AboutNeoStumbler() {
     }
 
     Text(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = { showDialog.value = true })
-            .padding(8.dp),
+        modifier =
+            Modifier.fillMaxWidth().clickable(onClick = { showDialog.value = true }).padding(8.dp),
         textAlign = TextAlign.Center,
         style = MaterialTheme.typography.labelMedium,
-        text = stringResource(R.string.about_app)
+        text = stringResource(R.string.about_app),
     )
 }
 
@@ -135,18 +116,18 @@ private fun getAuthorsText(): AnnotatedString {
         addStyle(
             style = SpanStyle(fontWeight = FontWeight.SemiBold),
             start = raw.indexOf(author),
-            end = raw.indexOf(author) + author.length
+            end = raw.indexOf(author) + author.length,
         )
 
         addLink(
             url = LinkAnnotation.Url("https://github.com/mjaakko/NeoStumbler/graphs/contributors"),
             start = raw.indexOf(contributors),
-            end = raw.indexOf(contributors) + contributors.length
+            end = raw.indexOf(contributors) + contributors.length,
         )
         addStyle(
             style = SpanStyle(color = MaterialTheme.colorScheme.primary),
             start = raw.indexOf(contributors),
-            end = raw.indexOf(contributors) + contributors.length
+            end = raw.indexOf(contributors) + contributors.length,
         )
     }
 }
@@ -157,17 +138,22 @@ private fun String.urlEncode(): String {
 
 private fun getBugReportUrl(): String {
     return buildString {
-        val device = "${Build.BRAND.takeIf { !it.isNullOrBlank() }?.replaceFirstChar { it.uppercaseChar() } ?: Build.MANUFACTURER} ${Build.MODEL}"
+        val manufacturer =
+            Build.BRAND.takeIf { !it.isNullOrBlank() }?.replaceFirstChar { it.uppercaseChar() }
+                ?: Build.MANUFACTURER
 
-        append("https://github.com/mjaakko/NeoStumbler/issues/new?labels=bug&template=1-bug_report.yml")
+        val device = "$manufacturer ${Build.MODEL}"
+
+        append(
+            "https://github.com/mjaakko/NeoStumbler/issues/new?labels=bug&template=1-bug_report.yml"
+        )
         append("&version=${BuildConfig.VERSION_NAME.urlEncode()}")
-        //TODO: autoselecting the variant doesn't seem to work
         append("&variant=${BuildConfig.FLAVOR.urlEncode()}")
         append("&android-version=${Build.VERSION.RELEASE.urlEncode()}")
         append("&device=${device.urlEncode()}")
     }
 }
 
-private fun getTranslationsUrl(): String {
-    return "https://hosted.weblate.org/projects/neostumbler/"
+private fun getTranslationsUrl(context: Context): String {
+    return "https://hosted.weblate.org/projects/neostumbler/-/${context.defaultLocale.language}/"
 }

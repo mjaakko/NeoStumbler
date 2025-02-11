@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.ui.composables
+package xyz.malkki.neostumbler.ui.composables.troubleshooting
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,42 +21,27 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.ui.composables.settings.SettingsItem
-import xyz.malkki.neostumbler.ui.composables.troubleshooting.AccurateLocationTroubleshootingItem
-import xyz.malkki.neostumbler.ui.composables.troubleshooting.BatteryOptimizationTroubleshootingItem
-import xyz.malkki.neostumbler.ui.composables.troubleshooting.PermissionsTroubleshootingItem
-import xyz.malkki.neostumbler.ui.composables.troubleshooting.WifiScanAlwaysAvailableTroubleshootingItem
 
 @Composable
 fun TroubleshootingSettingsItem() {
-    val showDialog = rememberSaveable {
-        mutableStateOf(false)
-    }
+    val showDialog = rememberSaveable { mutableStateOf(false) }
 
     if (showDialog.value) {
-        BasicAlertDialog(
-            onDismissRequest = {
-                showDialog.value = false
-            }
-        ) {
+        BasicAlertDialog(onDismissRequest = { showDialog.value = false }) {
             Surface(
-                modifier = Modifier
-                    .sizeIn(maxWidth = 400.dp)
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
+                modifier = Modifier.sizeIn(maxWidth = 400.dp).fillMaxWidth().wrapContentHeight(),
                 shape = MaterialTheme.shapes.medium,
-                tonalElevation = AlertDialogDefaults.TonalElevation
+                tonalElevation = AlertDialogDefaults.TonalElevation,
             ) {
-                Column(
-                    modifier = Modifier.padding(all = 24.dp)
-                ) {
+                Column(modifier = Modifier.padding(all = 24.dp)) {
                     Text(
                         style = MaterialTheme.typography.titleLarge,
-                        text = stringResource(id = R.string.troubleshooting_title)
+                        text = stringResource(id = R.string.troubleshooting_title),
                     )
 
                     Column(
                         modifier = Modifier.padding(top = 8.dp, bottom = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(space = 8.dp)
+                        verticalArrangement = Arrangement.spacedBy(space = 8.dp),
                     ) {
                         PermissionsTroubleshootingItem()
 
@@ -69,9 +54,7 @@ fun TroubleshootingSettingsItem() {
 
                     TextButton(
                         modifier = Modifier.align(Alignment.End),
-                        onClick = {
-                            showDialog.value = false
-                        },
+                        onClick = { showDialog.value = false },
                     ) {
                         Text(text = stringResource(R.string.cancel))
                     }
@@ -83,8 +66,6 @@ fun TroubleshootingSettingsItem() {
     SettingsItem(
         title = stringResource(R.string.troubleshooting_title),
         description = stringResource(R.string.troubleshooting_description),
-        onClick = {
-            showDialog.value = true
-        }
+        onClick = { showDialog.value = true },
     )
 }

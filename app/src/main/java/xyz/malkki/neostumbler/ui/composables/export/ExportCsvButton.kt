@@ -1,6 +1,5 @@
 package xyz.malkki.neostumbler.ui.composables.export
 
-import android.content.Context
 import android.text.format.DateFormat
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -18,83 +17,95 @@ import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
-import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.StumblerApplication
-import xyz.malkki.neostumbler.export.CsvExportWorker
-import xyz.malkki.neostumbler.extensions.showToast
-import xyz.malkki.neostumbler.ui.composables.DateRangePickerDialog
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Date
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import org.koin.compose.koinInject
+import xyz.malkki.neostumbler.R
+import xyz.malkki.neostumbler.db.ReportDatabaseManager
+import xyz.malkki.neostumbler.export.CsvExportWorker
+import xyz.malkki.neostumbler.extensions.showToast
+import xyz.malkki.neostumbler.ui.composables.shared.DateRangePickerDialog
 
-private fun getSelectableDatesSet(context: Context): Flow<Set<LocalDate>> {
-    return (context.applicationContext as StumblerApplication).reportDb
-        .flatMapLatest { it.reportDao().getReportDates() }
-        .map { it.toSet() }
+private fun ReportDatabaseManager.getSelectableDatesSet(): Flow<Set<LocalDate>> {
+    return reportDb.flatMapLatest { it.reportDao().getReportDates() }.map { it.toSet() }
 }
 
 @Composable
 fun ExportCsvButton() {
     val context = LocalContext.current
 
-    val selectableDates = getSelectableDatesSet(context).collectAsStateWithLifecycle(null)
+    val reportDatabaseManager: ReportDatabaseManager = koinInject()
 
-    val dialogOpen = rememberSaveable {
-        mutableStateOf(false)
-    }
+    val selectableDates =
+        reportDatabaseManager.getSelectableDatesSet().collectAsStateWithLifecycle(null)
 
-    val selectedDates = rememberSaveable {
-        mutableStateOf<Pair<LocalDate, LocalDate>?>(null)
-    }
+    val dialogOpen = rememberSaveable { mutableStateOf(false) }
 
-    val activityLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.CreateDocument("application/zip"),
-        onResult = { uri ->
-            if (uri == null) {
-                context.showToast(ContextCompat.getString(context, R.string.export_no_file_chosen))
-            } else {
-                val dateFormat = DateFormat.getDateFormat(context)
+    val selectedDates = rememberSaveable { mutableStateOf<Pair<LocalDate, LocalDate>?>(null) }
 
-                val localTimeZone = ZoneId.systemDefault()
+    val activityLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.CreateDocument("application/zip"),
+            onResult = { uri ->
+                if (uri == null) {
+                    context.showToast(
+                        ContextCompat.getString(context, R.string.export_no_file_chosen)
+                    )
+                } else {
+                    val dateFormat = DateFormat.getDateFormat(context)
 
-                val fromDate = selectedDates.value!!.first
-                val toDate = selectedDates.value!!.second
+                    val localTimeZone = ZoneId.systemDefault()
 
-                val fromFormatted = dateFormat.format(Date.from(fromDate.atStartOfDay(localTimeZone).toInstant()))
-                val toFormatted = dateFormat.format(Date.from(toDate.atStartOfDay(localTimeZone).toInstant()))
+                    val fromDate = selectedDates.value!!.first
+                    val toDate = selectedDates.value!!.second
 
-                context.showToast(ContextCompat.getString(context, R.string.export_started).format(fromFormatted, toFormatted))
+                    val fromFormatted =
+                        dateFormat.format(
+                            Date.from(fromDate.atStartOfDay(localTimeZone).toInstant())
+                        )
+                    val toFormatted =
+                        dateFormat.format(Date.from(toDate.atStartOfDay(localTimeZone).toInstant()))
 
-                //Convert to local time
-                val from = fromDate.atStartOfDay(localTimeZone).toInstant().toEpochMilli()
-                val to = toDate
-                    //Add one day to include data for the last day in the selected range
-                    .plusDays(1)
-                    .atStartOfDay(localTimeZone)
-                    .toInstant()
-                    .toEpochMilli()
+                    context.showToast(
+                        ContextCompat.getString(context, R.string.export_started)
+                            .format(fromFormatted, toFormatted)
+                    )
 
-                WorkManager.getInstance(context).enqueue(
-                    OneTimeWorkRequest.Builder(CsvExportWorker::class.java)
-                        .setInputData(Data.Builder()
-                            .putString(CsvExportWorker.INPUT_OUTPUT_URI, uri.toString())
-                            .putLong(CsvExportWorker.INPUT_FROM, from)
-                            .putLong(CsvExportWorker.INPUT_TO, to)
-                            .build())
-                        .setConstraints(Constraints.NONE)
-                        .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-                        .build()
-                )
+                    // Convert to local time
+                    val from = fromDate.atStartOfDay(localTimeZone).toInstant().toEpochMilli()
+                    val to =
+                        toDate
+                            // Add one day to include data for the last day in the selected range
+                            .plusDays(1)
+                            .atStartOfDay(localTimeZone)
+                            .toInstant()
+                            .toEpochMilli()
 
-                selectedDates.value = null
-                dialogOpen.value = false
-            }
-        }
-    )
+                    WorkManager.getInstance(context)
+                        .enqueue(
+                            OneTimeWorkRequest.Builder(CsvExportWorker::class.java)
+                                .setInputData(
+                                    Data.Builder()
+                                        .putString(CsvExportWorker.INPUT_OUTPUT_URI, uri.toString())
+                                        .putLong(CsvExportWorker.INPUT_FROM, from)
+                                        .putLong(CsvExportWorker.INPUT_TO, to)
+                                        .build()
+                                )
+                                .setConstraints(Constraints.NONE)
+                                .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+                                .build()
+                        )
+
+                    selectedDates.value = null
+                    dialogOpen.value = false
+                }
+            },
+        )
 
     if (dialogOpen.value) {
         DateRangePickerDialog(
@@ -114,16 +125,11 @@ fun ExportCsvButton() {
                 } else {
                     dialogOpen.value = false
                 }
-            }
+            },
         )
     }
-    
-    Button(
-        enabled = true,
-        onClick = {
-            dialogOpen.value = true
-        }
-    ) {
+
+    Button(enabled = true, onClick = { dialogOpen.value = true }) {
         Text(text = stringResource(id = R.string.export_csv))
     }
 }

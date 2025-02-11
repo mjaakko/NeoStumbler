@@ -154,6 +154,6 @@
     <string name="reports_empty">Kol kas ataskaitų nėra</string>
     <string name="coverage_layer">Aprėpties sluoksnis žemėlapyje</string>
     <string name="coverage_layer_tile_json_url">„TileJSON“ aprėpties žemėlapio URL (neprivalomas)</string>
-    <string name="no_valid_url_warning">Tinkamo URL nėra</string>
-    <string name="coverage_layer_no_configured_tile_json_url">„TileJSON“ aprėpties žemėlapio URL nenurodytas</string>
+    <string name="invalid_url">Tinkamo URL nėra</string>
+    <string name="coverage_layer_no_configured">„TileJSON“ aprėpties žemėlapio URL nenurodytas</string>
 </resources>

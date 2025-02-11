@@ -6,13 +6,21 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import xyz.malkki.neostumbler.domain.Position
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import xyz.malkki.neostumbler.domain.Position
 
 @Entity(
-    foreignKeys = [ForeignKey(entity = Report::class, parentColumns = ["id"], childColumns = ["reportId"], onDelete = ForeignKey.CASCADE)],
-    indices = [Index(value = ["latitude", "longitude"])]
+    foreignKeys =
+        [
+            ForeignKey(
+                entity = Report::class,
+                parentColumns = ["id"],
+                childColumns = ["reportId"],
+                onDelete = ForeignKey.CASCADE,
+            )
+        ],
+    indices = [Index(value = ["latitude", "longitude"])],
 )
 data class PositionEntity(
     @PrimaryKey(autoGenerate = true) val id: Long?,
@@ -26,12 +34,22 @@ data class PositionEntity(
     val pressure: Double?,
     val speed: Double?,
     val source: String,
-    @ColumnInfo(index = true) val reportId: Long
+    @ColumnInfo(index = true) val reportId: Long,
 ) {
     companion object {
-        fun createFromPosition(reportId: Long, reportTimestamp: Instant, position: Position): PositionEntity {
-            //Report time is truncated to seconds -> age can be negative by some milliseconds
-            val age = maxOf(0, Instant.now().minusMillis(SystemClock.elapsedRealtime() - (position.timestamp)).until(reportTimestamp, ChronoUnit.MILLIS))
+        fun createFromPosition(
+            reportId: Long,
+            reportTimestamp: Instant,
+            position: Position,
+        ): PositionEntity {
+            // Report time is truncated to seconds -> age can be negative by some milliseconds
+            val age =
+                maxOf(
+                    0,
+                    Instant.now()
+                        .minusMillis(SystemClock.elapsedRealtime() - (position.timestamp))
+                        .until(reportTimestamp, ChronoUnit.MILLIS),
+                )
 
             return PositionEntity(
                 null,
@@ -45,7 +63,7 @@ data class PositionEntity(
                 pressure = position.pressure,
                 speed = position.speed,
                 source = position.source,
-                reportId = reportId
+                reportId = reportId,
             )
         }
     }

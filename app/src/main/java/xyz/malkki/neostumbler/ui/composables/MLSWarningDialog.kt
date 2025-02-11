@@ -16,12 +16,15 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.text.getSpans
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.compose.koinInject
+import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.extensions.getTextCompat
 import xyz.malkki.neostumbler.utils.OneTimeActionHelper
@@ -29,7 +32,7 @@ import xyz.malkki.neostumbler.utils.SuggestedService
 
 private const val MLS_WARNING = "mls_warning"
 
-//ID from suggested_services.json
+// ID from suggested_services.json
 private const val DEFAULT_SERVICE_ID = "beacondb"
 
 @Composable
@@ -37,38 +40,43 @@ fun MLSWarningDialog() {
     val context = LocalContext.current
 
     val coroutineScope = rememberCoroutineScope()
-    val oneTimeActionHelper = OneTimeActionHelper(context.applicationContext as StumblerApplication)
 
-    val settingsStore = (context.applicationContext as StumblerApplication).settingsStore
+    val settingsStore = koinInject<DataStore<Preferences>>(PREFERENCES)
 
-    val warningShown = oneTimeActionHelper.hasActionBeenShownFlow(MLS_WARNING).collectAsState(
-        initial = true
-    )
+    val oneTimeActionHelper = koinInject<OneTimeActionHelper>()
 
-    val defaultServiceParams = produceState<SuggestedService?>(null) {
-        value = withContext(Dispatchers.IO) {
-            SuggestedService.getSuggestedServices(context).find { it.id == DEFAULT_SERVICE_ID }
+    val warningShown =
+        oneTimeActionHelper.hasActionBeenShownFlow(MLS_WARNING).collectAsState(initial = true)
+
+    val defaultServiceParams =
+        produceState<SuggestedService?>(null) {
+            value =
+                withContext(Dispatchers.IO) {
+                    SuggestedService.getSuggestedServices(context).find {
+                        it.id == DEFAULT_SERVICE_ID
+                    }
+                }
         }
-    }
 
-    val mlsWarningText = (context.getTextCompat(R.string.mls_warning_text) as SpannedString).let { spannedString ->
-        val privacyPolicyLink = spannedString.getSpans<android.text.Annotation>().first()
+    val mlsWarningText =
+        (context.getTextCompat(R.string.mls_warning_text) as SpannedString).let { spannedString ->
+            val privacyPolicyLink = spannedString.getSpans<android.text.Annotation>().first()
 
-        buildAnnotatedString {
-            append(spannedString)
+            buildAnnotatedString {
+                append(spannedString)
 
-            addLink(
-                url = LinkAnnotation.Url(defaultServiceParams.value?.termsOfUse ?: ""),
-                start = spannedString.getSpanStart(privacyPolicyLink),
-                end = spannedString.getSpanEnd(privacyPolicyLink)
-            )
-            addStyle(
-                style = SpanStyle(color = MaterialTheme.colorScheme.primary),
-                start = spannedString.getSpanStart(privacyPolicyLink),
-                end = spannedString.getSpanEnd(privacyPolicyLink)
-            )
+                addLink(
+                    url = LinkAnnotation.Url(defaultServiceParams.value?.termsOfUse ?: ""),
+                    start = spannedString.getSpanStart(privacyPolicyLink),
+                    end = spannedString.getSpanEnd(privacyPolicyLink),
+                )
+                addStyle(
+                    style = SpanStyle(color = MaterialTheme.colorScheme.primary),
+                    start = spannedString.getSpanStart(privacyPolicyLink),
+                    end = spannedString.getSpanEnd(privacyPolicyLink),
+                )
+            }
         }
-    }
 
     if (!warningShown.value) {
         AlertDialog(
@@ -84,21 +92,24 @@ fun MLSWarningDialog() {
                                 val (baseUrl, path) = defaultServiceParams.value!!.endpoint
 
                                 prefs.toMutablePreferences().apply {
-                                    set(stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT), baseUrl)
+                                    set(
+                                        stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT),
+                                        baseUrl,
+                                    )
                                     set(stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH), path)
 
                                     remove(stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY))
 
-                                    set(stringPreferencesKey(
-                                        PreferenceKeys.COVERAGE_TILE_JSON_URL),
-                                        defaultServiceParams.value!!.coverageTileJsonUrl
+                                    set(
+                                        stringPreferencesKey(PreferenceKeys.COVERAGE_TILE_JSON_URL),
+                                        defaultServiceParams.value!!.coverageTileJsonUrl,
                                     )
                                 }
                             }
 
                             oneTimeActionHelper.markActionShown(MLS_WARNING)
                         }
-                    }
+                    },
                 ) {
                     Text(stringResource(id = R.string.yes))
                 }
@@ -106,15 +117,13 @@ fun MLSWarningDialog() {
             dismissButton = {
                 TextButton(
                     onClick = {
-                        coroutineScope.launch {
-                            oneTimeActionHelper.markActionShown(MLS_WARNING)
-                        }
+                        coroutineScope.launch { oneTimeActionHelper.markActionShown(MLS_WARNING) }
                     }
                 ) {
                     Text(stringResource(id = R.string.no))
                 }
             },
-            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false),
         )
     }
 }

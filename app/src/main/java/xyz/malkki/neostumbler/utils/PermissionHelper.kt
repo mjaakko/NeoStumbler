@@ -5,13 +5,15 @@ import android.content.Context
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 
 object PermissionHelper {
-    fun hasScanPermissions(context: Context): Boolean = context
-        .checkMissingPermissions(Manifest.permission.ACCESS_FINE_LOCATION)
-        .isEmpty()
+    fun hasScanPermissions(context: Context): Boolean =
+        context.checkMissingPermissions(Manifest.permission.ACCESS_FINE_LOCATION).isEmpty()
 
-    fun hasAutoScanPermissions(context: Context): Boolean = context
-        .checkMissingPermissions(Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-            Manifest.permission.ACTIVITY_RECOGNITION)
-        .isEmpty()
+    fun hasAutoScanPermissions(context: Context): Boolean =
+        context
+            .checkMissingPermissions(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+                Manifest.permission.ACTIVITY_RECOGNITION,
+            )
+            .isEmpty()
 }
