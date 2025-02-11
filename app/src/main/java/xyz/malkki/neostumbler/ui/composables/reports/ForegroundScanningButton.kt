@@ -55,7 +55,6 @@ private val requiredPermissions =
         }
         .toTypedArray()
 
-@SuppressLint("NewApi")
 @Composable
 fun ForegroundScanningButton() {
     val context = LocalContext.current
@@ -170,6 +169,7 @@ private fun StartStopScanningButton(
     val isScanning = serviceConnection.value != null
 
     if (showQuickSettingsDialog.value) {
+        @SuppressLint("NewApi")
         AddQSTileDialog(
             componentName = ComponentName(context, ScannerTileService::class.java),
             dialogText = stringResource(id = R.string.add_quick_settings_tile),

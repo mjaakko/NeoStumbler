@@ -148,8 +148,8 @@
     <string name="toast_reports_upload_failed_no_endpoint">Hochladen fehlgeschlagen, weil kein Endpunkt eingerichtet ist</string>
     <string name="no_endpoint_configured">Kein Endpunkt eingerichtet</string>
     <string name="reports_last_uploaded_never">niemals</string>
-    <string name="no_valid_url_warning">Keine valide URL</string>
+    <string name="invalid_url">Keine valide URL</string>
     <string name="coverage_layer_tile_json_url">TileJSON-URL für die Abdeckungskarte (optional)</string>
     <string name="coverage_layer">Abdeckungsekarte (Ebene) auf der Karte</string>
-    <string name="coverage_layer_no_configured_tile_json_url">Keine TileJSON-URL für die Abdeckungskarte konfiguriert</string>
+    <string name="coverage_layer_no_configured">Keine TileJSON-URL für die Abdeckungskarte konfiguriert</string>
 </resources>
