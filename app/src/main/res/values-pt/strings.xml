@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="permission_rationale_fine_location">É necessário dar permissão para aceder à localização exata para que a localização seja precisa</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="permission_rationale_fine_location">Para os relatórios serem úteis, a app precisa de ter permissão para aceder a localização precisa</string>
     <string name="permission_rationale_bluetooth">É necessário permitir acesso ao Bluetooth para procurar Bluetooth beacons</string>
     <string name="permission_rationale_background_location_quick_settings">Iniciar scans a partir das definições rápidas precisa de acesso à localização em segundo plano</string>
     <string name="stop_scanning">Parar scan</string>
@@ -28,8 +28,8 @@
     <string name="export_data">Exportar dados</string>
     <string name="export_no_file_chosen">Não foi possível exportar os dados porque nenhum ficheiro foi criado</string>
     <string name="export_started">Exportando dados desde %1$s até %2$s</string>
-    <string name="cells">Torres de redes móveis</string>
-    <string name="beacons">Bluetooth beacons</string>
+    <string name="cells">Redes móveis</string>
+    <string name="beacons">Bluetooth</string>
     <string name="endpoint">Ponto de recolha</string>
     <string name="api_key">API key (opcional)</string>
     <string name="wifi_scan_throttling">Restrição dos scans de redes Wi-Fi</string>
@@ -147,4 +147,12 @@
     <string name="cell_tower_scan_frequency">Frequência do scan das redes móveis</string>
     <string name="wifi_scan_frequency">Frequência do scan das redes Wi-Fi</string>
     <string name="map_tile_source">Fonte dos mapas</string>
+    <string name="toast_reports_upload_failed_no_endpoint">Falha ao enviar os relatórios porque nenhum ponto de recolha foi configurado</string>
+    <string name="no_endpoint_configured">Nenhum ponto de recolha configurado</string>
+    <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Ok</string>
+    <string name="mls_warning_text">O Mozilla Location Service (MLS) encerrou e não recebe novas submissões de relatórios. Como alternativa ao MLS, pode enviar enviar relatórios para o beaconDB.net, um serviço compatível com o MLS\n\nNote que o beaconDB ainda está a ser desenvolvido e isto afeta a forma como a sua informação é usada. Pode ler a <annotation link="privacy_policy">política de privacidade</annotation> para mais informação\n\nQuer usar o beaconDB como ponto de recolha? Pode alterar isto mais tarde nas opções da app</string>
+    <string name="invalid_url">URL inválido</string>
+    <string name="troubleshooting_not_ok" tools:ignore="Typos">Não está bem</string>
+    <string name="reports_last_uploaded_never">nunca</string>
+    <string name="reports_empty">Sem relatórios até agora</string>
 </resources>
