@@ -155,4 +155,7 @@
     <string name="troubleshooting_not_ok" tools:ignore="Typos">Não está bem</string>
     <string name="reports_last_uploaded_never">nunca</string>
     <string name="reports_empty">Sem relatórios até agora</string>
+    <string name="coverage_layer">Camada para o mapa de cobertura</string>
+    <string name="coverage_layer_tile_json_url">TileJSON URL para a camada do mapa de cobertura</string>
+    <string name="coverage_layer_no_configured">Nenhuma camada do mapa de cobertura foi configurada</string>
 </resources>
