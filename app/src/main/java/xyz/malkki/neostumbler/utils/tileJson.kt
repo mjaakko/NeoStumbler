@@ -3,6 +3,7 @@ package xyz.malkki.neostumbler.utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Call
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.Request
 import org.json.JSONException
 import org.json.JSONObject
@@ -10,8 +11,9 @@ import timber.log.Timber
 import xyz.malkki.neostumbler.extensions.executeSuspending
 
 suspend fun getTileJsonLayerIds(tileJsonUrl: String, httpClient: Call.Factory): List<String> {
-    val response =
-        httpClient.newCall(Request.Builder().url(tileJsonUrl).build()).executeSuspending()
+    val url = tileJsonUrl.toHttpUrlOrNull() ?: return emptyList()
+
+    val response = httpClient.newCall(Request.Builder().url(url).build()).executeSuspending()
 
     return withContext(Dispatchers.IO) {
         response.use {

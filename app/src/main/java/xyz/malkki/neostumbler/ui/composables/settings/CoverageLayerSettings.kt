@@ -130,10 +130,7 @@ private fun CoverageLayerDialog(currentTileJsonUrl: String?, onDialogClose: (Str
                 Row {
                     Spacer(modifier = Modifier.weight(1.0f))
 
-                    TextButton(
-                        onClick = { onDialogClose(tileJsonUrl.value) },
-                        enabled = tileJsonUrl.value?.isEmpty() == false,
-                    ) {
+                    TextButton(onClick = { onDialogClose(tileJsonUrl.value) }) {
                         Text(text = stringResource(id = R.string.save))
                     }
                 }
