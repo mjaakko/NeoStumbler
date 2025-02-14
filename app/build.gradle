@@ -62,7 +62,8 @@ android {
                 'pt-rBR',
                 'ru',
                 'uk',
-                'zh-rCN'
+                'zh-rCN',
+                'zh-rTW'
         ]
 
         //Add supported locales to a build config field for the language picker UI
