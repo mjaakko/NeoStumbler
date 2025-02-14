@@ -165,6 +165,7 @@
     </string>
 
     <string name="app_language">Language</string>
+    <string name="system_default_language">System default language</string>
 
     <string name="map_tile_source">Map tile source</string>
     <string name="show_my_location">Show my location</string>
