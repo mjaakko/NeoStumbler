@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="no_thanks">Nee, bedankt</string>
     <string name="import_database_not_valid">Het geselecteerde bestand bevat geen geldige database</string>
     <string name="stop_scanning">Scannen stoppen</string>
@@ -148,8 +148,10 @@
     <string name="no_endpoint_configured">Geen eind­punt geconfigureerd</string>
     <string name="reports_last_uploaded_never">nooit</string>
     <string name="reports_empty">Nog geen rapporten</string>
-    <string name="coverage_layer_tile_json_url">TileJSON-URL voor dekkings­kaart (optioneel)</string>
+    <string name="coverage_layer_tile_json_url">TileJSON-URL voor dekkings­laag op kaart</string>
     <string name="coverage_layer_no_configured">Geen geconfigureerde TileJSON-URL voor dekkings­kaart</string>
     <string name="coverage_layer">Dekkings­laag op kaart</string>
     <string name="invalid_url">Geen geldige URL</string>
+    <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Oké</string>
+    <string name="troubleshooting_not_ok" tools:ignore="Typos">Niet oké</string>
 </resources>
