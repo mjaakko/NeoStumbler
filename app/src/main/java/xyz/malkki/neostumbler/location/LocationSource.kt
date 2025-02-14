@@ -5,5 +5,5 @@ import kotlinx.coroutines.flow.Flow
 import xyz.malkki.neostumbler.domain.Position
 
 fun interface LocationSource {
-    fun getLocations(interval: Duration): Flow<Position>
+    fun getLocations(interval: Duration, usePassiveProvider: Boolean): Flow<Position>
 }

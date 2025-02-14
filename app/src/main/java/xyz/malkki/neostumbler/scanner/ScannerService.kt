@@ -271,7 +271,7 @@ class ScannerService : Service() {
 
             val locationFlow =
                 locationSource
-                    .getLocations(LOCATION_INTERVAL)
+                    .getLocations(LOCATION_INTERVAL, usePassiveProvider = false)
                     .onStart { gpsActive.emit(true) }
                     .onCompletion { gpsActive.emit(false) }
                     .shareIn(scope = this, started = SharingStarted.WhileSubscribed())
@@ -351,7 +351,11 @@ class ScannerService : Service() {
             MovementDetectorType.SIGNIFICANT_MOTION ->
                 SignificantMotionMovementDetector(
                     sensorManager = sensorManager,
-                    locationSource = { locationFlow },
+                    locationSource = {
+                        locationSourceProvider
+                            .getLocationSource(this)
+                            .getLocations(5.seconds, usePassiveProvider = true)
+                    },
                 )
         }
     }

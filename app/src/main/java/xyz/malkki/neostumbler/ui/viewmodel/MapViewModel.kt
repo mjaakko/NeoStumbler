@@ -193,7 +193,7 @@ class MapViewModel(
     val myLocation =
         showMyLocation.flatMapLatest {
             if (it) {
-                locationSource.getLocations(2.seconds)
+                locationSource.getLocations(2.seconds, usePassiveProvider = false)
             } else {
                 emptyFlow()
             }

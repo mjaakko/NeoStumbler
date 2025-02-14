@@ -7,15 +7,13 @@ import android.hardware.TriggerEventListener
 import kotlin.coroutines.resume
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
-import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.timeout
+import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.suspendCancellableCoroutine
 import xyz.malkki.neostumbler.domain.Position
 
@@ -63,34 +61,34 @@ class SignificantMotionMovementDetector(
         }
     }
 
-    override fun getIsMovingFlow(): Flow<Boolean> =
-        getSignificantMotionFlow()
-            .flatMapLatest {
-                flow {
-                    // Significant motion detected -> we are moving
-                    emit(true)
+    private fun getSignificantMotionIsMovingFlow(): Flow<Boolean> {
+        return getSignificantMotionFlow().transformLatest {
+            emit(true)
 
-                    locationSource
-                        .invoke()
-                        // Emit values only when the location changes significantly
-                        .distinctUntilChanged { a, b ->
-                            a.latLng.distanceTo(b.latLng) <= DISTANCE_THRESHOLD
-                        }
-                        .map {}
-                        // Complete the flow if no value was emitted within the limit
-                        .timeout(notMovingDelay)
-                        .catch { ex ->
-                            if (ex !is TimeoutCancellationException) {
-                                throw ex
-                            }
-                        }
-                        .collect()
+            delay(notMovingDelay)
 
-                    // If the location has not changed and there hasn't been another significant
-                    // motion ->
-                    // we are not moving
-                    emit(false)
-                }
+            emit(false)
+        }
+    }
+
+    private fun getLocationBasedIsMovingFlow(): Flow<Boolean> {
+        return locationSource
+            .invoke()
+            // Emit values only when the location changes significantly
+            .distinctUntilChanged { a, b -> a.latLng.distanceTo(b.latLng) <= DISTANCE_THRESHOLD }
+            .map {}
+            .transformLatest {
+                emit(true)
+
+                delay(notMovingDelay)
+
+                emit(false)
             }
-            .distinctUntilChanged()
+    }
+
+    override fun getIsMovingFlow(): Flow<Boolean> {
+        return combine(getSignificantMotionIsMovingFlow(), getLocationBasedIsMovingFlow()) { a, b ->
+            a || b
+        }
+    }
 }

@@ -22,37 +22,44 @@ class FusedLocationSource(context: Context) : LocationSource {
     private val appContext = context.applicationContext
 
     @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-    override fun getLocations(interval: Duration): Flow<Position> = callbackFlow {
-        val fusedLocationProviderClient =
-            LocationServices.getFusedLocationProviderClient(appContext)
+    override fun getLocations(interval: Duration, usePassiveProvider: Boolean): Flow<Position> =
+        callbackFlow {
+            val fusedLocationProviderClient =
+                LocationServices.getFusedLocationProviderClient(appContext)
 
-        val locationIntervalMillis = interval.inWholeMilliseconds
+            val locationIntervalMillis = interval.inWholeMilliseconds
 
-        val locationRequest =
-            LocationRequest.Builder(locationIntervalMillis)
-                .setWaitForAccurateLocation(true)
-                .setMinUpdateIntervalMillis(locationIntervalMillis / 3)
-                .setGranularity(Granularity.GRANULARITY_FINE)
-                .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
-                .build()
+            val locationRequest =
+                LocationRequest.Builder(locationIntervalMillis)
+                    .setWaitForAccurateLocation(!usePassiveProvider)
+                    .setMinUpdateIntervalMillis(locationIntervalMillis / 3)
+                    .setGranularity(Granularity.GRANULARITY_FINE)
+                    .setPriority(
+                        if (usePassiveProvider) {
+                            Priority.PRIORITY_PASSIVE
+                        } else {
+                            Priority.PRIORITY_HIGH_ACCURACY
+                        }
+                    )
+                    .build()
 
-        val locationCallback =
-            object : LocationCallback() {
-                override fun onLocationResult(locationResult: LocationResult) {
-                    locationResult.locations.forEach { location ->
-                        trySendBlocking(Position.fromLocation(location, "fused"))
+            val locationCallback =
+                object : LocationCallback() {
+                    override fun onLocationResult(locationResult: LocationResult) {
+                        locationResult.locations.forEach { location ->
+                            trySendBlocking(Position.fromLocation(location, "fused"))
+                        }
                     }
                 }
-            }
 
-        fusedLocationProviderClient
-            .requestLocationUpdates(locationRequest, ImmediateExecutor, locationCallback)
-            .await()
+            fusedLocationProviderClient
+                .requestLocationUpdates(locationRequest, ImmediateExecutor, locationCallback)
+                .await()
 
-        awaitClose {
-            fusedLocationProviderClient.flushLocations().addOnCompleteListener {
-                fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+            awaitClose {
+                fusedLocationProviderClient.flushLocations().addOnCompleteListener {
+                    fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+                }
             }
         }
-    }
 }

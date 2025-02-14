@@ -22,51 +22,65 @@ class PlatformLocationSource(context: Context) : LocationSource {
     private val appContext = context.applicationContext
 
     @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-    override fun getLocations(interval: Duration): Flow<Position> = callbackFlow {
-        val locationManager =
-            appContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    override fun getLocations(interval: Duration, usePassiveProvider: Boolean): Flow<Position> =
+        callbackFlow {
+            val locationManager =
+                appContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-        val locationListener =
-            object : LocationListener {
-                override fun onLocationChanged(location: Location) {
-                    trySendBlocking(Position.fromLocation(location, "gps"))
+            val locationListener =
+                object : LocationListener {
+                    override fun onLocationChanged(location: Location) {
+                        trySendBlocking(
+                            Position.fromLocation(
+                                location = location,
+                                // TODO: check the actual location source
+                                source = "gps",
+                            )
+                        )
+                    }
+
+                    override fun onProviderDisabled(provider: String) {
+                        Timber.w("Location provider $provider disabled")
+                    }
+
+                    override fun onProviderEnabled(provider: String) {
+                        Timber.i("Location provider $provider enabled")
+                    }
                 }
 
-                override fun onProviderDisabled(provider: String) {
-                    Timber.w("Location provider $provider disabled")
+            val locationIntervalMillis = interval.inWholeMilliseconds
+
+            val provider =
+                if (usePassiveProvider) {
+                    LocationManager.PASSIVE_PROVIDER
+                } else {
+                    LocationManager.GPS_PROVIDER
                 }
 
-                override fun onProviderEnabled(provider: String) {
-                    Timber.i("Location provider $provider enabled")
-                }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                val locationRequest =
+                    LocationRequest.Builder(locationIntervalMillis)
+                        .setQuality(LocationRequest.QUALITY_HIGH_ACCURACY)
+                        .setIntervalMillis(locationIntervalMillis)
+                        .setMinUpdateDistanceMeters(0.0f)
+                        .build()
+
+                locationManager.requestLocationUpdates(
+                    provider,
+                    locationRequest,
+                    ImmediateExecutor,
+                    locationListener,
+                )
+            } else {
+                locationManager.requestLocationUpdates(
+                    provider,
+                    locationIntervalMillis,
+                    0.0f,
+                    locationListener,
+                    Looper.getMainLooper(),
+                )
             }
 
-        val locationIntervalMillis = interval.inWholeMilliseconds
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val locationRequest =
-                LocationRequest.Builder(locationIntervalMillis)
-                    .setQuality(LocationRequest.QUALITY_HIGH_ACCURACY)
-                    .setIntervalMillis(locationIntervalMillis)
-                    .setMinUpdateDistanceMeters(0.0f)
-                    .build()
-
-            locationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER,
-                locationRequest,
-                ImmediateExecutor,
-                locationListener,
-            )
-        } else {
-            locationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER,
-                locationIntervalMillis,
-                0.0f,
-                locationListener,
-                Looper.getMainLooper(),
-            )
+            awaitClose { locationManager.removeUpdates(locationListener) }
         }
-
-        awaitClose { locationManager.removeUpdates(locationListener) }
-    }
 }
