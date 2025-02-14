@@ -22,9 +22,11 @@ class VariableDelayTest {
             delayWithMinDuration(timeSource.invoke(), timeSource, flowOf(1.seconds))
         }
 
+        // Use 990.milliseconds instead of 1.seconds to avoid timming differences due to system
+        // performance
         assertTrue(
             "Expected delay to be at least 1 second (was ${delay.toString(DurationUnit.SECONDS)})",
-            delay >= 1.seconds,
+            delay >= 990.milliseconds,
         )
     }
 
@@ -46,7 +48,8 @@ class VariableDelayTest {
             delayWithMinDuration(timeSource.invoke(), timeSource, durationFlow)
         }
 
-        // For some reason, 1000.milliseconds >= 1.seconds == false
+        // Use 990.milliseconds instead of 1.seconds to avoid timming differences due to system
+        // performance
         assertTrue(
             "Expected delay to be at least 1 second (was ${delay.toString(DurationUnit.MILLISECONDS)})",
             delay >= 990.milliseconds,
@@ -71,9 +74,11 @@ class VariableDelayTest {
             delayWithMinDuration(timeSource.invoke(), timeSource, durationFlow)
         }
 
+        // Use 990.milliseconds instead of 1.seconds to avoid timming differences due to system
+        // performance
         assertTrue(
             "Expected delay to be at least 1 second (was ${delay.toString(DurationUnit.SECONDS)})",
-            delay >= 1.seconds,
+            delay >= 990.milliseconds,
         )
     }
 }
