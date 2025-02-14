@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <plurals name="notification_wireless_scanning_content_reports_created">
         <item quantity="one">%d отчёт создан</item>
         <item quantity="few">%d отчёта создано</item>
@@ -156,8 +156,10 @@
     <string name="mls_warning_text">Сервисы Геолокации Mozilla были закрыты и больше не принимают данные. Как альтернативу для СГM, вы можете отправлять данные в beaconDB, где предоставляется сервис совместимый с СГM\n\nПросьба заметить, что beaconDB всё ещё в разработке и это может повлиять на то, как ваши данные обрабатываются. Вы можете прочитать <annotation link="privacy_policy">политику конфиденциальности</annotation> для получения дальнейшей информации\n\nВы хотите установить beaconDB как точку назначения? Это может быть настроено позже в настройках</string>
     <string name="reports_last_uploaded_never">никогда</string>
     <string name="reports_empty">Нет отчётов пока что</string>
-    <string name="coverage_layer">Слой покрытия на карте</string>
-    <string name="coverage_layer_tile_json_url">Ссылка TileJSON для карты покрытия (необязательно)</string>
+    <string name="coverage_layer">Карта слоя покрытия</string>
+    <string name="coverage_layer_tile_json_url">Ссылка TileJSON для слоя карты покрытия</string>
     <string name="coverage_layer_no_configured">Не была сконфигурирована ссылка TileJSON для карты покрытия</string>
     <string name="invalid_url">Нет действительной ссылки</string>
+    <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Ок</string>
+    <string name="troubleshooting_not_ok" tools:ignore="Typos">Не ок</string>
 </resources>
