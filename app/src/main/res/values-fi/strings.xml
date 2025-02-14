@@ -95,7 +95,9 @@
     <string name="export_started">Viedään datat ajanjaksolta %1$s - %2$s</string>
 
     <string name="export_csv">Vie CSV:nä</string>
+
     <string name="export_raw_database">Vie raaka tietokanta</string>
+    <string name="export_raw_database_compress">Pakkaa tietokantatiedosto</string>
 
     <string name="import_data">Tuo dataa</string>
 
