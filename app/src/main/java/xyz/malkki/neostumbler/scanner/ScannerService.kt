@@ -88,7 +88,7 @@ class ScannerService : Service() {
         private const val EXTRA_AUTOSTART = "autostart"
 
         /**
-         * Try to get new locations every 3 seconds
+         * Try to get new locations every 3 seconds by default
          *
          * If the interval is too high, data quality will be worse because of the distance traveled
          * between the scan and the location fix. Also there can be some gaps on the map
@@ -99,7 +99,7 @@ class ScannerService : Service() {
          *
          * 3 seconds seems to give a reasonably good balance between these
          */
-        private val LOCATION_INTERVAL = 3.seconds
+        const val DEFAULT_LOCATION_INTERVAL = 3
 
         // By default, try to scan Wi-Fis every 50 meters
         const val DEFAULT_WIFI_SCAN_DISTANCE: Int = 50
@@ -263,6 +263,12 @@ class ScannerService : Service() {
                     DEFAULT_CELL_SCAN_DISTANCE,
                 )
 
+            val locationInterval =
+                settingsStore.getOrDefault(
+                    intPreferencesKey(PreferenceKeys.LOCATION_INTERVAL),
+                    DEFAULT_LOCATION_INTERVAL,
+                )
+
             Timber.d(
                 "Scan distances: ${wifiScanDistance}m - Wi-Fis, ${cellScanDistance}m - cell towers"
             )
@@ -271,7 +277,7 @@ class ScannerService : Service() {
 
             val locationFlow =
                 locationSource
-                    .getLocations(LOCATION_INTERVAL)
+                    .getLocations(locationInterval.seconds)
                     .onStart { gpsActive.emit(true) }
                     .onCompletion { gpsActive.emit(false) }
                     .shareIn(scope = this, started = SharingStarted.WhileSubscribed())
@@ -322,7 +328,7 @@ class ScannerService : Service() {
                         wifiAccessPointSource.getWifiAccessPointFlow(scanFrequencyFlow)
                     },
                     airPressureSource = {
-                        airPressureSource.getAirPressureFlow(LOCATION_INTERVAL / 2)
+                        airPressureSource.getAirPressureFlow(locationInterval.seconds / 2)
                     },
                     movementDetector = movementDetector,
                 )
