@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="prefer_fused_location_title">Preferir fornecedor de localização unido</string>
-    <string name="autoscan_when_moving">Scan automático ao se mover</string>
-    <string name="autoscan_failed_to_enable">Falha ao ativar o scan automático</string>
-    <string name="permission_rationale_background_location_autoscan">Para começar o scan automaticamente, é necessário a permissão de localização em segundo plano</string>
-    <string name="permission_rationale_activity_recognition">Para começar o scan automaticamente, é necessário acesso à atividade atual</string>
+    <string name="autoscan_when_moving">Busca automática ao se mover</string>
+    <string name="autoscan_failed_to_enable">Falha ao ativar a busca automática</string>
+    <string name="permission_rationale_background_location_autoscan">Para começar a busca automaticamente, é necessário a permissão de localização em segundo plano</string>
+    <string name="permission_rationale_activity_recognition">Para começar a busca automaticamente, é necessário acesso à atividade atual</string>
     <string name="prefer_fused_location_description">Esse fornecedor de localização pode combinar dados de outras fontes para determinar a localização</string>
 </resources>
