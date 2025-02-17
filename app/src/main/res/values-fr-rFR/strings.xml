@@ -171,4 +171,7 @@
     <string name="coverage_layer_no_configured">Aucune couche de couverture cartographique configurée</string>
     <string name="invalid_url">URL invalide</string>
     <string name="coverage_layer">Couche de couverture cartographique</string>
+    <string name="toast_reports_upload_failed_no_endpoint">Échec de l\'envoi des rapport, car aucun service n\'a été configuré</string>
+    <string name="no_endpoint_configured">Aucun service configuré</string>
+    <string name="coverage_layer_tile_json_url">URL TileJSON pour la couche de couverture cartographique</string>
 </resources>
