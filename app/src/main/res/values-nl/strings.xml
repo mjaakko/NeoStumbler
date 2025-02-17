@@ -148,10 +148,10 @@
     <string name="no_endpoint_configured">Geen eind­punt geconfigureerd</string>
     <string name="reports_last_uploaded_never">nooit</string>
     <string name="reports_empty">Nog geen rapporten</string>
-    <string name="coverage_layer_tile_json_url">TileJSON-URL voor dekkings­laag op kaart</string>
-    <string name="coverage_layer_no_configured">Geen geconfigureerde TileJSON-URL voor dekkings­kaart</string>
-    <string name="coverage_layer">Dekkings­laag op kaart</string>
-    <string name="invalid_url">Geen geldige URL</string>
+    <string name="coverage_layer_tile_json_url">TileJSON-URL voor achtergrondkaart</string>
+    <string name="coverage_layer_no_configured">Geen achtergrondkaartlaag ingesteld</string>
+    <string name="coverage_layer">Achtergrondkaart</string>
+    <string name="invalid_url">Ongeldige URL</string>
     <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Oké</string>
-    <string name="troubleshooting_not_ok" tools:ignore="Typos">Niet oké</string>
+    <string name="troubleshooting_not_ok" tools:ignore="Typos">Probleem</string>
 </resources>
