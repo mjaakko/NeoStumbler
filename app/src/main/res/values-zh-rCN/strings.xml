@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="permissions_not_granted">请求但未获得的权限</string>
     <string name="wifi_icon_description">Wi-Fi 图标</string>
     <string name="cell_tower_icon_description">信号塔图标</string>
@@ -74,7 +74,7 @@
     <string name="notification_style_basic_description">显示创建的报告数量</string>
     <string name="notification_style_detailed_description">显示报告和 GNSS 卫星数量</string>
     <string name="show_my_location">显示我的位置</string>
-    <string name="permission_rationale_fine_location">获取当前位置需要精确位置权限</string>
+    <string name="permission_rationale_fine_location">创建数据有用的报告需要精确位置权限</string>
     <string name="permission_rationale_read_phone_state">扫描信号塔需要获取电话状态权限</string>
     <string name="permission_rationale_bluetooth">扫描蓝牙信标需要蓝牙权限</string>
     <string name="permission_rationale_post_notifications">显示状态通知需要通知权限</string>
@@ -143,4 +143,8 @@
     <string name="reports_last_uploaded_never">从未</string>
     <string name="reports_empty">尚无报告</string>
     <string name="no_endpoint_configured">未配置端点</string>
+    <string name="invalid_url">无效URL</string>
+    <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">OK</string>
+    <string name="troubleshooting_not_ok" tools:ignore="Typos">不OK</string>
+    <string name="mls_warning_text">Mozilla Location Service已经关闭，不再接受数据提交。作为替代，你可将数据上传至beaconDB，其服务和MLS兼容\n\n请记得beaconDB仍在开发中，并且这一切换会影响处理你数据的方式。更多信息请参阅其<annotation link="privacy_policy">隐私政策</annotation>\n\n你是否要设置beaconDB为上传端点？这也可以在应用中设置</string>
 </resources>
