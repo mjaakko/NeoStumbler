@@ -60,7 +60,7 @@ import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.getOrDefault
 import xyz.malkki.neostumbler.extensions.getQuantityString
 import xyz.malkki.neostumbler.extensions.isWifiScanThrottled
-import xyz.malkki.neostumbler.location.LocationSourceProvider
+import xyz.malkki.neostumbler.location.LocationSource
 import xyz.malkki.neostumbler.scanner.movement.ConstantMovementDetector
 import xyz.malkki.neostumbler.scanner.movement.LocationBasedMovementDetector
 import xyz.malkki.neostumbler.scanner.movement.MovementDetector
@@ -144,7 +144,7 @@ class ScannerService : Service() {
 
     private val scanReportCreator: ScanReportCreator by inject()
 
-    private val locationSourceProvider: LocationSourceProvider by inject()
+    private val locationSource: LocationSource by inject()
 
     private lateinit var wakeLock: WakeLock
 
@@ -267,8 +267,6 @@ class ScannerService : Service() {
                 "Scan distances: ${wifiScanDistance}m - Wi-Fis, ${cellScanDistance}m - cell towers"
             )
 
-            val locationSource = locationSourceProvider.getLocationSource(this@ScannerService)
-
             val locationFlow =
                 locationSource
                     .getLocations(LOCATION_INTERVAL, usePassiveProvider = false)
@@ -352,9 +350,7 @@ class ScannerService : Service() {
                 SignificantMotionMovementDetector(
                     sensorManager = sensorManager,
                     locationSource = {
-                        locationSourceProvider
-                            .getLocationSource(this)
-                            .getLocations(5.seconds, usePassiveProvider = true)
+                        locationSource.getLocations(5.seconds, usePassiveProvider = true)
                     },
                 )
         }

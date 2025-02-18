@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.ui.composables.ManageStorage
+import xyz.malkki.neostumbler.ui.composables.managestorage.ManageStorage
 
 @Composable
 fun ManageStorageSettingsItem() {

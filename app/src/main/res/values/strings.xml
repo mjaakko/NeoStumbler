@@ -14,6 +14,8 @@
     <string name="delete">Delete</string>
     <string name="no_data">No data</string>
 
+    <string name="waiting_for_location">Waiting for location</string>
+
     <string name="failed_to_open_selected_file">
         Failed to open the selected file
     </string>
@@ -214,6 +216,7 @@
 
     <string name="delete_data">Delete data</string>
     <string name="delete_reports_by_date">Delete reports by date</string>
+    <string name="delete_reports_from_area">Delete reports from area</string>
     <string name="delete_all_reports">Delete all reports</string>
     <string name="delete_all_reports_confirmation">Are you sure you want to delete all reports?</string>
     <plurals name="toast_deleted_reports">

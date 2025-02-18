@@ -18,6 +18,8 @@
 
     <string name="no_data">Ei tietoja</string>
 
+    <string name="waiting_for_location">Odotetaan sijaintia</string>
+
     <string name="failed_to_open_selected_file">
         Valitun tiedoston avaaminen ei onnistunut
     </string>
@@ -252,6 +254,7 @@
     <string name="delete_data">Poista dataa</string>
 
     <string name="delete_reports_by_date">Poista raportit ajanjaksolta</string>
+    <string name="delete_reports_from_area">Poista raportit alueelta</string>
     <string name="delete_all_reports">Poista kaikki raportit</string>
 
     <string name="delete_all_reports_confirmation">Oletko varma, että haluat poistaa kaikki raportit?</string>

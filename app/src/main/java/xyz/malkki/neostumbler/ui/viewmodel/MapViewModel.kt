@@ -34,17 +34,18 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import okhttp3.Call
 import org.geohex.geohex4j.GeoHex
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.db.ReportDatabaseManager
+import xyz.malkki.neostumbler.db.dao.getReportsInsideBoundingBox
 import xyz.malkki.neostumbler.domain.LatLng
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.get
 import xyz.malkki.neostumbler.extensions.parallelMap
-import xyz.malkki.neostumbler.location.LocationSourceProvider
+import xyz.malkki.neostumbler.location.LocationSource
+import xyz.malkki.neostumbler.ui.map.MapTileSource
 import xyz.malkki.neostumbler.utils.getTileJsonLayerIds
 
 // The "size" of one report relative to the geohex size. The idea is that hexes with lower
@@ -61,10 +62,8 @@ class MapViewModel(
     private val settingsStore: DataStore<Preferences>,
     private val httpClientProvider: Deferred<Call.Factory>,
     private val reportDatabaseManager: ReportDatabaseManager,
-    locationSourceProvider: LocationSourceProvider,
+    private val locationSource: LocationSource,
 ) : AndroidViewModel(application) {
-    private val locationSource = locationSourceProvider.getLocationSource(application)
-
     private val _httpClient = MutableStateFlow<Call.Factory?>(null)
     val httpClient: StateFlow<Call.Factory?>
         get() = _httpClient.asStateFlow()
@@ -72,8 +71,7 @@ class MapViewModel(
     val mapTileSource: Flow<MapTileSource> =
         settingsStore.data
             .map { prefs ->
-                prefs.get<MapTileSource>(PreferenceKeys.MAP_TILE_SOURCE)
-                    ?: MapTileSource.OPENSTREETMAP
+                prefs.get<MapTileSource>(PreferenceKeys.MAP_TILE_SOURCE) ?: MapTileSource.DEFAULT
             }
             .distinctUntilChanged()
 
@@ -87,20 +85,6 @@ class MapViewModel(
             .mapLatest { (coverageTileJsonUrl, httpClient) ->
                 getTileJsonLayerIds(coverageTileJsonUrl, httpClient)
             }
-
-    val mapStyle: Flow<MapStyle> =
-        mapTileSource
-            .map { mapTileSource ->
-                if (mapTileSource.sourceAsset != null) {
-                    MapStyle(
-                        styleUrl = null,
-                        styleJson = readStyleFromAssets(mapTileSource.sourceAsset),
-                    )
-                } else {
-                    MapStyle(styleUrl = mapTileSource.sourceUrl!!, styleJson = null)
-                }
-            }
-            .shareIn(viewModelScope, started = SharingStarted.Eagerly, replay = 1)
 
     private val showMyLocation =
         MutableStateFlow(
@@ -131,34 +115,14 @@ class MapViewModel(
                 val (minLat, minLon) = bounds.first
                 val (maxLat, maxLon) = bounds.second
 
-                val dao = reportDatabaseManager.reportDb.value.reportDao()
-
-                if (minLon > maxLon) {
-                    // Handle crossing the 180th meridian
-                    val left =
-                        dao.getAllReportsWithLocationInsideBoundingBox(
-                            minLatitude = minLat,
-                            minLongitude = minLon,
-                            maxLatitude = maxLat,
-                            maxLongitude = 180.0,
-                        )
-                    val right =
-                        dao.getAllReportsWithLocationInsideBoundingBox(
-                            minLatitude = -180.0,
-                            minLongitude = minLon,
-                            maxLatitude = maxLat,
-                            maxLongitude = maxLon,
-                        )
-
-                    left.combine(right) { listA, listB -> listA + listB }
-                } else {
-                    dao.getAllReportsWithLocationInsideBoundingBox(
+                reportDatabaseManager.reportDb.value
+                    .reportDao()
+                    .getReportsInsideBoundingBox(
                         minLatitude = minLat,
                         minLongitude = minLon,
                         maxLatitude = maxLat,
                         maxLongitude = maxLon,
                     )
-                }
             }
             .distinctUntilChanged()
             .combine(
@@ -251,13 +215,6 @@ class MapViewModel(
         }
     }
 
-    private suspend fun readStyleFromAssets(assetName: String): String =
-        withContext(Dispatchers.IO) {
-            getApplication<StumblerApplication>().assets.open(assetName).use {
-                it.readBytes().decodeToString()
-            }
-        }
-
     @Suppress("MagicNumber")
     private fun mapZoomToGeohexResolution(mapZoom: Double): Int {
         // Convert map zoom level to a suitable geohex resolution
@@ -268,16 +225,4 @@ class MapViewModel(
 
     /** @property heatPct From 0.0 to 1.0 */
     data class HeatMapTile(val outline: List<LatLng>, val heatPct: Float)
-
-    enum class MapTileSource(val title: String, val sourceUrl: String?, val sourceAsset: String?) {
-        OPENSTREETMAP("OpenStreetMap", null, "osm_raster_style.json"),
-        OPENFREEMAP("OpenFreeMap", "https://tiles.openfreemap.org/styles/liberty", null),
-        VERSATILES(
-            "VersaTiles",
-            "https://tiles.versatiles.org/assets/styles/colorful/style.json",
-            null,
-        ),
-    }
-
-    data class MapStyle(val styleUrl: String?, val styleJson: String?)
 }

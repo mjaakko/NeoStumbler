@@ -15,7 +15,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import xyz.malkki.neostumbler.ui.composables.ManageStorage
+import xyz.malkki.neostumbler.ui.composables.managestorage.ManageStorage
 import xyz.malkki.neostumbler.ui.theme.NeoStumblerTheme
 
 // TODO: investigate if it's possible to use a single activity, e.g. with activity-alias in the
