@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="stop">Stop</string>
     <string name="yes">Igen</string>
     <string name="delete_report_confirmation">Biztos törölni szeretnéd az eredményt?</string>
@@ -21,9 +21,10 @@
     <string name="reports_tab_title">Eredmények</string>
     <string name="reports_not_uploaded">Feltöltetlen eredmények: %d</string>
     <string name="reports_last_uploaded">Utoljára feltöltött eredmények: %s</string>
-    <string name="start_scanning">Szkennelés indítása</string>
+    <string name="start_scanning">Indítás</string>
     <string name="delete_report">Eredmények törlése</string>
     <plurals name="toast_reports_uploaded">
+        <item quantity="one">Feltöltve %d eredmény</item>
         <item quantity="other">Feltöltve %d eredmény</item>
     </plurals>
     <string name="toast_reports_upload_failed">Nem sikerült feltölteni az eredményeket</string>
@@ -33,6 +34,7 @@
     <string name="notification_exporting_data">Adatok exportálása…</string>
     <string name="export_data">Adat exportálása</string>
     <plurals name="notification_wireless_scanning_content_reports_created">
+        <item quantity="one">Készült %d eredmény</item>
         <item quantity="other">Készült %d eredmény</item>
     </plurals>
     <string name="notification_wireless_scanning_content_satellite_stats">Használat műholdak száma: %1$d/%2$d</string>
@@ -44,6 +46,7 @@
     <string name="import_raw_database">Nyers adatbázis importálása</string>
     <string name="import_database_not_valid">A kiválasztott fájl nem tartalmaz érvényes adatbázist</string>
     <plurals name="import_database_successful">
+        <item quantity="one">Az importált adatbázis %d rekordot tartalmaz</item>
         <item quantity="other">Az importált adatbázis %d rekordot tartalmaz</item>
     </plurals>
     <string name="reupload_data">Újratöltött adat</string>
@@ -101,7 +104,7 @@
     <string name="reports_total">Összes eredmény: %d</string>
     <string name="ok">OK</string>
     <string name="no">Nem</string>
-    <string name="stop_scanning">Szkennelés leállítása</string>
+    <string name="stop_scanning">Leállítás</string>
     <string name="export_started">Adatexportálás forrása: %1$s célja: %2$s</string>
     <string name="import_raw_database_description">A nyers adatbázis importálása felül fogja írni a jelenlegit</string>
     <string name="path">Útvonal</string>
@@ -124,6 +127,7 @@
     <string name="db_size">Adatbázis mérete: %s</string>
     <string name="delete_reports_by_date">Eredmények törlése dátum szerint</string>
     <plurals name="toast_deleted_reports">
+        <item quantity="one">Törölve %d eredmény</item>
         <item quantity="other">Törölve %d eredmény</item>
     </plurals>
     <string name="toast_deleted_all_reports">Minden eredmény törölve</string>
@@ -134,4 +138,18 @@
     <string name="wifi_scan_throttling">Wi-Fi szkennelés korlátozása</string>
     <string name="notification_wireless_scanning_title">Vezetéknélküli szkennelés aktív</string>
     <string name="wifi_scan_throttling_explanation">A funkció engedélyezéséhez ki kell kapcsolni a Wi-Fi szkennelés korlátozását a készülék beállításaiban. Ez általában a fejlesztői beállításoknál tehető meg</string>
+    <string name="toast_reports_upload_failed_no_endpoint">Nem sikerült feltölteni az eredményeket, mert nincs végpont beállítva</string>
+    <string name="cell_tower_scan_frequency">Bázisállomás szkennelési gyakoriság</string>
+    <string name="no_endpoint_configured">Nincs beállítva végpont</string>
+    <string name="every_x_meters">%d méterenként</string>
+    <string name="map_tile_source">Térképrétegek</string>
+    <string name="coverage_layer">Térkép lefedettségi réteg</string>
+    <string name="coverage_layer_no_configured">Nincs beállítva lefedettségi térkép réteg</string>
+    <string name="invalid_url">Érvénytelen URL</string>
+    <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Oké</string>
+    <string name="troubleshooting_not_ok" tools:ignore="Typos">Nincs rendben</string>
+    <string name="coverage_layer_tile_json_url">TileJSON URL a lefedettségi térképréteghez</string>
+    <string name="wifi_scan_frequency">Wi-Fi szkennelés gyakorisága</string>
+    <string name="reports_last_uploaded_never">soha</string>
+    <string name="reports_empty">Nincs még eredmény</string>
 </resources>
