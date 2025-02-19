@@ -197,6 +197,7 @@
     </string>
 
     <string name="app_language">Kieli</string>
+    <string name="system_default_language">Käyttöjärjestelmän oletuskieli</string>
 
     <string name="map_tile_source">Karttatiilien lähde</string>
     <string name="show_my_location">Näytä oma sijainti</string>

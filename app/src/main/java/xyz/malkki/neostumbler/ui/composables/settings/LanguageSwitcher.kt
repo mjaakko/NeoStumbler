@@ -1,16 +1,16 @@
 package xyz.malkki.neostumbler.ui.composables.settings
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.core.app.LocaleManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.core.os.LocaleListCompat
 import java.util.Locale
 import xyz.malkki.neostumbler.BuildConfig
 import xyz.malkki.neostumbler.R
+import xyz.malkki.neostumbler.extensions.defaultLocale
 import xyz.malkki.neostumbler.scanner.quicksettings.ScannerTileService
 
 // Place English first, otherwise sort by language code
@@ -39,43 +39,40 @@ private val SUPPORTED_LOCALES_BCP47 =
         .sortedWith(ENGLISH_FIRST_COMPARATOR)
         .toTypedArray()
 
-private fun getCurrentLocale(context: Context): Locale {
-    val locale =
-        if (AppCompatDelegate.getApplicationLocales().isEmpty) {
-            // Per-app language was not set, use system language
-            LocaleManagerCompat.getSystemLocales(context).getFirstMatch(SUPPORTED_LOCALES_BCP47)!!
-        } else {
-            AppCompatDelegate.getApplicationLocales()[0]!!
-        }
-
-    return if ("${locale.language}-${locale.country}" in SUPPORTED_LOCALES_BCP47) {
-        locale
-    } else {
-        // If the user chooses an unsupported country-variant in the system settings, just use the
-        // language tag
-        Locale(locale.language)
+private fun getCurrentLocale(): Locale? {
+    if (AppCompatDelegate.getApplicationLocales().isEmpty) {
+        // Per-app language was not set, use system default language
+        return null
     }
+
+    return AppCompatDelegate.getApplicationLocales()[0]!!
 }
 
 @Composable
 fun LanguageSwitcher() {
     val context = LocalContext.current
 
-    val localeList = remember {
-        LocaleListCompat.forLanguageTags(SUPPORTED_LOCALES_BCP47.joinToString(","))
+    val locales = remember {
+        listOf(null) + SUPPORTED_LOCALES_BCP47.map { Locale.forLanguageTag(it) }
     }
-    val locales = remember(localeList) { (0 until localeList.size()).map { localeList.get(it)!! } }
 
-    val selectedLanguage = getCurrentLocale(context)
+    val selectedLanguage = getCurrentLocale()
 
     MultiChoiceSettings(
         title = stringResource(id = R.string.app_language),
         options = locales,
         selectedOption = selectedLanguage,
-        titleProvider = { it.getDisplayName(selectedLanguage) },
-        descriptionProvider = { it.getDisplayName(it) },
+        titleProvider = {
+            it?.getDisplayName(selectedLanguage ?: context.defaultLocale)
+                ?: ContextCompat.getString(context, R.string.system_default_language)
+        },
+        descriptionProvider = { it?.getDisplayName(it) },
         onValueSelected = { newLocale ->
-            AppCompatDelegate.setApplicationLocales(LocaleListCompat.create(newLocale))
+            if (newLocale != null) {
+                AppCompatDelegate.setApplicationLocales(LocaleListCompat.create(newLocale))
+            } else {
+                AppCompatDelegate.setApplicationLocales(LocaleListCompat.getEmptyLocaleList())
+            }
 
             // Update QS tile so that it will use the selected language
             ScannerTileService.updateTile(context)
