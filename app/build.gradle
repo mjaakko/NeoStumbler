@@ -61,6 +61,7 @@ android {
                 'pt',
                 'pt-rBR',
                 'ru',
+                'ta',
                 'uk',
                 'zh-rCN',
                 'zh-rTW'
