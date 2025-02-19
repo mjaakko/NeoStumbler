@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="ok">OK</string>
     <string name="no_thanks">Ne děkuji</string>
     <string name="yes">Ano</string>
@@ -152,4 +152,10 @@
     <string name="reports_last_uploaded_never">Nikdy</string>
     <string name="reports_empty">Žádné reporty</string>
     <string name="mls_warning_text">Polohová služba Mozilla (MLS) byla ukončena a nepřijímá nová data. Jako alternativu k MLS můžete odesílat data do beaconDB, která poskytuje službu kompatibilní s MLS\n\nVezměte na vědomí, že beaconDB je stále ve vývoji což ovlivňuje jak může s být s vašemi daty nakládáno. Informace můžete najít v <annotation link="privacy_policy"> zásadách ochrany soukromí</annotation>\n\nChcete nastavil beaconDB jako server? Server lze později změnit v nastavení</string>
+    <string name="coverage_layer_tile_json_url">TileJSON URL pro vrstvu pokrytí mapy</string>
+    <string name="coverage_layer">Vrstva pokrytí mapy</string>
+    <string name="coverage_layer_no_configured">Žádná vrstva pokrytí mapy</string>
+    <string name="invalid_url">Neplatná URL</string>
+    <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Ok</string>
+    <string name="troubleshooting_not_ok" tools:ignore="Typos">Problém</string>
 </resources>
