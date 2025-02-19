@@ -150,7 +150,7 @@
     <string name="toast_reports_upload_failed_no_endpoint">Falha ao enviar os relatórios porque nenhum ponto de recolha foi configurado</string>
     <string name="no_endpoint_configured">Nenhum ponto de recolha configurado</string>
     <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Ok</string>
-    <string name="mls_warning_text">O Mozilla Location Service (MLS) encerrou e não recebe novas submissões de relatórios. Como alternativa ao MLS, pode enviar enviar relatórios para o beaconDB.net, um serviço compatível com o MLS\n\nNote que o beaconDB ainda está a ser desenvolvido e isto afeta a forma como a sua informação é usada. Pode ler a <annotation link="privacy_policy">política de privacidade</annotation> para mais informação\n\nQuer usar o beaconDB como ponto de recolha? Pode alterar isto mais tarde nas opções da app</string>
+    <string name="mls_warning_text">O Mozilla Location Service (MLS) encerrou e não recebe novas submissões de relatórios. Como alternativa ao MLS, pode enviar relatórios para o beaconDB.net, um serviço compatível com o MLS\n\nNote que o beaconDB ainda está a ser desenvolvido e isto afeta a forma como a sua informação é usada. Pode ler a <annotation link="privacy_policy">política de privacidade</annotation> para mais informação\n\nQuer usar o beaconDB como ponto de recolha? Pode alterar isto mais tarde nas opções da app</string>
     <string name="invalid_url">URL inválido</string>
     <string name="troubleshooting_not_ok" tools:ignore="Typos">Não está bem</string>
     <string name="reports_last_uploaded_never">nunca</string>
