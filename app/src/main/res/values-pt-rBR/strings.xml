@@ -55,7 +55,7 @@
     <string name="cells">Redes móveis</string>
     <string name="beacons">Beacons Bluetooth</string>
     <string name="add_quick_settings_tile">Adicionar bloco às configurações rápidas para iniciar a busca facilmente?</string>
-    <string name="endpoint">Serviço</string>
+    <string name="endpoint">Ponto de recolha</string>
     <string name="path">Caminho</string>
     <string name="api_key">Chave de API (opcional)</string>
     <string name="settings_ignore_wifi_scan_throttling_title">Ignorar limitações de busca por Wi-Fi</string>
@@ -92,10 +92,10 @@
     <string name="notification_style_basic_description">Mostra o número de relatórios criados</string>
     <string name="notification_style_detailed_title">Detalhado</string>
     <string name="notification_style_detailed_description">Mostra o número de relatórios criados e o número de satélites GNSS</string>
-    <string name="unencrypted_endpoint_warning">Serviço não-criptografado</string>
+    <string name="unencrypted_endpoint_warning">Ponto de recolha não-criptografado</string>
     <string name="suggested_service_website">Site</string>
     <string name="suggested_service_hosted_by">Hospedado por:</string>
-    <string name="suggested_services_title">Serviços sugeridos</string>
+    <string name="suggested_services_title">Pontos de recolha sugeridos</string>
     <string name="movement_detection_significant_motion_description">Pausa a busca e o GPS quando nenhum movimento significativo é detectado. Economiza bateria, mas pode não funcionar bem em alguns dispositivos</string>
     <string name="app_language">Idioma</string>
     <string name="use_dynamic_color_ui">Usar cores dinâmicas na interface</string>
@@ -151,9 +151,9 @@
     <string name="map_tile_source">Fonte das ladrilhas do mapa</string>
     <string name="reports_last_uploaded_never">nunca</string>
     <string name="reports_empty">Nenhum relatório ainda</string>
-    <string name="no_endpoint_configured">Nenhum serviço configurado</string>
-    <string name="toast_reports_upload_failed_no_endpoint">Falha ao enviar relatórios, pois nenhum serviço foi configurado</string>
-    <string name="mls_warning_text">O Mozilla Location Services foi encerrado e não aceita mais envios. Como uma alternativa, você pode enviar dados ao beaconDB, que fornece um serviço compatível com o MLS\n\nNote que o beaconDB ainda está em desenvolvimento e isso afeta como seus dados são tratados. Você pode ler a <annotation link="privacy_policy">política de privacidade</annotation> para mais informações\n\nVocê gostaria de configurar o beaconDB como o serviço? Isso pode ser alterado mais tarde nas configurações</string>
+    <string name="no_endpoint_configured">Nenhum ponto de recolha configurado</string>
+    <string name="toast_reports_upload_failed_no_endpoint">Falha ao enviar relatórios, pois nenhum ponto de recolha foi configurado</string>
+    <string name="mls_warning_text">O Mozilla Location Services foi encerrado e não aceita mais envios. Como uma alternativa, você pode enviar dados ao beaconDB, que fornece um serviço compatível com o MLS\n\nNote que o beaconDB ainda está em desenvolvimento e isso afeta como seus dados são tratados. Você pode ler a <annotation link="privacy_policy">política de privacidade</annotation> para mais informações\n\nVocê gostaria de configurar o beaconDB como o ponto de recolha? Isso pode ser alterado mais tarde nas configurações</string>
     <string name="coverage_layer">Camada de cobertura do mapa</string>
     <string name="coverage_layer_tile_json_url">URL TileJSON para a camada de cobertura do mapa (opcional)</string>
     <string name="invalid_url">Nenhuma URL válida</string>
