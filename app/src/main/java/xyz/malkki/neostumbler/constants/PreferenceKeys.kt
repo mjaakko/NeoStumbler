@@ -7,6 +7,7 @@ object PreferenceKeys {
 
     const val IGNORE_SCAN_THROTTLING = "ignore_scan_throttling"
 
+    const val LOCATION_INTERVAL = "location_interval"
     const val WIFI_SCAN_DISTANCE = "wifi_scan_distance"
     const val CELL_SCAN_DISTANCE = "cell_scan_distance"
 

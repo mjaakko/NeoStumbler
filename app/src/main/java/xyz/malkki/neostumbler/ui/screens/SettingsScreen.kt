@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.extensions.getQuantityString
 import xyz.malkki.neostumbler.scanner.ScannerService
 import xyz.malkki.neostumbler.ui.composables.AboutNeoStumbler
 import xyz.malkki.neostumbler.ui.composables.ReportReuploadButton
@@ -52,6 +53,14 @@ fun SettingsScreen() {
             MovementDetectorSettings()
             FusedLocationToggle()
             IgnoreScanThrottlingToggle()
+            SliderSetting(
+                title = stringResource(R.string.location_interval),
+                preferenceKey = PreferenceKeys.LOCATION_INTERVAL,
+                range = 1..10,
+                step = 1,
+                valueFormatter = { context.getQuantityString(R.plurals.every_x_seconds, it, it) },
+                default = ScannerService.DEFAULT_LOCATION_INTERVAL,
+            )
             SliderSetting(
                 title = stringResource(R.string.wifi_scan_frequency),
                 preferenceKey = PreferenceKeys.WIFI_SCAN_DISTANCE,

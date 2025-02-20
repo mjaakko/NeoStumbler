@@ -130,6 +130,11 @@
     <string name="settings_group_scanning">Scanning</string>
     <string name="settings_group_other">Other</string>
 
+    <string name="location_interval">Location lookup interval</string>
+    <plurals name="every_x_seconds">
+        <item quantity="one">Every %d second</item>
+        <item quantity="other">Every %d seconds</item>
+    </plurals>
     <string name="wifi_scan_frequency">Wi-Fi scan frequency</string>
     <string name="cell_tower_scan_frequency">Cell tower scan frequency</string>
 
