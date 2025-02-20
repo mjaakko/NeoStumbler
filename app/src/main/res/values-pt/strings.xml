@@ -60,7 +60,7 @@
     <string name="ignore_battery_optimizations_description">Para melhores resultados, a otimização da bateria deve ser desativada. O número de scans de redes Wi-Fi e acesso à localização são significativamente reduzidos se a otimização da bateria estiver ativa e o ecrã estiver desligado</string>
     <string name="battery_optimizations_not_disabled_warning">As otimizações de bateria não foram desativadas</string>
     <string name="send_reports_automatically">Enviar relatórios automaticamente</string>
-    <string name="wifis">Wi-Fis</string>
+    <string name="wifis">Wi-Fi</string>
     <string name="notification_exporting_data">Exportando dados…</string>
     <string name="reupload_data">Re-enviar dados</string>
     <string name="add_quick_settings_tile">Adicionar botão às definições rápidas para iniciar scans mais rapidamente?</string>
@@ -71,7 +71,7 @@
     <string name="warning_icon_description">Ícone de aviso</string>
     <string name="unencrypted_endpoint_warning">Ponto de recolha não encriptado</string>
     <string name="movement_detection">Deteção de movimento</string>
-    <string name="movement_detection_none_title">Não detetado</string>
+    <string name="movement_detection_none_title">Sem deteção</string>
     <string name="movement_detection_location_title">Baseado na localização</string>
     <string name="movement_detection_location_description">Pausa o scan quando a sua localização não muda. Mantém o GPS ativo</string>
     <string name="movement_detection_significant_motion_title">Sensor de movimento</string>
@@ -124,7 +124,7 @@
     <string name="about_app">Sobre o NeoStumbler</string>
     <string name="app_version">Versão: %s</string>
     <string name="app_variant">Variante: %s</string>
-    <string name="bug_report_button">Relatar um problema</string>
+    <string name="bug_report_button">Reportar problema</string>
     <string name="update_translations_button">Atualizar traduções</string>
     <string name="author_text">Criado com ❤️ por %1$s e %2$s</string>
     <string name="contributors">contribuidores</string>
@@ -155,7 +155,8 @@
     <string name="troubleshooting_not_ok" tools:ignore="Typos">Não está bem</string>
     <string name="reports_last_uploaded_never">nunca</string>
     <string name="reports_empty">Sem relatórios até agora</string>
-    <string name="coverage_layer">Camada para o mapa de cobertura</string>
-    <string name="coverage_layer_tile_json_url">TileJSON URL para a camada do mapa de cobertura</string>
-    <string name="coverage_layer_no_configured">Nenhuma camada do mapa de cobertura foi configurada</string>
+    <string name="coverage_layer">Mapa de cobertura</string>
+    <string name="coverage_layer_tile_json_url">TileJSON URL do mapa de cobertura</string>
+    <string name="coverage_layer_no_configured">Nenhum mapa de cobertura definido</string>
+    <string name="system_default_language">Língua do sistema</string>
 </resources>
