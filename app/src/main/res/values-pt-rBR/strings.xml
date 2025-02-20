@@ -65,7 +65,7 @@
     <string name="permission_rationale_fine_location">Criar relatórios com dados de localização úteis requer a permissão de localização precisa</string>
     <string name="permission_rationale_read_phone_state">Acesso ao status do telefone é necessário para a busca por redes móveis</string>
     <string name="permission_rationale_bluetooth">Para fazer a busca por beacons Bluetooth, é necessária a permissão de Bluetooth</string>
-    <string name="permission_rationale_post_notifications">Para mostrar a notificação de status, é necessária a permissão de notificações</string>
+    <string name="permission_rationale_post_notifications">Para mostrar a notificação de estado, é necessária a permissão de notificações</string>
     <string name="permission_rationale_background_location_quick_settings">Para começar a busca pelas configurações rápidas, é necessário acesso à localização em segundo plano</string>
     <string name="permission_rationale_location_map">
         Para mostrar sua localização no mapa, é necessário a permissão de localização
@@ -86,11 +86,11 @@
     <string name="movement_detection_location_description">Pausa a busca quando a localização não muda. Mantém o GPS ativo</string>
     <string name="movement_detection_significant_motion_title">Sensor de movimento</string>
     <string name="notification_style">Estilo da notificação</string>
-    <string name="notification_style_minimal_title">Mínimo</string>
+    <string name="notification_style_minimal_title">Mínima</string>
     <string name="notification_style_minimal_description">Mostra a notificação com nenhum detalhe</string>
-    <string name="notification_style_basic_title">Básico</string>
+    <string name="notification_style_basic_title">Básica</string>
     <string name="notification_style_basic_description">Mostra o número de relatórios criados</string>
-    <string name="notification_style_detailed_title">Detalhado</string>
+    <string name="notification_style_detailed_title">Detalhada</string>
     <string name="notification_style_detailed_description">Mostra o número de relatórios criados e o número de satélites GNSS</string>
     <string name="unencrypted_endpoint_warning">Conexão insegura sem criptografia</string>
     <string name="suggested_service_website">Site</string>
@@ -160,4 +160,5 @@
     <string name="coverage_layer_no_configured">Nenhuma URL TileJSON configurada para o mapa de cobertura</string>
     <string name="troubleshooting_not_ok" tools:ignore="Typos">Não correto</string>
     <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Ok</string>
+    <string name="system_default_language">Idioma padrão do sistema</string>
 </resources>
