@@ -92,10 +92,10 @@
     <string name="notification_style_basic_description">Mostra o número de relatórios criados</string>
     <string name="notification_style_detailed_title">Detalhado</string>
     <string name="notification_style_detailed_description">Mostra o número de relatórios criados e o número de satélites GNSS</string>
-    <string name="unencrypted_endpoint_warning">Ponto de recolha não-criptografado</string>
+    <string name="unencrypted_endpoint_warning">Conexão insegura sem criptografia</string>
     <string name="suggested_service_website">Site</string>
     <string name="suggested_service_hosted_by">Hospedado por:</string>
-    <string name="suggested_services_title">Serviço sugeridos</string>
+    <string name="suggested_services_title">Serviços sugeridos</string>
     <string name="movement_detection_significant_motion_description">Pausa a busca e o GPS quando nenhum movimento significativo é detectado. Economiza bateria, mas pode não funcionar bem em alguns dispositivos</string>
     <string name="app_language">Idioma</string>
     <string name="use_dynamic_color_ui">Usar cores dinâmicas na interface</string>
