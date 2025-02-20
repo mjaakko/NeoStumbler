@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -54,17 +55,17 @@ fun CoverageLayerSettings(settingsStore: DataStore<Preferences> = koinInject(PRE
     if (dialogOpen.value) {
         CoverageLayerDialog(
             currentTileJsonUrl = tileJsonUrl.value,
-            onDialogClose = { newTileJsonUrl ->
+            onDialogClose = { newTileJsonUrl, save ->
                 coroutineScope.launch {
-                    settingsStore.updateData { prefs ->
-                        prefs.toMutablePreferences().apply {
+                    if (save) {
+                        settingsStore.edit { prefs ->
                             if (newTileJsonUrl.isNullOrEmpty()) {
-                                remove(stringPreferencesKey(PreferenceKeys.COVERAGE_TILE_JSON_URL))
-                            } else {
-                                set(
-                                    stringPreferencesKey(PreferenceKeys.COVERAGE_TILE_JSON_URL),
-                                    newTileJsonUrl,
+                                prefs.remove(
+                                    stringPreferencesKey(PreferenceKeys.COVERAGE_TILE_JSON_URL)
                                 )
+                            } else {
+                                prefs[stringPreferencesKey(PreferenceKeys.COVERAGE_TILE_JSON_URL)] =
+                                    newTileJsonUrl
                             }
                         }
                     }
@@ -82,7 +83,10 @@ fun CoverageLayerSettings(settingsStore: DataStore<Preferences> = koinInject(PRE
 }
 
 @Composable
-private fun CoverageLayerDialog(currentTileJsonUrl: String?, onDialogClose: (String?) -> Unit) {
+private fun CoverageLayerDialog(
+    currentTileJsonUrl: String?,
+    onDialogClose: (String?, Boolean) -> Unit,
+) {
     val tileJsonUrl = rememberSaveable { mutableStateOf(currentTileJsonUrl) }
 
     val showSuggestedServicesDialog = rememberSaveable { mutableStateOf(false) }
@@ -99,7 +103,7 @@ private fun CoverageLayerDialog(currentTileJsonUrl: String?, onDialogClose: (Str
         )
     }
 
-    BasicAlertDialog(onDismissRequest = { onDialogClose(null) }) {
+    BasicAlertDialog(onDismissRequest = { onDialogClose(null, false) }) {
         Surface(
             modifier = Modifier.wrapContentWidth().wrapContentHeight(),
             shape = MaterialTheme.shapes.large,
@@ -130,7 +134,7 @@ private fun CoverageLayerDialog(currentTileJsonUrl: String?, onDialogClose: (Str
                 Row {
                     Spacer(modifier = Modifier.weight(1.0f))
 
-                    TextButton(onClick = { onDialogClose(tileJsonUrl.value) }) {
+                    TextButton(onClick = { onDialogClose(tileJsonUrl.value, true) }) {
                         Text(text = stringResource(id = R.string.save))
                     }
                 }
