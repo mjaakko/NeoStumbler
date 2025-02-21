@@ -125,7 +125,7 @@
     <string name="manage_storage_title">管理儲存空間</string>
     <string name="db_size">資料庫大小：%s</string>
     <string name="delete_data">刪除資料</string>
-    <string name="delete_reports_by_date">按日情師刪除報告</string>
+    <string name="delete_reports_by_date">按日期刪除報告</string>
     <string name="delete_all_reports">刪除報告</string>
     <string name="delete_all_reports_confirmation">您確定要刪除所有報告嗎？</string>
     <plurals name="toast_deleted_reports">
@@ -150,4 +150,5 @@
     <string name="coverage_layer_no_configured">未設定地圖覆蓋率層</string>
     <string name="wifi_scan_throttling_explanation">您需要在您的裝置的設定中停用 Wi-Fi 掃描調節才能啟用此通能。 通常可在開發人員選項找到</string>
     <string name="movement_detection_location_description">當位置沒有變化時暫停掃描。 GPS 始終開啟</string>
+    <string name="system_default_language">系統預設語言</string>
 </resources>
