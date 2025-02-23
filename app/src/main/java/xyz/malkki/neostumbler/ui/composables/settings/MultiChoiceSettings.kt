@@ -32,6 +32,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
+import xyz.malkki.neostumbler.ui.modifiers.verticalScrollbar
 
 @Composable
 fun <O> MultiChoiceSettings(
@@ -97,11 +98,14 @@ private fun <O> MultiChoiceSettingsDialog(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                val scrollState = rememberScrollState()
+
                 Column(
                     modifier =
                         Modifier.selectableGroup()
                             .padding(bottom = 8.dp)
-                            .verticalScroll(state = rememberScrollState()),
+                            .verticalScrollbar(scrollState = scrollState)
+                            .verticalScroll(state = scrollState),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     options.forEach { option ->
