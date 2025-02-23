@@ -158,4 +158,5 @@
     <string name="coverage_layer_no_configured">„TileJSON“ aprėpties žemėlapio URL nenurodytas</string>
     <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Problemų neaptikta</string>
     <string name="troubleshooting_not_ok" tools:ignore="Typos">Aptikta problemų</string>
+    <string name="system_default_language">Numatytoji sistemos kalba</string>
 </resources>
