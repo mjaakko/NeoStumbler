@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bluetooth
@@ -29,6 +30,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -57,6 +61,7 @@ import xyz.malkki.neostumbler.extensions.defaultLocale
 import xyz.malkki.neostumbler.ui.composables.MLSWarningDialog
 import xyz.malkki.neostumbler.ui.composables.ReportUploadButton
 import xyz.malkki.neostumbler.ui.composables.reports.ForegroundScanningButton
+import xyz.malkki.neostumbler.ui.composables.shared.CenteredCircularProgressIndicator
 import xyz.malkki.neostumbler.ui.composables.shared.ConfirmationDialog
 import xyz.malkki.neostumbler.ui.composables.shared.Link
 import xyz.malkki.neostumbler.ui.composables.shared.Shimmer
@@ -112,6 +117,11 @@ private fun ReportStats(reportsViewModel: ReportsViewModel) {
 private fun Reports(reportsViewModel: ReportsViewModel) {
     val reports = reportsViewModel.reports.collectAsLazyPagingItems()
 
+    val listState = rememberLazyListState()
+
+    val listAtTop by remember { derivedStateOf { listState.firstVisibleItemIndex == 0 } }
+    var listWasAtTop by remember { mutableStateOf(listAtTop) }
+
     val context = LocalContext.current
     val geocoder = remember {
         CachingGeocoder(PlatformGeocoder(AndroidGeocoder(context, context.defaultLocale), 1))
@@ -134,14 +144,28 @@ private fun Reports(reportsViewModel: ReportsViewModel) {
         )
     }
 
+    LaunchedEffect(reports.itemCount) {
+        // Scroll list to the top if it was at the top before
+        if (listWasAtTop) {
+            listState.scrollToItem(0)
+        }
+    }
+
+    SideEffect { listWasAtTop = listAtTop }
+
     Column(modifier = Modifier.padding(top = 8.dp)) {
         Text(text = stringResource(R.string.reports), style = MaterialTheme.typography.titleMedium)
-        if (reports.loadState.isIdle && reports.itemCount == 0) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(stringResource(R.string.reports_empty))
+
+        if (reports.itemCount == 0) {
+            if (reports.loadState.isIdle) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(stringResource(R.string.reports_empty))
+                }
+            } else {
+                CenteredCircularProgressIndicator()
             }
         } else {
-            LazyColumn {
+            LazyColumn(state = listState) {
                 items(reports.itemCount, key = reports.itemKey { it.reportId }) { index ->
                     val report = reports.get(index)
 
