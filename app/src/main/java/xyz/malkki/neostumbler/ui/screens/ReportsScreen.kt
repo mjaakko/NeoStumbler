@@ -61,6 +61,7 @@ import xyz.malkki.neostumbler.extensions.defaultLocale
 import xyz.malkki.neostumbler.ui.composables.MLSWarningDialog
 import xyz.malkki.neostumbler.ui.composables.ReportUploadButton
 import xyz.malkki.neostumbler.ui.composables.reports.ForegroundScanningButton
+import xyz.malkki.neostumbler.ui.composables.shared.CenteredCircularProgressIndicator
 import xyz.malkki.neostumbler.ui.composables.shared.ConfirmationDialog
 import xyz.malkki.neostumbler.ui.composables.shared.Link
 import xyz.malkki.neostumbler.ui.composables.shared.Shimmer
@@ -154,9 +155,14 @@ private fun Reports(reportsViewModel: ReportsViewModel) {
 
     Column(modifier = Modifier.padding(top = 8.dp)) {
         Text(text = stringResource(R.string.reports), style = MaterialTheme.typography.titleMedium)
-        if (reports.loadState.isIdle && reports.itemCount == 0) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(stringResource(R.string.reports_empty))
+
+        if (reports.itemCount == 0) {
+            if (reports.loadState.isIdle) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(stringResource(R.string.reports_empty))
+                }
+            } else {
+                CenteredCircularProgressIndicator()
             }
         } else {
             LazyColumn(state = listState) {
