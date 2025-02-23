@@ -88,7 +88,7 @@ private fun <O> MultiChoiceSettingsDialog(
 ) {
     BasicAlertDialog(onDismissRequest = { onValueSelected(selectedOption) }) {
         Surface(
-            modifier = Modifier.wrapContentWidth().wrapContentHeight().sizeIn(maxHeight = 380.dp),
+            modifier = Modifier.wrapContentWidth().wrapContentHeight().sizeIn(maxHeight = 365.dp),
             shape = MaterialTheme.shapes.large,
             tonalElevation = AlertDialogDefaults.TonalElevation,
         ) {
