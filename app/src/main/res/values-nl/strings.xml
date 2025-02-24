@@ -154,4 +154,5 @@
     <string name="invalid_url">Ongeldige URL</string>
     <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Oké</string>
     <string name="troubleshooting_not_ok" tools:ignore="Typos">Probleem</string>
+    <string name="system_default_language">Systeem taal</string>
 </resources>
