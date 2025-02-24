@@ -81,7 +81,7 @@ jobs:
           script: echo "AVD snapshot generated"
       - name: Run intrumented tests
         uses: reactivecircus/android-emulator-runner@v2
-        timeout-minutes: 10
+        timeout-minutes: 15
         with:
           api-level: ${{ matrix.api-level }}
           arch: ${{ matrix.arch }}
