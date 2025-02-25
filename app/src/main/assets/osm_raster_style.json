@@ -18,7 +18,7 @@
       "type": "raster",
       "source": "osm",
       "minzoom": 3,
-      "maxzoom": 16
+      "maxzoom": 19
     }
   ]
 }

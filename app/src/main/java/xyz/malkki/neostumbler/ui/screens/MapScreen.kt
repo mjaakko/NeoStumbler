@@ -2,7 +2,6 @@ package xyz.malkki.neostumbler.ui.screens
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
 import android.location.Location
 import androidx.annotation.ColorInt
 import androidx.compose.foundation.layout.Arrangement
@@ -50,10 +49,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.graphics.ColorUtils
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import java.util.Locale
 import org.koin.androidx.compose.koinViewModel
 import org.maplibre.android.MapLibre
 import org.maplibre.android.camera.CameraPosition
@@ -63,24 +60,21 @@ import org.maplibre.android.location.LocationComponentActivationOptions
 import org.maplibre.android.location.LocationComponentConstants
 import org.maplibre.android.location.modes.RenderMode
 import org.maplibre.android.maps.MapLibreMap
-import org.maplibre.android.maps.MapView
 import org.maplibre.android.maps.Style
 import org.maplibre.android.module.http.HttpRequestUtil
 import org.maplibre.android.plugins.annotation.FillManager
 import org.maplibre.android.plugins.annotation.FillOptions
-import org.maplibre.android.style.expressions.Expression
 import org.maplibre.android.style.layers.FillLayer
 import org.maplibre.android.style.layers.PropertyFactory
-import org.maplibre.android.style.layers.PropertyFactory.textField
-import org.maplibre.android.style.layers.SymbolLayer
 import org.maplibre.android.style.sources.VectorSource
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
-import xyz.malkki.neostumbler.extensions.defaultLocale
 import xyz.malkki.neostumbler.ui.composables.shared.KeepScreenOn
 import xyz.malkki.neostumbler.ui.composables.shared.PermissionsDialog
+import xyz.malkki.neostumbler.ui.map.LifecycleAwareMapView
+import xyz.malkki.neostumbler.ui.map.MapTileSource
+import xyz.malkki.neostumbler.ui.map.setAttributionMargin
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
-import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel.MapTileSource
 
 @ColorInt private const val HEAT_LOW: Int = 0x78d278ff
 @ColorInt private const val HEAT_HIGH: Int = 0x78aa00ff
@@ -113,8 +107,6 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
     val httpClient = mapViewModel.httpClient.collectAsState(initial = null)
 
     val selectedMapTileSource = mapViewModel.mapTileSource.collectAsState(initial = null)
-
-    val mapStyle = mapViewModel.mapStyle.collectAsState(initial = null)
 
     val coverageTileJsonUrl = mapViewModel.coverageTileJsonUrl.collectAsState(initial = null)
 
@@ -156,38 +148,15 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
     KeepScreenOn()
 
     Box(modifier = Modifier.fillMaxSize()) {
-        if (mapStyle.value != null && httpClient.value != null) {
+        if (selectedMapTileSource.value != null && httpClient.value != null) {
             AndroidView(
                 modifier = Modifier.fillMaxSize(),
                 factory = { context ->
                     MapLibre.getInstance(context)
                     HttpRequestUtil.setOkHttpClient(httpClient.value)
 
-                    val mapView = LifecycleAwareMap(context)
-                    mapView.addOnDidFinishLoadingStyleListener {
-                        mapView.getMapAsync { map ->
-                            map.getStyle { style ->
-                                style.layers.forEach { layer ->
-                                    if (layer is SymbolLayer) {
-                                        if (
-                                            layer.textField.isExpression &&
-                                                layer.textField.expression
-                                                    ?.toString()
-                                                    ?.contains("name") == true
-                                        ) {
-                                            layer.setProperties(
-                                                textField(
-                                                    getLocalizedLabelExpression(
-                                                        context.defaultLocale
-                                                    )
-                                                )
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    val mapView = LifecycleAwareMapView(context)
+                    mapView.localizeLabelNames()
 
                     mapView.getMapAsync { map ->
                         map.addOnMoveListener(
@@ -201,22 +170,6 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                                 override fun onMoveEnd(p0: MoveGestureDetector) {}
                             }
                         )
-
-                        map.setMinZoomPreference(MIN_ZOOM)
-                        map.setMaxZoomPreference(MAX_ZOOM)
-
-                        val attributionMargin = density.run { 8.dp.roundToPx() }
-
-                        map.uiSettings.isLogoEnabled = false
-                        map.uiSettings.setAttributionMargins(
-                            attributionMargin,
-                            0,
-                            0,
-                            attributionMargin,
-                        )
-                        map.uiSettings.isAttributionEnabled = true
-
-                        map.uiSettings.isRotateGesturesEnabled = false
 
                         map.addOnCameraMoveListener(
                             object : MapLibreMap.OnCameraMoveListener {
@@ -244,14 +197,15 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                             }
                         )
 
+                        map.setMinZoomPreference(MIN_ZOOM)
+                        map.setMaxZoomPreference(MAX_ZOOM)
+
+                        map.setAttributionMargin(density)
+
+                        map.uiSettings.isRotateGesturesEnabled = false
+
                         val styleBuilder =
-                            Style.Builder().apply {
-                                if (mapStyle.value!!.styleJson != null) {
-                                    fromJson(mapStyle.value!!.styleJson!!)
-                                } else {
-                                    fromUri(mapStyle.value!!.styleUrl!!)
-                                }
-                            }
+                            Style.Builder().fromUri(selectedMapTileSource.value!!.sourceUrl)
 
                         map.setStyle(styleBuilder) { style ->
                             map.locationComponent.activateLocationComponent(
@@ -286,8 +240,7 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
 
                     mapView.getMapAsync { map ->
                         // Call repeatedly in update() because latestReportPosition may not be
-                        // available in
-                        // factory()
+                        // available in factory()
                         val target =
                             if (mapViewModel.mapCenter.value.isOrigin()) {
                                 latestReportPosition.value
@@ -324,18 +277,13 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                         // Ugly, but we don't want to update the map style unless it has actually
                         // changed
                         // TODO: think about a better way to do this
-                        if (map.style != null) {
-                            if (
-                                mapStyle.value!!.styleUrl != null &&
-                                    map.style!!.uri != mapStyle.value!!.styleUrl
-                            ) {
-                                map.setStyle(Style.Builder().fromUri(mapStyle.value!!.styleUrl!!))
-                            } else if (
-                                mapStyle.value!!.styleJson != null &&
-                                    map.style!!.json != mapStyle.value!!.styleJson
-                            ) {
-                                map.setStyle(Style.Builder().fromJson(mapStyle.value!!.styleJson!!))
-                            }
+                        if (
+                            map.style != null &&
+                                selectedMapTileSource.value!!.sourceUrl != map.style!!.uri
+                        ) {
+                            map.setStyle(
+                                Style.Builder().fromUri(selectedMapTileSource.value!!.sourceUrl)
+                            )
                         }
 
                         addCoverage(map, coverageTileJsonUrl.value, coverageTileJsonLayerIds.value)
@@ -387,42 +335,6 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
             }
         }
     }
-}
-
-private fun getLocalizedLabelExpression(locale: Locale): Expression {
-    val preferredLanguage =
-        if (locale.language == "zh") {
-            // Handle different Chinese scripts by preferring the simplified script if it's chosen
-            // by the user or if the country is China
-            if (locale.script == "Hans" || (locale.script.isEmpty() && locale.country == "CN")) {
-                arrayOf(
-                    Expression.get("name:zh-Hans"),
-                    Expression.get("name:zh-Hant"),
-                    Expression.get("name:zh"),
-                )
-            } else {
-                arrayOf(
-                    Expression.get("name:zh-Hant"),
-                    Expression.get("name:zh-Hans"),
-                    Expression.get("name:zh"),
-                )
-            }
-        } else {
-            arrayOf(Expression.get("name:${locale.language}"))
-        }
-
-    return Expression.format(
-        Expression.formatEntry(
-            Expression.coalesce(
-                *preferredLanguage,
-                Expression.get("name:en"),
-                // VersaTiles does not seem to support localized labels and uses underscore instead
-                // in the expression
-                Expression.get("name_en"),
-                Expression.get("name"),
-            )
-        )
-    )
 }
 
 private fun addCoverageLayer(style: Style, layerIds: List<String>) {
@@ -548,35 +460,5 @@ private fun MapTileSourceButton(
             painter = painterResource(id = R.drawable.layers_18),
             contentDescription = stringResource(id = R.string.map_tile_source),
         )
-    }
-}
-
-private class LifecycleAwareMap(context: Context) : MapView(context) {
-    var lifecycle: Lifecycle? = null
-        set(value) {
-            field?.removeObserver(observer)
-            value?.addObserver(observer)
-            field = value
-        }
-
-    private val observer = LifecycleEventObserver { source, event ->
-        when (event) {
-            Lifecycle.Event.ON_RESUME -> {
-                onResume()
-            }
-            Lifecycle.Event.ON_PAUSE -> {
-                onPause()
-            }
-            Lifecycle.Event.ON_START -> {
-                onStart()
-            }
-            Lifecycle.Event.ON_STOP -> {
-                onStop()
-            }
-            Lifecycle.Event.ON_DESTROY -> {
-                onDestroy()
-            }
-            else -> {}
-        }
     }
 }

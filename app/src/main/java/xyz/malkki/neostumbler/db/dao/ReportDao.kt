@@ -9,6 +9,7 @@ import androidx.room.Update
 import java.time.Instant
 import java.time.LocalDate
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import xyz.malkki.neostumbler.db.entities.Report
 import xyz.malkki.neostumbler.db.entities.ReportWithData
 import xyz.malkki.neostumbler.db.entities.ReportWithLocation
@@ -20,7 +21,8 @@ interface ReportDao {
 
     @Update suspend fun update(vararg reports: Report)
 
-    @Query("DELETE FROM Report WHERE id IN (:reportIds)") suspend fun delete(vararg reportIds: Long)
+    @Query("DELETE FROM Report WHERE id IN (:reportIds)")
+    suspend fun delete(vararg reportIds: Long): Int
 
     @Query("DELETE FROM Report WHERE timestamp >= :minTimestamp AND timestamp <= :maxTimestamp")
     suspend fun deleteFromTimeRange(minTimestamp: Instant, maxTimestamp: Instant): Int
@@ -86,6 +88,10 @@ interface ReportDao {
     )
     fun getAllReportsWithLocation(): Flow<List<ReportWithLocation>>
 
+    /**
+     * Note that this function does not handle crossing the 180th meridian. For that, use
+     * [ReportDao.getReportsInsideBoundingBox]
+     */
     @Transaction
     @Query(
         """
@@ -108,4 +114,38 @@ interface ReportDao {
 
     @Query("SELECT DISTINCT DATE(ROUND(r.timestamp / 1000), 'unixepoch') FROM Report r")
     fun getReportDates(): Flow<List<LocalDate>>
+}
+
+fun ReportDao.getReportsInsideBoundingBox(
+    minLatitude: Double,
+    minLongitude: Double,
+    maxLatitude: Double,
+    maxLongitude: Double,
+): Flow<List<ReportWithLocation>> {
+    return if (minLongitude > maxLongitude) {
+        // Handle crossing the 180th meridian
+        val left =
+            getAllReportsWithLocationInsideBoundingBox(
+                minLatitude = minLatitude,
+                minLongitude = minLongitude,
+                maxLatitude = maxLatitude,
+                maxLongitude = 180.0,
+            )
+        val right =
+            getAllReportsWithLocationInsideBoundingBox(
+                minLatitude = -180.0,
+                minLongitude = minLongitude,
+                maxLatitude = maxLatitude,
+                maxLongitude = maxLongitude,
+            )
+
+        left.combine(right) { listA, listB -> listA + listB }
+    } else {
+        getAllReportsWithLocationInsideBoundingBox(
+            minLatitude = minLatitude,
+            minLongitude = minLongitude,
+            maxLatitude = maxLatitude,
+            maxLongitude = maxLongitude,
+        )
+    }
 }

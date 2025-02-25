@@ -38,7 +38,7 @@ import xyz.malkki.neostumbler.db.DbPruneWorker
 import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.export.CsvExporter
 import xyz.malkki.neostumbler.http.getCallFactory
-import xyz.malkki.neostumbler.location.LocationSourceProvider
+import xyz.malkki.neostumbler.location.locationModule
 import xyz.malkki.neostumbler.scanner.ScanReportCreator
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
 import xyz.malkki.neostumbler.ui.viewmodel.ReportsViewModel
@@ -86,7 +86,7 @@ class StumblerApplication : Application() {
                 }
             )
 
-            modules(module { single { LocationSourceProvider(get(PREFERENCES)) } })
+            modules(locationModule)
 
             modules(
                 module {

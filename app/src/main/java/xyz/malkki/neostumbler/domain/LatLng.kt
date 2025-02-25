@@ -1,5 +1,8 @@
 package xyz.malkki.neostumbler.domain
 
+import java.lang.Math.toDegrees
+import java.lang.Math.toRadians
+import kotlin.math.asin
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
@@ -25,8 +28,8 @@ data class LatLng(val latitude: Double, val longitude: Double) {
      * @return Distance in meters
      */
     fun distanceTo(other: LatLng): Double {
-        val latDistance = Math.toRadians(other.latitude - latitude)
-        val lonDistance = Math.toRadians(other.longitude - longitude)
+        val latDistance = toRadians(other.latitude - latitude)
+        val lonDistance = toRadians(other.longitude - longitude)
 
         val a =
             (sin(latDistance / 2) * sin(latDistance / 2) +
@@ -37,5 +40,35 @@ data class LatLng(val latitude: Double, val longitude: Double) {
         val c = 2 * atan2(sqrt(a), sqrt(1 - a))
 
         return EARTH_RADIUS_IN_METERS * c
+    }
+
+    /**
+     * Calculates destination coordinate when traveling from this coordinate
+     *
+     * @param distance Distance in metres
+     * @param bearing Bearing in degrees from north
+     */
+    fun destination(distance: Double, bearing: Double): LatLng {
+        val angDist = distance / EARTH_RADIUS_IN_METERS
+
+        val latitudeRadians = toRadians(latitude)
+        val longitudeRadians = toRadians(longitude)
+
+        val bearingRadians = toRadians(bearing)
+
+        val lat2 =
+            asin(
+                sin(latitudeRadians) * cos(angDist) +
+                    cos(latitudeRadians) * sin(angDist) * cos(bearingRadians)
+            )
+        val lon2 =
+            longitudeRadians +
+                atan2(
+                    sin(bearingRadians) * sin(angDist) * cos(latitudeRadians),
+                    cos(angDist) - sin(latitudeRadians) * sin(lat2),
+                )
+
+        @Suppress("MagicNumber")
+        return LatLng(toDegrees(lat2), ((toDegrees(lon2) + 540) % 360) - 180)
     }
 }
