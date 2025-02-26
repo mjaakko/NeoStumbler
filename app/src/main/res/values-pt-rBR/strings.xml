@@ -161,4 +161,6 @@
     <string name="troubleshooting_not_ok" tools:ignore="Typos">Não correto</string>
     <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Ok</string>
     <string name="system_default_language">Idioma padrão do sistema</string>
+    <string name="waiting_for_location">Esperanto pela localização</string>
+    <string name="delete_reports_from_area">Excluir relatórios de uma área</string>
 </resources>
