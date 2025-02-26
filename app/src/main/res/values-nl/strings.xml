@@ -155,4 +155,6 @@
     <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Oké</string>
     <string name="troubleshooting_not_ok" tools:ignore="Typos">Probleem</string>
     <string name="system_default_language">Systeem taal</string>
+    <string name="waiting_for_location">Wachten op locatie</string>
+    <string name="delete_reports_from_area">Rapporten van gebied verwĳderen</string>
 </resources>
