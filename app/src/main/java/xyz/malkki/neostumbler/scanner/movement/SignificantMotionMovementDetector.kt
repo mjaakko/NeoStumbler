@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.suspendCancellableCoroutine
 import xyz.malkki.neostumbler.domain.Position
@@ -88,7 +89,9 @@ class SignificantMotionMovementDetector(
 
     override fun getIsMovingFlow(): Flow<Boolean> {
         return combine(getSignificantMotionIsMovingFlow(), getLocationBasedIsMovingFlow()) { a, b ->
-            a || b
-        }
+                a || b
+            }
+            .onStart { emit(true) }
+            .distinctUntilChanged()
     }
 }
