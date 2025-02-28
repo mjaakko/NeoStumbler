@@ -3,12 +3,11 @@ package xyz.malkki.neostumbler.location
 import android.Manifest
 import android.content.Context
 import android.location.Location
-import android.location.LocationListener
 import android.location.LocationManager
-import android.location.LocationRequest
-import android.os.Build
-import android.os.Looper
 import androidx.annotation.RequiresPermission
+import androidx.core.location.LocationListenerCompat
+import androidx.core.location.LocationManagerCompat
+import androidx.core.location.LocationRequestCompat
 import kotlin.time.Duration
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
@@ -28,7 +27,7 @@ class PlatformLocationSource(context: Context) : LocationSource {
                 appContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
             val locationListener =
-                object : LocationListener {
+                object : LocationListenerCompat {
                     override fun onLocationChanged(location: Location) {
                         trySendBlocking(
                             Position.fromLocation(
@@ -57,30 +56,24 @@ class PlatformLocationSource(context: Context) : LocationSource {
                     LocationManager.GPS_PROVIDER
                 }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                val locationRequest =
-                    LocationRequest.Builder(locationIntervalMillis)
-                        .setQuality(LocationRequest.QUALITY_HIGH_ACCURACY)
-                        .setIntervalMillis(locationIntervalMillis)
-                        .setMinUpdateDistanceMeters(0.0f)
-                        .build()
+            val locationRequest =
+                LocationRequestCompat.Builder(locationIntervalMillis)
+                    .setQuality(LocationRequestCompat.QUALITY_HIGH_ACCURACY)
+                    .setMinUpdateIntervalMillis(locationIntervalMillis)
+                    .setMaxUpdateDelayMillis(0)
+                    .setMinUpdateDistanceMeters(0.0f)
+                    .setMaxUpdates(Int.MAX_VALUE)
+                    .setDurationMillis(Long.MAX_VALUE)
+                    .build()
 
-                locationManager.requestLocationUpdates(
-                    provider,
-                    locationRequest,
-                    ImmediateExecutor,
-                    locationListener,
-                )
-            } else {
-                locationManager.requestLocationUpdates(
-                    provider,
-                    locationIntervalMillis,
-                    0.0f,
-                    locationListener,
-                    Looper.getMainLooper(),
-                )
-            }
+            LocationManagerCompat.requestLocationUpdates(
+                locationManager,
+                provider,
+                locationRequest,
+                ImmediateExecutor,
+                locationListener,
+            )
 
-            awaitClose { locationManager.removeUpdates(locationListener) }
+            awaitClose { LocationManagerCompat.removeUpdates(locationManager, locationListener) }
         }
 }
