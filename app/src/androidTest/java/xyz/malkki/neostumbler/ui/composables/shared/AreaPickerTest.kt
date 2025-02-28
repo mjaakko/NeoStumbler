@@ -9,6 +9,7 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
+import java.io.IOException
 import kotlin.time.Duration
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -17,7 +18,10 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import okhttp3.Call
-import okhttp3.OkHttpClient
+import okhttp3.Callback
+import okhttp3.Request
+import okhttp3.Response
+import okio.Timeout
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
@@ -34,6 +38,43 @@ import xyz.malkki.neostumbler.domain.Position
 import xyz.malkki.neostumbler.location.LocationSource
 
 class AreaPickerTest {
+    private val mockHttpClient: Call.Factory =
+        object : Call.Factory {
+            override fun newCall(request: Request): Call {
+                return object : Call {
+                    override fun cancel() {}
+
+                    override fun clone(): Call {
+                        return this
+                    }
+
+                    override fun enqueue(responseCallback: Callback) {
+                        responseCallback.onFailure(this, IOException("Failed"))
+                    }
+
+                    override fun execute(): Response {
+                        throw IOException("Failed")
+                    }
+
+                    override fun isCanceled(): Boolean {
+                        return false
+                    }
+
+                    override fun isExecuted(): Boolean {
+                        return false
+                    }
+
+                    override fun request(): Request {
+                        return request
+                    }
+
+                    override fun timeout(): Timeout {
+                        return timeout()
+                    }
+                }
+            }
+        }
+
     private val testContext: Context = ApplicationProvider.getApplicationContext()
 
     @get:Rule val composeTestRule = createComposeRule()
@@ -51,7 +92,7 @@ class AreaPickerTest {
                     androidContext(testContext)
 
                     single<Deferred<Call.Factory>> {
-                        @OptIn(DelicateCoroutinesApi::class) GlobalScope.async { OkHttpClient() }
+                        @OptIn(DelicateCoroutinesApi::class) GlobalScope.async { mockHttpClient }
                     }
 
                     single<DataStore<Preferences>>(PREFERENCES) {
