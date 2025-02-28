@@ -32,7 +32,8 @@ class FusedLocationSource(context: Context) : LocationSource {
             val locationRequest =
                 LocationRequest.Builder(locationIntervalMillis)
                     .setWaitForAccurateLocation(!usePassiveProvider)
-                    .setMinUpdateIntervalMillis(locationIntervalMillis / 3)
+                    .setMinUpdateIntervalMillis(locationIntervalMillis)
+                    .setMaxUpdateDelayMillis(0)
                     .setGranularity(Granularity.GRANULARITY_FINE)
                     .setPriority(
                         if (usePassiveProvider) {

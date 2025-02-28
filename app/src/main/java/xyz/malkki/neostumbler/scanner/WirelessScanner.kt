@@ -6,6 +6,7 @@ import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
@@ -30,6 +31,11 @@ import xyz.malkki.neostumbler.scanner.movement.MovementDetector
 
 // Maximum accuracy for locations, used for filtering bad locations
 private const val LOCATION_MAX_ACCURACY = 200
+
+// Don't emit new locations until the distance between them is at least 40 metres or when at least
+// 10 seconds have passed
+private val LOCATION_MAX_AGE_UNTIL_CHANGED = 10.seconds
+private const val LOCATION_MAX_DISTANCE_DIFF_UNTIL_CHANGED = 40
 
 // Maximum age for observed devices. This is used to filter out old data when e.g. there is no GPS
 // signal and there's a gap between two locations
@@ -85,6 +91,16 @@ class WirelessScanner(
             .collect { data -> mapMutex.withLock { data.forEach { map[it.uniqueKey] = it } } }
     }
 
+    private fun Flow<Position>.filterInaccurateLocations(): Flow<Position> = filter { location ->
+        location.accuracy != null && location.accuracy <= LOCATION_MAX_ACCURACY
+    }
+
+    private fun Flow<Position>.distinctUntilChangedSignificantly(): Flow<Position> =
+        distinctUntilChanged { a, b ->
+            abs(a.timestamp - b.timestamp).milliseconds <= LOCATION_MAX_AGE_UNTIL_CHANGED &&
+                a.latLng.distanceTo(b.latLng) <= LOCATION_MAX_DISTANCE_DIFF_UNTIL_CHANGED
+        }
+
     fun createReports(): Flow<ReportData> = channelFlow {
         val mutex = Mutex()
 
@@ -134,9 +150,8 @@ class WirelessScanner(
                     emptyFlow()
                 }
             }
-            .filter { location ->
-                location.accuracy != null && location.accuracy <= LOCATION_MAX_ACCURACY
-            }
+            .filterInaccurateLocations()
+            .distinctUntilChangedSignificantly()
             // Collect locations to a list so that we can choose the best based on timestamp
             .buffer(LOCATION_BUFFER_DURATION)
             .filter { it.isNotEmpty() }
@@ -147,8 +162,7 @@ class WirelessScanner(
                         cellTowersByKey.clear()
 
                         // Take Wi-Fis only if there's at least two, because two are needed for a
-                        // valid
-                        // Geosubmit report
+                        // valid Geosubmit report
                         val wifis =
                             if (wifiAccessPointByMacAddr.size >= 2) {
                                 wifiAccessPointByMacAddr.values.toList().apply {
