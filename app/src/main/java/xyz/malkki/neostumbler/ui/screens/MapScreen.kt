@@ -156,6 +156,8 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                     HttpRequestUtil.setOkHttpClient(httpClient.value)
 
                     val mapView = LifecycleAwareMapView(context)
+                    mapView.context.registerComponentCallbacks(mapView.componentCallback)
+
                     mapView.localizeLabelNames()
 
                     mapView.getMapAsync { map ->
@@ -296,6 +298,8 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                     }
                 },
                 onRelease = { view ->
+                    view.context.unregisterComponentCallbacks(view.componentCallback)
+
                     view.getMapAsync { map ->
                         // No permission is needed to disable the location component
                         @SuppressLint("MissingPermission")
