@@ -1,6 +1,8 @@
 package xyz.malkki.neostumbler.ui.map
 
+import android.content.ComponentCallbacks2
 import android.content.Context
+import android.content.res.Configuration
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import java.util.Locale
@@ -11,11 +13,35 @@ import org.maplibre.android.style.layers.SymbolLayer
 import xyz.malkki.neostumbler.extensions.defaultLocale
 
 class LifecycleAwareMapView(context: Context) : MapView(context) {
+    val componentCallback: ComponentCallbacks2 =
+        object : ComponentCallbacks2 {
+            override fun onTrimMemory(level: Int) {
+                @Suppress("DEPRECATION")
+                // Android 14+ never notifies of this level, but we can ignore the deprecation,
+                // because we are doing an inequality comparison
+                if (level >= ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW) {
+                    this@LifecycleAwareMapView.onLowMemory()
+                }
+            }
+
+            override fun onConfigurationChanged(newConfig: Configuration) {}
+
+            override fun onLowMemory() {}
+        }
+
     var lifecycle: Lifecycle? = null
         set(value) {
-            field?.removeObserver(observer)
-            value?.addObserver(observer)
-            field = value
+            if (value != field) {
+                field?.removeObserver(observer)
+                value?.addObserver(observer)
+                field = value
+
+                // When the lifecycle is set to null, the map view is removed from the Compose
+                // tree -> call onDestroy to release any resources
+                if (value == null) {
+                    onDestroy()
+                }
+            }
         }
 
     private val observer = LifecycleEventObserver { source, event ->
