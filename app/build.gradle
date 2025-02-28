@@ -235,6 +235,7 @@ dependencies {
     implementation 'androidx.compose.material:material-icons-extended-android'
 
     testImplementation 'junit:junit:4.13.2'
+
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
@@ -295,6 +296,15 @@ dependencies {
     fullImplementation 'com.google.net.cronet:cronet-okhttp:0.1.0'
 
     testImplementation "org.mockito.kotlin:mockito-kotlin:5.4.0"
+
+    androidTestImplementation 'org.awaitility:awaitility-kotlin:4.3.0'
+}
+
+configurations.configureEach {
+    resolutionStrategy {
+        force "org.hamcrest:hamcrest-core:2+"
+        force "org.hamcrest:hamcrest-library:2+"
+    }
 }
 
 ktfmt {

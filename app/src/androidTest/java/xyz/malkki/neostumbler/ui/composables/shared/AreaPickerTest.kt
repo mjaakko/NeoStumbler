@@ -1,6 +1,7 @@
 package xyz.malkki.neostumbler.ui.composables.shared
 
 import android.content.Context
+import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -22,6 +23,8 @@ import okhttp3.Callback
 import okhttp3.Request
 import okhttp3.Response
 import okio.Timeout
+import org.awaitility.kotlin.await
+import org.awaitility.kotlin.untilAsserted
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
@@ -128,6 +131,8 @@ class AreaPickerTest {
                 )
             }
         }
+
+        await untilAsserted { composeTestRule.onNodeWithText("select").assertIsEnabled() }
 
         composeTestRule.onNodeWithText("select").performClick()
 
