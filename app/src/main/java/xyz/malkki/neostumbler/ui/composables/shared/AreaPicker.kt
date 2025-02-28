@@ -236,6 +236,9 @@ fun AreaPickerMap(
                     }
                 }
             },
+            onRelease = { view ->
+                view.lifecycle = null
+            }
         )
     }
 }

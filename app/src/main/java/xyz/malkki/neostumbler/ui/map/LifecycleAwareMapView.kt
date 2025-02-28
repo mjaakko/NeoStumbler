@@ -13,9 +13,17 @@ import xyz.malkki.neostumbler.extensions.defaultLocale
 class LifecycleAwareMapView(context: Context) : MapView(context) {
     var lifecycle: Lifecycle? = null
         set(value) {
-            field?.removeObserver(observer)
-            value?.addObserver(observer)
-            field = value
+            if (value != field) {
+                field?.removeObserver(observer)
+                value?.addObserver(observer)
+                field = value
+
+                // When the lifecycle is set to null, the map view is removed from the Compose
+                // tree -> call onDestroy to release any resources
+                if (value == null) {
+                    onDestroy()
+                }
+            }
         }
 
     private val observer = LifecycleEventObserver { source, event ->
