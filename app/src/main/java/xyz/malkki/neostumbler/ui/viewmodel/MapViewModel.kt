@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import java.io.IOException
 import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.time.Duration.Companion.seconds
@@ -14,6 +15,7 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.trySendBlocking
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -31,11 +33,13 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.retryWhen
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import okhttp3.Call
 import org.geohex.geohex4j.GeoHex
+import timber.log.Timber
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.db.ReportDatabaseManager
@@ -56,6 +60,8 @@ private const val DEFAULT_MAP_ZOOM = 12.0
 
 private const val MIN_GEOHEX_RESOLUTION = 3
 private const val MAX_GEOHEX_RESOLUTION = 9
+
+private val TILEJSON_RETRY_DELAY = 30.seconds
 
 class MapViewModel(
     application: Application,
@@ -84,6 +90,17 @@ class MapViewModel(
         combine(coverageTileJsonUrl.filterNotNull(), httpClient.filterNotNull()) { a, b -> a to b }
             .mapLatest { (coverageTileJsonUrl, httpClient) ->
                 getTileJsonLayerIds(coverageTileJsonUrl, httpClient)
+            }
+            .retryWhen { cause, attempt ->
+                if (cause is IOException) {
+                    Timber.w(cause, "Failed to load TileJSON for coverage layer")
+
+                    delay(TILEJSON_RETRY_DELAY)
+
+                    true
+                } else {
+                    throw cause
+                }
             }
 
     private val showMyLocation =
