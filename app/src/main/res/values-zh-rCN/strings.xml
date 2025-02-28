@@ -143,8 +143,14 @@
     <string name="reports_last_uploaded_never">从未</string>
     <string name="reports_empty">尚无报告</string>
     <string name="no_endpoint_configured">未配置端点</string>
-    <string name="invalid_url">无效URL</string>
+    <string name="invalid_url">无效 URL</string>
     <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">OK</string>
     <string name="troubleshooting_not_ok" tools:ignore="Typos">不OK</string>
     <string name="mls_warning_text">Mozilla Location Service已经关闭，不再接受数据提交。作为替代，你可将数据上传至beaconDB，其服务和MLS兼容\n\n请记得beaconDB仍在开发中，并且这一切换会影响处理你数据的方式。更多信息请参阅其<annotation link="privacy_policy">隐私政策</annotation>\n\n你是否要设置beaconDB为上传端点？这也可以在应用中设置</string>
+    <string name="coverage_layer_no_configured">未配置覆盖率地图</string>
+    <string name="waiting_for_location">等待位置</string>
+    <string name="coverage_layer">覆盖率地图</string>
+    <string name="coverage_layer_tile_json_url">覆盖率地图所用的 TileJSON URL</string>
+    <string name="system_default_language">系统默认语言</string>
+    <string name="delete_reports_from_area">按地区删除报告</string>
 </resources>
