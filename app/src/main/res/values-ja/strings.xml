@@ -217,9 +217,9 @@
     <string name="db_size">データベースのサイズ: %s</string>
 
     <string name="delete_data">データの削除</string>
-    <string name="delete_reports_by_date">日付を指定してレポートを削除する</string>
-    <string name="delete_reports_from_area">エリアからレポートを削除する</string>
-    <string name="delete_all_reports">すべてのレポートを削除する</string>
+    <string name="delete_reports_by_date">日付を指定してレポートを削除</string>
+    <string name="delete_reports_from_area">エリアを指定してレポートを削除</string>
+    <string name="delete_all_reports">すべてのレポートを削除</string>
     <string name="delete_all_reports_confirmation">本当にすべてのレポートを削除しますか？</string>
     <plurals name="toast_deleted_reports">
         <item quantity="one">%d件のレポートを削除しました</item>

@@ -1,0 +1,16 @@
+<resources>
+    <string name="prefer_fused_location_title">融合された位置予測プロバイダを優先する</string>
+    <string name="prefer_fused_location_description">融合された位置予測プロバイダは、GPS以外のソースからのデータを組み合わせることで位置情報を特定することができます</string>
+
+    <string name="autoscan_when_moving">移動中は自動でスキャンする</string>
+
+    <string name="autoscan_failed_to_enable">自動スキャンの有効化に失敗しました</string>
+
+    <string name="permission_rationale_background_location_autoscan">
+        自動的にスキャンを開始するには、バックグラウンドでの位置情報取得の許可が必要です
+    </string>
+
+    <string name="permission_rationale_activity_recognition">
+        自動的にスキャンを開始するには、現在のアクティビティへのアクセス権が必要です
+    </string>
+</resources>
