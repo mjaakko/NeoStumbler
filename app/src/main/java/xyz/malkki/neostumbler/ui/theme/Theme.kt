@@ -2,6 +2,8 @@ package xyz.malkki.neostumbler.ui.theme
 
 import android.app.Activity
 import android.os.Build
+import androidx.activity.ComponentActivity
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -62,7 +64,8 @@ fun NeoStumblerTheme(
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
-            val window = (view.context as Activity).window
+            val activity = view.context as Activity
+            val window = activity.window
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
                 @Suppress("DEPRECATION")
@@ -70,6 +73,15 @@ fun NeoStumblerTheme(
             }
 
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+
+            if (activity is ComponentActivity) {
+                activity.enableEdgeToEdge()
+
+                WindowCompat.getInsetsController(window, window.decorView)
+                    .isAppearanceLightStatusBars = darkTheme
+
+                window.isNavigationBarContrastEnforced = false
+            }
         }
     }
 
