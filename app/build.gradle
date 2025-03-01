@@ -280,7 +280,7 @@ dependencies {
 
     implementation 'org.altbeacon:android-beacon-library:2.21.0'
 
-    implementation 'org.maplibre.gl:android-sdk:11.8.0'
+    implementation 'org.maplibre.gl:android-sdk:11.8.2'
     implementation 'org.maplibre.gl:android-plugin-annotation-v9:3.0.2'
 
     implementation 'org.geohex.geohex4j:geohex4j:3.2.2'
