@@ -302,7 +302,7 @@ dependencies {
 
 configurations.configureEach {
     resolutionStrategy {
-        force "org.hamcrest:hamcrest-core:2+"
+        force "org.hamcrest:hamcrest-core:3+"
         force "org.hamcrest:hamcrest-library:2+"
     }
 }
