@@ -158,4 +158,7 @@
     <string name="invalid_url">Neplatná URL</string>
     <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Ok</string>
     <string name="troubleshooting_not_ok" tools:ignore="Typos">Problém</string>
+    <string name="system_default_language">Výchozí jazyk</string>
+    <string name="waiting_for_location">Čekání na polohu</string>
+    <string name="delete_reports_from_area">Smazat reporty z oblasti</string>
 </resources>
