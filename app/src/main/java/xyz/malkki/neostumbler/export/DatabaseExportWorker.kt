@@ -4,15 +4,17 @@ import android.app.Notification
 import android.content.Context
 import android.content.pm.ServiceInfo
 import android.net.Uri
+import android.os.FileUtils
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.hasKeyWithValueOfType
-import java.nio.file.Files
+import java.util.zip.GZIPOutputStream
 import kotlin.io.path.createTempFile
 import kotlin.io.path.deleteIfExists
+import kotlin.io.path.inputStream
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import timber.log.Timber
@@ -25,6 +27,7 @@ class DatabaseExportWorker(appContext: Context, private val params: WorkerParame
     CoroutineWorker(appContext, params), KoinComponent {
     companion object {
         const val INPUT_OUTPUT_URI = "uri"
+        const val INPUT_COMPRESS = "compress"
 
         private const val DATABASE_EXPORT_NOTIFICATION_ID = 200001
     }
@@ -62,6 +65,8 @@ class DatabaseExportWorker(appContext: Context, private val params: WorkerParame
 
         setForeground(getForegroundInfo())
 
+        val compress = params.inputData.getBoolean(INPUT_COMPRESS, false)
+
         val uri = Uri.parse(params.inputData.getString(INPUT_OUTPUT_URI)!!)
 
         val tempFile = createTempFile(applicationContext.cacheDir.toPath(), "export", "db")
@@ -71,9 +76,17 @@ class DatabaseExportWorker(appContext: Context, private val params: WorkerParame
 
             reportDb.openHelper.writableDatabase.copyTo(tempFile)
 
-            applicationContext.contentResolver.openOutputStream(uri)!!.buffered().use { outputStream
-                ->
-                Files.copy(tempFile, outputStream)
+            val rawOutputStream = applicationContext.contentResolver.openOutputStream(uri)!!
+
+            val outputStream =
+                if (compress) {
+                    GZIPOutputStream(rawOutputStream)
+                } else {
+                    rawOutputStream
+                }
+
+            tempFile.inputStream().use { input ->
+                outputStream.use { output -> FileUtils.copy(input, output) }
             }
 
             return Result.success()
