@@ -66,7 +66,7 @@
     <string name="beacons">藍牙信標</string>
     <string name="mls_warning_title">MLS 已經退役</string>
     <string name="endpoint">端點</string>
-    <string name="path">路徑</string>
+    <string name="submission_path">路徑</string>
     <string name="api_key">API Key（可選）</string>
     <string name="no_endpoint_configured">未設定端點</string>
     <string name="coverage_layer">地圖覆蓋率層</string>

@@ -117,7 +117,7 @@
     <string name="mls_warning_title">MLS został wyłączony</string>
     <string name="use_dynamic_color_ui">Używaj dynamicznych kolorów interfejsu</string>
     <string name="delete_all_reports">Usuń wszystkie raporty</string>
-    <string name="path">Adres</string>
+    <string name="submission_path">Adres</string>
     <string name="wifi_scan_throttling">Ograniczanie skanowania Wi-Fi</string>
     <string name="settings_group_scanning">Skanowanie</string>
     <string name="api_key">Klucz API (opcjonalnie)</string>

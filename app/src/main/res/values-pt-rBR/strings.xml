@@ -56,7 +56,7 @@
     <string name="beacons">Sinalizadores Bluetooth</string>
     <string name="add_quick_settings_tile">Adicionar bloco às configurações rápidas para iniciar a busca facilmente?</string>
     <string name="endpoint">Ponto de recolha</string>
-    <string name="path">Caminho</string>
+    <string name="submission_path">Caminho</string>
     <string name="api_key">Chave de API (opcional)</string>
     <string name="settings_ignore_wifi_scan_throttling_title">Ignorar limitações de busca por Wi-Fi</string>
     <string name="wifi_scan_throttling">Limitações de busca por Wi-Fi</string>

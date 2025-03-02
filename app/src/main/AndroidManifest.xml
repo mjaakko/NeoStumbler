@@ -25,14 +25,6 @@
         android:name="android.permission.BLUETOOTH_ADMIN"
         android:maxSdkVersion="30" />
 
-    <queries>
-        <intent>
-            <action android:name="android.intent.action.VIEW" />
-
-            <data android:scheme="geo" />
-        </intent>
-    </queries>
-
     <application
         android:name=".StumblerApplication"
         android:allowBackup="true"

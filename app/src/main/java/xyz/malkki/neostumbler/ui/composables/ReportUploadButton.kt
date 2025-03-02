@@ -38,7 +38,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.geosubmit.ReportSendWorker
+import xyz.malkki.neostumbler.ichnaea.ReportSendWorker
 import xyz.malkki.neostumbler.ui.composables.reports.ToastOnReportUpload
 import xyz.malkki.neostumbler.ui.viewmodel.ReportsViewModel
 

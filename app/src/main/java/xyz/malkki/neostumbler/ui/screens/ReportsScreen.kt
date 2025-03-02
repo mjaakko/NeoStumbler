@@ -61,16 +61,15 @@ import xyz.malkki.neostumbler.extensions.defaultLocale
 import xyz.malkki.neostumbler.ui.composables.MLSWarningDialog
 import xyz.malkki.neostumbler.ui.composables.ReportUploadButton
 import xyz.malkki.neostumbler.ui.composables.reports.ForegroundScanningButton
+import xyz.malkki.neostumbler.ui.composables.reports.details.ReportDetailsDialog
 import xyz.malkki.neostumbler.ui.composables.shared.CenteredCircularProgressIndicator
 import xyz.malkki.neostumbler.ui.composables.shared.ConfirmationDialog
-import xyz.malkki.neostumbler.ui.composables.shared.Link
 import xyz.malkki.neostumbler.ui.composables.shared.Shimmer
 import xyz.malkki.neostumbler.ui.composables.shared.getAddress
 import xyz.malkki.neostumbler.ui.viewmodel.ReportsViewModel
 import xyz.malkki.neostumbler.utils.geocoder.CachingGeocoder
 import xyz.malkki.neostumbler.utils.geocoder.Geocoder
 import xyz.malkki.neostumbler.utils.geocoder.PlatformGeocoder
-import xyz.malkki.neostumbler.utils.showMapWithMarkerIntent
 
 @Composable
 fun ReportsScreen(viewModel: ReportsViewModel = koinViewModel()) {
@@ -127,7 +126,16 @@ private fun Reports(reportsViewModel: ReportsViewModel) {
         CachingGeocoder(PlatformGeocoder(AndroidGeocoder(context, context.defaultLocale), 1))
     }
 
+    val reportToShow = rememberSaveable { mutableStateOf<Long?>(null) }
+
     val reportToDelete = rememberSaveable { mutableStateOf<Long?>(null) }
+
+    if (reportToShow.value != null) {
+        ReportDetailsDialog(
+            reportId = reportToShow.value!!,
+            onDismiss = { reportToShow.value = null },
+        )
+    }
 
     if (reportToDelete.value != null) {
         ConfirmationDialog(
@@ -174,6 +182,7 @@ private fun Reports(reportsViewModel: ReportsViewModel) {
                             modifier = Modifier.animateItem(),
                             report = report,
                             geocoder = geocoder,
+                            onShowReportDetails = { reportId -> reportToShow.value = reportId },
                             onDeleteReport = { reportId -> reportToDelete.value = reportId },
                         )
                     } else {
@@ -212,6 +221,7 @@ private fun Report(
     modifier: Modifier,
     report: ReportWithStats,
     geocoder: Geocoder,
+    onShowReportDetails: (Long) -> Unit,
     onDeleteReport: (Long) -> Unit,
 ) {
     val context = LocalContext.current
@@ -222,15 +232,12 @@ private fun Report(
     val dateStr =
         "${DateFormat.getMediumDateFormat(context).format(date)} ${DateFormat.getTimeFormat(context).format(date)}"
 
-    val intent = showMapWithMarkerIntent(report.latitude, report.longitude)
-    val canShowMap = intent.resolveActivity(context.packageManager) != null
-
     Column(
         modifier =
             modifier
                 .combinedClickable(
                     enabled = true,
-                    onClick = {},
+                    onClick = { onShowReportDetails(report.reportId) },
                     onLongClickLabel = stringResource(id = R.string.delete_report),
                     onLongClick = { onDeleteReport(report.reportId) },
                 )
@@ -262,15 +269,8 @@ private fun Report(
                 count = report.bluetoothBeaconCount,
             )
         }
-        if (canShowMap) {
-            Link(
-                text = address.value,
-                onClick = { context.startActivity(intent) },
-                style = MaterialTheme.typography.bodySmall,
-            )
-        } else {
-            Text(text = address.value, style = MaterialTheme.typography.bodySmall)
-        }
+
+        Text(text = address.value ?: "", style = MaterialTheme.typography.bodySmall)
     }
 }
 

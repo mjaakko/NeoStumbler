@@ -72,7 +72,7 @@
     <string name="beacons">Bluetooth-bakens</string>
     <string name="add_quick_settings_tile">Tegel aan snelle instellingen toevoegen om gemakkelijk te scannen?</string>
     <string name="mls_warning_title">MLS is gestopt</string>
-    <string name="path">Pad</string>
+    <string name="submission_path">Pad</string>
     <string name="api_key">API-sleutel (optioneel)</string>
     <string name="unencrypted_endpoint_warning">Onversleutelde ontvangstlocatie</string>
     <string name="suggested_service_hosted_by">Aangeboden door:</string>

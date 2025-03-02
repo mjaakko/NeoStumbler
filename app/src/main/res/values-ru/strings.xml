@@ -66,7 +66,7 @@
     <string name="beacons">Bluetooth маячки</string>
     <string name="mls_warning_title">MLS был закрыт</string>
     <string name="endpoint">Точка назначения</string>
-    <string name="path">Путь</string>
+    <string name="submission_path">Путь</string>
     <string name="api_key">Ключ API (необязательно)</string>
     <string name="unencrypted_endpoint_warning">Незашифрованная конечная точка</string>
     <string name="suggested_services_title">Предлагаемые сервисы</string>

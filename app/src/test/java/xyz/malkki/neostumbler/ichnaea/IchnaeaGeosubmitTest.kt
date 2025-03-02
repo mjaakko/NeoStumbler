@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.geosubmit
+package xyz.malkki.neostumbler.ichnaea
 
 import java.nio.charset.StandardCharsets
 import java.util.zip.GZIPInputStream
@@ -14,7 +14,8 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import xyz.malkki.neostumbler.geosubmit.dto.ReportDto
+import xyz.malkki.neostumbler.ichnaea.dto.BluetoothBeaconDto
+import xyz.malkki.neostumbler.ichnaea.dto.ReportDto
 
 class IchnaeaGeosubmitTest {
     private lateinit var mockServer: MockWebServer
@@ -35,12 +36,13 @@ class IchnaeaGeosubmitTest {
     @Test
     fun `Test sending a report`() = runTest {
         val geosubmit: Geosubmit =
-            IchnaeaGeosubmit(
+            IchnaeaClient(
                 httpClient = OkHttpClient(),
-                geosubmitParams =
-                    GeosubmitParams(
+                ichnaeaParams =
+                    IchnaeaParams(
                         baseUrl = mockServer.url("/").toString(),
-                        path = "/v2/geosubmit",
+                        submissionPath = "/v2/geosubmit",
+                        locatePath = "/v1/geolocate",
                         apiKey = null,
                     ),
             )
@@ -66,13 +68,8 @@ class IchnaeaGeosubmitTest {
                     cellTowers = null,
                     bluetoothBeacons =
                         listOf(
-                            ReportDto.BluetoothBeaconDto(
+                            BluetoothBeaconDto(
                                 macAddress = "01:01:01:01:01:01",
-                                name = null,
-                                beaconType = null,
-                                id1 = null,
-                                id2 = null,
-                                id3 = null,
                                 age = 100,
                                 signalStrength = -70,
                             )

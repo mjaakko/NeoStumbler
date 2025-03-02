@@ -61,7 +61,7 @@
     <string name="mls_warning_title">MLS ha cerrado</string>
     <string name="wifis">Wi-Fis</string>
     <string name="endpoint">Destino</string>
-    <string name="path">Ruta</string>
+    <string name="submission_path">Ruta</string>
     <string name="invalid_url">URL inválida</string>
     <string name="suggested_services_title">Servicios sugeridos</string>
     <string name="suggested_service_hosted_by">Alojado por:</string>

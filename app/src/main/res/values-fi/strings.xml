@@ -43,6 +43,21 @@
     </plurals>
     <string name="toast_reports_upload_failed">Raporttien lähettäminen epäonnistui</string>
     <string name="toast_reports_upload_failed_no_endpoint">Raporttien lähettäminen epäonnistui, koska palvelinta ei ole määritetty</string>
+
+    <string name="speed_metres_per_second">Nopeus: %s m/s</string>
+    <string name="altitude_metres">Korkeus: %s m</string>
+
+    <string name="signal_strength_dbm">Signaalin voimakkuus: %d dBm</string>
+
+    <string name="unknown_cell_id">Tuntematon solutunnus</string>
+    <string name="mcc">MCC: %s</string>
+    <string name="mnc">MNC: %s</string>
+    <string name="lac">LAC: %s</string>
+
+    <string name="radio_type">Tyyppi: %s</string>
+
+    <string name="beacon_type">Majakan tyyppi: %s</string>
+
     <string name="report_upload_notification_channel_name">Raporttien lähetys</string>
     <string name="notification_sending_reports">Lähetetään raportteja</string>
     <string name="notification_wireless_scanning_title">Langaton skannaus päällä</string>
@@ -89,19 +104,24 @@
     <string name="settings_group_reports">Raportit</string>
     <string name="settings_group_scanning">Skannaus</string>
     <string name="settings_group_other">Muut</string>
+
     <string name="endpoint">Palvelin</string>
-    <string name="path">Polku</string>
+    <string name="submission_path">Polku</string>
     <string name="api_key">API-avain (vapaaehtoinen)</string>
     <string name="no_endpoint_configured">Palvelinta ei määriteltey</string>
+
     <string name="coverage_layer">Kartan kattavuustaso</string>
     <string name="coverage_layer_tile_json_url">Kartan kattavuustason TileJSON:n URL-osoite</string>
     <string name="coverage_layer_no_configured">Kartan kattavuustasoa ei määritelty</string>
+
     <string name="invalid_url">Virheellinen URL-osoite</string>
     <string name="unencrypted_endpoint_warning">Salaamaton palvelin</string>
+
     <string name="suggested_services_title">Ehdotetut palvelut</string>
     <string name="suggested_service_hosted_by">Ylläpitäjä:</string>
     <string name="suggested_service_website">Verkkosivu</string>
     <string name="suggested_service_terms_of_use">Käyttöehdot</string>
+
     <string name="settings_ignore_wifi_scan_throttling_title">Wi-Fi -skannaus ilman rajoituksia</string>
     <string name="settings_ignore_wifi_scan_throttling_description">Jos skannaus on rajoitettu, skannauksia voidaan tehdä vain neljä kertaa kahdessa minuutissa</string>
     <string name="wifi_scan_throttling">Wi-Fi -skannauksen rajoitukset</string>

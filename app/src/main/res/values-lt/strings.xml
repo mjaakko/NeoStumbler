@@ -77,7 +77,7 @@
     <string name="add_quick_settings_tile">Ar pridėti greitųjų nustatymų mygtuką paprastai skenavimo pradžiai?</string>
     <string name="mls_warning_title">MLS tarnyba išjungta</string>
     <string name="endpoint">Serveris</string>
-    <string name="path">Kelias</string>
+    <string name="submission_path">Kelias</string>
     <string name="api_key">API raktas (neprivalomas)</string>
     <string name="unencrypted_endpoint_warning">Serveris nenaudoja šifruoto ryšio</string>
     <string name="suggested_services_title">Siūlomos tarnybos</string>

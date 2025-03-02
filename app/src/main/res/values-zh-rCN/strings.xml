@@ -50,7 +50,7 @@
     <string name="add_quick_settings_tile">要添加快捷开关以方便启动扫描吗？</string>
     <string name="mls_warning_title">MLS 已经退役</string>
     <string name="endpoint">端点</string>
-    <string name="path">路径</string>
+    <string name="submission_path">路径</string>
     <string name="api_key">API 密钥（可选）</string>
     <string name="suggested_services_title">建议服务</string>
     <string name="suggested_service_website">网站</string>

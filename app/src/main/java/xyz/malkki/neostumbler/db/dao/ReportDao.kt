@@ -66,6 +66,10 @@ interface ReportDao {
     suspend fun getAllReportsNotUploaded(): List<ReportWithData>
 
     @Transaction
+    @Query("SELECT * FROM Report WHERE id = :reportId")
+    fun getReport(reportId: Long): Flow<ReportWithData>
+
+    @Transaction
     @Query("SELECT * FROM Report WHERE timestamp >= :from AND timestamp <= :to")
     suspend fun getAllReportsForTimerange(from: Instant, to: Instant): List<ReportWithData>
 

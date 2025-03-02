@@ -58,7 +58,7 @@
         <item quantity="other">%d rapporter opprettet</item>
     </plurals>
     <string name="export_data">Eksporter data</string>
-    <string name="path">Sti</string>
+    <string name="submission_path">Sti</string>
     <string name="endpoint">Endepunkt</string>
     <string name="unencrypted_endpoint_warning">Ukryptert endepunkt</string>
     <string name="suggested_services_title">Foreslåtte tjenester</string>

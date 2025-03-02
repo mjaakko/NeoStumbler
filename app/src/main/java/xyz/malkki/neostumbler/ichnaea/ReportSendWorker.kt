@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.geosubmit
+package xyz.malkki.neostumbler.ichnaea
 
 import android.app.Notification
 import android.content.Context
@@ -7,7 +7,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.ForegroundInfo
@@ -16,12 +15,7 @@ import androidx.work.hasKeyWithValueOfType
 import java.io.IOException
 import java.net.SocketTimeoutException
 import java.time.Instant
-import kotlin.collections.isNotEmpty
-import kotlin.collections.map
-import kotlin.getValue
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import okhttp3.Call
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -29,10 +23,12 @@ import timber.log.Timber
 import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
-import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.db.entities.ReportWithData
-import xyz.malkki.neostumbler.geosubmit.dto.ReportDto
+import xyz.malkki.neostumbler.ichnaea.dto.BluetoothBeaconDto
+import xyz.malkki.neostumbler.ichnaea.dto.CellTowerDto
+import xyz.malkki.neostumbler.ichnaea.dto.ReportDto
+import xyz.malkki.neostumbler.ichnaea.dto.WifiAccessPointDto
 
 // Send max 2000 reports in one request to avoid creating too large payloads
 private const val MAX_REPORTS_PER_BATCH = 2000
@@ -71,32 +67,13 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) :
     private val reportDao = reportDatabaseManager.reportDb.value.reportDao()
 
     private suspend fun getGeosubmitApi(): Geosubmit? {
-        return getGeosubmitParams()?.let { geosubmitParams ->
+        return settingsStore.getIchnaeaParams()?.let { geosubmitParams ->
             Timber.d(
-                "Using endpoint ${geosubmitParams.path} with API key ${geosubmitParams.apiKey} for Geosubmit"
+                "Using endpoint ${geosubmitParams.submissionPath} with API key ${geosubmitParams.apiKey} for Geosubmit"
             )
 
-            IchnaeaGeosubmit(httpClientProvider.await(), geosubmitParams)
+            IchnaeaClient(httpClientProvider.await(), geosubmitParams)
         }
-    }
-
-    private suspend fun getGeosubmitParams(): GeosubmitParams? {
-        return settingsStore.data
-            .map { prefs ->
-                val endpoint = prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)]
-
-                if (endpoint == null) {
-                    null
-                } else {
-                    val path =
-                        prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH)]
-                            ?: GeosubmitParams.DEFAULT_PATH
-                    val apiKey = prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY)]
-
-                    GeosubmitParams(endpoint, path, apiKey)
-                }
-            }
-            .first()
     }
 
     override suspend fun doWork(): Result {
@@ -158,15 +135,15 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) :
                     position = ReportDto.PositionDto.fromDbEntity(report.positionEntity),
                     wifiAccessPoints =
                         report.wifiAccessPointEntities
-                            .map(ReportDto.WifiAccessPointDto::fromDbEntity)
+                            .map(WifiAccessPointDto::fromDbEntity)
                             .takeIf { it.isNotEmpty() },
                     cellTowers =
-                        report.cellTowerEntities.map(ReportDto.CellTowerDto::fromDbEntity).takeIf {
+                        report.cellTowerEntities.map(CellTowerDto::fromDbEntity).takeIf {
                             it.isNotEmpty()
                         },
                     bluetoothBeacons =
                         report.bluetoothBeaconEntities
-                            .map(ReportDto.BluetoothBeaconDto::fromDbEntity)
+                            .map(BluetoothBeaconDto::fromDbEntity)
                             .takeIf { it.isNotEmpty() },
                 )
             }
@@ -210,7 +187,7 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) :
         }
 
         if (
-            exception is IchnaeaGeosubmit.IchnaeaGeosubmitException &&
+            exception is IchnaeaClient.HttpException &&
                 exception.httpStatusCode in HTTP_STATUS_CODE_SERVER_ERROR
         ) {
             // Retry server-side errors (HTTP status 5xx)

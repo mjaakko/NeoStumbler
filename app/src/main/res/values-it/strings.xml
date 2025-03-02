@@ -66,7 +66,7 @@
     <string name="add_quick_settings_tile">Aggiungere riquadro impostazioni rapide per iniziare scansione facilmente?</string>
     <string name="mls_warning_title">MLS è stato chiuso</string>
     <string name="endpoint">Endpoint</string>
-    <string name="path">Percorso</string>
+    <string name="submission_path">Percorso</string>
     <string name="api_key">Chiave API (opzionale)</string>
     <string name="unencrypted_endpoint_warning">Endpoint non cifrato</string>
     <string name="suggested_services_title">Servizi suggeriti</string>

@@ -77,7 +77,7 @@
     <string name="add_quick_settings_tile">ச்கேனிங்கை எளிதாக தொடங்க விரைவான அமைப்புகள் ஓடு சேர்க்கவா?</string>
     <string name="mls_warning_title">எம்.எல்.எச் மூடப்பட்டுள்ளது</string>
     <string name="endpoint">முனைப்புள்ளி</string>
-    <string name="path">பாதை</string>
+    <string name="submission_path">பாதை</string>
     <string name="api_key">பநிஇ விசை (விரும்பினால்)</string>
     <string name="unencrypted_endpoint_warning">மறைகுறியாக்கப்பட்ட இறுதிப்புள்ளி</string>
     <string name="suggested_services_title">பரிந்துரைக்கப்பட்ட சேவைகள்</string>

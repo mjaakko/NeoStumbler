@@ -62,7 +62,7 @@
     <string name="beacons">Balises Bluetooth</string>
     <string name="add_quick_settings_tile">Ajouter un bloc aux réglages rapides pour facilement démarrer des mesures ?</string>
     <string name="endpoint">Destination</string>
-    <string name="path">Chemin</string>
+    <string name="submission_path">Chemin</string>
     <string name="api_key">Clé API (optionnel)</string>
     <string name="settings_ignore_wifi_scan_throttling_title">Ignorer les limitations pour les mesures du Wi-Fi</string>
     <string name="wifi_scan_throttling">Limitations de mesures du Wi-Fi</string>

@@ -9,7 +9,7 @@ import java.util.UUID
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.extensions.getQuantityString
 import xyz.malkki.neostumbler.extensions.showToast
-import xyz.malkki.neostumbler.geosubmit.ReportSendWorker
+import xyz.malkki.neostumbler.ichnaea.ReportSendWorker
 import xyz.malkki.neostumbler.ui.composables.shared.EffectOnWorkCompleted
 
 @Composable

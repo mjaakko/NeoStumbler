@@ -8,6 +8,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import xyz.malkki.neostumbler.domain.LatLng
 import xyz.malkki.neostumbler.domain.Position
 
 @Entity(
@@ -68,3 +69,6 @@ data class PositionEntity(
         }
     }
 }
+
+val PositionEntity.latLng: LatLng
+    get() = LatLng(latitude, longitude)

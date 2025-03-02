@@ -107,7 +107,7 @@
     <string name="stop_scanning">Leállítás</string>
     <string name="export_started">Adatexportálás forrása: %1$s célja: %2$s</string>
     <string name="import_raw_database_description">A nyers adatbázis importálása felül fogja írni a jelenlegit</string>
-    <string name="path">Útvonal</string>
+    <string name="submission_path">Útvonal</string>
     <string name="cell_tower_icon_description">Mobil bázisállomás ikon</string>
     <string name="cancel">Mégsem</string>
     <string name="settings_group_reports">Eredmények</string>

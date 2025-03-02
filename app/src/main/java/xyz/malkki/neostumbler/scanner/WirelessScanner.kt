@@ -230,7 +230,11 @@ class WirelessScanner(
         filter { wifiAccessPoint ->
             val ssid = wifiAccessPoint.ssid
 
-            !ssid.isNullOrBlank() && !ssid.endsWith("_nomap")
+            !ssid.isNullOrBlank() &&
+                !ssid.endsWith("_nomap")
+                // Some access points have a SSID with only null characters
+                &&
+                ssid.all { char -> char != '\u0000' }
         }
 
     private fun <T : ObservedDevice<*>> Map<Position, List<T>>.filterOldData():

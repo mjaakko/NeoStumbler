@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.map
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.db.ReportDatabaseManager
-import xyz.malkki.neostumbler.geosubmit.ReportSendWorker
+import xyz.malkki.neostumbler.ichnaea.ReportSendWorker
 import xyz.malkki.neostumbler.ui.composables.reports.ToastOnReportUpload
 import xyz.malkki.neostumbler.ui.composables.shared.DateRangePickerDialog
 

@@ -48,7 +48,7 @@
     <string name="cells">Мобільні вежі</string>
     <string name="beacons">Bluetooth маяки</string>
     <string name="endpoint">Кінцева точка</string>
-    <string name="path">Шлях</string>
+    <string name="submission_path">Шлях</string>
     <string name="api_key">API-ключ (необов\'язково)</string>
     <string name="suggested_services_title">Рекомендовані сервіси</string>
     <string name="suggested_service_hosted_by">Хостинг:</string>
