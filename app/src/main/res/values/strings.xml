@@ -201,6 +201,9 @@
     <string name="db_prune_never">Never</string>
     <string name="manage_storage_title">Manage storage</string>
     <string name="db_size">Database size: %s</string>
+
+    <string name="db_schema_version">Database schema version: %d</string>
+    
     <string name="delete_data">Delete data</string>
     <string name="delete_reports_by_date">Delete reports by date</string>
     <string name="delete_reports_from_area">Delete reports from area</string>

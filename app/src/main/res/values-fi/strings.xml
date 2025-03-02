@@ -204,6 +204,8 @@
     <string name="db_prune_never">Ei ikinä</string>
     <string name="manage_storage_title">Hallinnoi tilan käyttöä</string>
     <string name="db_size">Tietokannan koko: %s</string>
+    <string name="db_schema_version">Tietokannan skeeman versio: %d</string>
+
     <string name="delete_data">Poista dataa</string>
     <string name="delete_reports_by_date">Poista raportit ajanjaksolta</string>
     <string name="delete_reports_from_area">Poista raportit alueelta</string>
