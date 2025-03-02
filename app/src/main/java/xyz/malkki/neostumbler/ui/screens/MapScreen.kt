@@ -303,7 +303,13 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                     view.getMapAsync { map ->
                         // No permission is needed to disable the location component
                         @SuppressLint("MissingPermission")
-                        map.locationComponent.isLocationComponentEnabled = false
+                        try {
+                            // The location component has to be disabled before destroying the view
+                            map.locationComponent.isLocationComponentEnabled = false
+                        } catch (_: IllegalStateException) {
+                            // And if disabling the location component fails, it's safe to destroy
+                            // the view
+                        }
                     }
 
                     view.lifecycle = null
