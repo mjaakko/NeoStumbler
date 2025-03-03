@@ -32,10 +32,10 @@ import xyz.malkki.neostumbler.scanner.movement.MovementDetector
 // Maximum accuracy for locations, used for filtering bad locations
 private const val LOCATION_MAX_ACCURACY = 200
 
-// Don't emit new locations until the distance between them is at least 40 metres or when at least
+// Don't emit new locations until the distance between them is at least 30 metres or when at least
 // 10 seconds have passed
 private val LOCATION_MAX_AGE_UNTIL_CHANGED = 10.seconds
-private const val LOCATION_MAX_DISTANCE_DIFF_UNTIL_CHANGED = 40
+private const val LOCATION_MAX_DISTANCE_DIFF_UNTIL_CHANGED = 30
 
 // Maximum age for observed devices. This is used to filter out old data when e.g. there is no GPS
 // signal and there's a gap between two locations
