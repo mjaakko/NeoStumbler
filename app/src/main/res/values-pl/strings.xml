@@ -84,7 +84,7 @@
     </plurals>
     <string name="import_raw_database_description">Importowanie bazy danych nadpisze obecną bazę</string>
     <string name="use">Użyj</string>
-    <string name="permission_rationale_post_notifications">Pokazywanie powiadomień o statusie wymaga uprawnienia dostępu do powiadomień</string>
+    <string name="permission_rationale_post_notifications">Pokazywanie powiadomień o statusie wymaga uprawnienia do wysyłania powiadomień</string>
     <string name="db_prune_six_months">Po sześciu miesiącach</string>
     <string name="delete">Usuń</string>
     <string name="import_data">Zamportuj dane</string>
