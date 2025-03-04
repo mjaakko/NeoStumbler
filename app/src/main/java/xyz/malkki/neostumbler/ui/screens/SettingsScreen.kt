@@ -55,6 +55,7 @@ fun SettingsScreen() {
             SliderSetting(
                 title = stringResource(R.string.wifi_scan_frequency),
                 preferenceKey = PreferenceKeys.WIFI_SCAN_DISTANCE,
+                // Some translations assume this will always be a multiple of ten
                 range = 10..250,
                 step = 10,
                 valueFormatter = {
@@ -65,6 +66,7 @@ fun SettingsScreen() {
             SliderSetting(
                 title = stringResource(R.string.cell_tower_scan_frequency),
                 preferenceKey = PreferenceKeys.CELL_SCAN_DISTANCE,
+                // Some translations assume this will always be a multiple of ten
                 range = 20..500,
                 step = 20,
                 valueFormatter = {

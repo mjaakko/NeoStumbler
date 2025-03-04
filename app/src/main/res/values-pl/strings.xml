@@ -94,7 +94,7 @@
     <string name="suggested_service_terms_of_use">Zasady użycia</string>
     <string name="scanner_status_notification_channel_name">Status skanowania</string>
     <string name="wireless_scanning">Skanowanie bezprzewodowe</string>
-    <string name="every_x_meters">Co %dm</string>
+    <string name="every_x_meters">Co %d metrów</string>
     <string name="map_tab_title">Mapa</string>
     <string name="statistics_tab_title">Statystyki</string>
     <string name="reports">Raporty:</string>
