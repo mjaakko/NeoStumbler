@@ -12,7 +12,7 @@
     <string name="ok">Ok</string>
     <string name="failed_to_open_selected_file">Nie udało się otworzyć wybranego pliku</string>
     <string name="permissions_needed">Wymagane są dodatkowe uprawnienia</string>
-    <string name="cell_tower_icon_description">Ikona BTS</string>
+    <string name="cell_tower_icon_description">Ikona wieży komórkowej</string>
     <string name="reports_tab_title">Raporty</string>
     <string name="send_reports">Wyślij raporty</string>
     <string name="reports_last_uploaded">Data ostatniej wysyłki: %s</string>
@@ -41,13 +41,13 @@
     <string name="wifis">Wi-Fi</string>
     <string name="beacons">Beacony Bluetooth</string>
     <string name="add_quick_settings_tile">Czy dodać kafelek szybkich ustawień, aby łatwiej rozpoczynać skanowanie?</string>
-    <string name="cells">Stacje bazowe</string>
+    <string name="cells">Wieże komórkowe</string>
     <string name="suggested_services_title">Sugerowane serwisy</string>
     <string name="suggested_service_website">Strona</string>
     <string name="suggested_service_hosted_by">Hostowane przez:</string>
     <string name="settings_ignore_wifi_scan_throttling_title">Ignoruj ograniczanie skanowania Wi-Fi</string>
     <string name="movement_detection_none_title">Brak</string>
-    <string name="cell_tower_scan_frequency">Częstotliwość skanowania BTS</string>
+    <string name="cell_tower_scan_frequency">Częstotliwość skanowania wież komórkowych</string>
     <string name="notification_style_basic_description">Pokazuje liczbę utworzonych raportów</string>
     <string name="notification_style_detailed_title">Dokładne</string>
     <string name="map_tile_source">Źródło map</string>
@@ -112,7 +112,7 @@
     <string name="notification_exporting_data">Eksportowanie danych…</string>
     <string name="export_data">Wyeksportuj dane</string>
     <string name="reupload_data">Wyślij dane ponownie</string>
-    <string name="permission_rationale_read_phone_state">Dostęp do stanu telefonu jest wymagany do skanowania BTSów</string>
+    <string name="permission_rationale_read_phone_state">Dostęp do stanu telefonu jest wymagany by skanować wieże komórkowe</string>
     <string name="movement_detection">Wykrywanie ruchu</string>
     <string name="about_app">O NeoStumblerze</string>
     <string name="ignore_battery_optimizations_description">Dla najlepszych osiągów optymalizacja baterii powinna być wyłączona. Skanowanie bezprzewodowe i dostęp do lokalizacji są znacznie ograniczone, gdy jest ona włączona, a ekran jest wyłączony</string>
@@ -137,7 +137,7 @@
     <string name="permission_rationale_location_map">Pokazywanie twojej lokalizacji na mapie wymaga uprawnienia do lokalizacji</string>
     <string name="notification_style_minimal_description">Pokazuje powiadomienia bez szczegółów</string>
     <string name="notification_style_basic_title">Podstawowe</string>
-    <string name="notification_style_detailed_description">Pokazuje liczbę stworzonych raportów oraz liczbę satelitów GNSS</string>
+    <string name="notification_style_detailed_description">Pokazuje liczbę stworzonych raportów oraz liczbę satelitów GPS</string>
     <string name="permission_rationale_bluetooth">Skanowanie beaconów Bluetooth wymaga uprawnienia Bluetooth</string>
     <string name="delete_data">Usuń dane</string>
     <string name="permission_rationale_background_location_quick_settings">Rozpoczynanie skanowania kafelkiem szybkich ustawień wymaga uprawnienia do lokalizacji w tle</string>
