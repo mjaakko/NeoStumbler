@@ -49,7 +49,7 @@
         <item quantity="few">Sukurtos %d ataskaitos</item>
         <item quantity="other">Sukurta %d ataskaitų</item>
     </plurals>
-    <string name="notification_wireless_scanning_content_satellite_stats">Naudojama palydovų: %1$d/%2$d</string>
+    <string name="notification_wireless_scanning_content_satellite_stats">Naudojama palydovų: %1$d⁄%2$d</string>
     <string name="ignore_battery_optimizations_title">Nepaisyti akumuliatoriaus optimizacijų</string>
     <string name="ignore_battery_optimizations_description">Norint pasiekti geriausių rezultatų, turėtų būti išjungtos akumuliatoriaus optimizacijos. Kol jos įjungtos, esant išjungtam ekranui, belaidžių tinklų skenavimas ir prieiga prie vietovės informacijos yra stipriai ribojami</string>
     <string name="battery_optimizations_not_disabled_warning">Akumuliatoriaus optimizacijos neišjungtos</string>

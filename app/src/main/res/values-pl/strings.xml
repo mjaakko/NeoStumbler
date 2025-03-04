@@ -32,9 +32,9 @@
         <item quantity="many">Stworzono %d raportów</item>
     </plurals>
     <plurals name="notification_wireless_scanning_content_satellite_stats">
-        <item quantity="one">%1$d/%2$d satelity w użyciu</item>
-        <item quantity="few">%1$d/%2$d satelitów w użyciu</item>
-        <item quantity="many">%1$d/%2$d satelitów w użyciu</item>
+        <item quantity="one">%1$d⁄%2$d satelity w użyciu</item>
+        <item quantity="few">%1$d⁄%2$d satelitów w użyciu</item>
+        <item quantity="many">%1$d⁄%2$d satelitów w użyciu</item>
     </plurals>
     <string name="export_csv">Eksportuj jako CSV</string>
     <string name="export_raw_database">Eksportuj bazę danych</string>

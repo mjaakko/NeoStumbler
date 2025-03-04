@@ -42,7 +42,7 @@
     <string name="toast_reports_upload_failed_no_endpoint">報告上傳失敗，因為沒有設定端點</string>
     <string name="report_upload_notification_channel_name">報告上傳</string>
     <string name="notification_sending_reports">正在上傳報告</string>
-    <string name="notification_wireless_scanning_content_satellite_stats">正在使用 %1$d/%2$d 個衛星</string>
+    <string name="notification_wireless_scanning_content_satellite_stats">正在使用 %1$d⁄%2$d 個衛星</string>
     <string name="ignore_battery_optimizations_title">忽略電池最佳化</string>
     <string name="battery_optimizations_not_disabled_warning">電池最佳化未停用</string>
     <string name="send_reports_automatically">自動上傳報告</string>

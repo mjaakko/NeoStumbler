@@ -77,7 +77,7 @@
     <string name="movement_detection_significant_motion_title">Sensor de movimento</string>
     <string name="movement_detection_significant_motion_description">Pausa o scan e GPS quando nenhum movimento significativo é detetado. Poupa bateria, mas não funciona bem em alguns dispositivos</string>
     <string name="movement_detection_none_description">Continuar o scan mesmo sem movimento</string>
-    <string name="notification_wireless_scanning_content_satellite_stats">%1$d/%2$d satélites em uso</string>
+    <string name="notification_wireless_scanning_content_satellite_stats">%1$d⁄%2$d satélites em uso</string>
     <string name="settings_group_reports">Relatórios</string>
     <string name="settings_group_other">Outros</string>
     <string name="notification_style">Estilo da notificação</string>
