@@ -162,4 +162,7 @@
     <string name="invalid_url">Нет действительной ссылки</string>
     <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Ок</string>
     <string name="troubleshooting_not_ok" tools:ignore="Typos">Не ок</string>
+    <string name="delete_reports_from_area">Удалить отчёты из области</string>
+    <string name="waiting_for_location">Ожидание геолокации</string>
+    <string name="system_default_language">Язык системы</string>
 </resources>
