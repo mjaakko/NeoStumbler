@@ -123,7 +123,7 @@ android {
             dimension "version"
         }
     }
-        
+
     applicationVariants.configureEach { variant ->
         if (variant.buildType.debuggable) {
             variant.resValue("string", "app_name", "NeoStumbler (dev, $variant.flavorName)")
@@ -178,7 +178,11 @@ android {
 }
 
 tasks.register('printVersionName') {
-    print project.android.defaultConfig.versionName
+    def versionName = project.android.defaultConfig.versionName
+
+    doLast {
+        println(versionName)
+    }
 }
 
 // Run Detekt task separately
