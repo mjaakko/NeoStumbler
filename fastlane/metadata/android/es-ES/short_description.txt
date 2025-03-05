@@ -1,0 +1,1 @@
+Aplicación para recolectar redes inalámbricas para servicios de geolocalización

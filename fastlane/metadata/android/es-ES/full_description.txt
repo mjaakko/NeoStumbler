@@ -1,0 +1,1 @@
+<b>NeoStumbles</b> es un aplicación para recolectar ubicaciones de redes Wi-Fi, torres celulares y beacons Bluetooth para servicios de geolocalización que sean compatibles con la API de Mozilla Location Services
