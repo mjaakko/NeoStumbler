@@ -31,6 +31,8 @@ jobs:
           string: ${{ matrix.version }}
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
       - name: Build debug APK
         run: ./gradlew assemble${{ steps.capitalize-version.outputs.capitalized }}Debug
       - name: Upload debug APK as artifact

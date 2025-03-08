@@ -37,6 +37,8 @@ jobs:
           java-version: '17'
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
       - name: Build project
         # Gradle build cache does not work with CodeQL
         run: ./gradlew assembleDebug --no-build-cache
