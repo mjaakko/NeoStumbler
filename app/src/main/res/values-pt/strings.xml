@@ -159,4 +159,6 @@
     <string name="coverage_layer_tile_json_url">TileJSON URL do mapa de cobertura</string>
     <string name="coverage_layer_no_configured">Nenhum mapa de cobertura definido</string>
     <string name="system_default_language">Língua do sistema</string>
+    <string name="waiting_for_location">A espera da localização</string>
+    <string name="delete_reports_from_area">Apagar relatórios desta área</string>
 </resources>
