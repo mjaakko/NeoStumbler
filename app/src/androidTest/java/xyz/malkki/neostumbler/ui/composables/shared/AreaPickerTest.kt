@@ -1,5 +1,6 @@
 package xyz.malkki.neostumbler.ui.composables.shared
 
+import android.Manifest
 import android.content.Context
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -10,6 +11,7 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.rule.GrantPermissionRule
 import java.io.IOException
 import kotlin.time.Duration
 import kotlinx.coroutines.Deferred
@@ -41,6 +43,10 @@ import xyz.malkki.neostumbler.domain.Position
 import xyz.malkki.neostumbler.location.LocationSource
 
 class AreaPickerTest {
+    @get:Rule
+    val permissionRule: GrantPermissionRule =
+        GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION)
+
     private val mockHttpClient: Call.Factory =
         object : Call.Factory {
             override fun newCall(request: Request): Call {

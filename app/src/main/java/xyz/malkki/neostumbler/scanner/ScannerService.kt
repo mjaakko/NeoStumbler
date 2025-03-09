@@ -78,6 +78,7 @@ import xyz.malkki.neostumbler.scanner.speed.SmoothenedGpsSpeedSource
 import xyz.malkki.neostumbler.utils.GpsStats
 import xyz.malkki.neostumbler.utils.getGpsStatsFlow
 
+@SuppressLint("MissingPermission")
 class ScannerService : Service() {
     companion object {
         private const val MAIN_ACTIVITY_PENDING_INTENT_REQUEST_CODE = 4321
@@ -213,7 +214,7 @@ class ScannerService : Service() {
             val gpsStatusFlow =
                 gpsActive.flatMapLatest { isGpsActive ->
                     if (isGpsActive) {
-                        @SuppressLint("MissingPermission") getGpsStatsFlow(this@ScannerService)
+                        getGpsStatsFlow(this@ScannerService)
                     } else {
                         flowOf(null)
                     }
@@ -236,7 +237,6 @@ class ScannerService : Service() {
         return binder
     }
 
-    @SuppressLint("MissingPermission")
     private fun startScanning() =
         coroutineScope.launch {
             if (scanning) {
