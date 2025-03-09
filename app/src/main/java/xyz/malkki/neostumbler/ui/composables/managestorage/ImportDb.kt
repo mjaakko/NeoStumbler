@@ -11,6 +11,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
+import java.util.zip.GZIPInputStream
+import kotlin.io.buffered
 import kotlin.io.copyTo
 import kotlin.io.path.createTempFile
 import kotlin.io.path.deleteIfExists
@@ -23,14 +25,13 @@ import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.extensions.getQuantityString
+import xyz.malkki.neostumbler.extensions.isGzipped
 import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.ui.composables.shared.ConfirmationDialog
 
 @Composable
-fun ImportDb() {
+fun ImportDb(reportDatabaseManager: ReportDatabaseManager = koinInject()) {
     val context = LocalContext.current
-
-    val reportDatabaseManager: ReportDatabaseManager = koinInject()
 
     val coroutineContext = rememberCoroutineScope()
 
@@ -56,9 +57,18 @@ fun ImportDb() {
                     }
 
                     withContext(Dispatchers.IO) {
-                        inputStream.use { input ->
-                            tempDbFile.outputStream().buffered().use { output ->
-                                input.copyTo(output)
+                        inputStream.buffered().use { rawInput ->
+                            val inputStreamDecompressed =
+                                if (rawInput.isGzipped()) {
+                                    GZIPInputStream(rawInput)
+                                } else {
+                                    rawInput
+                                }
+
+                            inputStreamDecompressed.use { input ->
+                                tempDbFile.outputStream().buffered().use { output ->
+                                    input.copyTo(output)
+                                }
                             }
                         }
                     }
