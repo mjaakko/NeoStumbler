@@ -1,6 +1,7 @@
 package xyz.malkki.neostumbler.ui.viewmodel
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Application
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -174,6 +175,7 @@ class MapViewModel(
     val myLocation =
         showMyLocation.flatMapLatest {
             if (it) {
+                @SuppressLint("MissingPermission")
                 locationSource.getLocations(2.seconds, usePassiveProvider = false)
             } else {
                 emptyFlow()

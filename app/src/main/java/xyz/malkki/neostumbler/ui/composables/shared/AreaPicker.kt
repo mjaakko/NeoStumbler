@@ -1,5 +1,8 @@
 package xyz.malkki.neostumbler.ui.composables.shared
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Color
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,12 +22,14 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
@@ -53,7 +58,7 @@ import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.domain.LatLng
-import xyz.malkki.neostumbler.domain.Position
+import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.get
 import xyz.malkki.neostumbler.location.LocationSource
 import xyz.malkki.neostumbler.ui.map.LifecycleAwareMapView
@@ -119,10 +124,27 @@ private const val MAX_ZOOM = 15.0
 private const val DEFAULT_ZOOM = 12.0
 
 @Composable
+private fun getCurrentLocation(
+    context: Context = LocalContext.current,
+    locationSource: LocationSource = koinInject(),
+): State<LatLng?> =
+    produceState<LatLng?>(initialValue = null) {
+        value =
+            if (
+                context.checkMissingPermissions(Manifest.permission.ACCESS_FINE_LOCATION).isEmpty()
+            ) {
+                @SuppressLint("MissingPermission")
+                locationSource.getLocations(1.seconds, usePassiveProvider = false).first().latLng
+            } else {
+                // If we don't have location permission, just show any location to avoid crashing
+                LatLng(0.0, 0.0)
+            }
+    }
+
+@Composable
 fun AreaPickerMap(
     settingsStore: DataStore<Preferences> = koinInject(PREFERENCES),
     httpClientProvider: Deferred<Call.Factory> = koinInject(),
-    locationSource: LocationSource = koinInject(),
     onCircleUpdated: (Pair<LatLng, Double>) -> Unit,
 ) {
     val lifecycle = LocalLifecycleOwner.current.lifecycle
@@ -133,10 +155,7 @@ fun AreaPickerMap(
 
     val httpClient = produceState<Call.Factory?>(null) { value = httpClientProvider.await() }
 
-    val currentLocation =
-        produceState<Position?>(null) {
-            value = locationSource.getLocations(1.seconds, usePassiveProvider = false).first()
-        }
+    val currentLocation = getCurrentLocation()
 
     if (mapTileSource.value == null || httpClient.value == null || currentLocation.value == null) {
         Column(
@@ -175,7 +194,7 @@ fun AreaPickerMap(
                         }
                     )
 
-                    val cameraPos = currentLocation.value!!.latLng.asMapLibreLatLng()
+                    val cameraPos = currentLocation.value!!.asMapLibreLatLng()
 
                     map.cameraPosition =
                         CameraPosition.Builder().target(cameraPos).zoom(DEFAULT_ZOOM).build()
