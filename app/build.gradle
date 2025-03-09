@@ -50,6 +50,7 @@ android {
                 'en',
                 'cs',
                 'de-rDE',
+                'es',
                 'fi',
                 'fr-rFR',
                 'hu',
