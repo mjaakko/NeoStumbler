@@ -82,7 +82,7 @@
     <string name="movement_detection">Detecção de movimento</string>
     <string name="movement_detection_none_title">Nenhuma</string>
     <string name="movement_detection_none_description">Continuar a busca mesmo ao parar de mover</string>
-    <string name="movement_detection_location_title">Baseado em localização</string>
+    <string name="movement_detection_location_title">Baseado na localização</string>
     <string name="movement_detection_location_description">Pausa a busca quando a localização não muda. Mantém o GPS ativo</string>
     <string name="movement_detection_significant_motion_title">Sensor de movimento</string>
     <string name="notification_style">Estilo da notificação</string>
@@ -161,6 +161,6 @@
     <string name="troubleshooting_not_ok" tools:ignore="Typos">Não correto</string>
     <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Ok</string>
     <string name="system_default_language">Idioma padrão do sistema</string>
-    <string name="waiting_for_location">Esperanto pela localização</string>
+    <string name="waiting_for_location">Esperando pela localização</string>
     <string name="delete_reports_from_area">Excluir relatórios de uma área</string>
 </resources>
