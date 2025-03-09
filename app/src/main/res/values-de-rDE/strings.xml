@@ -79,7 +79,7 @@
     <string name="mls_warning_title">MLS hat den Betrieb eingestellt</string>
     <string name="cancel">Abbrechen</string>
     <string name="use">Benutzen</string>
-    <string name="notification_wireless_scanning_content_satellite_stats">%1$d/%2$d Satelliten werden verwendet</string>
+    <string name="notification_wireless_scanning_content_satellite_stats">%1$d⁄%2$d Satelliten werden verwendet</string>
     <string name="unencrypted_endpoint_warning">Unverschlüsselter Endpunkt</string>
     <string name="suggested_services_title">Vorgeschlagene Dienste</string>
     <string name="suggested_service_hosted_by">Betrieben von:</string>
