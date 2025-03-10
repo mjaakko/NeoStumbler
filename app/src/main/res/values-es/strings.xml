@@ -161,4 +161,5 @@
     <string name="delete_data">Borrar datos</string>
     <string name="use_dynamic_color_ui">Usar colores dinámicos en la interfaz</string>
     <string name="db_prune_one_month">Tras un mes</string>
+    <string name="export_raw_database_compress">Comprimir el fichero de base de datos</string>
 </resources>
