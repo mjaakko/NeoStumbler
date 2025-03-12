@@ -163,4 +163,5 @@
     <string name="system_default_language">Idioma padrão do sistema</string>
     <string name="waiting_for_location">Esperando pela localização</string>
     <string name="delete_reports_from_area">Excluir relatórios de uma área</string>
+    <string name="export_raw_database_compress">Comprimir o arquivo do banco de dados</string>
 </resources>

@@ -159,4 +159,7 @@
     <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Problemų neaptikta</string>
     <string name="troubleshooting_not_ok" tools:ignore="Typos">Aptikta problemų</string>
     <string name="system_default_language">Numatytoji sistemos kalba</string>
+    <string name="export_raw_database_compress">Suglaudinti duomenų bazės failą</string>
+    <string name="waiting_for_location">Laukiama vietos informacijos</string>
+    <string name="delete_reports_from_area">Šalinti ataskaitas iš šios apylinkės</string>
 </resources>
