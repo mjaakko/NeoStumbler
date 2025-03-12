@@ -9,7 +9,7 @@
     <string name="warning_icon_description">Иконка предупреждения</string>
     <string name="reports_not_uploaded">Отчётов не отправлено: %d</string>
     <string name="delete_report">Удалить отчёт</string>
-    <string name="notification_wireless_scanning_content_satellite_stats">%1$d/%2$d спутников используется</string>
+    <string name="notification_wireless_scanning_content_satellite_stats">%1$d⁄%2$d спутников используется</string>
     <string name="import_database_not_valid">Выбранный файл не содержит не содержит действительной базы данных</string>
     <string name="ignore_battery_optimizations_title">Игнорировать оптимизацию батареи</string>
     <string name="import_data">Импортировать данные</string>

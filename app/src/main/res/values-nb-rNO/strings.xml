@@ -73,7 +73,7 @@
     <string name="notification_style_minimal_description">Viser merknaden uten detaljer</string>
     <string name="notification_style_detailed_title">Detaljert</string>
     <string name="notification_style_detailed_description">Viser antallet rapporter og antallet GNSS-satellitter</string>
-    <string name="notification_wireless_scanning_content_satellite_stats">%1$d/%2$d satellitter i bruk</string>
+    <string name="notification_wireless_scanning_content_satellite_stats">%1$d⁄%2$d satellitter i bruk</string>
     <string name="ignore_battery_optimizations_title">Ignorer batterioptimaliseringer</string>
     <string name="send_reports_automatically">Send rapporter automatisk</string>
     <string name="notification_exporting_data">Eksporterer data …</string>

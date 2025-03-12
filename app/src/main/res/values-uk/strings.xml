@@ -4,7 +4,7 @@
     <string name="notification_style_basic_title">Базово</string>
     <string name="delete">Видалити</string>
     <string name="unencrypted_endpoint_warning">Не зашифрована кінцева точка</string>
-    <string name="notification_wireless_scanning_content_satellite_stats">%1$d/%2$d супутників використовуються</string>
+    <string name="notification_wireless_scanning_content_satellite_stats">%1$d⁄%2$d супутників використовуються</string>
     <string name="send_reports_automatically">Автоматично відправляти звіти</string>
     <string name="add_quick_settings_tile">Додати плитку швидких налаштувань для легкого запуску сканування?</string>
     <string name="reset">Скинути</string>

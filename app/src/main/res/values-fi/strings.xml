@@ -73,7 +73,7 @@
         <item quantity="other">%d raporttia luotu</item>
     </plurals>
     <string name="notification_wireless_scanning_content_satellite_stats">
-        %1$d/%2$d satelliittia käytössä
+        %1$d⁄%2$d satelliittia käytössä
     </string>
 
     <string name="ignore_battery_optimizations_title">Akun optimointi</string>
