@@ -151,4 +151,7 @@
     <string name="wifi_scan_throttling_explanation">您需要在您的裝置的設定中停用 Wi-Fi 掃描調節才能啟用此通能。 通常可在開發人員選項找到</string>
     <string name="movement_detection_location_description">當位置沒有變化時暫停掃描。 GPS 始終開啟</string>
     <string name="system_default_language">系統預設語言</string>
+    <string name="delete_reports_from_area">按區域刪除報告</string>
+    <string name="export_raw_database_compress">壓縮資料庫檔案</string>
+    <string name="waiting_for_location">等待位置</string>
 </resources>
