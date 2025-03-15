@@ -34,7 +34,7 @@
     <string name="send_reports">Отправить отчёты</string>
     <string name="reports">Отчёты:</string>
     <string name="reports_total">Всего отчётов: %d</string>
-    <string name="start_scanning">Начать сканирование</string>
+    <string name="start_scanning">Сканировать</string>
     <string name="stop_scanning">Прекратить сканирование</string>
     <string name="delete_report_confirmation">Вы уверены, что хотите удалить отчёт?</string>
     <plurals name="toast_reports_uploaded">
@@ -165,4 +165,5 @@
     <string name="delete_reports_from_area">Удалить отчёты из области</string>
     <string name="waiting_for_location">Ожидание геолокации</string>
     <string name="system_default_language">Язык системы</string>
+    <string name="export_raw_database_compress">Сжать файл базы данных</string>
 </resources>
