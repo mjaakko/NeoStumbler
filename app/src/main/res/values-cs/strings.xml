@@ -161,4 +161,5 @@
     <string name="system_default_language">Výchozí jazyk</string>
     <string name="waiting_for_location">Čekání na polohu</string>
     <string name="delete_reports_from_area">Smazat reporty z oblasti</string>
+    <string name="export_raw_database_compress">Komprese exportované databáze</string>
 </resources>
