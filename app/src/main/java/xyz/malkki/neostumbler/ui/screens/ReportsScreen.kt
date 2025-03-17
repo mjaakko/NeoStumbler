@@ -147,7 +147,7 @@ private fun Reports(reportsViewModel: ReportsViewModel) {
     LaunchedEffect(reports.itemCount) {
         // Scroll list to the top if it was at the top before
         if (listWasAtTop) {
-            listState.scrollToItem(0)
+            listState.animateScrollToItem(0)
         }
     }
 
@@ -171,12 +171,13 @@ private fun Reports(reportsViewModel: ReportsViewModel) {
 
                     if (report != null) {
                         Report(
+                            modifier = Modifier.animateItem(),
                             report = report,
                             geocoder = geocoder,
                             onDeleteReport = { reportId -> reportToDelete.value = reportId },
                         )
                     } else {
-                        ReportPlaceholder()
+                        ReportPlaceholder(modifier = Modifier.animateItem())
                     }
                 }
             }
@@ -185,11 +186,11 @@ private fun Reports(reportsViewModel: ReportsViewModel) {
 }
 
 @Composable
-private fun ReportPlaceholder() {
+private fun ReportPlaceholder(modifier: Modifier) {
     val density = LocalDensity.current
     val height = with(density) { 14.sp.toDp() }
 
-    Column(modifier = Modifier.wrapContentHeight().padding(vertical = 4.dp)) {
+    Column(modifier = modifier.wrapContentHeight().padding(vertical = 4.dp)) {
         Shimmer(
             modifier =
                 Modifier.height(height)
@@ -207,7 +208,12 @@ private fun ReportPlaceholder() {
 }
 
 @Composable
-private fun Report(report: ReportWithStats, geocoder: Geocoder, onDeleteReport: (Long) -> Unit) {
+private fun Report(
+    modifier: Modifier,
+    report: ReportWithStats,
+    geocoder: Geocoder,
+    onDeleteReport: (Long) -> Unit,
+) {
     val context = LocalContext.current
 
     val address = getAddress(report.latitude, report.longitude, geocoder = geocoder)
@@ -221,7 +227,8 @@ private fun Report(report: ReportWithStats, geocoder: Geocoder, onDeleteReport: 
 
     Column(
         modifier =
-            Modifier.combinedClickable(
+            modifier
+                .combinedClickable(
                     enabled = true,
                     onClick = {},
                     onLongClickLabel = stringResource(id = R.string.delete_report),
