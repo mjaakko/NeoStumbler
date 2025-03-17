@@ -216,6 +216,7 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                                     // ourself
                                     .locationEngine(null)
                                     .useDefaultLocationEngine(false)
+                                    .useSpecializedLocationLayer(true)
                                     .build()
                             )
                             @SuppressLint("MissingPermission")
