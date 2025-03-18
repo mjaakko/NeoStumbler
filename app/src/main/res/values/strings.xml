@@ -19,10 +19,10 @@
     </string>
     <string name="permissions_needed">Permissions needed</string>
     <string name="permissions_not_granted">Permissions that are required were not granted</string>
-    <string name="wifi_icon_description">Wi-Fi icon description</string>
-    <string name="cell_tower_icon_description">Cell tower icon description</string>
-    <string name="bluetooth_icon_description">Bluetooth icon description</string>
-    <string name="warning_icon_description">Warning icon description</string>
+    <string name="wifi_icon_description">Wi-Fi icon</string>
+    <string name="cell_tower_icon_description">Cell tower icon</string>
+    <string name="bluetooth_icon_description">Bluetooth icon</string>
+    <string name="warning_icon_description">Warning icon</string>
     <string name="scanner_status_notification_channel_name">Scanning status</string>
     <string name="wireless_scanning">Wireless scanning</string>
     <string name="map_tab_title">Map</string>
