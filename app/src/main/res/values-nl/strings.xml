@@ -34,7 +34,7 @@
     <string name="bluetooth_icon_description">Bluetooth-icoon</string>
     <string name="map_tab_title">Kaart</string>
     <string name="settings_tab_title">Instellingen</string>
-    <string name="send_reports">Rapporten versturen</string>
+    <string name="send_reports">Rapporten verzenden</string>
     <string name="reports">Rapporten:</string>
     <string name="reports_total">Aantal rapporten: %d</string>
     <string name="reports_not_uploaded">Niet-geüploade rapporten: %d</string>
@@ -47,7 +47,7 @@
         <item quantity="one">%d raport opgestuurd</item>
         <item quantity="other">%d rapporten opgestuurd</item>
     </plurals>
-    <string name="notification_sending_reports">Rapporten versturen</string>
+    <string name="notification_sending_reports">Rapporten verzenden</string>
     <plurals name="notification_wireless_scanning_content_reports_created">
         <item quantity="one">%d rapport gemaakt</item>
         <item quantity="other">%d rapporten gemaakt</item>
@@ -157,4 +157,5 @@
     <string name="system_default_language">Systeem taal</string>
     <string name="waiting_for_location">Wachten op locatie</string>
     <string name="delete_reports_from_area">Rapporten van gebied verwĳderen</string>
+    <string name="export_raw_database_compress">comprimeer het databasebestand</string>
 </resources>
