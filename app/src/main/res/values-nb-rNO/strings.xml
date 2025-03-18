@@ -12,7 +12,7 @@
     <string name="delete_report">Slett rapport</string>
     <string name="export_notification_channel_name">Dataeksport</string>
     <string name="stop">Stopp</string>
-    <string name="wifi_icon_description">Beskrivelse av Wi-Fi-ikonet</string>
+    <string name="wifi_icon_description">Wi-Fi-ikon</string>
     <string name="reports">Rapporter:</string>
     <string name="reports_total">Totalt antall rapporter: %d</string>
     <string name="export_started">Eksporterer data fra %1$s til %2$s</string>
@@ -25,7 +25,7 @@
     <string name="settings_group_reports">Rapporter</string>
     <string name="settings_group_scanning">Skanning</string>
     <string name="movement_detection_significant_motion_title">Bevegelsessensor</string>
-    <string name="warning_icon_description">Beskrivelse av advarselsikonet</string>
+    <string name="warning_icon_description">Advarselsikon</string>
     <string name="delete_report_confirmation">Slett rapporten?</string>
     <plurals name="toast_reports_uploaded">
         <item quantity="other">Lastet opp %d rapporter</item>
@@ -42,7 +42,7 @@
     <string name="permission_rationale_read_phone_state">Tilgang til telefontilstand kreves for skanning av mobilmaster</string>
     <string name="cancel">Avbryt</string>
     <string name="use">Bruk</string>
-    <string name="bluetooth_icon_description">Beskrivelse av Bluetooth-ikonet</string>
+    <string name="bluetooth_icon_description">Blåtannsikon</string>
     <string name="scanner_status_notification_channel_name">Skanningsstatus</string>
     <string name="wireless_scanning">Trådløs skanning</string>
     <string name="reports_tab_title">Rapporter</string>
@@ -51,8 +51,8 @@
     <string name="reports_last_uploaded">Sist opplastede rapporter: %s</string>
     <string name="start_scanning">Start skanning</string>
     <string name="stop_scanning">Stopp skanning</string>
-    <string name="permissions_not_granted">Tillatelser ikke gitt</string>
-    <string name="cell_tower_icon_description">Beskrivelse av ikonet for mobilmast</string>
+    <string name="permissions_not_granted">Påkrevde tilganger ble ikke innvilget</string>
+    <string name="cell_tower_icon_description">Mobilmast-ikon</string>
     <string name="notification_wireless_scanning_title">Skanner trådløst …</string>
     <plurals name="notification_wireless_scanning_content_reports_created">
         <item quantity="other">%d rapporter opprettet</item>
