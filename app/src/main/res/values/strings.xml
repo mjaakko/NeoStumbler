@@ -18,7 +18,7 @@
         Failed to open the selected file
     </string>
     <string name="permissions_needed">Permissions needed</string>
-    <string name="permissions_not_granted">Permissions not granted</string>
+    <string name="permissions_not_granted">Permissions that are required were not granted</string>
     <string name="wifi_icon_description">Wi-Fi icon description</string>
     <string name="cell_tower_icon_description">Cell tower icon description</string>
     <string name="bluetooth_icon_description">Bluetooth icon description</string>
