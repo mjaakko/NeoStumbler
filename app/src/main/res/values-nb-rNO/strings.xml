@@ -5,14 +5,14 @@
     <string name="yes">Ja</string>
     <string name="no">Nei</string>
     <string name="reset">Tilbakestill</string>
-    <string name="save">Lagre</string>
+    <string name="save">Spar</string>
     <string name="map_tab_title">Kart</string>
     <string name="statistics_tab_title">Statistikk</string>
     <string name="settings_tab_title">Innstillinger</string>
     <string name="delete_report">Slett rapport</string>
     <string name="export_notification_channel_name">Dataeksport</string>
     <string name="stop">Stopp</string>
-    <string name="wifi_icon_description">Wi-Fi-ikon</string>
+    <string name="wifi_icon_description">Beskrivelse av Wi-Fi-ikonet</string>
     <string name="reports">Rapporter:</string>
     <string name="reports_total">Totalt antall rapporter: %d</string>
     <string name="export_started">Eksporterer data fra %1$s til %2$s</string>
@@ -22,11 +22,10 @@
     <string name="notification_style_basic_title">Grunnleggende</string>
     <string name="notification_style_basic_description">Viser antall opprettede rapporter</string>
     <string name="permission_rationale_post_notifications">Visning av statusmerknader krever tilgang til merknader</string>
-
     <string name="settings_group_reports">Rapporter</string>
     <string name="settings_group_scanning">Skanning</string>
     <string name="movement_detection_significant_motion_title">Bevegelsessensor</string>
-    <string name="warning_icon_description">Advarselsikon</string>
+    <string name="warning_icon_description">Beskrivelse av advarselsikonet</string>
     <string name="delete_report_confirmation">Slett rapporten?</string>
     <plurals name="toast_reports_uploaded">
         <item quantity="other">Lastet opp %d rapporter</item>
@@ -35,7 +34,7 @@
     <string name="report_upload_notification_channel_name">Rapport-opplastninger</string>
     <string name="notification_sending_reports">Rapportforsendelse</string>
     <string name="api_key">API-nøkkel (valgfritt)</string>
-    <string name="permissions_needed">Påkrevde tilganger</string>
+    <string name="permissions_needed">Nødvendige tillatelser</string>
     <string name="show_my_location">Vis min posisjon</string>
     <string name="wifi_scan_throttling">Begrensning av Wi-Fi-skanning</string>
     <string name="permission_rationale_fine_location">Innhenting av nåværende posisjon krever tilgang til nøyaktig posisjon</string>
@@ -43,7 +42,7 @@
     <string name="permission_rationale_read_phone_state">Tilgang til telefontilstand kreves for skanning av mobilmaster</string>
     <string name="cancel">Avbryt</string>
     <string name="use">Bruk</string>
-    <string name="bluetooth_icon_description">Blåtannsikon</string>
+    <string name="bluetooth_icon_description">Beskrivelse av Bluetooth-ikonet</string>
     <string name="scanner_status_notification_channel_name">Skanningsstatus</string>
     <string name="wireless_scanning">Trådløs skanning</string>
     <string name="reports_tab_title">Rapporter</string>
@@ -52,8 +51,8 @@
     <string name="reports_last_uploaded">Sist opplastede rapporter: %s</string>
     <string name="start_scanning">Start skanning</string>
     <string name="stop_scanning">Stopp skanning</string>
-    <string name="permissions_not_granted">Påkrevde tilganger ble ikke innvilget</string>
-    <string name="cell_tower_icon_description">Mobilmast-ikon</string>
+    <string name="permissions_not_granted">Tillatelser ikke gitt</string>
+    <string name="cell_tower_icon_description">Beskrivelse av ikonet for mobilmast</string>
     <string name="notification_wireless_scanning_title">Skanner trådløst …</string>
     <plurals name="notification_wireless_scanning_content_reports_created">
         <item quantity="other">%d rapporter opprettet</item>
@@ -93,4 +92,10 @@
     <string name="permission_rationale_location_map">Visning av din posisjon på kartet krever posisjonstilgang</string>
     <string name="permission_rationale_bluetooth">Skanning av Blåtannssignalgivere krever tilgang til Blåtann</string>
     <string name="permission_rationale_background_location_quick_settings">Start av skanning fra hurtiginnstillinger krever tilgang til posisjon i bakgrunnen</string>
+    <string name="no_data">Ingen data</string>
+    <string name="failed_to_open_selected_file">Kunne ikke åpne den valgte filen</string>
+    <string name="delete">Slett</string>
+    <string name="waiting_for_location">Venter på data</string>
+    <string name="reports_last_uploaded_never">Aldri</string>
+    <string name="reports_empty">Ingen rapporter ennå</string>
 </resources>
