@@ -6,7 +6,7 @@
         <item quantity="many">%d отчётов создано</item>
         <item quantity="other">%d отчётов создано</item>
     </plurals>
-    <string name="warning_icon_description">Описание иконки предупреждения</string>
+    <string name="warning_icon_description">Иконка предупреждения</string>
     <string name="reports_not_uploaded">Отчётов не отправлено: %d</string>
     <string name="delete_report">Удалить отчёт</string>
     <string name="notification_wireless_scanning_content_satellite_stats">%1$d⁄%2$d спутников используется</string>
@@ -27,7 +27,7 @@
     <string name="failed_to_open_selected_file">Не удалось открыть выбранный файл</string>
     <string name="permissions_needed">Необходимы разрешения</string>
     <string name="wifi_icon_description">Описание иконки Wi-Fi</string>
-    <string name="cell_tower_icon_description">Описание иконки вышки связи</string>
+    <string name="cell_tower_icon_description">Иконка вышки связи</string>
     <string name="map_tab_title">Карта</string>
     <string name="reports_tab_title">Отчёты</string>
     <string name="settings_tab_title">Настройки</string>
@@ -117,8 +117,8 @@
     <string name="yes">Да</string>
     <string name="save">Сохранить</string>
     <string name="cancel">Отмена</string>
-    <string name="permissions_not_granted">Разрешения не были выданы</string>
-    <string name="bluetooth_icon_description">Описание иконки Bluetooth</string>
+    <string name="permissions_not_granted">Необходимые разрешения не были выданы</string>
+    <string name="bluetooth_icon_description">Иконка Bluetooth</string>
     <string name="send_reports_automatically">Отправлять отчёты автоматически</string>
     <string name="notification_exporting_data">Экспортируем данные…</string>
     <string name="export_notification_channel_name">Экспорт данных</string>
