@@ -157,4 +157,5 @@
     <string name="system_default_language">Systeem taal</string>
     <string name="waiting_for_location">Wachten op locatie</string>
     <string name="delete_reports_from_area">Rapporten van gebied verwĳderen</string>
+    <string name="export_raw_database_compress">comprimeer het databasebestand</string>
 </resources>

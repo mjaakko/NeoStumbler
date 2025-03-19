@@ -5,7 +5,7 @@
     <string name="yes">Ja</string>
     <string name="no">Nei</string>
     <string name="reset">Tilbakestill</string>
-    <string name="save">Lagre</string>
+    <string name="save">Spar</string>
     <string name="map_tab_title">Kart</string>
     <string name="statistics_tab_title">Statistikk</string>
     <string name="settings_tab_title">Innstillinger</string>
@@ -22,7 +22,6 @@
     <string name="notification_style_basic_title">Grunnleggende</string>
     <string name="notification_style_basic_description">Viser antall opprettede rapporter</string>
     <string name="permission_rationale_post_notifications">Visning av statusmerknader krever tilgang til merknader</string>
-
     <string name="settings_group_reports">Rapporter</string>
     <string name="settings_group_scanning">Skanning</string>
     <string name="movement_detection_significant_motion_title">Bevegelsessensor</string>
@@ -35,7 +34,7 @@
     <string name="report_upload_notification_channel_name">Rapport-opplastninger</string>
     <string name="notification_sending_reports">Rapportforsendelse</string>
     <string name="api_key">API-nøkkel (valgfritt)</string>
-    <string name="permissions_needed">Påkrevde tilganger</string>
+    <string name="permissions_needed">Nødvendige tillatelser</string>
     <string name="show_my_location">Vis min posisjon</string>
     <string name="wifi_scan_throttling">Begrensning av Wi-Fi-skanning</string>
     <string name="permission_rationale_fine_location">Innhenting av nåværende posisjon krever tilgang til nøyaktig posisjon</string>
@@ -93,4 +92,10 @@
     <string name="permission_rationale_location_map">Visning av din posisjon på kartet krever posisjonstilgang</string>
     <string name="permission_rationale_bluetooth">Skanning av Blåtannssignalgivere krever tilgang til Blåtann</string>
     <string name="permission_rationale_background_location_quick_settings">Start av skanning fra hurtiginnstillinger krever tilgang til posisjon i bakgrunnen</string>
+    <string name="no_data">Ingen data</string>
+    <string name="failed_to_open_selected_file">Kunne ikke åpne den valgte filen</string>
+    <string name="delete">Slett</string>
+    <string name="waiting_for_location">Venter på data</string>
+    <string name="reports_last_uploaded_never">Aldri</string>
+    <string name="reports_empty">Ingen rapporter ennå</string>
 </resources>

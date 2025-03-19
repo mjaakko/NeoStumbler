@@ -11,16 +11,12 @@
     <string name="stop">停止</string>
     <string name="delete">削除</string>
     <string name="no_data">データがありません</string>
-
     <string name="waiting_for_location">位置情報を取得中</string>
-
     <string name="failed_to_open_selected_file">
         選択されたファイルを開けませんでした
     </string>
-
     <string name="permissions_needed">権限が必要です</string>
     <string name="permissions_not_granted">必要な権限が付与されていません</string>
-
     <string name="wifi_icon_description">Wi-Fiアイコン</string>
     <string name="cell_tower_icon_description">基地局アイコン</string>
     <string name="bluetooth_icon_description">Bluetoothアイコン</string>
@@ -48,24 +44,18 @@
     <string name="toast_reports_upload_failed">レポートのアップロードに失敗しました</string>
     <string name="toast_reports_upload_failed_no_endpoint">エンドポイントが設定されていないため、ファイルのアップロードに失敗しました。</string>
     <string name="report_upload_notification_channel_name">レポートの送信</string>
-
     <string name="notification_sending_reports">レポートを送信中</string>
-
     <string name="notification_wireless_scanning_title">無線のスキャンが有効です</string>
-
     <plurals name="notification_wireless_scanning_content_reports_created">
         <item quantity="other">%d件のレポートを作成しました</item>
     </plurals>
     <string name="notification_wireless_scanning_content_satellite_stats">
         %1$d⁄%2$d 基の衛星を使用中
     </string>
-
     <string name="ignore_battery_optimizations_title">バッテリーの最適化を無効にしてください</string>
     <string name="ignore_battery_optimizations_description">最高の結果を得るためには、バッテリーの最適化を無効にする必要があります。有効になっている場合、画面がオフの状態では無線のスキャンと位置情報へのアクセスが大幅に制限されます。</string>
     <string name="battery_optimizations_not_disabled_warning">バッテリーの最適化が有効になっています</string>
-
     <string name="send_reports_automatically">レポートを自動送信する</string>
-
     <string name="export_notification_channel_name">データをエクスポート</string>
     <string name="notification_exporting_data">データをエクスポート中…</string>
     <string name="export_data">データのエクスポート</string>
@@ -73,7 +63,6 @@
     <string name="export_started">%1$s～%2$sまでのデータをエクスポート中</string>
     <string name="export_csv">CSVのエクスポート</string>
     <string name="export_raw_database">RAWデータベースのエクスポート</string>
-
     <string name="import_data">データのインポート</string>
     <string name="import_raw_database">RAWデータベースをインポート</string>
     <string name="import_raw_database_description">
@@ -83,71 +72,52 @@
     <plurals name="import_database_successful">
         <item quantity="other">データベースから%d件のレポートをインポートしました</item>
     </plurals>
-
     <string name="reupload_data">データの再送信</string>
-
     <string name="wifis">Wi-Fi</string>
     <string name="cells">基地局</string>
     <string name="beacons">Bluetoothビーコン</string>
-
     <string name="add_quick_settings_tile">クイック設定にタイルを追加して、簡単にスキャンを開始できるようにしますか?</string>
-
     <string name="mls_warning_title">MLSはシャットダウンされました</string>
     <string name="mls_warning_text">
         Mozilla Location Service(MLS)はシャットダウンされ、データの受け入れを終了しました。代わりに、MLSの代替サービスであるbeaconDBにデータを送信することができます。\n\nbeaconDBは現在開発中のため、お客様が送信したデータの取り扱い方法が変更される可能性があります。詳細は<annotation link="privacy_policy">プライバシーポリシー</annotation>をご確認ください。\n\nbeaconDBをエンドポイントとして設定しますか？ この設定は後から変更することができます。
     </string>
-
     <string name="endpoint">エンドポイント</string>
     <string name="path">パス</string>
     <string name="api_key">APIキー (オプション)</string>
-
     <string name="no_endpoint_configured">エンドポイントが設定されていません</string>
-
     <string name="coverage_layer">Map coverage layer</string>
     <string name="coverage_layer_tile_json_url">map coverage layerのTileJSON URL</string>
     <string name="coverage_layer_no_configured">map coverage layerが設定されていません</string>
-
     <string name="invalid_url">無効なURL</string>
     <string name="unencrypted_endpoint_warning">暗号化されていないエンドポイント</string>
-
     <string name="suggested_services_title">推奨されるサービス</string>
     <string name="suggested_service_hosted_by">ホスト:</string>
     <string name="suggested_service_website">ウェブサイト</string>
     <string name="suggested_service_terms_of_use">利用規約</string>
-
     <string name="settings_ignore_wifi_scan_throttling_title">Wi-Fiのスキャン制限を無視する</string>
     <string name="settings_ignore_wifi_scan_throttling_description">スキャンが制限されている場合、2分間に4回のみスキャンが可能です</string>
-
     <string name="wifi_scan_throttling">Wi-Fiのスキャン制限</string>
     <string name="wifi_scan_throttling_explanation">
         You need to disable Wi-Fi scan throttling in your device\'s settings to enable this feature. Usually this can be done in the developer settings
         この機能を利用するには、お使いのデバイスで"Wi-Fiスキャンスロットリング"を無効にする必要があります。これは通常、開発者メニューから変更できます。
     </string>
-
     <string name="settings_group_reports">レポート</string>
     <string name="settings_group_scanning">スキャン</string>
     <string name="settings_group_other">その他</string>
-
     <string name="wifi_scan_frequency">Wi-Fiのスキャン間隔</string>
     <string name="cell_tower_scan_frequency">基地局のスキャン間隔</string>
-
     <string name="every_x_meters">%dメートルごと</string>
-
     <string name="movement_detection">移動検知</string>
-
     <string name="movement_detection_none_title">なし</string>
     <string name="movement_detection_none_description">動いていない場合もスキャンを続ける</string>
-
     <string name="movement_detection_location_title">位置情報ベース</string>
     <string name="movement_detection_location_description">
         位置が変わらない場合はスキャンを一時停止します。GPSが常に有効になります
     </string>
-
     <string name="movement_detection_significant_motion_title">モーションセンサー</string>
     <string name="movement_detection_significant_motion_description">
         大きな動きがない間はGPSとスキャンを停止します。バッテリーを節約できますが、一部の端末では動作が安定しません
     </string>
-
     <string name="notification_style">通知スタイル</string>
     <string name="notification_style_minimal_title">最小</string>
     <string name="notification_style_minimal_description">
@@ -161,13 +131,10 @@
     <string name="notification_style_detailed_description">
         作成されたレポート数とGNSS衛星数を表示します
     </string>
-
     <string name="app_language">言語</string>
     <string name="system_default_language">システムの言語</string>
-
     <string name="map_tile_source">マップタイルのソース</string>
     <string name="show_my_location">現在の位置情報を表示</string>
-
     <string name="permission_rationale_fine_location">
         有用なレポートを作成するには、正確な位置情報へのアクセス権が必要です
     </string>
@@ -187,30 +154,23 @@
     <string name="permission_rationale_location_map">
         地図上に現在地を表示するには、位置情報へのアクセス権が必要です
     </string>
-
     <string name="troubleshooting_title">トラブルシューティング</string>
     <string name="troubleshooting_description">スキャンに関する一般的な問題を修正します</string>
     <string name="troubleshooting_permissions_granted">権限の付与</string>
     <string name="troubleshooting_battery_optimizations_disabled">バッテリーの最適化の無効化</string>
     <string name="troubleshooting_accurate_location_available">正確な位置情報の有効化</string>
     <string name="troubleshooting_wifi_scan_always_available">Wi-Fiスキャンが常に利用可能</string>
-
     <string name="troubleshooting_fix">修正する</string>
     <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Ok</string>
     <string name="troubleshooting_not_ok" tools:ignore="Typos">Not ok</string>
-
     <string name="use_dynamic_color_ui">UIにダイナミックカラーを使用する</string>
-
     <string name="db_prune_title">送信済みレポートの削除</string>
     <string name="db_prune_one_month">1か月後</string>
     <string name="db_prune_two_months">2か月後</string>
     <string name="db_prune_six_months">6か月後</string>
     <string name="db_prune_never">なし</string>
-
     <string name="manage_storage_title">ストレージの管理</string>
-
     <string name="db_size">データベースのサイズ: %s</string>
-
     <string name="delete_data">データの削除</string>
     <string name="delete_reports_by_date">日付を指定してレポートを削除</string>
     <string name="delete_reports_from_area">エリアを指定してレポートを削除</string>

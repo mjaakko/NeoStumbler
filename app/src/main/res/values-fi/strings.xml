@@ -1,73 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="ok">OK</string>
-
     <string name="no_thanks">Ei kiitos</string>
-
     <string name="yes">Kyllä</string>
     <string name="no">Ei</string>
-
     <string name="reset">Nollaa</string>
     <string name="save">Tallenna</string>
-
     <string name="cancel">Peru</string>
     <string name="use">Käytä</string>
-
     <string name="stop">Lopeta</string>
-
     <string name="delete">Poista</string>
-
     <string name="no_data">Ei tietoja</string>
-
     <string name="waiting_for_location">Odotetaan sijaintia</string>
-
     <string name="failed_to_open_selected_file">
         Valitun tiedoston avaaminen ei onnistunut
     </string>
-
     <string name="permissions_needed">Käyttölupia tarvitaan</string>
     <string name="permissions_not_granted">Jotain tarvittavista käyttöluvista ei annettu</string>
-
     <string name="wifi_icon_description">Wi-Fi kuvake</string>
     <string name="cell_tower_icon_description">Puhelinmasto kuvake</string>
     <string name="bluetooth_icon_description">Bluetooth kuvake</string>
-
     <string name="warning_icon_description">Varoituskuvake</string>
-
     <string name="scanner_status_notification_channel_name">Skannauksen status</string>
-
     <string name="wireless_scanning">Langaton skannaus</string>
-
     <string name="map_tab_title">Kartta</string>
     <string name="reports_tab_title">Raportit</string>
     <string name="statistics_tab_title">Tilastot</string>
     <string name="settings_tab_title">Asetukset</string>
-
     <string name="send_reports">Lähetä raportit</string>
-
     <string name="reports">Raportit:</string>
     <string name="reports_total">Raportteja yhteensä: %d</string>
     <string name="reports_not_uploaded">Raportteja lähettämättä: %d</string>
     <string name="reports_last_uploaded">Raportit lähetetty viimeksi: %s</string>
-
     <string name="reports_empty">Ei raportteja vielä</string>
     <string name="start_scanning">Aloita skannaus</string>
     <string name="stop_scanning">Lopeta skannaus</string>
-
     <string name="delete_report">Poista raportti</string>
     <string name="delete_report_confirmation">Oletko varma, että haluat poistaa raportin?</string>
-
     <plurals name="toast_reports_uploaded">
         <item quantity="one">Lähetetty %d raportti</item>
         <item quantity="other">Lähetetty %d raporttia</item>
     </plurals>
     <string name="toast_reports_upload_failed">Raporttien lähettäminen epäonnistui</string>
     <string name="toast_reports_upload_failed_no_endpoint">Raporttien lähettäminen epäonnistui, koska palvelinta ei ole määritetty</string>
-
     <string name="report_upload_notification_channel_name">Raporttien lähetys</string>
     <string name="notification_sending_reports">Lähetetään raportteja</string>
-
     <string name="notification_wireless_scanning_title">Langaton skannaus päällä</string>
-
     <plurals name="notification_wireless_scanning_content_reports_created">
         <item quantity="one">%d raportti luotu</item>
         <item quantity="other">%d raporttia luotu</item>
@@ -75,206 +53,147 @@
     <string name="notification_wireless_scanning_content_satellite_stats">
         %1$d⁄%2$d satelliittia käytössä
     </string>
-
     <string name="ignore_battery_optimizations_title">Akun optimointi</string>
     <string name="ignore_battery_optimizations_description">
         Parhaiden tulosten saamiseksi akun optimointi tulee poistaa käytöstä. Langattomien verkkojen skannaus ja sijaintien saaminen on huomattavan rajoitettua, kun akun optimointi on päällä ja laitteen näyttö on pois päältä
     </string>
-
     <string name="battery_optimizations_not_disabled_warning">Akun optimointia ei poistettu käytöstä</string>
-
     <string name="send_reports_automatically">Lähetä raportit automaattisesti</string>
-
     <string name="export_notification_channel_name">Raporttien vieminen</string>
-
     <string name="notification_exporting_data">Viedään dataa…</string>
-
     <string name="export_data">Vie dataa</string>
-
     <string name="export_no_file_chosen">Datan vieminen ei onnistunut, koska tiedostoa ei valittu</string>
     <string name="export_started">Viedään datat ajanjaksolta %1$s - %2$s</string>
-
     <string name="export_csv">Vie CSV:nä</string>
-
     <string name="export_raw_database">Vie raaka tietokanta</string>
     <string name="export_raw_database_compress">Pakkaa tietokantatiedosto</string>
-
     <string name="import_data">Tuo dataa</string>
-
     <string name="import_raw_database">Tuo raaka tietokanta</string>
     <string name="import_raw_database_description">
         Raa\'an tietokannan tuominen korvaa käytössä olevan tietokannan
     </string>
-
     <string name="import_database_not_valid">Valitussa tiedostossa ei ollut eheää tietokantaa</string>
     <plurals name="import_database_successful">
         <item quantity="one">Tuotu tietokanta, jossa %d raportti</item>
         <item quantity="other">Tuotu tietokanta, jossa %d raporttia</item>
     </plurals>
-
     <string name="reupload_data">Lähetä datat uudelleen</string>
-
     <string name="wifis">Wi-Fit</string>
     <string name="cells">Puhelinmastot</string>
     <string name="beacons">Bluetooth-majakat</string>
-  
     <string name="add_quick_settings_tile">Lisää skannaaminen pika-asetuksiin?</string>
-
     <string name="mls_warning_title">MLS on poistunut käytöstä</string>
     <string name="mls_warning_text">
         Mozillan sijaintipalvelu on poistunut käytöstä eikä enää ota vastaan dataa. MLS:n sijasta voit lähettää dataa beaconDB:hen, joka tarjoaa MLS:n kanssa yhteensopivan palvelun\n\nHuomaathan, että beaconDB on edelleen kehityksessä ja tällä on vaikutusta siihen, kuinka dataasi käsitellään. <annotation link="privacy_policy">Tietosuojaselosteesta</annotation> löydät lisää tietoja aiheesta\n\nHaluatko asettaa beaconDB:n palvelimeksi? Tämän voi myöhemmin vaihtaa asetuksista
     </string>
-
     <string name="settings_group_reports">Raportit</string>
     <string name="settings_group_scanning">Skannaus</string>
     <string name="settings_group_other">Muut</string>
-
     <string name="endpoint">Palvelin</string>
     <string name="path">Polku</string>
     <string name="api_key">API-avain (vapaaehtoinen)</string>
-
     <string name="no_endpoint_configured">Palvelinta ei määriteltey</string>
-
     <string name="coverage_layer">Kartan kattavuustaso</string>
     <string name="coverage_layer_tile_json_url">Kartan kattavuustason TileJSON:n URL-osoite</string>
     <string name="coverage_layer_no_configured">Kartan kattavuustasoa ei määritelty</string>
-
     <string name="invalid_url">Virheellinen URL-osoite</string>
-
     <string name="unencrypted_endpoint_warning">Salaamaton palvelin</string>
-
     <string name="suggested_services_title">Ehdotetut palvelut</string>
-
     <string name="suggested_service_hosted_by">Ylläpitäjä:</string>
     <string name="suggested_service_website">Verkkosivu</string>
     <string name="suggested_service_terms_of_use">Käyttöehdot</string>
-
     <string name="settings_ignore_wifi_scan_throttling_title">Wi-Fi -skannaus ilman rajoituksia</string>
     <string name="settings_ignore_wifi_scan_throttling_description">Jos skannaus on rajoitettu, skannauksia voidaan tehdä vain neljä kertaa kahdessa minuutissa</string>
-
     <string name="wifi_scan_throttling">Wi-Fi -skannauksen rajoitukset</string>
     <string name="wifi_scan_throttling_explanation">
         Wi-Fi -skannauksen rajoitukset täytyy poistaa laitteen asetuksista tätä ominaisuutta varten. Tämän voi yleensä tehdä kehittäjän asetuksista
     </string>
-
     <string name="wifi_scan_frequency">Wi-Fi -skannausten tiheys</string>
     <string name="cell_tower_scan_frequency">Puhelinmastojen skannausten tiheys</string>
-
     <string name="every_x_meters">Joka %d. metri</string>
-
     <string name="movement_detection">Liikkeen tunnistus</string>
-
     <string name="movement_detection_none_title">Ei käytössä</string>
     <string name="movement_detection_none_description">Skannaamista jatketaan myös pysähdyksissä</string>
-
     <string name="movement_detection_location_title">Sijaintiin perustuva</string>
     <string name="movement_detection_location_description">
         Pysäyttää skannaamisen, kun sijainti ei muutu. Pitää GPS:n päällä
     </string>
-
     <string name="movement_detection_significant_motion_title">Liiketunnistin</string>
     <string name="movement_detection_significant_motion_description">
         Pysäyttää skannaamisen ja GPS:n, kun laitteen liiketunnistimesta ei havaita liikettä. Säästää akkua, mutta ei toimi luotettavasti joillain laitteilla
     </string>
-
     <string name="notification_style">Ilmoituksen tyyli</string>
-
     <string name="notification_style_minimal_title">
         Minimaalinen
     </string>
     <string name="notification_style_minimal_description">
         Ilmoitus näytetään ilman lisätietoja
     </string>
-
     <string name="notification_style_basic_title">
         Oletus
     </string>
     <string name="notification_style_basic_description">
         Ilmoituksessa näytetään luotujen raporttien määrä
     </string>
-
     <string name="notification_style_detailed_title">
         Yksityiskohtainen
     </string>
     <string name="notification_style_detailed_description">
         Ilmoituksessa näytetään luotujen raporttien määrä ja GNSS-satelliittien määrä
     </string>
-
     <string name="app_language">Kieli</string>
     <string name="system_default_language">Käyttöjärjestelmän oletuskieli</string>
-
     <string name="map_tile_source">Karttatiilien lähde</string>
     <string name="show_my_location">Näytä oma sijainti</string>
-
     <string name="permission_rationale_fine_location">
         Käyttölupa tarkkaan sijaintiin tarvitaan raporttien luomiseen tarkalla paikkatiedolla
     </string>
-
     <string name="permission_rationale_read_phone_state">
         Käyttölupa puhelimeen tarvitaan puhelinmastojen skannaamiseen
     </string>
-
     <string name="permission_rationale_bluetooth">
         Käyttölupa Bluetoothiin tarvitaan Bluetooth-majakoiden skannaamista varten
     </string>
-
     <string name="permission_rationale_post_notifications">
         Käyttölupa ilmoituksiin tarvitaan statusilmoitusten näyttämistä varten
     </string>
-
     <string name="permission_rationale_background_location_quick_settings">
         Käyttölupa laitteen sijaintiin aina tarvitaan skannaamisen aloittamiseksi pika-asetuksista
     </string>
-
     <string name="permission_rationale_location_map">
         Käyttölupa laitteen sijaintiin tarvitaan oman sijainnin näyttämiseksi kartalla
     </string>
-
     <string name="troubleshooting_title">Vianmääritys</string>
     <string name="troubleshooting_description">Korjaa skannauksen yleisiä ongelmia</string>
-
     <string name="troubleshooting_permissions_granted">Käyttöluvat annettu</string>
     <string name="troubleshooting_battery_optimizations_disabled">Akun optimointi poistettu käytöstä</string>
     <string name="troubleshooting_accurate_location_available">Tarkka sijainti saatavilla</string>
     <string name="troubleshooting_wifi_scan_always_available">Wi-Fi -skannaus aina päällä</string>
-
     <string name="troubleshooting_fix">Korjaa</string>
-
     <string name="troubleshooting_not_ok">Ei kunnossa</string>
     <string name="use_dynamic_color_ui">Käytä dynaamisia värejä käyttöliittymässä</string>
-
     <string name="db_prune_title">Poista lähetetyt raportit</string>
     <string name="db_prune_one_month">Kuukauden jälkeen</string>
     <string name="db_prune_two_months">Kahden kuukauden jälkeen</string>
     <string name="db_prune_six_months">Kuuden kuukauden jälkeen</string>
     <string name="db_prune_never">Ei ikinä</string>
-
     <string name="manage_storage_title">Hallinnoi tilan käyttöä</string>
-
     <string name="db_size">Tietokannan koko: %s</string>
-
     <string name="delete_data">Poista dataa</string>
-
     <string name="delete_reports_by_date">Poista raportit ajanjaksolta</string>
     <string name="delete_reports_from_area">Poista raportit alueelta</string>
     <string name="delete_all_reports">Poista kaikki raportit</string>
-
     <string name="delete_all_reports_confirmation">Oletko varma, että haluat poistaa kaikki raportit?</string>
-
     <plurals name="toast_deleted_reports">
         <item quantity="one">%d raportti poistettu</item>
         <item quantity="other">%d raporttia poistettu</item>
     </plurals>
     <string name="toast_deleted_all_reports">Kaikki raportit poistettu</string>
- 
-
     <string name="about_app">Tietoja NeoStumblerista</string>
     <string name="app_version">Versio: %s</string>
     <string name="app_variant">Variantti: %s</string>
-
     <string name="author_text">Tehnyt ❤️:llä %1$s ja %2$s</string>
     <string name="contributors">kehittäjäyhteisö</string>
-
     <string name="bug_report_button">Ilmoita bugista</string>
     <string name="update_translations_button">Päivitä käännöksiä</string>
     <string name="reports_last_uploaded_never">ei ikinä</string>
