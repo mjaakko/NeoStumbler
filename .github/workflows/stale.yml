@@ -1,4 +1,5 @@
 name: 'Close stale issues'
+
 on:
   schedule:
     - cron: '32 4 * * *'
@@ -9,7 +10,7 @@ jobs:
     steps:
       - uses: actions/stale@v9
         with:
-          only-issue-labels: "bug,more-info-needed"
+          only-issue-labels: "bug,more info needed"
           stale-issue-message: 'This issue is stale because it has been open 30 days with no activity. Remove stale label or comment or this will be closed in 7 days.'
           close-issue-message: 'This issue was closed because it has been stalled for 7 days with no activity.'
           days-before-issue-stale: 30
