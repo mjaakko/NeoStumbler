@@ -26,7 +26,7 @@
     <string name="no_data">Нет данных</string>
     <string name="failed_to_open_selected_file">Не удалось открыть выбранный файл</string>
     <string name="permissions_needed">Необходимы разрешения</string>
-    <string name="wifi_icon_description">Описание иконки Wi-Fi</string>
+    <string name="wifi_icon_description">Иконка Wi-Fi</string>
     <string name="cell_tower_icon_description">Иконка вышки связи</string>
     <string name="map_tab_title">Карта</string>
     <string name="reports_tab_title">Отчёты</string>
