@@ -53,7 +53,7 @@
     <string name="reupload_data">Re-enviar dados</string>
     <string name="wifis">Redes Wi-Fi</string>
     <string name="cells">Redes móveis</string>
-    <string name="beacons">Beacons Bluetooth</string>
+    <string name="beacons">Sinalizadores Bluetooth</string>
     <string name="add_quick_settings_tile">Adicionar bloco às configurações rápidas para iniciar a busca facilmente?</string>
     <string name="endpoint">Ponto de recolha</string>
     <string name="path">Caminho</string>
@@ -64,7 +64,7 @@
     <string name="show_my_location">Mostrar minha localização</string>
     <string name="permission_rationale_fine_location">Criar relatórios com dados de localização úteis requer a permissão de localização precisa</string>
     <string name="permission_rationale_read_phone_state">Acesso ao status do telefone é necessário para a busca por redes móveis</string>
-    <string name="permission_rationale_bluetooth">Para fazer a busca por beacons Bluetooth, é necessária a permissão de Bluetooth</string>
+    <string name="permission_rationale_bluetooth">Para fazer a busca por sinalizadores Bluetooth, é necessária a permissão de Bluetooth</string>
     <string name="permission_rationale_post_notifications">Para mostrar a notificação de estado, é necessária a permissão de notificações</string>
     <string name="permission_rationale_background_location_quick_settings">Para começar a busca pelas configurações rápidas, é necessário acesso à localização em segundo plano</string>
     <string name="permission_rationale_location_map">
