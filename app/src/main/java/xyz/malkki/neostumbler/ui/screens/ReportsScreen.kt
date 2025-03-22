@@ -1,7 +1,6 @@
 package xyz.malkki.neostumbler.ui.screens
 
 import android.location.Geocoder as AndroidGeocoder
-import android.text.format.DateFormat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -53,7 +52,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import java.text.DecimalFormat
-import java.util.Date
 import org.koin.androidx.compose.koinViewModel
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.db.entities.ReportWithStats
@@ -65,6 +63,7 @@ import xyz.malkki.neostumbler.ui.composables.reports.details.ReportDetailsDialog
 import xyz.malkki.neostumbler.ui.composables.shared.CenteredCircularProgressIndicator
 import xyz.malkki.neostumbler.ui.composables.shared.ConfirmationDialog
 import xyz.malkki.neostumbler.ui.composables.shared.Shimmer
+import xyz.malkki.neostumbler.ui.composables.shared.formattedDate
 import xyz.malkki.neostumbler.ui.composables.shared.getAddress
 import xyz.malkki.neostumbler.ui.viewmodel.ReportsViewModel
 import xyz.malkki.neostumbler.utils.geocoder.CachingGeocoder
@@ -90,19 +89,13 @@ fun ReportsScreen(viewModel: ReportsViewModel = koinViewModel()) {
 
 @Composable
 private fun ReportStats(reportsViewModel: ReportsViewModel) {
-    val context = LocalContext.current
-
     val reportsTotal = reportsViewModel.reportsTotal.collectAsStateWithLifecycle(null)
     val reportsNotUploaded = reportsViewModel.reportsNotUploaded.collectAsStateWithLifecycle(null)
     val reportsLastUploaded = reportsViewModel.lastUpload.collectAsStateWithLifecycle(null)
 
     val lastUploadedText =
         reportsLastUploaded.value?.let {
-            val millis = it.toEpochMilli()
-
-            DateFormat.getMediumDateFormat(context).format(millis) +
-                " " +
-                DateFormat.getTimeFormat(context).format(millis)
+            formattedDate(it)
         } ?: stringResource(R.string.reports_last_uploaded_never)
 
     Column(modifier = Modifier.wrapContentHeight()) {
@@ -177,9 +170,7 @@ private fun Reports(reportsViewModel: ReportsViewModel) {
                 items(reports.itemCount, key = reports.itemKey { it.reportId }) { index ->
                     val report = reports.get(index)
 
-                    Box(
-                        modifier = Modifier.wrapContentSize().animateItem()
-                    ) {
+                    Box(modifier = Modifier.wrapContentSize().animateItem()) {
                         if (report != null) {
                             Report(
                                 report = report,
@@ -238,13 +229,7 @@ private fun Report(
     onShowReportDetails: (Long) -> Unit,
     onDeleteReport: (Long) -> Unit,
 ) {
-    val context = LocalContext.current
-
     val address = getAddress(report.latitude, report.longitude, geocoder = geocoder)
-
-    val date = Date.from(report.timestamp)
-    val dateStr =
-        "${DateFormat.getMediumDateFormat(context).format(date)} ${DateFormat.getTimeFormat(context).format(date)}"
 
     Column(
         modifier =
@@ -261,7 +246,7 @@ private fun Report(
         Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
             Text(
                 modifier = Modifier.wrapContentSize(),
-                text = dateStr,
+                text = formattedDate(report.timestamp),
                 style = MaterialTheme.typography.bodySmall,
             )
             Spacer(modifier = Modifier.weight(1.0f))
