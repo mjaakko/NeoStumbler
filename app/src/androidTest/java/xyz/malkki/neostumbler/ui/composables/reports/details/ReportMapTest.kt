@@ -103,16 +103,19 @@ class ReportMapTest {
 
                     single<DataStore<Preferences>>(PREFERENCES) {
                         @OptIn(DelicateCoroutinesApi::class)
-                        val settingsStore = PreferenceDataStoreFactory.create(
-                            scope = GlobalScope,
-                            produceFile = { testContext.preferencesDataStoreFile("prefs") },
-                        )
+                        val settingsStore =
+                            PreferenceDataStoreFactory.create(
+                                scope = GlobalScope,
+                                produceFile = { testContext.preferencesDataStoreFile("prefs") },
+                            )
 
                         runBlocking {
                             settingsStore.edit { prefs ->
-                                prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)] = "http://example.com"
+                                prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)] =
+                                    "http://example.com"
                                 prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH)] = "/test"
-                                prefs[stringPreferencesKey(PreferenceKeys.GEOLOCATE_PATH)] = "/geolocate"
+                                prefs[stringPreferencesKey(PreferenceKeys.GEOLOCATE_PATH)] =
+                                    "/geolocate"
                             }
                         }
 
@@ -125,60 +128,65 @@ class ReportMapTest {
         composeTestRule.setContent {
             KoinContext {
                 ReportMap(
-                    reportWithData = ReportWithData(
-                        report = Report(
-                            id = 1,
-                            timestamp = Instant.now(),
-                            uploaded = false,
-                            uploadTimestamp = null
+                    reportWithData =
+                        ReportWithData(
+                            report =
+                                Report(
+                                    id = 1,
+                                    timestamp = Instant.now(),
+                                    uploaded = false,
+                                    uploadTimestamp = null,
+                                ),
+                            positionEntity =
+                                PositionEntity(
+                                    id = 1,
+                                    latitude = 53.3677,
+                                    longitude = 42.141656,
+                                    accuracy = 10.0,
+                                    age = 1000,
+                                    altitude = null,
+                                    altitudeAccuracy = null,
+                                    heading = null,
+                                    pressure = null,
+                                    speed = null,
+                                    source = "gps",
+                                    reportId = 1,
+                                ),
+                            wifiAccessPointEntities = emptyList(),
+                            cellTowerEntities =
+                                listOf(
+                                    CellTowerEntity(
+                                        id = 1,
+                                        radioType = "lte",
+                                        mobileCountryCode = "1",
+                                        mobileNetworkCode = "1",
+                                        cellId = 321,
+                                        locationAreaCode = 555,
+                                        asu = null,
+                                        primaryScramblingCode = null,
+                                        serving = null,
+                                        signalStrength = null,
+                                        timingAdvance = null,
+                                        arfcn = null,
+                                        age = 1000,
+                                        reportId = 1,
+                                    )
+                                ),
+                            bluetoothBeaconEntities = emptyList(),
                         ),
-                        positionEntity = PositionEntity(
-                            id = 1,
-                            latitude = 53.3677,
-                            longitude = 42.141656,
-                            accuracy = 10.0,
-                            age = 1000,
-                            altitude = null,
-                            altitudeAccuracy = null,
-                            heading = null,
-                            pressure = null,
-                            speed = null,
-                            source = "gps",
-                            reportId = 1
-                        ),
-                        wifiAccessPointEntities = emptyList(),
-                        cellTowerEntities = listOf(
-                            CellTowerEntity(
-                                id = 1,
-                                radioType = "lte",
-                                mobileCountryCode = "1",
-                                mobileNetworkCode = "1",
-                                cellId = 321,
-                                locationAreaCode = 555,
-                                asu = null,
-                                primaryScramblingCode = null,
-                                serving = null,
-                                signalStrength = null,
-                                timingAdvance = null,
-                                arfcn = null,
-                                age = 1000,
-                                reportId = 1
-                            )
-                        ),
-                        bluetoothBeaconEntities = emptyList()
-                    ),
-                    modifier = Modifier.size(300.dp)
+                    modifier = Modifier.size(300.dp),
                 )
             }
         }
 
-        await untilAsserted {
-            assertTrue(requests.isNotEmpty())
+        await untilAsserted
+            {
+                assertTrue(requests.isNotEmpty())
 
-            val requestUrl = requests.first().url
+                val requestUrl = requests.first().url
 
-            assertEquals("example.com", requestUrl.host)
-            assertEquals("/geolocate", requestUrl.encodedPath)
-        }
+                assertEquals("example.com", requestUrl.host)
+                assertEquals("/geolocate", requestUrl.encodedPath)
+            }
     }
 }
