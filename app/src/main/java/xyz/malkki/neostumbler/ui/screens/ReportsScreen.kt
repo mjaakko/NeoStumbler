@@ -177,16 +177,19 @@ private fun Reports(reportsViewModel: ReportsViewModel) {
                 items(reports.itemCount, key = reports.itemKey { it.reportId }) { index ->
                     val report = reports.get(index)
 
-                    if (report != null) {
-                        Report(
-                            modifier = Modifier.animateItem(),
-                            report = report,
-                            geocoder = geocoder,
-                            onShowReportDetails = { reportId -> reportToShow.value = reportId },
-                            onDeleteReport = { reportId -> reportToDelete.value = reportId },
-                        )
-                    } else {
-                        ReportPlaceholder(modifier = Modifier.animateItem())
+                    Box(
+                        modifier = Modifier.wrapContentSize().animateItem()
+                    ) {
+                        if (report != null) {
+                            Report(
+                                report = report,
+                                geocoder = geocoder,
+                                onShowReportDetails = { reportId -> reportToShow.value = reportId },
+                                onDeleteReport = { reportId -> reportToDelete.value = reportId },
+                            )
+                        } else {
+                            ReportPlaceholder()
+                        }
                     }
                 }
             }
@@ -195,22 +198,33 @@ private fun Reports(reportsViewModel: ReportsViewModel) {
 }
 
 @Composable
-private fun ReportPlaceholder(modifier: Modifier) {
+private fun ReportPlaceholder(modifier: Modifier = Modifier) {
     val density = LocalDensity.current
     val height = with(density) { 14.sp.toDp() }
 
     Column(modifier = modifier.wrapContentHeight().padding(vertical = 4.dp)) {
-        Shimmer(
-            modifier =
-                Modifier.height(height)
-                    .fillMaxWidth()
-                    .background(Color.LightGray, shape = RoundedCornerShape(2.dp))
-        )
+        Row {
+            Shimmer(
+                modifier =
+                    Modifier.height(height)
+                        .width(120.dp)
+                        .background(Color.LightGray, shape = RoundedCornerShape(2.dp))
+            )
+
+            Spacer(modifier = Modifier.weight(1.0f))
+
+            Shimmer(
+                modifier =
+                    Modifier.height(height)
+                        .width(60.dp)
+                        .background(Color.LightGray, shape = RoundedCornerShape(2.dp))
+            )
+        }
         Spacer(modifier = Modifier.height(2.dp))
         Shimmer(
             modifier =
                 Modifier.height(height)
-                    .fillMaxWidth()
+                    .width(160.dp)
                     .background(Color.LightGray, shape = RoundedCornerShape(2.dp))
         )
     }
@@ -218,7 +232,7 @@ private fun ReportPlaceholder(modifier: Modifier) {
 
 @Composable
 private fun Report(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     report: ReportWithStats,
     geocoder: Geocoder,
     onShowReportDetails: (Long) -> Unit,
