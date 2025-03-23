@@ -36,8 +36,13 @@
     <string name="reports_last_uploaded">Reports last uploaded: %s</string>
     <string name="reports_last_uploaded_never">never</string>
     <string name="reports_empty">No reports yet</string>
+
     <string name="start_scanning">Start scanning</string>
     <string name="stop_scanning">Stop scanning</string>
+
+    <string name="scanning_status_active">Scanning <annotation style="status">active</annotation></string>
+    <string name="scanning_status_not_active">Scanning <annotation style="status">not active</annotation></string>
+
     <string name="delete_report">Delete report</string>
     <string name="delete_report_confirmation">Are you sure you want to delete the report?</string>
     <plurals name="toast_reports_uploaded">
@@ -65,11 +70,11 @@
     <string name="report_upload_notification_channel_name">Report uploads</string>
     <string name="notification_sending_reports">Sending reports</string>
     <string name="notification_wireless_scanning_title">Wireless scanning active</string>
-    <plurals name="notification_wireless_scanning_content_reports_created">
+    <plurals name="reports_created">
         <item quantity="one">%d report created</item>
         <item quantity="other">%d reports created</item>
     </plurals>
-    <string name="notification_wireless_scanning_content_satellite_stats">
+    <string name="satellites_in_use">
         %1$d⁄%2$d satellites in use
     </string>
     <string name="ignore_battery_optimizations_title">Ignore battery optimizations</string>

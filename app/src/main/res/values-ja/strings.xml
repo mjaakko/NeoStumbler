@@ -46,10 +46,10 @@
     <string name="report_upload_notification_channel_name">レポートの送信</string>
     <string name="notification_sending_reports">レポートを送信中</string>
     <string name="notification_wireless_scanning_title">無線のスキャンが有効です</string>
-    <plurals name="notification_wireless_scanning_content_reports_created">
+    <plurals name="reports_created">
         <item quantity="other">%d件のレポートを作成しました</item>
     </plurals>
-    <string name="notification_wireless_scanning_content_satellite_stats">
+    <string name="satellites_in_use">
         %1$d⁄%2$d 基の衛星を使用中
     </string>
     <string name="ignore_battery_optimizations_title">バッテリーの最適化を無効にしてください</string>

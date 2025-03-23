@@ -33,8 +33,13 @@
     <string name="reports_not_uploaded">Raportteja lähettämättä: %d</string>
     <string name="reports_last_uploaded">Raportit lähetetty viimeksi: %s</string>
     <string name="reports_empty">Ei raportteja vielä</string>
+
     <string name="start_scanning">Aloita skannaus</string>
     <string name="stop_scanning">Lopeta skannaus</string>
+
+    <string name="scanning_status_active">Skannaus <annotation style="status">päällä</annotation></string>
+    <string name="scanning_status_not_active">Skannaus <annotation style="status">ei päällä</annotation></string>
+
     <string name="delete_report">Poista raportti</string>
     <string name="delete_report_confirmation">Oletko varma, että haluat poistaa raportin?</string>
     <plurals name="toast_reports_uploaded">
@@ -61,11 +66,11 @@
     <string name="report_upload_notification_channel_name">Raporttien lähetys</string>
     <string name="notification_sending_reports">Lähetetään raportteja</string>
     <string name="notification_wireless_scanning_title">Langaton skannaus päällä</string>
-    <plurals name="notification_wireless_scanning_content_reports_created">
+    <plurals name="reports_created">
         <item quantity="one">%d raportti luotu</item>
         <item quantity="other">%d raporttia luotu</item>
     </plurals>
-    <string name="notification_wireless_scanning_content_satellite_stats">
+    <string name="satellites_in_use">
         %1$d⁄%2$d satelliittia käytössä
     </string>
     <string name="ignore_battery_optimizations_title">Akun optimointi</string>

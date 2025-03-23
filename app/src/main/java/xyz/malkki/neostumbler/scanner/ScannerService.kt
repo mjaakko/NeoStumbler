@@ -130,6 +130,10 @@ class ScannerService : Service() {
 
         private val gpsActive = MutableStateFlow(false)
 
+        private val _gpsStats = MutableStateFlow<GpsStats?>(null)
+        val gpsStats: StateFlow<GpsStats?>
+            get() = _gpsStats.asStateFlow()
+
         private val _reportsCreated = MutableStateFlow(0)
         val reportsCreated: StateFlow<Int>
             get() = _reportsCreated.asStateFlow()
@@ -211,16 +215,19 @@ class ScannerService : Service() {
         coroutineScope = CoroutineScope(Dispatchers.Default)
 
         coroutineScope.launch {
-            val gpsStatusFlow =
-                gpsActive.flatMapLatest { isGpsActive ->
+            gpsActive
+                .flatMapLatest { isGpsActive ->
                     if (isGpsActive) {
                         getGpsStatsFlow(this@ScannerService)
                     } else {
                         flowOf(null)
                     }
                 }
+                .collect(_gpsStats)
+        }
 
-            gpsStatusFlow
+        coroutineScope.launch {
+            gpsStats
                 .combine(reportsCreated) { a, b -> a to b }
                 .collect { (gpsStats, reportsCount) ->
                     if (notificationManager.areNotificationsEnabled()) {
@@ -419,6 +426,7 @@ class ScannerService : Service() {
 
         _serviceRunning.value = false
         _reportsCreated.value = 0
+        _gpsStats.value = null
 
         ScannerTileService.updateTile(this)
 
@@ -432,16 +440,13 @@ class ScannerService : Service() {
     private fun createNotification(reportsCreated: Int, gpsStats: GpsStats? = null): Notification {
         val reportsCreatedText =
             applicationContext.getQuantityString(
-                R.plurals.notification_wireless_scanning_content_reports_created,
+                R.plurals.reports_created,
                 reportsCreated,
                 reportsCreated,
             )
         val satellitesInUseText =
             gpsStats?.let {
-                ContextCompat.getString(
-                        applicationContext,
-                        R.string.notification_wireless_scanning_content_satellite_stats,
-                    )
+                ContextCompat.getString(applicationContext, R.string.satellites_in_use)
                     .format(it.satellitesUsedInFix, it.satellitesTotal)
             }
 

@@ -42,7 +42,7 @@
     <string name="toast_reports_upload_failed_no_endpoint">報告上傳失敗，因為沒有設定端點</string>
     <string name="report_upload_notification_channel_name">報告上傳</string>
     <string name="notification_sending_reports">正在上傳報告</string>
-    <string name="notification_wireless_scanning_content_satellite_stats">正在使用 %1$d⁄%2$d 個衛星</string>
+    <string name="satellites_in_use">正在使用 %1$d⁄%2$d 個衛星</string>
     <string name="ignore_battery_optimizations_title">忽略電池最佳化</string>
     <string name="battery_optimizations_not_disabled_warning">電池最佳化未停用</string>
     <string name="send_reports_automatically">自動上傳報告</string>
@@ -141,7 +141,7 @@
     <string name="update_translations_button">更新翻譯</string>
     <string name="scanner_status_notification_channel_name">掃描狀態</string>
     <string name="notification_wireless_scanning_title">無線掃描啟用中</string>
-    <plurals name="notification_wireless_scanning_content_reports_created">
+    <plurals name="reports_created">
         <item quantity="other">%d 個報告已建立</item>
     </plurals>
     <string name="ignore_battery_optimizations_description">為獲得最佳效果，應停用電池最佳化。當電池最佳化啟用且螢幕關閉時，無線掃描與位置存取將受到顯著限制</string>

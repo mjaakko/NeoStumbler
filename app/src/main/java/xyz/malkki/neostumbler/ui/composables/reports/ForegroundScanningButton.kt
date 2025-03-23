@@ -4,15 +4,12 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.os.Build
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Stop
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -22,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -183,7 +181,8 @@ private fun StartStopScanningButton(
         )
     }
 
-    Button(
+    FilledIconButton(
+        modifier = Modifier.size(48.dp),
         onClick = {
             if (isScanning) {
                 onStop()
@@ -205,7 +204,6 @@ private fun StartStopScanningButton(
                 onStart()
             }
         },
-        contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
     ) {
         val stringResId =
             if (isScanning) {
@@ -222,13 +220,9 @@ private fun StartStopScanningButton(
 
         Icon(
             painter = rememberVectorPainter(icon),
-            contentDescription = null,
-            modifier = Modifier.size(ButtonDefaults.IconSize),
+            contentDescription = stringResource(stringResId),
+            modifier = Modifier.size(36.dp),
         )
-
-        Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-
-        Text(text = stringResource(stringResId))
     }
 }
 

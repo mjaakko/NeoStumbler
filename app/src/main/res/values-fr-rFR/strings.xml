@@ -5,7 +5,7 @@
     - Report : rapport
     - Upload : envoyer
     -->
-    
+
     <string name="ok">D\'accord</string>
     <string name="no_thanks">Non merci</string>
     <string name="yes">Oui</string>
@@ -42,7 +42,7 @@
     <string name="report_upload_notification_channel_name">Envoi des rapports</string>
     <string name="notification_sending_reports">Téléversement des rapports</string>
     <string name="notification_wireless_scanning_title">Mesure sans fil active</string>
-    <plurals name="notification_wireless_scanning_content_reports_created">
+    <plurals name="reports_created">
         <item quantity="one">%d rapport créé</item>
         <item quantity="many">%d rapports créés</item>
         <item quantity="other">%d rapports créés</item>
@@ -86,7 +86,7 @@
     </string>
     <string name="use_dynamic_color_ui">Utiliser des couleurs dynamiques pour l’interface</string>
     <string name="delete">Supprimer</string>
-    <string name="notification_wireless_scanning_content_satellite_stats">%1$d⁄%2$d satellites utilisés</string>
+    <string name="satellites_in_use">%1$d⁄%2$d satellites utilisés</string>
     <string name="mls_warning_title">MLS a fermé</string>
     <string name="settings_group_other">Autres</string>
     <string name="notification_style_detailed_description">Affiche le nombre de rapports créés et le nombre de satellites GNSS</string>

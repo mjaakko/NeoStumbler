@@ -37,7 +37,7 @@
     <string name="report_upload_notification_channel_name">Invio rilevamenti</string>
     <string name="notification_sending_reports">Invio rilevamenti in corso</string>
     <string name="notification_wireless_scanning_title">Scansione wireless attiva</string>
-    <plurals name="notification_wireless_scanning_content_reports_created">
+    <plurals name="reports_created">
         <item quantity="one">%d rilevamento creato</item>
         <item quantity="many">%d di rilevamenti creati</item>
         <item quantity="other">%d rilevamenti creati</item>
@@ -80,7 +80,7 @@
     <string name="permissions_needed">Autorizzazioni negate</string>
     <string name="ignore_battery_optimizations_description">Per migliorare i risultati, le ottimizzazzioni batteria dovrebbero essere disabilitate. La scansione wireless e l\'accesso alla posizione sono significativamente rallentati quando le ottimizzazioni batteria sono attive e lo schermo è spento</string>
     <string name="wifi_scan_throttling">Limitazioni scansione Wi-Fi</string>
-    <string name="notification_wireless_scanning_content_satellite_stats">%1$d⁄%2$d satelliti in uso</string>
+    <string name="satellites_in_use">%1$d⁄%2$d satelliti in uso</string>
     <string name="import_database_not_valid">Il file selezionato non contiene un database valido</string>
     <string name="settings_group_scanning">Scansione</string>
     <string name="reset">Reimposta</string>

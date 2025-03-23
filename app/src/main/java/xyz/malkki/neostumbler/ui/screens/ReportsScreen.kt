@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
@@ -25,6 +26,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bluetooth
 import androidx.compose.material.icons.filled.CellTower
 import androidx.compose.material.icons.filled.Wifi
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -56,9 +58,12 @@ import org.koin.androidx.compose.koinViewModel
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.db.entities.ReportWithStats
 import xyz.malkki.neostumbler.extensions.defaultLocale
+import xyz.malkki.neostumbler.extensions.getQuantityString
+import xyz.malkki.neostumbler.scanner.ScannerService
 import xyz.malkki.neostumbler.ui.composables.MLSWarningDialog
 import xyz.malkki.neostumbler.ui.composables.ReportUploadButton
 import xyz.malkki.neostumbler.ui.composables.reports.ForegroundScanningButton
+import xyz.malkki.neostumbler.ui.composables.reports.GpsStatus
 import xyz.malkki.neostumbler.ui.composables.reports.details.ReportDetailsDialog
 import xyz.malkki.neostumbler.ui.composables.shared.CenteredCircularProgressIndicator
 import xyz.malkki.neostumbler.ui.composables.shared.ConfirmationDialog
@@ -74,39 +79,100 @@ import xyz.malkki.neostumbler.utils.geocoder.PlatformGeocoder
 fun ReportsScreen(viewModel: ReportsViewModel = koinViewModel()) {
     MLSWarningDialog()
 
-    Column(modifier = Modifier.padding(16.dp)) {
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            ForegroundScanningButton()
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier.padding(vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            ReportStats(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                reportsViewModel = viewModel,
+            )
 
-            Spacer(modifier = Modifier.weight(1.0f))
-
-            ReportUploadButton(viewModel)
+            Reports(
+                modifier = Modifier.padding(horizontal = 16.dp).weight(1.0f),
+                reportsViewModel = viewModel,
+            )
         }
-        ReportStats(viewModel)
-        Reports(viewModel)
+
+        ScanningControllerCard(modifier = Modifier.align(Alignment.BottomCenter).padding(8.dp))
     }
 }
 
 @Composable
-private fun ReportStats(reportsViewModel: ReportsViewModel) {
+private fun ScanningControllerCard(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+
+    val scanningActive by ScannerService.serviceRunning.collectAsStateWithLifecycle()
+    val reportsCreated by ScannerService.reportsCreated.collectAsStateWithLifecycle()
+
+    ElevatedCard(modifier = modifier.wrapContentHeight().sizeIn(maxWidth = 400.dp).fillMaxWidth()) {
+        Row(
+            modifier = Modifier.padding(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            ForegroundScanningButton()
+
+            Column(modifier = Modifier.align(Alignment.CenterVertically).weight(1.0f)) {
+                Text(
+                    text =
+                        if (scanningActive) {
+                            stringResource(R.string.scanning_status_active)
+                        } else {
+                            stringResource(R.string.scanning_status_not_active)
+                        },
+                    maxLines = 1,
+                    style = MaterialTheme.typography.titleMedium,
+                )
+
+                Text(
+                    text =
+                        context.getQuantityString(
+                            R.plurals.reports_created,
+                            reportsCreated,
+                            reportsCreated,
+                        ),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
+
+            GpsStatus()
+        }
+    }
+}
+
+@Composable
+private fun ReportStats(modifier: Modifier = Modifier, reportsViewModel: ReportsViewModel) {
     val reportsTotal = reportsViewModel.reportsTotal.collectAsStateWithLifecycle(null)
     val reportsNotUploaded = reportsViewModel.reportsNotUploaded.collectAsStateWithLifecycle(null)
     val reportsLastUploaded = reportsViewModel.lastUpload.collectAsStateWithLifecycle(null)
 
     val lastUploadedText =
-        reportsLastUploaded.value?.let {
-            formattedDate(it)
-        } ?: stringResource(R.string.reports_last_uploaded_never)
+        reportsLastUploaded.value?.let { formattedDate(it) }
+            ?: stringResource(R.string.reports_last_uploaded_never)
 
-    Column(modifier = Modifier.wrapContentHeight()) {
-        Text(text = stringResource(R.string.reports_total, reportsTotal.value ?: 0))
-        Text(text = stringResource(R.string.reports_not_uploaded, reportsNotUploaded.value ?: 0))
-        Text(text = stringResource(R.string.reports_last_uploaded, lastUploadedText))
+    Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        Column(modifier = Modifier.weight(1.0f)) {
+            Text(
+                text = stringResource(R.string.reports_total, reportsTotal.value ?: 0),
+                style = MaterialTheme.typography.bodySmall,
+            )
+            Text(
+                text = stringResource(R.string.reports_not_uploaded, reportsNotUploaded.value ?: 0),
+                style = MaterialTheme.typography.bodySmall,
+            )
+            Text(
+                text = stringResource(R.string.reports_last_uploaded, lastUploadedText),
+                style = MaterialTheme.typography.bodySmall,
+            )
+        }
+
+        ReportUploadButton(reportsViewModel = reportsViewModel)
     }
 }
 
 @Composable
-private fun Reports(reportsViewModel: ReportsViewModel) {
+private fun Reports(modifier: Modifier = Modifier, reportsViewModel: ReportsViewModel) {
     val reports = reportsViewModel.reports.collectAsLazyPagingItems()
 
     val listState = rememberLazyListState()
@@ -154,7 +220,7 @@ private fun Reports(reportsViewModel: ReportsViewModel) {
 
     SideEffect { listWasAtTop = listAtTop }
 
-    Column(modifier = Modifier.padding(top = 8.dp)) {
+    Column(modifier = modifier) {
         Text(text = stringResource(R.string.reports), style = MaterialTheme.typography.titleMedium)
 
         if (reports.itemCount == 0) {
@@ -168,7 +234,7 @@ private fun Reports(reportsViewModel: ReportsViewModel) {
         } else {
             LazyColumn(state = listState) {
                 items(reports.itemCount, key = reports.itemKey { it.reportId }) { index ->
-                    val report = reports.get(index)
+                    val report = reports[index]
 
                     Box(modifier = Modifier.wrapContentSize().animateItem()) {
                         if (report != null) {
@@ -249,20 +315,26 @@ private fun Report(
                 text = formattedDate(report.timestamp),
                 style = MaterialTheme.typography.bodySmall,
             )
+
             Spacer(modifier = Modifier.weight(1.0f))
-            StationCount(
+
+            EmitterCount(
                 icon = Icons.Default.Wifi,
                 iconDescription = stringResource(R.string.wifi_icon_description),
                 count = report.wifiAccessPointCount,
             )
+
             Spacer(modifier = Modifier.width(2.dp))
-            StationCount(
+
+            EmitterCount(
                 icon = Icons.Default.CellTower,
                 iconDescription = stringResource(R.string.cell_tower_icon_description),
                 count = report.cellTowerCount,
             )
+
             Spacer(modifier = Modifier.width(2.dp))
-            StationCount(
+
+            EmitterCount(
                 icon = Icons.Default.Bluetooth,
                 iconDescription = stringResource(R.string.bluetooth_icon_description),
                 count = report.bluetoothBeaconCount,
@@ -274,7 +346,7 @@ private fun Report(
 }
 
 @Composable
-private fun StationCount(icon: ImageVector, iconDescription: String, count: Int) {
+private fun EmitterCount(icon: ImageVector, iconDescription: String, count: Int) {
     val decimalFormat = remember { DecimalFormat("0") }
 
     val localDensity = LocalDensity.current

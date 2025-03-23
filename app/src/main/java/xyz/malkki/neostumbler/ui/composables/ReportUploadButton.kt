@@ -1,13 +1,9 @@
 package xyz.malkki.neostumbler.ui.composables
 
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material.icons.filled.Upload
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -18,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.work.BackoffPolicy
 import androidx.work.Constraints
@@ -55,7 +50,7 @@ private fun WorkManager.getCanUploadFlow(): Flow<Boolean> =
         .distinctUntilChanged()
 
 @Composable
-fun ReportUploadButton(reportsViewModel: ReportsViewModel) {
+fun ReportUploadButton(modifier: Modifier = Modifier, reportsViewModel: ReportsViewModel) {
     val context = LocalContext.current
     val workManager = WorkManager.getInstance(context)
 
@@ -70,7 +65,8 @@ fun ReportUploadButton(reportsViewModel: ReportsViewModel) {
 
     ToastOnReportUpload(workId = enqueuedUploadWork)
 
-    Button(
+    FilledIconButton(
+        modifier = modifier,
         enabled = reportsNotUploaded.value > 0 && canUpload.value && !enqueuing.value,
         onClick = {
             coroutineScope.launch {
@@ -107,19 +103,10 @@ fun ReportUploadButton(reportsViewModel: ReportsViewModel) {
                 enqueuing.value = false
             }
         },
-        contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
     ) {
         Icon(
-            painter = rememberVectorPainter(Icons.AutoMirrored.Default.Send),
-            contentDescription = null,
-            modifier = Modifier.size(ButtonDefaults.IconSize),
-        )
-        Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-
-        Text(
-            text = stringResource(R.string.send_reports),
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
+            painter = rememberVectorPainter(Icons.Default.Upload),
+            contentDescription = stringResource(R.string.send_reports),
         )
     }
 }

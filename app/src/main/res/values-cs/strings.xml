@@ -33,7 +33,7 @@
     <string name="notification_sending_reports">Odesílání reportů</string>
     <string name="scanner_status_notification_channel_name">Stav skenování</string>
     <string name="notification_wireless_scanning_title">Skenování aktivní</string>
-    <plurals name="notification_wireless_scanning_content_reports_created">
+    <plurals name="reports_created">
         <item quantity="one">%d report vytvořen</item>
         <item quantity="few">%d reporty vytvořeny</item>
         <item quantity="other">Vytvořeno %d reportů</item>
@@ -79,7 +79,7 @@
     <string name="movement_detection_location_description">Pozastaví skenování když se GPS pozice nemění, GPS zůstává aktivní, což může stále způsobovat spotřebu baterie.</string>
     <string name="warning_icon_description">Varovná ikona</string>
     <string name="unencrypted_endpoint_warning">Nešifrované připojení k serveru</string>
-    <string name="notification_wireless_scanning_content_satellite_stats">%1$d⁄%2$d používaných satelitů</string>
+    <string name="satellites_in_use">%1$d⁄%2$d používaných satelitů</string>
     <string name="notification_style_minimal_description">Ukazuje upozornění bez detailů</string>
     <string name="notification_style_basic_title">Základní</string>
     <string name="notification_style_basic_description">Ukazuje počet vytvořených reportů</string>
