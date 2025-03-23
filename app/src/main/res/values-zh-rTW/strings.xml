@@ -61,7 +61,7 @@
         <item quantity="other">已匯入有 %d 份報告的資料庫</item>
     </plurals>
     <string name="reupload_data">重新上傳資料</string>
-    <string name="wifis">Wi-Fis</string>
+    <string name="wifis">Wi-Fi</string>
     <string name="cells">訊號塔</string>
     <string name="beacons">藍牙信標</string>
     <string name="mls_warning_title">MLS 已經退役</string>
