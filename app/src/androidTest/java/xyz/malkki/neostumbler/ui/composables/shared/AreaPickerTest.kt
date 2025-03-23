@@ -14,12 +14,15 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.rule.GrantPermissionRule
 import java.io.IOException
 import kotlin.time.Duration
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runTest
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Request
@@ -89,7 +92,7 @@ class AreaPickerTest {
     @get:Rule val composeTestRule = createComposeRule()
 
     @Test
-    fun testAreaPicker() {
+    fun testAreaPicker() = runTest {
         stopKoin()
 
         val fakeLocation =
@@ -105,9 +108,8 @@ class AreaPickerTest {
                     }
 
                     single<DataStore<Preferences>>(PREFERENCES) {
-                        @OptIn(DelicateCoroutinesApi::class)
                         PreferenceDataStoreFactory.create(
-                            scope = GlobalScope,
+                            scope = CoroutineScope(coroutineContext + Dispatchers.IO),
                             produceFile = { testContext.preferencesDataStoreFile("prefs") },
                         )
                     }

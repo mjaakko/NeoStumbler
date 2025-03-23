@@ -16,11 +16,13 @@ import java.io.IOException
 import java.time.Instant
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Request
@@ -89,8 +91,20 @@ class ReportMapTest {
     @get:Rule val composeTestRule = createComposeRule()
 
     @Test
-    fun testReportMapQueriesLocationFromConfiguredEndpoint() {
+    fun testReportMapQueriesLocationFromConfiguredEndpoint() = runTest {
         stopKoin()
+
+        val settingsStore =
+            PreferenceDataStoreFactory.create(
+                scope = CoroutineScope(coroutineContext + Dispatchers.IO),
+                produceFile = { testContext.preferencesDataStoreFile("prefs") },
+            )
+
+        settingsStore.edit { prefs ->
+            prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)] = "http://example.com"
+            prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH)] = "/test"
+            prefs[stringPreferencesKey(PreferenceKeys.GEOLOCATE_PATH)] = "/geolocate"
+        }
 
         startKoin {
             modules(
@@ -101,26 +115,7 @@ class ReportMapTest {
                         @OptIn(DelicateCoroutinesApi::class) GlobalScope.async { mockHttpClient }
                     }
 
-                    single<DataStore<Preferences>>(PREFERENCES) {
-                        @OptIn(DelicateCoroutinesApi::class)
-                        val settingsStore =
-                            PreferenceDataStoreFactory.create(
-                                scope = GlobalScope,
-                                produceFile = { testContext.preferencesDataStoreFile("prefs") },
-                            )
-
-                        runBlocking {
-                            settingsStore.edit { prefs ->
-                                prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)] =
-                                    "http://example.com"
-                                prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH)] = "/test"
-                                prefs[stringPreferencesKey(PreferenceKeys.GEOLOCATE_PATH)] =
-                                    "/geolocate"
-                            }
-                        }
-
-                        settingsStore
-                    }
+                    single<DataStore<Preferences>>(PREFERENCES) { settingsStore }
                 }
             )
         }
