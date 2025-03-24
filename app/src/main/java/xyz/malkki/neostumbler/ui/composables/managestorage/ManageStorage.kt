@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
+import xyz.malkki.neostumbler.db.REPORT_DB_VERSION
 import xyz.malkki.neostumbler.db.ReportDatabase
 import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.extensions.getEstimatedSize
@@ -48,6 +49,10 @@ fun ManageStorage() {
     Column {
         Text(
             text = stringResource(id = R.string.db_size, dbSizeFormatted),
+            style = MaterialTheme.typography.bodySmall,
+        )
+        Text(
+            text = stringResource(id = R.string.db_schema_version, REPORT_DB_VERSION),
             style = MaterialTheme.typography.bodySmall,
         )
 
