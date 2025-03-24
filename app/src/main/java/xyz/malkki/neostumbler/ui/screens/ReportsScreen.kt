@@ -27,6 +27,7 @@ import androidx.compose.material.icons.filled.Bluetooth
 import androidx.compose.material.icons.filled.CellTower
 import androidx.compose.material.icons.filled.Wifi
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -236,7 +237,7 @@ private fun Reports(modifier: Modifier = Modifier, reportsViewModel: ReportsView
                 items(reports.itemCount, key = reports.itemKey { it.reportId }) { index ->
                     val report = reports[index]
 
-                    Box(modifier = Modifier.wrapContentSize().animateItem()) {
+                    Column(modifier = Modifier.wrapContentSize().animateItem()) {
                         if (report != null) {
                             Report(
                                 report = report,
@@ -246,6 +247,10 @@ private fun Reports(modifier: Modifier = Modifier, reportsViewModel: ReportsView
                             )
                         } else {
                             ReportPlaceholder()
+                        }
+
+                        if (index < reports.itemCount - 1) {
+                            HorizontalDivider()
                         }
                     }
                 }
@@ -259,7 +264,7 @@ private fun ReportPlaceholder(modifier: Modifier = Modifier) {
     val density = LocalDensity.current
     val height = with(density) { 14.sp.toDp() }
 
-    Column(modifier = modifier.wrapContentHeight().padding(vertical = 4.dp)) {
+    Column(modifier = modifier.wrapContentHeight().padding(vertical = 8.dp)) {
         Row {
             Shimmer(
                 modifier =
@@ -306,7 +311,7 @@ private fun Report(
                     onLongClickLabel = stringResource(id = R.string.delete_report),
                     onLongClick = { onDeleteReport(report.reportId) },
                 )
-                .padding(vertical = 4.dp)
+                .padding(vertical = 8.dp)
                 .wrapContentHeight()
     ) {
         Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
