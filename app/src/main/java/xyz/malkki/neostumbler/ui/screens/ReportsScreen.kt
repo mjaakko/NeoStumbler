@@ -6,6 +6,7 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -46,9 +47,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -78,6 +81,10 @@ import xyz.malkki.neostumbler.utils.geocoder.PlatformGeocoder
 
 @Composable
 fun ReportsScreen(viewModel: ReportsViewModel = koinViewModel()) {
+    val density = LocalDensity.current
+
+    var cardHeight by remember { mutableStateOf(0.dp) }
+
     MLSWarningDialog()
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -92,11 +99,17 @@ fun ReportsScreen(viewModel: ReportsViewModel = koinViewModel()) {
 
             Reports(
                 modifier = Modifier.padding(horizontal = 16.dp).weight(1.0f),
+                listBottomPadding = cardHeight,
                 reportsViewModel = viewModel,
             )
         }
 
-        ScanningControllerCard(modifier = Modifier.align(Alignment.BottomCenter).padding(8.dp))
+        ScanningControllerCard(
+            modifier =
+                Modifier.align(Alignment.BottomCenter).padding(8.dp).onPlaced {
+                    cardHeight = density.run { it.size.height.toDp() }
+                }
+        )
     }
 }
 
@@ -173,7 +186,11 @@ private fun ReportStats(modifier: Modifier = Modifier, reportsViewModel: Reports
 }
 
 @Composable
-private fun Reports(modifier: Modifier = Modifier, reportsViewModel: ReportsViewModel) {
+private fun Reports(
+    modifier: Modifier = Modifier,
+    reportsViewModel: ReportsViewModel,
+    listBottomPadding: Dp,
+) {
     val reports = reportsViewModel.reports.collectAsLazyPagingItems()
 
     val listState = rememberLazyListState()
@@ -233,7 +250,10 @@ private fun Reports(modifier: Modifier = Modifier, reportsViewModel: ReportsView
                 CenteredCircularProgressIndicator()
             }
         } else {
-            LazyColumn(state = listState) {
+            LazyColumn(
+                state = listState,
+                contentPadding = PaddingValues(bottom = listBottomPadding),
+            ) {
                 items(reports.itemCount, key = reports.itemKey { it.reportId }) { index ->
                     val report = reports[index]
 
