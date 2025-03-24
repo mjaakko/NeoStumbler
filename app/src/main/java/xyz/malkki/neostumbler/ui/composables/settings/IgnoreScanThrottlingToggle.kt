@@ -8,6 +8,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -57,6 +58,23 @@ fun IgnoreScanThrottlingToggle() {
                 }
             }
         }
+
+    LaunchedEffect(Unit) {
+        /**
+         * If Wi-Fi scan throttling has been re-enabled in the settings, change the settings value
+         * so that the toggle will be off. There is no callback for this, so we need to check this
+         * when rendering the composable
+         *
+         * This assumes that the scanner service checks from system settings whether Wi-Fi scanning
+         * is throttled before starting scanning
+         */
+        if (context.isWifiScanThrottled() == true && enabled.value) {
+            settingsStore.edit {
+                it[booleanPreferencesKey(PreferenceKeys.IGNORE_SCAN_THROTTLING)] = false
+            }
+        }
+    }
+
     if (showExplanationDialog.value) {
         AlertDialog(
             onDismissRequest = { showExplanationDialog.value = false },
