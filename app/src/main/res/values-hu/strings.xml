@@ -96,7 +96,7 @@
     <string name="contributors">közreműködők</string>
     <string name="bug_report_button">Hiba jelentése</string>
     <string name="wifi_icon_description">Wi-Fi ikon</string>
-    <string name="send_reports_automatically">Eredmények automatikus küldése</string>
+    <string name="send_reports_automatically_title">Eredmények automatikus küldése</string>
     <string name="delete">Törlés</string>
     <string name="failed_to_open_selected_file">A kiválasztott fájl megnyitása sikertelen</string>
     <string name="send_reports">Eredmények elküldése</string>

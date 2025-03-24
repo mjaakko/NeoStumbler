@@ -78,7 +78,12 @@
         Parhaiden tulosten saamiseksi akun optimointi tulee poistaa käytöstä. Langattomien verkkojen skannaus ja sijaintien saaminen on huomattavan rajoitettua, kun akun optimointi on päällä ja laitteen näyttö on pois päältä
     </string>
     <string name="battery_optimizations_not_disabled_warning">Akun optimointia ei poistettu käytöstä</string>
-    <string name="send_reports_automatically">Lähetä raportit automaattisesti</string>
+
+    <string name="send_reports_automatically_title">Lähetä raportit automaattisesti</string>
+    <string name="send_reports_automatically_never">Ei ikinä</string>
+    <string name="send_reports_automatically_on_any_network">Millä tahansa verkkoyhteydellä</string>
+    <string name="send_reports_automatically_on_unmetered_network">Rajoittamattomalla verkkoyhteydellä</string>
+
     <string name="export_notification_channel_name">Raporttien vieminen</string>
     <string name="notification_exporting_data">Viedään dataa…</string>
     <string name="export_data">Vie dataa</string>

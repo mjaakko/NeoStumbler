@@ -5,7 +5,7 @@
     <string name="delete">Видалити</string>
     <string name="unencrypted_endpoint_warning">Не зашифрована кінцева точка</string>
     <string name="satellites_in_use">%1$d⁄%2$d супутників використовуються</string>
-    <string name="send_reports_automatically">Автоматично відправляти звіти</string>
+    <string name="send_reports_automatically_title">Автоматично відправляти звіти</string>
     <string name="add_quick_settings_tile">Додати плитку швидких налаштувань для легкого запуску сканування?</string>
     <string name="reset">Скинути</string>
     <string name="save">Зберегти</string>

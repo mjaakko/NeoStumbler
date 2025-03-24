@@ -43,7 +43,7 @@
         <item quantity="other">%d rilevamenti creati</item>
     </plurals>
     <string name="ignore_battery_optimizations_title">Ignora ottimizzazioni batteria</string>
-    <string name="send_reports_automatically">Invia rilevamenti automaticamente</string>
+    <string name="send_reports_automatically_title">Invia rilevamenti automaticamente</string>
     <string name="export_notification_channel_name">Esportazione dati</string>
     <string name="notification_exporting_data">Esportazione dati in corso…</string>
     <string name="export_data">Esportazione dati</string>
