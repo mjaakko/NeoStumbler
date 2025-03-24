@@ -4,7 +4,7 @@
     <string name="notification_style_basic_title">Базово</string>
     <string name="delete">Видалити</string>
     <string name="unencrypted_endpoint_warning">Не зашифрована кінцева точка</string>
-    <string name="notification_wireless_scanning_content_satellite_stats">%1$d⁄%2$d супутників використовуються</string>
+    <string name="satellites_in_use">%1$d⁄%2$d супутників використовуються</string>
     <string name="send_reports_automatically">Автоматично відправляти звіти</string>
     <string name="add_quick_settings_tile">Додати плитку швидких налаштувань для легкого запуску сканування?</string>
     <string name="reset">Скинути</string>
@@ -48,7 +48,7 @@
     <string name="cells">Мобільні вежі</string>
     <string name="beacons">Bluetooth маяки</string>
     <string name="endpoint">Кінцева точка</string>
-    <string name="path">Шлях</string>
+    <string name="submission_path">Шлях</string>
     <string name="api_key">API-ключ (необов\'язково)</string>
     <string name="suggested_services_title">Рекомендовані сервіси</string>
     <string name="suggested_service_hosted_by">Хостинг:</string>
@@ -121,7 +121,7 @@
     <string name="delete_reports_by_date">Видалення звітів за датою</string>
     <string name="bluetooth_icon_description">Значок Bluetooth</string>
     <string name="wireless_scanning">Бездротове сканування</string>
-    <plurals name="notification_wireless_scanning_content_reports_created">
+    <plurals name="reports_created">
         <item quantity="one">%d створено звіт</item>
         <item quantity="few">%d створено звіти</item>
         <item quantity="many">%d створено звітів</item>

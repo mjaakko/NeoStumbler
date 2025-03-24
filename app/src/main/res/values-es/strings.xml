@@ -33,7 +33,7 @@
     <string name="toast_reports_upload_failed">Error al enviar informes</string>
     <string name="toast_reports_upload_failed_no_endpoint">Error al enviar informes, porque no hay un destino configurado</string>
     <string name="notification_wireless_scanning_title">Escaneo inalámbrico activo</string>
-    <plurals name="notification_wireless_scanning_content_reports_created">
+    <plurals name="reports_created">
         <item quantity="one">%d informe creado</item>
         <item quantity="many">%d informes creados</item>
         <item quantity="other">%d informes creados</item>
@@ -61,7 +61,7 @@
     <string name="mls_warning_title">MLS ha cerrado</string>
     <string name="wifis">Wi-Fis</string>
     <string name="endpoint">Destino</string>
-    <string name="path">Ruta</string>
+    <string name="submission_path">Ruta</string>
     <string name="invalid_url">URL inválida</string>
     <string name="suggested_services_title">Servicios sugeridos</string>
     <string name="suggested_service_hosted_by">Alojado por:</string>
@@ -135,7 +135,7 @@
     <string name="report_upload_notification_channel_name">Envios de informes</string>
     <string name="api_key">Clave API (opcional)</string>
     <string name="notification_sending_reports">Enviando informes</string>
-    <string name="notification_wireless_scanning_content_satellite_stats">%1$d⁄%2$d satélites en uso</string>
+    <string name="satellites_in_use">%1$d⁄%2$d satélites en uso</string>
     <string name="reupload_data">Resubir datos</string>
     <string name="mls_warning_text">El servicio de localización de Mozilla (MLS) ha cerrado y ya no acepta añadir nuevos datos. Como alternativa a MLS puedes enviar datos a beaconDB, que proporciona un servicio compatible con MLS\n\nPor favor tenga en cuenta que beaconDB sigue bajo desarrollo y esto afecta como se gestionan tus datos. Puedes leer la <annotation link="privacy_policy">política de privacidad</annotation> para más información\n\n¿Quiere establecer beaconDB como el destino? Lo puedes cambiar luego en ajustes</string>
     <string name="unencrypted_endpoint_warning">Destino sin cifrado</string>

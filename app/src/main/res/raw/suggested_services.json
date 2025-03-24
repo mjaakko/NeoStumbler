@@ -7,7 +7,8 @@
     "hostedBy": "Joel Koen",
     "endpoint": {
       "baseUrl": "https://api.beacondb.net",
-      "path": "/v2/geosubmit"
+      "geosubmitPath": "/v2/geosubmit",
+      "geolocatePath": "/v1/geolocate"
     },
     "coverageTileJsonUrl": "https://cdn.beacondb.net/tiles/beacondb.json"
   }

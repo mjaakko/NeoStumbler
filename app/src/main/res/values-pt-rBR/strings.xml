@@ -36,7 +36,7 @@
     <string name="report_upload_notification_channel_name">Envio de relatórios</string>
     <string name="notification_sending_reports">Enviando relatórios</string>
     <string name="notification_wireless_scanning_title">Busca por redes sem-fio ativa</string>
-    <plurals name="notification_wireless_scanning_content_reports_created">
+    <plurals name="reports_created">
         <item quantity="one">%d relatório criado</item>
         <item quantity="many">%d de relatórios criados</item>
         <item quantity="other">%d relatórios criados</item>
@@ -56,7 +56,7 @@
     <string name="beacons">Sinalizadores Bluetooth</string>
     <string name="add_quick_settings_tile">Adicionar bloco às configurações rápidas para iniciar a busca facilmente?</string>
     <string name="endpoint">Ponto de recolha</string>
-    <string name="path">Caminho</string>
+    <string name="submission_path">Caminho</string>
     <string name="api_key">Chave de API (opcional)</string>
     <string name="settings_ignore_wifi_scan_throttling_title">Ignorar limitações de busca por Wi-Fi</string>
     <string name="wifi_scan_throttling">Limitações de busca por Wi-Fi</string>
@@ -74,7 +74,7 @@
     <string name="mls_warning_title">O MLS foi encerrado</string>
     <string name="cancel">Cancelar</string>
     <string name="use">Usar</string>
-    <string name="notification_wireless_scanning_content_satellite_stats">%1$d⁄%2$d satélites em uso</string>
+    <string name="satellites_in_use">%1$d⁄%2$d satélites em uso</string>
     <string name="suggested_service_terms_of_use">Termos de uso</string>
     <string name="settings_group_reports">Relatórios</string>
     <string name="settings_group_scanning">Busca</string>

@@ -2,12 +2,12 @@
 <resources>
     <string name="notification_sending_reports">அறிக்கைகளை அனுப்புகிறது</string>
     <string name="notification_wireless_scanning_title">வயர்லெச் ச்கேனிங் செயலில்</string>
-    <plurals name="notification_wireless_scanning_content_reports_created">
+    <plurals name="reports_created">
         <item quantity="other">
             %d அறிக்கைகள் உருவாக்கப்பட்டன
         </item>
     </plurals>
-    <string name="notification_wireless_scanning_content_satellite_stats">பயன்பாட்டில் உள்ள%1$d⁄%2$d செயற்கைக்கோள்கள்</string>
+    <string name="satellites_in_use">பயன்பாட்டில் உள்ள%1$d⁄%2$d செயற்கைக்கோள்கள்</string>
     <string name="ignore_battery_optimizations_title">பேட்டரி மேம்படுத்தல்களை புறக்கணிக்கவும்</string>
     <string name="ignore_battery_optimizations_description">சிறந்த முடிவுகளுக்கு, பேட்டரி மேம்படுத்தல்கள் முடக்கப்பட வேண்டும். பேட்டரி உகப்பாக்கம் செயலில் இருக்கும்போது மற்றும் திரை முடக்கப்பட்டால் வயர்லெச் ச்கேனிங் மற்றும் இருப்பிட அணுகல் கணிசமாக தூண்டப்படுகிறது</string>
     <string name="battery_optimizations_not_disabled_warning">பேட்டரி மேம்படுத்தல்கள் முடக்கப்படவில்லை</string>
@@ -77,7 +77,7 @@
     <string name="add_quick_settings_tile">ச்கேனிங்கை எளிதாக தொடங்க விரைவான அமைப்புகள் ஓடு சேர்க்கவா?</string>
     <string name="mls_warning_title">எம்.எல்.எச் மூடப்பட்டுள்ளது</string>
     <string name="endpoint">முனைப்புள்ளி</string>
-    <string name="path">பாதை</string>
+    <string name="submission_path">பாதை</string>
     <string name="api_key">பநிஇ விசை (விரும்பினால்)</string>
     <string name="unencrypted_endpoint_warning">மறைகுறியாக்கப்பட்ட இறுதிப்புள்ளி</string>
     <string name="suggested_services_title">பரிந்துரைக்கப்பட்ட சேவைகள்</string>

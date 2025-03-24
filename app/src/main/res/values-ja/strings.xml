@@ -46,10 +46,10 @@
     <string name="report_upload_notification_channel_name">レポートの送信</string>
     <string name="notification_sending_reports">レポートを送信中</string>
     <string name="notification_wireless_scanning_title">無線のスキャンが有効です</string>
-    <plurals name="notification_wireless_scanning_content_reports_created">
+    <plurals name="reports_created">
         <item quantity="other">%d件のレポートを作成しました</item>
     </plurals>
-    <string name="notification_wireless_scanning_content_satellite_stats">
+    <string name="satellites_in_use">
         %1$d⁄%2$d 基の衛星を使用中
     </string>
     <string name="ignore_battery_optimizations_title">バッテリーの最適化を無効にしてください</string>
@@ -82,7 +82,7 @@
         Mozilla Location Service(MLS)はシャットダウンされ、データの受け入れを終了しました。代わりに、MLSの代替サービスであるbeaconDBにデータを送信することができます。\n\nbeaconDBは現在開発中のため、お客様が送信したデータの取り扱い方法が変更される可能性があります。詳細は<annotation link="privacy_policy">プライバシーポリシー</annotation>をご確認ください。\n\nbeaconDBをエンドポイントとして設定しますか？ この設定は後から変更することができます。
     </string>
     <string name="endpoint">エンドポイント</string>
-    <string name="path">パス</string>
+    <string name="submission_path">パス</string>
     <string name="api_key">APIキー (オプション)</string>
     <string name="no_endpoint_configured">エンドポイントが設定されていません</string>
     <string name="coverage_layer">Map coverage layer</string>

@@ -87,8 +87,7 @@ class ScannerTileService : TileService() {
                                 subtitle =
                                     if (scanningActive) {
                                         applicationContext.getQuantityString(
-                                            R.plurals
-                                                .notification_wireless_scanning_content_reports_created,
+                                            R.plurals.reports_created,
                                             reportsCreated,
                                             reportsCreated,
                                         )

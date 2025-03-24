@@ -27,5 +27,10 @@ data class SuggestedService(
     }
 
     @Serializable
-    data class Endpoint(val baseUrl: String, val path: String, val apiKey: String? = null)
+    data class Endpoint(
+        val baseUrl: String,
+        val geosubmitPath: String,
+        val geolocatePath: String? = null,
+        val apiKey: String? = null,
+    )
 }

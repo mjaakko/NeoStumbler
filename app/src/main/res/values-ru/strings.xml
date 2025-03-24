@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <plurals name="notification_wireless_scanning_content_reports_created">
+    <plurals name="reports_created">
         <item quantity="one">%d отчёт создан</item>
         <item quantity="few">%d отчёта создано</item>
         <item quantity="many">%d отчётов создано</item>
@@ -9,7 +9,7 @@
     <string name="warning_icon_description">Иконка предупреждения</string>
     <string name="reports_not_uploaded">Отчётов не отправлено: %d</string>
     <string name="delete_report">Удалить отчёт</string>
-    <string name="notification_wireless_scanning_content_satellite_stats">%1$d⁄%2$d спутников используется</string>
+    <string name="satellites_in_use">%1$d⁄%2$d спутников используется</string>
     <string name="import_database_not_valid">Выбранный файл не содержит не содержит действительной базы данных</string>
     <string name="ignore_battery_optimizations_title">Игнорировать оптимизацию батареи</string>
     <string name="import_data">Импортировать данные</string>
@@ -66,7 +66,7 @@
     <string name="beacons">Bluetooth маячки</string>
     <string name="mls_warning_title">MLS был закрыт</string>
     <string name="endpoint">Точка назначения</string>
-    <string name="path">Путь</string>
+    <string name="submission_path">Путь</string>
     <string name="api_key">Ключ API (необязательно)</string>
     <string name="unencrypted_endpoint_warning">Незашифрованная конечная точка</string>
     <string name="suggested_services_title">Предлагаемые сервисы</string>

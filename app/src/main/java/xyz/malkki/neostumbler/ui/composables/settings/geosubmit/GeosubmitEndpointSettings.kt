@@ -1,9 +1,7 @@
 package xyz.malkki.neostumbler.ui.composables.settings.geosubmit
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -25,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -34,22 +33,31 @@ import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
-import xyz.malkki.neostumbler.geosubmit.GeosubmitParams
+import xyz.malkki.neostumbler.ichnaea.IchnaeaParams
 import xyz.malkki.neostumbler.ui.composables.settings.ParamField
 import xyz.malkki.neostumbler.ui.composables.settings.SettingsItem
 import xyz.malkki.neostumbler.ui.composables.settings.UrlField
 
-private fun DataStore<Preferences>.geosubmitParams(): Flow<GeosubmitParams?> =
+private fun DataStore<Preferences>.geosubmitParams(): Flow<IchnaeaParams?> =
     data
         .map { preferences ->
             val endpoint = preferences[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)]
-            val path =
+            val submisionPath =
                 preferences[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH)]
-                    ?: GeosubmitParams.DEFAULT_PATH
+                    ?: IchnaeaParams.DEFAULT_SUBMISSION_PATH
+            val locatePath =
+                preferences[stringPreferencesKey(PreferenceKeys.GEOLOCATE_PATH)]
+                    ?: IchnaeaParams.DEFAULT_LOCATE_PATH
+
             val apiKey = preferences[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY)]
 
             if (endpoint != null) {
-                GeosubmitParams(endpoint, path, apiKey)
+                IchnaeaParams(
+                    baseUrl = endpoint,
+                    submissionPath = submisionPath,
+                    locatePath = locatePath,
+                    apiKey = apiKey,
+                )
             } else {
                 null
             }
@@ -72,25 +80,25 @@ fun GeosubmitEndpointSettings(
             onDialogClose = { newParams ->
                 if (newParams != null) {
                     coroutineScope.launch {
-                        settingsStore.updateData { prefs ->
-                            prefs.toMutablePreferences().apply {
-                                set(
-                                    stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT),
-                                    newParams.baseUrl,
-                                )
-                                set(
-                                    stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH),
-                                    newParams.path,
-                                )
+                        settingsStore.edit { prefs ->
+                            prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)] =
+                                newParams.baseUrl
 
-                                if (newParams.apiKey != null) {
-                                    set(
-                                        stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY),
-                                        newParams.apiKey,
-                                    )
-                                } else {
-                                    remove(stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY))
-                                }
+                            prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH)] =
+                                newParams.submissionPath
+
+                            if (newParams.locatePath != null) {
+                                prefs[stringPreferencesKey(PreferenceKeys.GEOLOCATE_PATH)] =
+                                    newParams.locatePath
+                            } else {
+                                prefs.remove(stringPreferencesKey(PreferenceKeys.GEOLOCATE_PATH))
+                            }
+
+                            if (newParams.apiKey != null) {
+                                prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY)] =
+                                    newParams.apiKey
+                            } else {
+                                prefs.remove(stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY))
                             }
                         }
 
@@ -112,13 +120,20 @@ fun GeosubmitEndpointSettings(
 
 @Composable
 private fun GeosubmitEndpointDialog(
-    currentParams: GeosubmitParams?,
-    onDialogClose: (GeosubmitParams?) -> Unit,
+    currentParams: IchnaeaParams?,
+    onDialogClose: (IchnaeaParams?) -> Unit,
 ) {
     val endpoint = rememberSaveable { mutableStateOf(currentParams?.baseUrl) }
-    val path = rememberSaveable {
-        mutableStateOf<String?>(currentParams?.path ?: GeosubmitParams.DEFAULT_PATH)
+
+    val geosubmitPath = rememberSaveable {
+        mutableStateOf<String?>(
+            currentParams?.submissionPath ?: IchnaeaParams.DEFAULT_SUBMISSION_PATH
+        )
     }
+    val geolocatePath = rememberSaveable {
+        mutableStateOf<String?>(currentParams?.locatePath ?: IchnaeaParams.DEFAULT_LOCATE_PATH)
+    }
+
     val apiKey = rememberSaveable { mutableStateOf(currentParams?.apiKey) }
 
     val showSuggestedServicesDialog = rememberSaveable { mutableStateOf(false) }
@@ -128,7 +143,8 @@ private fun GeosubmitEndpointDialog(
             onServiceSelected = { service ->
                 if (service != null) {
                     endpoint.value = service.endpoint.baseUrl
-                    path.value = service.endpoint.path
+                    geosubmitPath.value = service.endpoint.geosubmitPath
+                    geolocatePath.value = service.endpoint.geolocatePath
                     apiKey.value = service.endpoint.apiKey
                 }
 
@@ -149,19 +165,21 @@ private fun GeosubmitEndpointDialog(
                     text = stringResource(id = R.string.endpoint),
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Column(
+                    modifier = Modifier.padding(top = 16.dp, bottom = 24.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    UrlField(label = stringResource(R.string.endpoint), state = endpoint)
 
-                UrlField(label = stringResource(R.string.endpoint), state = endpoint)
+                    ParamField(
+                        label = stringResource(R.string.submission_path),
+                        state = geosubmitPath,
+                    )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                    ParamField(label = stringResource(R.string.locate_path), state = geolocatePath)
 
-                ParamField(label = stringResource(R.string.path), state = path)
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                ParamField(label = stringResource(R.string.api_key), state = apiKey)
-
-                Spacer(modifier = Modifier.height(24.dp))
+                    ParamField(label = stringResource(R.string.api_key), state = apiKey)
+                }
 
                 Button(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -170,19 +188,22 @@ private fun GeosubmitEndpointDialog(
                     Text(text = stringResource(id = R.string.suggested_services_title))
                 }
 
-                Row {
-                    Spacer(modifier = Modifier.weight(1.0f))
-
-                    TextButton(
-                        onClick = {
-                            onDialogClose(
-                                GeosubmitParams(endpoint.value!!, path.value!!, apiKey.value)
+                TextButton(
+                    modifier = Modifier.align(Alignment.End),
+                    onClick = {
+                        onDialogClose(
+                            IchnaeaParams(
+                                baseUrl = endpoint.value!!,
+                                submissionPath = geosubmitPath.value!!,
+                                locatePath = geolocatePath.value,
+                                apiKey = apiKey.value,
                             )
-                        },
-                        enabled = !endpoint.value.isNullOrBlank() && !path.value.isNullOrBlank(),
-                    ) {
-                        Text(text = stringResource(id = R.string.save))
-                    }
+                        )
+                    },
+                    enabled =
+                        !endpoint.value.isNullOrBlank() && !geosubmitPath.value.isNullOrBlank(),
+                ) {
+                    Text(text = stringResource(id = R.string.save))
                 }
             }
         }

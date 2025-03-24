@@ -11,7 +11,7 @@
     <string name="start_scanning">启动扫描</string>
     <string name="stop_scanning">停止扫描</string>
     <string name="wireless_scanning">无线扫描</string>
-    <string name="notification_wireless_scanning_content_satellite_stats">正使用 %1$d⁄%2$d 个卫星</string>
+    <string name="satellites_in_use">正使用 %1$d⁄%2$d 个卫星</string>
     <string name="ignore_battery_optimizations_title">忽略电池优化</string>
     <string name="notification_exporting_data">导出数据中…</string>
     <string name="export_notification_channel_name">数据导出</string>
@@ -38,7 +38,7 @@
     <string name="report_upload_notification_channel_name">报告上传</string>
     <string name="notification_sending_reports">正在上传报告</string>
     <string name="notification_wireless_scanning_title">无线扫描活动中</string>
-    <plurals name="notification_wireless_scanning_content_reports_created">
+    <plurals name="reports_created">
         <item quantity="other">%d个报告已创建</item>
     </plurals>
     <string name="send_reports_automatically">自动上传报告</string>
@@ -50,7 +50,7 @@
     <string name="add_quick_settings_tile">要添加快捷开关以方便启动扫描吗？</string>
     <string name="mls_warning_title">MLS 已经退役</string>
     <string name="endpoint">端点</string>
-    <string name="path">路径</string>
+    <string name="submission_path">路径</string>
     <string name="api_key">API 密钥（可选）</string>
     <string name="suggested_services_title">建议服务</string>
     <string name="suggested_service_website">网站</string>

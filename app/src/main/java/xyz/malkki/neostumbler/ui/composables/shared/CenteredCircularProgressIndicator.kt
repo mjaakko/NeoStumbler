@@ -8,8 +8,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
+fun CenteredCircularProgressIndicator(modifier: Modifier = Modifier) {
+    Box(modifier = modifier, contentAlignment = Alignment.Center) { CircularProgressIndicator() }
+}
+
+@Composable
 fun CenteredCircularProgressIndicator() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        CircularProgressIndicator()
-    }
+    CenteredCircularProgressIndicator(modifier = Modifier.fillMaxSize())
 }

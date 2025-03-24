@@ -36,7 +36,7 @@
     <string name="report_upload_notification_channel_name">Berichtuploads</string>
     <string name="notification_sending_reports">Lade Berichte hoch</string>
     <string name="notification_wireless_scanning_title">Funknetzwerke scannen aktiv</string>
-    <plurals name="notification_wireless_scanning_content_reports_created">
+    <plurals name="reports_created">
         <item quantity="one">%d Bericht erstellt</item>
         <item quantity="other">%d Berichte erstellt</item>
     </plurals>
@@ -55,7 +55,7 @@
     <string name="beacons">Bluetooth-Beacon</string>
     <string name="add_quick_settings_tile">Schnelleinstellungskachel hinzufügen, um das Scannen einfacher zu starten?</string>
     <string name="endpoint">Endpunkt</string>
-    <string name="path">Pfad</string>
+    <string name="submission_path">Pfad</string>
     <string name="api_key">API-Schlüssel (optional)</string>
     <string name="settings_ignore_wifi_scan_throttling_title">Ignoriere WLAN-Suchdrosselung</string>
     <string name="wifi_scan_throttling">WLAN-Suchdrosselung</string>
@@ -79,7 +79,7 @@
     <string name="mls_warning_title">MLS hat den Betrieb eingestellt</string>
     <string name="cancel">Abbrechen</string>
     <string name="use">Benutzen</string>
-    <string name="notification_wireless_scanning_content_satellite_stats">%1$d⁄%2$d Satelliten werden verwendet</string>
+    <string name="satellites_in_use">%1$d⁄%2$d Satelliten werden verwendet</string>
     <string name="unencrypted_endpoint_warning">Unverschlüsselter Endpunkt</string>
     <string name="suggested_services_title">Vorgeschlagene Dienste</string>
     <string name="suggested_service_hosted_by">Betrieben von:</string>

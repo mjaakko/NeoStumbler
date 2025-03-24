@@ -48,11 +48,11 @@
         <item quantity="other">%d rapporten opgestuurd</item>
     </plurals>
     <string name="notification_sending_reports">Rapporten versturen</string>
-    <plurals name="notification_wireless_scanning_content_reports_created">
+    <plurals name="reports_created">
         <item quantity="one">%d rapport gemaakt</item>
         <item quantity="other">%d rapporten gemaakt</item>
     </plurals>
-    <string name="notification_wireless_scanning_content_satellite_stats">%1$d⁄%2$d satellieten in gebruik</string>
+    <string name="satellites_in_use">%1$d⁄%2$d satellieten in gebruik</string>
     <string name="battery_optimizations_not_disabled_warning">Accu­optimalisatie is niet uitgeschakeld</string>
     <string name="send_reports_automatically">Rapporten automatisch versturen</string>
     <string name="export_notification_channel_name">Gegevens­export</string>
@@ -72,7 +72,7 @@
     <string name="beacons">Bluetooth-bakens</string>
     <string name="add_quick_settings_tile">Tegel aan snelle instellingen toevoegen om gemakkelijk te scannen?</string>
     <string name="mls_warning_title">MLS is gestopt</string>
-    <string name="path">Pad</string>
+    <string name="submission_path">Pad</string>
     <string name="api_key">API-sleutel (optioneel)</string>
     <string name="unencrypted_endpoint_warning">Onversleutelde ontvangstlocatie</string>
     <string name="suggested_service_hosted_by">Aangeboden door:</string>

@@ -16,7 +16,7 @@ import kotlin.time.toJavaDuration
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.geosubmit.ReportSendWorker
+import xyz.malkki.neostumbler.ichnaea.ReportSendWorker
 import xyz.malkki.neostumbler.ui.composables.ToggleWithAction
 
 private val UPLOAD_INTERVAL = 8.hours

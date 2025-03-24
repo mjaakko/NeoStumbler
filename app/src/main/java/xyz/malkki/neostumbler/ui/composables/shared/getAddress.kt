@@ -14,9 +14,14 @@ private const val FRACTION_DIGITS = 4
 
 @Composable
 @SuppressLint("ProduceStateDoesNotAssignValue") // https://issuetracker.google.com/issues/349411310
-fun getAddress(latitude: Double, longitude: Double, geocoder: Geocoder): State<String> =
+fun getAddress(
+    latitude: Double,
+    longitude: Double,
+    geocoder: Geocoder,
+    fallbackToCoordinates: Boolean = true,
+): State<String?> =
     produceState(
-        initialValue = "",
+        initialValue = null,
         latitude,
         longitude,
         geocoder,
@@ -33,10 +38,10 @@ fun getAddress(latitude: Double, longitude: Double, geocoder: Geocoder): State<S
                 }
 
             value =
-                if (addresses.isEmpty()) {
+                if (addresses.isEmpty() && fallbackToCoordinates) {
                     "${latitude.roundToString(FRACTION_DIGITS)}, ${longitude.roundToString(FRACTION_DIGITS)}"
                 } else {
-                    addresses.first().format()
+                    addresses.firstOrNull()?.format()
                 }
         },
     )

@@ -19,7 +19,7 @@
     <string name="delete_report_confirmation">Tem a certeza que quer apagar o relatório?</string>
     <string name="notification_sending_reports">Enviando relatórios</string>
     <string name="notification_wireless_scanning_title">Scan wireless ativo</string>
-    <plurals name="notification_wireless_scanning_content_reports_created">
+    <plurals name="reports_created">
         <item quantity="one">%d relatório criado</item>
         <item quantity="many">%d relatórios criados</item>
         <item quantity="other">%d relatórios criados</item>
@@ -65,7 +65,7 @@
     <string name="reupload_data">Re-enviar dados</string>
     <string name="add_quick_settings_tile">Adicionar botão às definições rápidas para iniciar scans mais rapidamente?</string>
     <string name="settings_ignore_wifi_scan_throttling_title">Ignorar limitações no scan de redes Wi-Fi</string>
-    <string name="path">Caminho</string>
+    <string name="submission_path">Caminho</string>
     <string name="wifi_scan_throttling_explanation">Desative a restrição nos scans/procura de redes Wi-Fi nas definições do seu dispositivo. Normalmente pode ser desativado nas opções de programador/developers settings</string>
     <string name="show_my_location">Mostrar a minha localização</string>
     <string name="warning_icon_description">Ícone de aviso</string>
@@ -77,7 +77,7 @@
     <string name="movement_detection_significant_motion_title">Sensor de movimento</string>
     <string name="movement_detection_significant_motion_description">Pausa o scan e GPS quando nenhum movimento significativo é detetado. Poupa bateria, mas não funciona bem em alguns dispositivos</string>
     <string name="movement_detection_none_description">Continuar o scan mesmo sem movimento</string>
-    <string name="notification_wireless_scanning_content_satellite_stats">%1$d⁄%2$d satélites em uso</string>
+    <string name="satellites_in_use">%1$d⁄%2$d satélites em uso</string>
     <string name="settings_group_reports">Relatórios</string>
     <string name="settings_group_other">Outros</string>
     <string name="notification_style">Estilo da notificação</string>

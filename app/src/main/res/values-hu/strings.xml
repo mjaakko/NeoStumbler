@@ -33,11 +33,11 @@
     <string name="export_notification_channel_name">Adatok exportálása</string>
     <string name="notification_exporting_data">Adatok exportálása…</string>
     <string name="export_data">Adat exportálása</string>
-    <plurals name="notification_wireless_scanning_content_reports_created">
+    <plurals name="reports_created">
         <item quantity="one">Készült %d eredmény</item>
         <item quantity="other">Készült %d eredmény</item>
     </plurals>
-    <string name="notification_wireless_scanning_content_satellite_stats">Használat műholdak száma: %1$d⁄%2$d</string>
+    <string name="satellites_in_use">Használat műholdak száma: %1$d⁄%2$d</string>
     <string name="ignore_battery_optimizations_title">Akkumulátor optimalizálás figyelmen kívül hagyása</string>
     <string name="battery_optimizations_not_disabled_warning">Az akkumulátor optimalizálás nem volt letiltva</string>
     <string name="export_csv">Exportálás CSV-be</string>
@@ -107,7 +107,7 @@
     <string name="stop_scanning">Leállítás</string>
     <string name="export_started">Adatexportálás forrása: %1$s célja: %2$s</string>
     <string name="import_raw_database_description">A nyers adatbázis importálása felül fogja írni a jelenlegit</string>
-    <string name="path">Útvonal</string>
+    <string name="submission_path">Útvonal</string>
     <string name="cell_tower_icon_description">Mobil bázisállomás ikon</string>
     <string name="cancel">Mégsem</string>
     <string name="settings_group_reports">Eredmények</string>
