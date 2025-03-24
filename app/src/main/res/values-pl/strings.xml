@@ -94,7 +94,7 @@
     <string name="map_tab_title">Mapa</string>
     <string name="statistics_tab_title">Statystyki</string>
     <string name="reports">Raporty:</string>
-    <string name="send_reports_automatically">Wysyłaj raporty automatycznie</string>
+    <string name="send_reports_automatically_title">Wysyłaj raporty automatycznie</string>
     <string name="settings_group_reports">Raporty</string>
     <string name="report_upload_notification_channel_name">Wysyłki raportów</string>
     <string name="reports_total">Całkowita liczba raportów: %d</string>

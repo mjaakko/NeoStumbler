@@ -80,7 +80,12 @@
     <string name="ignore_battery_optimizations_title">Ignore battery optimizations</string>
     <string name="ignore_battery_optimizations_description">For best results, battery optimizations should be disabled. Wireless scanning and location access is significantly throttled when battery optimization is active and the screen is off</string>
     <string name="battery_optimizations_not_disabled_warning">Battery optimizations were not disabled</string>
-    <string name="send_reports_automatically">Send reports automatically</string>
+
+    <string name="send_reports_automatically_title">Send reports automatically</string>
+    <string name="send_reports_automatically_never">Never</string>
+    <string name="send_reports_automatically_on_any_network">On any network</string>
+    <string name="send_reports_automatically_on_unmetered_network">On unmetered network</string>
+
     <string name="export_notification_channel_name">Data export</string>
     <string name="notification_exporting_data">Exporting data…</string>
     <string name="export_data">Export data</string>
@@ -203,7 +208,7 @@
     <string name="db_size">Database size: %s</string>
 
     <string name="db_schema_version">Database schema version: %d</string>
-    
+
     <string name="delete_data">Delete data</string>
     <string name="delete_reports_by_date">Delete reports by date</string>
     <string name="delete_reports_from_area">Delete reports from area</string>

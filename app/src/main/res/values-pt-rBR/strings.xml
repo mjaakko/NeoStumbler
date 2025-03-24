@@ -44,7 +44,7 @@
     <string name="ignore_battery_optimizations_title">Ignorar otimizações de bateria</string>
     <string name="ignore_battery_optimizations_description">Para resultados melhores, as otimizações de bateria devem ser desativadas. A busca por redes sem-fio e o acesso à localização é significativamente sufocado quando as otimizações de bateria estão ativas e a tela está desligada</string>
     <string name="battery_optimizations_not_disabled_warning">As otimizações de bateria não foram desativadas</string>
-    <string name="send_reports_automatically">Enviar relatórios automaticamente</string>
+    <string name="send_reports_automatically_title">Enviar relatórios automaticamente</string>
     <string name="export_notification_channel_name">Exportação de dados</string>
     <string name="notification_exporting_data">Exportando dados…</string>
     <string name="export_data">Exportar dados</string>

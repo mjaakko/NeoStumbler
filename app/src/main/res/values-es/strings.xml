@@ -6,7 +6,7 @@
     <string name="no_data">Sin datos</string>
     <string name="reports_total">Informes totales: %d</string>
     <string name="notification_style_basic_title">Básico</string>
-    <string name="send_reports_automatically">Enviar informes automáticamente</string>
+    <string name="send_reports_automatically_title">Enviar informes automáticamente</string>
     <string name="coverage_layer_tile_json_url">URL TileJSON para el mapa de cobertura</string>
     <string name="no">No</string>
     <string name="notification_style_detailed_title">Detallado</string>

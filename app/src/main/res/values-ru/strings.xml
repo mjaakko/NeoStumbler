@@ -119,7 +119,7 @@
     <string name="cancel">Отмена</string>
     <string name="permissions_not_granted">Необходимые разрешения не были выданы</string>
     <string name="bluetooth_icon_description">Иконка Bluetooth</string>
-    <string name="send_reports_automatically">Отправлять отчёты автоматически</string>
+    <string name="send_reports_automatically_title">Отправлять отчёты автоматически</string>
     <string name="notification_exporting_data">Экспортируем данные…</string>
     <string name="export_notification_channel_name">Экспорт данных</string>
     <string name="import_raw_database">Импортировать сырую базу данных</string>

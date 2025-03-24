@@ -55,7 +55,7 @@
     <string name="ignore_battery_optimizations_title">バッテリーの最適化を無効にしてください</string>
     <string name="ignore_battery_optimizations_description">最高の結果を得るためには、バッテリーの最適化を無効にする必要があります。有効になっている場合、画面がオフの状態では無線のスキャンと位置情報へのアクセスが大幅に制限されます。</string>
     <string name="battery_optimizations_not_disabled_warning">バッテリーの最適化が有効になっています</string>
-    <string name="send_reports_automatically">レポートを自動送信する</string>
+    <string name="send_reports_automatically_title">レポートを自動送信する</string>
     <string name="export_notification_channel_name">データをエクスポート</string>
     <string name="notification_exporting_data">データをエクスポート中…</string>
     <string name="export_data">データのエクスポート</string>

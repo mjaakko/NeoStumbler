@@ -45,7 +45,7 @@
     <string name="satellites_in_use">正在使用 %1$d⁄%2$d 個衛星</string>
     <string name="ignore_battery_optimizations_title">忽略電池最佳化</string>
     <string name="battery_optimizations_not_disabled_warning">電池最佳化未停用</string>
-    <string name="send_reports_automatically">自動上傳報告</string>
+    <string name="send_reports_automatically_title">自動上傳報告</string>
     <string name="export_notification_channel_name">資料匯出</string>
     <string name="notification_exporting_data">匯出資料中…</string>
     <string name="export_data">匯出資料</string>

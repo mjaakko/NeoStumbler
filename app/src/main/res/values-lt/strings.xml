@@ -53,7 +53,7 @@
     <string name="ignore_battery_optimizations_title">Nepaisyti akumuliatoriaus optimizacijų</string>
     <string name="ignore_battery_optimizations_description">Norint pasiekti geriausių rezultatų, turėtų būti išjungtos akumuliatoriaus optimizacijos. Kol jos įjungtos, esant išjungtam ekranui, belaidžių tinklų skenavimas ir prieiga prie vietovės informacijos yra stipriai ribojami</string>
     <string name="battery_optimizations_not_disabled_warning">Akumuliatoriaus optimizacijos neišjungtos</string>
-    <string name="send_reports_automatically">Siųsti ataskaitas automatiškai</string>
+    <string name="send_reports_automatically_title">Siųsti ataskaitas automatiškai</string>
     <string name="export_notification_channel_name">Duomenų eksportas</string>
     <string name="notification_exporting_data">Duomenys eksportuojami…</string>
     <string name="export_data">Duomenų eksportas</string>

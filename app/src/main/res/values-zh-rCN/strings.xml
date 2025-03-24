@@ -41,7 +41,7 @@
     <plurals name="reports_created">
         <item quantity="other">%d个报告已创建</item>
     </plurals>
-    <string name="send_reports_automatically">自动上传报告</string>
+    <string name="send_reports_automatically_title">自动上传报告</string>
     <string name="export_no_file_chosen">无法导出数据，因为未创建任何文件</string>
     <string name="export_started">正从 %1$s 到 %2$s 导出数据</string>
     <string name="no_thanks">不用了，谢谢</string>

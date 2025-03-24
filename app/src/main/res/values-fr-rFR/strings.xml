@@ -50,7 +50,7 @@
     <string name="ignore_battery_optimizations_title">Ignorer les optimisations de batterie</string>
     <string name="ignore_battery_optimizations_description">Pour de meilleurs résultats, les optimisations de batterie doivent être désactivées. Les mesures sans fil et l’utilisation de la localisation sont significativement affectés lorsque l’optimisation de batterie est active et l’écran éteint</string>
     <string name="battery_optimizations_not_disabled_warning">Les optimisations de batterie n\'ont pas été désactivées</string>
-    <string name="send_reports_automatically">Envoyer les rapports automatiquement</string>
+    <string name="send_reports_automatically_title">Envoyer les rapports automatiquement</string>
     <string name="export_notification_channel_name">Export de données</string>
     <string name="notification_exporting_data">Exportation des données…</string>
     <string name="export_data">Exporter les données</string>

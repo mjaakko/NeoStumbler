@@ -59,7 +59,7 @@
     <string name="ignore_battery_optimizations_title">Ignorar otimizações da bateria</string>
     <string name="ignore_battery_optimizations_description">Para melhores resultados, a otimização da bateria deve ser desativada. O número de scans de redes Wi-Fi e acesso à localização são significativamente reduzidos se a otimização da bateria estiver ativa e o ecrã estiver desligado</string>
     <string name="battery_optimizations_not_disabled_warning">As otimizações de bateria não foram desativadas</string>
-    <string name="send_reports_automatically">Enviar relatórios automaticamente</string>
+    <string name="send_reports_automatically_title">Enviar relatórios automaticamente</string>
     <string name="wifis">Wi-Fi</string>
     <string name="notification_exporting_data">Exportando dados…</string>
     <string name="reupload_data">Re-enviar dados</string>
