@@ -2,8 +2,8 @@
 <resources>
     <string name="prefer_fused_location_title">Fused-Location-Provider bevorzugen</string>
     <string name="autoscan_when_moving">Automatisch scannen, wenn in Bewegung</string>
-    <string name="autoscan_failed_to_enable">Konnte automatisches Scannen nicht einschalten</string>
-    <string name="permission_rationale_background_location_autoscan">Das Scannen automatisch zu starten, benötigt die Berechtigung für Hintergrund-Standort</string>
-    <string name="permission_rationale_activity_recognition">Das Scannen automatisch zu starten, benötigt Zugriff auf die aktuelle Aktivität</string>
-    <string name="prefer_fused_location_description">Der \"Fused\" Standortprovider kombiniert Daten anderer Quellen als GPS um den Standort zu bestimmen</string>
+    <string name="autoscan_failed_to_enable">Automatisches Scannen konnte nicht einschalten werden</string>
+    <string name="permission_rationale_background_location_autoscan">Um das Automatische Scannen zu starten, benötigt die Berechtigung für Hintergrund-Standort</string>
+    <string name="permission_rationale_activity_recognition">Um das Automatische Scannen zu starten, wird Zugriff auf die aktuelle Aktivität benötigt</string>
+    <string name="prefer_fused_location_description">Der \"Fused-Location-Provider\" kombiniert Daten anderer Quellen als GPS, um den Standort zu bestimmen</string>
 </resources>
