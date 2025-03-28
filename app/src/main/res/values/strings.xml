@@ -137,9 +137,21 @@
     <string name="wifi_scan_throttling_explanation">
         You need to disable Wi-Fi scan throttling in your device\'s settings to enable this feature. Usually this can be done in the developer settings
     </string>
+
     <string name="settings_group_reports">Reports</string>
     <string name="settings_group_scanning">Scanning</string>
+    <string name="settings_group_privacy">Privacy</string>
     <string name="settings_group_other">Other</string>
+
+    <string name="wifi_filter_settings_title">Filter Wi-Fis by SSID</string>
+    <plurals name="wifi_filter_settings_description">
+        <item quantity="one">%d SSID filtered</item>
+        <item quantity="other">%d SSIDs filtered</item>
+    </plurals>
+    <string name="wifi_filter_settings_hint">
+        Wi-Fi networks with any of these keywords in their SSID are not collected
+    </string>
+
     <string name="wifi_scan_frequency">Wi-Fi scan frequency</string>
     <string name="cell_tower_scan_frequency">Cell tower scan frequency</string>
     <string name="every_x_meters">Every %d meters</string>

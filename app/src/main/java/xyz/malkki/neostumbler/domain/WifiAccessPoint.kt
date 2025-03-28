@@ -7,11 +7,11 @@ import xyz.malkki.neostumbler.extensions.timestampMillis
 
 data class WifiAccessPoint(
     val macAddress: String,
-    val radioType: RadioType?,
-    val channel: Int?,
-    val frequency: Int?,
-    val signalStrength: Int?,
-    val ssid: String?,
+    val radioType: RadioType? = null,
+    val channel: Int? = null,
+    val frequency: Int? = null,
+    val signalStrength: Int? = null,
+    val ssid: String? = null,
     override val timestamp: Long,
 ) : ObservedDevice<String> {
     override val uniqueKey: String

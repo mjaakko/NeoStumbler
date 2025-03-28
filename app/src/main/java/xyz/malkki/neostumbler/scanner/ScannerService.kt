@@ -28,6 +28,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.stringSetPreferencesKey
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -66,6 +67,8 @@ import xyz.malkki.neostumbler.scanner.movement.LocationBasedMovementDetector
 import xyz.malkki.neostumbler.scanner.movement.MovementDetector
 import xyz.malkki.neostumbler.scanner.movement.MovementDetectorType
 import xyz.malkki.neostumbler.scanner.movement.SignificantMotionMovementDetector
+import xyz.malkki.neostumbler.scanner.postprocess.HiddenWifiFilterer
+import xyz.malkki.neostumbler.scanner.postprocess.SsidBasedWifiFilterer
 import xyz.malkki.neostumbler.scanner.quicksettings.ScannerTileService
 import xyz.malkki.neostumbler.scanner.source.AirPressureSource
 import xyz.malkki.neostumbler.scanner.source.BeaconLibraryBluetoothBeaconSource
@@ -274,6 +277,12 @@ class ScannerService : Service() {
                 "Scan distances: ${wifiScanDistance}m - Wi-Fis, ${cellScanDistance}m - cell towers"
             )
 
+            val wifiFilterList =
+                settingsStore.getOrDefault(
+                    stringSetPreferencesKey(PreferenceKeys.WIFI_FILTER_LIST),
+                    emptySet(),
+                )
+
             val locationFlow =
                 locationSource
                     .getLocations(LOCATION_INTERVAL, usePassiveProvider = false)
@@ -330,6 +339,8 @@ class ScannerService : Service() {
                         airPressureSource.getAirPressureFlow(LOCATION_INTERVAL / 2)
                     },
                     movementDetector = movementDetector,
+                    postProcessors =
+                        listOf(HiddenWifiFilterer(), SsidBasedWifiFilterer(wifiFilterList)),
                 )
                 .createReports()
                 .collect { reportData ->

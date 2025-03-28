@@ -111,9 +111,20 @@
     <string name="mls_warning_text">
         Mozillan sijaintipalvelu on poistunut käytöstä eikä enää ota vastaan dataa. MLS:n sijasta voit lähettää dataa beaconDB:hen, joka tarjoaa MLS:n kanssa yhteensopivan palvelun\n\nHuomaathan, että beaconDB on edelleen kehityksessä ja tällä on vaikutusta siihen, kuinka dataasi käsitellään. <annotation link="privacy_policy">Tietosuojaselosteesta</annotation> löydät lisää tietoja aiheesta\n\nHaluatko asettaa beaconDB:n palvelimeksi? Tämän voi myöhemmin vaihtaa asetuksista
     </string>
+
     <string name="settings_group_reports">Raportit</string>
     <string name="settings_group_scanning">Skannaus</string>
+    <string name="settings_group_privacy">Tietosuoja</string>
     <string name="settings_group_other">Muut</string>
+
+    <string name="wifi_filter_settings_title">Suodata Wi-Fi -verkkoja SSID:n perusteella</string>
+    <plurals name="wifi_filter_settings_description">
+        <item quantity="one">%d SSID suodatettu</item>
+        <item quantity="other">%d SSID:tä suodatettu</item>
+    </plurals>
+    <string name="wifi_filter_settings_hint">
+        Wi-Fi -verkkoja, joiden nimessä on jokin näistä avainsanoista, ei kerätä
+    </string>
 
     <string name="endpoint">Palvelin</string>
     <string name="submission_path">Polku</string>

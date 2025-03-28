@@ -5,10 +5,12 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -28,6 +30,7 @@ import xyz.malkki.neostumbler.extensions.combineWithLatestFrom
 import xyz.malkki.neostumbler.scanner.data.ReportData
 import xyz.malkki.neostumbler.scanner.movement.ConstantMovementDetector
 import xyz.malkki.neostumbler.scanner.movement.MovementDetector
+import xyz.malkki.neostumbler.scanner.postprocess.ReportPostProcessor
 
 // Maximum accuracy for locations, used for filtering bad locations
 private const val LOCATION_MAX_ACCURACY = 200
@@ -54,6 +57,7 @@ class WirelessScanner(
     private val wifiAccessPointSource: () -> Flow<List<WifiAccessPoint>>,
     private val bluetoothBeaconSource: () -> Flow<List<BluetoothBeacon>>,
     private val movementDetector: MovementDetector = ConstantMovementDetector,
+    private val postProcessors: List<ReportPostProcessor> = emptyList(),
 ) {
     private fun getLocationsWithAirPressure(): Flow<Position> {
         val locationFlow = locationSource.invoke()
@@ -180,30 +184,36 @@ class WirelessScanner(
 
                 val cellsByLocation = cells.groupByLocation(locations).filterOldData()
 
-                val wifisByLocation =
-                    wifis.filterHiddenNetworks().groupByLocation(locations).filterOldData()
+                val wifisByLocation = wifis.groupByLocation(locations).filterOldData()
 
                 val bluetoothsByLocation = bluetooths.groupByLocation(locations).filterOldData()
 
                 val locationsWithData =
                     cellsByLocation.keys + wifisByLocation.keys + bluetoothsByLocation.keys
 
-                locationsWithData
-                    .map { location ->
-                        createReport(
-                            location,
-                            cellsByLocation[location] ?: emptyList(),
-                            wifisByLocation[location] ?: emptyList(),
-                            bluetoothsByLocation[location] ?: emptyList(),
-                        )
-                    }
-                    .filter {
-                        it.bluetoothBeacons.isNotEmpty() ||
-                            it.cellTowers.isNotEmpty() ||
-                            it.wifiAccessPoints.isNotEmpty()
-                    }
+                locationsWithData.map { location ->
+                    createReport(
+                        location,
+                        cellsByLocation[location] ?: emptyList(),
+                        wifisByLocation[location] ?: emptyList(),
+                        bluetoothsByLocation[location] ?: emptyList(),
+                    )
+                }
             }
-            .collect { reports -> reports.forEach { send(it) } }
+            .flatMapConcat { reports -> reports.postProcess() }
+            .filter { report -> !report.isEmpty }
+            .collect { report -> send(report) }
+    }
+
+    private fun List<ReportData>.postProcess(): Flow<ReportData> {
+        return mapNotNull { report ->
+                postProcessors.fold<ReportPostProcessor, ReportData?>(report) {
+                    reportToProcess,
+                    processor ->
+                    reportToProcess?.let { processor.postProcessReport(it) }
+                }
+            }
+            .asFlow()
     }
 
     private fun createReport(
@@ -219,23 +229,6 @@ class WirelessScanner(
             bluetoothBeacons = bluetooths,
         )
     }
-
-    /**
-     * Filters Wi-Fi networks that should not be sent to geolocation services, i.e. hidden networks
-     * with empty SSID or those with SSID ending in "_nomap"
-     *
-     * @return Filtered list of scan results
-     */
-    private fun List<WifiAccessPoint>.filterHiddenNetworks(): List<WifiAccessPoint> =
-        filter { wifiAccessPoint ->
-            val ssid = wifiAccessPoint.ssid
-
-            !ssid.isNullOrBlank() &&
-                !ssid.endsWith("_nomap")
-                // Some access points have a SSID with only null characters
-                &&
-                ssid.all { char -> char != '\u0000' }
-        }
 
     private fun <T : ObservedDevice<*>> Map<Position, List<T>>.filterOldData():
         Map<Position, List<T>> = mapValues { entry ->
