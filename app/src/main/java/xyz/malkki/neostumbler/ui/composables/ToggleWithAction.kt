@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Switch
@@ -22,6 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 
+private const val DESCRIPTION_MAX_LINES = 3
+
 @Composable
 fun ToggleWithAction(
     title: String,
@@ -35,7 +38,8 @@ fun ToggleWithAction(
 
     Row(
         modifier =
-            Modifier.fillMaxWidth()
+            Modifier
+                .fillMaxWidth()
                 .wrapContentHeight()
                 .clickable(
                     enabled = enabled && !changingState.value,
@@ -57,14 +61,16 @@ fun ToggleWithAction(
                 Text(
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Light,
-                    maxLines = 2,
+                    maxLines = DESCRIPTION_MAX_LINES,
                     overflow = TextOverflow.Ellipsis,
                     text = description,
                 )
             }
         }
         Switch(
-            modifier = Modifier.wrapContentSize(),
+            modifier = Modifier
+                .wrapContentSize()
+                .padding(start = 8.dp),
             enabled = enabled && !changingState.value,
             checked = checked,
             onCheckedChange = null,
