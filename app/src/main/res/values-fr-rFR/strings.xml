@@ -175,4 +175,5 @@
     <string name="no_endpoint_configured">Aucun service configuré</string>
     <string name="coverage_layer_tile_json_url">URL TileJSON pour la couche de couverture cartographique</string>
     <string name="system_default_language">Langue du système</string>
+    <string name="waiting_for_location">En attente de localisation</string>
 </resources>

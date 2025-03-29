@@ -166,4 +166,21 @@
     <string name="waiting_for_location">Ожидание геолокации</string>
     <string name="system_default_language">Язык системы</string>
     <string name="export_raw_database_compress">Сжать файл базы данных</string>
+    <string name="scanning_status_active">Сканирование <annotation style="status">активно</annotation></string>
+    <string name="scanning_status_not_active">Сканирование <annotation style="status">не активно</annotation></string>
+    <string name="speed_metres_per_second">Скорость: %s м/с</string>
+    <string name="altitude_metres">Высота: %s м</string>
+    <string name="unknown_cell_id">ID вышки неизвестен</string>
+    <string name="mcc">MCC: %s</string>
+    <string name="mnc">MNC: %s</string>
+    <string name="lac">LAC: %s</string>
+    <string name="radio_type">Тип: %s</string>
+    <string name="beacon_type">Тип маячка: %s</string>
+    <string name="beacon_id">ID%d: %s</string>
+    <string name="locate_path">Путь для геолокации</string>
+    <string name="signal_strength_dbm">Сила сигнала: %d дБм</string>
+    <string name="send_reports_automatically_never">Никогда</string>
+    <string name="db_schema_version">Версия схемы базы данных: %d</string>
+    <string name="send_reports_automatically_on_any_network">Любая сеть</string>
+    <string name="send_reports_automatically_on_unmetered_network">Нетарифицированные сети</string>
 </resources>
