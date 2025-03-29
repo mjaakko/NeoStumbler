@@ -1,2 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="report_upload_notification_channel_name">보고 전송</string>
+    <string name="mcc">MCC: %s</string>
+    <string name="export_raw_database_compress">데이터베이스 파일 압축</string>
+    <string name="permissions_needed">권한 필요</string>
+    <string name="settings_tab_title">설정</string>
+    <string name="delete_report_confirmation">보고를 삭제하시겠습니까?</string>
+    <string name="import_database_not_valid">선택된 파일에 올바른 데이터베이스가 없습니다</string>
+    <string name="warning_icon_description">경고 아이콘</string>
+    <string name="save">저장</string>
+    <string name="no">아니오</string>
+    <string name="no_thanks">아니오</string>
+    <string name="yes">예</string>
+    <string name="reset">초기화</string>
+    <string name="cancel">취소</string>
+    <string name="use">사용</string>
+    <string name="stop">정지</string>
+    <string name="delete">삭제</string>
+    <string name="no_data">정보 없음</string>
+    <string name="waiting_for_location">위치 찾는 중</string>
+    <string name="failed_to_open_selected_file">해당 파일 열기 실패함</string>
+    <string name="permissions_not_granted">필요한 권한이 허락되지 않음</string>
+    <string name="wifi_icon_description">와이파이 아이콘</string>
+    <string name="cell_tower_icon_description">무선 타워 아이콘</string>
+    <string name="bluetooth_icon_description">블루투스 아이콘</string>
+    <string name="scanner_status_notification_channel_name">탐색 현황</string>
+    <string name="wireless_scanning">무선 탐색</string>
+    <string name="map_tab_title">지도</string>
+    <string name="reports_tab_title">보고</string>
+    <string name="statistics_tab_title">통계</string>
+    <string name="send_reports">보고서 전송</string>
+    <string name="reports">보고:</string>
+    <string name="reports_total">총 보고량: %d</string>
+    <string name="reports_not_uploaded">미전송 보고량: %d</string>
+    <string name="reports_last_uploaded">마지막 전송 보고량: %s</string>
+    <string name="reports_last_uploaded_never">없음</string>
+    <string name="reports_empty">보고 없음</string>
+    <string name="start_scanning">탐색 시작</string>
+    <string name="stop_scanning">탐색 정지</string>
+    <string name="scanning_status_active">탐색 <annotation style="status">활성</annotation></string>
+    <string name="scanning_status_not_active">탐색 <annotation style="status">비활성</annotation></string>
+    <string name="delete_report">보고 삭제</string>
+    <plurals name="toast_reports_uploaded">
+        <item quantity="other">보고 %d 건 전송됨</item>
+    </plurals>
+    <string name="toast_reports_upload_failed">보고 전송 실패함</string>
+    <string name="toast_reports_upload_failed_no_endpoint">종점이 설정되지 않아 보고 전송에 실패함</string>
+    <string name="speed_metres_per_second">속도: %s m/s</string>
+    <string name="altitude_metres">고도: %s m</string>
+    <string name="signal_strength_dbm">신호 세기: %d dBm</string>
+    <string name="unknown_cell_id">미확인 무선 ID</string>
+    <string name="mnc">MNC: %s</string>
+    <string name="radio_type">종류: %s</string>
+    <string name="beacon_type">비콘 종류: %s</string>
+    <string name="notification_sending_reports">보고 전송중</string>
+    <string name="notification_wireless_scanning_title">무선 탐색 활성</string>
+    <plurals name="reports_created">
+        <item quantity="other">보고 %d건 생성됨</item>
+    </plurals>
+    <string name="satellites_in_use">위성 %1$d⁄%2$d개 이용중</string>
+    <string name="ignore_battery_optimizations_title">배터리 최적화 중지</string>
+    <string name="battery_optimizations_not_disabled_warning">배터리 최적화 중지되지 않음</string>
+    <string name="send_reports_automatically_title">보고 자동 전송</string>
+    <string name="send_reports_automatically_never">끔</string>
+    <string name="send_reports_automatically_on_any_network">모든 접속</string>
+    <string name="send_reports_automatically_on_unmetered_network">무제한 네트워크에서</string>
+    <string name="export_notification_channel_name">정보 내보내기</string>
+    <string name="notification_exporting_data">내보내는 중…</string>
+    <string name="export_data">정보 내보내기</string>
+    <string name="export_no_file_chosen">생성된 파일이 없어 정보를 내보낼 수 없습니다</string>
+    <string name="export_csv">CSV로 내보내기</string>
+    <string name="export_raw_database">원 데이터베이스 내보내기</string>
+    <string name="import_data">정보 들여오기</string>
+    <string name="import_raw_database">원 데이터베이스 들여오기</string>
+    <string name="import_raw_database_description">원 데이터베이스를 들여오면 기존 데이터베이스를 덮어씁니다</string>
+    <plurals name="import_database_successful">
+        <item quantity="other">%d 건의 보고를 포함한 데이터베이스 들여옴</item>
+    </plurals>
+    <string name="reupload_data">정보 재전송</string>
+    <string name="wifis">와이파이</string>
+    <string name="cells">무선</string>
+    <string name="beacons">블루투스 비콘</string>
+    <string name="ok">확인</string>
+    <string name="ignore_battery_optimizations_description">최적의 탐색을 위해서는 배터리 최적화가 꺼져 있어야 합니다. 배터리 최적화를 켱 상태에서 화면을 끌 경우 무선 탐색과 위치정보 접근 빈도가 크게 제한됩니다.</string>
+</resources>
