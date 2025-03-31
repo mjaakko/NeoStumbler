@@ -43,6 +43,7 @@ import org.koin.dsl.module
 import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.domain.LatLng
 import xyz.malkki.neostumbler.domain.Position
+import xyz.malkki.neostumbler.domain.Position.Source
 import xyz.malkki.neostumbler.location.LocationSource
 
 class AreaPickerTest {
@@ -96,7 +97,12 @@ class AreaPickerTest {
         stopKoin()
 
         val fakeLocation =
-            Position(latitude = 40.689100, longitude = -74.044300, source = "gps", timestamp = 0)
+            Position(
+                latitude = 40.689100,
+                longitude = -74.044300,
+                source = Source.GPS,
+                timestamp = 0,
+            )
 
         startKoin {
             modules(

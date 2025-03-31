@@ -27,6 +27,7 @@ import xyz.malkki.neostumbler.ui.composables.settings.IgnoreScanThrottlingToggle
 import xyz.malkki.neostumbler.ui.composables.settings.LanguageSwitcher
 import xyz.malkki.neostumbler.ui.composables.settings.ManageStorageSettingsItem
 import xyz.malkki.neostumbler.ui.composables.settings.MovementDetectorSettings
+import xyz.malkki.neostumbler.ui.composables.settings.PassiveScanToggle
 import xyz.malkki.neostumbler.ui.composables.settings.ScannerNotificationStyleSettings
 import xyz.malkki.neostumbler.ui.composables.settings.SettingsGroup
 import xyz.malkki.neostumbler.ui.composables.settings.SettingsToggle
@@ -97,6 +98,7 @@ fun SettingsScreen() {
                 },
                 default = ScannerService.DEFAULT_CELL_SCAN_DISTANCE,
             )
+            PassiveScanToggle()
             AutoScanToggle()
         }
 

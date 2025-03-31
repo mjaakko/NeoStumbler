@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import timber.log.Timber
 import xyz.malkki.neostumbler.domain.Position
+import xyz.malkki.neostumbler.domain.Position.Source
 import xyz.malkki.neostumbler.utils.ImmediateExecutor
 
 class PlatformLocationSource(context: Context) : LocationSource {
@@ -29,13 +30,14 @@ class PlatformLocationSource(context: Context) : LocationSource {
             val locationListener =
                 object : LocationListenerCompat {
                     override fun onLocationChanged(location: Location) {
-                        trySendBlocking(
-                            Position.fromLocation(
-                                location = location,
-                                // TODO: check the actual location source
-                                source = "gps",
-                            )
-                        )
+                        val source =
+                            if (location.provider == LocationManager.NETWORK_PROVIDER) {
+                                Source.NETWORK
+                            } else {
+                                Source.GPS
+                            }
+
+                        trySendBlocking(Position.fromLocation(location = location, source = source))
                     }
 
                     override fun onProviderDisabled(provider: String) {

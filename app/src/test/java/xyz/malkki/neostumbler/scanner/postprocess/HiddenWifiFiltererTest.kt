@@ -3,6 +3,7 @@ package xyz.malkki.neostumbler.scanner.postprocess
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import xyz.malkki.neostumbler.domain.Position
+import xyz.malkki.neostumbler.domain.Position.Source
 import xyz.malkki.neostumbler.domain.WifiAccessPoint
 import xyz.malkki.neostumbler.scanner.data.ReportData
 
@@ -17,7 +18,7 @@ class HiddenWifiFiltererTest {
                     Position(
                         latitude = 45.51156,
                         longitude = 12.213415,
-                        source = "gps",
+                        source = Source.GPS,
                         timestamp = 0,
                     ),
                 cellTowers = emptyList(),

@@ -8,6 +8,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import java.util.Locale
 import xyz.malkki.neostumbler.domain.LatLng
 import xyz.malkki.neostumbler.domain.Position
 
@@ -63,8 +64,8 @@ data class PositionEntity(
                 heading = position.heading,
                 pressure = position.pressure,
                 speed = position.speed,
-                source = position.source,
                 reportId = reportId,
+                source = position.source.name.lowercase(Locale.ROOT),
             )
         }
     }

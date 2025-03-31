@@ -4,7 +4,6 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.os.SystemClock
 import android.telephony.CellInfo
-import android.telephony.ServiceState
 import android.telephony.TelephonyManager
 import androidx.annotation.RequiresPermission
 import kotlin.time.Duration
@@ -22,6 +21,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.isActive
 import timber.log.Timber
 import xyz.malkki.neostumbler.domain.CellTower
+import xyz.malkki.neostumbler.domain.CellTower.Companion.fillMissingData
 import xyz.malkki.neostumbler.extensions.getServiceStateFlow
 import xyz.malkki.neostumbler.utils.ImmediateExecutor
 import xyz.malkki.neostumbler.utils.delayWithMinDuration
@@ -38,64 +38,6 @@ class TelephonyManagerCellInfoSource(
     private val telephonyManager: TelephonyManager,
     private val timeSource: () -> Long = SystemClock::elapsedRealtime,
 ) : CellInfoSource {
-    /**
-     * On some devices, cells don't include mobile network code
-     * (https://github.com/mjaakko/NeoStumbler/issues/360#issuecomment-2563861008)
-     *
-     * We can try to fix this by extracting the MNC from service state
-     */
-    @RequiresPermission(
-        allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_PHONE_STATE]
-    )
-    private fun List<CellTower>.addMncIfMissing(serviceState: ServiceState?): List<CellTower> {
-        if (serviceState == null || serviceState.operatorNumeric == null) {
-            return this
-        }
-
-        val mobileCountryCodes = mapNotNull { it.mobileCountryCode }.toSet()
-        return if (mobileCountryCodes.size != 1) {
-            // MCC not unique, we can't extract MNC from the service state
-            this
-        } else {
-            val mcc = mobileCountryCodes.first()
-
-            if (!serviceState.operatorNumeric.startsWith(mcc)) {
-                // Service state is for a different mobile country code, we can't use the MNC
-                this
-            } else {
-                val mnc = serviceState.operatorNumeric.replaceFirst(mcc, "")
-
-                map { cellTower ->
-                    if (cellTower.mobileNetworkCode == null) {
-                        cellTower.copy(mobileNetworkCode = mnc)
-                    } else {
-                        cellTower
-                    }
-                }
-            }
-        }
-    }
-
-    private fun List<CellTower>.fillMissingDataFromOtherCells(): List<CellTower> {
-        if (size == 1) {
-            return this
-        } else {
-            val mobileCountryCodes = mapNotNull { it.mobileCountryCode }.toSet()
-            val mobileNetworkCodes = mapNotNull { it.mobileNetworkCode }.toSet()
-
-            return if (mobileCountryCodes.size != 1 || mobileNetworkCodes.size != 1) {
-                this
-            } else {
-                map { cellTower ->
-                    cellTower.copy(
-                        mobileCountryCode = mobileCountryCodes.first(),
-                        mobileNetworkCode = mobileNetworkCodes.first(),
-                    )
-                }
-            }
-        }
-    }
-
     @SuppressLint("MissingPermission")
     @RequiresPermission(
         allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_PHONE_STATE]
@@ -104,6 +46,12 @@ class TelephonyManagerCellInfoSource(
         callbackFlow {
                 val initialServiceState = telephonyManager.serviceState
 
+                /**
+                 * On some devices, cells don't include mobile network code
+                 * (https://github.com/mjaakko/NeoStumbler/issues/360#issuecomment-2563861008)
+                 *
+                 * We can try to fix this by extracting the MNC from service state
+                 */
                 val serviceState =
                     telephonyManager
                         .getServiceStateFlow()
@@ -132,8 +80,7 @@ class TelephonyManagerCellInfoSource(
                             val cellTowers =
                                 cellInfo
                                     .mapNotNull { CellTower.fromCellInfo(it) }
-                                    .addMncIfMissing(serviceState.value)
-                                    .fillMissingDataFromOtherCells()
+                                    .fillMissingData(serviceState.value?.operatorNumeric)
                                     // Filter cell infos which don't have enough useful data to be
                                     // collected
                                     .filter { it.hasEnoughData() }
@@ -164,22 +111,4 @@ class TelephonyManagerCellInfoSource(
                 // Check the timestamp to make sure that we have received new data
                 cellTowers.maxOfOrNull { cellTower -> cellTower.timestamp }
             }
-}
-
-/**
- * Checks if the cell info has enough useful data. Used for filtering neighbouring cells which don't
- * specify their cell ID etc.
- */
-private fun CellTower.hasEnoughData(): Boolean {
-    if (mobileCountryCode == null || mobileNetworkCode == null) {
-        return false
-    }
-
-    return when (radioType) {
-        CellTower.RadioType.GSM -> cellId != null || locationAreaCode != null
-        CellTower.RadioType.WCDMA,
-        CellTower.RadioType.LTE,
-        CellTower.RadioType.NR ->
-            cellId != null || locationAreaCode != null || primaryScramblingCode != null
-    }
 }

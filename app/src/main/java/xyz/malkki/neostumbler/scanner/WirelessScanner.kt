@@ -5,12 +5,10 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -32,17 +30,10 @@ import xyz.malkki.neostumbler.scanner.movement.ConstantMovementDetector
 import xyz.malkki.neostumbler.scanner.movement.MovementDetector
 import xyz.malkki.neostumbler.scanner.postprocess.ReportPostProcessor
 
-// Maximum accuracy for locations, used for filtering bad locations
-private const val LOCATION_MAX_ACCURACY = 200
-
 // Don't emit new locations until the distance between them is at least 30 metres or when at least
 // 10 seconds have passed
 private val LOCATION_MAX_AGE_UNTIL_CHANGED = 10.seconds
 private const val LOCATION_MAX_DISTANCE_DIFF_UNTIL_CHANGED = 30
-
-// Maximum age for observed devices. This is used to filter out old data when e.g. there is no GPS
-// signal and there's a gap between two locations
-private val OBSERVED_DEVICE_MAX_AGE = 30.seconds
 
 // Maximum age of air pressure data, relative to the location timestamp
 private val AIR_PRESSURE_MAX_AGE = 2.seconds
@@ -96,7 +87,8 @@ class WirelessScanner(
     }
 
     private fun Flow<Position>.filterInaccurateLocations(): Flow<Position> = filter { location ->
-        location.accuracy != null && location.accuracy <= LOCATION_MAX_ACCURACY
+        location.accuracy != null &&
+            location.accuracy <= ScanningConstants.LOCATION_MAX_ACCURACY_METERS
     }
 
     private fun Flow<Position>.distinctUntilChangedSignificantly(): Flow<Position> =
@@ -182,66 +174,8 @@ class WirelessScanner(
                         Triple(cells, wifis, bluetooths)
                     }
 
-                val cellsByLocation = cells.groupByLocation(locations).filterOldData()
-
-                val wifisByLocation = wifis.groupByLocation(locations).filterOldData()
-
-                val bluetoothsByLocation = bluetooths.groupByLocation(locations).filterOldData()
-
-                val locationsWithData =
-                    cellsByLocation.keys + wifisByLocation.keys + bluetoothsByLocation.keys
-
-                locationsWithData.map { location ->
-                    createReport(
-                        location,
-                        cellsByLocation[location] ?: emptyList(),
-                        wifisByLocation[location] ?: emptyList(),
-                        bluetoothsByLocation[location] ?: emptyList(),
-                    )
-                }
+                createReports(locations, cells, wifis, bluetooths, postProcessors)
             }
-            .flatMapConcat { reports -> reports.postProcess() }
-            .filter { report -> !report.isEmpty }
-            .collect { report -> send(report) }
-    }
-
-    private fun List<ReportData>.postProcess(): Flow<ReportData> {
-        return mapNotNull { report ->
-                postProcessors.fold<ReportPostProcessor, ReportData?>(report) {
-                    reportToProcess,
-                    processor ->
-                    reportToProcess?.let { processor.postProcessReport(it) }
-                }
-            }
-            .asFlow()
-    }
-
-    private fun createReport(
-        position: Position,
-        cells: List<CellTower>,
-        wifis: List<WifiAccessPoint>,
-        bluetooths: List<BluetoothBeacon>,
-    ): ReportData {
-        return ReportData(
-            position = position,
-            cellTowers = cells,
-            wifiAccessPoints = wifis.takeIf { it.size >= 2 } ?: emptyList(),
-            bluetoothBeacons = bluetooths,
-        )
-    }
-
-    private fun <T : ObservedDevice<*>> Map<Position, List<T>>.filterOldData():
-        Map<Position, List<T>> = mapValues { entry ->
-        val location = entry.key
-
-        entry.value.filter {
-            abs(it.timestamp - location.timestamp).milliseconds <= OBSERVED_DEVICE_MAX_AGE
-        }
-    }
-
-    private fun <T : ObservedDevice<*>> List<T>.groupByLocation(
-        locations: List<Position>
-    ): Map<Position, List<T>> = groupBy {
-        locations.minBy { location -> abs(it.timestamp - location.timestamp) }
+            .collect { reports -> reports.forEach { report -> send(report) } }
     }
 }

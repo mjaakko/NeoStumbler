@@ -18,6 +18,7 @@ import org.junit.Test
 import xyz.malkki.neostumbler.domain.AirPressureObservation
 import xyz.malkki.neostumbler.domain.BluetoothBeacon
 import xyz.malkki.neostumbler.domain.Position
+import xyz.malkki.neostumbler.domain.Position.Source
 import xyz.malkki.neostumbler.domain.WifiAccessPoint
 import xyz.malkki.neostumbler.scanner.data.ReportData
 import xyz.malkki.neostumbler.scanner.postprocess.HiddenWifiFilterer
@@ -34,7 +35,7 @@ class WirelessScannerTest {
                             longitude = 10.0,
                             accuracy = 15.0,
                             timestamp = 0,
-                            source = "gps",
+                            source = Source.GPS,
                         )
                     )
                 },
@@ -62,7 +63,7 @@ class WirelessScannerTest {
                             longitude = 10.0,
                             accuracy = 15.0,
                             timestamp = 60000,
-                            source = "gps",
+                            source = Source.GPS,
                         )
                     )
                 },
@@ -104,7 +105,7 @@ class WirelessScannerTest {
                             longitude = 10.0,
                             accuracy = 15.0,
                             timestamp = 0,
-                            source = "gps",
+                            source = Source.GPS,
                         )
                     )
                 },
@@ -159,7 +160,7 @@ class WirelessScannerTest {
                                 longitude = 10.0,
                                 accuracy = 15.0,
                                 timestamp = 0,
-                                source = "gps",
+                                source = Source.GPS,
                             )
 
                         emit(position)
