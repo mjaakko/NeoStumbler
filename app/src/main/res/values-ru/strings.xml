@@ -14,7 +14,7 @@
     <string name="ignore_battery_optimizations_title">Игнорировать оптимизацию батареи</string>
     <string name="import_data">Импортировать данные</string>
     <string name="statistics_tab_title">Статистика</string>
-    <string name="reports_last_uploaded">Отчётов недавно отправлено: %s</string>
+    <string name="reports_last_uploaded">Последняя отправка отчётов: %s</string>
     <string name="no">Нет</string>
     <string name="notification_sending_reports">Отправка отчётов</string>
     <string name="ok">Окей</string>
