@@ -183,4 +183,15 @@
     <string name="db_schema_version">Версия схемы базы данных: %d</string>
     <string name="send_reports_automatically_on_any_network">Любая сеть</string>
     <string name="send_reports_automatically_on_unmetered_network">Нетарифицированные сети</string>
+    <string name="settings_group_privacy">Приватность</string>
+    <string name="wifi_filter_settings_title">Фильтровать сети Wi-Fi по SSID</string>
+    <plurals name="wifi_filter_settings_description">
+        <item quantity="one">%d SSID отфильтрован</item>
+        <item quantity="few">%d SSID отфильтровано</item>
+        <item quantity="many">%d SSID отфильтровано</item>
+        <item quantity="other">%d SSID отфильтровано</item>
+    </plurals>
+    <string name="wifi_filter_settings_hint">Сети Wi-Fi с любым из этих слов в их SSID не будут собраны</string>
+    <string name="reduced_metadata_description">Отчёты отправлены в случайном порядке без меток времени и других метаданных</string>
+    <string name="reduced_metadata_title">Отправить отчёты с меньшим количеством метаданных</string>
 </resources>
