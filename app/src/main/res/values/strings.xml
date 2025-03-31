@@ -152,6 +152,11 @@
         Wi-Fi networks with any of these keywords in their SSID are not collected
     </string>
 
+    <string name="reduced_metadata_title">Send reports with less metadata</string>
+    <string name="reduced_metadata_description">
+        Reports are sent in a randomized order with timestamps and other metadata truncated
+    </string>
+
     <string name="wifi_scan_frequency">Wi-Fi scan frequency</string>
     <string name="cell_tower_scan_frequency">Cell tower scan frequency</string>
     <string name="every_x_meters">Every %d meters</string>

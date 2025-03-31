@@ -62,8 +62,12 @@ interface ReportDao {
     fun getAllReportsWithStats(): PagingSource<Int, ReportWithStats>
 
     @Transaction
-    @Query("SELECT * FROM Report WHERE uploaded = 0")
-    suspend fun getAllReportsNotUploaded(): List<ReportWithData>
+    @Query("SELECT * FROM Report WHERE uploaded = 0 ORDER BY timestamp ASC LIMIT :count")
+    suspend fun getNotUploadedReports(count: Int): List<ReportWithData>
+
+    @Transaction
+    @Query("SELECT * FROM Report WHERE uploaded = 0 ORDER BY RANDOM() ASC LIMIT :count")
+    suspend fun getRandomNotUploadedReports(count: Int): List<ReportWithData>
 
     @Transaction
     @Query("SELECT * FROM Report WHERE id = :reportId")

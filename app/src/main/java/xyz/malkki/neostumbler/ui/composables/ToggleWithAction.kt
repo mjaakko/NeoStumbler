@@ -38,8 +38,7 @@ fun ToggleWithAction(
 
     Row(
         modifier =
-            Modifier
-                .fillMaxWidth()
+            Modifier.fillMaxWidth()
                 .wrapContentHeight()
                 .clickable(
                     enabled = enabled && !changingState.value,
@@ -68,9 +67,7 @@ fun ToggleWithAction(
             }
         }
         Switch(
-            modifier = Modifier
-                .wrapContentSize()
-                .padding(start = 8.dp),
+            modifier = Modifier.wrapContentSize().padding(start = 8.dp),
             enabled = enabled && !changingState.value,
             checked = checked,
             onCheckedChange = null,

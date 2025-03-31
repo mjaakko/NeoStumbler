@@ -126,6 +126,11 @@
         Wi-Fi -verkkoja, joiden nimessä on jokin näistä avainsanoista, ei kerätä
     </string>
 
+    <string name="reduced_metadata_title">Vähennä raporttien metatietoja</string>
+    <string name="reduced_metadata_description">
+        Raportit lähetetään satunnaisessa järjestyksessä aikaleimat ja muu metatieto pyöristettynä
+    </string>
+
     <string name="endpoint">Palvelin</string>
     <string name="submission_path">Polku</string>
     <string name="api_key">API-avain (vapaaehtoinen)</string>

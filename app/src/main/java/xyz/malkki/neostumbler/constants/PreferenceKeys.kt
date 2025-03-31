@@ -27,5 +27,7 @@ object PreferenceKeys {
 
     const val MAP_TILE_SOURCE = "map_tile_source"
 
+    // Privacy options
     const val WIFI_FILTER_LIST = "wifi_filter_list"
+    const val REDUCED_METADATA = "reduced_metadata"
 }

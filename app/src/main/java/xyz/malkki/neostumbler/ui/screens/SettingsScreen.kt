@@ -80,6 +80,13 @@ fun SettingsScreen() {
 
         SettingsGroup(title = stringResource(id = R.string.settings_group_privacy)) {
             WifiFilterSettings()
+
+            SettingsToggle(
+                title = stringResource(id = R.string.reduced_metadata_title),
+                description = stringResource(id = R.string.reduced_metadata_description),
+                preferenceKey = PreferenceKeys.REDUCED_METADATA,
+                default = false,
+            )
         }
 
         SettingsGroup(title = stringResource(id = R.string.settings_group_other)) {
