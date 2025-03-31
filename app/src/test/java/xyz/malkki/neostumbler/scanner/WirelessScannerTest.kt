@@ -20,6 +20,7 @@ import xyz.malkki.neostumbler.domain.BluetoothBeacon
 import xyz.malkki.neostumbler.domain.Position
 import xyz.malkki.neostumbler.domain.WifiAccessPoint
 import xyz.malkki.neostumbler.scanner.data.ReportData
+import xyz.malkki.neostumbler.scanner.postprocess.HiddenWifiFilterer
 
 class WirelessScannerTest {
     @Test
@@ -134,6 +135,7 @@ class WirelessScannerTest {
                 },
                 bluetoothBeaconSource = { emptyFlow() },
                 airPressureSource = { emptyFlow() },
+                postProcessors = listOf(HiddenWifiFilterer()),
             )
 
         val reportFlow = wirelessScanner.createReports()

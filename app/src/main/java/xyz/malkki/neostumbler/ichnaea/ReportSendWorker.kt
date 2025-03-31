@@ -7,6 +7,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.ForegroundInfo
@@ -16,6 +17,8 @@ import java.io.IOException
 import java.net.SocketTimeoutException
 import java.time.Instant
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import okhttp3.Call
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -23,15 +26,8 @@ import timber.log.Timber
 import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
+import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.db.ReportDatabaseManager
-import xyz.malkki.neostumbler.db.entities.ReportWithData
-import xyz.malkki.neostumbler.ichnaea.dto.BluetoothBeaconDto
-import xyz.malkki.neostumbler.ichnaea.dto.CellTowerDto
-import xyz.malkki.neostumbler.ichnaea.dto.ReportDto
-import xyz.malkki.neostumbler.ichnaea.dto.WifiAccessPointDto
-
-// Send max 2000 reports in one request to avoid creating too large payloads
-private const val MAX_REPORTS_PER_BATCH = 2000
 
 // By default, WorkManager will retry indefinitely.
 // If uploading hasn't been successful after 5 retries,
@@ -64,8 +60,6 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) :
 
     private val reportDatabaseManager: ReportDatabaseManager by inject()
 
-    private val reportDao = reportDatabaseManager.reportDb.value.reportDao()
-
     private suspend fun getGeosubmitApi(): Geosubmit? {
         return settingsStore.getIchnaeaParams()?.let { geosubmitParams ->
             Timber.d(
@@ -85,34 +79,39 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) :
             )
         }
 
+        val reportSender =
+            ReportSender(
+                geosubmit = geosubmit,
+                reportDao = reportDatabaseManager.reportDb.value.reportDao(),
+            )
+
+        val sendWithReducedMetadata =
+            settingsStore.data
+                .map { prefs ->
+                    prefs[booleanPreferencesKey(PreferenceKeys.REDUCED_METADATA)] == true
+                }
+                .first()
+
         val reupload =
             inputData.hasKeyWithValueOfType<Long>(INPUT_REUPLOAD_FROM) &&
                 inputData.hasKeyWithValueOfType<Long>(INPUT_REUPLOAD_TO)
 
-        val reportsToUpload =
-            if (!reupload) {
-                reportDao.getAllReportsNotUploaded()
-            } else {
-                val from = Instant.ofEpochMilli(inputData.getLong(INPUT_REUPLOAD_FROM, 0))
-                val to = Instant.ofEpochMilli(inputData.getLong(INPUT_REUPLOAD_TO, 0))
-
-                reportDao.getAllReportsForTimerange(from, to)
-            }
-
-        if (reportsToUpload.isEmpty()) {
-            Timber.i("No Geosubmit reports to send")
-            return Result.success(createResultData(0))
-        }
-
         var reportsSent = 0
 
         return try {
-            reportsToUpload.chunked(MAX_REPORTS_PER_BATCH).forEach {
-                sendReports(geosubmit, it)
-
-                reportsSent += it.size
+            val progressListener: suspend (Int) -> Unit = {
+                reportsSent += it
 
                 setProgress(createResultData(reportsSent))
+            }
+
+            if (reupload) {
+                val from = Instant.ofEpochMilli(inputData.getLong(INPUT_REUPLOAD_FROM, 0))
+                val to = Instant.ofEpochMilli(inputData.getLong(INPUT_REUPLOAD_TO, 0))
+
+                reportSender.reuploadReports(from, to, sendWithReducedMetadata, progressListener)
+            } else {
+                reportSender.sendNotUploadedReports(sendWithReducedMetadata, progressListener)
             }
 
             Result.success(createResultData(reportsSent))
@@ -125,43 +124,6 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) :
                 Result.failure(createResultData(reportsSent, errorMessage = ex.message))
             }
         }
-    }
-
-    private suspend fun sendReports(geosubmitApi: Geosubmit, reports: List<ReportWithData>) {
-        val geosubmitReports =
-            reports.map { report ->
-                ReportDto(
-                    timestamp = report.report.timestamp.toEpochMilli(),
-                    position = ReportDto.PositionDto.fromDbEntity(report.positionEntity),
-                    wifiAccessPoints =
-                        report.wifiAccessPointEntities
-                            .map(WifiAccessPointDto::fromDbEntity)
-                            .takeIf { it.isNotEmpty() },
-                    cellTowers =
-                        report.cellTowerEntities.map(CellTowerDto::fromDbEntity).takeIf {
-                            it.isNotEmpty()
-                        },
-                    bluetoothBeacons =
-                        report.bluetoothBeaconEntities
-                            .map(BluetoothBeaconDto::fromDbEntity)
-                            .takeIf { it.isNotEmpty() },
-                )
-            }
-
-        geosubmitApi.sendReports(geosubmitReports)
-
-        val now = Instant.now()
-
-        val updatedReports =
-            reports
-                .filter {
-                    // Do not update upload timestamp for reports which were reuploaded
-                    !it.report.uploaded
-                }
-                .map { it.report.copy(uploaded = true, uploadTimestamp = now) }
-                .toTypedArray()
-
-        reportDao.update(*updatedReports)
     }
 
     private fun createResultData(reportsSent: Int, errorMessage: String? = null): Data {

@@ -18,7 +18,7 @@ fun SettingsGroup(title: String, content: @Composable () -> Unit) {
 
     Column(
         modifier = Modifier.padding(vertical = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         content()
     }

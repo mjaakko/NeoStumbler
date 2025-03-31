@@ -32,6 +32,7 @@ import xyz.malkki.neostumbler.ui.composables.settings.SettingsGroup
 import xyz.malkki.neostumbler.ui.composables.settings.SettingsToggle
 import xyz.malkki.neostumbler.ui.composables.settings.SliderSetting
 import xyz.malkki.neostumbler.ui.composables.settings.geosubmit.GeosubmitEndpointSettings
+import xyz.malkki.neostumbler.ui.composables.settings.privacy.WifiFilterSettings
 import xyz.malkki.neostumbler.ui.composables.troubleshooting.TroubleshootingSettingsItem
 
 @Composable
@@ -75,6 +76,17 @@ fun SettingsScreen() {
                 default = ScannerService.DEFAULT_CELL_SCAN_DISTANCE,
             )
             AutoScanToggle()
+        }
+
+        SettingsGroup(title = stringResource(id = R.string.settings_group_privacy)) {
+            WifiFilterSettings()
+
+            SettingsToggle(
+                title = stringResource(id = R.string.reduced_metadata_title),
+                description = stringResource(id = R.string.reduced_metadata_description),
+                preferenceKey = PreferenceKeys.REDUCED_METADATA,
+                default = false,
+            )
         }
 
         SettingsGroup(title = stringResource(id = R.string.settings_group_other)) {

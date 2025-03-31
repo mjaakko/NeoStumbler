@@ -11,4 +11,8 @@ data class ReportData(
     val cellTowers: List<CellTower>,
     val wifiAccessPoints: List<WifiAccessPoint>,
     val bluetoothBeacons: List<BluetoothBeacon>,
-)
+) {
+    /** true if the report does not contain any data */
+    val isEmpty: Boolean
+        get() = cellTowers.isEmpty() && wifiAccessPoints.isEmpty() && bluetoothBeacons.isEmpty()
+}
