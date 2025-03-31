@@ -1,6 +1,10 @@
 package xyz.malkki.neostumbler.domain
 
 import android.location.Location
+import android.os.SystemClock
+import kotlin.math.abs
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 import xyz.malkki.neostumbler.extensions.elapsedRealtimeMillisCompat
 
 data class Position(
@@ -20,11 +24,28 @@ data class Position(
         get() = LatLng(latitude, longitude)
 
     companion object {
+        /*
+         * On some devices, elapsed realtime millis is broken and returns a value that would be a long time in the past.
+         * If the timestamp is more than 30 seconds away from the current time,
+         * then we assume the value is broken and get the timestamp from wall clock time instead
+         */
+        private val MAX_TIMESTAMP_DRIFT = 30.seconds
+
         fun fromLocation(
             location: Location,
             source: String,
             airPressure: Double? = null,
         ): Position {
+            val timestamp =
+                if (
+                    abs(location.elapsedRealtimeMillisCompat - SystemClock.elapsedRealtime())
+                        .milliseconds >= MAX_TIMESTAMP_DRIFT
+                ) {
+                    SystemClock.elapsedRealtime() - (System.currentTimeMillis() - location.time)
+                } else {
+                    location.elapsedRealtimeMillisCompat
+                }
+
             return Position(
                 latitude = location.latitude,
                 longitude = location.longitude,
@@ -42,7 +63,7 @@ data class Position(
                 speed = location.speed.takeIf { location.hasSpeed() && it.isFinite() }?.toDouble(),
                 pressure = airPressure,
                 source = source,
-                timestamp = location.elapsedRealtimeMillisCompat,
+                timestamp = timestamp,
             )
         }
     }
