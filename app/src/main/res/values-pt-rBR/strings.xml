@@ -181,4 +181,14 @@
     <string name="radio_type">Tipo: %s</string>
     <string name="beacon_type">Tipo de sinalizador: %s</string>
     <string name="lac">LAC: %s</string>
+    <string name="settings_group_privacy">Privacidade</string>
+    <string name="wifi_filter_settings_hint">Redes Wi-Fi com qualquer uma dessas palavras-chave em seu SSID não são coletadas</string>
+    <string name="reduced_metadata_title">Enviar relatórios com menos metadados</string>
+    <string name="reduced_metadata_description">Relatórios são enviados em uma ordem aleatória e com os horários e outros metadados com a precisão reduzida</string>
+    <string name="wifi_filter_settings_title">Filtrar redes Wi-Fi pelo SSID</string>
+    <plurals name="wifi_filter_settings_description">
+        <item quantity="one">%d SSID filtrado</item>
+        <item quantity="many">%d de SSIDs filtrados</item>
+        <item quantity="other">%d SSIDs filtrados</item>
+    </plurals>
 </resources>
