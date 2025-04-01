@@ -14,6 +14,7 @@ updates:
         patterns:
           - 'org.jetbrains.kotlin.android'
           - 'org.jetbrains.kotlin.plugin.compose'
+          - 'org.jetbrains.kotlin.plugin.serialization'
           - 'com.google.devtools.ksp'
       android-gradle-plugins:
         patterns:
