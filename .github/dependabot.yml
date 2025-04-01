@@ -5,7 +5,7 @@ updates:
     schedule:
       interval: "monthly"
     target-branch: "master"
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 15
     groups:
       kotlinx:
         patterns:
