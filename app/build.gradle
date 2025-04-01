@@ -299,7 +299,7 @@ dependencies {
 
     implementation 'org.geohex.geohex4j:geohex4j:3.2.2'
 
-    implementation 'org.apache.commons:commons-csv:1.12.0'
+    implementation 'org.apache.commons:commons-csv:1.14.0'
 
     def vico_version = "2.0.2"
     
