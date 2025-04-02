@@ -59,7 +59,7 @@ fun IgnoreScanThrottlingToggle() {
             }
         }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(enabled.value) {
         /**
          * If Wi-Fi scan throttling has been re-enabled in the settings, change the settings value
          * so that the toggle will be off. There is no callback for this, so we need to check this
