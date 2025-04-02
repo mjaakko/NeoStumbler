@@ -92,7 +92,7 @@ interface ReportDao {
 
     @Transaction
     @Query(
-        "SELECT r.id, r.timestamp, p.latitude, p.longitude FROM Report r JOIN PositionEntity p ON r.id = p.reportId"
+        "SELECT r.id, p.latitude, p.longitude FROM Report r JOIN PositionEntity p ON r.id = p.reportId"
     )
     fun getAllReportsWithLocation(): Flow<List<ReportWithLocation>>
 
@@ -104,7 +104,7 @@ interface ReportDao {
     @Query(
         """
         SELECT
-            r.id, r.timestamp, p.latitude, p.longitude
+            r.id, p.latitude, p.longitude
         FROM Report r
         JOIN PositionEntity p ON r.id = p.reportId
         WHERE p.latitude >= :minLatitude
