@@ -3,6 +3,8 @@ package xyz.malkki.neostumbler.ui.viewmodel
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Application
+import androidx.collection.MutableLongIntMap
+import androidx.collection.MutableObjectIntMap
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -21,7 +23,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
@@ -36,7 +37,6 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.retryWhen
 import kotlinx.coroutines.flow.shareIn
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import okhttp3.Call
 import org.geohex.geohex4j.GeoHex
@@ -45,12 +45,13 @@ import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.db.dao.getReportsInsideBoundingBox
+import xyz.malkki.neostumbler.db.entities.ReportWithLocation
 import xyz.malkki.neostumbler.domain.LatLng
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.get
-import xyz.malkki.neostumbler.extensions.parallelMap
 import xyz.malkki.neostumbler.location.LocationSource
 import xyz.malkki.neostumbler.ui.map.MapTileSource
+import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel.HeatMapTile
 import xyz.malkki.neostumbler.utils.getTileJsonLayerIds
 
 // The "size" of one report relative to the geohex size. The idea is that hexes with lower
@@ -142,32 +143,12 @@ class MapViewModel(
                         maxLongitude = maxLon,
                     )
             }
-            .distinctUntilChanged()
             .combine(
                 flow = zoom.map { zoom -> mapZoomToGeohexResolution(zoom) }.distinctUntilChanged(),
                 transform = { a, b -> a to b },
             )
-            .map { (reportsWithLocation, resolution) ->
-                reportsWithLocation
-                    .asFlow()
-                    .parallelMap { reportWithLocation ->
-                        GeoHex.encode(
-                            reportWithLocation.latitude,
-                            reportWithLocation.longitude,
-                            resolution,
-                        )
-                    }
-                    .toList()
-                    .groupingBy { it }
-                    .eachCount()
-                    .map {
-                        val zone = GeoHex.getZoneByCode(it.key)
-
-                        HeatMapTile(
-                            zone.hexCoords.map { coord -> LatLng(coord.lat, coord.lon) },
-                            ((it.value * REPORT_SIZE) / zone.hexSize).coerceAtMost(1.0).toFloat(),
-                        )
-                    }
+            .mapLatest { (reportsWithLocation, resolution) ->
+                reportsWithLocation.calculateHeatMapTiles(resolution)
             }
             .flowOn(Dispatchers.Default)
             .shareIn(viewModelScope, started = SharingStarted.Lazily, replay = 1)
@@ -243,5 +224,56 @@ class MapViewModel(
     }
 
     /** @property heatPct From 0.0 to 1.0 */
-    data class HeatMapTile(val outline: List<LatLng>, val heatPct: Float)
+    data class HeatMapTile(val id: String, val outline: List<LatLng>, val heatPct: Float)
+}
+
+private const val COORDINATE_PRECISION = 0.0001f
+
+@Suppress("MagicNumber")
+private fun List<ReportWithLocation>.calculateHeatMapTiles(
+    resolution: Int
+): Map<String, HeatMapTile> {
+    val truncatedCoords = MutableLongIntMap(size)
+
+    forEach {
+        // Calculating the hexagons is relatively expensive -> truncate coordinates first to avoid
+        // unnecessary calculations
+        val lat = it.latitude.toFloat()
+        val lng = it.longitude.toFloat()
+
+        val truncatedLat = lat - (lat % COORDINATE_PRECISION)
+        val truncatedLng = lng - (lng % COORDINATE_PRECISION)
+
+        val packedCoords =
+            (truncatedLat.toRawBits().toLong() shl 32) or
+                (truncatedLng.toRawBits().toLong() and 0xFFFFFFFF)
+
+        truncatedCoords.put(packedCoords, truncatedCoords.getOrDefault(packedCoords, 0) + 1)
+    }
+
+    val countByHexagon = MutableObjectIntMap<String>()
+
+    truncatedCoords.forEach { packedCoord, count ->
+        val lat = Float.fromBits((packedCoord shr 32).toInt()).toDouble()
+        val lng = Float.fromBits((packedCoord and 0xFFFFFFFF).toInt()).toDouble()
+
+        val hexKey = GeoHex.encode(lat, lng, resolution)!!
+
+        countByHexagon.put(hexKey, countByHexagon.getOrDefault(hexKey, 0) + count)
+    }
+
+    val heatMapTiles = HashMap<String, HeatMapTile>(countByHexagon.size)
+
+    countByHexagon.forEach { hexKey, count ->
+        val zone = GeoHex.getZoneByCode(hexKey)
+
+        heatMapTiles[hexKey] =
+            HeatMapTile(
+                id = hexKey,
+                outline = zone.hexCoords.map { coord -> LatLng(coord.lat, coord.lon) },
+                heatPct = ((count * REPORT_SIZE) / zone.hexSize).coerceAtMost(1.0).toFloat(),
+            )
+    }
+
+    return heatMapTiles
 }
