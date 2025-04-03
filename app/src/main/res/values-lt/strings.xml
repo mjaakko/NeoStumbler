@@ -77,7 +77,7 @@
     <string name="add_quick_settings_tile">Ar pridėti greitųjų nustatymų mygtuką paprastai skenavimo pradžiai?</string>
     <string name="mls_warning_title">MLS tarnyba išjungta</string>
     <string name="endpoint">Serveris</string>
-    <string name="submission_path">Kelias</string>
+    <string name="submission_path">Kelias ataskaitoms pateikti</string>
     <string name="api_key">API raktas (neprivalomas)</string>
     <string name="unencrypted_endpoint_warning">Serveris nenaudoja šifruoto ryšio</string>
     <string name="suggested_services_title">Siūlomos tarnybos</string>
@@ -162,4 +162,22 @@
     <string name="export_raw_database_compress">Suglaudinti duomenų bazės failą</string>
     <string name="waiting_for_location">Laukiama vietos informacijos</string>
     <string name="delete_reports_from_area">Šalinti ataskaitas iš šios apylinkės</string>
+    <string name="settings_group_privacy">Privatumas</string>
+    <string name="wifi_filter_settings_title">Filtruoti belaidžius tinklus pagal SSID</string>
+    <string name="scanning_status_active">Skenavimas <annotation style="status">vyksta</annotation></string>
+    <string name="scanning_status_not_active">Skenavimas <annotation style="status">nevyksta</annotation></string>
+    <string name="speed_metres_per_second">Greitis: %s m/s</string>
+    <string name="altitude_metres">Altitudė: %s m</string>
+    <string name="signal_strength_dbm">Signalo stiprumas: %d dBm</string>
+    <string name="unknown_cell_id">Nežinomas celės ID</string>
+    <string name="mcc">MCC: %s</string>
+    <string name="mnc">MNC: %s</string>
+    <string name="lac">LAC: %s</string>
+    <string name="radio_type">Tipas: %s</string>
+    <string name="beacon_type">Siųstuvo tipas: %s</string>
+    <string name="beacon_id">ID%d: %s</string>
+    <string name="send_reports_automatically_never">Niekada</string>
+    <string name="send_reports_automatically_on_any_network">Bet kuriame tinkle</string>
+    <string name="send_reports_automatically_on_unmetered_network">Tik neapskaitomuose tinkluose</string>
+    <string name="locate_path">Kelias geolokacijai</string>
 </resources>
