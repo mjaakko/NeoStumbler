@@ -177,4 +177,14 @@
     <string name="waiting_for_location">In attesa della posizione</string>
     <string name="delete_reports_from_area">Elimina rilevamenti dall\'area</string>
     <string name="settings_ignore_wifi_scan_throttling_description">Se la scansione viene limitata, possono essere effettuate solo 4 scansioni in un periodo di 2 minuti</string>
+    <string name="settings_group_privacy">Privacy</string>
+    <string name="wifi_filter_settings_title">Filtra Wi-Fi per SSID</string>
+    <plurals name="wifi_filter_settings_description">
+        <item quantity="one">%d SSID filtrato</item>
+        <item quantity="many">%d SSID filtrati</item>
+        <item quantity="other">%d SSID filtrati</item>
+    </plurals>
+    <string name="wifi_filter_settings_hint">Le reti Wi-Fi con queste parole chiave negli SSID non vengono rilevate</string>
+    <string name="reduced_metadata_title">Invia rilevamenti con meno metadati</string>
+    <string name="reduced_metadata_description">I rilevamenti vengono inviati in ordine casuale con gli orari ed altri metadati troncati</string>
 </resources>
