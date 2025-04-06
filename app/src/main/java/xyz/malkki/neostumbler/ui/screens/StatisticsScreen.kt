@@ -51,6 +51,7 @@ import kotlin.math.pow
 import org.koin.androidx.compose.koinViewModel
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.extensions.defaultLocale
+import xyz.malkki.neostumbler.ui.modifiers.handleDisplayCutouts
 import xyz.malkki.neostumbler.ui.viewmodel.StatisticsViewModel
 
 @Composable
@@ -67,7 +68,10 @@ private fun StationsByDayChart(entryModel: CartesianChartModelProducer) {
         }
 
     CartesianChartHost(
-        modifier = Modifier.padding(start = 8.dp, top = 8.dp, bottom = 8.dp).fillMaxSize(),
+        modifier =
+            Modifier.padding(start = 8.dp, top = 8.dp, bottom = 8.dp)
+                .fillMaxSize()
+                .handleDisplayCutouts(),
         scrollState = rememberVicoScrollState(initialScroll = Scroll.Absolute.End),
         zoomState =
             rememberVicoZoomState(initialZoom = remember { Zoom.min(Zoom.fixed(), Zoom.Content) }),
@@ -147,8 +151,10 @@ fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = koinViewModel())
                                 when (dataType) {
                                     StatisticsViewModel.DataType.WIFIS ->
                                         stringResource(id = R.string.wifis)
+
                                     StatisticsViewModel.DataType.CELLS ->
                                         stringResource(id = R.string.cells)
+
                                     StatisticsViewModel.DataType.BEACONS ->
                                         stringResource(id = R.string.beacons)
                                 },
@@ -166,9 +172,11 @@ fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = koinViewModel())
                         CircularProgressIndicator()
                     }
                 }
+
                 StatisticsViewModel.State.LOADED -> {
                     StationsByDayChart(entryModel = statisticsViewModel.chartModelProducer)
                 }
+
                 StatisticsViewModel.State.NO_DATA -> {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         Text(text = stringResource(id = R.string.no_data))

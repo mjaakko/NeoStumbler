@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.res.Configuration
 import android.os.Build
 import androidx.activity.ComponentActivity
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -80,8 +79,6 @@ fun NeoStumblerTheme(
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
 
             if (activity is ComponentActivity) {
-                activity.enableEdgeToEdge()
-
                 WindowCompat.getInsetsController(window, window.decorView)
                     .isAppearanceLightStatusBars = darkTheme
 

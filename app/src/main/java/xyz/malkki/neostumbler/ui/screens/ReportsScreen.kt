@@ -75,6 +75,7 @@ import xyz.malkki.neostumbler.ui.composables.shared.ConfirmationDialog
 import xyz.malkki.neostumbler.ui.composables.shared.Shimmer
 import xyz.malkki.neostumbler.ui.composables.shared.formattedDate
 import xyz.malkki.neostumbler.ui.composables.shared.getAddress
+import xyz.malkki.neostumbler.ui.modifiers.handleDisplayCutouts
 import xyz.malkki.neostumbler.ui.viewmodel.ReportsViewModel
 import xyz.malkki.neostumbler.utils.geocoder.CachingGeocoder
 import xyz.malkki.neostumbler.utils.geocoder.Geocoder
@@ -94,12 +95,12 @@ fun ReportsScreen(viewModel: ReportsViewModel = koinViewModel()) {
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             ReportStats(
-                modifier = Modifier.padding(horizontal = 16.dp),
+                modifier = Modifier.padding(horizontal = 16.dp).handleDisplayCutouts(),
                 reportsViewModel = viewModel,
             )
 
             Reports(
-                modifier = Modifier.padding(horizontal = 16.dp).weight(1.0f),
+                modifier = Modifier.padding(horizontal = 16.dp).weight(1.0f).handleDisplayCutouts(),
                 listBottomPadding = cardHeight,
                 reportsViewModel = viewModel,
             )
