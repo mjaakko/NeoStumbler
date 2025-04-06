@@ -175,7 +175,6 @@
     <string name="coverage_layer">Layer di copertura mappa</string>
     <string name="coverage_layer_tile_json_url">URL TileJSON per layer di copertura mappa</string>
     <string name="waiting_for_location">In attesa della posizione</string>
-    <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos"></string>
     <string name="delete_reports_from_area">Elimina rilevamenti dall\'area</string>
     <string name="settings_ignore_wifi_scan_throttling_description">Se la scansione viene limitata, possono essere effettuate solo 4 scansioni in un periodo di 2 minuti</string>
 </resources>
