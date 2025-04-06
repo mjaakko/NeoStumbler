@@ -247,7 +247,10 @@ private fun Reports(
 
         if (reports.itemCount == 0) {
             if (reports.loadState.isIdle) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Box(
+                    modifier = Modifier.fillMaxSize().padding(bottom = listBottomPadding),
+                    contentAlignment = Alignment.Center,
+                ) {
                     Text(stringResource(R.string.reports_empty))
                 }
             } else {
