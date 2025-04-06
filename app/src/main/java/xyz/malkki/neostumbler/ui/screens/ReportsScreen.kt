@@ -27,6 +27,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bluetooth
 import androidx.compose.material.icons.filled.CellTower
 import androidx.compose.material.icons.filled.Wifi
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -120,7 +121,10 @@ private fun ScanningControllerCard(modifier: Modifier = Modifier) {
     val scanningActive by ScannerService.serviceRunning.collectAsStateWithLifecycle()
     val reportsCreated by ScannerService.reportsCreated.collectAsStateWithLifecycle()
 
-    ElevatedCard(modifier = modifier.wrapContentHeight().sizeIn(maxWidth = 400.dp).fillMaxWidth()) {
+    ElevatedCard(
+        modifier = modifier.wrapContentHeight().sizeIn(maxWidth = 400.dp).fillMaxWidth(),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
+    ) {
         Row(
             modifier = Modifier.padding(8.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
