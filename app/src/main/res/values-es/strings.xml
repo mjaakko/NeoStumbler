@@ -61,7 +61,7 @@
     <string name="mls_warning_title">MLS ha cerrado</string>
     <string name="wifis">Wi-Fis</string>
     <string name="endpoint">Destino</string>
-    <string name="submission_path">Ruta</string>
+    <string name="submission_path">Ruta para envíos</string>
     <string name="invalid_url">URL inválida</string>
     <string name="suggested_services_title">Servicios sugeridos</string>
     <string name="suggested_service_hosted_by">Alojado por:</string>
@@ -162,4 +162,31 @@
     <string name="use_dynamic_color_ui">Usar colores dinámicos en la interfaz</string>
     <string name="db_prune_one_month">Tras un mes</string>
     <string name="export_raw_database_compress">Comprimir el fichero de base de datos</string>
+    <string name="wifi_filter_settings_title">Filtrar Wi-Fis por SSID</string>
+    <string name="wifi_filter_settings_hint">Las redes Wi-Fi con estas palabras clave en su SSID no se recolectarán</string>
+    <string name="settings_group_privacy">Privacidad</string>
+    <plurals name="wifi_filter_settings_description">
+        <item quantity="one">%d SSID filtrado</item>
+        <item quantity="many">%d SSIDs filtrados</item>
+        <item quantity="other">%d SSID filtrado</item>
+    </plurals>
+    <string name="reduced_metadata_title">Enviar informes con menos metadatos</string>
+    <string name="reduced_metadata_description">Los informes se envian en orden aleatorio con las marcas de tiempo y otros metadatos truncados</string>
+    <string name="scanning_status_active">Escaneo <annotation style="status">activo</annotation></string>
+    <string name="scanning_status_not_active">Escaneo <annotation style="status">inactivo</annotation></string>
+    <string name="speed_metres_per_second">Velocidad: %s m/s</string>
+    <string name="altitude_metres">Altitud: %s m</string>
+    <string name="signal_strength_dbm">Intensidad de señal: %d dBm</string>
+    <string name="unknown_cell_id">ID de celda desconocida</string>
+    <string name="mcc">MCC: %s</string>
+    <string name="mnc">MNC: %s</string>
+    <string name="lac">LAC: %s</string>
+    <string name="radio_type">Tipo: %s</string>
+    <string name="beacon_type">Tipo de baliza: %s</string>
+    <string name="beacon_id">ID%d: %s</string>
+    <string name="locate_path">Ruta para geolocalización</string>
+    <string name="send_reports_automatically_never">Nunca</string>
+    <string name="send_reports_automatically_on_any_network">En cualquier red</string>
+    <string name="send_reports_automatically_on_unmetered_network">En redes no medidas</string>
+    <string name="db_schema_version">Versión del esquema de la base de datos: %d</string>
 </resources>

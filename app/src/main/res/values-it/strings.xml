@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="failed_to_open_selected_file">Impossibile aprire il file selezionato</string>
     <string name="stop">Interrompi</string>
     <string name="map_tab_title">Mappa</string>
@@ -151,4 +151,40 @@
     <string name="reports_empty">Nessun rilevamento finora</string>
     <string name="wifi_scan_frequency">Frequenza scansione Wi-Fi</string>
     <string name="cell_tower_scan_frequency">Frequenza scansione celle</string>
+    <string name="beacon_id">ID%d: %s</string>
+    <string name="beacon_type">Tipo trasmittente: %s</string>
+    <string name="scanning_status_active">Scansione <annotation style="status">attiva</annotation></string>
+    <string name="scanning_status_not_active">Scansione <annotation style="status">non attiva</annotation></string>
+    <string name="speed_metres_per_second">Velocità: %s m/s</string>
+    <string name="altitude_metres">Altitudine: %s m</string>
+    <string name="signal_strength_dbm">Potenza segnale: %d dBm</string>
+    <string name="unknown_cell_id">ID cella sconosciuto</string>
+    <string name="mcc">MCC: %s</string>
+    <string name="mnc">MNC: %s</string>
+    <string name="lac">LAC: %s</string>
+    <string name="radio_type">Tipo: %s</string>
+    <string name="db_schema_version">Versione schema database: %d</string>
+    <string name="export_raw_database_compress">Comprimi il file del database</string>
+    <string name="invalid_url">URL non valido</string>
+    <string name="send_reports_automatically_never">Mai</string>
+    <string name="send_reports_automatically_on_any_network">Da qualsiasi rete</string>
+    <string name="send_reports_automatically_on_unmetered_network">Da reti a consumo</string>
+    <string name="locate_path">Percorso geolocalizzazione</string>
+    <string name="coverage_layer_no_configured">Nessun layer di copertura mappa configurato</string>
+    <string name="system_default_language">Lingua di default del sistema</string>
+    <string name="coverage_layer">Layer di copertura mappa</string>
+    <string name="coverage_layer_tile_json_url">URL TileJSON per layer di copertura mappa</string>
+    <string name="waiting_for_location">In attesa della posizione</string>
+    <string name="delete_reports_from_area">Elimina rilevamenti dall\'area</string>
+    <string name="settings_ignore_wifi_scan_throttling_description">Se la scansione viene limitata, possono essere effettuate solo 4 scansioni in un periodo di 2 minuti</string>
+    <string name="settings_group_privacy">Privacy</string>
+    <string name="wifi_filter_settings_title">Filtra Wi-Fi per SSID</string>
+    <plurals name="wifi_filter_settings_description">
+        <item quantity="one">%d SSID filtrato</item>
+        <item quantity="many">%d SSID filtrati</item>
+        <item quantity="other">%d SSID filtrati</item>
+    </plurals>
+    <string name="wifi_filter_settings_hint">Le reti Wi-Fi con queste parole chiave negli SSID non vengono rilevate</string>
+    <string name="reduced_metadata_title">Invia rilevamenti con meno metadati</string>
+    <string name="reduced_metadata_description">I rilevamenti vengono inviati in ordine casuale con gli orari ed altri metadati troncati</string>
 </resources>
