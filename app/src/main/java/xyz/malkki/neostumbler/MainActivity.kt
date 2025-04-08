@@ -2,10 +2,15 @@ package xyz.malkki.neostumbler
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Place
@@ -64,6 +69,8 @@ class MainActivity : AppCompatActivity() {
                 .stateIn(lifecycleScope, started = SharingStarted.Eagerly, initialValue = null)
 
         installSplashScreen().apply { setKeepOnScreenCondition { dynamicColorFlow.value == null } }
+
+        enableEdgeToEdge()
 
         super.onCreate(savedInstanceState)
 
@@ -131,6 +138,8 @@ class MainActivity : AppCompatActivity() {
                                     tabs[selectedTabIndex.intValue].render()
                                 }
                             },
+                            contentWindowInsets =
+                                WindowInsets.systemBars.exclude(WindowInsets.displayCutout),
                         )
                     }
                 }

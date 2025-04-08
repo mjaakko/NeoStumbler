@@ -34,12 +34,18 @@ import xyz.malkki.neostumbler.ui.composables.settings.SliderSetting
 import xyz.malkki.neostumbler.ui.composables.settings.geosubmit.GeosubmitEndpointSettings
 import xyz.malkki.neostumbler.ui.composables.settings.privacy.WifiFilterSettings
 import xyz.malkki.neostumbler.ui.composables.troubleshooting.TroubleshootingSettingsItem
+import xyz.malkki.neostumbler.ui.modifiers.handleDisplayCutouts
 
 @Composable
 fun SettingsScreen() {
     val context = LocalContext.current
 
-    Column(modifier = Modifier.padding(horizontal = 16.dp).verticalScroll(rememberScrollState())) {
+    Column(
+        modifier =
+            Modifier.padding(horizontal = 16.dp)
+                .verticalScroll(rememberScrollState())
+                .handleDisplayCutouts()
+    ) {
         Spacer(modifier = Modifier.height(16.dp))
 
         SettingsGroup(title = stringResource(id = R.string.settings_group_reports)) {

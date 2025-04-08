@@ -1,9 +1,9 @@
 package xyz.malkki.neostumbler.ui.theme
 
 import android.app.Activity
+import android.content.res.Configuration
 import android.os.Build
 import androidx.activity.ComponentActivity
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
@@ -62,6 +63,9 @@ fun NeoStumblerTheme(
             else -> LightColorScheme
         }
     val view = LocalView.current
+
+    val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
+
     if (!view.isInEditMode) {
         SideEffect {
             val activity = view.context as Activity
@@ -75,12 +79,10 @@ fun NeoStumblerTheme(
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
 
             if (activity is ComponentActivity) {
-                activity.enableEdgeToEdge()
-
                 WindowCompat.getInsetsController(window, window.decorView)
                     .isAppearanceLightStatusBars = darkTheme
 
-                window.isNavigationBarContrastEnforced = false
+                window.isNavigationBarContrastEnforced = isLandscape
             }
         }
     }

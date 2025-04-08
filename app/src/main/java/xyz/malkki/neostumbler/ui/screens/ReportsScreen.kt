@@ -6,6 +6,8 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,6 +29,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bluetooth
 import androidx.compose.material.icons.filled.CellTower
 import androidx.compose.material.icons.filled.Wifi
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -74,6 +77,7 @@ import xyz.malkki.neostumbler.ui.composables.shared.ConfirmationDialog
 import xyz.malkki.neostumbler.ui.composables.shared.Shimmer
 import xyz.malkki.neostumbler.ui.composables.shared.formattedDate
 import xyz.malkki.neostumbler.ui.composables.shared.getAddress
+import xyz.malkki.neostumbler.ui.modifiers.handleDisplayCutouts
 import xyz.malkki.neostumbler.ui.viewmodel.ReportsViewModel
 import xyz.malkki.neostumbler.utils.geocoder.CachingGeocoder
 import xyz.malkki.neostumbler.utils.geocoder.Geocoder
@@ -93,12 +97,12 @@ fun ReportsScreen(viewModel: ReportsViewModel = koinViewModel()) {
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             ReportStats(
-                modifier = Modifier.padding(horizontal = 16.dp),
+                modifier = Modifier.padding(horizontal = 16.dp).handleDisplayCutouts(),
                 reportsViewModel = viewModel,
             )
 
             Reports(
-                modifier = Modifier.padding(horizontal = 16.dp).weight(1.0f),
+                modifier = Modifier.padding(horizontal = 16.dp).weight(1.0f).handleDisplayCutouts(),
                 listBottomPadding = cardHeight,
                 reportsViewModel = viewModel,
             )
@@ -120,7 +124,10 @@ private fun ScanningControllerCard(modifier: Modifier = Modifier) {
     val scanningActive by ScannerService.serviceRunning.collectAsStateWithLifecycle()
     val reportsCreated by ScannerService.reportsCreated.collectAsStateWithLifecycle()
 
-    ElevatedCard(modifier = modifier.wrapContentHeight().sizeIn(maxWidth = 400.dp).fillMaxWidth()) {
+    ElevatedCard(
+        modifier = modifier.wrapContentHeight().sizeIn(maxWidth = 400.dp).fillMaxWidth(),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
+    ) {
         Row(
             modifier = Modifier.padding(8.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -155,6 +162,7 @@ private fun ScanningControllerCard(modifier: Modifier = Modifier) {
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun ReportStats(modifier: Modifier = Modifier, reportsViewModel: ReportsViewModel) {
     val reportsTotal = reportsViewModel.reportsTotal.collectAsStateWithLifecycle(null)
@@ -166,7 +174,11 @@ private fun ReportStats(modifier: Modifier = Modifier, reportsViewModel: Reports
             ?: stringResource(R.string.reports_last_uploaded_never)
 
     Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-        Column(modifier = Modifier.weight(1.0f)) {
+        FlowRow(
+            modifier = Modifier.weight(1.0f),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            maxItemsInEachRow = 2,
+        ) {
             Text(
                 text = stringResource(R.string.reports_total, reportsTotal.value ?: 0),
                 style = MaterialTheme.typography.bodySmall,
@@ -243,7 +255,10 @@ private fun Reports(
 
         if (reports.itemCount == 0) {
             if (reports.loadState.isIdle) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Box(
+                    modifier = Modifier.fillMaxSize().padding(bottom = listBottomPadding),
+                    contentAlignment = Alignment.Center,
+                ) {
                     Text(stringResource(R.string.reports_empty))
                 }
             } else {
