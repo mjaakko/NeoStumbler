@@ -9,7 +9,7 @@ plugins {
     id 'io.gitlab.arturbosch.detekt'
 }
 
-def DB_SCHEMAS_DIR =  "$projectDir/schemas"
+def DB_SCHEMAS_DIR = "$projectDir/schemas"
 
 bundletool {
     signingConfig {
@@ -119,6 +119,10 @@ android {
             dimension "version"
 
             applicationId = defaultConfig.applicationId + ".fdroid"
+
+            ndk {
+                abiFilters('armeabi-v7a', 'arm64-v8a')
+            }
         }
         full {
             dimension "version"
@@ -157,7 +161,7 @@ android {
             enable project.hasProperty("enableAbiSplit")
 
             reset()
-            include 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+            include 'armeabi-v7a', 'arm64-v8a'
 
             universalApk true
         }
@@ -261,7 +265,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8'
     fullImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services'
-    
+
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test'
     androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test'
 
@@ -302,7 +306,7 @@ dependencies {
     implementation 'org.apache.commons:commons-csv:1.14.0'
 
     def vico_version = "2.1.1"
-    
+
     implementation "com.patrykandpatrick.vico:compose:$vico_version"
     implementation "com.patrykandpatrick.vico:compose-m3:$vico_version"
 
