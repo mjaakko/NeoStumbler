@@ -38,6 +38,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -76,6 +77,7 @@ import xyz.malkki.neostumbler.scanner.source.BluetoothBeaconSource
 import xyz.malkki.neostumbler.scanner.source.CellInfoSource
 import xyz.malkki.neostumbler.scanner.source.MultiSubscriptionCellInfoSource
 import xyz.malkki.neostumbler.scanner.source.PressureSensorAirPressureSource
+import xyz.malkki.neostumbler.scanner.source.WifiAccessPointSource
 import xyz.malkki.neostumbler.scanner.source.WifiManagerWifiAccessPointSource
 import xyz.malkki.neostumbler.scanner.speed.SmoothenedGpsSpeedSource
 import xyz.malkki.neostumbler.utils.GpsStats
@@ -255,106 +257,100 @@ class ScannerService : Service() {
 
             scanning = true
 
-            notificationStyle =
-                settingsStore.getOrDefault(
-                    stringPreferencesKey(PreferenceKeys.SCANNER_NOTIFICATION_STYLE),
-                    NotificationStyle.BASIC,
-                )
-
-            val wifiScanDistance =
-                settingsStore.getOrDefault(
-                    intPreferencesKey(PreferenceKeys.WIFI_SCAN_DISTANCE),
-                    DEFAULT_WIFI_SCAN_DISTANCE,
-                )
-
-            val cellScanDistance =
-                settingsStore.getOrDefault(
-                    intPreferencesKey(PreferenceKeys.CELL_SCAN_DISTANCE),
-                    DEFAULT_CELL_SCAN_DISTANCE,
-                )
-
-            Timber.d(
-                "Scan distances: ${wifiScanDistance}m - Wi-Fis, ${cellScanDistance}m - cell towers"
-            )
-
-            val wifiFilterList =
-                settingsStore.getOrDefault(
-                    stringSetPreferencesKey(PreferenceKeys.WIFI_FILTER_LIST),
-                    emptySet(),
-                )
-
-            val locationFlow =
-                locationSource
-                    .getLocations(LOCATION_INTERVAL, usePassiveProvider = false)
-                    .onStart { gpsActive.emit(true) }
-                    .onCompletion { gpsActive.emit(false) }
-                    .shareIn(scope = this, started = SharingStarted.WhileSubscribed())
-
-            val speedFlow = SmoothenedGpsSpeedSource(locationFlow).getSpeedFlow()
-
-            val cellInfoSource = getCellInfoSource()
-
-            val ignoreScanThrottlingPreference =
-                settingsStore.getOrDefault(
-                    booleanPreferencesKey(PreferenceKeys.IGNORE_SCAN_THROTTLING),
-                    false,
-                )
-
-            val wifiScanThrottled = !ignoreScanThrottlingPreference || isWifiScanThrottled() == true
-
-            val wifiAccessPointSource =
-                WifiManagerWifiAccessPointSource(
-                    this@ScannerService,
-                    wifiScanThrottled = wifiScanThrottled,
-                )
-
-            val bluetoothBeaconSource = getBluetoothBeaconSource()
-
-            val movementDetectorType =
-                settingsStore.getOrDefault(
-                    stringPreferencesKey(PreferenceKeys.MOVEMENT_DETECTOR),
-                    MovementDetectorType.LOCATION,
-                )
-
-            val movementDetector = getMovementDetector(movementDetectorType, locationFlow)
-
-            val airPressureSource = getAirPressureSource()
-
-            WirelessScanner(
-                    locationSource = { locationFlow },
-                    cellInfoSource = {
-                        val scanFrequencyFlow =
-                            speedFlow.map { speed -> (cellScanDistance.toDouble() / speed).seconds }
-
-                        cellInfoSource.getCellInfoFlow(scanFrequencyFlow)
-                    },
-                    bluetoothBeaconSource = { bluetoothBeaconSource.getBluetoothBeaconFlow() },
-                    wifiAccessPointSource = {
-                        val scanFrequencyFlow =
-                            speedFlow.map { speed -> (wifiScanDistance.toDouble() / speed).seconds }
-
-                        wifiAccessPointSource.getWifiAccessPointFlow(scanFrequencyFlow)
-                    },
-                    airPressureSource = {
-                        airPressureSource.getAirPressureFlow(LOCATION_INTERVAL / 2)
-                    },
-                    movementDetector = movementDetector,
-                    postProcessors =
-                        listOf(HiddenWifiFilterer(), SsidBasedWifiFilterer(wifiFilterList)),
-                )
-                .createReports()
-                .collect { reportData ->
-                    scanReportCreator.createReport(
-                        position = reportData.position,
-                        cellTowers = reportData.cellTowers,
-                        wifiScanResults = reportData.wifiAccessPoints,
-                        beacons = reportData.bluetoothBeacons,
+            settingsStore.data.collectLatest {
+                notificationStyle =
+                    settingsStore.getOrDefault(
+                        stringPreferencesKey(PreferenceKeys.SCANNER_NOTIFICATION_STYLE),
+                        NotificationStyle.BASIC,
                     )
 
-                    _reportsCreated.update { it + 1 }
+                val wifiScanDistance =
+                    settingsStore.getOrDefault(
+                        intPreferencesKey(PreferenceKeys.WIFI_SCAN_DISTANCE),
+                        DEFAULT_WIFI_SCAN_DISTANCE,
+                    )
 
-                    ScannerTileService.updateTile(this@ScannerService)
-                }
+                val cellScanDistance =
+                    settingsStore.getOrDefault(
+                        intPreferencesKey(PreferenceKeys.CELL_SCAN_DISTANCE),
+                        DEFAULT_CELL_SCAN_DISTANCE,
+                    )
+
+                Timber.d(
+                    "Scan distances: ${wifiScanDistance}m - Wi-Fis, ${cellScanDistance}m - cell towers"
+                )
+
+                val wifiFilterList =
+                    settingsStore.getOrDefault(
+                        stringSetPreferencesKey(PreferenceKeys.WIFI_FILTER_LIST),
+                        emptySet(),
+                    )
+
+                val locationFlow =
+                    locationSource
+                        .getLocations(LOCATION_INTERVAL, usePassiveProvider = false)
+                        .onStart { gpsActive.emit(true) }
+                        .onCompletion { gpsActive.emit(false) }
+                        .shareIn(scope = this, started = SharingStarted.WhileSubscribed())
+
+                val speedFlow = SmoothenedGpsSpeedSource(locationFlow).getSpeedFlow()
+
+                val cellInfoSource = getCellInfoSource()
+
+                val wifiAccessPointSource = getWifiAccessPointSource()
+
+                val bluetoothBeaconSource = getBluetoothBeaconSource()
+
+                val movementDetectorType =
+                    settingsStore.getOrDefault(
+                        stringPreferencesKey(PreferenceKeys.MOVEMENT_DETECTOR),
+                        MovementDetectorType.LOCATION,
+                    )
+
+                val movementDetector = getMovementDetector(movementDetectorType, locationFlow)
+
+                val airPressureSource = getAirPressureSource()
+
+                WirelessScanner(
+                        locationSource = { locationFlow },
+                        cellInfoSource = {
+                            val scanFrequencyFlow =
+                                speedFlow.map { speed ->
+                                    (cellScanDistance.toDouble() / speed).seconds
+                                }
+
+                            cellInfoSource.getCellInfoFlow(scanFrequencyFlow)
+                        },
+                        bluetoothBeaconSource = { bluetoothBeaconSource.getBluetoothBeaconFlow() },
+                        wifiAccessPointSource = {
+                            val scanFrequencyFlow =
+                                speedFlow.map { speed ->
+                                    (wifiScanDistance.toDouble() / speed).seconds
+                                }
+
+                            wifiAccessPointSource.getWifiAccessPointFlow(scanFrequencyFlow)
+                        },
+                        airPressureSource = {
+                            airPressureSource.getAirPressureFlow(LOCATION_INTERVAL / 2)
+                        },
+                        movementDetector = movementDetector,
+                        postProcessors =
+                            listOf(HiddenWifiFilterer(), SsidBasedWifiFilterer(wifiFilterList)),
+                    )
+                    .createReports()
+                    .collect { reportData ->
+                        scanReportCreator.createReport(
+                            position = reportData.position,
+                            cellTowers = reportData.cellTowers,
+                            wifiScanResults = reportData.wifiAccessPoints,
+                            beacons = reportData.bluetoothBeacons,
+                        )
+
+                        _reportsCreated.update { it + 1 }
+
+                        ScannerTileService.updateTile(this@ScannerService)
+                    }
+            }
         }
 
     private fun getMovementDetector(
@@ -403,6 +399,21 @@ class ScannerService : Service() {
         } else {
             BluetoothBeaconSource { emptyFlow() }
         }
+    }
+
+    private suspend fun getWifiAccessPointSource(): WifiAccessPointSource {
+        val ignoreScanThrottlingPreference =
+            settingsStore.getOrDefault(
+                booleanPreferencesKey(PreferenceKeys.IGNORE_SCAN_THROTTLING),
+                false,
+            )
+
+        val wifiScanThrottled = !ignoreScanThrottlingPreference || isWifiScanThrottled() == true
+
+        return WifiManagerWifiAccessPointSource(
+            this@ScannerService,
+            wifiScanThrottled = wifiScanThrottled,
+        )
     }
 
     private fun stopScanning() {
