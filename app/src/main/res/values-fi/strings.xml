@@ -11,6 +11,9 @@
     <string name="stop">Lopeta</string>
     <string name="delete">Poista</string>
     <string name="no_data">Ei tietoja</string>
+
+    <string name="disabled">Ei käytössä</string>
+
     <string name="waiting_for_location">Odotetaan sijaintia</string>
     <string name="failed_to_open_selected_file">
         Valitun tiedoston avaaminen ei onnistunut
@@ -154,6 +157,10 @@
     <string name="wifi_scan_throttling_explanation">
         Wi-Fi -skannauksen rajoitukset täytyy poistaa laitteen asetuksista tätä ominaisuutta varten. Tämän voi yleensä tehdä kehittäjän asetuksista
     </string>
+
+    <string name="pause_scanning_on_low_battery_title">Keskeytä skanaaminen akun ollessa vähissä</string>
+    <string name="pause_scanning_on_low_battery_description">Kun akun varaustila alle %d%%</string>
+
     <string name="wifi_scan_frequency">Wi-Fi -skannausten tiheys</string>
     <string name="cell_tower_scan_frequency">Puhelinmastojen skannausten tiheys</string>
     <string name="every_x_meters">Joka %d. metri</string>

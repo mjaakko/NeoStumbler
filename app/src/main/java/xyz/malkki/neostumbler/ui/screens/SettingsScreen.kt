@@ -59,6 +59,21 @@ fun SettingsScreen() {
             MovementDetectorSettings()
             FusedLocationToggle()
             IgnoreScanThrottlingToggle()
+
+            SliderSetting(
+                title = stringResource(R.string.pause_scanning_on_low_battery_title),
+                preferenceKey = PreferenceKeys.PAUSE_ON_BATTERY_LEVEL_THRESHOLD,
+                range = 0..50,
+                step = 5,
+                valueFormatter = {
+                    if (it == 0) {
+                        context.getString(R.string.disabled)
+                    } else {
+                        context.getString(R.string.pause_scanning_on_low_battery_description, it)
+                    }
+                },
+                default = 0,
+            )
             SliderSetting(
                 title = stringResource(R.string.wifi_scan_frequency),
                 preferenceKey = PreferenceKeys.WIFI_SCAN_DISTANCE,
@@ -70,6 +85,7 @@ fun SettingsScreen() {
                 },
                 default = ScannerService.DEFAULT_WIFI_SCAN_DISTANCE,
             )
+
             SliderSetting(
                 title = stringResource(R.string.cell_tower_scan_frequency),
                 preferenceKey = PreferenceKeys.CELL_SCAN_DISTANCE,
