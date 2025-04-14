@@ -39,7 +39,9 @@ import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.export.CsvExporter
 import xyz.malkki.neostumbler.http.getCallFactory
 import xyz.malkki.neostumbler.location.locationModule
-import xyz.malkki.neostumbler.scanner.ScanReportCreator
+import xyz.malkki.neostumbler.scanner.ScanReportSaver
+import xyz.malkki.neostumbler.scanner.passive.passiveScanningModule
+import xyz.malkki.neostumbler.scanner.postprocess.postProcessorsModule
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
 import xyz.malkki.neostumbler.ui.viewmodel.ReportsViewModel
 import xyz.malkki.neostumbler.ui.viewmodel.StatisticsViewModel
@@ -47,11 +49,16 @@ import xyz.malkki.neostumbler.utils.OneTimeActionHelper
 
 val PREFERENCES = named("preferences")
 
+val PASSIVE_SCAN_STATE = named("passive_scan_state")
+
 class StumblerApplication : Application() {
     private val settingsStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
     private val oneTimeActionsStore: DataStore<Preferences> by
         preferencesDataStore(name = "one_time_actions")
+
+    private val passiveScanStateStore: DataStore<Preferences> by
+        preferencesDataStore(name = "passive_scan_state")
 
     var bluetoothScanAvailable by Delegates.notNull<Boolean>()
 
@@ -71,7 +78,7 @@ class StumblerApplication : Application() {
                 module {
                     factory { CsvExporter(get(), get()) }
 
-                    single { ScanReportCreator(get()) }
+                    single { ScanReportSaver(get()) }
                 }
             )
 
@@ -88,8 +95,14 @@ class StumblerApplication : Application() {
 
             modules(locationModule)
 
+            modules(postProcessorsModule)
+
+            modules(passiveScanningModule)
+
             modules(
                 module {
+                    single(PASSIVE_SCAN_STATE) { passiveScanStateStore }
+
                     single(PREFERENCES) { settingsStore }
 
                     single { OneTimeActionHelper(oneTimeActionsStore) }

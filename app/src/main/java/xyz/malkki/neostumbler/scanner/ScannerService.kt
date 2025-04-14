@@ -157,7 +157,7 @@ class ScannerService : Service() {
 
     private val settingsStore: DataStore<Preferences> by inject<DataStore<Preferences>>(PREFERENCES)
 
-    private val scanReportCreator: ScanReportCreator by inject()
+    private val scanReportSaver: ScanReportSaver by inject()
 
     private val locationSource: LocationSource by inject()
 
@@ -370,12 +370,7 @@ class ScannerService : Service() {
             )
 
         scanner.createReports().collect { reportData ->
-            scanReportCreator.createReport(
-                position = reportData.position,
-                cellTowers = reportData.cellTowers,
-                wifiScanResults = reportData.wifiAccessPoints,
-                beacons = reportData.bluetoothBeacons,
-            )
+            scanReportSaver.saveReport(reportData)
 
             _reportsCreated.update { it + 1 }
 

@@ -8,14 +8,15 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import xyz.malkki.neostumbler.domain.Position
+import xyz.malkki.neostumbler.domain.Position.Source
 
 class LocationBasedMovementDetectorTest {
     @Test
     fun `Test that no movement is detected when the location does not change`() {
         val locationFlow =
             flowOf(
-                Position(latitude = 0.0, longitude = 0.0, source = "gps", timestamp = 0),
-                Position(latitude = 0.0, longitude = 0.0, source = "gps", timestamp = 0),
+                Position(latitude = 0.0, longitude = 0.0, source = Source.GPS, timestamp = 0),
+                Position(latitude = 0.0, longitude = 0.0, source = Source.GPS, timestamp = 0),
             )
 
         val movementDetector =
@@ -33,8 +34,8 @@ class LocationBasedMovementDetectorTest {
     fun `Test that movement is detected when the location changes`() {
         val locationFlow =
             flowOf(
-                Position(latitude = 0.0, longitude = 0.0, source = "gps", timestamp = 0),
-                Position(latitude = 10.0, longitude = 10.0, source = "gps", timestamp = 0),
+                Position(latitude = 0.0, longitude = 0.0, source = Source.GPS, timestamp = 0),
+                Position(latitude = 10.0, longitude = 10.0, source = Source.GPS, timestamp = 0),
             )
 
         val movementDetector =

@@ -32,11 +32,11 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:manageSpaceActivity="xyz.malkki.neostumbler.ManageStorageActivity"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.Starting"
         android:usesCleartextTraffic="true"
-        android:manageSpaceActivity="xyz.malkki.neostumbler.ManageStorageActivity"
         tools:targetApi="31">
         <service
             android:name=".scanner.ScannerService"
@@ -72,11 +72,28 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ManageStorageActivity"
-            android:theme="@style/Theme.NeoStumbler"
+            android:exported="true"
+            android:theme="@style/Theme.NeoStumbler" />
+
+        <receiver
+            android:name=".scanner.passive.PlatformPassiveLocationReceiver"
+            android:enabled="true"
             android:exported="true" />
+
+        <receiver
+            android:name=".scanner.passive.PassiveScanRestoreReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
 
         <service
             android:name="androidx.work.impl.foreground.SystemForegroundService"

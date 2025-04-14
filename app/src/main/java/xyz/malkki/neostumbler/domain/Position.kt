@@ -16,7 +16,7 @@ data class Position(
     val heading: Double? = null,
     val speed: Double? = null,
     val pressure: Double? = null,
-    val source: String,
+    val source: Source,
     /** Timestamp in milliseconds since boot */
     val timestamp: Long,
 ) {
@@ -33,7 +33,7 @@ data class Position(
 
         fun fromLocation(
             location: Location,
-            source: String,
+            source: Source,
             airPressure: Double? = null,
         ): Position {
             val timestamp =
@@ -66,5 +66,16 @@ data class Position(
                 timestamp = timestamp,
             )
         }
+    }
+
+    enum class Source {
+        /** Position received from a GNSS system (e.g. GPS) */
+        GPS,
+        /** Position received from a network location provider */
+        NETWORK,
+        /** Position received from a fused location provider (e.g. Google Play Services) */
+        FUSED,
+        /** Position with manually specified location */
+        MANUAL,
     }
 }

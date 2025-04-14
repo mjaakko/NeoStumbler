@@ -26,6 +26,15 @@ data class ReportDto(
     ) {
         companion object {
             fun fromDbEntity(positionEntity: PositionEntity): PositionDto {
+                // Ichnaea Geosubmit officially only supports these sources
+                // https://ichnaea.readthedocs.io/en/latest/api/geosubmit2.html#position-fields
+                val source =
+                    if (positionEntity.source == "gps") {
+                        "gps"
+                    } else {
+                        "fused"
+                    }
+
                 return PositionDto(
                     positionEntity.latitude,
                     positionEntity.longitude,
@@ -36,7 +45,7 @@ data class ReportDto(
                     positionEntity.heading?.takeUnless { it.isNaN() },
                     positionEntity.pressure?.takeUnless { it.isNaN() },
                     positionEntity.speed?.takeUnless { it.isNaN() },
-                    positionEntity.source,
+                    source,
                 )
             }
         }

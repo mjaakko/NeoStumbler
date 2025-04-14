@@ -2,9 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" tools:node="merge"/>
+    <uses-permission
+        android:name="android.permission.ACTIVITY_RECOGNITION"
+        tools:node="merge" />
 
     <application tools:node="merge">
+        <receiver
+            android:name=".scanner.passive.FusedPassiveLocationReceiver"
+            android:enabled="true"
+            android:exported="true"
+            tools:node="merge" />
 
         <receiver
             android:name=".scanner.autoscan.LocationReceiver"
@@ -24,11 +31,11 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
         <receiver
             android:name=".scanner.autoscan.ActivityTransitionReceiver"
             android:enabled="true"
             android:exported="true"
             tools:node="merge" />
     </application>
+
 </manifest>

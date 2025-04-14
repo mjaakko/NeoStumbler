@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import xyz.malkki.neostumbler.domain.Position
+import xyz.malkki.neostumbler.domain.Position.Source
 import xyz.malkki.neostumbler.utils.ImmediateExecutor
 
 class FusedLocationSource(context: Context) : LocationSource {
@@ -48,7 +49,7 @@ class FusedLocationSource(context: Context) : LocationSource {
                 object : LocationCallback() {
                     override fun onLocationResult(locationResult: LocationResult) {
                         locationResult.locations.forEach { location ->
-                            trySendBlocking(Position.fromLocation(location, "fused"))
+                            trySendBlocking(Position.fromLocation(location, Source.FUSED))
                         }
                     }
                 }
