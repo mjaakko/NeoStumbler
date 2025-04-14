@@ -20,6 +20,9 @@ updates:
         patterns:
           - 'com.android.application'
           - 'com.android.library'
+      hamcrest:
+        patterns:
+          - 'org.hamcrest'
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
