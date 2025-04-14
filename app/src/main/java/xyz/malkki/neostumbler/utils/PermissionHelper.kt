@@ -2,6 +2,7 @@ package xyz.malkki.neostumbler.utils
 
 import android.Manifest
 import android.content.Context
+import android.os.Build
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 
 object PermissionHelper {
@@ -16,4 +17,20 @@ object PermissionHelper {
                 Manifest.permission.ACTIVITY_RECOGNITION,
             )
             .isEmpty()
+
+    fun hasBluetoothScanPermission(context: Context): Boolean =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            context.checkMissingPermissions(Manifest.permission.BLUETOOTH_SCAN).isEmpty()
+        } else {
+            context
+                .checkMissingPermissions(
+                    Manifest.permission.BLUETOOTH,
+                    Manifest.permission.BLUETOOTH_ADMIN,
+                )
+                .isEmpty()
+        }
+
+    fun hasReadPhoneStatePermission(context: Context): Boolean {
+        return context.checkMissingPermissions(Manifest.permission.READ_PHONE_STATE).isEmpty()
+    }
 }

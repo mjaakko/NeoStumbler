@@ -10,6 +10,8 @@ object PreferenceKeys {
     const val WIFI_SCAN_DISTANCE = "wifi_scan_distance"
     const val CELL_SCAN_DISTANCE = "cell_scan_distance"
 
+    const val PAUSE_ON_BATTERY_LEVEL_THRESHOLD = "low_battery_threshold"
+
     const val GEOSUBMIT_ENDPOINT = "geosubmit_endpoint"
     const val GEOSUBMIT_PATH = "geosubmit_path"
     const val GEOSUBMIT_API_KEY = "geosubmit_api_key"

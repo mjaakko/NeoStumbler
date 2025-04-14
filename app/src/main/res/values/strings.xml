@@ -13,6 +13,9 @@
     <string name="stop">Stop</string>
     <string name="delete">Delete</string>
     <string name="no_data">No data</string>
+
+    <string name="disabled">Disabled</string>
+
     <string name="waiting_for_location">Waiting for location</string>
     <string name="failed_to_open_selected_file">
         Failed to open the selected file
@@ -156,6 +159,9 @@
     <string name="reduced_metadata_description">
         Reports are sent in a randomized order with timestamps and other metadata truncated
     </string>
+
+    <string name="pause_scanning_on_low_battery_title">Pause scanning on low battery</string>
+    <string name="pause_scanning_on_low_battery_description">When battery level less than %d%%</string>
 
     <string name="wifi_scan_frequency">Wi-Fi scan frequency</string>
     <string name="cell_tower_scan_frequency">Cell tower scan frequency</string>
