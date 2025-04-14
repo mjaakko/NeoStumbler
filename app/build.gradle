@@ -300,7 +300,7 @@ dependencies {
 
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1'
 
-    implementation 'org.altbeacon:android-beacon-library:2.21.0'
+    implementation 'org.altbeacon:android-beacon-library:2.21.1'
 
     implementation 'org.maplibre.gl:android-sdk:11.8.6'
     implementation 'org.maplibre.gl:android-plugin-annotation-v9:3.0.2'
