@@ -189,4 +189,7 @@
     <string name="send_reports_automatically_on_any_network">En cualquier red</string>
     <string name="send_reports_automatically_on_unmetered_network">En redes no medidas</string>
     <string name="db_schema_version">Versión del esquema de la base de datos: %d</string>
+    <string name="pause_scanning_on_low_battery_description">Cuando la batería baja del %d%%</string>
+    <string name="disabled">Deshabilitado</string>
+    <string name="pause_scanning_on_low_battery_title">Pausar escaneo con batería baja</string>
 </resources>
