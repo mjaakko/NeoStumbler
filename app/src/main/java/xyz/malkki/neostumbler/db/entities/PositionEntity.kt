@@ -25,7 +25,7 @@ import xyz.malkki.neostumbler.domain.Position
     indices = [Index(value = ["latitude", "longitude"])],
 )
 data class PositionEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long?,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val latitude: Double,
     val longitude: Double,
     val accuracy: Double?,
@@ -54,7 +54,7 @@ data class PositionEntity(
                 )
 
             return PositionEntity(
-                null,
+                id = 0,
                 latitude = position.latitude,
                 longitude = position.longitude,
                 accuracy = position.accuracy,

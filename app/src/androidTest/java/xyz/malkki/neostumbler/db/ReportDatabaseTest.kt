@@ -67,7 +67,7 @@ class ReportDatabaseTest {
             val reportId =
                 reportDao.insert(
                     Report(
-                        id = null,
+                        id = 0,
                         timestamp = Instant.now(),
                         uploaded = false,
                         uploadTimestamp = null,
@@ -77,7 +77,7 @@ class ReportDatabaseTest {
             positionDao.insert(
                 PositionEntity(
                     reportId = reportId,
-                    id = null,
+                    id = 0,
                     latitude = 78.2356,
                     longitude = 13.415,
                     accuracy = 500.0,
@@ -94,7 +94,7 @@ class ReportDatabaseTest {
             cellTowerDao.insertAll(
                 CellTowerEntity(
                     reportId = reportId,
-                    id = null,
+                    id = 0,
                     radioType = "LTE",
                     mobileCountryCode = "111",
                     mobileNetworkCode = "01",

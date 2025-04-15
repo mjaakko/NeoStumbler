@@ -21,7 +21,7 @@ import xyz.malkki.neostumbler.domain.CellTower
         ]
 )
 data class CellTowerEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long?,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val radioType: String,
     val mobileCountryCode: String?,
     val mobileNetworkCode: String?,
@@ -52,7 +52,7 @@ data class CellTowerEntity(
                 )
 
             return CellTowerEntity(
-                id = null,
+                id = 0,
                 radioType = cellTower.radioType.name.lowercase(),
                 mobileCountryCode = cellTower.mobileCountryCode!!,
                 mobileNetworkCode = cellTower.mobileNetworkCode!!,

@@ -7,7 +7,7 @@ import java.time.Instant
 
 @Entity()
 data class Report(
-    @PrimaryKey(autoGenerate = true) val id: Long?,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
     @ColumnInfo(index = true) val timestamp: Instant,
     @ColumnInfo(index = true) val uploaded: Boolean,
     val uploadTimestamp: Instant?,

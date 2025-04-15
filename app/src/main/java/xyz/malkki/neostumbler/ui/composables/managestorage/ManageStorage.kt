@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.room.invalidationTrackerFlow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -30,7 +29,7 @@ import xyz.malkki.neostumbler.ui.composables.export.ExportDatabaseButton
 private fun Flow<ReportDatabase>.dbSizeFlow(): Flow<Long> = flatMapLatest { db ->
     val tableNames = db.openHelper.readableDatabase.getTableNames()
 
-    db.invalidationTrackerFlow(*tableNames.toTypedArray(), emitInitialState = true).map {
+    db.invalidationTracker.createFlow(*tableNames.toTypedArray(), emitInitialState = true).map {
         db.openHelper.readableDatabase.getEstimatedSize()
     }
 }
