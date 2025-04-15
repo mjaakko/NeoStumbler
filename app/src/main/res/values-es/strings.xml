@@ -189,4 +189,10 @@
     <string name="send_reports_automatically_on_any_network">En cualquier red</string>
     <string name="send_reports_automatically_on_unmetered_network">En redes no medidas</string>
     <string name="db_schema_version">Versión del esquema de la base de datos: %d</string>
+    <string name="pause_scanning_on_low_battery_description">Cuando la batería baja del %d%%</string>
+    <string name="disabled">Deshabilitado</string>
+    <string name="pause_scanning_on_low_battery_title">Pausar escaneo con batería baja</string>
+    <string name="passive_scanning_title">Escaneo pasivo</string>
+    <string name="passive_scanning_description">El escaneo pasivo crea informes en segundo plano con un impacto mínimo en la batería usando datos solicitados por otras aplicaciones.\n\nLa efectividad del escaneo pasivo dependerá del tipo de dispositivo, las aplicaciones que use y si tiene un proveedor de ubicación combinada disponible.\n\nTenga en cuenta que el escaneo pasivo no funciona con las balizas Bluetooth.\n\n¿Quieres activar el escaneo pasivo?</string>
+    <string name="permission_rationale_background_location_passive_scan">Recibir actualizaciones de ubicación cuando la aplicación no está activa requiere permisos de acceso a la ubicación en segundo plano</string>
 </resources>

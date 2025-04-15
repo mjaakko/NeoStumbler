@@ -191,4 +191,10 @@
         <item quantity="many">%d de SSIDs filtrados</item>
         <item quantity="other">%d SSIDs filtrados</item>
     </plurals>
+    <string name="disabled">Desativado</string>
+    <string name="pause_scanning_on_low_battery_title">Pausar a busca quando a bateria estiver fraca</string>
+    <string name="pause_scanning_on_low_battery_description">Quando o nível da bateria está abaixo de %d%%</string>
+    <string name="permission_rationale_background_location_passive_scan">Receber atualizações de localização quando o app não está ativado requer o acesso à localização em segundo plano</string>
+    <string name="passive_scanning_title">Coleta de dados passiva</string>
+    <string name="passive_scanning_description">A coleta de dados passiva cria relatórios em segundo plano, tendo um impacto mínimo na bateria, já que usa os dados que já foram solicitados por outros aplicativos.\n\nA eficácia da coleta de dados passiva pode depender do tipo do seu dispositivo, os apps que você usa, e se tem o provedor de localização unido.\n\nObserve que a coleta de dados passiva não funciona com sinalizadores Bluetooth.\n\nVocê gostaria de ativar a coleta de dados passiva?</string>
 </resources>

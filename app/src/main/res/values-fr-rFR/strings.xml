@@ -176,4 +176,10 @@
     <string name="coverage_layer_tile_json_url">URL TileJSON pour la couche de couverture cartographique</string>
     <string name="system_default_language">Langue du système</string>
     <string name="waiting_for_location">En attente de localisation</string>
+    <string name="send_reports_automatically_never">Jamais</string>
+    <string name="disabled">Désactivé</string>
+    <string name="speed_metres_per_second">Vitesse : %s m/s</string>
+    <string name="altitude_metres">Altitude : %s m</string>
+    <string name="signal_strength_dbm">Intensité du signal : %d dBm</string>
+    <string name="scanning_status_active">Scan. &lt;annotation style=\"status\"&gt;actif/annotation&gt;</string>
 </resources>
