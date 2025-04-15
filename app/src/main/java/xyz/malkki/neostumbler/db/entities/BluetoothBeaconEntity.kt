@@ -21,7 +21,7 @@ import xyz.malkki.neostumbler.domain.BluetoothBeacon
         ]
 )
 data class BluetoothBeaconEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long?,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val macAddress: String,
     val age: Long,
     val name: String?,
@@ -47,7 +47,7 @@ data class BluetoothBeaconEntity(
                 )
 
             return BluetoothBeaconEntity(
-                null,
+                id = 0,
                 macAddress = beacon.macAddress,
                 age = age,
                 name = null,

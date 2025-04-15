@@ -17,7 +17,7 @@ class ScanReportSaver(reportDatabaseManager: ReportDatabaseManager) {
     suspend fun saveReport(reportData: ReportData, reportTimestamp: Instant = Instant.now()) =
         reportDb.value.let { db ->
             db.withTransaction {
-                val report = Report(null, reportTimestamp, false, null)
+                val report = Report(id = 0, reportTimestamp, false, null)
                 val reportId = db.reportDao().insert(report)
 
                 val positionEntity =

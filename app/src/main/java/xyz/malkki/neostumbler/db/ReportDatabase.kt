@@ -21,7 +21,7 @@ import xyz.malkki.neostumbler.db.entities.WifiAccessPointEntity
 import xyz.malkki.neostumbler.db.migrations.RenamePositionToPositionEntity
 import xyz.malkki.neostumbler.db.migrations.RenameTablesToEntities
 
-const val REPORT_DB_VERSION = 8
+const val REPORT_DB_VERSION = 9
 
 @Database(
     exportSchema = true,
@@ -43,6 +43,7 @@ const val REPORT_DB_VERSION = 8
             AutoMigration(from = 5, to = 6),
             AutoMigration(from = 6, to = 7),
             AutoMigration(from = 7, to = 8, spec = RenamePositionToPositionEntity::class),
+            AutoMigration(from = 8, to = 9),
         ],
 )
 @TypeConverters(InstantConverters::class, LocalDateConverters::class)

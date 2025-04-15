@@ -81,7 +81,6 @@ interface ReportDao {
         """
         SELECT
             r.id,
-            r.timestamp,
             p.latitude,
             p.longitude
         FROM Report r
