@@ -164,8 +164,8 @@
     <string name="waiting_for_location">Esperando pela localização</string>
     <string name="delete_reports_from_area">Excluir relatórios de uma área</string>
     <string name="export_raw_database_compress">Comprimir o arquivo do banco de dados</string>
-    <string name="scanning_status_active">Busca<annotation style="status">ativa</annotation></string>
-    <string name="scanning_status_not_active">Busca<annotation style="status">inativa</annotation></string>
+    <string name="scanning_status_active">Busca <annotation style="status">ativa</annotation></string>
+    <string name="scanning_status_not_active">Busca <annotation style="status">inativa</annotation></string>
     <string name="speed_metres_per_second">Velocidade: %s m/s</string>
     <string name="altitude_metres">Altitude: %s m</string>
     <string name="signal_strength_dbm">Força do sinal: %d dBm</string>
@@ -182,7 +182,7 @@
     <string name="beacon_type">Tipo de sinalizador: %s</string>
     <string name="lac">LAC: %s</string>
     <string name="settings_group_privacy">Privacidade</string>
-    <string name="wifi_filter_settings_hint">Redes Wi-Fi com qualquer uma dessas palavras-chave em seu SSID não são coletadas</string>
+    <string name="wifi_filter_settings_hint">Redes Wi-Fi com qualquer uma dessas palavras-chaves no seu SSID não são coletadas</string>
     <string name="reduced_metadata_title">Enviar relatórios com menos metadados</string>
     <string name="reduced_metadata_description">Relatórios são enviados em uma ordem aleatória e com os horários e outros metadados com a precisão reduzida</string>
     <string name="wifi_filter_settings_title">Filtrar redes Wi-Fi pelo SSID</string>
@@ -194,7 +194,7 @@
     <string name="disabled">Desativado</string>
     <string name="pause_scanning_on_low_battery_title">Pausar a busca quando a bateria estiver fraca</string>
     <string name="pause_scanning_on_low_battery_description">Quando o nível da bateria está abaixo de %d%%</string>
-    <string name="permission_rationale_background_location_passive_scan">Receber atualizações de localização quando o app não está ativado requer o acesso à localização em segundo plano</string>
-    <string name="passive_scanning_title">Coleta de dados passiva</string>
-    <string name="passive_scanning_description">A coleta de dados passiva cria relatórios em segundo plano, tendo um impacto mínimo na bateria, já que usa os dados que já foram solicitados por outros aplicativos.\n\nA eficácia da coleta de dados passiva pode depender do tipo do seu dispositivo, os apps que você usa, e se tem o provedor de localização unido.\n\nObserve que a coleta de dados passiva não funciona com sinalizadores Bluetooth.\n\nVocê gostaria de ativar a coleta de dados passiva?</string>
+    <string name="permission_rationale_background_location_passive_scan">Receber atualizações de localização enquanto o app não está ativo requer o acesso à localização em segundo plano</string>
+    <string name="passive_scanning_title">Coleta passiva de dados</string>
+    <string name="passive_scanning_description">A coleta passiva de dados cria relatórios em segundo plano, tendo um impacto mínimo na bateria, já que usa os dados que já foram solicitados por outros aplicativos.\n\nA eficácia da coleta passiva de dados pode depender do tipo do seu dispositivo, os apps que você usa, e se o provedor de localização unido está disponível.\n\nObserve que a coleta passiva de dados não funciona com sinalizadores Bluetooth.\n\nVocê gostaria de ativar a coleta passiva de dados?</string>
 </resources>
