@@ -162,4 +162,37 @@
     <string name="waiting_for_location">Čekání na polohu</string>
     <string name="delete_reports_from_area">Smazat reporty z oblasti</string>
     <string name="export_raw_database_compress">Komprese exportované databáze</string>
+    <string name="scanning_status_not_active">Skenování <annotation style="status">neaktivní</annotation></string>
+    <string name="scanning_status_active">Skenování <annotation style="status">aktivní</annotation></string>
+    <plurals name="wifi_filter_settings_description">
+        <item quantity="one">%d SSID filtrována</item>
+        <item quantity="few">%d SSID filtrovány</item>
+        <item quantity="other">%d SSID filtrováno</item>
+    </plurals>
+    <string name="wifi_filter_settings_hint">Sítě Wi-Fi těmito klíčovými slovy v jejich SSID nejsou shromažďována</string>
+    <string name="reduced_metadata_title">Odesílat reporty s méně metadaty</string>
+    <string name="reduced_metadata_description">Reporty se odesílají v náhodném pořadí s časovými razítky a dalšími metadaty oříznuty</string>
+    <string name="altitude_metres">Nadmořská výška: %s m</string>
+    <string name="send_reports_automatically_never">Nikdy</string>
+    <string name="send_reports_automatically_on_any_network">Na jakékoli síti</string>
+    <string name="send_reports_automatically_on_unmetered_network">Na neměřené síti</string>
+    <string name="disabled">Vypnuté</string>
+    <string name="speed_metres_per_second">Rychlost: %s m/s</string>
+    <string name="signal_strength_dbm">Síla signálu: %d dBm</string>
+    <string name="unknown_cell_id">Neznámé cell ID</string>
+    <string name="mcc">MCC: %s</string>
+    <string name="mnc">MNC: %s</string>
+    <string name="lac">LAC: %s</string>
+    <string name="radio_type">Typ: %s</string>
+    <string name="beacon_type">Typ majáku: %s</string>
+    <string name="beacon_id">ID%d: %s</string>
+    <string name="locate_path">Cesta pro geolokaci</string>
+    <string name="settings_group_privacy">Soukromí</string>
+    <string name="wifi_filter_settings_title">Filtrovat Wi-Fi sítě podle SSID</string>
+    <string name="pause_scanning_on_low_battery_title">Pozastavit skenování při slabé baterii</string>
+    <string name="pause_scanning_on_low_battery_description">Když je úroveň baterie nižší než %d%%</string>
+    <string name="passive_scanning_title">Pasivní sběr dat</string>
+    <string name="passive_scanning_description">Pasivní sběr dat vytváří reporty v pozadí s minimálním dopadem na baterii využíváním dat vyžadovaných jinými aplikacemi.\n\nÚčinnost pasivního sběru dat bude záviset na typu vašeho zařízení, aplikacích které používáte, a na tom, zda máte k dispozici spojenou polohu..\n\nPasivní sběr dat nefunguje s Bluetooth majáky.\n\nChcete spustit pasivní sběr dat?</string>
+    <string name="permission_rationale_background_location_passive_scan">Aktualizací polohy když aplikace není aktivní vyžaduje přístup k poloze v pozadí</string>
+    <string name="db_schema_version">Verze schéma databáze: %d</string>
 </resources>
