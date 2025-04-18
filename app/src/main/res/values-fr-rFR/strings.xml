@@ -181,5 +181,5 @@
     <string name="speed_metres_per_second">Vitesse : %s m/s</string>
     <string name="altitude_metres">Altitude : %s m</string>
     <string name="signal_strength_dbm">Intensité du signal : %d dBm</string>
-    <string name="scanning_status_active">Scan. &lt;annotation style=\"status\"&gt;actif/annotation&gt;</string>
+    <string name="scanning_status_active">Scan <annotation style="status">actif</annotation></string>
 </resources>
