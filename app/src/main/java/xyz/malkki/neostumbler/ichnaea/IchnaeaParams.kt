@@ -62,7 +62,7 @@ suspend fun DataStore<Preferences>.getIchnaeaParams(): IchnaeaParams? =
         .map { prefs ->
             val baseUrl = prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)]
             val submissionPath =
-                prefs[stringPreferencesKey(PreferenceKeys.GEOLOCATE_PATH)]
+                prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH)]
                     ?: IchnaeaParams.DEFAULT_SUBMISSION_PATH
             val locatePath =
                 prefs[stringPreferencesKey(PreferenceKeys.GEOLOCATE_PATH)]
