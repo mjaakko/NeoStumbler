@@ -37,6 +37,7 @@ import java.nio.charset.StandardCharsets
 import xyz.malkki.neostumbler.BuildConfig
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.extensions.defaultLocale
+import xyz.malkki.neostumbler.extensions.toLtr
 
 @Composable
 fun AboutNeoStumbler() {
@@ -63,7 +64,11 @@ fun AboutNeoStumbler() {
 
                     Column(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)) {
                         Text(
-                            text = stringResource(R.string.app_version, BuildConfig.VERSION_NAME),
+                            text =
+                                stringResource(
+                                    R.string.app_version,
+                                    BuildConfig.VERSION_NAME.toLtr(),
+                                ),
                             style = MaterialTheme.typography.bodyMedium,
                         )
                         Text(
