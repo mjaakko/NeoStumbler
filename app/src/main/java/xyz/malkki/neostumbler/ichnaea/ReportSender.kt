@@ -2,13 +2,6 @@ package xyz.malkki.neostumbler.ichnaea
 
 import java.time.Instant
 import java.time.temporal.ChronoUnit
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.buffer
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.runningReduce
 import xyz.malkki.neostumbler.db.dao.ReportDao
 import xyz.malkki.neostumbler.db.entities.ReportWithData
 import xyz.malkki.neostumbler.extensions.roundToMultipleOf
@@ -33,7 +26,7 @@ class ReportSender(private val geosubmit: Geosubmit, private val reportDao: Repo
         reducedMetadata: Boolean,
         progressListener: (suspend (Int) -> Unit)? = null,
     ) {
-        val reportBatchFlow = channelFlow {
+        val reportBatches =
             reportDao
                 .getAllReportsForTimerange(from, to)
                 .let {
@@ -44,11 +37,15 @@ class ReportSender(private val geosubmit: Geosubmit, private val reportDao: Repo
                     }
                 }
                 .chunked(MAX_REPORTS_PER_BATCH)
-                .forEach { send(it) }
-        }
 
-        reportBatchFlow.sendBatches(reducedMetadata).collect { reportsSent ->
-            progressListener?.invoke(reportsSent)
+        var sent = 0
+
+        reportBatches.forEach {
+            it.sendBatch(reduceMetadata = reducedMetadata)
+
+            sent += it.size
+
+            progressListener?.invoke(sent)
         }
     }
 
@@ -56,58 +53,50 @@ class ReportSender(private val geosubmit: Geosubmit, private val reportDao: Repo
         reducedMetadata: Boolean,
         progressListener: (suspend (Int) -> Unit)? = null,
     ) {
-        val reportBatchFlow = flow {
-            while (true) {
-                val batch =
-                    if (reducedMetadata) {
-                        reportDao.getRandomNotUploadedReports(MAX_REPORTS_PER_BATCH)
-                    } else {
-                        reportDao.getNotUploadedReports(MAX_REPORTS_PER_BATCH)
-                    }
+        var sent = 0
 
-                if (batch.isEmpty()) {
-                    break
+        while (true) {
+            val batch =
+                if (reducedMetadata) {
+                    reportDao.getRandomNotUploadedReports(MAX_REPORTS_PER_BATCH)
+                } else {
+                    reportDao.getNotUploadedReports(MAX_REPORTS_PER_BATCH)
                 }
 
-                emit(batch)
+            if (batch.isEmpty()) {
+                break
             }
-        }
 
-        reportBatchFlow.sendBatches(reducedMetadata).collect { reportsSent ->
-            progressListener?.invoke(reportsSent)
+            batch.sendBatch(reduceMetadata = reducedMetadata)
+
+            sent += batch.size
+
+            progressListener?.invoke(sent)
         }
     }
 
-    private fun Flow<List<ReportWithData>>.sendBatches(reduceMetadata: Boolean): Flow<Int> {
-        return buffer(1, onBufferOverflow = BufferOverflow.SUSPEND)
-            .map { reportBatch ->
-                val dtos =
-                    reportBatch.map { report ->
-                        if (reduceMetadata) {
-                            report.toDto().reduceMetadata()
-                        } else {
-                            report.toDto()
-                        }
-                    }
-
-                geosubmit.sendReports(dtos)
-
-                val now = Instant.now()
-
-                val updatedReports =
-                    reportBatch
-                        .filter {
-                            // Do not update upload timestamp for reports which were reuploaded
-                            !it.report.uploaded
-                        }
-                        .map { it.report.copy(uploaded = true, uploadTimestamp = now) }
-                        .toTypedArray()
-
-                reportDao.update(*updatedReports)
-
-                reportBatch.size
+    private suspend fun List<ReportWithData>.sendBatch(reduceMetadata: Boolean) {
+        val dtos = map { report ->
+            if (reduceMetadata) {
+                report.toDto().reduceMetadata()
+            } else {
+                report.toDto()
             }
-            .runningReduce { a, b -> a + b }
+        }
+
+        geosubmit.sendReports(dtos)
+
+        val now = Instant.now()
+
+        val updatedReports =
+            filter {
+                    // Do not update upload timestamp for reports which were reuploaded
+                    !it.report.uploaded
+                }
+                .map { it.report.copy(uploaded = true, uploadTimestamp = now) }
+                .toTypedArray()
+
+        reportDao.update(*updatedReports)
     }
 
     private fun ReportWithData.toDto(): ReportDto {
