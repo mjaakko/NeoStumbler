@@ -35,7 +35,7 @@
     <string name="reports_empty">אין דיווחים עדיין</string>
     <string name="no_data">אין נתונים</string>
     <string name="permissions_not_granted">הרשאות נדרשות לא ניתנו</string>
-    <string name="failed_to_open_selected_file">כישלון בפתיחת הקובץ הנבחר</string>
+    <string name="failed_to_open_selected_file">פתיחת הקובץ הנבחר נכשלה</string>
     <string name="wifi_icon_description">סמליל Wi-Fi</string>
     <string name="cell_tower_icon_description">סמליל אנטנה סלולרית</string>
     <string name="bluetooth_icon_description">סמליל Bluetooth</string>
