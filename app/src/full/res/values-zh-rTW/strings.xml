@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="prefer_fused_location_title">偏好 Prefer fused location provider</string>
+    <string name="prefer_fused_location_title">偏好 Fused location provider</string>
     <string name="prefer_fused_location_description">Fused location provider 可組合 GPS 之外來源以確定位置</string>
     <string name="autoscan_when_moving">自動在移動時掃描</string>
     <string name="autoscan_failed_to_enable">自動掃描啟動失敗</string>

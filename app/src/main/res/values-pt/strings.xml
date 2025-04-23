@@ -65,7 +65,7 @@
     <string name="reupload_data">Re-enviar dados</string>
     <string name="add_quick_settings_tile">Adicionar botão às definições rápidas para iniciar scans mais rapidamente?</string>
     <string name="settings_ignore_wifi_scan_throttling_title">Ignorar limitações no scan de redes Wi-Fi</string>
-    <string name="submission_path">Caminho</string>
+    <string name="submission_path">Path/caminho para submissões</string>
     <string name="wifi_scan_throttling_explanation">Desative a restrição nos scans/procura de redes Wi-Fi nas definições do seu dispositivo. Normalmente pode ser desativado nas opções de programador/developers settings</string>
     <string name="show_my_location">Mostrar a minha localização</string>
     <string name="warning_icon_description">Ícone de aviso</string>
@@ -162,4 +162,37 @@
     <string name="waiting_for_location">A espera da localização</string>
     <string name="delete_reports_from_area">Apagar relatórios desta área</string>
     <string name="export_raw_database_compress">Comprimir a base de dados</string>
+    <string name="signal_strength_dbm">Força do sinal: %d dBm</string>
+    <string name="send_reports_automatically_on_any_network">Em qualquer rede</string>
+    <string name="altitude_metres">Altitude: %s m</string>
+    <string name="unknown_cell_id">ID da rede móvel desconhecido</string>
+    <string name="mcc">MCC: %s</string>
+    <string name="lac">LAC: %s</string>
+    <string name="send_reports_automatically_never">Nunca</string>
+    <string name="passive_scanning_description">A recolha passiva de dados cria relatórios em segundo plano usando informação solicitada por outras apps minimizando o impacto na bateria.\n\nA eficácia da recolha passiva de dados depende do dispositivo, das outras aplicações que está a utilizar e se tem um fornecedor de localização combinada disponível.\n\nNote que a recolha passiva de dados não funciona com beacons Bluetooth.\n\nQuer ativar a recolha passiva de dados?</string>
+    <string name="disabled">Desativado</string>
+    <string name="settings_group_privacy">Privacidade</string>
+    <string name="wifi_filter_settings_hint">Redes de Wi-Fi com alguma destas palavras-chave no nome/SSID não são colecionadas</string>
+    <string name="db_schema_version">Versão do esquema da base de dados: %d</string>
+    <string name="scanning_status_active">Scanning <annotation style="status">ativo</annotation></string>
+    <string name="scanning_status_not_active">Scanning <annotation style="status">desativado</annotation></string>
+    <string name="speed_metres_per_second">Velocidade: %s m/s</string>
+    <string name="mnc">MNC: %s</string>
+    <string name="radio_type">Tipo: %s</string>
+    <string name="beacon_type">Tipo de beacon: %s</string>
+    <string name="beacon_id">ID%d: %s</string>
+    <string name="send_reports_automatically_on_unmetered_network">Apenas em redes ilimitadas</string>
+    <string name="locate_path">Path/caminho para a geolocalização</string>
+    <string name="wifi_filter_settings_title">Filtrar redes Wi-Fi por SSID</string>
+    <plurals name="wifi_filter_settings_description">
+        <item quantity="one">%d SSID filtrado</item>
+        <item quantity="many">%d SSIDs filtrados</item>
+        <item quantity="other">%d SSIDs filtrados</item>
+    </plurals>
+    <string name="reduced_metadata_title">Enviar relatórios com menos metadados</string>
+    <string name="pause_scanning_on_low_battery_description">Quando o nível da bateria for inferior a %d%%</string>
+    <string name="reduced_metadata_description">Relatórios são enviados em ordem aleatória com carimbos de data/hora e metadados truncados</string>
+    <string name="pause_scanning_on_low_battery_title">Pausar scan quando a bateria estiver baixa</string>
+    <string name="passive_scanning_title">Recolha passiva de dados</string>
+    <string name="permission_rationale_background_location_passive_scan">Para atualizar a localização quando a app não está ativa, a app precisa de acesso à localização em segundo plano</string>
 </resources>

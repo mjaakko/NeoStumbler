@@ -175,4 +175,18 @@
     <string name="troubleshooting_not_ok" tools:ignore="Typos">Problem</string>
     <string name="waiting_for_location">Auf Standort warten</string>
     <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Ok</string>
+    <string name="settings_group_privacy">Datenschutz</string>
+    <string name="disabled">Deaktiviert</string>
+    <string name="wifi_filter_settings_title">WLANs nach SSID filtern</string>
+    <string name="wifi_filter_settings_hint">WLANs mit einem dieser Schlagwörter im Namen werden nicht aufgezeichnet</string>
+    <string name="reduced_metadata_title">Berichte mit weniger Metadaten senden</string>
+    <string name="reduced_metadata_description">Berichte werden in zufälliger Reihenfolge mit eingeschränkten Zeitstempel und Metadaten gesendet</string>
+    <string name="pause_scanning_on_low_battery_title">Scannen bei niedrigem Akku pausieren</string>
+    <string name="pause_scanning_on_low_battery_description">Wenn der Akkustand weniger als %d%% ist</string>
+    <plurals name="wifi_filter_settings_description">
+        <item quantity="one">%d SSID gefiltert</item>
+        <item quantity="other">%d SSIDs gefiltert</item>
+    </plurals>
+    <string name="passive_scanning_title">Passives Datensammeln</string>
+    <string name="permission_rationale_background_location_passive_scan">Um Standortupdates zu empfangen, wenn die App nicht aktiv ist, wird Zugriff auf den Hintergrundstandort benötigt</string>
 </resources>

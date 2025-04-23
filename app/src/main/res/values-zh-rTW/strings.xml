@@ -154,4 +154,35 @@
     <string name="delete_reports_from_area">按區域刪除報告</string>
     <string name="export_raw_database_compress">壓縮資料庫檔案</string>
     <string name="waiting_for_location">等待位置</string>
+    <string name="wifi_filter_settings_title">透過 SSID 過濾 Wi-Fi</string>
+    <string name="settings_group_privacy">隱私</string>
+    <plurals name="wifi_filter_settings_description">
+        <item quantity="other">已過濾 %d 個 SSID</item>
+    </plurals>
+    <string name="wifi_filter_settings_hint">具有那些任一關鍵字的 SSID 將不會被蒐集</string>
+    <string name="db_schema_version">資料庫結構版本：%d</string>
+    <string name="unknown_cell_id">未知的基地台編號（Cell ID）</string>
+    <string name="signal_strength_dbm">訊號強度：%d dbm</string>
+    <string name="beacon_id">ID%d: %s</string>
+    <string name="beacon_type">信標類型：%s</string>
+    <string name="send_reports_automatically_never">從不</string>
+    <string name="send_reports_automatically_on_any_network">在任何網路</string>
+    <string name="send_reports_automatically_on_unmetered_network">在非計量付費網路</string>
+    <string name="locate_path">定位路徑</string>
+    <string name="disabled">停用</string>
+    <string name="scanning_status_active">掃描<annotation style="status">中</annotation></string>
+    <string name="scanning_status_not_active">掃描<annotation style="status">未啟用</annotation></string>
+    <string name="speed_metres_per_second">速度：%s 公尺/秒</string>
+    <string name="altitude_metres">海拔：%s 公尺</string>
+    <string name="mcc">MCC: %s</string>
+    <string name="mnc">MNC: %s</string>
+    <string name="lac">LAC: %s</string>
+    <string name="radio_type">類型：%s</string>
+    <string name="reduced_metadata_title">發送較少中繼資料 (metadata) 的報告</string>
+    <string name="reduced_metadata_description">報告會以隨機順序傳送，並會移除時間戳記與其他中繼資料 (metadata)</string>
+    <string name="pause_scanning_on_low_battery_title">在低電量時暫停掃描</string>
+    <string name="pause_scanning_on_low_battery_description">當電量低於 %d%% 時</string>
+    <string name="passive_scanning_description">被動式資料蒐集會在背景中建立報告，藉由使用其他應用程式時所請求的資料，以盡量減少電池消耗。\n\n被動式資料蒐集的效果會依照你的裝置類型、正在使用的其他應用程式，以及是否有啟用融合式定位提供者（fused location provider）而有所不同。\n\n請注意，被動式資料蒐集無法搭配藍牙信標使用。\n\n您是否要啟用被動式資料蒐集？</string>
+    <string name="passive_scanning_title">被動式資料蒐集</string>
+    <string name="permission_rationale_background_location_passive_scan">在應用程式未啟動時接收定位更新，需啟用背景定位權限</string>
 </resources>
