@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import java.text.DecimalFormat
 import xyz.malkki.neostumbler.R
+import xyz.malkki.neostumbler.extensions.toLtr
 import xyz.malkki.neostumbler.scanner.ScannerService
 import xyz.malkki.neostumbler.ui.composables.shared.Gauge
 
@@ -74,6 +75,6 @@ fun GpsStatus() {
             append(satellitesTotal ?: "-")
         }
 
-        Text(text = text, style = MaterialTheme.typography.labelSmall, maxLines = 1)
+        Text(text = text.toLtr(), style = MaterialTheme.typography.labelSmall, maxLines = 1)
     }
 }

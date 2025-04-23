@@ -395,7 +395,7 @@ private fun EmitterCount(icon: ImageVector, iconDescription: String, count: Int)
     Row(
         modifier = Modifier.wrapContentSize(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.Absolute.SpaceBetween,
     ) {
         Icon(
             painter = rememberVectorPainter(icon),
