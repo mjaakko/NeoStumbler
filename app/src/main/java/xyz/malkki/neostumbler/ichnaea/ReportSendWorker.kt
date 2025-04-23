@@ -100,7 +100,7 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) :
 
         return try {
             val progressListener: suspend (Int) -> Unit = {
-                reportsSent += it
+                reportsSent = it
 
                 setProgress(createResultData(reportsSent))
             }
