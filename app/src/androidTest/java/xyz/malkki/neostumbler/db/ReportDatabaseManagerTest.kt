@@ -8,6 +8,7 @@ import java.nio.file.Path
 import kotlin.io.path.outputStream
 import kotlin.io.path.writeBytes
 import kotlin.random.Random
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -51,5 +52,20 @@ class ReportDatabaseManagerTest {
         val isValid = ReportDatabaseManager.validateDatabase(context, dbFile)
 
         assertFalse(isValid)
+    }
+
+    @Test
+    fun testOpeningDatabase() = runTest {
+        InstrumentationRegistry.getInstrumentation().context.assets.open("valid_reports.db").use {
+            input ->
+            dbFile.outputStream().use { output -> input.copyTo(output) }
+        }
+
+        val manager = ReportDatabaseManager(context)
+        manager.importDb(dbFile)
+
+        val database = manager.reportDb.value
+
+        assertTrue(database.reportDao().getReportCount().first() > 0)
     }
 }

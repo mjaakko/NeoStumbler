@@ -2,6 +2,9 @@ package xyz.malkki.neostumbler.db
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.sqlite.SQLiteConnection
+import androidx.sqlite.execSQL
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
@@ -88,6 +91,24 @@ class ReportDatabaseManager(context: Context) {
         }
 
     private fun createDatabaseInstance(): ReportDatabase {
-        return Room.databaseBuilder(appContext, ReportDatabase::class.java, DATABASE_NAME).build()
+        return Room.databaseBuilder(appContext, ReportDatabase::class.java, DATABASE_NAME)
+            .addCallback(
+                object : RoomDatabase.Callback() {
+                    override fun onOpen(connection: SQLiteConnection) {
+                        super.onOpen(connection)
+
+                        /**
+                         * Sending reports fails when there are reports without a position. This
+                         * might be caused e.g. when the insertion is not completed fully
+                         *
+                         * -> Let's fix this by removing these broken reports
+                         */
+                        connection.execSQL(
+                            "DELETE FROM Report WHERE id NOT IN (SELECT reportId FROM PositionEntity)"
+                        )
+                    }
+                }
+            )
+            .build()
     }
 }
