@@ -14,7 +14,6 @@ import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.hasKeyWithValueOfType
 import java.io.IOException
-import java.net.SocketTimeoutException
 import java.time.Instant
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.flow.first
@@ -28,6 +27,7 @@ import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.db.ReportDatabaseManager
+import xyz.malkki.neostumbler.http.isRetryable
 
 // By default, WorkManager will retry indefinitely.
 // If uploading hasn't been successful after 5 retries,
@@ -143,11 +143,6 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) :
             return false
         }
 
-        if (exception is SocketTimeoutException) {
-            // Retry timeouts because most likely we are just temporarily disconnected
-            return true
-        }
-
         if (
             exception is IchnaeaClient.HttpException &&
                 exception.httpStatusCode in HTTP_STATUS_CODE_SERVER_ERROR
@@ -156,7 +151,7 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) :
             return true
         }
 
-        return false
+        return exception.isRetryable()
     }
 
     override suspend fun getForegroundInfo(): ForegroundInfo {
