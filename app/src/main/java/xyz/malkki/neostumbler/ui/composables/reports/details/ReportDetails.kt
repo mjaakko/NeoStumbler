@@ -49,6 +49,9 @@ import xyz.malkki.neostumbler.db.entities.BluetoothBeaconEntity
 import xyz.malkki.neostumbler.db.entities.CellTowerEntity
 import xyz.malkki.neostumbler.db.entities.ReportWithData
 import xyz.malkki.neostumbler.db.entities.WifiAccessPointEntity
+import xyz.malkki.neostumbler.db.entities.latLng
+import xyz.malkki.neostumbler.domain.LatLng
+import xyz.malkki.neostumbler.extensions.roundToString
 
 private fun ReportDatabaseManager.getReport(reportId: Long): Flow<ReportWithData> =
     reportDb.flatMapLatest { it.reportDao().getReport(reportId) }
@@ -76,6 +79,22 @@ fun ReportDetailsDialog(reportId: Long, onDismiss: () -> Unit) {
     }
 }
 
+// 5 digits ~= 1m precision at the Equator
+private const val COORDINATES_DIGITS = 5
+
+@Composable
+private fun Coordinates(latLng: LatLng) {
+    Text(
+        text =
+            buildString {
+                append(latLng.latitude.roundToString(COORDINATES_DIGITS))
+                append(", ")
+                append(latLng.longitude.roundToString(COORDINATES_DIGITS))
+            },
+        style = MaterialTheme.typography.bodySmall,
+    )
+}
+
 @Composable
 private fun ReportDetails(
     reportId: Long,
@@ -96,11 +115,7 @@ private fun ReportDetails(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Text(
-            text =
-                "${report.value!!.positionEntity.latitude}, ${report.value!!.positionEntity.longitude}",
-            style = MaterialTheme.typography.bodySmall,
-        )
+        Coordinates(latLng = report.value!!.positionEntity.latLng)
 
         val decimalFormat = DecimalFormat("#.#")
 
@@ -163,6 +178,7 @@ private fun ReportDataLists(report: ReportWithData) {
                 ReportWifisList(report.wifiAccessPointEntities)
             }
         }
+
         CELLS -> {
             if (report.cellTowerEntities.isEmpty()) {
                 NoData()
@@ -170,6 +186,7 @@ private fun ReportDataLists(report: ReportWithData) {
                 ReportCellsList(report.cellTowerEntities)
             }
         }
+
         BLUETOOTHS -> {
             if (report.bluetoothBeaconEntities.isEmpty()) {
                 NoData()
