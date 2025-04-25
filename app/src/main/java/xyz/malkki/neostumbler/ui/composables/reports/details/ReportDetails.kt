@@ -52,6 +52,7 @@ import xyz.malkki.neostumbler.db.entities.WifiAccessPointEntity
 import xyz.malkki.neostumbler.db.entities.latLng
 import xyz.malkki.neostumbler.domain.LatLng
 import xyz.malkki.neostumbler.extensions.roundToString
+import xyz.malkki.neostumbler.ui.composables.shared.formattedDate
 
 private fun ReportDatabaseManager.getReport(reportId: Long): Flow<ReportWithData> =
     reportDb.flatMapLatest { it.reportDao().getReport(reportId) }
@@ -111,7 +112,12 @@ private fun ReportDetails(
             CircularProgressIndicator()
         }
     } else {
-        ReportMap(reportWithData = report.value!!)
+        Text(
+            text = formattedDate(report.value!!.report.timestamp),
+            style = MaterialTheme.typography.titleLarge,
+        )
+
+        ReportMap(modifier = Modifier.padding(top = 8.dp), reportWithData = report.value!!)
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -197,7 +203,7 @@ private fun ReportDataLists(report: ReportWithData) {
     }
 }
 
-private val listSize = Modifier.height(180.dp).fillMaxWidth().padding(top = 8.dp)
+private val listSize = Modifier.height(160.dp).fillMaxWidth().padding(top = 8.dp)
 
 @Composable
 private fun NoData() {
