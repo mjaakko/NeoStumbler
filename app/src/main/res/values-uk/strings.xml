@@ -162,4 +162,22 @@
     <string name="mls_warning_text">Служба Mozilla Location була закрита і більше не приймає подачу даних. Як альтернативу MLS, ви можете відправляти дані до beaconDB, який надає сумісну з MLS службу.\n\nЗверніть увагу, що beaconDB все ще знаходиться на етапі розробки, і це впливає на обробку ваших даних. Ви можете прочитати <annotation link="privacy_policy">політику конфіденційності</annotation> для додаткової інформації.\n\nВи хочете встановити beaconDB як кінцеву точку? Це можна налаштувати пізніше в налаштуваннях</string>
     <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Ок</string>
     <string name="troubleshooting_not_ok" tools:ignore="Typos">Не ок</string>
+    <string name="mcc">MCC: %s</string>
+    <string name="send_reports_automatically_never">Ніколи</string>
+    <string name="send_reports_automatically_on_any_network">Будь-яка мережа</string>
+    <string name="send_reports_automatically_on_unmetered_network">Без лімітування трафіку</string>
+    <string name="locate_path">Шлях для геолокації</string>
+    <string name="waiting_for_location">Очікування на місцезнаходження</string>
+    <string name="lac">LAC: %s</string>
+    <string name="altitude_metres">Висота: %s м</string>
+    <string name="speed_metres_per_second">Швидкість: %s м/с</string>
+    <string name="disabled">Вимкнено</string>
+    <string name="scanning_status_active">Сканування <annotation style="status">активне</annotation></string>
+    <string name="scanning_status_not_active">Сканування <annotation style="status">неактивне</annotation></string>
+    <string name="signal_strength_dbm">Сила сигналу: %d дБм</string>
+    <string name="mnc">MNC: %s</string>
+    <string name="radio_type">Тип: %s</string>
+    <string name="beacon_type">Тип маяка: %s</string>
+    <string name="beacon_id">ID%d: %s</string>
+    <string name="export_raw_database_compress">Стиснути файл бази даних</string>
 </resources>
