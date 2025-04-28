@@ -66,8 +66,21 @@ interface ReportDao {
     suspend fun getNotUploadedReports(count: Int): List<ReportWithData>
 
     @Transaction
-    @Query("SELECT * FROM Report WHERE uploaded = 0 ORDER BY RANDOM() ASC LIMIT :count")
-    suspend fun getRandomNotUploadedReports(count: Int): List<ReportWithData>
+    @Query("SELECT * FROM Report WHERE id IN (:ids)")
+    suspend fun getReports(ids: List<Long>): List<ReportWithData>
+
+    @Query("SELECT id FROM REPORT WHERE uploaded = 0 ORDER BY RANDOM() LIMIT :count")
+    suspend fun getRandomNotUploadedReportIds(count: Int): List<Long>
+
+    @Transaction
+    suspend fun getRandomNotUploadedReports(count: Int): List<ReportWithData> {
+        // First fetch random report IDs
+        val reportIds = getRandomNotUploadedReportIds(count)
+        // And then the reports - this cannot be done with a single query, because Room will
+        // execute this query twice and returning non-deterministic result set causes it to not be
+        // able to handle the one-to-one relation
+        return getReports(reportIds)
+    }
 
     @Transaction
     @Query("SELECT * FROM Report WHERE id = :reportId")
