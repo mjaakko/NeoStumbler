@@ -158,4 +158,26 @@
     <string name="waiting_for_location">Wachten op locatie</string>
     <string name="delete_reports_from_area">Rapporten van gebied verwĳderen</string>
     <string name="export_raw_database_compress">comprimeer het databasebestand</string>
+    <string name="settings_group_privacy">Privacy</string>
+    <string name="scanning_status_active">Scannen <annotation style="status">actief</annotation></string>
+    <string name="scanning_status_not_active">Scannen <annotation style="status">niet actief</annotation></string>
+    <string name="send_reports_automatically_never">Nooit</string>
+    <string name="send_reports_automatically_on_any_network">Via elk netwerk</string>
+    <string name="send_reports_automatically_on_unmetered_network">Via ongemeten netwerk</string>
+    <string name="disabled">Uitgeschakeld</string>
+    <string name="radio_type">Type: %s</string>
+    <string name="speed_metres_per_second">Snelheid: %s m/s</string>
+    <string name="altitude_metres">Hoogte: %s m</string>
+    <string name="beacon_type">Baken­type: %s</string>
+    <string name="signal_strength_dbm">Signaal­sterkte: %d dBm</string>
+    <string name="unknown_cell_id">Onbekende mast-id</string>
+    <string name="mcc">MCC: %s</string>
+    <string name="mnc">MNC: %s</string>
+    <string name="lac">LAC: %s</string>
+    <string name="reduced_metadata_title">Rapporten met minder meta­gegevens opsturen</string>
+    <string name="passive_scanning_title">Passieve gegevens­verzameling</string>
+    <plurals name="wifi_filter_settings_description">
+        <item quantity="one">%d SSID gefilterd</item>
+        <item quantity="other">%d SSID\'s gefilterd</item>
+    </plurals>
 </resources>
