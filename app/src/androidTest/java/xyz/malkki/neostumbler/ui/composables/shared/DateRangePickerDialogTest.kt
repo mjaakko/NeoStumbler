@@ -4,14 +4,12 @@ import android.icu.text.DateFormat
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.test.assertIsNotEnabled
-import androidx.compose.ui.test.hasScrollAction
+import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.hasText
-import androidx.compose.ui.test.isNotDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performTouchInput
-import androidx.compose.ui.test.swipeUp
+import androidx.compose.ui.test.performScrollTo
 import androidx.test.platform.app.InstrumentationRegistry
 import java.time.LocalDate
 import java.time.ZoneId
@@ -34,7 +32,7 @@ class DateRangePickerDialogTest {
     @Before
     fun setup() {
         dates = buildSet {
-            var date = LocalDate.now()
+            var date = LocalDate.now().plusMonths(1).withDayOfMonth(1).minusDays(11)
             repeat(10) {
                 add(date)
 
@@ -57,30 +55,21 @@ class DateRangePickerDialogTest {
 
     @Test
     fun testSelectingDateRange() {
-        val startDate =
-            composeTestRule.onNode(
-                hasText(" " + dates.first().format(dateFormat), substring = true)
-            )
+        val startDateMatcher = hasText(" " + dates.first().format(dateFormat), substring = true)
 
-        if (startDate.isNotDisplayed()) {
-            composeTestRule.onNode(hasScrollAction()).performTouchInput {
-                swipeUp(startY = centerY, endY = top)
-            }
-        }
+        val startDate = composeTestRule.onNode(startDateMatcher)
 
+        startDate.performScrollTo()
         startDate.performClick()
+        startDate.assertIsSelected()
 
-        val endDate =
-            composeTestRule.onNode(hasText(" " + dates.last().format(dateFormat), substring = true))
+        val endDateMatcher = hasText(" " + dates.last().format(dateFormat), substring = true)
 
-        // If the end date is not visible, scroll the calendar to show the next month
-        if (endDate.isNotDisplayed()) {
-            composeTestRule.onNode(hasScrollAction()).performTouchInput {
-                swipeUp(startY = centerY, endY = top)
-            }
-        }
+        val endDate = composeTestRule.onNode(endDateMatcher)
 
+        endDate.performScrollTo()
         endDate.performClick()
+        endDate.assertIsSelected()
 
         composeTestRule.onNodeWithText("select").performClick()
 
