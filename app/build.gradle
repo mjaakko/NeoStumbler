@@ -287,7 +287,7 @@ dependencies {
     implementation "androidx.room:room-paging:$room_version"
     androidTestImplementation "androidx.room:room-testing:$room_version"
 
-    def work_version = "2.10.0"
+    def work_version = "2.10.1"
 
     implementation "androidx.work:work-runtime:$work_version"
     implementation "androidx.work:work-runtime-ktx:$work_version"
