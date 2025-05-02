@@ -61,7 +61,7 @@
     <string name="wifi_scan_throttling">WLAN-Suchdrosselung</string>
     <string name="wifi_scan_throttling_explanation">Sie müssen die Drosselung der WLAN-Suche in Ihren Geräteeinstellungen deaktivieren, um diese Funktion zu ermöglichen. Normalerweise kann dies in den Entwicklereinstellungen getan werden</string>
     <string name="show_my_location">Zeige meinen Standort</string>
-    <string name="permission_rationale_fine_location">Damit Berichte mit nützlicher Standortdaten erstellt werden können, wird die Berechtigung „genauer Standort“ benötigt</string>
+    <string name="permission_rationale_fine_location">Damit Berichte mit nützlichen Standortdaten erstellt werden können, wird die Berechtigung „genauer Standort“ benötigt</string>
     <string name="permission_rationale_read_phone_state">Zugriff auf das Telefon wird benötigt, um Mobilfunkmasten zu scannen</string>
     <string name="permission_rationale_bluetooth">Das Scannen von Bluetooth-Beacons benötigt die Bluetooth-Berechtigung</string>
     <string name="permission_rationale_post_notifications">Das Anzeigen der Status-Benachrichtigung benötigt die Benachrichtigungsberechtigung</string>
@@ -115,7 +115,7 @@
     </plurals>
     <string name="troubleshooting_battery_optimizations_disabled">Batterieoptimierung deaktiviert</string>
     <string name="troubleshooting_accurate_location_available">Genauer Standort verfügbar</string>
-    <string name="troubleshooting_fix">Reparieren</string>
+    <string name="troubleshooting_fix">Beheben</string>
     <string name="db_prune_title">Lösche gesendete Berichte</string>
     <string name="db_prune_one_month">Nach einem Monat</string>
     <string name="db_prune_two_months">Nach zwei Monaten</string>
@@ -135,7 +135,7 @@
     <string name="app_version">Version: %s</string>
     <string name="app_variant">Variante: %s</string>
     <string name="contributors">Mitwirkende</string>
-    <string name="bug_report_button">Melde ein Fehler</string>
+    <string name="bug_report_button">Einen Bug melden</string>
     <string name="update_translations_button">Aktualisiere Übersetzung</string>
     <string name="author_text">Mit ❤️ von %1$s und %2$s erstellt</string>
     <string name="no_data">Keine Daten vorhanden</string>
