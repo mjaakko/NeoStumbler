@@ -2,7 +2,7 @@
 <resources>
     <string name="prefer_fused_location_title">Preferire provider di posizione fuso</string>
     <string name="autoscan_when_moving">Scansione automatica in movimento</string>
-    <string name="autoscan_failed_to_enable">Impossibile abilitare la scansione automatica</string>
+    <string name="autoscan_failed_to_enable_title">Impossibile abilitare la scansione automatica</string>
     <string name="permission_rationale_activity_recognition">L\'avvio automatico della scansione richiede l\'accesso all\'attività corrente</string>
     <string name="permission_rationale_background_location_autoscan">L\'avvio automatico della scansione richiede le autorizzazioni per la posizione in background</string>
     <string name="prefer_fused_location_description">Il provider di posizione fuso può combinare dati da fonti anche non GPS per determinare la posizione</string>

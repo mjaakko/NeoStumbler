@@ -2,7 +2,7 @@
 <resources>
     <string name="prefer_fused_location_title">Preferir proveedor de ubicación combinado</string>
     <string name="prefer_fused_location_description">El proveedor de ubicación combinado puede fusionar datos de otras fuentes además del GPS para determinar la ubicación</string>
-    <string name="autoscan_failed_to_enable">Falló al habilitar el escaneo automático</string>
+    <string name="autoscan_failed_to_enable_title">Falló al habilitar el escaneo automático</string>
     <string name="permission_rationale_activity_recognition">Iniciar el escaneo automáticamente requiere acceso a la actividad actual</string>
     <string name="autoscan_when_moving">Escaneo automático al moverse</string>
     <string name="permission_rationale_background_location_autoscan">Iniciar el escaneo automáticamente requiere permisos de ubicación en segundo plano</string>

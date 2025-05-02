@@ -4,7 +4,7 @@
 
     <string name="autoscan_when_moving">移動中は自動でスキャンする</string>
 
-    <string name="autoscan_failed_to_enable">自動スキャンの有効化に失敗しました</string>
+    <string name="autoscan_failed_to_enable_title">自動スキャンの有効化に失敗しました</string>
 
     <string name="permission_rationale_background_location_autoscan">
         自動的にスキャンを開始するには、バックグラウンドでの位置情報取得の許可が必要です

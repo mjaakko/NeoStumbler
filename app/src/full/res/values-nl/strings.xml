@@ -2,7 +2,7 @@
 <resources>
     <string name="permission_rationale_activity_recognition">Automatisch starten van het scannen heeft toegang nodig tot de huidige activiteit</string>
     <string name="autoscan_when_moving">Automatisch scannen tijdens bewegen</string>
-    <string name="autoscan_failed_to_enable">Activeren van automatisch scannen mislukt</string>
+    <string name="autoscan_failed_to_enable_title">Activeren van automatisch scannen mislukt</string>
     <string name="permission_rationale_background_location_autoscan">Automatisch starten van het scannen heeft rechten nodig voor achtergrond­locatie</string>
     <string name="prefer_fused_location_title">Voorkeur geven aan gefuseerde locatie­aanbieder</string>
     <string name="prefer_fused_location_description">Gefuseerde locatie­aanbieder kan gegevens van andere bronnen dan GPS combineren om de locatie te bepalen</string>
