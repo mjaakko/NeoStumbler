@@ -32,13 +32,12 @@ jobs:
         run: ./gradlew testFullDebugUnitTest
   instrumented-test:
     name: Run instrumented tests
-    # Need to use Ubuntu 22.04 because: https://github.com/ReactiveCircus/android-emulator-runner/issues/400
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        api-level: [33]
-        target: [google_apis]
-        arch: [x86_64]
+        api-level: [ 35 ]
+        target: [ google_apis ]
+        arch: [ x86_64 ]
     steps:
       - name: Delete unnecessary tools
         uses: jlumbroso/free-disk-space@v1.3.1
@@ -99,3 +98,10 @@ jobs:
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -no-metrics
           disable-animations: true
           script: ./gradlew connectedFullAndroidTest
+      - name: Upload logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs
+          path: app/build/outputs/androidTest-results/connected/debug/**/logcat-*.txt
+          retention-days: 1
