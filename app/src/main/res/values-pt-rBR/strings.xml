@@ -25,8 +25,8 @@
     <string name="reports_last_uploaded">Último envio: %s</string>
     <string name="start_scanning">Iniciar busca</string>
     <string name="stop_scanning">Parar busca</string>
-    <string name="delete_report">Excluir relatório</string>
-    <string name="delete_report_confirmation">Você tem certeza que deseja excluir o relatório?</string>
+    <string name="delete_report">Apagar relatório</string>
+    <string name="delete_report_confirmation">Você tem certeza que deseja apagar o relatório?</string>
     <plurals name="toast_reports_uploaded">
         <item quantity="one">%d relatório enviado</item>
         <item quantity="many">%d de relatórios enviados</item>
@@ -99,19 +99,19 @@
     <string name="movement_detection_significant_motion_description">Pausa a busca e o GPS quando nenhum movimento significativo é detectado. Economiza bateria, mas pode não funcionar bem em alguns dispositivos</string>
     <string name="app_language">Idioma</string>
     <string name="use_dynamic_color_ui">Usar cores dinâmicas na interface</string>
-    <string name="delete">Excluir</string>
+    <string name="delete">Apagar</string>
     <string name="db_prune_two_months">Após 2 meses</string>
-    <string name="db_prune_title">Excluir relatórios enviados</string>
+    <string name="db_prune_title">Apagar relatórios enviados</string>
     <string name="db_prune_one_month">Após um mês</string>
     <string name="db_prune_six_months">Após 6 meses</string>
-    <string name="toast_deleted_all_reports">Todos os relatórios foram excluidos</string>
-    <string name="delete_reports_by_date">Excluir relatórios pela data</string>
-    <string name="delete_all_reports">Excluir todos os relatórios</string>
-    <string name="delete_all_reports_confirmation">Você tem certeza que deseja excluir todos os relatórios?</string>
+    <string name="toast_deleted_all_reports">Todos os relatórios foram apagados</string>
+    <string name="delete_reports_by_date">Apagar relatórios pela data</string>
+    <string name="delete_all_reports">Apagar todos os relatórios</string>
+    <string name="delete_all_reports_confirmation">Você tem certeza que deseja apagar todos os relatórios?</string>
     <plurals name="toast_deleted_reports">
-        <item quantity="one">%d relatório foi excluído</item>
-        <item quantity="many">%d de relatórios foram excluídos</item>
-        <item quantity="other">%d relatórios foram excluídos</item>
+        <item quantity="one">%d relatório foi apagado</item>
+        <item quantity="many">%d de relatórios foram apagados</item>
+        <item quantity="other">%d relatórios foram apagados</item>
     </plurals>
     <string name="db_prune_never">Nunca</string>
     <string name="manage_storage_title">Gerenciar armazenamento</string>
@@ -132,7 +132,7 @@
     <string name="update_translations_button">Atualizar traduções</string>
     <string name="export_raw_database">Exportar banco de dados bruto</string>
     <string name="export_csv">Exportar como CSV</string>
-    <string name="delete_data">Excluir dados</string>
+    <string name="delete_data">Apagar dados</string>
     <string name="failed_to_open_selected_file">Falha ao abrir o arquivo selecionado</string>
     <string name="import_data">Importar dados</string>
     <string name="import_raw_database">Importar banco de dados bruto</string>
@@ -162,7 +162,7 @@
     <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Ok</string>
     <string name="system_default_language">Idioma padrão do sistema</string>
     <string name="waiting_for_location">Esperando pela localização</string>
-    <string name="delete_reports_from_area">Excluir relatórios de uma área</string>
+    <string name="delete_reports_from_area">Apagar relatórios de uma área</string>
     <string name="export_raw_database_compress">Comprimir o arquivo do banco de dados</string>
     <string name="scanning_status_active">Busca <annotation style="status">ativa</annotation></string>
     <string name="scanning_status_not_active">Busca <annotation style="status">inativa</annotation></string>
