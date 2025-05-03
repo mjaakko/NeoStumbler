@@ -101,9 +101,9 @@
     <string name="settings_group_other">שונות</string>
     <string name="wifi_filter_settings_title">סינון רשתות Wi-Fi על ידי SSID</string>
     <plurals name="wifi_filter_settings_description">
-        <item quantity="one">SSID %d סונן</item>
-        <item quantity="two">%d SDIDs סוננו</item>
-        <item quantity="other">%d SSIDs סוננו</item>
+        <item quantity="one">SSID %d מסונן</item>
+        <item quantity="two">%d SDIDs מסוננים</item>
+        <item quantity="other">%d SSIDs מסוננים</item>
     </plurals>
     <string name="wifi_filter_settings_hint">רשתות Wi-Fi עם כל אחת ממילות המפתח האלו בSSID שלהן לא נאספות</string>
     <string name="reduced_metadata_title">שליחת דיווחים עם פחות מטא-נתונים</string>
@@ -192,7 +192,7 @@
     <string name="reupload_data">העלאת נתונים מחדש</string>
     <string name="mls_warning_text">שירות המיקום של Mozilla נסגר וכבר לא מקבל נתונים. כאלטרנטיבה לMLS, ניתן לשלוח מידע לbeaconDB, שמספק שירות תואם לMLS\n\nנא לשים לב שBeaconDB עוד נמצא בפיתוח וזה משפיע על דרך הטיפול במידע שלך. אפשר לקרוא את <annotation link="privacy_policy">מדיניות הפרטיות</annotation> למידע נוסף\n\nהאם ברצונך לקבוע את beaconDB כנקודת קצה? אפשר לשנות זאת אחר כך בהגדרות</string>
     <string name="lac">LAC: %s</string>
-    <string name="passive_scanning_description">איסוף נתונים פאסיבי יוצר דיווחים ברקע עם סוללה מינימלית על ידי שימוש בנתונים האפליקציות אחרות מבקשות. \n\nהיעילות של איסוף נתונים פאסיבי תהיה תלויה בסוג המכשיר, האפליקציות האחרות שבשימוש ואם יש ספק מיקום משולב זמין.\n\nיש להוסיף שאיסוף נתונים פאסיבי לא עובד עם משואות Bluetooth.\n\nהאם להפעיל איסוף נתונים פאסיבי?</string>
+    <string name="passive_scanning_description">איסוף נתונים פאסיבי יוצר דיווחים ברקע עם סוללה מינימלית על ידי שימוש בנתונים שאפליקציות אחרות מבקשות. \n\nהיעילות של איסוף נתונים פאסיבי תהיה תלויה בסוג המכשיר, האפליקציות האחרות שבשימוש ואם יש ספק מיקום משולב זמין.\n\nיש להוסיף שאיסוף נתונים פאסיבי לא עובד עם משואות Bluetooth.\n\nהאם להפעיל איסוף נתונים פאסיבי?</string>
     <string name="report_upload_notification_channel_name">העלאות דיווחים</string>
     <string name="permission_rationale_background_location_passive_scan">קבלת עדכוני מיקום כשהאפליקציה לא פעילה דורשת גישה למיקום ברקע</string>
 </resources>
