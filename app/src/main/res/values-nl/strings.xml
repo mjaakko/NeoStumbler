@@ -183,4 +183,5 @@
     <string name="wifi_filter_settings_title">Wifi-netwerken filteren op SSID</string>
     <string name="locate_path">Pad voor geolocatie</string>
     <string name="wifi_filter_settings_hint">Wifi-netwerken met een van deze sleutel­woorden in hun SSID worden niet verzameld</string>
+    <string name="beacon_id">ID%d: %s</string>
 </resources>
