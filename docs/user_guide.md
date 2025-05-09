@@ -82,3 +82,9 @@ The statistics screen shows the number of unique transmitters detected over time
 * Also check other background restriction and battery optimization settings that the device might have
   * [dontkillmyapp.com](https://dontkillmyapp.com/) can be a helpful resource for this
 * Disable permission auto-reset for NeoStumbler in the device settings
+
+## Troubleshooting
+
+### Cannot enable automatic scanning
+
+Automatic scanning uses Google Play Services activity recognition API to detect when the device is moving. In case you're using sandboxed Google Play Services (e.g. with GrapheneOS), you need to grant the physical activity permission for *both* NeoStumbler and Google Play Services. See [this section](https://grapheneos.org/usage#sandboxed-google-play-location-sharing) from GrapheneOS documentation for more details
