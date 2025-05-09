@@ -13,7 +13,12 @@
     <string name="use">Use</string>
     <string name="stop">Stop</string>
     <string name="delete">Delete</string>
+    <string name="delete_all">Delete all</string>
     <string name="no_data">No data</string>
+
+    <string name="copy">Copy</string>
+
+    <string name="text_copied_to_clipboard">Text copied to clipboard!</string>
 
     <string name="disabled">Disabled</string>
 
@@ -282,6 +287,9 @@
         <item quantity="other">Deleted %d reports</item>
     </plurals>
     <string name="toast_deleted_all_reports">Deleted all reports</string>
+
+    <string name="crash_log_title">Crash log</string>
+    <string name="crash_log_entry_title">Crash #%d</string>
 
     <string name="about_app">About NeoStumbler</string>
     <string name="app_version">Version: %s</string>
