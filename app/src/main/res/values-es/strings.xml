@@ -195,4 +195,9 @@
     <string name="passive_scanning_title">Escaneo pasivo</string>
     <string name="passive_scanning_description">El escaneo pasivo crea informes en segundo plano con un impacto mínimo en la batería usando datos solicitados por otras aplicaciones.\n\nLa efectividad del escaneo pasivo dependerá del tipo de dispositivo, las aplicaciones que use y si tiene un proveedor de ubicación combinada disponible.\n\nTenga en cuenta que el escaneo pasivo no funciona con las balizas Bluetooth.\n\n¿Quieres activar el escaneo pasivo?</string>
     <string name="permission_rationale_background_location_passive_scan">Recibir actualizaciones de ubicación cuando la aplicación no está activa requiere permisos de acceso a la ubicación en segundo plano</string>
+    <string name="crash_log_title">Registro de errores</string>
+    <string name="text_copied_to_clipboard">¡Texto copiado al portapapeles!</string>
+    <string name="crash_log_entry_title">Error #%d</string>
+    <string name="delete_all">Eliminar todo</string>
+    <string name="copy">Copiar</string>
 </resources>
