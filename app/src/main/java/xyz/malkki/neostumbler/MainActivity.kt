@@ -43,7 +43,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import org.koin.android.ext.android.inject
-import org.koin.compose.KoinContext
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.ui.screens.MapScreen
 import xyz.malkki.neostumbler.ui.screens.ReportsScreen
@@ -77,71 +76,67 @@ class MainActivity : AppCompatActivity() {
         setContent {
             val dynamicColorState = dynamicColorFlow.collectAsState()
 
-            KoinContext {
-                NeoStumblerTheme(dynamicColor = dynamicColorState.value == true) {
-                    // A surface container using the 'background' color from the theme
-                    Surface(modifier = Modifier.fillMaxSize()) {
-                        val tabs =
-                            listOf(
-                                Tab(
-                                    title = stringResource(R.string.map_tab_title),
-                                    icon = rememberVectorPainter(Icons.Filled.Place),
-                                    render = { MapScreen() },
-                                ),
-                                Tab(
-                                    title = stringResource(R.string.reports_tab_title),
-                                    icon = rememberVectorPainter(Icons.AutoMirrored.Default.List),
-                                    render = { ReportsScreen() },
-                                ),
-                                Tab(
-                                    title = stringResource(R.string.statistics_tab_title),
-                                    icon = painterResource(id = R.drawable.statistics_24),
-                                    render = { StatisticsScreen() },
-                                ),
-                                Tab(
-                                    title = stringResource(R.string.settings_tab_title),
-                                    icon = rememberVectorPainter(Icons.Filled.Settings),
-                                    render = { SettingsScreen() },
-                                ),
-                            )
-
-                        val selectedTabIndex = rememberSaveable { mutableIntStateOf(1) }
-
-                        Scaffold(
-                            topBar = {
-                                TopAppBar(
-                                    title = { Text(text = stringResource(R.string.app_name)) },
-                                    colors =
-                                        TopAppBarDefaults.topAppBarColors(
-                                            containerColor = MaterialTheme.colorScheme.primary,
-                                            titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                                        ),
-                                    actions = {},
-                                )
-                            },
-                            bottomBar = {
-                                NavigationBar {
-                                    tabs.forEachIndexed { index, (title, icon) ->
-                                        NavigationBarItem(
-                                            icon = { Icon(icon, contentDescription = title) },
-                                            label = { Text(title) },
-                                            selected = selectedTabIndex.intValue == index,
-                                            onClick = { selectedTabIndex.intValue = index },
-                                        )
-                                    }
-                                }
-                            },
-                            content = {
-                                Column(
-                                    modifier = Modifier.fillMaxSize().padding(paddingValues = it)
-                                ) {
-                                    tabs[selectedTabIndex.intValue].render()
-                                }
-                            },
-                            contentWindowInsets =
-                                WindowInsets.systemBars.exclude(WindowInsets.displayCutout),
+            NeoStumblerTheme(dynamicColor = dynamicColorState.value == true) {
+                // A surface container using the 'background' color from the theme
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    val tabs =
+                        listOf(
+                            Tab(
+                                title = stringResource(R.string.map_tab_title),
+                                icon = rememberVectorPainter(Icons.Filled.Place),
+                                render = { MapScreen() },
+                            ),
+                            Tab(
+                                title = stringResource(R.string.reports_tab_title),
+                                icon = rememberVectorPainter(Icons.AutoMirrored.Default.List),
+                                render = { ReportsScreen() },
+                            ),
+                            Tab(
+                                title = stringResource(R.string.statistics_tab_title),
+                                icon = painterResource(id = R.drawable.statistics_24),
+                                render = { StatisticsScreen() },
+                            ),
+                            Tab(
+                                title = stringResource(R.string.settings_tab_title),
+                                icon = rememberVectorPainter(Icons.Filled.Settings),
+                                render = { SettingsScreen() },
+                            ),
                         )
-                    }
+
+                    val selectedTabIndex = rememberSaveable { mutableIntStateOf(1) }
+
+                    Scaffold(
+                        topBar = {
+                            TopAppBar(
+                                title = { Text(text = stringResource(R.string.app_name)) },
+                                colors =
+                                    TopAppBarDefaults.topAppBarColors(
+                                        containerColor = MaterialTheme.colorScheme.primary,
+                                        titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                                    ),
+                                actions = {},
+                            )
+                        },
+                        bottomBar = {
+                            NavigationBar {
+                                tabs.forEachIndexed { index, (title, icon) ->
+                                    NavigationBarItem(
+                                        icon = { Icon(icon, contentDescription = title) },
+                                        label = { Text(title) },
+                                        selected = selectedTabIndex.intValue == index,
+                                        onClick = { selectedTabIndex.intValue = index },
+                                    )
+                                }
+                            }
+                        },
+                        content = {
+                            Column(modifier = Modifier.fillMaxSize().padding(paddingValues = it)) {
+                                tabs[selectedTabIndex.intValue].render()
+                            }
+                        },
+                        contentWindowInsets =
+                            WindowInsets.systemBars.exclude(WindowInsets.displayCutout),
+                    )
                 }
             }
         }

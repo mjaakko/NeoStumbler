@@ -36,9 +36,8 @@ import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.koin.android.ext.koin.androidContext
-import org.koin.compose.KoinContext
-import org.koin.core.context.startKoin
-import org.koin.core.context.stopKoin
+import org.koin.compose.KoinIsolatedContext
+import org.koin.dsl.koinApplication
 import org.koin.dsl.module
 import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.domain.LatLng
@@ -94,8 +93,6 @@ class AreaPickerTest {
 
     @Test
     fun testAreaPicker() = runTest {
-        stopKoin()
-
         val fakeLocation =
             Position(
                 latitude = 40.689100,
@@ -104,7 +101,7 @@ class AreaPickerTest {
                 timestamp = 0,
             )
 
-        startKoin {
+        val koin = koinApplication {
             modules(
                 module {
                     androidContext(testContext)
@@ -137,7 +134,7 @@ class AreaPickerTest {
         var selectedCircle: Pair<LatLng, Double>? = null
 
         composeTestRule.setContent {
-            KoinContext {
+            KoinIsolatedContext(koin) {
                 AreaPickerDialog(
                     title = "Area picker",
                     positiveButtonText = "select",
