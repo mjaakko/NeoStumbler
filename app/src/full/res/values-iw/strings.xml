@@ -3,7 +3,7 @@
     <string name="prefer_fused_location_title">העדפת ספק מיקום משולב</string>
     <string name="permission_rationale_background_location_autoscan">התחלת סריקה באופן אוטומטי דורשת הרשאה למיקום רקע</string>
     <string name="autoscan_when_moving">סריקה אוטומטית בזמן תנועה</string>
-    <string name="autoscan_failed_to_enable">הפעלת סריקה באופן אוטומטי כשלה</string>
+    <string name="autoscan_failed_to_enable_title">הפעלת סריקה באופן אוטומטי כשלה</string>
     <string name="permission_rationale_activity_recognition">התחלת סריקה באופן אוטומטי דורשת גישה לפעולה הנוכחית</string>
     <string name="prefer_fused_location_description">ספק מיקום משולב יכול לשלב נתונים ממקורות חוץ מGPS כדי לקבוע את המיקום</string>
 </resources>

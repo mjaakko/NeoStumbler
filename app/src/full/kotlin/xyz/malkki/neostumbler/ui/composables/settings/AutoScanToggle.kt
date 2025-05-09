@@ -2,15 +2,25 @@ package xyz.malkki.neostumbler.ui.composables.settings
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Build
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.ContextCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -42,44 +52,51 @@ import xyz.malkki.neostumbler.ui.composables.shared.PermissionsDialog
 private fun DataStore<Preferences>.autoScanEnabled(): Flow<Boolean?> =
     data.map { it[booleanPreferencesKey(PreferenceKeys.AUTOSCAN_ENABLED)] }.distinctUntilChanged()
 
+private fun Context.checkGoogleApiAvailability(): Pair<Boolean, Boolean> {
+    val googleApiAvailability = GoogleApiAvailability.getInstance()
+
+    val googleApiAvailabilityCode = googleApiAvailability.isGooglePlayServicesAvailable(this)
+    val isGoogleApiAvailable = googleApiAvailabilityCode == ConnectionResult.SUCCESS
+    val isGoogleApiAvailabilityUserResolvable =
+        googleApiAvailability.isUserResolvableError(googleApiAvailabilityCode)
+
+    return isGoogleApiAvailable to isGoogleApiAvailabilityUserResolvable
+}
+
+private val REQUIRED_PERMISSIONS: Array<String> =
+    buildList {
+            add(Manifest.permission.ACCESS_FINE_LOCATION)
+            add(Manifest.permission.ACTIVITY_RECOGNITION)
+            add(Manifest.permission.READ_PHONE_STATE)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                add(Manifest.permission.POST_NOTIFICATIONS)
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                add(Manifest.permission.BLUETOOTH_SCAN)
+            } else {
+                add(Manifest.permission.BLUETOOTH)
+                add(Manifest.permission.BLUETOOTH_ADMIN)
+            }
+        }
+        .toTypedArray()
+
 @SuppressLint("MissingPermission")
 @Composable
 fun AutoScanToggle() {
     val context = LocalContext.current
-
-    val googleApiAvailability = GoogleApiAvailability.getInstance()
-
-    val googleApiAvailabilityCode = googleApiAvailability.isGooglePlayServicesAvailable(context)
-    val isGoogleApiAvailable = googleApiAvailabilityCode == ConnectionResult.SUCCESS
-    val isGoogleApiAvailabilityUserResolvable =
-        googleApiAvailability.isUserResolvableError(googleApiAvailabilityCode)
 
     val coroutineScope = rememberCoroutineScope()
 
     val settingsStore = koinInject<DataStore<Preferences>>(PREFERENCES)
     val enabled = settingsStore.autoScanEnabled().collectAsState(initial = false)
 
+    val (isGoogleApiAvailable, isGoogleApiAvailabilityUserResolvable) =
+        remember(context) { context.checkGoogleApiAvailability() }
+
     val missingPermissionsBasic = remember {
-        val neededPermissions =
-            buildList {
-                    add(Manifest.permission.ACCESS_FINE_LOCATION)
-                    add(Manifest.permission.ACTIVITY_RECOGNITION)
-                    add(Manifest.permission.READ_PHONE_STATE)
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        add(Manifest.permission.POST_NOTIFICATIONS)
-                    }
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        add(Manifest.permission.BLUETOOTH_SCAN)
-                    } else {
-                        add(Manifest.permission.BLUETOOTH)
-                        add(Manifest.permission.BLUETOOTH_ADMIN)
-                    }
-                }
-                .toTypedArray()
-
-        mutableStateOf(context.checkMissingPermissions(*neededPermissions))
+        mutableStateOf(context.checkMissingPermissions(*REQUIRED_PERMISSIONS))
     }
     // Background location permission has to be requested separately
     val missingPermissionsAdditional = remember {
@@ -91,11 +108,12 @@ fun AutoScanToggle() {
     val showBasicPermissionsDialog = rememberSaveable { mutableStateOf(false) }
     val showAdditionalPermissionsDialog = rememberSaveable { mutableStateOf(false) }
 
+    var showErrorDialog by rememberSaveable { mutableStateOf(false) }
+
     suspend fun enableAutoScan() {
         try {
             // Use timeout here so that the toggle doesn't get stuck in case the function never
-            // returns
-            // (this can happen e.g. when using a stub implementation of GPlay services)
+            // returns (this can happen e.g. when using a stub implementation of GPlay services)
             withTimeout(2.seconds) { ActivityTransitionReceiver.enable(context) }
 
             settingsStore.edit { it[booleanPreferencesKey(PreferenceKeys.AUTOSCAN_ENABLED)] = true }
@@ -104,7 +122,7 @@ fun AutoScanToggle() {
         } catch (e: Exception) {
             Timber.w(e, "Failed to enable activity transition listener")
 
-            context.showToast(ContextCompat.getString(context, R.string.autoscan_failed_to_enable))
+            showErrorDialog = true
         }
     }
 
@@ -113,6 +131,21 @@ fun AutoScanToggle() {
         settingsStore.edit { it[booleanPreferencesKey(PreferenceKeys.AUTOSCAN_ENABLED)] = false }
 
         Timber.i("Disabled activity transition listener")
+    }
+
+    if (showErrorDialog) {
+        AlertDialog(
+            properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true),
+            onDismissRequest = { showErrorDialog = false },
+            title = { Text(stringResource(R.string.autoscan_failed_to_enable_title)) },
+            text = { Text(stringResource(R.string.autoscan_failed_to_enable_description)) },
+            confirmButton = {
+                TextButton(onClick = { showErrorDialog = false }) {
+                    Text(text = stringResource(R.string.ok))
+                }
+            },
+            modifier = Modifier.fillMaxWidth().wrapContentHeight(),
+        )
     }
 
     if (showBasicPermissionsDialog.value) {
@@ -216,7 +249,7 @@ fun AutoScanToggle() {
             if (!isGoogleApiAvailable) {
                 try {
                     withContext(Dispatchers.Main) {
-                        googleApiAvailability
+                        GoogleApiAvailability.getInstance()
                             .makeGooglePlayServicesAvailable(context.getActivity()!!)
                             .await()
                     }
@@ -225,6 +258,9 @@ fun AutoScanToggle() {
                         ex,
                         "Failed to make Google Play Services available, cannot enable autoscan",
                     )
+
+                    showErrorDialog = true
+
                     return@ToggleWithAction
                 }
             }
