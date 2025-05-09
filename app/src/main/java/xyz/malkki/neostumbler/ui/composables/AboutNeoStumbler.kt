@@ -2,8 +2,6 @@ package xyz.malkki.neostumbler.ui.composables
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.os.Build
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -32,19 +30,19 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
+import androidx.core.net.toUri
 import xyz.malkki.neostumbler.BuildConfig
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.extensions.defaultLocale
 import xyz.malkki.neostumbler.extensions.toLtr
+import xyz.malkki.neostumbler.utils.getBugReportUrl
 
 @Composable
 fun AboutNeoStumbler() {
     val context = LocalContext.current
 
     fun openUrl(url: String) {
-        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+        context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
     }
 
     val showDialog = rememberSaveable { mutableStateOf(false) }
@@ -134,28 +132,6 @@ private fun getAuthorsText(): AnnotatedString {
             start = raw.indexOf(contributors),
             end = raw.indexOf(contributors) + contributors.length,
         )
-    }
-}
-
-private fun String.urlEncode(): String {
-    return URLEncoder.encode(this, StandardCharsets.UTF_8.name())
-}
-
-private fun getBugReportUrl(): String {
-    return buildString {
-        val manufacturer =
-            Build.BRAND.takeIf { !it.isNullOrBlank() }?.replaceFirstChar { it.uppercaseChar() }
-                ?: Build.MANUFACTURER
-
-        val device = "$manufacturer ${Build.MODEL}"
-
-        append(
-            "https://github.com/mjaakko/NeoStumbler/issues/new?labels=bug&template=1-bug_report.yml"
-        )
-        append("&version=${BuildConfig.VERSION_NAME.urlEncode()}")
-        append("&variant=${BuildConfig.FLAVOR.urlEncode()}")
-        append("&android-version=${Build.VERSION.RELEASE.urlEncode()}")
-        append("&device=${device.urlEncode()}")
     }
 }
 

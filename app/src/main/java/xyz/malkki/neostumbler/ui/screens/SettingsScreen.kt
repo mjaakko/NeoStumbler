@@ -21,6 +21,7 @@ import xyz.malkki.neostumbler.ui.composables.ReportReuploadButton
 import xyz.malkki.neostumbler.ui.composables.settings.AutoScanToggle
 import xyz.malkki.neostumbler.ui.composables.settings.AutoUploadToggle
 import xyz.malkki.neostumbler.ui.composables.settings.CoverageLayerSettings
+import xyz.malkki.neostumbler.ui.composables.settings.CrashLogSettingsItem
 import xyz.malkki.neostumbler.ui.composables.settings.DbPruneSettings
 import xyz.malkki.neostumbler.ui.composables.settings.FusedLocationToggle
 import xyz.malkki.neostumbler.ui.composables.settings.IgnoreScanThrottlingToggle
@@ -128,6 +129,8 @@ fun SettingsScreen() {
 
             TroubleshootingSettingsItem()
             ManageStorageSettingsItem()
+
+            CrashLogSettingsItem()
         }
 
         Spacer(modifier = Modifier.height(8.dp))

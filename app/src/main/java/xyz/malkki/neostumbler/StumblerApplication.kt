@@ -14,6 +14,7 @@ import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import java.time.Duration
+import kotlin.io.path.createDirectories
 import kotlin.io.path.deleteIfExists
 import kotlin.io.path.deleteRecursively
 import kotlin.io.path.exists
@@ -34,6 +35,8 @@ import org.koin.dsl.module
 import timber.log.Timber
 import xyz.malkki.neostumbler.beacons.IBeaconParser
 import xyz.malkki.neostumbler.beacons.StubDistanceCalculator
+import xyz.malkki.neostumbler.crashlog.CrashLogManager
+import xyz.malkki.neostumbler.crashlog.FileCrashLogManager
 import xyz.malkki.neostumbler.db.DbPruneWorker
 import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.export.CsvExporter
@@ -45,6 +48,7 @@ import xyz.malkki.neostumbler.scanner.postprocess.postProcessorsModule
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
 import xyz.malkki.neostumbler.ui.viewmodel.ReportsViewModel
 import xyz.malkki.neostumbler.ui.viewmodel.StatisticsViewModel
+import xyz.malkki.neostumbler.utils.FileLoggingUncaughtExceptionHandler
 import xyz.malkki.neostumbler.utils.OneTimeActionHelper
 
 val PREFERENCES = named("preferences")
@@ -69,8 +73,19 @@ class StumblerApplication : Application() {
             Timber.plant(Timber.DebugTree())
         }
 
+        val crashLogDirectory = filesDir.toPath().resolve("crash_log").createDirectories()
+
+        Thread.setDefaultUncaughtExceptionHandler(
+            FileLoggingUncaughtExceptionHandler(
+                directory = crashLogDirectory,
+                nextHandler = Thread.getDefaultUncaughtExceptionHandler(),
+            )
+        )
+
         startKoin {
             androidContext(this@StumblerApplication)
+
+            modules(module { single<CrashLogManager> { FileCrashLogManager(crashLogDirectory) } })
 
             modules(module { single { ReportDatabaseManager(get()) } })
 

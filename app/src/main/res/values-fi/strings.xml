@@ -10,7 +10,12 @@
     <string name="use">Käytä</string>
     <string name="stop">Lopeta</string>
     <string name="delete">Poista</string>
+    <string name="delete_all">Poista kaikki</string>
     <string name="no_data">Ei tietoja</string>
+
+    <string name="copy">Kopioi</string>
+
+    <string name="text_copied_to_clipboard">Teksti kopioitu leikepöydälle!</string>
 
     <string name="disabled">Ei käytössä</string>
 
@@ -287,6 +292,9 @@
     </plurals>
 
     <string name="toast_deleted_all_reports">Kaikki raportit poistettu</string>
+
+    <string name="crash_log_title">Virheloki</string>
+    <string name="crash_log_entry_title">Virhe #%d</string>
 
     <string name="about_app">Tietoja NeoStumblerista</string>
     <string name="app_version">Versio: %s</string>
