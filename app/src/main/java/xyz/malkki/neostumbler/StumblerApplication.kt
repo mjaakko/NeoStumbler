@@ -3,6 +3,7 @@ package xyz.malkki.neostumbler
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.Context
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.datastore.core.DataStore
@@ -24,9 +25,11 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import org.altbeacon.beacon.AltBeaconParser
-import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.BeaconManager
 import org.altbeacon.beacon.BeaconParser
+import org.altbeacon.beacon.Settings
+import org.altbeacon.beacon.distance.DistanceCalculator
+import org.altbeacon.beacon.distance.DistanceCalculatorFactory
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.viewModel
@@ -209,12 +212,21 @@ class StumblerApplication : Application() {
         // Disable manifest checking, which seems to cause crashes on certain devices
         BeaconManager.setManifestCheckingDisabled(true)
 
-        // Use stub distance calculator to avoid making unnecessary requests for fetching distance
-        // calibrations used by the Beacon Library
-        Beacon.setDistanceCalculator(StubDistanceCalculator)
-
         try {
             val beaconManager = BeaconManager.getInstanceForApplication(this)
+
+            beaconManager.adjustSettings(
+                Settings(
+                    distanceCalculatorFactory =
+                        object : DistanceCalculatorFactory {
+                            override fun getInstance(context: Context): DistanceCalculator {
+                                // Use stub distance calculator to avoid making unnecessary requests
+                                // for fetching distance calibrations used by the Beacon Library
+                                return StubDistanceCalculator
+                            }
+                        }
+                )
+            )
 
             // Try forcing foreground mode (this doesn't seem to work)
             beaconManager.setEnableScheduledScanJobs(false)

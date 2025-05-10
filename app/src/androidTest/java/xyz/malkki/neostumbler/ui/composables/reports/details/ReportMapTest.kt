@@ -33,9 +33,8 @@ import org.awaitility.kotlin.untilAsserted
 import org.junit.Rule
 import org.junit.Test
 import org.koin.android.ext.koin.androidContext
-import org.koin.compose.KoinContext
-import org.koin.core.context.startKoin
-import org.koin.core.context.stopKoin
+import org.koin.compose.KoinIsolatedContext
+import org.koin.dsl.koinApplication
 import org.koin.dsl.module
 import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.constants.PreferenceKeys
@@ -92,8 +91,6 @@ class ReportMapTest {
 
     @Test
     fun testReportMapQueriesLocationFromConfiguredEndpoint() = runTest {
-        stopKoin()
-
         val settingsStore =
             PreferenceDataStoreFactory.create(
                 scope = CoroutineScope(coroutineContext + Dispatchers.IO),
@@ -106,7 +103,7 @@ class ReportMapTest {
             prefs[stringPreferencesKey(PreferenceKeys.GEOLOCATE_PATH)] = "/geolocate"
         }
 
-        startKoin {
+        val koin = koinApplication {
             modules(
                 module {
                     androidContext(testContext)
@@ -121,7 +118,7 @@ class ReportMapTest {
         }
 
         composeTestRule.setContent {
-            KoinContext {
+            KoinIsolatedContext(koin) {
                 ReportMap(
                     reportWithData =
                         ReportWithData(
