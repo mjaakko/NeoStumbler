@@ -6,4 +6,5 @@
     <string name="permission_rationale_background_location_autoscan">Automatisch starten van het scannen heeft rechten nodig voor achtergrond­locatie</string>
     <string name="prefer_fused_location_title">Voorkeur geven aan gefuseerde locatie­aanbieder</string>
     <string name="prefer_fused_location_description">Gefuseerde locatie­aanbieder kan gegevens van andere bronnen dan GPS combineren om de locatie te bepalen</string>
+    <string name="autoscan_failed_to_enable_description">Automatisch scannen maakt gebruik van de activiteits­herkenning van Google Play Services, die mogelĳk niet beschikbaar is op uw apparaat</string>
 </resources>
