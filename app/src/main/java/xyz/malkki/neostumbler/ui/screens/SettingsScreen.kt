@@ -39,9 +39,112 @@ import xyz.malkki.neostumbler.ui.composables.troubleshooting.TroubleshootingSett
 import xyz.malkki.neostumbler.ui.modifiers.handleDisplayCutouts
 
 @Composable
-fun SettingsScreen() {
+private fun ReportSettings() {
+    SettingsGroup(title = stringResource(id = R.string.settings_group_reports)) {
+        GeosubmitEndpointSettings()
+        CoverageLayerSettings()
+        AutoUploadToggle()
+        DbPruneSettings()
+    }
+}
+
+@Composable
+private fun ScanningSettings() {
     val context = LocalContext.current
 
+    SettingsGroup(title = stringResource(id = R.string.settings_group_scanning)) {
+        MovementDetectorSettings()
+        FusedLocationToggle()
+        IgnoreScanThrottlingToggle()
+
+        SliderSetting(
+            title = stringResource(R.string.pause_scanning_on_low_battery_title),
+            preferenceKey = PreferenceKeys.PAUSE_ON_BATTERY_LEVEL_THRESHOLD,
+            range = 0..50,
+            step = 5,
+            valueFormatter = {
+                if (it == 0) {
+                    context.getString(R.string.disabled)
+                } else {
+                    context.getString(R.string.pause_scanning_on_low_battery_description, it)
+                }
+            },
+            default = 0,
+        )
+        SliderSetting(
+            title = stringResource(R.string.wifi_scan_frequency),
+            preferenceKey = PreferenceKeys.WIFI_SCAN_DISTANCE,
+            // Some translations assume this will always be a multiple of ten
+            range = 10..250,
+            step = 10,
+            valueFormatter = {
+                ContextCompat.getString(context, R.string.every_x_meters).format(it)
+            },
+            default = ScannerService.DEFAULT_WIFI_SCAN_DISTANCE,
+        )
+
+        SliderSetting(
+            title = stringResource(R.string.cell_tower_scan_frequency),
+            preferenceKey = PreferenceKeys.CELL_SCAN_DISTANCE,
+            // Some translations assume this will always be a multiple of ten
+            range = 20..500,
+            step = 20,
+            valueFormatter = {
+                ContextCompat.getString(context, R.string.every_x_meters).format(it)
+            },
+            default = ScannerService.DEFAULT_CELL_SCAN_DISTANCE,
+        )
+
+        SettingsToggle(
+            title = stringResource(id = R.string.moving_device_filter_title),
+            description = stringResource(id = R.string.moving_device_filter_description),
+            preferenceKey = PreferenceKeys.FILTER_MOVING_DEVICES,
+            default = true,
+        )
+
+        PassiveScanToggle()
+        AutoScanToggle()
+    }
+}
+
+@Composable
+private fun PrivacySettings() {
+    SettingsGroup(title = stringResource(id = R.string.settings_group_privacy)) {
+        WifiFilterSettings()
+
+        SettingsToggle(
+            title = stringResource(id = R.string.reduced_metadata_title),
+            description = stringResource(id = R.string.reduced_metadata_description),
+            preferenceKey = PreferenceKeys.REDUCED_METADATA,
+            default = false,
+        )
+    }
+}
+
+@Composable
+private fun OtherSettings() {
+    SettingsGroup(title = stringResource(id = R.string.settings_group_other)) {
+        ScannerNotificationStyleSettings()
+        LanguageSwitcher()
+
+        // Dynamic color is available on Android 12+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            SettingsToggle(
+                title = stringResource(id = R.string.use_dynamic_color_ui),
+                preferenceKey = PreferenceKeys.DYNAMIC_COLOR_THEME,
+                default = false,
+            )
+        }
+
+        TroubleshootingSettingsItem()
+        ManageStorageSettingsItem()
+
+        CrashLogSettingsItem()
+    }
+}
+
+@Composable
+fun SettingsScreen() {
     Column(
         modifier =
             Modifier.padding(horizontal = 16.dp)
@@ -50,88 +153,13 @@ fun SettingsScreen() {
     ) {
         Spacer(modifier = Modifier.height(16.dp))
 
-        SettingsGroup(title = stringResource(id = R.string.settings_group_reports)) {
-            GeosubmitEndpointSettings()
-            CoverageLayerSettings()
-            AutoUploadToggle()
-            DbPruneSettings()
-        }
+        ReportSettings()
 
-        SettingsGroup(title = stringResource(id = R.string.settings_group_scanning)) {
-            MovementDetectorSettings()
-            FusedLocationToggle()
-            IgnoreScanThrottlingToggle()
+        ScanningSettings()
 
-            SliderSetting(
-                title = stringResource(R.string.pause_scanning_on_low_battery_title),
-                preferenceKey = PreferenceKeys.PAUSE_ON_BATTERY_LEVEL_THRESHOLD,
-                range = 0..50,
-                step = 5,
-                valueFormatter = {
-                    if (it == 0) {
-                        context.getString(R.string.disabled)
-                    } else {
-                        context.getString(R.string.pause_scanning_on_low_battery_description, it)
-                    }
-                },
-                default = 0,
-            )
-            SliderSetting(
-                title = stringResource(R.string.wifi_scan_frequency),
-                preferenceKey = PreferenceKeys.WIFI_SCAN_DISTANCE,
-                // Some translations assume this will always be a multiple of ten
-                range = 10..250,
-                step = 10,
-                valueFormatter = {
-                    ContextCompat.getString(context, R.string.every_x_meters).format(it)
-                },
-                default = ScannerService.DEFAULT_WIFI_SCAN_DISTANCE,
-            )
+        PrivacySettings()
 
-            SliderSetting(
-                title = stringResource(R.string.cell_tower_scan_frequency),
-                preferenceKey = PreferenceKeys.CELL_SCAN_DISTANCE,
-                // Some translations assume this will always be a multiple of ten
-                range = 20..500,
-                step = 20,
-                valueFormatter = {
-                    ContextCompat.getString(context, R.string.every_x_meters).format(it)
-                },
-                default = ScannerService.DEFAULT_CELL_SCAN_DISTANCE,
-            )
-            PassiveScanToggle()
-            AutoScanToggle()
-        }
-
-        SettingsGroup(title = stringResource(id = R.string.settings_group_privacy)) {
-            WifiFilterSettings()
-
-            SettingsToggle(
-                title = stringResource(id = R.string.reduced_metadata_title),
-                description = stringResource(id = R.string.reduced_metadata_description),
-                preferenceKey = PreferenceKeys.REDUCED_METADATA,
-                default = false,
-            )
-        }
-
-        SettingsGroup(title = stringResource(id = R.string.settings_group_other)) {
-            ScannerNotificationStyleSettings()
-            LanguageSwitcher()
-
-            // Dynamic color is available on Android 12+
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                SettingsToggle(
-                    title = stringResource(id = R.string.use_dynamic_color_ui),
-                    preferenceKey = PreferenceKeys.DYNAMIC_COLOR_THEME,
-                    default = false,
-                )
-            }
-
-            TroubleshootingSettingsItem()
-            ManageStorageSettingsItem()
-
-            CrashLogSettingsItem()
-        }
+        OtherSettings()
 
         Spacer(modifier = Modifier.height(8.dp))
 

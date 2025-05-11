@@ -185,6 +185,11 @@
 
     <string name="every_x_meters">Joka %d. metri</string>
 
+    <string name="moving_device_filter_title">Suodata liikkuvat laitteet</string>
+    <string name="moving_device_filter_description">
+        Liikkuvat Wi-Fi -verkot ja Bluetooth-majakat tunnistetaan automaattisesti ja jätetään pois raporteista
+    </string>
+
     <string name="movement_detection">Liikkeen tunnistus</string>
     <string name="movement_detection_none_title">Ei käytössä</string>
     <string name="movement_detection_none_description">Skannaamista jatketaan myös pysähdyksissä</string>

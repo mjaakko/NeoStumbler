@@ -5,11 +5,11 @@ import org.altbeacon.beacon.Beacon
 
 data class BluetoothBeacon(
     val macAddress: String,
-    val beaconType: Int?,
-    val id1: String?,
-    val id2: String?,
-    val id3: String?,
-    val signalStrength: Int,
+    val beaconType: Int? = null,
+    val id1: String? = null,
+    val id2: String? = null,
+    val id3: String? = null,
+    val signalStrength: Int? = null,
     override val timestamp: Long,
 ) : ObservedDevice<String> {
     override val uniqueKey: String

@@ -187,6 +187,11 @@
     <string name="cell_tower_scan_frequency">Cell tower scan frequency</string>
     <string name="every_x_meters">Every %d meters</string>
 
+    <string name="moving_device_filter_title">Filter moving devices</string>
+    <string name="moving_device_filter_description">
+        Moving Wi-Fi networks and Bluetooth beacons are automatically detected and filtered from reports
+    </string>
+
     <string name="movement_detection">Movement detection</string>
     <string name="movement_detection_none_title">None</string>
     <string name="movement_detection_none_description">Keep scanning even when not moving</string>

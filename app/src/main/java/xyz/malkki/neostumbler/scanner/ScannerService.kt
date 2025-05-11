@@ -71,7 +71,9 @@ import xyz.malkki.neostumbler.scanner.movement.LocationBasedMovementDetector
 import xyz.malkki.neostumbler.scanner.movement.MovementDetector
 import xyz.malkki.neostumbler.scanner.movement.MovementDetectorType
 import xyz.malkki.neostumbler.scanner.movement.SignificantMotionMovementDetector
+import xyz.malkki.neostumbler.scanner.postprocess.AutoDetectingMovingWifiBluetoothFilterer
 import xyz.malkki.neostumbler.scanner.postprocess.HiddenWifiFilterer
+import xyz.malkki.neostumbler.scanner.postprocess.ReportPostProcessor
 import xyz.malkki.neostumbler.scanner.postprocess.SsidBasedWifiFilterer
 import xyz.malkki.neostumbler.scanner.quicksettings.ScannerTileService
 import xyz.malkki.neostumbler.scanner.source.AirPressureSource
@@ -348,6 +350,12 @@ class ScannerService : Service() {
 
         val airPressureSource = getAirPressureSource()
 
+        val filterMovingDevices =
+            settingsStore.getOrDefault(
+                booleanPreferencesKey(PreferenceKeys.FILTER_MOVING_DEVICES),
+                true,
+            )
+
         val scanner =
             WirelessScanner(
                 locationSource = { locationFlow },
@@ -366,7 +374,15 @@ class ScannerService : Service() {
                 },
                 airPressureSource = { airPressureSource.getAirPressureFlow(LOCATION_INTERVAL / 2) },
                 movementDetector = movementDetector,
-                postProcessors = listOf(HiddenWifiFilterer(), SsidBasedWifiFilterer(wifiFilterList)),
+                postProcessors =
+                    buildList<ReportPostProcessor> {
+                        add(HiddenWifiFilterer())
+                        add(SsidBasedWifiFilterer(wifiFilterList))
+
+                        if (filterMovingDevices) {
+                            add(AutoDetectingMovingWifiBluetoothFilterer())
+                        }
+                    },
             )
 
         scanner.createReports().collect { reportData ->
