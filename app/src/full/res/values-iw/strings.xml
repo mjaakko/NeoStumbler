@@ -6,4 +6,5 @@
     <string name="autoscan_failed_to_enable_title">הפעלת סריקה באופן אוטומטי כשלה</string>
     <string name="permission_rationale_activity_recognition">התחלת סריקה באופן אוטומטי דורשת גישה לפעולה הנוכחית</string>
     <string name="prefer_fused_location_description">ספק מיקום משולב יכול לשלב נתונים ממקורות חוץ מGPS כדי לקבוע את המיקום</string>
+    <string name="autoscan_failed_to_enable_description">סריקה אוטומטית משתמשת בזיהוי הפעולות של שירותי Google Play, שעלולה לא להיות זמינה במכשירך</string>
 </resources>
