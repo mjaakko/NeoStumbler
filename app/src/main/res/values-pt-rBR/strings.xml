@@ -202,4 +202,6 @@
     <string name="delete_all">Apagar tudo</string>
     <string name="crash_log_entry_title">Falha #%d</string>
     <string name="crash_log_title">Registros de falha</string>
+    <string name="moving_device_filter_title">Filtrar dispositivos móveis</string>
+    <string name="moving_device_filter_description">Redes Wi-Fi e sinalizadores Bluetooth que se movem são detectadas automaticamente e filtradas dos relatórios</string>
 </resources>

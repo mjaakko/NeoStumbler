@@ -190,4 +190,9 @@
     <string name="pause_scanning_on_low_battery_title">Scannen pauzeren bĳ laag accu­percentage</string>
     <string name="pause_scanning_on_low_battery_description">Wanneer het accu­percentage lager is dan %d%%</string>
     <string name="permission_rationale_background_location_passive_scan">Om locatie-updates te ontvangen wanneer de app niet actief is, is toegang tot de locatie op de achtergrond vereist</string>
+    <string name="copy">Kopiëren</string>
+    <string name="text_copied_to_clipboard">Tekst gekopieerd naar klembord!</string>
+    <string name="crash_log_title">Crash­logboek</string>
+    <string name="crash_log_entry_title">Crash #%d</string>
+    <string name="delete_all">Alles verwĳderen</string>
 </resources>

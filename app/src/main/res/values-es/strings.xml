@@ -200,4 +200,6 @@
     <string name="crash_log_entry_title">Error #%d</string>
     <string name="delete_all">Eliminar todo</string>
     <string name="copy">Copiar</string>
+    <string name="moving_device_filter_description">Las redes Wi-Fi y balizas Bluetooth móviles se detectarán y filtrarán automáticamente</string>
+    <string name="moving_device_filter_title">Filtrar dispositivos móviles</string>
 </resources>
