@@ -30,7 +30,7 @@
     <string name="reports">דיווחים:</string>
     <string name="reports_total">דיווחים בסה\"כ:%d</string>
     <string name="reports_not_uploaded">דיווחים שלא הועלו:%d</string>
-    <string name="reports_last_uploaded">דיווחים שהועלו בפעם האחרונה:%s</string>
+    <string name="reports_last_uploaded">פעם אחרונה שהועלו דיווחים:%s</string>
     <string name="reports_last_uploaded_never">מעולם לא</string>
     <string name="reports_empty">אין דיווחים עדיין</string>
     <string name="no_data">אין נתונים</string>
@@ -54,7 +54,7 @@
     <string name="ignore_battery_optimizations_title">התעלמות ממיטוב סוללה</string>
     <string name="battery_optimizations_not_disabled_warning">מיטוב סוללה לא כובה</string>
     <string name="send_reports_automatically_title">שליחת דיווחים באופן אוטומטי</string>
-    <string name="send_reports_automatically_never">אף פעם</string>
+    <string name="send_reports_automatically_never">לעולם לא</string>
     <string name="send_reports_automatically_on_any_network">בכל רשת</string>
     <string name="send_reports_automatically_on_unmetered_network">ברשת לא מדודה</string>
     <string name="export_data">ייצוא מידע</string>
@@ -107,7 +107,7 @@
     </plurals>
     <string name="wifi_filter_settings_hint">רשתות Wi-Fi עם כל אחת ממילות המפתח האלו בSSID שלהן לא נאספות</string>
     <string name="reduced_metadata_title">שליחת דיווחים עם פחות מטא-נתונים</string>
-    <string name="reduced_metadata_description">דיווחים נשלחים בסדר אקראי כשחותמות הזמן ועוד מטא-נתונים נחתכים</string>
+    <string name="reduced_metadata_description">דיווחים נשלחים בסדר אקראי תוך כדי שחותמות הזמן ועוד מטא-נתונים נחתכים</string>
     <string name="pause_scanning_on_low_battery_description">כשרמת הסוללה נמצאת מתחת ל%d%%</string>
     <string name="wifi_scan_frequency">תדירות סריקת Wi-Fi</string>
     <string name="pause_scanning_on_low_battery_title">השהיית הסריקה כשהסוללה חלשה</string>
@@ -144,7 +144,7 @@
     <string name="db_prune_one_month">אחרי חודש אחד</string>
     <string name="db_prune_two_months">אחרי חודשיים</string>
     <string name="db_prune_six_months">אחרי שישה חודשים</string>
-    <string name="db_prune_never">אף פעם</string>
+    <string name="db_prune_never">לעולם לא</string>
     <string name="manage_storage_title">ניהול האיחסון</string>
     <string name="db_size">גודל מסד נתונים:%s</string>
     <string name="db_schema_version">גרסת מבנה מסד נתונים:%d</string>
