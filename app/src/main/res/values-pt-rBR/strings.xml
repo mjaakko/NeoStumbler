@@ -148,7 +148,7 @@
     <string name="wifi_scan_frequency">Frequência de busca por redes Wi-Fi</string>
     <string name="every_x_meters">A cada %d metros</string>
     <string name="cell_tower_scan_frequency">Frequência de busca por redes móveis</string>
-    <string name="map_tile_source">Fonte das ladrilhas do mapa</string>
+    <string name="map_tile_source">Fonte dos blocos do mapa</string>
     <string name="reports_last_uploaded_never">nunca</string>
     <string name="reports_empty">Nenhum relatório ainda</string>
     <string name="no_endpoint_configured">Nenhum ponto de recolha configurado</string>
