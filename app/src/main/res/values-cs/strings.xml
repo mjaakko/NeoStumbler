@@ -195,4 +195,11 @@
     <string name="passive_scanning_description">Pasivní sběr dat vytváří reporty v pozadí s minimálním dopadem na baterii využíváním dat vyžadovaných jinými aplikacemi.\n\nÚčinnost pasivního sběru dat bude záviset na typu vašeho zařízení, aplikacích které používáte, a na tom, zda máte k dispozici spojenou polohu..\n\nPasivní sběr dat nefunguje s Bluetooth majáky.\n\nChcete spustit pasivní sběr dat?</string>
     <string name="permission_rationale_background_location_passive_scan">Aktualizací polohy když aplikace není aktivní vyžaduje přístup k poloze v pozadí</string>
     <string name="db_schema_version">Verze schéma databáze: %d</string>
+    <string name="delete_all">Smazat vše</string>
+    <string name="copy">Kopírovat</string>
+    <string name="text_copied_to_clipboard">Text zkopírován do schránky!</string>
+    <string name="crash_log_title">Záznam chyby</string>
+    <string name="moving_device_filter_description">Pohybující se sítě Wi-Fi a Bluetooth majáky jsou automaticky detekovány a filtrovány z reportů</string>
+    <string name="moving_device_filter_title">Filtrovat pohybující zařízení</string>
+    <string name="crash_log_entry_title">Chyba #%d</string>
 </resources>
