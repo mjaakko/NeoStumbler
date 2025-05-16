@@ -29,6 +29,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
+import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
@@ -48,10 +49,11 @@ fun SliderSetting(
     step: Int = 1,
     valueFormatter: (Int) -> String = { it.toString() },
     default: Int,
+    settingsStore: DataStore<Preferences> = koinInject<DataStore<Preferences>>(PREFERENCES),
+    saveButtonText: String = stringResource(R.string.save),
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    val settingsStore = koinInject<DataStore<Preferences>>(PREFERENCES)
     val preferenceValue = settingsStore.getValue(preferenceKey).collectAsState(initial = default)
 
     val sliderValue =
@@ -84,7 +86,10 @@ fun SliderSetting(
                     ) {
                         Slider(
                             value = sliderValue.intValue.toFloat(),
-                            onValueChange = { sliderValue.intValue = it.toInt() },
+                            onValueChange = {
+                                // roundToInt to avoid problems with floating point errors
+                                sliderValue.intValue = it.roundToInt()
+                            },
                             steps = ((range.endInclusive - range.start) / step) - 1,
                             valueRange = range.start.toFloat()..range.endInclusive.toFloat(),
                         )
@@ -107,7 +112,7 @@ fun SliderSetting(
                             }
                         },
                     ) {
-                        Text(text = stringResource(R.string.save))
+                        Text(text = saveButtonText)
                     }
                 }
             }
