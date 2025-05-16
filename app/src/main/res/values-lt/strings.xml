@@ -195,4 +195,11 @@
     <string name="pause_scanning_on_low_battery_title">Pristabdyti skenavimą, nukritus akumuliatoriaus įkrovai</string>
     <string name="pause_scanning_on_low_battery_description">Įkrovai nukritus žemiau %d%%</string>
     <string name="permission_rationale_background_location_passive_scan">Vietovės atnaujinimams gauti kai programa nėra aktyvi reikia leidimo pasiekti vietovę kai programa veikia fone</string>
+    <string name="delete_all">Šalinti visas</string>
+    <string name="copy">Kopijuoti</string>
+    <string name="crash_log_title">Strigčių žurnalas</string>
+    <string name="crash_log_entry_title">Strigtis Nr. %d</string>
+    <string name="moving_device_filter_description">Mobilieji belaidžiai tinklai ir „Bluetooth“ siųstuvai automatiškai aptinkami ir neįtraukiami į ataskaitas</string>
+    <string name="moving_device_filter_title">Neįtraukti mobiliųjų įrenginių</string>
+    <string name="text_copied_to_clipboard">Tekstas nukopijuotas į iškarpinę!</string>
 </resources>
