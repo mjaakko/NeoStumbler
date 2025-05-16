@@ -23,6 +23,7 @@
         <item quantity="one">Wysłano %d raport</item>
         <item quantity="few">Wysłano %d raporty</item>
         <item quantity="many">Wysłano %d raportów</item>
+        <item quantity="other">Wysłano %d raportów</item>
     </plurals>
     <string name="notification_sending_reports">Wysyłanie raportów</string>
     <string name="notification_wireless_scanning_title">Skanowanie aktywne</string>
@@ -30,6 +31,7 @@
         <item quantity="one">Stworzono %d raport</item>
         <item quantity="few">Stworzono %d raporty</item>
         <item quantity="many">Stworzono %d raportów</item>
+        <item quantity="other">Stworzono %d raportów</item>
     </plurals>
     <string name="satellites_in_use">%1$d⁄%2$d satelitów w użyciu</string>
     <string name="export_csv">Eksportuj jako CSV</string>
@@ -63,6 +65,7 @@
         <item quantity="one">Usunięto %d raport</item>
         <item quantity="few">Usunięto %d raporty</item>
         <item quantity="many">Usunięto %d raportów</item>
+        <item quantity="other">Usunięto %d raportów</item>
     </plurals>
     <string name="toast_deleted_all_reports">Usunięto wszystkie raporty</string>
     <string name="author_text">Stworzone z ❤️ przez %1$s i %2$s</string>
@@ -77,6 +80,7 @@
         <item quantity="one">Zaimportowano bazę danych z %d raportem</item>
         <item quantity="few">Zaimportowano bazę danych z %d raportami</item>
         <item quantity="many">Zaimportowano bazę danych z %d raportami</item>
+        <item quantity="other">Zaimportowano bazę danych z %d raportami</item>
     </plurals>
     <string name="import_raw_database_description">Importowanie bazy danych nadpisze obecną bazę</string>
     <string name="use">Użyj</string>
