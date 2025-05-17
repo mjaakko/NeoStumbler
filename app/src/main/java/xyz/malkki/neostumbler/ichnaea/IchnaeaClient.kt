@@ -15,11 +15,11 @@ import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okio.BufferedSink
-import org.apache.commons.io.output.CloseShieldOutputStream
 import xyz.malkki.neostumbler.extensions.executeSuspending
 import xyz.malkki.neostumbler.ichnaea.dto.GeolocateRequestDto
 import xyz.malkki.neostumbler.ichnaea.dto.GeolocateResponseDto
 import xyz.malkki.neostumbler.ichnaea.dto.ReportDto
+import xyz.malkki.neostumbler.utils.io.closeShielded
 
 private const val BUFFER_SIZE = 8 * 1024
 
@@ -88,9 +88,9 @@ class IchnaeaClient(
             override fun contentType(): MediaType = JSON_MEDIA_TYPE
 
             override fun writeTo(sink: BufferedSink) {
-                GZIPOutputStream(CloseShieldOutputStream.wrap(sink.outputStream()), BUFFER_SIZE)
-                    .buffered()
-                    .use { JSON_ENCODER.encodeToStream(ReportItems(reports), it) }
+                GZIPOutputStream(sink.outputStream().closeShielded(), BUFFER_SIZE).buffered().use {
+                    JSON_ENCODER.encodeToStream(ReportItems(reports), it)
+                }
             }
         }
     }

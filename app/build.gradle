@@ -308,7 +308,7 @@ dependencies {
 
     implementation 'org.geohex.geohex4j:geohex4j:3.2.2'
 
-    implementation 'org.apache.commons:commons-csv:1.14.0'
+    implementation 'de.siegmar:fastcsv:3.7.0'
 
     def vico_version = "2.1.2"
 
