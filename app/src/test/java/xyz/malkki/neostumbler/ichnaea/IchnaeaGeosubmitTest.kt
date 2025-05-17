@@ -9,43 +9,34 @@ import kotlinx.coroutines.withTimeout
 import okhttp3.OkHttpClient
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
-import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import xyz.malkki.neostumbler.ichnaea.dto.BluetoothBeaconDto
+import xyz.malkki.neostumbler.ichnaea.dto.CellTowerDto
+import xyz.malkki.neostumbler.ichnaea.dto.GeolocateRequestDto
 import xyz.malkki.neostumbler.ichnaea.dto.ReportDto
 
 class IchnaeaGeosubmitTest {
-    private lateinit var mockServer: MockWebServer
+    @get:Rule private val mockServer = MockWebServer()
 
-    @Before
-    fun setup() {
-        mockServer = MockWebServer()
-        mockServer.enqueue(MockResponse().setBody("{}"))
-
-        mockServer.start()
-    }
-
-    @After
-    fun shutdown() {
-        mockServer.shutdown()
-    }
+    private val ichnaeaClient: IchnaeaClient =
+        IchnaeaClient(
+            httpClient = OkHttpClient(),
+            ichnaeaParams =
+                IchnaeaParams(
+                    baseUrl = mockServer.url("/").toString(),
+                    submissionPath = "/v2/geosubmit",
+                    locatePath = "/v1/geolocate",
+                    apiKey = null,
+                ),
+        )
 
     @Test
     fun `Test sending a report`() = runTest {
-        val geosubmit: Geosubmit =
-            IchnaeaClient(
-                httpClient = OkHttpClient(),
-                ichnaeaParams =
-                    IchnaeaParams(
-                        baseUrl = mockServer.url("/").toString(),
-                        submissionPath = "/v2/geosubmit",
-                        locatePath = "/v1/geolocate",
-                        apiKey = null,
-                    ),
-            )
+        mockServer.enqueue(MockResponse().setBody("{}"))
 
         val reports =
             listOf(
@@ -77,7 +68,7 @@ class IchnaeaGeosubmitTest {
                 )
             )
 
-        geosubmit.sendReports(reports)
+        ichnaeaClient.sendReports(reports)
 
         val request = withTimeout(1.seconds) { runInterruptible { mockServer.takeRequest() } }
 
@@ -89,5 +80,50 @@ class IchnaeaGeosubmitTest {
 
         // Check that request body does not contain nulls -> Ichnaea servers don't accept them
         assertFalse(requestBody.contains("null"))
+    }
+
+    @Test
+    fun `Test receiving a geolocate response with extra values`() = runTest {
+        mockServer.enqueue(
+            MockResponse().apply {
+                setBody(
+                    """
+                    {
+                      "license": "test license",
+                      "location": {
+                        "lat": 50.42352,
+                        "lng": 12.32135
+                      },
+                      "accuracy": 25000,
+                      "fallback": "ipf"
+                    }
+                """
+                        .trimIndent()
+                )
+            }
+        )
+
+        val response =
+            ichnaeaClient.getLocation(
+                GeolocateRequestDto(
+                    considerIp = true,
+                    cellTowers =
+                        listOf(
+                            CellTowerDto(
+                                radioType = "lte",
+                                mobileCountryCode = 10,
+                                mobileNetworkCode = 100,
+                                locationAreaCode = 255,
+                                cellId = 123456,
+                                signalStrength = -78,
+                            )
+                        ),
+                    bluetoothBeacons = emptyList(),
+                    wifiAccessPoints = emptyList(),
+                )
+            )
+
+        assertEquals(50.42352, response.location.lat, 0.0001)
+        assertEquals(12.32135, response.location.lng, 0.0001)
     }
 }

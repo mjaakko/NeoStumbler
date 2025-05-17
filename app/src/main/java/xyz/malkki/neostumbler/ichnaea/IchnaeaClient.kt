@@ -36,7 +36,11 @@ class IchnaeaClient(
     private val ichnaeaParams: IchnaeaParams,
 ) : Geosubmit, Geolocate {
     companion object {
-        private val JSON_ENCODER = Json { explicitNulls = false }
+        private val JSON_ENCODER = Json {
+            explicitNulls = false
+            // BeaconDB geolocate responses include extra values not present in the Ichnaea format
+            ignoreUnknownKeys = true
+        }
 
         private val JSON_MEDIA_TYPE = "application/json".toMediaType()
     }
