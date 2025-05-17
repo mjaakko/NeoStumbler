@@ -1,5 +1,7 @@
 package xyz.malkki.neostumbler.crashlog
 
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 import junit.framework.TestCase.assertEquals
 import kotlin.io.path.listDirectoryEntries
 import kotlin.io.path.writeText
@@ -16,8 +18,10 @@ class FileCrashLogManagerTest {
     fun `Test crash log`() = runTest {
         val dir = temporaryFolder.newFolder().toPath()
 
-        dir.resolve("crash_2.txt").writeText("another crash!!!")
-        dir.resolve("crash_1.txt").writeText("crash!!!")
+        dir.resolve("crash_${LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS)}.txt")
+            .writeText("another crash!!!")
+        dir.resolve("crash_${LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS)}.txt")
+            .writeText("crash!!!")
 
         val crashLogManager: CrashLogManager = FileCrashLogManager(dir)
 
