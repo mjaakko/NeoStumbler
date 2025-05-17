@@ -3,8 +3,8 @@ package xyz.malkki.neostumbler.crashlog
 import java.nio.file.Path
 import kotlin.io.path.bufferedReader
 import kotlin.io.path.deleteIfExists
-import kotlin.io.path.getLastModifiedTime
 import kotlin.io.path.listDirectoryEntries
+import kotlin.io.path.name
 import kotlin.io.path.relativeTo
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.Dispatchers
@@ -35,7 +35,7 @@ class FileCrashLogManager(private val crashLogDirectory: Path) : CrashLogManager
                 withContext(Dispatchers.IO) {
                     return@withContext crashLogDirectory
                         .listDirectoryEntries()
-                        .sortedByDescending { it.getLastModifiedTime() }
+                        .sortedByDescending { it.name }
                         .map { it.relativeTo(crashLogDirectory).toString() }
                 }
             }
