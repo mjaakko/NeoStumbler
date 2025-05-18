@@ -3,9 +3,9 @@ package xyz.malkki.neostumbler.export
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
+import de.siegmar.fastcsv.writer.CsvWriter
 import java.io.IOException
 import java.io.OutputStream
-import java.io.OutputStreamWriter
 import java.math.RoundingMode
 import java.nio.charset.StandardCharsets
 import java.text.DecimalFormat
@@ -16,18 +16,14 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.apache.commons.csv.CSVFormat
-import org.apache.commons.csv.CSVPrinter
 import timber.log.Timber
 import xyz.malkki.neostumbler.db.ReportDatabaseManager
+import xyz.malkki.neostumbler.utils.io.closeShielded
 
 private const val MAXIMUM_FRACTION_DIGITS = 7
 
 /** Helper for exporting scan data as CSV files */
-class CsvExporter(
-    private val context: Context,
-    private val reportDatabaseManager: ReportDatabaseManager,
-) {
+class CsvExporter(private val context: Context, reportDatabaseManager: ReportDatabaseManager) {
     companion object {
         private const val BEACONS_FILE_NAME = "beacons.csv"
         private const val WIFIS_FILE_NAME = "wifis.csv"
@@ -51,34 +47,24 @@ class CsvExporter(
             if (cursor.count > 0) {
                 zipOutputStream.putNextEntry(ZipEntry(fileName))
 
-                val csvHeader =
-                    (0 until cursor.columnCount).map { cursor.getColumnName(it) }.toTypedArray()
-                val csvFormat =
-                    CSVFormat.Builder.create(CSVFormat.RFC4180)
-                        .setHeader(*csvHeader)
-                        .setSkipHeaderRecord(false)
-                        .build()
-
-                val csvPrinter =
-                    CSVPrinter(
-                        OutputStreamWriter(zipOutputStream, StandardCharsets.UTF_8),
-                        csvFormat,
-                    )
-                while (cursor.moveToNext()) {
-                    val csvRecord =
-                        (0 until cursor.columnCount).map {
-                            cursor.getCsvValue(it).sanitizeNullString()
-                        }
-
-                    csvPrinter.printRecord(csvRecord)
+                CsvWriter.builder().build(zipOutputStream.closeShielded()).use { csvWriter ->
+                    cursor.writeToCsv(csvWriter)
                 }
-                // Only flush CSVPrinter. Closing it will close the ZIP output stream and we might
-                // still
-                // need to write more data to it
-                csvPrinter.flush()
 
                 zipOutputStream.closeEntry()
             }
+        }
+    }
+
+    private fun Cursor.writeToCsv(csvWriter: CsvWriter) {
+        val csvHeader = (0 until columnCount).map { getColumnName(it) }
+
+        csvWriter.writeRecord(csvHeader)
+
+        while (moveToNext()) {
+            val csvRecord = (0 until columnCount).map { getCsvValue(it).sanitizeNullString() }
+
+            csvWriter.writeRecord(csvRecord)
         }
     }
 
