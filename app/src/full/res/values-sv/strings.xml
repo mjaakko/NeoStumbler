@@ -1,2 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="prefer_fused_location_title">Föredra sammanslagen platsleverantör</string>
+    <string name="prefer_fused_location_description">Sammanslagen platsleverantör kan kombinera data från andra källor än GPS för att lokalisera position</string>
+    <string name="autoscan_when_moving">Automatisk skanning vid förflyttning</string>
+    <string name="autoscan_failed_to_enable_title">Misslyckades att aktivera automatisk skanning</string>
+</resources>
