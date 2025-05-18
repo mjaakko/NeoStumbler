@@ -1,0 +1,1 @@
+Applikation för insamling av trådlösa nätverk till geopositioneringstjänster
