@@ -125,4 +125,60 @@
     <string name="notification_sending_reports">Skickar rapporter</string>
     <string name="suggested_service_terms_of_use">Användarvillkor</string>
     <string name="notification_style_minimal_description">Visar aviseringen utan detaljer</string>
+    <string name="scanning_status_not_active">Skanning <annotation style="status">inte aktiverad</annotation></string>
+    <string name="scanning_status_active">Skanning <annotation style="status">aktiverad</annotation></string>
+    <string name="toast_reports_upload_failed_no_endpoint">Misslyckades att ladda upp rapporter pga ingen ändpunkt har konfigurerats</string>
+    <string name="mcc">MCC: %s</string>
+    <string name="mnc">MNC: %s</string>
+    <string name="lac">LAC: %s</string>
+    <string name="radio_type">Typ: %s</string>
+    <string name="beacon_type">Sändartyp: %s</string>
+    <string name="beacon_id">ID%d: %s</string>
+    <string name="ignore_battery_optimizations_description">För bästa resultat så bör batterioptimering vara inaktiverat. Trådlös skanning och platsbehörighet begränsas avsevärt när batterioptimering är aktiv och skärmen är avstängd</string>
+    <string name="battery_optimizations_not_disabled_warning">Batterioptimering var inte inaktiverat</string>
+    <string name="send_reports_automatically_on_any_network">Alla nätverk</string>
+    <string name="send_reports_automatically_on_unmetered_network">Mobilnätverk</string>
+    <string name="export_data">Exportera data</string>
+    <string name="export_no_file_chosen">Kan inte exportera data för ingen fil skapades</string>
+    <string name="export_started">Exporterar data från %1$s till %2$s</string>
+    <string name="import_raw_database_description">Importering av en rådatabas kommer ersätta nuvarande databas</string>
+    <string name="import_database_not_valid">Den valda filen innehöll inte en giltig databas</string>
+    <string name="cells">Mobilmaster</string>
+    <string name="beacons">Blåtandssändare</string>
+    <string name="add_quick_settings_tile">Lägg till en snabbinställningsruta för att enkelt starta skanning?</string>
+    <string name="endpoint">Ändpunkt</string>
+    <string name="locate_path">Sökväg till geoposition</string>
+    <string name="no_endpoint_configured">Ingen ändpunkt konfigurerad</string>
+    <string name="coverage_layer">Karttäckningslager</string>
+    <string name="coverage_layer_tile_json_url">TileJSON URL för karttäckninglager</string>
+    <string name="coverage_layer_no_configured">Inget karttäckningslager konfigurerat</string>
+    <string name="suggested_services_title">Föreslagna tjänster</string>
+    <string name="wifi_filter_settings_title">Filtrerar WiFi-nätverk med SSID</string>
+    <plurals name="wifi_filter_settings_description">
+        <item quantity="one">%d SSID filtrerad</item>
+        <item quantity="other">%d SSID filtrerade</item>
+    </plurals>
+    <string name="wifi_filter_settings_hint">WiFi-nätverk med något av dessa ord i dess SSID samlas inte in</string>
+    <string name="reduced_metadata_description">Rapporter sänds i slumpmässig ordning med tidssämplar och annan metadata är beskuren</string>
+    <string name="every_x_meters">Varje %d:e meter</string>
+    <string name="moving_device_filter_description">Rörliga WiFi-nätverk och Blåtandssändare upptäckts automatiskt och filtreras från rapporter</string>
+    <string name="movement_detection">Rörelsedetektion</string>
+    <string name="movement_detection_none_description">Fortsätt skanna även när din enhet inte förflyttas</string>
+    <string name="movement_detection_location_description">Pausa skanning när postionen inte ändras. Försätter GPS-position aktiverad</string>
+    <string name="notification_style_basic_title">Grundläggande</string>
+    <string name="map_tile_source">Kartrutskälla</string>
+    <string name="permission_rationale_read_phone_state">Tillgång till telefon behövs för att skanna efter mobilmaster</string>
+    <string name="permission_rationale_post_notifications">Visa aviseringsstatus kräver behörighet till aviseringar</string>
+    <string name="permission_rationale_location_map">Visa din position på kartan kräver platsbehörighet</string>
+    <string name="troubleshooting_description">Åtgärda vanliga problem med skanning</string>
+    <string name="troubleshooting_fix">Åtgärda</string>
+    <string name="use_dynamic_color_ui">Använd dynamiska färger</string>
+    <string name="app_variant">Variant: %s</string>
+    <string name="author_text">Skapad med ❤️ av %1$s och %2$s</string>
+    <string name="contributors">medarbetare</string>
+    <string name="unencrypted_endpoint_warning">Okrypterad ändpunkt</string>
+    <plurals name="import_database_successful">
+        <item quantity="one">Importerade databas med %d rapport</item>
+        <item quantity="other">Importerade databas med %d rapporter</item>
+    </plurals>
 </resources>
