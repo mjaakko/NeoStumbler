@@ -50,7 +50,7 @@
     <string name="mnc">MNC: %s</string>
     <string name="beacon_type">סוג משואה:%s</string>
     <string name="radio_type">סוג:%s</string>
-    <string name="satellites_in_use">%1$d%2$d לווינים בשימוש</string>
+    <string name="satellites_in_use">%1$d⁄%2$d לווינים בשימוש</string>
     <string name="ignore_battery_optimizations_title">התעלמות ממיטוב סוללה</string>
     <string name="battery_optimizations_not_disabled_warning">מיטוב סוללה לא כובה</string>
     <string name="send_reports_automatically_title">שליחת דיווחים באופן אוטומטי</string>
