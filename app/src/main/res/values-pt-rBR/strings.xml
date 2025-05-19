@@ -56,7 +56,7 @@
     <string name="beacons">Sinalizadores Bluetooth</string>
     <string name="add_quick_settings_tile">Adicionar bloco às configurações rápidas para iniciar a busca facilmente?</string>
     <string name="endpoint">Ponto de recolha</string>
-    <string name="submission_path">Caminho</string>
+    <string name="submission_path">Caminho para envios</string>
     <string name="api_key">Chave de API (opcional)</string>
     <string name="settings_ignore_wifi_scan_throttling_title">Ignorar limitações de busca por Wi-Fi</string>
     <string name="wifi_scan_throttling">Limitações de busca por Wi-Fi</string>
@@ -143,21 +143,21 @@
         <item quantity="many">O banco de dados foi importado com %d de relatórios</item>
         <item quantity="other">O banco de dados foi importado com %d relatórios</item>
     </plurals>
-    <string name="no_data">Sem dados</string>
+    <string name="no_data">Não há dados</string>
     <string name="settings_ignore_wifi_scan_throttling_description">Se a busca estiver limitada, somente 4 poderão ser feitas em um período de 2 minutos</string>
     <string name="wifi_scan_frequency">Frequência de busca por redes Wi-Fi</string>
     <string name="every_x_meters">A cada %d metros</string>
     <string name="cell_tower_scan_frequency">Frequência de busca por redes móveis</string>
     <string name="map_tile_source">Fonte dos blocos do mapa</string>
     <string name="reports_last_uploaded_never">nunca</string>
-    <string name="reports_empty">Nenhum relatório ainda</string>
-    <string name="no_endpoint_configured">Nenhum ponto de recolha configurado</string>
+    <string name="reports_empty">Não há relatórios ainda</string>
+    <string name="no_endpoint_configured">Não há um ponto de recolha configurado</string>
     <string name="toast_reports_upload_failed_no_endpoint">Falha ao enviar relatórios, pois nenhum ponto de recolha foi configurado</string>
     <string name="mls_warning_text">O Mozilla Location Services foi encerrado e não aceita mais envios. Como uma alternativa, você pode enviar dados ao beaconDB, que fornece um serviço compatível com o MLS\n\nNote que o beaconDB ainda está em desenvolvimento e isso afeta como seus dados são tratados. Você pode ler a <annotation link="privacy_policy">política de privacidade</annotation> para mais informações\n\nVocê gostaria de configurar o beaconDB como o ponto de recolha? Isso pode ser alterado mais tarde nas configurações</string>
     <string name="coverage_layer">Camada de cobertura do mapa</string>
     <string name="coverage_layer_tile_json_url">URL TileJSON para a camada de cobertura do mapa (opcional)</string>
-    <string name="invalid_url">Nenhuma URL válida</string>
-    <string name="coverage_layer_no_configured">Nenhuma URL TileJSON configurada para o mapa de cobertura</string>
+    <string name="invalid_url">URL inválida</string>
+    <string name="coverage_layer_no_configured">Nenhuma camada de cobertura do mapa configurada</string>
     <string name="troubleshooting_not_ok" tools:ignore="Typos">Não correto</string>
     <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Ok</string>
     <string name="system_default_language">Idioma padrão do sistema</string>
@@ -203,5 +203,5 @@
     <string name="crash_log_entry_title">Falha #%d</string>
     <string name="crash_log_title">Registros de falha</string>
     <string name="moving_device_filter_title">Filtrar dispositivos móveis</string>
-    <string name="moving_device_filter_description">Redes Wi-Fi e sinalizadores Bluetooth que se movem são detectadas automaticamente e filtradas dos relatórios</string>
+    <string name="moving_device_filter_description">Redes Wi-Fi e sinalizadores Bluetooth que se movem são detectados automaticamente e filtrados dos relatórios</string>
 </resources>
