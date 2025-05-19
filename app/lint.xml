@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <!-- Our translations are crowd-sourced, this doesn't make sense -->
+    <issue id="MissingTranslation" severity="ignore" />
+
+    <issue id="MissingQuantity" severity="error">
+        <!-- Weblate doesn't handle these yet: https://github.com/WeblateOrg/weblate/issues/7520 -->
+        <ignore path="src/main/res/values-cs" />
+        <ignore path="src/main/res/values-lt" />
+        <ignore path="src/main/res/values-sk" />
+
+        <!-- Awaiting proper plural adaptation -->
+        <ignore path="src/main/res/values-nb-rNO" />
+        <ignore path="src/main/res/values-ta" />
+    </issue>
+</lint>

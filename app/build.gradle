@@ -181,11 +181,7 @@ android {
     }
 
     lint {
-        //Don't check for missing translations when linting, because it's not feasible to always have 100% translation coverage
-        disable 'MissingTranslation'
-
-        //Temporarily set missing quantities to only give a warning until all the translations have been updated
-        warning 'MissingQuantity'
+        lintConfig file("app/lint.xml")
     }
 }
 
