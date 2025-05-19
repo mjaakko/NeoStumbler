@@ -185,4 +185,9 @@
     <string name="passive_scanning_description">被動式資料蒐集會在背景中建立報告，藉由使用其他應用程式時所請求的資料，以盡量減少電池消耗。\n\n被動式資料蒐集的效果會依照你的裝置類型、正在使用的其他應用程式，以及是否有啟用融合式定位提供者（fused location provider）而有所不同。\n\n請注意，被動式資料蒐集無法搭配藍牙信標使用。\n\n您是否要啟用被動式資料蒐集？</string>
     <string name="passive_scanning_title">被動式資料蒐集</string>
     <string name="permission_rationale_background_location_passive_scan">在應用程式未啟動時接收定位更新，需啟用背景定位權限</string>
+    <string name="delete_all">刪除全部</string>
+    <string name="copy">複製</string>
+    <string name="text_copied_to_clipboard">文字已複製至剪貼簿！</string>
+    <string name="moving_device_filter_title">過濾移動中的裝置</string>
+    <string name="moving_device_filter_description">移動中的 Wi-Fi 網路與藍牙信標會自動偵測並從報告中過濾</string>
 </resources>
