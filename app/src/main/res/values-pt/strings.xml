@@ -21,7 +21,7 @@
     <string name="notification_wireless_scanning_title">Scan wireless ativo</string>
     <plurals name="reports_created">
         <item quantity="one">%d relatório criado</item>
-        <item quantity="many">%d relatórios criados</item>
+        <item quantity="many">%d de relatórios criados</item>
         <item quantity="other">%d relatórios criados</item>
     </plurals>
     <string name="export_notification_channel_name">Exportação de dados</string>
@@ -51,7 +51,7 @@
     <string name="scanner_status_notification_channel_name">Estado do scan</string>
     <plurals name="toast_reports_uploaded">
         <item quantity="one">Enviado %d relatório</item>
-        <item quantity="many">Enviados %d relatórios</item>
+        <item quantity="many">Enviados %d de relatórios</item>
         <item quantity="other">Enviados %d relatórios</item>
     </plurals>
     <string name="toast_reports_upload_failed">O envio dos relatórios falhou</string>
@@ -84,7 +84,7 @@
     <string name="notification_style_minimal_title">Mínimo</string>
     <string name="notification_style_minimal_description">Mostra a notificação sem detalhes</string>
     <string name="notification_style_basic_description">Mostra o número de relatórios criados</string>
-    <string name="settings_group_scanning">Scanning</string>
+    <string name="settings_group_scanning">Scan</string>
     <string name="notification_style_detailed_title">Detalhado</string>
     <string name="notification_style_basic_title">Básico</string>
     <string name="notification_style_detailed_description">Mostra o número de relatórios criados e o número de satélites GNSS</string>
@@ -103,7 +103,7 @@
     <string name="import_database_not_valid">O ficheiro selecionado não contém uma base de dados válida</string>
     <plurals name="import_database_successful">
         <item quantity="one">Base de dados importada com %d relatório</item>
-        <item quantity="many">Base de dados importada com %d relatórios</item>
+        <item quantity="many">Base de dados importada com %d de relatórios</item>
         <item quantity="other">Base de dados importada com %d relatórios</item>
     </plurals>
     <string name="delete_all_reports">Apagar todos os relatórios</string>
@@ -113,7 +113,7 @@
     <string name="troubleshooting_title">Resolução de problemas</string>
     <plurals name="toast_deleted_reports">
         <item quantity="one">%d relatório apagado</item>
-        <item quantity="many">%d relatórios apagados</item>
+        <item quantity="many">%d de relatórios apagados</item>
         <item quantity="other">%d relatórios apagados</item>
     </plurals>
     <string name="toast_deleted_all_reports">Todos os relatórios foram apagados</string>
@@ -186,7 +186,7 @@
     <string name="wifi_filter_settings_title">Filtrar redes Wi-Fi por SSID</string>
     <plurals name="wifi_filter_settings_description">
         <item quantity="one">%d SSID filtrado</item>
-        <item quantity="many">%d SSIDs filtrados</item>
+        <item quantity="many">%d de SSIDs filtrados</item>
         <item quantity="other">%d SSIDs filtrados</item>
     </plurals>
     <string name="reduced_metadata_title">Enviar relatórios com menos metadados</string>
