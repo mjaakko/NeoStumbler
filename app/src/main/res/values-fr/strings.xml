@@ -187,8 +187,8 @@
     <string name="settings_group_privacy">Vie privée</string>
     <plurals name="wifi_filter_settings_description">
         <item quantity="one">%d SSID filtré</item>
-        <item quantity="many">%d SSID filtrés</item>
-        <item quantity="other"></item>
+        <item quantity="many">%d de SSIDs filtrés</item>
+        <item quantity="other">%d SSIDs filtrés</item>
     </plurals>
     <string name="wifi_filter_settings_title">Filtrer les Wi-Fis par SSID</string>
     <string name="wifi_filter_settings_hint">Les réseaux Wi-Fi dont le SSID contient l\'un de ces mots-clés ne sont pas collectés</string>
