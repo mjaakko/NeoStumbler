@@ -132,7 +132,7 @@
     <string name="import_data">Importar dados</string>
     <string name="troubleshooting_description">Corrigir problemas comuns com os scans</string>
     <string name="troubleshooting_battery_optimizations_disabled">Otimizações de bateria desativadas</string>
-    <string name="db_prune_title">Excluir relatórios enviados</string>
+    <string name="db_prune_title">Apagar relatórios enviados</string>
     <string name="troubleshooting_permissions_granted">Permissões concedidas</string>
     <string name="troubleshooting_accurate_location_available">Localização precisa disponível</string>
     <string name="db_prune_one_month">Após um mês</string>
@@ -174,8 +174,8 @@
     <string name="settings_group_privacy">Privacidade</string>
     <string name="wifi_filter_settings_hint">Redes de Wi-Fi com alguma destas palavras-chave no nome/SSID não são colecionadas</string>
     <string name="db_schema_version">Versão do esquema da base de dados: %d</string>
-    <string name="scanning_status_active">Scanning <annotation style="status">ativo</annotation></string>
-    <string name="scanning_status_not_active">Scanning <annotation style="status">desativado</annotation></string>
+    <string name="scanning_status_active">Scan <annotation style="status">ativo</annotation></string>
+    <string name="scanning_status_not_active">Scan <annotation style="status">suspenso</annotation></string>
     <string name="speed_metres_per_second">Velocidade: %s m/s</string>
     <string name="mnc">MNC: %s</string>
     <string name="radio_type">Tipo: %s</string>
@@ -195,4 +195,11 @@
     <string name="pause_scanning_on_low_battery_title">Pausar scan quando a bateria estiver baixa</string>
     <string name="passive_scanning_title">Recolha passiva de dados</string>
     <string name="permission_rationale_background_location_passive_scan">Para atualizar a localização quando a app não está ativa, a app precisa de acesso à localização em segundo plano</string>
+    <string name="delete_all">Apagar tudo</string>
+    <string name="copy">Copiar</string>
+    <string name="text_copied_to_clipboard">Texto copiado para o clipboard!</string>
+    <string name="crash_log_title">Registo de falha</string>
+    <string name="crash_log_entry_title">Falha #%d</string>
+    <string name="moving_device_filter_title">Filtrar dispositivos móveis</string>
+    <string name="moving_device_filter_description">Redes Wi-Fi e Bluetooth beacons móveis são automaticamente detetados e filtrados dos relatórios</string>
 </resources>
