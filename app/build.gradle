@@ -51,10 +51,10 @@ android {
         resourceConfigurations += [
                 'en',
                 'cs',
-                'de-rDE',
+                'de',
                 'es',
                 'fi',
-                'fr-rFR',
+                'fr',
                 'hu',
                 'it',
                 'iw',
