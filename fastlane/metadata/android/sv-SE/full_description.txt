@@ -1,0 +1,1 @@
+<b>NeoStumbler</b> är en applikation för insamling av positioner av trådlösa nätverk, mobilmaster och Blåtandsnätverk till geopositionerningstjänser som är kompatibla med Mozilla Location Services

@@ -200,4 +200,11 @@
     <string name="pause_scanning_on_low_battery_description">Когда заряд меньше чем %d%%</string>
     <string name="passive_scanning_title">Пассивный сбор данных</string>
     <string name="permission_rationale_background_location_passive_scan">Получение обновлений геолокации когда приложение не активно требует доступу к геолокации в фоновом режиме</string>
+    <string name="delete_all">Удалить всё</string>
+    <string name="copy">Копировать</string>
+    <string name="text_copied_to_clipboard">Текст скопировать в буфер обмена!</string>
+    <string name="crash_log_title">Логи падения</string>
+    <string name="crash_log_entry_title">Падение #%d</string>
+    <string name="moving_device_filter_description">Двигающиеся сети Wi-Fi и маячки Bluetooth автоматически удаляются и фильтруются из отчётов</string>
+    <string name="moving_device_filter_title">Фильтровать двигающиеся устройства</string>
 </resources>

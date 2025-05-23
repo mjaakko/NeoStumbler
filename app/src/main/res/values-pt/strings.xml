@@ -21,7 +21,7 @@
     <string name="notification_wireless_scanning_title">Scan wireless ativo</string>
     <plurals name="reports_created">
         <item quantity="one">%d relatório criado</item>
-        <item quantity="many">%d relatórios criados</item>
+        <item quantity="many">%d de relatórios criados</item>
         <item quantity="other">%d relatórios criados</item>
     </plurals>
     <string name="export_notification_channel_name">Exportação de dados</string>
@@ -51,7 +51,7 @@
     <string name="scanner_status_notification_channel_name">Estado do scan</string>
     <plurals name="toast_reports_uploaded">
         <item quantity="one">Enviado %d relatório</item>
-        <item quantity="many">Enviados %d relatórios</item>
+        <item quantity="many">Enviados %d de relatórios</item>
         <item quantity="other">Enviados %d relatórios</item>
     </plurals>
     <string name="toast_reports_upload_failed">O envio dos relatórios falhou</string>
@@ -84,7 +84,7 @@
     <string name="notification_style_minimal_title">Mínimo</string>
     <string name="notification_style_minimal_description">Mostra a notificação sem detalhes</string>
     <string name="notification_style_basic_description">Mostra o número de relatórios criados</string>
-    <string name="settings_group_scanning">Scanning</string>
+    <string name="settings_group_scanning">Scan</string>
     <string name="notification_style_detailed_title">Detalhado</string>
     <string name="notification_style_basic_title">Básico</string>
     <string name="notification_style_detailed_description">Mostra o número de relatórios criados e o número de satélites GNSS</string>
@@ -103,7 +103,7 @@
     <string name="import_database_not_valid">O ficheiro selecionado não contém uma base de dados válida</string>
     <plurals name="import_database_successful">
         <item quantity="one">Base de dados importada com %d relatório</item>
-        <item quantity="many">Base de dados importada com %d relatórios</item>
+        <item quantity="many">Base de dados importada com %d de relatórios</item>
         <item quantity="other">Base de dados importada com %d relatórios</item>
     </plurals>
     <string name="delete_all_reports">Apagar todos os relatórios</string>
@@ -113,7 +113,7 @@
     <string name="troubleshooting_title">Resolução de problemas</string>
     <plurals name="toast_deleted_reports">
         <item quantity="one">%d relatório apagado</item>
-        <item quantity="many">%d relatórios apagados</item>
+        <item quantity="many">%d de relatórios apagados</item>
         <item quantity="other">%d relatórios apagados</item>
     </plurals>
     <string name="toast_deleted_all_reports">Todos os relatórios foram apagados</string>
@@ -132,7 +132,7 @@
     <string name="import_data">Importar dados</string>
     <string name="troubleshooting_description">Corrigir problemas comuns com os scans</string>
     <string name="troubleshooting_battery_optimizations_disabled">Otimizações de bateria desativadas</string>
-    <string name="db_prune_title">Excluir relatórios enviados</string>
+    <string name="db_prune_title">Apagar relatórios enviados</string>
     <string name="troubleshooting_permissions_granted">Permissões concedidas</string>
     <string name="troubleshooting_accurate_location_available">Localização precisa disponível</string>
     <string name="db_prune_one_month">Após um mês</string>
@@ -174,8 +174,8 @@
     <string name="settings_group_privacy">Privacidade</string>
     <string name="wifi_filter_settings_hint">Redes de Wi-Fi com alguma destas palavras-chave no nome/SSID não são colecionadas</string>
     <string name="db_schema_version">Versão do esquema da base de dados: %d</string>
-    <string name="scanning_status_active">Scanning <annotation style="status">ativo</annotation></string>
-    <string name="scanning_status_not_active">Scanning <annotation style="status">desativado</annotation></string>
+    <string name="scanning_status_active">Scan <annotation style="status">ativo</annotation></string>
+    <string name="scanning_status_not_active">Scan <annotation style="status">suspenso</annotation></string>
     <string name="speed_metres_per_second">Velocidade: %s m/s</string>
     <string name="mnc">MNC: %s</string>
     <string name="radio_type">Tipo: %s</string>
@@ -186,7 +186,7 @@
     <string name="wifi_filter_settings_title">Filtrar redes Wi-Fi por SSID</string>
     <plurals name="wifi_filter_settings_description">
         <item quantity="one">%d SSID filtrado</item>
-        <item quantity="many">%d SSIDs filtrados</item>
+        <item quantity="many">%d de SSIDs filtrados</item>
         <item quantity="other">%d SSIDs filtrados</item>
     </plurals>
     <string name="reduced_metadata_title">Enviar relatórios com menos metadados</string>
@@ -195,4 +195,11 @@
     <string name="pause_scanning_on_low_battery_title">Pausar scan quando a bateria estiver baixa</string>
     <string name="passive_scanning_title">Recolha passiva de dados</string>
     <string name="permission_rationale_background_location_passive_scan">Para atualizar a localização quando a app não está ativa, a app precisa de acesso à localização em segundo plano</string>
+    <string name="delete_all">Apagar tudo</string>
+    <string name="copy">Copiar</string>
+    <string name="text_copied_to_clipboard">Texto copiado para o clipboard!</string>
+    <string name="crash_log_title">Registo de falha</string>
+    <string name="crash_log_entry_title">Falha #%d</string>
+    <string name="moving_device_filter_title">Filtrar dispositivos móveis</string>
+    <string name="moving_device_filter_description">Redes Wi-Fi e Bluetooth beacons móveis são automaticamente detetados e filtrados dos relatórios</string>
 </resources>

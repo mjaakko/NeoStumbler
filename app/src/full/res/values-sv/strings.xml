@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="prefer_fused_location_title">Föredra sammanslagen platsleverantör</string>
+    <string name="prefer_fused_location_description">Sammanslagen platsleverantör kan kombinera data från andra källor än GPS för att lokalisera position</string>
+    <string name="autoscan_when_moving">Automatisk skanning vid förflyttning</string>
+    <string name="autoscan_failed_to_enable_title">Misslyckades att aktivera automatisk skanning</string>
+    <string name="permission_rationale_background_location_autoscan">Automatisk start av scanning behöver behörighet till bakgrundsposition</string>
+    <string name="permission_rationale_activity_recognition">Automatisk start av scanning behöver tillgång till nuvarande aktivitet</string>
+    <string name="autoscan_failed_to_enable_description">Automatisk skanning använder Google Play Services aktivitetsingenkänning, vilket kanske inte är tillgänglig på din enhet</string>
+</resources>
