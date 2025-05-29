@@ -181,4 +181,13 @@
         <item quantity="one">Importerade databas med %d rapport</item>
         <item quantity="other">Importerade databas med %d rapporter</item>
     </plurals>
+    <string name="unknown_cell_id">Okänd Mobilmastidentitet</string>
+    <string name="mls_warning_text">Mozilla Location Service har stängts ner och accepterar inte längre bidrag av data. Som ett alternativ till MLS kan du skicka data till beaconDB som erbjuder en tjänst jämförbar med MLS\n\nNotera att beaconDB är under aktiv utveckling som påverkar hur din data hanteras. Du kan läsa <annotation link="privacy_policy">Integritetspolicyn</annotation> för vidare information\n\nVill du ange beaconDB som ändpunkt? Detta kan ändras senare i inställningar</string>
+    <string name="submission_path">Sökväg till bidrag</string>
+    <string name="suggested_service_hosted_by">Värd:</string>
+    <string name="settings_ignore_wifi_scan_throttling_title">Ignorera WiFi-skanningsbegränsning</string>
+    <string name="settings_ignore_wifi_scan_throttling_description">Om skanningen är begränsad så kan bara fyra sökningar göras på en tvåminutersperiod</string>
+    <string name="wifi_scan_throttling">WiFi-skanningsbegränsning</string>
+    <string name="movement_detection_significant_motion_description">Pausar skanning och GPS när ingen större rörelse upptäcks. Sparar batteri men fungerar inte pålitligt på vissa enheter</string>
+    <string name="troubleshooting_wifi_scan_always_available">WiFi-skanning alltid tillgänglig</string>
 </resources>
