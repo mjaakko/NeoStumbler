@@ -225,7 +225,7 @@ tasks.withType(Test).configureEach {
 }
 
 dependencies {
-    implementation platform('io.insert-koin:koin-bom:4.1.0-Beta7')
+    implementation platform('io.insert-koin:koin-bom:4.1.0-RC1')
     implementation "io.insert-koin:koin-core"
     implementation "io.insert-koin:koin-android"
     implementation "io.insert-koin:koin-androidx-compose"
