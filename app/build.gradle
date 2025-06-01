@@ -249,7 +249,7 @@ dependencies {
     implementation "androidx.paging:paging-common-ktx:$paging_version"
     implementation "androidx.paging:paging-compose:$paging_version"
 
-    def compose_bom = platform('androidx.compose:compose-bom:2025.04.01')
+    def compose_bom = platform('androidx.compose:compose-bom:2025.05.01')
     implementation compose_bom
     androidTestImplementation compose_bom
 
