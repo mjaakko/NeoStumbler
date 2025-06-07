@@ -190,4 +190,6 @@
     <string name="text_copied_to_clipboard">文字已複製至剪貼簿！</string>
     <string name="moving_device_filter_title">過濾移動中的裝置</string>
     <string name="moving_device_filter_description">移動中的 Wi-Fi 網路與藍牙信標會自動偵測並從報告中過濾</string>
+    <string name="crash_log_title">崩潰日誌</string>
+    <string name="crash_log_entry_title">崩潰 #%d</string>
 </resources>

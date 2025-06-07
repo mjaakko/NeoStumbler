@@ -102,7 +102,7 @@
     <string name="wifi_filter_settings_title">סינון רשתות Wi-Fi על ידי SSID</string>
     <plurals name="wifi_filter_settings_description">
         <item quantity="one">SSID %d מסונן</item>
-        <item quantity="two">%d SDIDs מסוננים</item>
+        <item quantity="two">%d SSIDs מסוננים</item>
         <item quantity="other">%d SSIDs מסוננים</item>
     </plurals>
     <string name="wifi_filter_settings_hint">רשתות Wi-Fi עם כל אחת ממילות המפתח האלו בSSID שלהן לא נאספות</string>
