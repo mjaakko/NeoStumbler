@@ -211,4 +211,9 @@
     <string name="pause_scanning_on_low_battery_description">Lorsque le niveau de la batterie est inférieur à %d%%</string>
     <string name="permission_rationale_background_location_passive_scan">La réception de mises à jour de localisation lorsque l\'application n\'est pas active nécessite l\'accès à la localisation en arrière-plan</string>
     <string name="delete_reports_from_area">Supprimer les rapports de la zone</string>
+    <string name="copy">Copier</string>
+    <string name="delete_all">Tout supprimer</string>
+    <string name="moving_device_filter_title">Filtrer les appareils mobiles</string>
+    <string name="crash_log_title">Journal de plantage</string>
+    <string name="crash_log_entry_title">Plantage #%d</string>
 </resources>
