@@ -195,4 +195,6 @@
     <string name="crash_log_title">Crash­logboek</string>
     <string name="crash_log_entry_title">Crash #%d</string>
     <string name="delete_all">Alles verwĳderen</string>
+    <string name="moving_device_filter_title">Bewegende apparaten wegfilteren</string>
+    <string name="moving_device_filter_description">Bewegende wifi-netwerken en Bluetooth-bakens worden automatisch gedetecteerd en uit rapporten gefilterd</string>
 </resources>

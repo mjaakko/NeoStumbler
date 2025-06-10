@@ -1,0 +1,1 @@
+<b>NeoStumbler</b>, Wi-Fi ağlarının, baz istasyonlarının ve Bluetooth işaretçilerinin konumlarını Mozilla Konum Hizmetleri ile API uyumlu coğrafi konum hizmetlerine toplamak için kullanılan bir uygulamadır
