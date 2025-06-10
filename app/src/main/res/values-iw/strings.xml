@@ -198,7 +198,7 @@
     <string name="delete_all">מחק הכל</string>
     <string name="copy">העתקה</string>
     <string name="crash_log_entry_title">קריסה #%d</string>
-    <string name="moving_device_filter_description">רשתות Wi-Fi ומשאואות Bluetooth שנמצאות בתנועה מאולתרות ומסוננות באופן אוטומטי מהדיווחים</string>
+    <string name="moving_device_filter_description">רשתות Wi-Fi ומשאואות Bluetooth שנמצאות בתנועה מאותרות ומסוננות באופן אוטומטי מהדיווחים</string>
     <string name="moving_device_filter_title">סינון מכשירים בתנועה</string>
     <string name="text_copied_to_clipboard">הטקסט הועתק ללוח!</string>
     <string name="crash_log_title">יומן קריסה</string>
