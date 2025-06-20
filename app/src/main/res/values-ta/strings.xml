@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="notification_sending_reports">அறிக்கைகளை அனுப்புகிறது</string>
     <string name="notification_wireless_scanning_title">வயர்லெச் ச்கேனிங் செயலில்</string>
     <plurals name="reports_created">
-        <item quantity="other">
-            %d அறிக்கைகள் உருவாக்கப்பட்டன
-        </item>
+        <item quantity="one">%d அறிக்கை உருவாக்கப்பட்டது</item>
+        <item quantity="other">%d அறிக்கைகள் உருவாக்கப்பட்டன</item>
     </plurals>
     <string name="satellites_in_use">பயன்பாட்டில் உள்ள%1$d⁄%2$d செயற்கைக்கோள்கள்</string>
     <string name="ignore_battery_optimizations_title">பேட்டரி மேம்படுத்தல்களை புறக்கணிக்கவும்</string>
@@ -14,7 +13,7 @@
     <string name="send_reports_automatically_title">அறிக்கைகளை தானாக அனுப்பவும்</string>
     <string name="export_notification_channel_name">தரவு ஏற்றுமதி</string>
     <string name="notification_exporting_data">தரவு ஏற்றுமதி…</string>
-    <string name="export_data">தரவு ஏற்றுமதி</string>
+    <string name="export_data">தரவை ஏற்றுமதி</string>
     <string name="notification_style_basic_title">அடிப்படை</string>
     <string name="notification_style_basic_description">உருவாக்கப்பட்ட அறிக்கைகளின் எண்ணிக்கையைக் காட்டுகிறது</string>
     <string name="ok">சரி</string>
@@ -51,9 +50,8 @@
     <string name="delete_report">அறிக்கையை நீக்கு</string>
     <string name="delete_report_confirmation">அறிக்கையை நீக்க விரும்புகிறீர்களா?</string>
     <plurals name="toast_reports_uploaded">
-        <item quantity="other">
-            பதிவேற்றியது %d அறிக்கைகள்
-        </item>
+        <item quantity="one">பதிவேற்றியது %d அறிக்கை</item>
+        <item quantity="other">பதிவேற்றியது %d அறிக்கைகள்</item>
     </plurals>
     <string name="toast_reports_upload_failed">அறிக்கைகளைப் பதிவேற்றத் தவறிவிட்டது</string>
     <string name="report_upload_notification_channel_name">பதிவேற்றங்களைப் புகாரளிக்கவும்</string>
@@ -66,9 +64,8 @@
     <string name="import_raw_database_description">ஒரு மூல தரவுத்தளத்தை இறக்குமதி செய்வது தற்போதுள்ள தரவுத்தளத்தை மாற்றும்</string>
     <string name="import_database_not_valid">தேர்ந்தெடுக்கப்பட்ட கோப்பில் சரியான தரவுத்தளம் இல்லை</string>
     <plurals name="import_database_successful">
-        <item quantity="other">
-            %d அறிக்கைகளுடன் இறக்குமதி செய்யப்பட்ட தரவுத்தளம்
-        </item>
+        <item quantity="one">%d அறிக்கையுடன் இறக்குமதி செய்யப்பட்ட தரவுத்தளம்</item>
+        <item quantity="other">%d அறிக்கைகளுடன் இறக்குமதி செய்யப்பட்ட தரவுத்தளம்</item>
     </plurals>
     <string name="reupload_data">தரவை மீண்டும் ஏற்றவும்</string>
     <string name="wifis">வை-ஃபிச்</string>
@@ -108,8 +105,8 @@
     <string name="notification_style_detailed_description">உருவாக்கப்பட்ட அறிக்கைகளின் எண்ணிக்கை மற்றும் சிஎன்எச்எச் செயற்கைக்கோள்களின் எண்ணிக்கை ஆகியவற்றைக் காட்டுகிறது</string>
     <string name="app_language">மொழி</string>
     <string name="show_my_location">எனது இருப்பிடத்தைக் காட்டு</string>
-    <string name="permission_rationale_fine_location">தற்போதைய இருப்பிடத்திற்கான அணுகலைப் பெறுவது துல்லியமான இருப்பிடத்திற்கு இசைவு தேவை</string>
-    <string name="permission_rationale_read_phone_state">சாதனத்தில் உள்ள அனைத்து சிம் கார்டுகளையும் கொண்டு செல் கோபுரங்களை ச்கேன் செய்ய தொலைபேசி நிலைக்கான அணுகல் தேவை</string>
+    <string name="permission_rationale_fine_location">பயனுள்ள இருப்பிட தரவுகளுடன் அறிக்கைகளை உருவாக்குவது துல்லியமான இருப்பிடத்திற்கு இசைவு தேவை</string>
+    <string name="permission_rationale_read_phone_state">செல் கோபுரங்களை வருடு செய்ய தொலைபேசி நிலைக்கான அணுகல் தேவை</string>
     <string name="permission_rationale_bluetooth">ஊடலை பீக்கான்களை ச்கேன் செய்வதற்கு புளூடூத்துக்கு இசைவு தேவை</string>
     <string name="permission_rationale_post_notifications">நிலை அறிவிப்பைக் காண்பிப்பது அறிவிப்புகளுக்கு இசைவு தேவை</string>
     <string name="permission_rationale_background_location_quick_settings">விரைவான அமைப்புகளிலிருந்து ச்கேன் செய்யத் தொடங்குவது பின்னணியில் இருப்பிடத்தை அணுக வேண்டும்</string>
@@ -134,9 +131,8 @@
     <string name="delete_all_reports">எல்லா அறிக்கைகளையும் நீக்கு</string>
     <string name="delete_all_reports_confirmation">எல்லா அறிக்கைகளையும் நீக்க விரும்புகிறீர்களா?</string>
     <plurals name="toast_deleted_reports">
-        <item quantity="other">
-            நீக்கப்பட்டது %d அறிக்கைகள்
-        </item>
+        <item quantity="one">நீக்கப்பட்டது %d அறிக்கை</item>
+        <item quantity="other">நீக்கப்பட்டது %d அறிக்கைகள்</item>
     </plurals>
     <string name="toast_deleted_all_reports">எல்லா அறிக்கைகளையும் நீக்கியது</string>
     <string name="about_app">நியோச்டம்ப்ளர் பற்றி</string>
@@ -146,4 +142,59 @@
     <string name="contributors">பங்களிப்பாளர்கள்</string>
     <string name="bug_report_button">ஒரு பிழையைப் புகாரளிக்கவும்</string>
     <string name="update_translations_button">மொழிபெயர்ப்புகளைப் புதுப்பிக்கவும்</string>
+    <string name="delete_all">அனைத்தையும் நீக்கு</string>
+    <string name="copy">நகலெடு</string>
+    <string name="text_copied_to_clipboard">இடைநிலைப்பலகைக்கு உரை நகலெடுக்கப்பட்டது!</string>
+    <string name="reports_last_uploaded_never">ஒருபோதும்</string>
+    <string name="reports_empty">இதுவரை அறிக்கைகள் இல்லை</string>
+    <string name="scanning_status_active">ச்கேனிங் <annotation style="status">செயலில்</annotation></string>
+    <string name="scanning_status_not_active">ச்கேனிங் <annotation style="status">செயலில் இல்லை </annotation></string>
+    <string name="unknown_cell_id">தெரியாத செல் அடையாளம்</string>
+    <string name="mcc">எம்.சி.சி: %s</string>
+    <string name="mnc">MNC: %s</string>
+    <string name="lac">லாக்: %s</string>
+    <string name="radio_type">வகை: %s</string>
+    <string name="wifi_filter_settings_hint">SSID இல் உள்ள இந்த முக்கிய சொற்களைக் கொண்ட வைஃபை நெட்வொர்க்குகள் சேகரிக்கப்படவில்லை</string>
+    <string name="reduced_metadata_title">குறைந்த மெட்டாடேட்டாவுடன் அறிக்கைகளை அனுப்பவும்</string>
+    <string name="system_default_language">கணினி இயல்புநிலை மொழி</string>
+    <string name="permission_rationale_background_location_passive_scan">பயன்பாடு செயலில் இல்லாதபோது இருப்பிட புதுப்பிப்புகளைப் பெறுவதற்கு பின்னணியில் இருப்பிடத்தை அணுக வேண்டும்</string>
+    <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">சரி</string>
+    <string name="settings_group_privacy">தனியுரிமை</string>
+    <string name="wifi_filter_settings_title">SSID ஆல் வை-ஃபைச் வடிகட்டவும்</string>
+    <plurals name="wifi_filter_settings_description">
+        <item quantity="one">%d SSID வடிகட்டப்பட்டது</item>
+        <item quantity="other">%d SSIDS வடிகட்டப்பட்டது</item>
+    </plurals>
+    <string name="passive_scanning_title">செயலற்ற தரவு சேகரிப்பு</string>
+    <string name="troubleshooting_not_ok" tools:ignore="Typos">சரி இல்லை</string>
+    <string name="export_raw_database_compress">தரவுத்தள கோப்பை சுருக்கவும்</string>
+    <string name="no_endpoint_configured">எண்ட்பாயிண்ட் கட்டமைக்கப்படவில்லை</string>
+    <string name="coverage_layer">வரைபட கவரேச் அடுக்கு</string>
+    <string name="delete_reports_from_area">பகுதியிலிருந்து அறிக்கைகளை நீக்கு</string>
+    <string name="coverage_layer_no_configured">வரைபட கவரேச் அடுக்கு கட்டமைக்கப்படவில்லை</string>
+    <string name="invalid_url">தவறான முகவரி</string>
+    <string name="send_reports_automatically_never">ஒருபோதும்</string>
+    <string name="send_reports_automatically_on_any_network">எந்த நெட்வொர்க்கிலும்</string>
+    <string name="send_reports_automatically_on_unmetered_network">அளவிடப்படாத நெட்வொர்க்கில்</string>
+    <string name="locate_path">புவிஇருப்பிடத்திற்கான பாதை</string>
+    <string name="waiting_for_location">இருப்பிடத்திற்காக காத்திருக்கிறது</string>
+    <string name="toast_reports_upload_failed_no_endpoint">அறிக்கைகளை பதிவேற்றுவதில் தோல்வி, ஏனெனில் எந்த இறுதிப் புள்ளியும் கட்டமைக்கப்படவில்லை</string>
+    <string name="speed_metres_per_second">வேகம்: %s m/s</string>
+    <string name="altitude_metres">உயரம்: %s மீ</string>
+    <string name="signal_strength_dbm">சமிக்ஞை வலிமை: %d டிபிஎம்</string>
+    <string name="beacon_type">பெக்கான் வகை: %s</string>
+    <string name="beacon_id">அடையாளம் %d: %s</string>
+    <string name="mls_warning_text">மொசில்லா இருப்பிட பணி மூடப்பட்டு தரவு சமர்ப்பிப்புகளை இனி ஏற்காது. எம்.எல்.எச் -க்கு மாற்றாக, நீங்கள் MLS உடன் இணக்கமான சேவையை வழங்கும் BEACONDB க்கு தரவை அனுப்பலாம் \n\nBEACONDB இன்னும் வளர்ச்சியில் உள்ளது என்பதை நினைவில் கொள்க, இது உங்கள் தரவு எவ்வாறு கையாளப்படுகிறது என்பதை பாதிக்கிறது. மேலும் தகவலுக்கு நீங்கள் <annotation link="privacy_policy">தனியுரிமைக் கொள்கை</annotation> ஐப் படிக்கலாம் \n\nநீங்கள் பீக்காண்ட்பை இறுதிப் புள்ளியாக அமைக்க விரும்புகிறீர்களா? இது பின்னர் அமைப்புகளில் கட்டமைக்கப்படலாம்</string>
+    <string name="coverage_layer_tile_json_url">வரைபட கவரேச் லேயருக்கான டைல்ச்சன் முகவரி</string>
+    <string name="reduced_metadata_description">அறிக்கைகள் நேர முத்திரைகள் மற்றும் பிற மெட்டாடேட்டாவுடன் சீரற்ற வரிசையில் அனுப்பப்படுகின்றன</string>
+    <string name="pause_scanning_on_low_battery_title">குறைந்த பேட்டரியில் வருடு செய்வதை இடைநிறுத்துங்கள்</string>
+    <string name="pause_scanning_on_low_battery_description">பேட்டரி அளவு%d %% க்கும் குறைவாக இருக்கும்போது</string>
+    <string name="moving_device_filter_title">நகரும் சாதனங்களை வடிகட்டவும்</string>
+    <string name="moving_device_filter_description">நகரும் வைஃபை நெட்வொர்க்குகள் மற்றும் ஊடலை பீக்கான்கள் தானாகவே கண்டறியப்பட்டு அறிக்கைகளிலிருந்து வடிகட்டப்படுகின்றன</string>
+    <string name="passive_scanning_description">செயலற்ற தரவு சேகரிப்பு பிற பயன்பாடுகளால் கோரப்பட்ட தரவைப் பயன்படுத்தி குறைந்தபட்ச பேட்டரி தாக்கத்துடன் பின்னணியில் அறிக்கைகளை உருவாக்குகிறது. \n\nசெயலற்ற தரவு சேகரிப்பின் செயல்திறன் உங்கள் சாதன வகை, நீங்கள் பயன்படுத்தும் பிற பயன்பாடுகள் மற்றும் இருப்பிட வழங்குநரை இணைத்துள்ளீர்களா என்பதைப் பொறுத்தது. \n\nசெயலற்ற தரவு சேகரிப்பு ஊடலை பீக்கான்களுடன் வேலை செய்யாது என்பதை நினைவில் கொள்க. \n\nசெயலற்ற தரவு சேகரிப்பை இயக்க விரும்புகிறீர்களா?</string>
+    <string name="map_tile_source">வரைபட ஓடு மூல</string>
+    <string name="crash_log_title">செயலிழப்பு பதிவு</string>
+    <string name="crash_log_entry_title">செயலிழப்பு #%d</string>
+    <string name="disabled">முடக்கப்பட்டது</string>
+    <string name="db_schema_version">தரவுத்தள ச்கீமா பதிப்பு: %d</string>
 </resources>

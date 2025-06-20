@@ -95,7 +95,7 @@
     <string name="troubleshooting_permissions_granted">Разрешения выданы</string>
     <string name="troubleshooting_battery_optimizations_disabled">Оптимизации батареи выключены</string>
     <string name="troubleshooting_wifi_scan_always_available">Сканирование Wi-Fi всегда доступно</string>
-    <string name="use_dynamic_color_ui">Использовать динамические цвета в интерфейсе</string>
+    <string name="use_dynamic_color_ui">Динамические цвета в интерфейсе</string>
     <string name="db_prune_title">Удалить отправленные отчёты</string>
     <string name="db_prune_two_months">После двух месяцев</string>
     <string name="db_prune_six_months">После шести месяцев</string>
