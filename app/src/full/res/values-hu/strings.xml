@@ -5,4 +5,6 @@
     <string name="prefer_fused_location_title">Fúziós helyszolgáltatók előnyben részesítése</string>
     <string name="autoscan_when_moving">Automatikus szkennelés mozgás közben</string>
     <string name="permission_rationale_background_location_autoscan">Az automatikus szkennelés indításához engedélyezni kell a program háttérben való futását</string>
+    <string name="prefer_fused_location_description">A helyfúziós szolgáltatás a GNSS-től eltérő forrásokból származó adatokat kombinálhatja</string>
+    <string name="autoscan_failed_to_enable_description">Az automatikus szkennelés a Google Play Services tevékenységfelismerést használja, amely nem biztos, hogy elérhető az Ön készülékén</string>
 </resources>
