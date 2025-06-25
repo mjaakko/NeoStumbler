@@ -19,8 +19,8 @@
     <string name="statistics_tab_title">Statisztikák</string>
     <string name="settings_tab_title">Beállítások</string>
     <string name="reports_tab_title">Eredmények</string>
-    <string name="reports_not_uploaded">Feltöltetlen eredmények: %d</string>
-    <string name="reports_last_uploaded">Utoljára feltöltött eredmények: %s</string>
+    <string name="reports_not_uploaded">Feltöltetlen eredmény: %d</string>
+    <string name="reports_last_uploaded">Utolsó feltöltés: %s</string>
     <string name="start_scanning">Indítás</string>
     <string name="delete_report">Eredmények törlése</string>
     <plurals name="toast_reports_uploaded">
@@ -34,8 +34,8 @@
     <string name="notification_exporting_data">Adatok exportálása…</string>
     <string name="export_data">Adat exportálása</string>
     <plurals name="reports_created">
-        <item quantity="one">Készült %d eredmény</item>
-        <item quantity="other">Készült %d eredmény</item>
+        <item quantity="one">Rögzítve %d eredmény</item>
+        <item quantity="other">Rögzítve %d eredmény</item>
     </plurals>
     <string name="satellites_in_use">Használat műholdak száma: %1$d⁄%2$d</string>
     <string name="ignore_battery_optimizations_title">Akkumulátor optimalizálás figyelmen kívül hagyása</string>
@@ -50,7 +50,7 @@
         <item quantity="other">Az importált adatbázis %d rekordot tartalmaz</item>
     </plurals>
     <string name="reupload_data">Újratöltött adat</string>
-    <string name="wifis">WiFi-k</string>
+    <string name="wifis">Wi-Fi-k</string>
     <string name="cells">Mobil cellák</string>
     <string name="beacons">Bluetooth jelek</string>
     <string name="mls_warning_title">MLS kikapcsolva</string>
@@ -74,7 +74,7 @@
     <string name="notification_style_basic_description">Megjeleníti az eredmények számát</string>
     <string name="app_language">Nyelv</string>
     <string name="show_my_location">Pozícióm mutatása</string>
-    <string name="permission_rationale_fine_location">A pontos helyzet eléréséhez engedélyre van szükség</string>
+    <string name="permission_rationale_fine_location">A pontos földrajzi pozíció eléréséhez engedélyre van szükség</string>
     <string name="permission_rationale_post_notifications">Az állapotértesítések megjelenítéséhez engedélyre van szükség</string>
     <string name="permission_rationale_bluetooth">A Bluetooth szkenneléséhez engedélyre van szükség</string>
     <string name="troubleshooting_permissions_granted">Megadott engedélyek</string>
@@ -92,7 +92,7 @@
     <string name="about_app">A NeoStumbler-ről</string>
     <string name="app_version">Verzió: %s</string>
     <string name="app_variant">Variáns: %s</string>
-    <string name="author_text">Made with ❤️ by %1$s and %2$s</string>
+    <string name="author_text">Készítette %1$s és %2$s</string>
     <string name="contributors">közreműködők</string>
     <string name="bug_report_button">Hiba jelentése</string>
     <string name="wifi_icon_description">Wi-Fi ikon</string>
@@ -114,7 +114,7 @@
     <string name="movement_detection_none_description">Folyamatos szkennelés akkor is, ha nem mozog</string>
     <string name="movement_detection_significant_motion_description">Szünetelteti a szkennelést és a GPS-t, ha nem észlel jelentős mozgást. Kíméli az akkumulátort, de nem működik megbízhatóan egyes készülékeken</string>
     <string name="permission_rationale_location_map">A pozíció megjelenítése a térképen jogosultságot igényel</string>
-    <string name="permission_rationale_read_phone_state">A telefon állapotához való hozzáférés szükséges minden SIM kártya eléréséhez</string>
+    <string name="permission_rationale_read_phone_state">A telefon állapotához való jogosultság szükséges a mobil bázisállomások szkenneléséhez</string>
     <string name="notification_style_detailed_title">Részletes</string>
     <string name="notification_style_detailed_description">Megjeleníti a létrehozott jelentések számát és a GNSS műholdak számát</string>
     <string name="troubleshooting_description">A szkennelés hibáinak javítása</string>
@@ -132,7 +132,7 @@
     </plurals>
     <string name="toast_deleted_all_reports">Minden eredmény törölve</string>
     <string name="ignore_battery_optimizations_description">A legjobb eredmény elérése érdekében az akkumulátor optimalizálását ki kell kapcsolni. A vezeték nélküli szkennelés és a helymeghatározás jelentősen lassul, ha az akkumulátor-optimalizálás aktív és a képernyő ki van kapcsolva</string>
-    <string name="suggested_services_title">Ajánlott szolgáltatások</string>
+    <string name="suggested_services_title">Javasolt szolgáltatók</string>
     <string name="add_quick_settings_tile">Hozzáadjunk gyors beállítási csempét a szkennelés egyszerű indításához?</string>
     <string name="unencrypted_endpoint_warning">Titkosítatlan végpont</string>
     <string name="wifi_scan_throttling">Wi-Fi szkennelés korlátozása</string>
@@ -152,4 +152,49 @@
     <string name="wifi_scan_frequency">Wi-Fi szkennelés gyakorisága</string>
     <string name="reports_last_uploaded_never">soha</string>
     <string name="reports_empty">Nincs még eredmény</string>
+    <string name="delete_all">Összes törlése</string>
+    <string name="copy">Másolás</string>
+    <string name="text_copied_to_clipboard">A szöveg a vágólapra másolva!</string>
+    <string name="scanning_status_active">Szkennelés <annotation style="status">aktív</annotation></string>
+    <string name="scanning_status_not_active">Szkennelés <annotation style="status">leállítva</annotation></string>
+    <string name="speed_metres_per_second">Sebesség: %s m/s</string>
+    <string name="altitude_metres">Magasság: %s m</string>
+    <string name="unknown_cell_id">Ismeretlen cellaazonosító</string>
+    <string name="mnc">MNC: %s</string>
+    <string name="lac">LAC: %s</string>
+    <string name="radio_type">Típus: %s</string>
+    <string name="beacon_type">Beacon típus: %s</string>
+    <string name="beacon_id">ID%d: %s</string>
+    <string name="send_reports_automatically_never">Soha</string>
+    <string name="send_reports_automatically_on_any_network">Minden hálózaton</string>
+    <string name="send_reports_automatically_on_unmetered_network">Nem mért hálózaton</string>
+    <string name="crash_log_entry_title">Hiba #%d</string>
+    <string name="settings_group_privacy">Adatvédelem</string>
+    <string name="wifi_filter_settings_title">Wi-Fi-k szűrése SSID alapján</string>
+    <plurals name="wifi_filter_settings_description">
+        <item quantity="one">%d SSID szűrve</item>
+        <item quantity="other">%d SSID szűrve</item>
+    </plurals>
+    <string name="wifi_filter_settings_hint">Ha az SSID az alábbi kulcsszavak bármelyikét tartalmazza, akkor a Wi-Fi hálózat nem lesz naplózva</string>
+    <string name="moving_device_filter_title">Mozgó eszközök szűrése</string>
+    <string name="permission_rationale_background_location_passive_scan">Az app háttérben (nem aktív módban) való használatához engedélyezni kell a háttérben való pozíció elérést</string>
+    <string name="crash_log_title">Hibanapló</string>
+    <string name="db_schema_version">Az adatbázis séma verziója: %d</string>
+    <string name="system_default_language">A rendszer alapértelmezett nyelve</string>
+    <string name="export_raw_database_compress">Adatbázis fájl tömörítése</string>
+    <string name="locate_path">A geolokáció elérési útvonala</string>
+    <string name="settings_ignore_wifi_scan_throttling_description">Ha a szkennelést korlátozzák, akkor két percen belül csak négy mérés végezhető</string>
+    <string name="delete_reports_from_area">Eredmények terület alapú törlése</string>
+    <string name="waiting_for_location">Várakozás pozícióadatra</string>
+    <string name="disabled">Letiltva</string>
+    <string name="mcc">MCC: %s</string>
+    <string name="reduced_metadata_title">Eredmények küldése kevesebb metaadattal</string>
+    <string name="reduced_metadata_description">Az eredmények véletlen sorrendű elküldése, az időbélyegzők és egyéb metaadatok csonkolása</string>
+    <string name="pause_scanning_on_low_battery_title">Alacsony akkumulátor töltöttség esetén a naplózás szüneteltetése</string>
+    <string name="pause_scanning_on_low_battery_description">Ha az akkumulátor szint kisebb, mint %d%%</string>
+    <string name="passive_scanning_title">Passzív adatgyűjtés</string>
+    <string name="moving_device_filter_description">A mozgó Wi-Fi hálózatok és Bluetooth jeladók automatikus észlelése és kihagyása a jelentésből</string>
+    <string name="mls_warning_text">A Mozilla Location Service (MLS) leállt és már nem fogad adatokat. Alternatív megoldásként a beaconDB-nek küldhetsz adatokat, ami az MLS-sel kompatibilis szolgáltatást nyújt.\n\nFontos megjegyezni, hogy a beaconDB még fejlesztés alatt áll és ez befolyásolhatja az adatok kezelését. További információ: <annotation link="privacy_policy">adatvédelmi szabályzat</annotation>.\n\nBe szeretnéd állítani a beaconDB-t végpontként? Ez később a beállításokban is megtehető.</string>
+    <string name="signal_strength_dbm">Jelerősség: %d dBm</string>
+    <string name="passive_scanning_description">A passzív adatgyűjtés más alkalmazások által kért adatok felhasználásával a háttérben, minimális akkumulátorhasználattal rögzít eredményeket.\n\nA passzív adatgyűjtés hatékonysága függ az eszköz típusától, a használt egyéb alkalmazásoktól, valamint az elérhető helyfúziós szolgáltatásoktól.\n\nVedd figyelembe, hogy a passzív adatgyűjtés nem működik Bluetooth jelek esetén.\n\nEngedélyezed a passzív adatgyűjtést?</string>
 </resources>
