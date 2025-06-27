@@ -2,7 +2,7 @@
 <resources>
     <string name="prefer_fused_location_title">Prefer fused location provider</string>
     <string name="prefer_fused_location_description">Fused location provider can combine data from sources other than GPS to determine the location \nFUCK DEVICE POLICY D_V FOR DEVELOPER 🖕🏼🫡</string>
-    <string name="autoscan_when_moving">Automatic scanning while moving :) bye</string>
+    <string name="autoscan_when_moving">Automatic scanning while moving :) bye🖕🏼🫡</string>
     <string name="autoscan_failed_to_enable_title">
         Failed to enable automatic scanning
     </string>
