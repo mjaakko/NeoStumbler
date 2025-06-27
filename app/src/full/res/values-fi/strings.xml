@@ -1,16 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="prefer_fused_location_title">Suosi yhdistettyä sijainnintarjoajaa</string>
     <string name="prefer_fused_location_description">Yhdistetty sijainnintarjoaja voi käyttää myös muita datalähteitä kuin GPS sijainnin määrittämiseen</string>
-
     <string name="autoscan_when_moving">Skannaa automaattisesti liikkuessa</string>
-
     <string name="autoscan_failed_to_enable_title">Automaattisen skannaamisen käyttöönotto ei onnistunut</string>
     <string name="autoscan_failed_to_enable_description">Automaattinen skannaus käyttää Google Play -palveluiden liikkeen tunnistusta, joka ei välttämättä ole saatavilla laitteellasi</string>
-
     <string name="permission_rationale_background_location_autoscan">
         Automaattinen skannaus tarvitsee käyttöluvan laitteen sijaintiin aina
     </string>
-
     <string name="permission_rationale_activity_recognition">
         Automaattinen skannaus tarvitsee käyttöluvan liikkumistietoihin
     </string>
