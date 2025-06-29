@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="no_thanks">Nein, danke</string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
@@ -60,13 +60,13 @@
     <string name="settings_ignore_wifi_scan_throttling_title">Ignoriere WLAN-Suchdrosselung</string>
     <string name="wifi_scan_throttling">WLAN-Suchdrosselung</string>
     <string name="wifi_scan_throttling_explanation">Sie müssen die Drosselung der WLAN-Suche in Ihren Geräteeinstellungen deaktivieren, um diese Funktion zu ermöglichen. Normalerweise kann dies in den Entwicklereinstellungen getan werden</string>
-    <string name="show_my_location">Zeige meinen Standort</string>
-    <string name="permission_rationale_fine_location">Damit Berichte mit nützlichen Standortdaten erstellt werden können, wird die Berechtigung „genauer Standort“ benötigt</string>
+    <string name="show_my_location">Meinen Standort anzeigen</string>
+    <string name="permission_rationale_fine_location">Damit Berichte mit nützlichen Standortdaten erstellt werden können, wird die Berechtigung für genauen Standort benötigt</string>
     <string name="permission_rationale_read_phone_state">Zugriff auf das Telefon wird benötigt, um Mobilfunkmasten zu scannen</string>
     <string name="permission_rationale_bluetooth">Das Scannen von Bluetooth-Beacons benötigt die Bluetooth-Berechtigung</string>
     <string name="permission_rationale_post_notifications">Das Anzeigen der Status-Benachrichtigung benötigt die Benachrichtigungsberechtigung</string>
     <string name="permission_rationale_background_location_quick_settings">Um das Scannen von der Schnelleinstellungskachel zu starten, wird der Hintergrundzugriff auf den Standort benötigt</string>
-    <string name="permission_rationale_location_map">Um deinen Standort auf der Karte anzuzeigen, benötigt die Neostumbler Zugriff auf deinen Standort</string>
+    <string name="permission_rationale_location_map">Die Anzeige deines Standorts auf der Karte erfordert eine Berechtigung für den Standort</string>
     <string name="movement_detection_location_description">Pausiert Scannen, wenn Standort sich nicht ändert. Hält GPS aktiv</string>
     <string name="notification_style_minimal_description">Zeigt Benachrichtigung ohne Details</string>
     <string name="notification_style_basic_title">Einfach</string>
@@ -144,7 +144,7 @@
     <string name="cell_tower_scan_frequency">Häufigkeit des Mobilfunk-Scans</string>
     <string name="map_tile_source">Kartenkachelquelle</string>
     <string name="settings_ignore_wifi_scan_throttling_description">Wenn das Scannen gedrosselt ist, können maximal vier Scans innerhalb von zwei Minuten durchgeführt werden</string>
-    <string name="mls_warning_text">\"Mozilla Location Service\" wurde abgeschalter und akzeptiert keine Datenbeiträge mehr. Alternativ zu MLS können Daten zu beaconDB gesendet werden, was einen Service ähnlich zu MLS bereitstellt\n\nBeachte bitte, dass sich beaconDB noch in der Entwicklung befindet, was die Art beeinflusst, wie die Daten verarbeitet werden. Lese die <annotation link="privacy_policy">Privacy Policy</annotation> für weitere Informationen\n\nMöchtest du beaconDB als Endpunkt setzen? Dies kann später in den Einstellung geändert werden</string>
+    <string name="mls_warning_text">Der Mozilla Location Service wurde abgeschaltet und akzeptiert keine Datenbeiträge mehr. Alternativ zu MLS können Daten zu beaconDB gesendet werden, was einen Service ähnlich zu MLS bereitstellt\n\nBeachte bitte, dass sich beaconDB noch in der Entwicklung befindet, was die Art beeinflusst, wie die Daten verarbeitet werden. Lese die <annotation link="privacy_policy">Privacy Policy</annotation> für weitere Informationen\n\nMöchtest du beaconDB als Endpunkt setzen? Dies kann später in den Einstellungen geändert werden</string>
     <string name="toast_reports_upload_failed_no_endpoint">Das Hochladen der Berichte is fehlgeschlagen, da kein Endpunkt eingerichtet ist</string>
     <string name="no_endpoint_configured">Kein Endpunkt eingerichtet</string>
     <string name="reports_last_uploaded_never">niemals</string>
@@ -160,7 +160,7 @@
     <string name="beacon_id">ID%d: %s</string>
     <string name="export_raw_database_compress">Datenbankdatei komprimieren</string>
     <string name="send_reports_automatically_on_any_network">Über alle Verbindungen</string>
-    <string name="locate_path">Pfad</string>
+    <string name="locate_path">Pfad für Geolokalisierung</string>
     <string name="system_default_language">Standartsystemsprache</string>
     <string name="delete_reports_from_area">Messwerte nach Bereich löschen</string>
     <string name="lac">LAC: %s</string>
@@ -196,5 +196,5 @@
     <string name="moving_device_filter_description">Sich bewegende Wi-Fi-Netzwerke und Bluetooth-Beacons werden automatisch erkannt und aus den Berichten herausgefiltert</string>
     <string name="crash_log_title">Absturzprotokoll</string>
     <string name="crash_log_entry_title">Absturz #%d</string>
-    <string name="passive_scanning_description">Bei der passiven Datenerfassung werden Berichte im Hintergrund mit minimalen Auswirkungen auf den Akku erstellt, indem von anderen Anwendungen angeforderte Daten verwendet werden.\n\nDie Effektivität der passiven Datenerfassung hängt von deinem Gerätetyp, den anderen Anwendungen, die du verwendest, und davon ab, ob du einen gesicherten Standortanbieter zur Verfügung hast.\n\nBeachte, dass die passive Datenerfassung nicht mit Bluetooth-Beacons funktioniert.\n\nMöchtest du die passive Datenerfassung aktivieren?</string>
+    <string name="passive_scanning_description">Bei der passiven Datenerfassung werden Berichte im Hintergrund mit minimalen Auswirkungen auf den Akku erstellt, indem von anderen Anwendungen angeforderte Daten verwendet werden.\n\nDie Effektivität der passiven Datenerfassung hängt von deinem Gerätetyp, den anderen Anwendungen, die du verwendest, und davon ab, ob du einen Anbieter für einen kombinierten Standort zur Verfügung hast.\n\nBeachte, dass die passive Datenerfassung nicht mit Bluetooth-Beacons funktioniert.\n\nMöchtest du die passive Datenerfassung aktivieren?</string>
 </resources>
