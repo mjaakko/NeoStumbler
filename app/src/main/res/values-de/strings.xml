@@ -196,4 +196,5 @@
     <string name="moving_device_filter_description">Sich bewegende Wi-Fi-Netzwerke und Bluetooth-Beacons werden automatisch erkannt und aus den Berichten herausgefiltert</string>
     <string name="crash_log_title">Absturzprotokoll</string>
     <string name="crash_log_entry_title">Absturz #%d</string>
+    <string name="passive_scanning_description">Bei der passiven Datenerfassung werden Berichte im Hintergrund mit minimalen Auswirkungen auf den Akku erstellt, indem von anderen Anwendungen angeforderte Daten verwendet werden.\n\nDie Effektivität der passiven Datenerfassung hängt von deinem Gerätetyp, den anderen Anwendungen, die du verwendest, und davon ab, ob du einen gesicherten Standortanbieter zur Verfügung hast.\n\nBeachte, dass die passive Datenerfassung nicht mit Bluetooth-Beacons funktioniert.\n\nMöchtest du die passive Datenerfassung aktivieren?</string>
 </resources>
