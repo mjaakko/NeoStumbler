@@ -10,8 +10,15 @@ import xyz.malkki.neostumbler.ichnaea.dto.CellTowerDto
 import xyz.malkki.neostumbler.ichnaea.dto.ReportDto
 import xyz.malkki.neostumbler.ichnaea.dto.WifiAccessPointDto
 
-// Send max 2000 reports in one request to avoid creating too large payloads
-private const val MAX_REPORTS_PER_BATCH = 2000
+/**
+ * Limit the number of reports per batch to 999
+ *
+ * This is used for:
+ * 1. avoiding too large payloads
+ * 2. not exceeding SQLite variable limit on older Android versions (see
+ *    https://www.sqlite.org/limits.html)
+ */
+private const val MAX_REPORTS_PER_BATCH = 999
 
 // Send speed with 2 m/s accuracy
 private const val REDUCED_METADATA_SPEED_ACCURACY = 2.0
