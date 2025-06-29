@@ -37,7 +37,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Starting"
         android:usesCleartextTraffic="true"
-        tools:targetApi="31">
+        android:enableOnBackInvokedCallback="true"
+        tools:targetApi="33">
         <service
             android:name=".scanner.ScannerService"
             android:enabled="true"
