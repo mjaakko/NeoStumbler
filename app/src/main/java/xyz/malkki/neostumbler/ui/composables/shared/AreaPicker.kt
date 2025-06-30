@@ -47,7 +47,6 @@ import okhttp3.Call
 import org.koin.compose.koinInject
 import org.maplibre.android.MapLibre
 import org.maplibre.android.camera.CameraPosition
-import org.maplibre.android.maps.MapLibreMap
 import org.maplibre.android.maps.Style
 import org.maplibre.android.module.http.HttpRequestUtil
 import org.maplibre.android.plugins.annotation.Circle
@@ -58,6 +57,7 @@ import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.domain.LatLng
+import xyz.malkki.neostumbler.domain.LatLng.Companion.asDomainLatLng
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.get
 import xyz.malkki.neostumbler.location.LocationSource
@@ -182,17 +182,9 @@ fun AreaPickerMap(
                 mapView.localizeLabelNames()
 
                 mapView.getMapAsync { map ->
-                    map.addOnCameraMoveListener(
-                        object : MapLibreMap.OnCameraMoveListener {
-                            override fun onCameraMove() {
-                                mapCenter.value =
-                                    LatLng(
-                                        map.cameraPosition.target!!.latitude,
-                                        map.cameraPosition.target!!.longitude,
-                                    )
-                            }
-                        }
-                    )
+                    map.addOnCameraMoveListener {
+                        mapCenter.value = map.cameraPosition.target!!.asDomainLatLng()
+                    }
 
                     val cameraPos = currentLocation.value!!.asMapLibreLatLng()
 

@@ -72,6 +72,7 @@ import org.maplibre.android.style.layers.PropertyFactory
 import org.maplibre.android.style.sources.VectorSource
 import org.maplibre.android.utils.ColorUtils as MapLibreColorUtils
 import xyz.malkki.neostumbler.R
+import xyz.malkki.neostumbler.domain.LatLng.Companion.asDomainLatLng
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.ui.composables.shared.KeepScreenOn
 import xyz.malkki.neostumbler.ui.composables.shared.PermissionsDialog
@@ -177,31 +178,23 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                             }
                         )
 
-                        map.addOnCameraMoveListener(
-                            object : MapLibreMap.OnCameraMoveListener {
-                                override fun onCameraMove() {
-                                    val mapCenter =
-                                        xyz.malkki.neostumbler.domain.LatLng(
-                                            map.cameraPosition.target!!.latitude,
-                                            map.cameraPosition.target!!.longitude,
-                                        )
+                        map.addOnCameraMoveListener {
+                            val mapCenter = map.cameraPosition.target!!.asDomainLatLng()
 
-                                    mapViewModel.setMapCenter(mapCenter)
-                                    mapViewModel.setZoom(map.cameraPosition.zoom)
+                            mapViewModel.setMapCenter(mapCenter)
+                            mapViewModel.setZoom(map.cameraPosition.zoom)
 
-                                    mapViewModel.setMapBounds(
-                                        minLatitude =
-                                            map.projection.visibleRegion.latLngBounds.latitudeSouth,
-                                        maxLatitude =
-                                            map.projection.visibleRegion.latLngBounds.latitudeNorth,
-                                        minLongitude =
-                                            map.projection.visibleRegion.latLngBounds.longitudeWest,
-                                        maxLongitude =
-                                            map.projection.visibleRegion.latLngBounds.longitudeEast,
-                                    )
-                                }
-                            }
-                        )
+                            mapViewModel.setMapBounds(
+                                minLatitude =
+                                    map.projection.visibleRegion.latLngBounds.latitudeSouth,
+                                maxLatitude =
+                                    map.projection.visibleRegion.latLngBounds.latitudeNorth,
+                                minLongitude =
+                                    map.projection.visibleRegion.latLngBounds.longitudeWest,
+                                maxLongitude =
+                                    map.projection.visibleRegion.latLngBounds.longitudeEast,
+                            )
+                        }
 
                         map.setMinZoomPreference(MIN_ZOOM)
                         map.setMaxZoomPreference(MAX_ZOOM)
@@ -263,12 +256,7 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                                 map.locationComponent.isLocationComponentActivated
                         ) {
                             map.locationComponent.forceLocationUpdate(
-                                Location("manual").apply {
-                                    latitude = myLocation.value!!.latitude
-                                    longitude = myLocation.value!!.longitude
-
-                                    myLocation.value!!.accuracy?.toFloat()?.let { accuracy = it }
-                                }
+                                myLocation.value!!.asPlatformLocation()
                             )
 
                             if (trackMyLocation.value) {
@@ -350,6 +338,16 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                     contentDescription = stringResource(id = R.string.show_my_location),
                 )
             }
+        }
+    }
+}
+
+private fun xyz.malkki.neostumbler.domain.Position.asPlatformLocation(): Location {
+    return Location("manual").apply {
+        this.latitude = this@asPlatformLocation.latitude
+        this.longitude = this@asPlatformLocation.longitude
+        if (this@asPlatformLocation.accuracy != null) {
+            this.accuracy = this@asPlatformLocation.accuracy.toFloat()
         }
     }
 }
