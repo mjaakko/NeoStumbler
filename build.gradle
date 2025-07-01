@@ -11,7 +11,7 @@ plugins {
 
     id "app.accrescent.tools.bundletool" version "0.2.4" apply false
 
-    id "com.ncorti.ktfmt.gradle" version "0.22.0" apply false
+    id "com.ncorti.ktfmt.gradle" version "0.23.0" apply false
 
     id "io.gitlab.arturbosch.detekt" version "1.23.8" apply false
 }
