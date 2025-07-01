@@ -303,7 +303,7 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor"
     testImplementation "com.squareup.okhttp3:mockwebserver"
 
-    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0'
 
     implementation 'org.altbeacon:android-beacon-library:2.21.0'
 
