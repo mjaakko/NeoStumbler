@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import xyz.malkki.neostumbler.R
 
 @Composable
@@ -20,6 +21,7 @@ fun ParamField(
     label: String,
     state: MutableState<String?>,
     onDone: (() -> Unit)? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     modifier: Modifier = Modifier.fillMaxWidth(),
 ) {
     TextField(
@@ -29,9 +31,9 @@ fun ParamField(
         keyboardActions = onDone?.let { KeyboardActions { onDone() } } ?: KeyboardActions.Default,
         keyboardOptions =
             if (onDone != null) {
-                KeyboardOptions.Default.copy(imeAction = ImeAction.Done)
+                keyboardOptions.copy(imeAction = ImeAction.Done)
             } else {
-                KeyboardOptions.Default
+                keyboardOptions
             },
         label = { Text(text = label) },
         singleLine = true,
@@ -46,7 +48,13 @@ fun UrlField(
     modifier: Modifier = Modifier.fillMaxWidth(),
 ) {
     Column(modifier = Modifier.width(IntrinsicSize.Max)) {
-        ParamField(label = label, state = state, onDone = onDone, modifier = modifier)
+        ParamField(
+            label = label,
+            state = state,
+            onDone = onDone,
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Uri),
+            modifier = modifier,
+        )
 
         if (!state.value.isValidUrl) {
             Warning(warningText = R.string.invalid_url)
