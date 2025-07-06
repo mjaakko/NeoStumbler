@@ -76,10 +76,18 @@ class MapViewModel(
     val httpClient: StateFlow<Call.Factory?>
         get() = _httpClient.asStateFlow()
 
-    val mapTileSource: Flow<MapTileSource> =
+    val mapTileSourceUrl: Flow<String> =
         settingsStore.data
             .map { prefs ->
-                prefs.get<MapTileSource>(PreferenceKeys.MAP_TILE_SOURCE) ?: MapTileSource.DEFAULT
+                val mapTileSource =
+                    prefs.get<MapTileSource>(PreferenceKeys.MAP_TILE_SOURCE)
+                        ?: MapTileSource.DEFAULT
+
+                if (mapTileSource == MapTileSource.CUSTOM) {
+                    prefs[stringPreferencesKey(PreferenceKeys.MAP_TILE_SOURCE_CUSTOM_URL)] ?: ""
+                } else {
+                    mapTileSource.sourceUrl!!
+                }
             }
             .distinctUntilChanged()
 
@@ -203,16 +211,6 @@ class MapViewModel(
                 LatLng(maxLatitude + latAdjust, maxLongitude + lngAdjust)
 
         mapBounds.trySendBlocking(bounds)
-    }
-
-    fun setMapTileSource(mapTileSource: MapTileSource) {
-        viewModelScope.launch {
-            settingsStore.updateData { prefs ->
-                prefs.toMutablePreferences().apply {
-                    set(stringPreferencesKey(PreferenceKeys.MAP_TILE_SOURCE), mapTileSource.name)
-                }
-            }
-        }
     }
 
     @Suppress("MagicNumber")

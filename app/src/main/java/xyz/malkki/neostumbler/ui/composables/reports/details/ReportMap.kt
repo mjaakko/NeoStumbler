@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
@@ -17,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import java.io.IOException
 import kotlin.time.Duration.Companion.seconds
@@ -63,9 +65,16 @@ import xyz.malkki.neostumbler.ui.map.setAttributionMargin
 
 private const val MAP_ZOOM_LEVEL = 15.0
 
-private fun DataStore<Preferences>.mapTileSource(): Flow<MapTileSource> =
+private fun DataStore<Preferences>.mapStyleUrl(): Flow<String> =
     data.map { prefs ->
-        prefs.get<MapTileSource>(PreferenceKeys.MAP_TILE_SOURCE) ?: MapTileSource.DEFAULT
+        val tileSource =
+            prefs.get<MapTileSource>(PreferenceKeys.MAP_TILE_SOURCE) ?: MapTileSource.DEFAULT
+
+        if (tileSource == MapTileSource.CUSTOM) {
+            prefs.get(stringPreferencesKey(PreferenceKeys.MAP_TILE_SOURCE_CUSTOM_URL)) ?: ""
+        } else {
+            tileSource.sourceUrl!!
+        }
     }
 
 @Composable
@@ -79,13 +88,13 @@ fun ReportMap(
 
     val density = LocalDensity.current
 
-    val mapTileSource = settingsStore.mapTileSource().collectAsState(initial = null)
+    val mapStyleUrl by settingsStore.mapStyleUrl().collectAsState(initial = null)
 
     val httpClient = produceState<Call.Factory?>(null) { value = httpClientProvider.await() }
 
     val estimatedLocation = getEstimatedReportLocation(reportWithData)
 
-    if (mapTileSource.value == null || httpClient.value == null) {
+    if (mapStyleUrl == null || httpClient.value == null) {
         CenteredCircularProgressIndicator(modifier = modifier.fillMaxWidth().height(150.dp))
     } else {
         val circleManager = remember { mutableStateOf<CircleManager?>(null) }
@@ -111,7 +120,7 @@ fun ReportMap(
 
                     map.uiSettings.setAllGesturesEnabled(false)
 
-                    val styleBuilder = Style.Builder().fromUri(mapTileSource.value!!.sourceUrl)
+                    val styleBuilder = Style.Builder().fromUri(mapStyleUrl!!)
 
                     map.setStyle(styleBuilder) { style ->
                         lineManager.value = LineManager(mapView, map, style)
@@ -124,8 +133,6 @@ fun ReportMap(
             },
             update = { mapView ->
                 mapView.lifecycle = lifecycle
-
-                val mapStyleUrl = mapTileSource.value?.sourceUrl
 
                 val lineManager = lineManager.value
 
@@ -289,7 +296,7 @@ private fun getEstimatedReportLocation(
             }
         }
 
-    return produceState<GeolocateResponseDto?>(null, reportWithData, geolocate.value) {
+    return produceState(null, reportWithData, geolocate.value) {
         val flow = flow {
             val locateResponse =
                 geolocate.value?.getLocation(

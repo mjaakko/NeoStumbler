@@ -5,34 +5,15 @@ import android.annotation.SuppressLint
 import android.location.Location
 import androidx.annotation.ColorInt
 import androidx.collection.forEach
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationSearching
 import androidx.compose.material.icons.filled.MyLocation
-import androidx.compose.material3.AlertDialogDefaults
-import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.FilledIconButton
-import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -43,9 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.graphics.ColorUtils
@@ -74,10 +53,10 @@ import org.maplibre.android.utils.ColorUtils as MapLibreColorUtils
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.domain.LatLng.Companion.asDomainLatLng
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
+import xyz.malkki.neostumbler.ui.composables.map.MapSettingsButton
 import xyz.malkki.neostumbler.ui.composables.shared.KeepScreenOn
 import xyz.malkki.neostumbler.ui.composables.shared.PermissionsDialog
 import xyz.malkki.neostumbler.ui.map.LifecycleAwareMapView
-import xyz.malkki.neostumbler.ui.map.MapTileSource
 import xyz.malkki.neostumbler.ui.map.setAttributionMargin
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
 
@@ -111,7 +90,7 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
 
     val httpClient = mapViewModel.httpClient.collectAsState(initial = null)
 
-    val selectedMapTileSource = mapViewModel.mapTileSource.collectAsState(initial = null)
+    val mapTileSourceUrl = mapViewModel.mapTileSourceUrl.collectAsState(initial = null)
 
     val coverageTileJsonUrl = mapViewModel.coverageTileJsonUrl.collectAsState(initial = null)
 
@@ -153,7 +132,7 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
     KeepScreenOn()
 
     Box(modifier = Modifier.fillMaxSize()) {
-        if (selectedMapTileSource.value != null && httpClient.value != null) {
+        if (mapTileSourceUrl.value != null && httpClient.value != null) {
             AndroidView(
                 modifier = Modifier.fillMaxSize(),
                 factory = { context ->
@@ -203,8 +182,7 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
 
                         map.uiSettings.isRotateGesturesEnabled = false
 
-                        val styleBuilder =
-                            Style.Builder().fromUri(selectedMapTileSource.value!!.sourceUrl)
+                        val styleBuilder = Style.Builder().fromUri(mapTileSourceUrl.value!!)
 
                         map.setStyle(styleBuilder) { style ->
                             map.locationComponent.activateLocationComponent(
@@ -270,13 +248,8 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                         // Ugly, but we don't want to update the map style unless it has actually
                         // changed
                         // TODO: think about a better way to do this
-                        if (
-                            map.style != null &&
-                                selectedMapTileSource.value!!.sourceUrl != map.style!!.uri
-                        ) {
-                            map.setStyle(
-                                Style.Builder().fromUri(selectedMapTileSource.value!!.sourceUrl)
-                            )
+                        if (map.style != null && mapTileSourceUrl.value!! != map.style!!.uri) {
+                            map.setStyle(Style.Builder().fromUri(mapTileSourceUrl.value!!))
                         }
 
                         addCoverage(map, coverageTileJsonUrl.value, coverageTileJsonLayerIds.value)
@@ -305,13 +278,7 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
         }
 
         Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-            if (selectedMapTileSource.value != null) {
-                MapTileSourceButton(
-                    modifier = Modifier.size(32.dp).align(Alignment.TopEnd),
-                    selectedMapTileSource = selectedMapTileSource.value!!,
-                    onMapTileSourceSelected = { mapViewModel.setMapTileSource(it) },
-                )
-            }
+            MapSettingsButton(modifier = Modifier.size(32.dp).align(Alignment.TopEnd))
 
             FilledIconButton(
                 modifier = Modifier.size(48.dp).align(Alignment.BottomEnd),
@@ -428,83 +395,4 @@ private fun createHeatMapFill(
 
             fillManager.create(fillOptions)
         }
-}
-
-@Composable
-private fun MapTileSourceButton(
-    modifier: Modifier,
-    selectedMapTileSource: MapTileSource,
-    onMapTileSourceSelected: (MapTileSource) -> Unit,
-) {
-    val dialogOpen = rememberSaveable { mutableStateOf(false) }
-
-    if (dialogOpen.value) {
-        BasicAlertDialog(onDismissRequest = { dialogOpen.value = false }) {
-            Surface(
-                modifier = Modifier.wrapContentWidth().wrapContentHeight(),
-                shape = MaterialTheme.shapes.small,
-                tonalElevation = AlertDialogDefaults.TonalElevation,
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        style = MaterialTheme.typography.titleLarge,
-                        text = stringResource(id = R.string.map_tile_source),
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Column(
-                        modifier = Modifier.selectableGroup().padding(bottom = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        MapTileSource.entries.forEach { mapTileSource ->
-                            Row(
-                                Modifier.fillMaxWidth()
-                                    .wrapContentHeight()
-                                    .defaultMinSize(minHeight = 36.dp)
-                                    .selectable(
-                                        selected = mapTileSource == selectedMapTileSource,
-                                        onClick = {
-                                            onMapTileSourceSelected(mapTileSource)
-
-                                            dialogOpen.value = false
-                                        },
-                                        role = Role.RadioButton,
-                                    )
-                                    .padding(horizontal = 16.dp, vertical = 4.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                RadioButton(
-                                    modifier =
-                                        Modifier.align(Alignment.CenterVertically)
-                                            .padding(top = 4.dp),
-                                    selected = mapTileSource == selectedMapTileSource,
-                                    onClick = null,
-                                )
-
-                                Text(
-                                    modifier =
-                                        Modifier.align(Alignment.CenterVertically)
-                                            .padding(start = 16.dp),
-                                    text = mapTileSource.title,
-                                    style = MaterialTheme.typography.bodyMedium.merge(),
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    FilledTonalIconButton(
-        modifier = modifier,
-        onClick = { dialogOpen.value = true },
-        colors = IconButtonDefaults.filledTonalIconButtonColors(),
-    ) {
-        Icon(
-            painter = painterResource(id = R.drawable.layers_18),
-            contentDescription = stringResource(id = R.string.map_tile_source),
-        )
-    }
 }

@@ -24,6 +24,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
@@ -37,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.Deferred
@@ -65,9 +67,16 @@ import xyz.malkki.neostumbler.ui.map.LifecycleAwareMapView
 import xyz.malkki.neostumbler.ui.map.MapTileSource
 import xyz.malkki.neostumbler.ui.map.setAttributionMargin
 
-private fun DataStore<Preferences>.mapTileSource(): Flow<MapTileSource> =
+private fun DataStore<Preferences>.mapStyleUrl(): Flow<String> =
     data.map { prefs ->
-        prefs.get<MapTileSource>(PreferenceKeys.MAP_TILE_SOURCE) ?: MapTileSource.DEFAULT
+        val tileSource =
+            prefs.get<MapTileSource>(PreferenceKeys.MAP_TILE_SOURCE) ?: MapTileSource.DEFAULT
+
+        if (tileSource == MapTileSource.CUSTOM) {
+            prefs.get(stringPreferencesKey(PreferenceKeys.MAP_TILE_SOURCE_CUSTOM_URL)) ?: ""
+        } else {
+            tileSource.sourceUrl!!
+        }
     }
 
 @Composable
@@ -151,13 +160,13 @@ fun AreaPickerMap(
 
     val density = LocalDensity.current
 
-    val mapTileSource = settingsStore.mapTileSource().collectAsState(initial = null)
+    val mapStyleUrl by settingsStore.mapStyleUrl().collectAsState(initial = null)
 
     val httpClient = produceState<Call.Factory?>(null) { value = httpClientProvider.await() }
 
     val currentLocation = getCurrentLocation()
 
-    if (mapTileSource.value == null || httpClient.value == null || currentLocation.value == null) {
+    if (mapStyleUrl == null || httpClient.value == null || currentLocation.value == null) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
@@ -198,7 +207,7 @@ fun AreaPickerMap(
 
                     map.uiSettings.isRotateGesturesEnabled = false
 
-                    val styleBuilder = Style.Builder().fromUri(mapTileSource.value!!.sourceUrl)
+                    val styleBuilder = Style.Builder().fromUri(mapStyleUrl!!)
 
                     map.setStyle(styleBuilder) { style ->
                         circleManager.value = CircleManager(mapView, map, style)
@@ -219,8 +228,6 @@ fun AreaPickerMap(
             },
             update = { mapView ->
                 mapView.lifecycle = lifecycle
-
-                val mapStyleUrl = mapTileSource.value?.sourceUrl
 
                 val mapCenter = mapCenter.value
                 val circle = circle.value
