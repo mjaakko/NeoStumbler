@@ -201,5 +201,10 @@
     <string name="passive_scanning_description">Pasywne zbieranie danych tworzy raporty w tle przy minimalnym zużyciu baterii przez wykorzystywanie danych żądanych przez inne aplikacje. \n\nEfektywność pasywnego zbierania danych będzie zależała od typu twojego urządzenia, innych aplikacji, których używasz, i tego, czy dostępny jest dostawca zespolonej lokalizacji.\n\nPamiętaj, że pasywne zbieranie danych nie działa z beaconami Bluetooth.\n\nCzy chcesz włączyć pasywne zbieranie danych?</string>
     <string name="system_default_language">Domyślny język systemu</string>
     <string name="permission_rationale_background_location_passive_scan">Aktualizowanie lokalizacji, gdy aplikacja nie jest aktywna wymaga dostępu do lokalizacji w tle</string>
-    <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Ok</string>
+    <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">OK</string>
+    <string name="troubleshooting_not_ok" tools:ignore="Typos">Nie OK</string>
+    <string name="db_schema_version">Wersja schematu bazy danych: %d</string>
+    <string name="delete_reports_from_area">Usuń raporty z obszaru</string>
+    <string name="crash_log_title">Dziennik błędów</string>
+    <string name="crash_log_entry_title">Awaria #%d</string>
 </resources>
