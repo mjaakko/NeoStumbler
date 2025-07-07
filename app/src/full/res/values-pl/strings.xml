@@ -6,4 +6,5 @@
     <string name="prefer_fused_location_title">Preferuj lokalizację zespoloną</string>
     <string name="permission_rationale_background_location_autoscan">Automatyczny start skanowania wymaga otrzymywanie lokalizacji, gdy aplikacja jest tle</string>
     <string name="prefer_fused_location_description">Dostawca lokalizacji zespolonej może łączyć dane z innych źródeł niż GPS, żeby określić lokalizację</string>
+    <string name="autoscan_failed_to_enable_description">Automatyczne skanowanie wykorzystuje wykrywanie aktywności Google Play, które może nie być dostępne na twoim urządzeniu</string>
 </resources>
