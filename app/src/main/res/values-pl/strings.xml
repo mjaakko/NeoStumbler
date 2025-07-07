@@ -15,7 +15,7 @@
     <string name="cell_tower_icon_description">Ikona wieży komórkowej</string>
     <string name="reports_tab_title">Raporty</string>
     <string name="send_reports">Wyślij raporty</string>
-    <string name="reports_last_uploaded">Data ostatniej wysyłki: %s</string>
+    <string name="reports_last_uploaded">Data ostatniego wysłania raportu: %s</string>
     <string name="start_scanning">Rozpocznij skanowanie</string>
     <string name="delete_report">Usuń raport</string>
     <string name="delete_report_confirmation">Czy jesteś pewien, że chcesz usunąć ten raport?</string>
@@ -100,7 +100,7 @@
     <string name="reports">Raporty:</string>
     <string name="send_reports_automatically_title">Wysyłaj raporty automatycznie</string>
     <string name="settings_group_reports">Raporty</string>
-    <string name="report_upload_notification_channel_name">Wysyłki raportów</string>
+    <string name="report_upload_notification_channel_name">Wysłania raportów</string>
     <string name="reports_total">Całkowita liczba raportów: %d</string>
     <string name="reports_not_uploaded">Liczba raportów do wysłania: %d</string>
     <string name="stop_scanning">Zatrzymaj skanowanie</string>
@@ -156,4 +156,47 @@
     <string name="mls_warning_text">Serwis lokalizacji Mozilli (MLS) został wyłączony i nie przyjmuje już nowych danych. Alternatywą dla MLS może być przesyłanie danych do beaconDB, które udostępnia usługę kompatybilną z MLS.\n\nProszę zauważyć, że beaconDB wciąż jest w fazie rozwoju i ma to wpływ na przetwarzanie Twoich danych. Możesz przeczytać <annotation link="privacy_policy">politykę prywatności (angielski)</annotation> w celu zapoznania się ze szczegółami.\n\nCzy chcesz ustawić beaconDB jako endpoint? Tę opcję można póżniej zmienić w ustawieniach</string>
     <string name="reports_last_uploaded_never">nigdy</string>
     <string name="reports_empty">Nie ma jeszcze żadnych raportów</string>
+    <string name="delete_all">Usuń wszystko</string>
+    <string name="copy">Kopiuj</string>
+    <string name="text_copied_to_clipboard">Tekst skopiowany do schowka!</string>
+    <string name="disabled">Wyłączono</string>
+    <string name="waiting_for_location">Oczekiwanie na lokalizację</string>
+    <string name="scanning_status_active">Skanowanie <annotation style="status">aktywne</annotation></string>
+    <string name="scanning_status_not_active">Skanowanie <annotation style="status">nieaktywne</annotation></string>
+    <string name="speed_metres_per_second">Prędkość: %s m/s</string>
+    <string name="altitude_metres">Wysokość: %s m</string>
+    <string name="signal_strength_dbm">Moc sygnału: %d dBm</string>
+    <string name="unknown_cell_id">Nieznane ID komórki</string>
+    <string name="mcc">MCC: %s</string>
+    <string name="mnc">MNC: %s</string>
+    <string name="lac">LAC: %s</string>
+    <string name="radio_type">Typ: %s</string>
+    <string name="beacon_type">Typ beacona: %s</string>
+    <string name="beacon_id">ID%d: %s</string>
+    <string name="send_reports_automatically_never">Nigdy</string>
+    <string name="send_reports_automatically_on_any_network">W każdej sieci</string>
+    <string name="send_reports_automatically_on_unmetered_network">W sieci bez pomiaru danych</string>
+    <string name="export_raw_database_compress">Skompresuj plik bazy danych</string>
+    <string name="locate_path">Ścieżka dla geolokalizacji</string>
+    <string name="coverage_layer">Warstwa pokrycia mapy</string>
+    <string name="coverage_layer_tile_json_url">Link TileJSON dla warstwy pokrycia mapy</string>
+    <string name="coverage_layer_no_configured">Brak skonfigurowanej warstwy pokrycia mapy</string>
+    <string name="invalid_url">Niepoprawny adres</string>
+    <string name="settings_group_privacy">Prywatność</string>
+    <string name="wifi_filter_settings_title">Filtruj Wi-Fi według SSID</string>
+    <plurals name="wifi_filter_settings_description">
+        <item quantity="one">%d SSID filtrowany</item>
+        <item quantity="few">%d SSID filtrowane</item>
+        <item quantity="many">%d SSID filtrowanych</item>
+        <item quantity="other">%d SSID filtrowanych</item>
+    </plurals>
+    <string name="wifi_filter_settings_hint">Sieci Wi-Fi z tymi słowami kluczami w swoich SSID nie są zbierane</string>
+    <string name="reduced_metadata_title">Wysyłaj raporty z mniejszą ilością metadanych</string>
+    <string name="reduced_metadata_description">Raporty są wysyłane w losowej kolejności z obciętymi znacznikami czasu i bez innych metadanych</string>
+    <string name="pause_scanning_on_low_battery_title">Wstrzymaj skanowanie przy niskim poziomie baterii</string>
+    <string name="pause_scanning_on_low_battery_description">Gdy poziom baterii jest niższy niż %d%%</string>
+    <string name="moving_device_filter_title">Filtruj urządzenia w ruchu</string>
+    <string name="moving_device_filter_description">Poruszające się sieci Wi-Fi i beacony Bluetooth są automatycznie wykrywane i filtrowane z raportów</string>
+    <string name="passive_scanning_title">Pasywne zbieranie danych</string>
+    <string name="passive_scanning_description">Pasywne zbieranie danych tworzy raporty w tle przy minimalnym zużyciu baterii przez wykorzystywanie danych żądanych przez inne aplikacje.  \n\nEfektywność pasywnego zbierania danych będzie zależała od typu twojego urządzenia, innych aplikacji, których używasz, i tego, czy dostępny jest dostawca zespolonej lokalizacji.\n\nPamiętaj, że pasywne zbieranie danych nie działa z beaconami Bluetooth.\n\nCzy chcesz włączyć pasywne zbieranie danych?</string>
 </resources>
