@@ -66,6 +66,7 @@ import xyz.malkki.neostumbler.location.LocationSource
 import xyz.malkki.neostumbler.ui.map.LifecycleAwareMapView
 import xyz.malkki.neostumbler.ui.map.MapTileSource
 import xyz.malkki.neostumbler.ui.map.setAttributionMargin
+import xyz.malkki.neostumbler.ui.map.updateMapStyleIfNeeded
 
 private fun DataStore<Preferences>.mapStyleUrl(): Flow<String> =
     data.map { prefs ->
@@ -247,11 +248,7 @@ fun AreaPickerMap(
                         )
                     }
 
-                    if (map.style != null && map.style!!.uri != mapStyleUrl) {
-                        val styleBuilder = Style.Builder().fromUri(mapStyleUrl!!)
-
-                        map.setStyle(styleBuilder)
-                    }
+                    mapStyleUrl?.let { map.updateMapStyleIfNeeded(it) }
                 }
             },
             onRelease = { view -> view.lifecycle = null },

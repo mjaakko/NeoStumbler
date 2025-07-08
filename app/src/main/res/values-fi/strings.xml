@@ -63,6 +63,8 @@
     <string name="toast_reports_upload_failed">Raporttien lähettäminen epäonnistui</string>
     <string name="toast_reports_upload_failed_no_endpoint">Raporttien lähettäminen epäonnistui, koska palvelinta ei ole määritetty</string>
 
+    <string name="distance_to_estimated_location">Etäisyys arvioituun sijaintiin: %d m</string>
+
     <string name="speed_metres_per_second">Nopeus: %s m/s</string>
     <string name="altitude_metres">Korkeus: %s m</string>
 

@@ -58,6 +58,7 @@ import xyz.malkki.neostumbler.ui.composables.shared.KeepScreenOn
 import xyz.malkki.neostumbler.ui.composables.shared.PermissionsDialog
 import xyz.malkki.neostumbler.ui.map.LifecycleAwareMapView
 import xyz.malkki.neostumbler.ui.map.setAttributionMargin
+import xyz.malkki.neostumbler.ui.map.updateMapStyleIfNeeded
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
 
 @ColorInt private const val HEAT_LOW: Int = 0x78d278ff
@@ -245,12 +246,7 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                             }
                         }
 
-                        // Ugly, but we don't want to update the map style unless it has actually
-                        // changed
-                        // TODO: think about a better way to do this
-                        if (map.style != null && mapTileSourceUrl.value!! != map.style!!.uri) {
-                            map.setStyle(Style.Builder().fromUri(mapTileSourceUrl.value!!))
-                        }
+                        mapTileSourceUrl.value?.let { map.updateMapStyleIfNeeded(it) }
 
                         addCoverage(map, coverageTileJsonUrl.value, coverageTileJsonLayerIds.value)
                     }
