@@ -71,10 +71,10 @@ fun MapSettingsButton(
             .selectedMapTileSourceAndStyleUrl()
             .collectAsStateWithLifecycle(initialValue = null)
 
-    val selectedMapTileSource = selectedMapTileSourceAndStyleUrl?.first
-    val styleUrl = selectedMapTileSourceAndStyleUrl?.second
-
     if (dialogOpen) {
+        val selectedMapTileSource = selectedMapTileSourceAndStyleUrl?.first
+        val styleUrl = selectedMapTileSourceAndStyleUrl?.second
+
         MapSettingsDialog(
             currentSettings = selectedMapTileSource!! to styleUrl!!,
             onCloseDialog = { newSettings ->
@@ -116,15 +116,10 @@ private fun MapSettingsDialog(
     val selectedTileSource = rememberSaveable { mutableStateOf(currentSettings.first) }
     val selectedStyleUrl = rememberSaveable { mutableStateOf<String?>(currentSettings.second) }
 
-    val onClose = {
-        if (selectedTileSource.value == MapTileSource.CUSTOM) {
-            onCloseDialog(selectedTileSource.value to selectedStyleUrl.value!!)
-        } else {
-            onCloseDialog(null)
-        }
-    }
-
-    Dialog(title = stringResource(id = R.string.map_tile_source), onDismissRequest = onClose) {
+    Dialog(
+        title = stringResource(id = R.string.map_tile_source),
+        onDismissRequest = { onCloseDialog(selectedTileSource.value to selectedStyleUrl.value!!) },
+    ) {
         Column {
             Column(
                 modifier = Modifier.selectableGroup().padding(bottom = 8.dp),
@@ -137,13 +132,7 @@ private fun MapSettingsDialog(
                             .defaultMinSize(minHeight = 36.dp)
                             .selectable(
                                 selected = mapTileSource == selectedTileSource.value,
-                                onClick = {
-                                    if (mapTileSource != MapTileSource.CUSTOM) {
-                                        onCloseDialog(mapTileSource to selectedStyleUrl.value!!)
-                                    } else {
-                                        selectedTileSource.value = mapTileSource
-                                    }
-                                },
+                                onClick = { selectedTileSource.value = mapTileSource },
                                 role = Role.RadioButton,
                             )
                             .padding(horizontal = 16.dp, vertical = 4.dp),
@@ -175,7 +164,6 @@ private fun MapSettingsDialog(
                 UrlField(
                     modifier = Modifier.padding(bottom = 12.dp),
                     label = stringResource(R.string.map_tile_source_custom_style_url),
-                    onDone = onClose,
                     state = selectedStyleUrl,
                 )
             }
