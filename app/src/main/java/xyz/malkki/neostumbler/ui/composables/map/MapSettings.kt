@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -40,6 +41,7 @@ import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.extensions.get
+import xyz.malkki.neostumbler.ui.composables.settings.SettingsToggle
 import xyz.malkki.neostumbler.ui.composables.settings.UrlField
 import xyz.malkki.neostumbler.ui.composables.shared.Dialog
 import xyz.malkki.neostumbler.ui.map.MapTileSource
@@ -175,6 +177,16 @@ private fun MapSettingsDialog(
                     label = stringResource(R.string.map_tile_source_custom_style_url),
                     onDone = onClose,
                     state = selectedStyleUrl,
+                )
+            }
+
+            HorizontalDivider()
+
+            Column(modifier = Modifier.padding(all = 8.dp)) {
+                SettingsToggle(
+                    title = stringResource(R.string.map_show_coverage_layer),
+                    preferenceKey = PreferenceKeys.COVERAGE_LAYER_ENABLED,
+                    default = true,
                 )
             }
         }

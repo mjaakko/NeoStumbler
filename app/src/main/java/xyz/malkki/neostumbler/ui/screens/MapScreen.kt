@@ -335,14 +335,22 @@ private fun addCoverageLayer(style: Style, layerIds: List<String>) {
 }
 
 private fun addCoverage(mapLibreMap: MapLibreMap, tileJsonUrl: String?, layerIds: List<String>) {
-    if (tileJsonUrl != null) {
-        mapLibreMap.getStyle { style ->
+    mapLibreMap.getStyle { style ->
+        if (tileJsonUrl != null) {
             val vectorSource = style.getSource(COVERAGE_SOURCE_ID) as? VectorSource
             if (vectorSource == null || vectorSource.uri != tileJsonUrl) {
                 style.removeSource(COVERAGE_SOURCE_ID)
                 style.addSource(VectorSource(COVERAGE_SOURCE_ID, tileJsonUrl))
             }
+
             addCoverageLayer(style, layerIds)
+        } else {
+            // Remove coverage layers
+            style.layers
+                .filter { it.id.startsWith(COVERAGE_LAYER_PREFIX) }
+                .forEach { style.removeLayer(it) }
+
+            style.removeSource(COVERAGE_SOURCE_ID)
         }
     }
 }

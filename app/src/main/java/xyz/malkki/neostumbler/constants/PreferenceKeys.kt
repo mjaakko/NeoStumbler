@@ -20,6 +20,7 @@ object PreferenceKeys {
     const val GEOLOCATE_PATH = "geolocate_path"
 
     const val COVERAGE_TILE_JSON_URL = "coverage_tile_json_url"
+    const val COVERAGE_LAYER_ENABLED = "coverage_layer_enabled"
 
     const val MOVEMENT_DETECTOR = "movement_detector"
 

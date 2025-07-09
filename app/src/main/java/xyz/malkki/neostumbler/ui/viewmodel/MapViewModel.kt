@@ -7,6 +7,7 @@ import androidx.collection.MutableLongIntMap
 import androidx.collection.MutableObjectIntMap
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -93,13 +94,20 @@ class MapViewModel(
 
     val coverageTileJsonUrl: Flow<String?> =
         settingsStore.data.map { prefs ->
-            prefs[stringPreferencesKey(PreferenceKeys.COVERAGE_TILE_JSON_URL)]
+            val coverageLayerEnabled =
+                prefs[booleanPreferencesKey(PreferenceKeys.COVERAGE_LAYER_ENABLED)]
+
+            if (coverageLayerEnabled != false) {
+                prefs[stringPreferencesKey(PreferenceKeys.COVERAGE_TILE_JSON_URL)]
+            } else {
+                null
+            }
         }
 
     val coverageTileJsonLayerIds: Flow<List<String>> =
-        combine(coverageTileJsonUrl.filterNotNull(), httpClient.filterNotNull()) { a, b -> a to b }
+        combine(coverageTileJsonUrl, httpClient.filterNotNull()) { a, b -> a to b }
             .mapLatest { (coverageTileJsonUrl, httpClient) ->
-                getTileJsonLayerIds(coverageTileJsonUrl, httpClient)
+                coverageTileJsonUrl?.let { getTileJsonLayerIds(it, httpClient) } ?: emptyList()
             }
             .retryWhen { cause, attempt ->
                 if (cause is IOException) {

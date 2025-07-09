@@ -243,6 +243,7 @@
     <string name="map_tile_source">Karttatiilien lähde</string>
     <string name="map_tile_source_custom_title">Vapaavalintainen</string>
     <string name="map_tile_source_custom_style_url">Karttatiilien URL</string>
+    <string name="map_show_coverage_layer">Näytä kattavuustaso</string>
 
     <string name="show_my_location">Näytä oma sijainti</string>
 

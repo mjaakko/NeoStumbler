@@ -238,6 +238,8 @@
     <string name="map_tile_source">Map tile source</string>
     <string name="map_tile_source_custom_title">Custom</string>
     <string name="map_tile_source_custom_style_url">Custom map style URL</string>
+    <string name="map_show_coverage_layer">Show coverage layer</string>
+
     <string name="show_my_location">Show my location</string>
 
     <string name="permission_rationale_fine_location">
