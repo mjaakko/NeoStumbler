@@ -156,7 +156,7 @@
     <string name="mls_warning_text">O Mozilla Location Services foi encerrado e não aceita mais envios. Como uma alternativa, você pode enviar dados ao beaconDB, que fornece um serviço compatível com o MLS\n\nNote que o beaconDB ainda está em desenvolvimento e isso afeta como seus dados são tratados. Você pode ler a <annotation link="privacy_policy">política de privacidade</annotation> para mais informações\n\nVocê gostaria de configurar o beaconDB como o ponto de coleta? Isso pode ser alterado mais tarde nas configurações</string>
     <string name="coverage_layer">Camada de cobertura do mapa</string>
     <string name="coverage_layer_tile_json_url">URL TileJSON para a camada de cobertura do mapa (opcional)</string>
-    <string name="invalid_url">URL inválida</string>
+    <string name="invalid_url">URL inválido</string>
     <string name="coverage_layer_no_configured">Nenhuma camada de cobertura do mapa configurada</string>
     <string name="troubleshooting_not_ok" tools:ignore="Typos">Não correto</string>
     <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Ok</string>
@@ -204,4 +204,8 @@
     <string name="crash_log_title">Registros de falha</string>
     <string name="moving_device_filter_title">Filtrar dispositivos móveis</string>
     <string name="moving_device_filter_description">Redes Wi-Fi e sinalizadores Bluetooth que se movem são detectados automaticamente e filtrados dos relatórios</string>
+    <string name="distance_to_estimated_location">Distância até a estimativa de localização: %d m</string>
+    <string name="map_tile_source_custom_title">Personalizado</string>
+    <string name="map_tile_source_custom_style_url">URL do estilo do mapa personalizado</string>
+    <string name="map_show_coverage_layer">Mostrar a camada de cobertura</string>
 </resources>
