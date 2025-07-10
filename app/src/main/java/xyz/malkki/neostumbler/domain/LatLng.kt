@@ -14,6 +14,10 @@ data class LatLng(val latitude: Double, val longitude: Double) {
         private const val EARTH_RADIUS_IN_METERS = 6371 * 1000
 
         val ORIGIN = LatLng(0.0, 0.0)
+
+        fun org.maplibre.android.geometry.LatLng.asDomainLatLng(): LatLng {
+            return LatLng(latitude, longitude)
+        }
     }
 
     fun isOrigin(): Boolean = this == ORIGIN

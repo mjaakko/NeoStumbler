@@ -7,6 +7,7 @@ import androidx.collection.MutableLongIntMap
 import androidx.collection.MutableObjectIntMap
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -76,22 +77,37 @@ class MapViewModel(
     val httpClient: StateFlow<Call.Factory?>
         get() = _httpClient.asStateFlow()
 
-    val mapTileSource: Flow<MapTileSource> =
+    val mapTileSourceUrl: Flow<String> =
         settingsStore.data
             .map { prefs ->
-                prefs.get<MapTileSource>(PreferenceKeys.MAP_TILE_SOURCE) ?: MapTileSource.DEFAULT
+                val mapTileSource =
+                    prefs.get<MapTileSource>(PreferenceKeys.MAP_TILE_SOURCE)
+                        ?: MapTileSource.DEFAULT
+
+                if (mapTileSource == MapTileSource.CUSTOM) {
+                    prefs[stringPreferencesKey(PreferenceKeys.MAP_TILE_SOURCE_CUSTOM_URL)] ?: ""
+                } else {
+                    mapTileSource.sourceUrl!!
+                }
             }
             .distinctUntilChanged()
 
     val coverageTileJsonUrl: Flow<String?> =
         settingsStore.data.map { prefs ->
-            prefs[stringPreferencesKey(PreferenceKeys.COVERAGE_TILE_JSON_URL)]
+            val coverageLayerEnabled =
+                prefs[booleanPreferencesKey(PreferenceKeys.COVERAGE_LAYER_ENABLED)]
+
+            if (coverageLayerEnabled != false) {
+                prefs[stringPreferencesKey(PreferenceKeys.COVERAGE_TILE_JSON_URL)]
+            } else {
+                null
+            }
         }
 
     val coverageTileJsonLayerIds: Flow<List<String>> =
-        combine(coverageTileJsonUrl.filterNotNull(), httpClient.filterNotNull()) { a, b -> a to b }
+        combine(coverageTileJsonUrl, httpClient.filterNotNull()) { a, b -> a to b }
             .mapLatest { (coverageTileJsonUrl, httpClient) ->
-                getTileJsonLayerIds(coverageTileJsonUrl, httpClient)
+                coverageTileJsonUrl?.let { getTileJsonLayerIds(it, httpClient) } ?: emptyList()
             }
             .retryWhen { cause, attempt ->
                 if (cause is IOException) {
@@ -203,16 +219,6 @@ class MapViewModel(
                 LatLng(maxLatitude + latAdjust, maxLongitude + lngAdjust)
 
         mapBounds.trySendBlocking(bounds)
-    }
-
-    fun setMapTileSource(mapTileSource: MapTileSource) {
-        viewModelScope.launch {
-            settingsStore.updateData { prefs ->
-                prefs.toMutablePreferences().apply {
-                    set(stringPreferencesKey(PreferenceKeys.MAP_TILE_SOURCE), mapTileSource.name)
-                }
-            }
-        }
     }
 
     @Suppress("MagicNumber")

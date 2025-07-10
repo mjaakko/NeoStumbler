@@ -20,6 +20,7 @@ object PreferenceKeys {
     const val GEOLOCATE_PATH = "geolocate_path"
 
     const val COVERAGE_TILE_JSON_URL = "coverage_tile_json_url"
+    const val COVERAGE_LAYER_ENABLED = "coverage_layer_enabled"
 
     const val MOVEMENT_DETECTOR = "movement_detector"
 
@@ -32,6 +33,7 @@ object PreferenceKeys {
     const val DB_PRUNE_DATA_MAX_AGE_DAYS = "db_prune_max_age_days"
 
     const val MAP_TILE_SOURCE = "map_tile_source"
+    const val MAP_TILE_SOURCE_CUSTOM_URL = "custom_map_tile_source_url"
 
     // Privacy options
     const val WIFI_FILTER_LIST = "wifi_filter_list"
