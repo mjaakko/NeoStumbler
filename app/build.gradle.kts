@@ -1,0 +1,329 @@
+import kotlin.math.roundToInt
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+plugins {
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
+    id("org.jetbrains.kotlin.plugin.compose")
+    id("org.jetbrains.kotlin.plugin.serialization")
+    id("app.accrescent.tools.bundletool")
+    id("com.ncorti.ktfmt.gradle")
+    id("io.gitlab.arturbosch.detekt")
+}
+
+private val DB_SCHEMAS_DIR = "$projectDir/schemas"
+
+bundletool {
+    signingConfig {
+        storeFile = file("../keystore.jks")
+        storePassword = System.getenv("SIGNING_STORE_PASSWORD")
+        keyAlias = System.getenv("SIGNING_KEY_ALIAS")
+        keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
+    }
+}
+
+ksp {
+    arg("room.schemaLocation", DB_SCHEMAS_DIR)
+    arg("room.incremental", "true")
+}
+
+android {
+    namespace = "xyz.malkki.neostumbler"
+    compileSdk = 36
+
+    signingConfigs {
+        create("release") {
+            storeFile = file("../keystore.jks")
+            storePassword = System.getenv("SIGNING_STORE_PASSWORD")
+            keyAlias = System.getenv("SIGNING_KEY_ALIAS")
+            keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
+        }
+    }
+
+    defaultConfig {
+        applicationId = "xyz.malkki.neostumbler"
+        minSdk = 29
+        targetSdk = 36
+        versionCode = 38
+        versionName = "2.1.2"
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables { useSupportLibrary = true }
+
+        androidResources {
+            // Configure supported languages here to avoid including incomplete translations in the
+            // releases
+            localeFilters +=
+                listOf(
+                    "en",
+                    "cs",
+                    "de",
+                    "es",
+                    "fi",
+                    "fr",
+                    "hu",
+                    "it",
+                    "iw",
+                    "ja",
+                    "lt",
+                    "nb-rNO",
+                    "nl",
+                    "pl",
+                    "pt",
+                    "pt-rBR",
+                    "ru",
+                    "sv",
+                    "ta",
+                    "uk",
+                    "zh-rCN",
+                    "zh-rTW",
+                )
+        }
+
+        // Add supported locales to a build config field for the language picker UI
+        buildConfigField(
+            "String",
+            "SUPPORTED_LOCALES",
+            "\"" + androidResources.localeFilters.joinToString(",") + "\"",
+        )
+    }
+
+    sourceSets { getByName("androidTest") { assets { srcDir(files(DB_SCHEMAS_DIR)) } } }
+
+    androidResources { generateLocaleConfig = true }
+
+    bundle {
+        // Don't split the app bundle by language, because we have an in-app language switcher which
+        // needs all languages to be available
+        language { enableSplit = false }
+    }
+
+    buildTypes {
+        getByName("debug") { applicationIdSuffix = ".dev" }
+
+        getByName("release") {
+            signingConfig = signingConfigs.getByName("release")
+
+            isDebuggable = false
+
+            isMinifyEnabled = true
+            isShrinkResources = true
+
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+                "altbeacon.pro",
+            )
+
+            ndk { abiFilters += listOf("armeabi-v7a", "arm64-v8a") }
+        }
+    }
+
+    buildFeatures { flavorDimensions += "version" }
+
+    productFlavors {
+        create("fdroid") {
+            dimension = "version"
+
+            applicationId = defaultConfig.applicationId + ".fdroid"
+        }
+        create("full") {
+            dimension = "version"
+
+            ndk { abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64") }
+        }
+    }
+
+    applicationVariants.configureEach {
+        if (buildType.isDebuggable) {
+            resValue("string", "app_name", "NeoStumbler (dev, $flavorName)")
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlin { compilerOptions { jvmTarget = JvmTarget.JVM_17 } }
+
+    buildFeatures {
+        buildConfig = true
+        compose = true
+    }
+
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            // We don"t use these codec - they are probably pulled in with some library
+            excludes += "**/apache/**/codec/**/*"
+            // No need for beacon distance models used by Android Beacon Library
+            excludes += "**/model-distance-calculations.json"
+        }
+    }
+
+    splits {
+        abi {
+            isEnable = project.hasProperty("enableAbiSplit")
+
+            reset()
+            include("armeabi-v7a", "arm64-v8a")
+
+            isUniversalApk = true
+        }
+    }
+
+    // These are not needed because the app is not published to Google Play
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
+    }
+
+    lint { lintConfig = file("app/lint.xml") }
+}
+
+tasks.register("printVersionName") {
+    val versionName = project.android.defaultConfig.versionName
+
+    doLast { println(versionName) }
+}
+
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.add("-opt-in=kotlin.io.path.ExperimentalPathApi")
+        freeCompilerArgs.add("-opt-in=kotlin.time.ExperimentalTime")
+        freeCompilerArgs.add("-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi")
+        freeCompilerArgs.add("-opt-in=androidx.compose.material3.ExperimentalMaterial3Api")
+        freeCompilerArgs.add("-opt-in=androidx.compose.foundation.ExperimentalFoundationApi")
+        freeCompilerArgs.add("-opt-in=kotlinx.coroutines.FlowPreview")
+        freeCompilerArgs.add("-opt-in=kotlinx.serialization.ExperimentalSerializationApi")
+    }
+}
+
+tasks.withType<Test>().configureEach {
+    testLogging {
+        exceptionFormat = TestExceptionFormat.FULL
+        showStackTraces = true
+    }
+
+    maxParallelForks =
+        (Runtime.getRuntime().availableProcessors() / 2.0).roundToInt().coerceAtLeast(1)
+
+    // Don't generate test reports, because currently we don't use them for anything
+    reports.html.required = false
+    reports.junitXml.required = false
+}
+
+dependencies {
+    implementation(platform("io.insert-koin:koin-bom:4.1.0"))
+    implementation("io.insert-koin:koin-core")
+    implementation("io.insert-koin:koin-android")
+    implementation("io.insert-koin:koin-androidx-compose")
+
+    implementation("androidx.core:core-ktx:1.16.0")
+    implementation("androidx.activity:activity-compose:1.10.1")
+
+    implementation("androidx.appcompat:appcompat:1.7.1")
+
+    implementation("androidx.core:core-splashscreen:1.0.1")
+
+    val lifecycle_version = "2.9.1"
+
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_version")
+
+    val paging_version = "3.3.6"
+
+    implementation("androidx.paging:paging-common-ktx:$paging_version")
+    implementation("androidx.paging:paging-compose:$paging_version")
+
+    val compose_bom = platform("androidx.compose:compose-bom:2025.06.01")
+    implementation(compose_bom)
+    androidTestImplementation(compose_bom)
+
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-graphics")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material:material-icons-extended-android")
+
+    testImplementation("junit:junit:4.13.2")
+
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    androidTestImplementation("androidx.test:rules:1.6.1")
+
+    debugImplementation("androidx.compose.ui:ui-tooling")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    implementation(platform("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.10.2"))
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8")
+    "fullImplementation"("org.jetbrains.kotlinx:kotlinx-coroutines-play-services")
+
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
+
+    "fullImplementation"("com.google.android.gms:play-services-location:21.3.0")
+
+    implementation("androidx.datastore:datastore-preferences:1.1.4")
+
+    val room_version = "2.7.2"
+
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    ksp("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+    implementation("androidx.room:room-paging:$room_version")
+    androidTestImplementation("androidx.room:room-testing:$room_version")
+
+    val work_version = "2.10.2"
+
+    implementation("androidx.work:work-runtime:$work_version")
+    implementation("androidx.work:work-runtime-ktx:$work_version")
+
+    implementation("com.jakewharton.timber:timber:5.0.1")
+
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.12.0"))
+    implementation("com.squareup.okhttp3:okhttp")
+    implementation("com.squareup.okhttp3:logging-interceptor")
+    testImplementation("com.squareup.okhttp3:mockwebserver")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
+
+    implementation("org.altbeacon:android-beacon-library:2.21.0")
+
+    implementation("org.maplibre.gl:android-sdk:11.11.0")
+    implementation("org.maplibre.gl:android-plugin-annotation-v9:3.0.2")
+
+    implementation("org.geohex.geohex4j:geohex4j:3.2.2")
+
+    implementation("de.siegmar:fastcsv:3.7.0")
+
+    val vico_version = "2.1.3"
+
+    implementation("com.patrykandpatrick.vico:compose:$vico_version")
+    implementation("com.patrykandpatrick.vico:compose-m3:$vico_version")
+
+    "fullImplementation"("com.google.android.gms:play-services-cronet:18.1.0")
+    "fullImplementation"("com.google.net.cronet:cronet-okhttp:0.1.0")
+
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
+
+    androidTestImplementation("org.awaitility:awaitility-kotlin:4.3.0")
+}
+
+configurations.configureEach {
+    resolutionStrategy {
+        force("org.hamcrest:hamcrest-core:3+")
+        force("org.hamcrest:hamcrest-library:3+")
+    }
+}
+
+ktfmt { kotlinLangStyle() }
