@@ -217,106 +217,97 @@ tasks.withType<Test>().configureEach {
 }
 
 dependencies {
-    implementation(platform("io.insert-koin:koin-bom:4.1.0"))
-    implementation("io.insert-koin:koin-core")
-    implementation("io.insert-koin:koin-android")
-    implementation("io.insert-koin:koin-androidx-compose")
+    implementation(platform(libs.koinBom))
+    implementation(libs.koinCore)
+    implementation(libs.koinAndroid)
+    implementation(libs.koinAndroidxCompose)
 
-    implementation("androidx.core:core-ktx:1.16.0")
-    implementation("androidx.activity:activity-compose:1.10.1")
+    implementation(libs.androidx.core)
+    implementation(libs.androidx.activityCompose)
 
-    implementation("androidx.appcompat:appcompat:1.7.1")
+    implementation(libs.androidx.appcompat)
 
-    implementation("androidx.core:core-splashscreen:1.0.1")
+    implementation(libs.androidx.splashscreen)
 
-    val lifecycle_version = "2.9.1"
+    implementation(libs.androidx.lifecycleRuntime)
+    implementation(libs.androidx.lifecycleRuntimeCompose)
+    implementation(libs.androidx.lifecycleViewmodel)
+    implementation(libs.androidx.lifecycleViewmodelCompose)
 
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_version")
+    implementation(libs.androidx.pagingCommon)
+    implementation(libs.androidx.pagingCompose)
 
-    val paging_version = "3.3.6"
+    val composeBom = platform(libs.androidx.composeBom)
+    implementation(composeBom)
+    androidTestImplementation(composeBom)
 
-    implementation("androidx.paging:paging-common-ktx:$paging_version")
-    implementation("androidx.paging:paging-compose:$paging_version")
+    implementation(libs.androidx.composeUi)
+    implementation(libs.androidx.composeUiGraphics)
+    implementation(libs.androidx.composeUiToolingPreview)
 
-    val compose_bom = platform("androidx.compose:compose-bom:2025.06.01")
-    implementation(compose_bom)
-    androidTestImplementation(compose_bom)
+    debugImplementation(libs.androidx.composeUiTooling)
+    debugImplementation(libs.androidx.composeUiTestManifest)
 
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation(libs.androidx.composeMaterial3)
+    implementation(libs.androidx.composeMaterialIconsExtended)
 
-    implementation("androidx.compose.material3:material3")
-    implementation("androidx.compose.material:material-icons-extended-android")
+    androidTestImplementation(libs.androidx.composeUiTestJunit)
 
-    testImplementation("junit:junit:4.13.2")
+    testImplementation(libs.junit)
 
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    androidTestImplementation("androidx.test:rules:1.6.1")
+    androidTestImplementation(libs.androidx.testJunit)
+    androidTestImplementation(libs.androidx.testEspresso)
+    androidTestImplementation(libs.androidx.testRules)
 
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    implementation(platform(libs.kotlinx.coroutinesBom))
+    implementation(libs.kotlinx.coroutinesCore)
+    implementation(libs.kotlinx.coroutinesAndroid)
+    "fullImplementation"(libs.kotlinx.coroutinesPlayServices)
 
-    implementation(platform("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.10.2"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8")
-    "fullImplementation"("org.jetbrains.kotlinx:kotlinx-coroutines-play-services")
+    testImplementation(libs.kotlinx.coroutinesTest)
+    androidTestImplementation(libs.kotlinx.coroutinesTest)
 
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
-    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
+    "fullImplementation"(libs.playservices.location)
 
-    "fullImplementation"("com.google.android.gms:play-services-location:21.3.0")
+    implementation(libs.androidx.datastore.preferences)
 
-    implementation("androidx.datastore:datastore-preferences:1.1.4")
+    implementation(libs.androidx.roomRuntime)
+    annotationProcessor(libs.androidx.roomCompiler)
+    ksp(libs.androidx.roomCompiler)
+    implementation(libs.androidx.roomKtx)
+    implementation(libs.androidx.roomPaging)
+    androidTestImplementation(libs.androidx.roomTesting)
 
-    val room_version = "2.7.2"
+    implementation(libs.androidx.workRuntime)
+    implementation(libs.androidx.workRuntimeKtx)
 
-    implementation("androidx.room:room-runtime:$room_version")
-    annotationProcessor("androidx.room:room-compiler:$room_version")
-    ksp("androidx.room:room-compiler:$room_version")
-    implementation("androidx.room:room-ktx:$room_version")
-    implementation("androidx.room:room-paging:$room_version")
-    androidTestImplementation("androidx.room:room-testing:$room_version")
+    implementation(libs.timber)
 
-    val work_version = "2.10.2"
+    implementation(platform(libs.okhttpBom))
+    implementation(libs.okhttp)
+    implementation(libs.okhttpLoggingInterceptor)
+    testImplementation(libs.okhttpMockWebServer)
 
-    implementation("androidx.work:work-runtime:$work_version")
-    implementation("androidx.work:work-runtime-ktx:$work_version")
+    implementation(libs.kotlinx.serializationJson)
 
-    implementation("com.jakewharton.timber:timber:5.0.1")
+    implementation(libs.androidBeaconLibrary)
 
-    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.12.0"))
-    implementation("com.squareup.okhttp3:okhttp")
-    implementation("com.squareup.okhttp3:logging-interceptor")
-    testImplementation("com.squareup.okhttp3:mockwebserver")
+    implementation(libs.mapLibre)
+    implementation(libs.mapLibreAnnotationsPlugin)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
+    implementation(libs.geohex)
 
-    implementation("org.altbeacon:android-beacon-library:2.21.0")
+    implementation(libs.fastcsv)
 
-    implementation("org.maplibre.gl:android-sdk:11.11.0")
-    implementation("org.maplibre.gl:android-plugin-annotation-v9:3.0.2")
+    implementation(libs.vicoCompose)
+    implementation(libs.vicoComposeMaterial3)
 
-    implementation("org.geohex.geohex4j:geohex4j:3.2.2")
+    "fullImplementation"(libs.playservices.cronet)
+    "fullImplementation"(libs.cronetOkhttp)
 
-    implementation("de.siegmar:fastcsv:3.7.0")
+    testImplementation(libs.mockitoKotlin)
 
-    val vico_version = "2.1.3"
-
-    implementation("com.patrykandpatrick.vico:compose:$vico_version")
-    implementation("com.patrykandpatrick.vico:compose-m3:$vico_version")
-
-    "fullImplementation"("com.google.android.gms:play-services-cronet:18.1.0")
-    "fullImplementation"("com.google.net.cronet:cronet-okhttp:0.1.0")
-
-    testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
-
-    androidTestImplementation("org.awaitility:awaitility-kotlin:4.3.0")
+    androidTestImplementation(libs.awaitilityKotlin)
 }
 
 configurations.configureEach {
