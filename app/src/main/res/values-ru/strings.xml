@@ -207,4 +207,8 @@
     <string name="crash_log_entry_title">Падение #%d</string>
     <string name="moving_device_filter_description">Двигающиеся сети Wi-Fi и маячки Bluetooth автоматически удаляются и фильтруются из отчётов</string>
     <string name="moving_device_filter_title">Фильтровать двигающиеся устройства</string>
+    <string name="distance_to_estimated_location">Расстояние до предпологаемого местоположения: %d м</string>
+    <string name="map_tile_source_custom_title">Пользовательский</string>
+    <string name="map_tile_source_custom_style_url">URL пользовательского стиля карты</string>
+    <string name="map_show_coverage_layer">Показывать слой покрытия</string>
 </resources>
