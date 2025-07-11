@@ -202,4 +202,8 @@
     <string name="copy">Copiar</string>
     <string name="moving_device_filter_description">Las redes Wi-Fi y balizas Bluetooth móviles se detectarán y filtrarán automáticamente</string>
     <string name="moving_device_filter_title">Filtrar dispositivos móviles</string>
+    <string name="map_tile_source_custom_title">Personalizado</string>
+    <string name="map_tile_source_custom_style_url">Dirección del estilo de mapa personalizado</string>
+    <string name="map_show_coverage_layer">Mostrar capa de cobertura</string>
+    <string name="distance_to_estimated_location">Distancia a la ubicación estimada: %d m</string>
 </resources>
