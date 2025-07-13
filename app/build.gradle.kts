@@ -1,16 +1,9 @@
-import kotlin.math.roundToInt
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("com.google.devtools.ksp")
-    id("org.jetbrains.kotlin.plugin.compose")
-    id("org.jetbrains.kotlin.plugin.serialization")
-    id("app.accrescent.tools.bundletool")
-    id("com.ncorti.ktfmt.gradle")
-    id("io.gitlab.arturbosch.detekt")
+    id("convention.android-app")
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlinCompose)
+    alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.bundletool)
 }
 
 private val DB_SCHEMAS_DIR = "$projectDir/schemas"
@@ -48,9 +41,6 @@ android {
         targetSdk = 36
         versionCode = 39
         versionName = "2.1.3"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables { useSupportLibrary = true }
 
         androidResources {
             // Configure supported languages here to avoid including incomplete translations in the
@@ -142,13 +132,6 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlin { compilerOptions { jvmTarget = JvmTarget.JVM_17 } }
-
     buildFeatures {
         buildConfig = true
         compose = true
@@ -177,12 +160,6 @@ android {
         }
     }
 
-    // These are not needed because the app is not published to Google Play
-    dependenciesInfo {
-        includeInApk = false
-        includeInBundle = false
-    }
-
     lint { lintConfig = file("app/lint.xml") }
 }
 
@@ -194,28 +171,9 @@ tasks.register("printVersionName") {
 
 kotlin {
     compilerOptions {
-        freeCompilerArgs.add("-opt-in=kotlin.io.path.ExperimentalPathApi")
-        freeCompilerArgs.add("-opt-in=kotlin.time.ExperimentalTime")
-        freeCompilerArgs.add("-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi")
         freeCompilerArgs.add("-opt-in=androidx.compose.material3.ExperimentalMaterial3Api")
         freeCompilerArgs.add("-opt-in=androidx.compose.foundation.ExperimentalFoundationApi")
-        freeCompilerArgs.add("-opt-in=kotlinx.coroutines.FlowPreview")
-        freeCompilerArgs.add("-opt-in=kotlinx.serialization.ExperimentalSerializationApi")
     }
-}
-
-tasks.withType<Test>().configureEach {
-    testLogging {
-        exceptionFormat = TestExceptionFormat.FULL
-        showStackTraces = true
-    }
-
-    maxParallelForks =
-        (Runtime.getRuntime().availableProcessors() / 2.0).roundToInt().coerceAtLeast(1)
-
-    // Don't generate test reports, because currently we don't use them for anything
-    reports.html.required = false
-    reports.junitXml.required = false
 }
 
 dependencies {
@@ -311,12 +269,3 @@ dependencies {
 
     androidTestImplementation(libs.awaitilityKotlin)
 }
-
-configurations.configureEach {
-    resolutionStrategy {
-        force("org.hamcrest:hamcrest-core:3+")
-        force("org.hamcrest:hamcrest-library:3+")
-    }
-}
-
-ktfmt { kotlinLangStyle() }
