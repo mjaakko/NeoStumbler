@@ -99,7 +99,7 @@
     <string name="db_prune_two_months">2个月后</string>
     <string name="db_prune_never">永不</string>
     <string name="manage_storage_title">管理存储</string>
-    <string name="db_size">数据库大小: %s</string>
+    <string name="db_size">数据库大小：%s</string>
     <string name="delete_reports_by_date">按日期删除报告</string>
     <string name="delete_all_reports">删除所有报告</string>
     <string name="delete_all_reports_confirmation">你确定要删除所有报告吗？</string>
@@ -109,7 +109,7 @@
     <string name="toast_deleted_all_reports">已删除所有报告</string>
     <string name="db_prune_six_months">6个月后</string>
     <string name="about_app">关于 NeoStumbler</string>
-    <string name="app_version">版本: %s</string>
+    <string name="app_version">版本：%s</string>
     <string name="bug_report_button">报告软件缺陷</string>
     <string name="troubleshooting_title">故障排除</string>
     <string name="troubleshooting_battery_optimizations_disabled">电池优化已禁用</string>
@@ -121,7 +121,7 @@
     <string name="troubleshooting_permissions_granted">权限已授予</string>
     <string name="troubleshooting_wifi_scan_always_available">Wi-Fi 扫描始终可用</string>
     <string name="delete_data">删除数据</string>
-    <string name="app_variant">变种: %s</string>
+    <string name="app_variant">变种：%s</string>
     <string name="contributors">贡献者们</string>
     <string name="update_translations_button">更新翻译</string>
     <string name="author_text">由 %1$s 和 %2$s 用 ❤️ 发电</string>
@@ -153,4 +153,27 @@
     <string name="coverage_layer_tile_json_url">覆盖率地图所用的 TileJSON URL</string>
     <string name="system_default_language">系统默认语言</string>
     <string name="delete_reports_from_area">按地区删除报告</string>
+    <string name="delete_all">删除全部</string>
+    <string name="copy">复制</string>
+    <string name="text_copied_to_clipboard">文本已复制至剪贴板！</string>
+    <string name="disabled">已禁用</string>
+    <string name="crash_log_title">崩溃日志</string>
+    <string name="crash_log_entry_title">崩溃%d</string>
+    <string name="db_schema_version">数据库架构版本：%d</string>
+    <string name="scanning_status_active">扫描<annotation style="status">已开始</annotation></string>
+    <string name="scanning_status_not_active">扫描<annotation style="status">已停止</annotation></string>
+    <string name="distance_to_estimated_location">距离估计位置：%d m</string>
+    <string name="speed_metres_per_second">速度：%s m/s</string>
+    <string name="altitude_metres">海拔：%s m</string>
+    <string name="signal_strength_dbm">信号强度：%d dBm</string>
+    <string name="unknown_cell_id">未知信号塔 ID</string>
+    <string name="mcc">MCC：%s</string>
+    <string name="mnc">MNC：%s</string>
+    <string name="lac">LAC：%s</string>
+    <string name="radio_type">类型：%s</string>
+    <string name="beacon_type">信标类型：%s</string>
+    <string name="beacon_id">ID%d：%s</string>
+    <string name="send_reports_automatically_never">从不</string>
+    <string name="send_reports_automatically_on_any_network">通过任意网络</string>
+    <string name="send_reports_automatically_on_unmetered_network">仅通过不计费网络</string>
 </resources>
