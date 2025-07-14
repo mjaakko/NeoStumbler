@@ -28,6 +28,7 @@ import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.http.isRetryable
+import xyz.malkki.neostumbler.ichnaea.mapper.getIchnaeaParams
 
 // By default, WorkManager will retry indefinitely.
 // If uploading hasn't been successful after 5 retries,

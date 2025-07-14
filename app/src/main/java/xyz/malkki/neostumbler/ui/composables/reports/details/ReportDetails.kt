@@ -41,7 +41,6 @@ import java.text.DecimalFormat
 import java.util.Locale
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
-import okhttp3.internal.toHexString
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.db.ReportDatabaseManager
@@ -258,7 +257,7 @@ private fun ReportCellsList(cellTowers: List<CellTowerEntity>) {
         }
 
     LazyColumn(modifier = listSize, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        items(items = sortedCellTowers, key = { it.id!! }) { cellTower ->
+        items(items = sortedCellTowers, key = { it.id }) { cellTower ->
             Column(modifier = Modifier.wrapContentHeight().fillMaxWidth()) {
                 Text(
                     text = cellTower.cellId?.toString() ?: stringResource(R.string.unknown_cell_id),
@@ -309,14 +308,13 @@ private fun ReportCellsList(cellTowers: List<CellTowerEntity>) {
     }
 }
 
-@OptIn(ExperimentalStdlibApi::class)
 @Composable
 private fun ReportBluetoothBeaconsList(bluetoothBeacons: List<BluetoothBeaconEntity>) {
     val sortedBluetoothBeaconSource =
         remember(bluetoothBeacons) { bluetoothBeacons.sortedByDescending { it.signalStrength } }
 
     LazyColumn(modifier = listSize, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        items(items = sortedBluetoothBeaconSource, key = { it.id!! }) { bluetoothBeacon ->
+        items(items = sortedBluetoothBeaconSource, key = { it.id }) { bluetoothBeacon ->
             Column(modifier = Modifier.wrapContentHeight().fillMaxWidth()) {
                 Text(text = bluetoothBeacon.macAddress, style = MaterialTheme.typography.titleSmall)
 

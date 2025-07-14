@@ -89,14 +89,14 @@ fun GeosubmitEndpointSettings(
 
                             if (newParams.locatePath != null) {
                                 prefs[stringPreferencesKey(PreferenceKeys.GEOLOCATE_PATH)] =
-                                    newParams.locatePath
+                                    newParams.locatePath!!
                             } else {
                                 prefs.remove(stringPreferencesKey(PreferenceKeys.GEOLOCATE_PATH))
                             }
 
                             if (newParams.apiKey != null) {
                                 prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY)] =
-                                    newParams.apiKey
+                                    newParams.apiKey!!
                             } else {
                                 prefs.remove(stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY))
                             }

@@ -17,3 +17,7 @@ dependencyResolutionManagement {
 rootProject.name = "NeoStumbler"
 
 include(":app")
+
+include(":libs:utils")
+
+include(":libs:ichnaea")

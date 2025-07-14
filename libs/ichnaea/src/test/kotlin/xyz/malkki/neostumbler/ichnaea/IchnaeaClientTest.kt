@@ -19,7 +19,7 @@ import xyz.malkki.neostumbler.ichnaea.dto.CellTowerDto
 import xyz.malkki.neostumbler.ichnaea.dto.GeolocateRequestDto
 import xyz.malkki.neostumbler.ichnaea.dto.ReportDto
 
-class IchnaeaGeosubmitTest {
+class IchnaeaClientTest {
     @get:Rule private val mockServer = MockWebServer()
 
     private val ichnaeaClient: IchnaeaClient =

@@ -177,6 +177,9 @@ kotlin {
 }
 
 dependencies {
+    implementation(project(":libs:ichnaea"))
+    implementation(project(":libs:utils"))
+
     implementation(platform(libs.koinBom))
     implementation(libs.koinCore)
     implementation(libs.koinAndroid)
@@ -245,6 +248,7 @@ dependencies {
 
     implementation(platform(libs.okhttpBom))
     implementation(libs.okhttp)
+    implementation(libs.okhttpCoroutines)
     implementation(libs.okhttpLoggingInterceptor)
     testImplementation(libs.okhttpMockWebServer)
 

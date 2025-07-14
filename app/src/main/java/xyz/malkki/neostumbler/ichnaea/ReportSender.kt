@@ -5,10 +5,8 @@ import java.time.temporal.ChronoUnit
 import xyz.malkki.neostumbler.db.dao.ReportDao
 import xyz.malkki.neostumbler.db.entities.ReportWithData
 import xyz.malkki.neostumbler.extensions.roundToMultipleOf
-import xyz.malkki.neostumbler.ichnaea.dto.BluetoothBeaconDto
-import xyz.malkki.neostumbler.ichnaea.dto.CellTowerDto
 import xyz.malkki.neostumbler.ichnaea.dto.ReportDto
-import xyz.malkki.neostumbler.ichnaea.dto.WifiAccessPointDto
+import xyz.malkki.neostumbler.ichnaea.mapper.toDto
 
 /**
  * Limit the number of reports per batch to 999
@@ -109,17 +107,11 @@ class ReportSender(private val geosubmit: Geosubmit, private val reportDao: Repo
     private fun ReportWithData.toDto(): ReportDto {
         return ReportDto(
             timestamp = report.timestamp.toEpochMilli(),
-            position = ReportDto.PositionDto.fromDbEntity(positionEntity),
+            position = positionEntity.toDto(),
             wifiAccessPoints =
-                wifiAccessPointEntities.map(WifiAccessPointDto::fromDbEntity).takeIf {
-                    it.isNotEmpty()
-                },
-            cellTowers =
-                cellTowerEntities.map(CellTowerDto::fromDbEntity).takeIf { it.isNotEmpty() },
-            bluetoothBeacons =
-                bluetoothBeaconEntities.map(BluetoothBeaconDto::fromDbEntity).takeIf {
-                    it.isNotEmpty()
-                },
+                wifiAccessPointEntities.map { it.toDto() }.takeIf { it.isNotEmpty() },
+            cellTowers = cellTowerEntities.map { it.toDto() }.takeIf { it.isNotEmpty() },
+            bluetoothBeacons = bluetoothBeaconEntities.map { it.toDto() }.takeIf { it.isNotEmpty() },
         )
     }
 

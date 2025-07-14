@@ -18,7 +18,12 @@ val jvmTargetVersion = "17"
 
 project.extra["jvmTarget"] = jvmTargetVersion
 
-tasks.withType<KotlinJvmCompile> {
+tasks.withType<JavaCompile>().configureEach {
+    sourceCompatibility = jvmTargetVersion
+    targetCompatibility = jvmTargetVersion
+}
+
+tasks.withType<KotlinJvmCompile>().configureEach {
     compilerOptions {
         jvmTarget = JvmTarget.fromTarget(jvmTargetVersion)
 

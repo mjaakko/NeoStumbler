@@ -14,8 +14,8 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.coroutines.executeAsync
 import okio.BufferedSink
-import xyz.malkki.neostumbler.extensions.executeSuspending
 import xyz.malkki.neostumbler.ichnaea.dto.GeolocateRequestDto
 import xyz.malkki.neostumbler.ichnaea.dto.GeolocateResponseDto
 import xyz.malkki.neostumbler.ichnaea.dto.ReportDto
@@ -58,7 +58,7 @@ class IchnaeaClient(
                 .addHeader("Content-Encoding", "gzip")
                 .build()
 
-        val response = httpClient.newCall(request).executeSuspending()
+        val response = httpClient.newCall(request).executeAsync()
         response.use {
             if (response.code !in HTTP_STATUS_CODE_SUCCESS) {
                 throw HttpException(request.url.toString(), response.code)
@@ -76,13 +76,13 @@ class IchnaeaClient(
 
         val request = Request.Builder().url(url).post(requestBody).build()
 
-        httpClient.newCall(request).executeSuspending().use { response ->
+        httpClient.newCall(request).executeAsync().use { response ->
             if (!response.isSuccessful) {
                 throw HttpException(request.url.toString(), response.code)
             }
 
             return withContext(Dispatchers.IO) {
-                JSON_ENCODER.decodeFromStream(response.body!!.byteStream().buffered())
+                JSON_ENCODER.decodeFromStream(response.body.byteStream().buffered())
             }
         }
     }

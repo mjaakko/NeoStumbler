@@ -66,7 +66,8 @@ import xyz.malkki.neostumbler.ichnaea.dto.CellTowerDto
 import xyz.malkki.neostumbler.ichnaea.dto.GeolocateRequestDto
 import xyz.malkki.neostumbler.ichnaea.dto.GeolocateResponseDto
 import xyz.malkki.neostumbler.ichnaea.dto.WifiAccessPointDto
-import xyz.malkki.neostumbler.ichnaea.getIchnaeaParams
+import xyz.malkki.neostumbler.ichnaea.dto.latLng
+import xyz.malkki.neostumbler.ichnaea.mapper.getIchnaeaParams
 import xyz.malkki.neostumbler.ui.composables.shared.CenteredCircularProgressIndicator
 import xyz.malkki.neostumbler.ui.map.LifecycleAwareMapView
 import xyz.malkki.neostumbler.ui.map.MapTileSource

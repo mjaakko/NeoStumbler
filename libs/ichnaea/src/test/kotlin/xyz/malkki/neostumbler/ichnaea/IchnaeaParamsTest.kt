@@ -1,6 +1,6 @@
 package xyz.malkki.neostumbler.ichnaea
 
-import org.junit.Assert.assertEquals
+import org.junit.Assert
 import org.junit.Test
 
 class IchnaeaParamsTest {
@@ -14,7 +14,7 @@ class IchnaeaParamsTest {
                 apiKey = null,
             )
 
-        assertEquals("http://example.com/geosubmit", params.toSubmissionUrl().toString())
+        Assert.assertEquals("http://example.com/geosubmit", params.toSubmissionUrl().toString())
     }
 
     @Test
@@ -27,6 +27,9 @@ class IchnaeaParamsTest {
                 apiKey = null,
             )
 
-        assertEquals("https://example.com/api/v2/geosubmit", params.toSubmissionUrl().toString())
+        Assert.assertEquals(
+            "https://example.com/api/v2/geosubmit",
+            params.toSubmissionUrl().toString(),
+        )
     }
 }
