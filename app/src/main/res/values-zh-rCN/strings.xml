@@ -185,5 +185,15 @@
     </plurals>
     <string name="wifi_filter_settings_hint">不会收集 SSID 中带有以上任意关键词的 Wi-Fi 网络</string>
     <string name="pause_scanning_on_low_battery_title">低电量时暂停扫描</string>
-    <string name="pause_scanning_on_low_battery_description">当电量低于 %% 时暂停</string>
+    <string name="pause_scanning_on_low_battery_description">当电量低于 %d%% 时暂停扫描</string>
+    <string name="moving_device_filter_title">排除移动设备</string>
+    <string name="moving_device_filter_description">自动检测并排除移动的 Wi-Fi 网络和蓝牙信标</string>
+    <string name="map_tile_source_custom_title">自定义</string>
+    <string name="map_tile_source_custom_style_url">自定义地图样式 URL</string>
+    <string name="map_show_coverage_layer">显示覆盖率地图</string>
+    <string name="passive_scanning_title">被动数据收集</string>
+    <string name="passive_scanning_description">被动数据收集会利用其他应用请求的数据，在后台生成报告，耗电量影响极小。\n\n被动数据收集的效果取决于您的设备类型、您正在使用的其他应用，以及您是否启用了融合定位服务。\n\n请注意，被动数据收集不适用于蓝牙信标。\n\n您是否要开启被动数据收集？</string>
+    <string name="reduced_metadata_description">报告以随机顺序发送，并截断时间戳及其他元数据</string>
+    <string name="reduced_metadata_title">发送报告时去除部分元数据</string>
+    <string name="permission_rationale_background_location_passive_scan">应用处于后台时，需要后台位置权限来更新位置信息</string>
 </resources>
