@@ -47,9 +47,9 @@ import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.db.dao.getReportsInsideBoundingBox
 import xyz.malkki.neostumbler.db.entities.ReportWithLocation
-import xyz.malkki.neostumbler.domain.LatLng
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.get
+import xyz.malkki.neostumbler.geography.LatLng
 import xyz.malkki.neostumbler.location.LocationSource
 import xyz.malkki.neostumbler.ui.map.MapTileSource
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel.HeatMapTile
@@ -128,7 +128,7 @@ class MapViewModel(
                 .isEmpty()
         )
 
-    private val _mapCenter = MutableStateFlow<LatLng>(LatLng.ORIGIN)
+    private val _mapCenter = MutableStateFlow(LatLng.ORIGIN)
     val mapCenter: StateFlow<LatLng>
         get() = _mapCenter.asStateFlow()
 

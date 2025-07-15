@@ -177,6 +177,7 @@ kotlin {
 }
 
 dependencies {
+    implementation(project(":libs:geography"))
     implementation(project(":libs:ichnaea"))
     implementation(project(":libs:utils"))
 

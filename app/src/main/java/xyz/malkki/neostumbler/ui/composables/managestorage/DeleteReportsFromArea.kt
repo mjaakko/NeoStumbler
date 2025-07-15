@@ -15,9 +15,9 @@ import kotlinx.coroutines.launch
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.db.ReportDatabase
 import xyz.malkki.neostumbler.db.dao.getReportsInsideBoundingBox
-import xyz.malkki.neostumbler.domain.LatLng
 import xyz.malkki.neostumbler.extensions.getQuantityString
 import xyz.malkki.neostumbler.extensions.showToast
+import xyz.malkki.neostumbler.geography.LatLng
 import xyz.malkki.neostumbler.ui.composables.shared.AreaPickerDialog
 
 @Composable

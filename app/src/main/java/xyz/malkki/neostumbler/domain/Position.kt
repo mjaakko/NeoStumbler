@@ -6,6 +6,7 @@ import kotlin.math.abs
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 import xyz.malkki.neostumbler.extensions.elapsedRealtimeMillisCompat
+import xyz.malkki.neostumbler.geography.LatLng
 
 data class Position(
     val latitude: Double,

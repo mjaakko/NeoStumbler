@@ -10,9 +10,9 @@ import androidx.annotation.RequiresPermission
 import androidx.core.content.getSystemService
 import xyz.malkki.neostumbler.domain.CellTower
 import xyz.malkki.neostumbler.domain.CellTower.Companion.fillMissingData
-import xyz.malkki.neostumbler.domain.LatLng
 import xyz.malkki.neostumbler.domain.Position
 import xyz.malkki.neostumbler.domain.WifiAccessPoint
+import xyz.malkki.neostumbler.geography.LatLng
 import xyz.malkki.neostumbler.scanner.ScanReportSaver
 import xyz.malkki.neostumbler.scanner.ScannerService
 import xyz.malkki.neostumbler.scanner.ScanningConstants

@@ -49,8 +49,8 @@ import xyz.malkki.neostumbler.db.entities.CellTowerEntity
 import xyz.malkki.neostumbler.db.entities.ReportWithData
 import xyz.malkki.neostumbler.db.entities.WifiAccessPointEntity
 import xyz.malkki.neostumbler.db.entities.latLng
-import xyz.malkki.neostumbler.domain.LatLng
 import xyz.malkki.neostumbler.extensions.roundToString
+import xyz.malkki.neostumbler.geography.LatLng
 import xyz.malkki.neostumbler.ui.composables.shared.formattedDate
 
 private fun ReportDatabaseManager.getReport(reportId: Long): Flow<ReportWithData> =

@@ -1,6 +1,6 @@
 package xyz.malkki.neostumbler.scanner.postprocess
 
-import xyz.malkki.neostumbler.domain.LatLng
+import xyz.malkki.neostumbler.geography.LatLng
 import xyz.malkki.neostumbler.scanner.data.ReportData
 
 private const val MAX_DISTANCE_FROM_EXISTING = 500.0

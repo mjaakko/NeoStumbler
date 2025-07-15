@@ -5,7 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import xyz.malkki.neostumbler.db.entities.PositionEntity
-import xyz.malkki.neostumbler.domain.LatLng
+import xyz.malkki.neostumbler.geography.LatLng
 
 @Dao
 interface PositionDao {

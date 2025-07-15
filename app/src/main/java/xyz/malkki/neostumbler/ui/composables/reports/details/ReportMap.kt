@@ -57,8 +57,9 @@ import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.db.entities.ReportWithData
 import xyz.malkki.neostumbler.db.entities.latLng
-import xyz.malkki.neostumbler.domain.LatLng
+import xyz.malkki.neostumbler.domain.asMapLibreLatLng
 import xyz.malkki.neostumbler.extensions.get
+import xyz.malkki.neostumbler.geography.LatLng
 import xyz.malkki.neostumbler.ichnaea.Geolocate
 import xyz.malkki.neostumbler.ichnaea.IchnaeaClient
 import xyz.malkki.neostumbler.ichnaea.dto.BluetoothBeaconDto

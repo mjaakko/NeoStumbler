@@ -51,7 +51,8 @@ import org.maplibre.android.style.layers.PropertyFactory
 import org.maplibre.android.style.sources.VectorSource
 import org.maplibre.android.utils.ColorUtils as MapLibreColorUtils
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.domain.LatLng.Companion.asDomainLatLng
+import xyz.malkki.neostumbler.domain.asDomainLatLng
+import xyz.malkki.neostumbler.domain.asMapLibreLatLng
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.ui.composables.map.MapSettingsButton
 import xyz.malkki.neostumbler.ui.composables.shared.KeepScreenOn

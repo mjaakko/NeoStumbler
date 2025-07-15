@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.domain
+package xyz.malkki.neostumbler.geography
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

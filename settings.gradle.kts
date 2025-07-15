@@ -18,6 +18,8 @@ rootProject.name = "NeoStumbler"
 
 include(":app")
 
+include(":libs:geography")
+
 include(":libs:utils")
 
 include(":libs:ichnaea")
