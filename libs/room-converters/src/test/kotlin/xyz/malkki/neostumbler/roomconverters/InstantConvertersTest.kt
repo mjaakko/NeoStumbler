@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.db.converters
+package xyz.malkki.neostumbler.roomconverters
 
 import java.time.Instant
 import java.time.temporal.ChronoUnit

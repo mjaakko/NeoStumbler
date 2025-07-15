@@ -181,6 +181,7 @@ dependencies {
     implementation(project(":libs:geography"))
     implementation(project(":libs:ichnaea"))
     implementation(project(":libs:utils"))
+    implementation(project(":libs:room-converters"))
 
     implementation(platform(libs.koinBom))
     implementation(libs.koinCore)

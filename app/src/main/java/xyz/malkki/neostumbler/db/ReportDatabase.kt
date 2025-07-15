@@ -4,8 +4,6 @@ import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import xyz.malkki.neostumbler.db.converters.InstantConverters
-import xyz.malkki.neostumbler.db.converters.LocalDateConverters
 import xyz.malkki.neostumbler.db.dao.BluetoothBeaconDao
 import xyz.malkki.neostumbler.db.dao.CellTowerDao
 import xyz.malkki.neostumbler.db.dao.ExportDao
@@ -20,6 +18,8 @@ import xyz.malkki.neostumbler.db.entities.Report
 import xyz.malkki.neostumbler.db.entities.WifiAccessPointEntity
 import xyz.malkki.neostumbler.db.migrations.RenamePositionToPositionEntity
 import xyz.malkki.neostumbler.db.migrations.RenameTablesToEntities
+import xyz.malkki.neostumbler.roomconverters.InstantConverters
+import xyz.malkki.neostumbler.roomconverters.LocalDateConverters
 
 const val REPORT_DB_VERSION = 9
 

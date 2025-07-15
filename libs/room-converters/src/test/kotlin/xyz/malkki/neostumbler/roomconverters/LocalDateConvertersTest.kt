@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.db.converters
+package xyz.malkki.neostumbler.roomconverters
 
 import java.time.LocalDate
 import org.junit.Assert.assertEquals

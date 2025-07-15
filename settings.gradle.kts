@@ -20,6 +20,8 @@ include(":app")
 
 include(":libs:beacon-library-utils")
 
+include(":libs:room-converters")
+
 include(":libs:geography")
 
 include(":libs:utils")

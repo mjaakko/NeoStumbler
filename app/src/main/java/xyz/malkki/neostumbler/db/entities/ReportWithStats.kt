@@ -2,7 +2,7 @@ package xyz.malkki.neostumbler.db.entities
 
 import androidx.room.TypeConverters
 import java.time.Instant
-import xyz.malkki.neostumbler.db.converters.InstantConverters
+import xyz.malkki.neostumbler.roomconverters.InstantConverters
 
 @TypeConverters(InstantConverters::class)
 data class ReportWithStats(
