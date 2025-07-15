@@ -36,8 +36,8 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import timber.log.Timber
-import xyz.malkki.neostumbler.beacons.IBeaconParser
-import xyz.malkki.neostumbler.beacons.StubDistanceCalculator
+import xyz.malkki.neostumbler.beaconlibrary.IBeaconParser
+import xyz.malkki.neostumbler.beaconlibrary.StubDistanceCalculator
 import xyz.malkki.neostumbler.crashlog.CrashLogManager
 import xyz.malkki.neostumbler.crashlog.FileCrashLogManager
 import xyz.malkki.neostumbler.db.DbPruneWorker

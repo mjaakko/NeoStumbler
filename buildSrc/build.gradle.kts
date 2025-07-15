@@ -5,6 +5,7 @@ dependencies {
     implementation(libs.plugins.kotlinAndroid.asLibraryDependency)
 
     implementation(libs.plugins.androidApplication.asLibraryDependency)
+    implementation(libs.plugins.androidLibrary.asLibraryDependency)
 
     implementation(libs.plugins.ktfmt.asLibraryDependency)
 

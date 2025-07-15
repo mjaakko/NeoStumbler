@@ -18,6 +18,8 @@ rootProject.name = "NeoStumbler"
 
 include(":app")
 
+include(":libs:beacon-library-utils")
+
 include(":libs:geography")
 
 include(":libs:utils")

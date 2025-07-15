@@ -177,6 +177,7 @@ kotlin {
 }
 
 dependencies {
+    implementation(project(":libs:beacon-library-utils"))
     implementation(project(":libs:geography"))
     implementation(project(":libs:ichnaea"))
     implementation(project(":libs:utils"))

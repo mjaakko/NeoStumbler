@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.beacons
+package xyz.malkki.neostumbler.beaconlibrary
 
 import org.altbeacon.beacon.BeaconParser
 
