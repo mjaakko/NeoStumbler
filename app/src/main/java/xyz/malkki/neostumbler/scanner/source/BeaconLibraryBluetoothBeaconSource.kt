@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.BeaconManager
+import org.altbeacon.beacon.RangeNotifier
 import org.altbeacon.beacon.Region
 import timber.log.Timber
 import xyz.malkki.neostumbler.core.BluetoothBeacon
@@ -26,10 +27,9 @@ class BeaconLibraryBluetoothBeaconSource(context: Context) : BluetoothBeaconSour
     private fun getBeaconFlow(context: Context): Flow<Collection<Beacon>> = callbackFlow {
         val beaconManager = BeaconManager.getInstanceForApplication(context)
 
-        val rangeNotifier: (Collection<Beacon>, Region) -> Unit =
-            { beacons: Collection<Beacon>, _: Region ->
-                trySendBlocking(beacons)
-            }
+        val rangeNotifier = RangeNotifier { beacons: Collection<Beacon>, _: Region ->
+            trySendBlocking(beacons)
+        }
 
         beaconManager.addRangeNotifier(rangeNotifier)
 
