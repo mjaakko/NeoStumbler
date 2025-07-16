@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.domain
+package xyz.malkki.neostumbler.core
 
 /** Interface for observations of wireless devices */
 interface ObservedDevice<K> {

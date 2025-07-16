@@ -13,7 +13,8 @@ import androidx.core.content.IntentCompat
 import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import xyz.malkki.neostumbler.domain.Position
+import xyz.malkki.neostumbler.core.Position
+import xyz.malkki.neostumbler.domain.toPosition
 
 class PlatformPassiveLocationReceiver : BroadcastReceiver(), KoinComponent {
     companion object {
@@ -65,15 +66,20 @@ class PlatformPassiveLocationReceiver : BroadcastReceiver(), KoinComponent {
         val positions =
             locations.map { location ->
                 val source =
-                    if (location.provider == LocationManager.GPS_PROVIDER) {
-                        Position.Source.GPS
-                    } else if (location.provider == LocationManager.NETWORK_PROVIDER) {
-                        Position.Source.NETWORK
-                    } else {
-                        // Location source unknown, let's use FUSED as the best guess
-                        Position.Source.FUSED
+                    when (location.provider) {
+                        LocationManager.GPS_PROVIDER -> {
+                            Position.Source.GPS
+                        }
+                        LocationManager.NETWORK_PROVIDER -> {
+                            Position.Source.NETWORK
+                        }
+                        else -> {
+                            // Location source unknown, let's use FUSED as the best guess
+                            Position.Source.FUSED
+                        }
                     }
-                Position.fromLocation(location, source = source)
+
+                location.toPosition(source = source)
             }
 
         runBlocking {

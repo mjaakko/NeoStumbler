@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.Locale
-import xyz.malkki.neostumbler.domain.Position
+import xyz.malkki.neostumbler.core.Position
 import xyz.malkki.neostumbler.geography.LatLng
 
 @Entity(

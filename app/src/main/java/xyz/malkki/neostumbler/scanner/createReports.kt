@@ -3,11 +3,11 @@ package xyz.malkki.neostumbler.scanner
 import kotlin.math.abs
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
-import xyz.malkki.neostumbler.domain.BluetoothBeacon
-import xyz.malkki.neostumbler.domain.CellTower
-import xyz.malkki.neostumbler.domain.ObservedDevice
-import xyz.malkki.neostumbler.domain.Position
-import xyz.malkki.neostumbler.domain.WifiAccessPoint
+import xyz.malkki.neostumbler.core.BluetoothBeacon
+import xyz.malkki.neostumbler.core.CellTower
+import xyz.malkki.neostumbler.core.ObservedDevice
+import xyz.malkki.neostumbler.core.Position
+import xyz.malkki.neostumbler.core.WifiAccessPoint
 import xyz.malkki.neostumbler.scanner.data.ReportData
 import xyz.malkki.neostumbler.scanner.postprocess.ReportPostProcessor
 

@@ -4,7 +4,7 @@ import android.Manifest
 import androidx.annotation.RequiresPermission
 import kotlin.time.Duration
 import kotlinx.coroutines.flow.Flow
-import xyz.malkki.neostumbler.domain.Position
+import xyz.malkki.neostumbler.core.Position
 
 fun interface LocationSource {
     @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)

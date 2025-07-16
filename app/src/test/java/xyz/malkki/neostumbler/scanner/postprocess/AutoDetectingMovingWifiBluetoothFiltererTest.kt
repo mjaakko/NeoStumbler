@@ -3,9 +3,9 @@ package xyz.malkki.neostumbler.scanner.postprocess
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import xyz.malkki.neostumbler.domain.BluetoothBeacon
-import xyz.malkki.neostumbler.domain.Position
-import xyz.malkki.neostumbler.domain.WifiAccessPoint
+import xyz.malkki.neostumbler.core.BluetoothBeacon
+import xyz.malkki.neostumbler.core.Position
+import xyz.malkki.neostumbler.core.WifiAccessPoint
 import xyz.malkki.neostumbler.scanner.data.ReportData
 
 class AutoDetectingMovingWifiBluetoothFiltererTest {

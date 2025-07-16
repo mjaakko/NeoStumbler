@@ -51,6 +51,7 @@ import org.maplibre.android.style.layers.PropertyFactory
 import org.maplibre.android.style.sources.VectorSource
 import org.maplibre.android.utils.ColorUtils as MapLibreColorUtils
 import xyz.malkki.neostumbler.R
+import xyz.malkki.neostumbler.core.Position
 import xyz.malkki.neostumbler.domain.asDomainLatLng
 import xyz.malkki.neostumbler.domain.asMapLibreLatLng
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
@@ -306,12 +307,12 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
     }
 }
 
-private fun xyz.malkki.neostumbler.domain.Position.asPlatformLocation(): Location {
+private fun Position.asPlatformLocation(): Location {
     return Location("manual").apply {
         this.latitude = this@asPlatformLocation.latitude
         this.longitude = this@asPlatformLocation.longitude
         if (this@asPlatformLocation.accuracy != null) {
-            this.accuracy = this@asPlatformLocation.accuracy.toFloat()
+            this.accuracy = this@asPlatformLocation.accuracy!!.toFloat()
         }
     }
 }

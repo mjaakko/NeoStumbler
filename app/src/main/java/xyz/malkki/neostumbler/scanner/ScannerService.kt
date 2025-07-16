@@ -59,8 +59,8 @@ import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
-import xyz.malkki.neostumbler.domain.CellTower
-import xyz.malkki.neostumbler.domain.Position
+import xyz.malkki.neostumbler.core.CellTower
+import xyz.malkki.neostumbler.core.Position
 import xyz.malkki.neostumbler.extensions.getOrDefault
 import xyz.malkki.neostumbler.extensions.getQuantityString
 import xyz.malkki.neostumbler.extensions.isWifiScanThrottled

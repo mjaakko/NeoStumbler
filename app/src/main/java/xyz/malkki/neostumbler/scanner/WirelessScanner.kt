@@ -17,12 +17,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import timber.log.Timber
+import xyz.malkki.neostumbler.core.BluetoothBeacon
+import xyz.malkki.neostumbler.core.CellTower
+import xyz.malkki.neostumbler.core.ObservedDevice
+import xyz.malkki.neostumbler.core.Position
+import xyz.malkki.neostumbler.core.WifiAccessPoint
 import xyz.malkki.neostumbler.domain.AirPressureObservation
-import xyz.malkki.neostumbler.domain.BluetoothBeacon
-import xyz.malkki.neostumbler.domain.CellTower
-import xyz.malkki.neostumbler.domain.ObservedDevice
-import xyz.malkki.neostumbler.domain.Position
-import xyz.malkki.neostumbler.domain.WifiAccessPoint
 import xyz.malkki.neostumbler.extensions.buffer
 import xyz.malkki.neostumbler.extensions.combineWithLatestFrom
 import xyz.malkki.neostumbler.scanner.data.ReportData
@@ -88,7 +88,7 @@ class WirelessScanner(
 
     private fun Flow<Position>.filterInaccurateLocations(): Flow<Position> = filter { location ->
         location.accuracy != null &&
-            location.accuracy <= ScanningConstants.LOCATION_MAX_ACCURACY_METERS
+            location.accuracy!! <= ScanningConstants.LOCATION_MAX_ACCURACY_METERS
     }
 
     private fun Flow<Position>.distinctUntilChangedSignificantly(): Flow<Position> =

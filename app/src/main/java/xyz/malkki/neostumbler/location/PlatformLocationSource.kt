@@ -14,8 +14,9 @@ import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import timber.log.Timber
-import xyz.malkki.neostumbler.domain.Position
-import xyz.malkki.neostumbler.domain.Position.Source
+import xyz.malkki.neostumbler.core.Position
+import xyz.malkki.neostumbler.core.Position.Source
+import xyz.malkki.neostumbler.domain.toPosition
 import xyz.malkki.neostumbler.utils.ImmediateExecutor
 
 class PlatformLocationSource(context: Context) : LocationSource {
@@ -37,7 +38,7 @@ class PlatformLocationSource(context: Context) : LocationSource {
                                 Source.GPS
                             }
 
-                        trySendBlocking(Position.fromLocation(location = location, source = source))
+                        trySendBlocking(location.toPosition(source = source))
                     }
 
                     override fun onProviderDisabled(provider: String) {

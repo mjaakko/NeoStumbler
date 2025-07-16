@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.runningFold
-import xyz.malkki.neostumbler.domain.Position
+import xyz.malkki.neostumbler.core.Position
 
 // Distance between coordinates in metres
 private const val HORIZONTAL_DIFFERENCE_THRESHOLD = 10.0

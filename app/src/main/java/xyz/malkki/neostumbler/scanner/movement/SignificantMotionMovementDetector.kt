@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.suspendCancellableCoroutine
-import xyz.malkki.neostumbler.domain.Position
+import xyz.malkki.neostumbler.core.Position
 
 // Minimum distance moved to consider the device to be moving
 // If the location has not changed by at least this amount, listening for locations is stopped

@@ -182,6 +182,7 @@ dependencies {
     implementation(project(":libs:ichnaea"))
     implementation(project(":libs:utils"))
     implementation(project(":libs:room-converters"))
+    implementation(project(":app:core"))
 
     implementation(platform(libs.koinBom))
     implementation(libs.koinCore)

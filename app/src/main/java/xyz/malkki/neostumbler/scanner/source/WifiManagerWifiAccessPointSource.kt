@@ -26,7 +26,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import xyz.malkki.neostumbler.domain.WifiAccessPoint
+import xyz.malkki.neostumbler.core.WifiAccessPoint
+import xyz.malkki.neostumbler.domain.toWifiAccessPoint
 import xyz.malkki.neostumbler.extensions.buffer
 import xyz.malkki.neostumbler.utils.ImmediateExecutor
 import xyz.malkki.neostumbler.utils.RateLimiter
@@ -97,11 +98,11 @@ class WifiManagerWifiAccessPointSource(
     @RequiresPermission(
         allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_WIFI_STATE]
     )
-    override fun getWifiAccessPointFlow(interval: Flow<Duration>): Flow<List<WifiAccessPoint>> =
+    override fun getWifiAccessPointFlow(scanInterval: Flow<Duration>): Flow<List<WifiAccessPoint>> =
         channelFlow {
             launch(Dispatchers.Default) {
                 val scanInterval =
-                    interval
+                    scanInterval
                         .map {
                             it.coerceIn(minimumValue = minScanInterval, maximumValue = MAX_INTERVAL)
                         }
@@ -128,7 +129,7 @@ class WifiManagerWifiAccessPointSource(
 
             scanResultFlow
                 .map { scanResults ->
-                    scanResults.map { scanResult -> WifiAccessPoint.fromScanResult(scanResult) }
+                    scanResults.map { scanResult -> scanResult.toWifiAccessPoint() }
                 }
                 .buffer(WIFI_BUFFER_WINDOW)
                 .map { wifis ->

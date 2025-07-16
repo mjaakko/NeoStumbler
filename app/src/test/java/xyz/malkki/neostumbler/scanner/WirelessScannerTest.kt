@@ -15,11 +15,11 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertThrows
 import org.junit.Test
+import xyz.malkki.neostumbler.core.BluetoothBeacon
+import xyz.malkki.neostumbler.core.Position
+import xyz.malkki.neostumbler.core.Position.Source
+import xyz.malkki.neostumbler.core.WifiAccessPoint
 import xyz.malkki.neostumbler.domain.AirPressureObservation
-import xyz.malkki.neostumbler.domain.BluetoothBeacon
-import xyz.malkki.neostumbler.domain.Position
-import xyz.malkki.neostumbler.domain.Position.Source
-import xyz.malkki.neostumbler.domain.WifiAccessPoint
 import xyz.malkki.neostumbler.scanner.data.ReportData
 import xyz.malkki.neostumbler.scanner.postprocess.HiddenWifiFilterer
 

@@ -8,10 +8,12 @@ import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
 import androidx.annotation.RequiresPermission
 import androidx.core.content.getSystemService
-import xyz.malkki.neostumbler.domain.CellTower
-import xyz.malkki.neostumbler.domain.CellTower.Companion.fillMissingData
-import xyz.malkki.neostumbler.domain.Position
-import xyz.malkki.neostumbler.domain.WifiAccessPoint
+import xyz.malkki.neostumbler.core.CellTower
+import xyz.malkki.neostumbler.core.CellTower.Companion.fillMissingData
+import xyz.malkki.neostumbler.core.Position
+import xyz.malkki.neostumbler.core.WifiAccessPoint
+import xyz.malkki.neostumbler.domain.toCellTower
+import xyz.malkki.neostumbler.domain.toWifiAccessPoint
 import xyz.malkki.neostumbler.geography.LatLng
 import xyz.malkki.neostumbler.scanner.ScanReportSaver
 import xyz.malkki.neostumbler.scanner.ScannerService
@@ -54,7 +56,8 @@ class PassiveScanReportCreator(
 
         val filteredPositions =
             positions.filter {
-                it.accuracy != null && it.accuracy <= ScanningConstants.LOCATION_MAX_ACCURACY_METERS
+                it.accuracy != null &&
+                    it.accuracy!! <= ScanningConstants.LOCATION_MAX_ACCURACY_METERS
             }
 
         if (filteredPositions.isEmpty()) {
@@ -106,7 +109,7 @@ class PassiveScanReportCreator(
         val maxTimestamp = passiveScanStateManager.getMaxWifiTimestamp()
 
         return wifiManager.scanResults
-            .map { WifiAccessPoint.fromScanResult(it) }
+            .map { it.toWifiAccessPoint() }
             .filter { maxTimestamp == null || it.timestamp > maxTimestamp }
     }
 
@@ -126,7 +129,7 @@ class PassiveScanReportCreator(
                 @SuppressLint("MissingPermission") val serviceState = it.serviceState
 
                 it.allCellInfo
-                    .mapNotNull { cellInfo -> CellTower.fromCellInfo(cellInfo) }
+                    .mapNotNull { cellInfo -> cellInfo.toCellTower() }
                     .fillMissingData(serviceState?.operatorNumeric)
                     .filter { it.hasEnoughData() }
             }

@@ -7,8 +7,8 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import xyz.malkki.neostumbler.domain.Position
-import xyz.malkki.neostumbler.domain.Position.Source
+import xyz.malkki.neostumbler.core.Position
+import xyz.malkki.neostumbler.core.Position.Source
 
 class LocationBasedMovementDetectorTest {
     @Test

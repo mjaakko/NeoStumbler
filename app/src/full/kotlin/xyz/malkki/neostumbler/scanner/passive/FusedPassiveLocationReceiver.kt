@@ -10,7 +10,8 @@ import com.google.android.gms.location.LocationResult
 import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import xyz.malkki.neostumbler.domain.Position
+import xyz.malkki.neostumbler.core.Position
+import xyz.malkki.neostumbler.domain.toPosition
 
 class FusedPassiveLocationReceiver : BroadcastReceiver(), KoinComponent {
     companion object {
@@ -37,9 +38,7 @@ class FusedPassiveLocationReceiver : BroadcastReceiver(), KoinComponent {
             val locationResult = LocationResult.extractResult(intent)!!
 
             val positions =
-                locationResult.locations.map {
-                    Position.fromLocation(it, source = Position.Source.FUSED)
-                }
+                locationResult.locations.map { it.toPosition(source = Position.Source.FUSED) }
 
             runBlocking {
                 // We can assume that we have the location permission, because we are receiving

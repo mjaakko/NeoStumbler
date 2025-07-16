@@ -40,9 +40,9 @@ import org.koin.compose.KoinIsolatedContext
 import org.koin.dsl.koinApplication
 import org.koin.dsl.module
 import xyz.malkki.neostumbler.PREFERENCES
+import xyz.malkki.neostumbler.core.Position
+import xyz.malkki.neostumbler.core.Position.Source
 import xyz.malkki.neostumbler.domain.LatLng
-import xyz.malkki.neostumbler.domain.Position
-import xyz.malkki.neostumbler.domain.Position.Source
 import xyz.malkki.neostumbler.location.LocationSource
 
 class AreaPickerTest {

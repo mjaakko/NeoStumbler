@@ -5,7 +5,7 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import xyz.malkki.neostumbler.domain.Position
+import xyz.malkki.neostumbler.core.Position
 import xyz.malkki.neostumbler.extensions.pairwise
 
 // Maximum age difference between two consecutive locations
@@ -26,9 +26,9 @@ class SmoothenedGpsSpeedSource(private val positionFlow: Flow<Position>) : Speed
                         abs(prevLocation.timestamp - currentLocation.timestamp).milliseconds <=
                             LOCATION_MAX_AGE_DIFF
                 ) {
-                    prevLocation.speed * A + currentLocation.speed * B
+                    prevLocation.speed!! * A + currentLocation.speed!! * B
                 } else {
-                    currentLocation.speed.toDouble()
+                    currentLocation.speed!!.toDouble()
                 }
             } else {
                 0.0

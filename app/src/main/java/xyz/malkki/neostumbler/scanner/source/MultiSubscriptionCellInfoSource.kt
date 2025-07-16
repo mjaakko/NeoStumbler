@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.merge
 import timber.log.Timber
-import xyz.malkki.neostumbler.domain.CellTower
+import xyz.malkki.neostumbler.core.CellTower
 import xyz.malkki.neostumbler.extensions.getActiveSubscriptionIds
 
 class MultiSubscriptionCellInfoSource(private val context: Context) : CellInfoSource {

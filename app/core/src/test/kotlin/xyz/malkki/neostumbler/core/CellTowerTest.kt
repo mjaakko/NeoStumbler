@@ -1,8 +1,8 @@
-package xyz.malkki.neostumbler.domain
+package xyz.malkki.neostumbler.core
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import xyz.malkki.neostumbler.domain.CellTower.Companion.fillMissingData
+import xyz.malkki.neostumbler.core.CellTower.Companion.fillMissingData
 
 class CellTowerTest {
     @Test

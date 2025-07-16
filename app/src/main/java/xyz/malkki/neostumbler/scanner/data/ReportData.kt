@@ -1,9 +1,9 @@
 package xyz.malkki.neostumbler.scanner.data
 
-import xyz.malkki.neostumbler.domain.BluetoothBeacon
-import xyz.malkki.neostumbler.domain.CellTower
-import xyz.malkki.neostumbler.domain.Position
-import xyz.malkki.neostumbler.domain.WifiAccessPoint
+import xyz.malkki.neostumbler.core.BluetoothBeacon
+import xyz.malkki.neostumbler.core.CellTower
+import xyz.malkki.neostumbler.core.Position
+import xyz.malkki.neostumbler.core.WifiAccessPoint
 
 /** Container for the data included in a single report */
 data class ReportData(

@@ -7,7 +7,7 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import java.time.Instant
 import java.time.temporal.ChronoUnit
-import xyz.malkki.neostumbler.domain.WifiAccessPoint
+import xyz.malkki.neostumbler.core.WifiAccessPoint
 
 @Entity(
     foreignKeys =

@@ -18,6 +18,8 @@ rootProject.name = "NeoStumbler"
 
 include(":app")
 
+include(":app:core")
+
 include(":libs:beacon-library-utils")
 
 include(":libs:room-converters")

@@ -20,8 +20,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.isActive
 import timber.log.Timber
-import xyz.malkki.neostumbler.domain.CellTower
-import xyz.malkki.neostumbler.domain.CellTower.Companion.fillMissingData
+import xyz.malkki.neostumbler.core.CellTower
+import xyz.malkki.neostumbler.core.CellTower.Companion.fillMissingData
+import xyz.malkki.neostumbler.domain.toCellTower
 import xyz.malkki.neostumbler.extensions.getServiceStateFlow
 import xyz.malkki.neostumbler.utils.ImmediateExecutor
 import xyz.malkki.neostumbler.utils.delayWithMinDuration
@@ -79,7 +80,7 @@ class TelephonyManagerCellInfoSource(
                         override fun onCellInfo(cellInfo: MutableList<CellInfo>) {
                             val cellTowers =
                                 cellInfo
-                                    .mapNotNull { CellTower.fromCellInfo(it) }
+                                    .mapNotNull { it.toCellTower() }
                                     .fillMissingData(serviceState.value?.operatorNumeric)
                                     // Filter cell infos which don't have enough useful data to be
                                     // collected
