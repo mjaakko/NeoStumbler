@@ -50,9 +50,9 @@
     <string name="add_quick_settings_tile">要添加快捷开关以方便启动扫描吗？</string>
     <string name="mls_warning_title">MLS 已经退役</string>
     <string name="endpoint">端点</string>
-    <string name="submission_path">路径</string>
+    <string name="submission_path">提交路径</string>
     <string name="api_key">API 密钥（可选）</string>
-    <string name="suggested_services_title">建议服务</string>
+    <string name="suggested_services_title">推荐服务</string>
     <string name="suggested_service_website">网站</string>
     <string name="unencrypted_endpoint_warning">未加密的端点</string>
     <string name="settings_ignore_wifi_scan_throttling_title">忽略 Wi-Fi 扫描限制</string>
@@ -99,7 +99,7 @@
     <string name="db_prune_two_months">2个月后</string>
     <string name="db_prune_never">永不</string>
     <string name="manage_storage_title">管理存储</string>
-    <string name="db_size">数据库大小: %s</string>
+    <string name="db_size">数据库大小：%s</string>
     <string name="delete_reports_by_date">按日期删除报告</string>
     <string name="delete_all_reports">删除所有报告</string>
     <string name="delete_all_reports_confirmation">你确定要删除所有报告吗？</string>
@@ -109,7 +109,7 @@
     <string name="toast_deleted_all_reports">已删除所有报告</string>
     <string name="db_prune_six_months">6个月后</string>
     <string name="about_app">关于 NeoStumbler</string>
-    <string name="app_version">版本: %s</string>
+    <string name="app_version">版本：%s</string>
     <string name="bug_report_button">报告软件缺陷</string>
     <string name="troubleshooting_title">故障排除</string>
     <string name="troubleshooting_battery_optimizations_disabled">电池优化已禁用</string>
@@ -121,13 +121,13 @@
     <string name="troubleshooting_permissions_granted">权限已授予</string>
     <string name="troubleshooting_wifi_scan_always_available">Wi-Fi 扫描始终可用</string>
     <string name="delete_data">删除数据</string>
-    <string name="app_variant">变种: %s</string>
+    <string name="app_variant">变种：%s</string>
     <string name="contributors">贡献者们</string>
     <string name="update_translations_button">更新翻译</string>
     <string name="author_text">由 %1$s 和 %2$s 用 ❤️ 发电</string>
     <string name="failed_to_open_selected_file">无法打开所选文件</string>
     <string name="import_data">导入数据</string>
-    <string name="import_raw_database">导入新数据库</string>
+    <string name="import_raw_database">导入原始数据库</string>
     <string name="import_raw_database_description">导入新数据库的会替换当前的</string>
     <string name="import_database_not_valid">所选文件未包含有效数据库</string>
     <plurals name="import_database_successful">
@@ -146,11 +146,54 @@
     <string name="invalid_url">无效 URL</string>
     <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">OK</string>
     <string name="troubleshooting_not_ok" tools:ignore="Typos">不OK</string>
-    <string name="mls_warning_text">Mozilla Location Service已经关闭，不再接受数据提交。作为替代，你可将数据上传至beaconDB，其服务和MLS兼容\n\n请记得beaconDB仍在开发中，并且这一切换会影响处理你数据的方式。更多信息请参阅其<annotation link="privacy_policy">隐私政策</annotation>\n\n你是否要设置beaconDB为上传端点？这也可以在应用中设置</string>
+    <string name="mls_warning_text">Mozilla位置服务（MLS）已经关闭，不再接受数据提交。作为替代，您可将数据上传至beaconDB，其服务和MLS兼容\n\n请注意beaconDB仍在开发中，并会影响您提交的数据之处理方式。更多信息请参阅其<annotation link="privacy_policy">隐私政策</annotation>\n\n您是否希望将beaconDB设置为上传端点？稍后也可在设置中更改</string>
     <string name="coverage_layer_no_configured">未配置覆盖率地图</string>
     <string name="waiting_for_location">等待位置</string>
     <string name="coverage_layer">覆盖率地图</string>
     <string name="coverage_layer_tile_json_url">覆盖率地图所用的 TileJSON URL</string>
     <string name="system_default_language">系统默认语言</string>
     <string name="delete_reports_from_area">按地区删除报告</string>
+    <string name="delete_all">删除全部</string>
+    <string name="copy">复制</string>
+    <string name="text_copied_to_clipboard">文本已复制至剪贴板！</string>
+    <string name="disabled">已禁用</string>
+    <string name="crash_log_title">崩溃日志</string>
+    <string name="crash_log_entry_title">崩溃%d</string>
+    <string name="db_schema_version">数据库架构版本：%d</string>
+    <string name="scanning_status_active">扫描<annotation style="status">已开始</annotation></string>
+    <string name="scanning_status_not_active">扫描<annotation style="status">已停止</annotation></string>
+    <string name="distance_to_estimated_location">距离估计位置：%d m</string>
+    <string name="speed_metres_per_second">速度：%s m/s</string>
+    <string name="altitude_metres">海拔：%s m</string>
+    <string name="signal_strength_dbm">信号强度：%d dBm</string>
+    <string name="unknown_cell_id">未知信号塔 ID</string>
+    <string name="mcc">MCC：%s</string>
+    <string name="mnc">MNC：%s</string>
+    <string name="lac">LAC：%s</string>
+    <string name="radio_type">类型：%s</string>
+    <string name="beacon_type">信标类型：%s</string>
+    <string name="beacon_id">ID%d：%s</string>
+    <string name="send_reports_automatically_never">从不自动上传</string>
+    <string name="send_reports_automatically_on_any_network">通过任意网络自动上传</string>
+    <string name="send_reports_automatically_on_unmetered_network">仅通过不计费网络自动上传</string>
+    <string name="export_raw_database_compress">压缩数据库文件</string>
+    <string name="locate_path">地理位置路径</string>
+    <string name="settings_group_privacy">隐私</string>
+    <string name="wifi_filter_settings_title">按 SSID 过滤 Wi-Fi</string>
+    <plurals name="wifi_filter_settings_description">
+        <item quantity="other">已过滤%d个 SSID</item>
+    </plurals>
+    <string name="wifi_filter_settings_hint">不会收集 SSID 中带有以上任意关键词的 Wi-Fi 网络</string>
+    <string name="pause_scanning_on_low_battery_title">低电量时暂停扫描</string>
+    <string name="pause_scanning_on_low_battery_description">当电量低于 %d%% 时暂停扫描</string>
+    <string name="moving_device_filter_title">排除移动设备</string>
+    <string name="moving_device_filter_description">自动检测并排除移动的 Wi-Fi 网络和蓝牙信标</string>
+    <string name="map_tile_source_custom_title">自定义</string>
+    <string name="map_tile_source_custom_style_url">自定义地图样式 URL</string>
+    <string name="map_show_coverage_layer">显示覆盖率地图</string>
+    <string name="passive_scanning_title">被动数据收集</string>
+    <string name="passive_scanning_description">被动数据收集会利用其他应用请求的数据，在后台生成报告，耗电量影响极小。\n\n被动数据收集的效果取决于您的设备类型、您正在使用的其他应用，以及您是否启用了融合定位服务。\n\n请注意，被动数据收集不适用于蓝牙信标。\n\n您是否要开启被动数据收集？</string>
+    <string name="reduced_metadata_description">报告以随机顺序发送，并截断时间戳及其他元数据</string>
+    <string name="reduced_metadata_title">发送报告时去除部分元数据</string>
+    <string name="permission_rationale_background_location_passive_scan">应用处于后台时，需要后台位置权限来更新位置信息</string>
 </resources>

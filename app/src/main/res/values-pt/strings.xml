@@ -202,4 +202,8 @@
     <string name="crash_log_entry_title">Falha #%d</string>
     <string name="moving_device_filter_title">Filtrar dispositivos móveis</string>
     <string name="moving_device_filter_description">Redes Wi-Fi e Bluetooth beacons móveis são automaticamente detetados e filtrados dos relatórios</string>
+    <string name="map_show_coverage_layer">Exibir mapa de cobertura</string>
+    <string name="distance_to_estimated_location">Distancia até o local estimado: %d m</string>
+    <string name="map_tile_source_custom_title">Personalizado</string>
+    <string name="map_tile_source_custom_style_url">URL do estilo do mapa personalizado</string>
 </resources>

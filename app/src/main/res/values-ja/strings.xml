@@ -42,7 +42,7 @@
         <item quantity="other">%d件のレポートを送信しました</item>
     </plurals>
     <string name="toast_reports_upload_failed">レポートのアップロードに失敗しました</string>
-    <string name="toast_reports_upload_failed_no_endpoint">エンドポイントが設定されていないため、ファイルのアップロードに失敗しました。</string>
+    <string name="toast_reports_upload_failed_no_endpoint">エンドポイントが設定されていないため、レポートのアップロードに失敗しました</string>
     <string name="report_upload_notification_channel_name">レポートの送信</string>
     <string name="notification_sending_reports">レポートを送信中</string>
     <string name="notification_wireless_scanning_title">無線のスキャンが有効です</string>
@@ -53,7 +53,7 @@
         %1$d⁄%2$d 基の衛星を使用中
     </string>
     <string name="ignore_battery_optimizations_title">バッテリーの最適化を無効にしてください</string>
-    <string name="ignore_battery_optimizations_description">最高の結果を得るためには、バッテリーの最適化を無効にする必要があります。有効になっている場合、画面がオフの状態では無線のスキャンと位置情報へのアクセスが大幅に制限されます。</string>
+    <string name="ignore_battery_optimizations_description">最高の結果を得るためには、バッテリーの最適化を無効にする必要があります。有効になっている場合、画面がオフの状態では無線のスキャンと位置情報へのアクセスが大幅に制限されます</string>
     <string name="battery_optimizations_not_disabled_warning">バッテリーの最適化が有効になっています</string>
     <string name="send_reports_automatically_title">レポートを自動送信する</string>
     <string name="export_notification_channel_name">データをエクスポート</string>
@@ -78,9 +78,7 @@
     <string name="beacons">Bluetoothビーコン</string>
     <string name="add_quick_settings_tile">クイック設定にタイルを追加して、簡単にスキャンを開始できるようにしますか?</string>
     <string name="mls_warning_title">MLSはシャットダウンされました</string>
-    <string name="mls_warning_text">
-        Mozilla Location Service(MLS)はシャットダウンされ、データの受け入れを終了しました。代わりに、MLSの代替サービスであるbeaconDBにデータを送信することができます。\n\nbeaconDBは現在開発中のため、お客様が送信したデータの取り扱い方法が変更される可能性があります。詳細は<annotation link="privacy_policy">プライバシーポリシー</annotation>をご確認ください。\n\nbeaconDBをエンドポイントとして設定しますか？ この設定は後から変更することができます。
-    </string>
+    <string name="mls_warning_text">Mozilla Location Service(MLS)はシャットダウンされ、データの受け入れを終了しました。代わりに、MLSの代替サービスであるbeaconDBにデータを送信することができます\n\nbeaconDBは現在開発中のため、お客様が送信したデータの取り扱い方法が変更される可能性があります。詳細は<annotation link="privacy_policy">プライバシーポリシー</annotation>をご確認ください\n\nbeaconDBをエンドポイントとして設定しますか？ この設定は後から変更することができます</string>
     <string name="endpoint">エンドポイント</string>
     <string name="submission_path">パス</string>
     <string name="api_key">APIキー (オプション)</string>
@@ -97,10 +95,7 @@
     <string name="settings_ignore_wifi_scan_throttling_title">Wi-Fiのスキャン制限を無視する</string>
     <string name="settings_ignore_wifi_scan_throttling_description">スキャンが制限されている場合、2分間に4回のみスキャンが可能です</string>
     <string name="wifi_scan_throttling">Wi-Fiのスキャン制限</string>
-    <string name="wifi_scan_throttling_explanation">
-        You need to disable Wi-Fi scan throttling in your device\'s settings to enable this feature. Usually this can be done in the developer settings
-        この機能を利用するには、お使いのデバイスで"Wi-Fiスキャンスロットリング"を無効にする必要があります。これは通常、開発者メニューから変更できます。
-    </string>
+    <string name="wifi_scan_throttling_explanation">この機能を利用するには、お使いのデバイスでWi-Fiスキャンスロットリングを無効にする必要があります。これは通常、開発者メニューから変更できます</string>
     <string name="settings_group_reports">レポート</string>
     <string name="settings_group_scanning">スキャン</string>
     <string name="settings_group_other">その他</string>
