@@ -12,6 +12,7 @@ import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -21,6 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.MainActivity
@@ -33,7 +35,6 @@ import xyz.malkki.neostumbler.scanner.quicksettings.ScannerTileService
 import xyz.malkki.neostumbler.ui.composables.BatteryOptimizationsDialog
 import xyz.malkki.neostumbler.ui.composables.shared.AddQSTileDialog
 import xyz.malkki.neostumbler.ui.composables.shared.PermissionsDialog
-import xyz.malkki.neostumbler.ui.composables.shared.rememberServiceConnection
 import xyz.malkki.neostumbler.utils.OneTimeActionHelper
 
 private val requiredPermissions =
@@ -161,10 +162,8 @@ private fun StartStopScanningButton(
 
     val showQuickSettingsDialog = rememberSaveable { mutableStateOf(false) }
 
-    val serviceConnection =
-        rememberServiceConnection(getService = ScannerService.ScannerServiceBinder::getService)
-
-    val isScanning = serviceConnection.value != null
+    val isScanning by
+        ScannerService.serviceRunning.collectAsStateWithLifecycle(initialValue = false)
 
     if (showQuickSettingsDialog.value) {
         @SuppressLint("NewApi")

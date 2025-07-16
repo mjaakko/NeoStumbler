@@ -12,7 +12,6 @@ import android.content.pm.ServiceInfo
 import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.os.BatteryManager
-import android.os.Binder
 import android.os.IBinder
 import android.os.PowerManager
 import android.os.PowerManager.PARTIAL_WAKE_LOCK
@@ -181,8 +180,6 @@ class ScannerService : Service() {
 
     private var notificationStyle = NotificationStyle.BASIC
 
-    private val binder = ScannerServiceBinder()
-
     @SuppressLint("WakelockTimeout") // We don't know how long the service runs for -> no timeout
     override fun onCreate() {
         super.onCreate()
@@ -262,8 +259,8 @@ class ScannerService : Service() {
         }
     }
 
-    override fun onBind(intent: Intent): IBinder {
-        return binder
+    override fun onBind(intent: Intent): IBinder? {
+        return null
     }
 
     private fun startScanner() =
@@ -605,9 +602,5 @@ class ScannerService : Service() {
             this@ScannerService,
             wifiScanThrottled = wifiScanThrottled,
         )
-    }
-
-    inner class ScannerServiceBinder : Binder() {
-        fun getService(): ScannerService = this@ScannerService
     }
 }
