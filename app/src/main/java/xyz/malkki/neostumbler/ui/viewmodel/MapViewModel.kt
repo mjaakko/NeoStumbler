@@ -44,13 +44,13 @@ import org.geohex.geohex4j.GeoHex
 import timber.log.Timber
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.data.location.LocationSource
 import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.db.dao.getReportsInsideBoundingBox
 import xyz.malkki.neostumbler.db.entities.ReportWithLocation
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.get
 import xyz.malkki.neostumbler.geography.LatLng
-import xyz.malkki.neostumbler.location.LocationSource
 import xyz.malkki.neostumbler.ui.map.MapTileSource
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel.HeatMapTile
 import xyz.malkki.neostumbler.utils.getTileJsonLayerIds

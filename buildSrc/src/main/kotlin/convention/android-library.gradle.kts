@@ -13,4 +13,6 @@ android {
         sourceCompatibility = JavaVersion.toVersion(project.extra["jvmTarget"]!!)
         targetCompatibility = JavaVersion.toVersion(project.extra["jvmTarget"]!!)
     }
+
+    defaultConfig { minSdk = 29 }
 }

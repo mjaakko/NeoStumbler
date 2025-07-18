@@ -1,19 +1,12 @@
 package xyz.malkki.neostumbler.scanner.passive
 
 import android.Manifest
-import android.annotation.SuppressLint
-import android.content.Context
-import android.net.wifi.WifiManager
-import android.telephony.SubscriptionManager
-import android.telephony.TelephonyManager
 import androidx.annotation.RequiresPermission
-import androidx.core.content.getSystemService
 import xyz.malkki.neostumbler.core.CellTower
-import xyz.malkki.neostumbler.core.CellTower.Companion.fillMissingData
 import xyz.malkki.neostumbler.core.Position
 import xyz.malkki.neostumbler.core.WifiAccessPoint
-import xyz.malkki.neostumbler.domain.toCellTower
-import xyz.malkki.neostumbler.domain.toWifiAccessPoint
+import xyz.malkki.neostumbler.data.emitter.PassiveCellTowerSource
+import xyz.malkki.neostumbler.data.emitter.PassiveWifiAccessPointSource
 import xyz.malkki.neostumbler.geography.LatLng
 import xyz.malkki.neostumbler.scanner.ScanReportSaver
 import xyz.malkki.neostumbler.scanner.ScannerService
@@ -28,18 +21,12 @@ import xyz.malkki.neostumbler.scanner.postprocess.ReportPostProcessor
 private const val MIN_DISTANCE_FROM_LAST_LOCATION = 50
 
 class PassiveScanReportCreator(
-    context: Context,
+    private val passiveWifiAccessPointSource: PassiveWifiAccessPointSource,
+    private val passiveCellTowerSource: PassiveCellTowerSource,
     private val passiveScanStateManager: PassiveScanStateManager,
     private val scanReportSaver: ScanReportSaver,
     private val postProcessors: List<ReportPostProcessor>,
 ) {
-    private val appContext = context.applicationContext
-
-    private val wifiManager = appContext.getSystemService<WifiManager>()!!
-
-    private val subscriptionManager = appContext.getSystemService<SubscriptionManager>()!!
-    private val telephonyManager = appContext.getSystemService<TelephonyManager>()!!
-
     @RequiresPermission(
         allOf =
             [
@@ -108,31 +95,19 @@ class PassiveScanReportCreator(
     private suspend fun getWifiAccessPoints(): List<WifiAccessPoint> {
         val maxTimestamp = passiveScanStateManager.getMaxWifiTimestamp()
 
-        return wifiManager.scanResults
-            .map { it.toWifiAccessPoint() }
-            .filter { maxTimestamp == null || it.timestamp > maxTimestamp }
+        return passiveWifiAccessPointSource.getWifiAccessPoints().filter {
+            maxTimestamp == null || it.timestamp > maxTimestamp
+        }
     }
 
     @RequiresPermission(
         allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_PHONE_STATE]
     )
     private suspend fun getCellTowers(): List<CellTower> {
-        val telephonyManagers =
-            subscriptionManager.activeSubscriptionInfoList?.map {
-                telephonyManager.createForSubscriptionId(it.subscriptionId)
-            } ?: emptyList()
-
         val maxTimestamp = passiveScanStateManager.getMaxCellTimestamp()
 
-        return telephonyManagers
-            .flatMap {
-                @SuppressLint("MissingPermission") val serviceState = it.serviceState
-
-                it.allCellInfo
-                    .mapNotNull { cellInfo -> cellInfo.toCellTower() }
-                    .fillMissingData(serviceState?.operatorNumeric)
-                    .filter { it.hasEnoughData() }
-            }
-            .filter { maxTimestamp == null || it.timestamp > maxTimestamp }
+        return passiveCellTowerSource.getCellTowers().filter {
+            maxTimestamp == null || it.timestamp > maxTimestamp
+        }
     }
 }

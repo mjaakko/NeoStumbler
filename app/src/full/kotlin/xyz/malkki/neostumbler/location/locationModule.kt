@@ -12,6 +12,9 @@ import org.koin.dsl.module
 import timber.log.Timber
 import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.data.location.FusedLocationSource
+import xyz.malkki.neostumbler.data.location.LocationSource
+import xyz.malkki.neostumbler.data.location.PlatformLocationSource
 import xyz.malkki.neostumbler.extensions.isGoogleApisAvailable
 
 private fun DataStore<Preferences>.preferFusedLocation(): Boolean = runBlocking {

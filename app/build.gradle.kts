@@ -37,8 +37,6 @@ android {
 
     defaultConfig {
         applicationId = "xyz.malkki.neostumbler"
-        minSdk = 29
-        targetSdk = 36
         versionCode = 39
         versionName = "2.1.3"
 
@@ -182,7 +180,19 @@ dependencies {
     implementation(project(":libs:ichnaea"))
     implementation(project(":libs:utils"))
     implementation(project(":libs:room-converters"))
+    implementation(project(":libs:executors"))
+    implementation(project(":libs:broadcast-receiver-flow"))
+
     implementation(project(":app:core"))
+    implementation(project(":app:core:mapper:android-location"))
+
+    implementation(project(":app:data:emitter:api"))
+    implementation(project(":app:data:location:api"))
+
+    implementation(project(":app:data:emitter:android"))
+
+    implementation(project(":app:data:location:android"))
+    "fullImplementation"(project(":app:data:location:googleplay"))
 
     implementation(platform(libs.koinBom))
     implementation(libs.koinCore)

@@ -57,14 +57,21 @@ import xyz.malkki.neostumbler.MainActivity
 import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
+import xyz.malkki.neostumbler.broadcastreceiverflow.broadcastReceiverFlow
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.core.CellTower
 import xyz.malkki.neostumbler.core.Position
+import xyz.malkki.neostumbler.data.emitter.ActiveBluetoothBeaconSource
+import xyz.malkki.neostumbler.data.emitter.ActiveCellInfoSource
+import xyz.malkki.neostumbler.data.emitter.ActiveWifiAccessPointSource
+import xyz.malkki.neostumbler.data.emitter.BeaconLibraryActiveBluetoothBeaconSource
+import xyz.malkki.neostumbler.data.emitter.MultiSubscriptionActiveCellInfoSource
+import xyz.malkki.neostumbler.data.emitter.WifiManagerActiveWifiAccessPointSource
+import xyz.malkki.neostumbler.data.location.LocationSource
 import xyz.malkki.neostumbler.extensions.getOrDefault
 import xyz.malkki.neostumbler.extensions.getQuantityString
 import xyz.malkki.neostumbler.extensions.isWifiScanThrottled
 import xyz.malkki.neostumbler.extensions.toPercentage
-import xyz.malkki.neostumbler.location.LocationSource
 import xyz.malkki.neostumbler.scanner.movement.ConstantMovementDetector
 import xyz.malkki.neostumbler.scanner.movement.LocationBasedMovementDetector
 import xyz.malkki.neostumbler.scanner.movement.MovementDetector
@@ -76,17 +83,10 @@ import xyz.malkki.neostumbler.scanner.postprocess.ReportPostProcessor
 import xyz.malkki.neostumbler.scanner.postprocess.SsidBasedWifiFilterer
 import xyz.malkki.neostumbler.scanner.quicksettings.ScannerTileService
 import xyz.malkki.neostumbler.scanner.source.AirPressureSource
-import xyz.malkki.neostumbler.scanner.source.BeaconLibraryBluetoothBeaconSource
-import xyz.malkki.neostumbler.scanner.source.BluetoothBeaconSource
-import xyz.malkki.neostumbler.scanner.source.CellInfoSource
-import xyz.malkki.neostumbler.scanner.source.MultiSubscriptionCellInfoSource
 import xyz.malkki.neostumbler.scanner.source.PressureSensorAirPressureSource
-import xyz.malkki.neostumbler.scanner.source.WifiAccessPointSource
-import xyz.malkki.neostumbler.scanner.source.WifiManagerWifiAccessPointSource
 import xyz.malkki.neostumbler.scanner.speed.SmoothenedGpsSpeedSource
 import xyz.malkki.neostumbler.utils.GpsStats
 import xyz.malkki.neostumbler.utils.PermissionHelper
-import xyz.malkki.neostumbler.utils.broadcastReceiverFlow
 import xyz.malkki.neostumbler.utils.getGpsStatsFlow
 
 @SuppressLint("MissingPermission")
@@ -570,26 +570,26 @@ class ScannerService : Service() {
         }
     }
 
-    private fun getCellInfoSource(): CellInfoSource {
+    private fun getCellInfoSource(): ActiveCellInfoSource {
         return if (PermissionHelper.hasReadPhoneStatePermission(this)) {
-            MultiSubscriptionCellInfoSource(this@ScannerService)
+            MultiSubscriptionActiveCellInfoSource(this@ScannerService)
         } else {
-            CellInfoSource { emptyFlow<List<CellTower>>() }
+            ActiveCellInfoSource { emptyFlow<List<CellTower>>() }
         }
     }
 
-    private fun getBluetoothBeaconSource(): BluetoothBeaconSource {
+    private fun getBluetoothBeaconSource(): ActiveBluetoothBeaconSource {
         return if (
             PermissionHelper.hasBluetoothScanPermission(this) &&
                 (application as StumblerApplication).bluetoothScanAvailable
         ) {
-            BeaconLibraryBluetoothBeaconSource(this@ScannerService)
+            BeaconLibraryActiveBluetoothBeaconSource(this@ScannerService)
         } else {
-            BluetoothBeaconSource { emptyFlow() }
+            ActiveBluetoothBeaconSource { emptyFlow() }
         }
     }
 
-    private suspend fun getWifiAccessPointSource(): WifiAccessPointSource {
+    private suspend fun getWifiAccessPointSource(): ActiveWifiAccessPointSource {
         val ignoreScanThrottlingPreference =
             settingsStore.getOrDefault(
                 booleanPreferencesKey(PreferenceKeys.IGNORE_SCAN_THROTTLING),
@@ -598,7 +598,7 @@ class ScannerService : Service() {
 
         val wifiScanThrottled = !ignoreScanThrottlingPreference || isWifiScanThrottled() == true
 
-        return WifiManagerWifiAccessPointSource(
+        return WifiManagerActiveWifiAccessPointSource(
             this@ScannerService,
             wifiScanThrottled = wifiScanThrottled,
         )

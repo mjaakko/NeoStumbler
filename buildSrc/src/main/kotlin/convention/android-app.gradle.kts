@@ -22,4 +22,9 @@ android {
         includeInApk = false
         includeInBundle = false
     }
+
+    defaultConfig {
+        minSdk = 29
+        targetSdk = 36
+    }
 }

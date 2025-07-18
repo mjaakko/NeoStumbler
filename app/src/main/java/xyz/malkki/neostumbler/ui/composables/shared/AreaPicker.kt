@@ -58,12 +58,12 @@ import org.maplibre.android.utils.ColorUtils
 import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.data.location.LocationSource
 import xyz.malkki.neostumbler.domain.asDomainLatLng
 import xyz.malkki.neostumbler.domain.asMapLibreLatLng
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.get
 import xyz.malkki.neostumbler.geography.LatLng
-import xyz.malkki.neostumbler.location.LocationSource
 import xyz.malkki.neostumbler.ui.map.LifecycleAwareMapView
 import xyz.malkki.neostumbler.ui.map.MapTileSource
 import xyz.malkki.neostumbler.ui.map.setAttributionMargin

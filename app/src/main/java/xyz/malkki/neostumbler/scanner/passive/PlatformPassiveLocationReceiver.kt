@@ -14,7 +14,7 @@ import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import xyz.malkki.neostumbler.core.Position
-import xyz.malkki.neostumbler.domain.toPosition
+import xyz.malkki.neostumbler.mapper.toPosition
 
 class PlatformPassiveLocationReceiver : BroadcastReceiver(), KoinComponent {
     companion object {
