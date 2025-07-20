@@ -40,6 +40,7 @@ import xyz.malkki.neostumbler.beaconlibrary.IBeaconParser
 import xyz.malkki.neostumbler.beaconlibrary.StubDistanceCalculator
 import xyz.malkki.neostumbler.crashlog.CrashLogManager
 import xyz.malkki.neostumbler.crashlog.FileCrashLogManager
+import xyz.malkki.neostumbler.data.settings.DataStoreSettings
 import xyz.malkki.neostumbler.db.DbPruneWorker
 import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.export.CsvExporter
@@ -123,13 +124,17 @@ class StumblerApplication : Application() {
 
                     single(PREFERENCES) { settingsStore }
 
+                    single<xyz.malkki.neostumbler.data.settings.Settings> {
+                        DataStoreSettings(get(PREFERENCES))
+                    }
+
                     single { OneTimeActionHelper(oneTimeActionsStore) }
                 }
             )
 
             modules(
                 module {
-                    viewModel { MapViewModel(get(), get(PREFERENCES), get(), get(), get()) }
+                    viewModel { MapViewModel(get(), get(), get(), get(), get()) }
 
                     viewModel { StatisticsViewModel(get()) }
 

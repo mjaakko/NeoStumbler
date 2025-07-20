@@ -32,6 +32,10 @@ include(":app:data:location:android")
 
 include(":app:data:location:googleplay")
 
+include(":app:data:settings:api")
+
+include(":app:data:settings:android-datastore")
+
 include(":libs:beacon-library-utils")
 
 include(":libs:room-converters")

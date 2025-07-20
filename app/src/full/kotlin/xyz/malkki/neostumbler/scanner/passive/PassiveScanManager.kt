@@ -5,24 +5,19 @@ import android.content.Context
 import android.location.LocationManager
 import androidx.annotation.RequiresPermission
 import androidx.core.content.getSystemService
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import com.google.android.gms.location.Granularity
 import com.google.android.gms.location.LocationRequest as LocationRequestFused
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.data.settings.Settings
+import xyz.malkki.neostumbler.data.settings.getBooleanFlow
 import xyz.malkki.neostumbler.extensions.isGoogleApisAvailable
 
-class PassiveScanManager(
-    private val context: Context,
-    private val settingsStore: DataStore<Preferences>,
-) {
+class PassiveScanManager(private val context: Context, private val settings: Settings) {
     @RequiresPermission(
         allOf =
             [
@@ -34,9 +29,7 @@ class PassiveScanManager(
         disablePassiveScanning()
 
         val preferFusedLocationProvider = runBlocking {
-            settingsStore.data
-                .map { it[booleanPreferencesKey(PreferenceKeys.PREFER_FUSED_LOCATION)] != false }
-                .first()
+            settings.getBooleanFlow(PreferenceKeys.PREFER_FUSED_LOCATION, true).first()
         }
 
         if (context.isGoogleApisAvailable() && preferFusedLocationProvider) {

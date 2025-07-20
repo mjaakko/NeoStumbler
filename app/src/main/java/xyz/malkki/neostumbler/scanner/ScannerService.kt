@@ -22,12 +22,6 @@ import androidx.core.app.NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE
 import androidx.core.app.PendingIntentCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.core.stringSetPreferencesKey
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -42,6 +36,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -54,7 +49,6 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 import xyz.malkki.neostumbler.MainActivity
-import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.broadcastreceiverflow.broadcastReceiverFlow
@@ -68,7 +62,11 @@ import xyz.malkki.neostumbler.data.emitter.BeaconLibraryActiveBluetoothBeaconSou
 import xyz.malkki.neostumbler.data.emitter.MultiSubscriptionActiveCellInfoSource
 import xyz.malkki.neostumbler.data.emitter.WifiManagerActiveWifiAccessPointSource
 import xyz.malkki.neostumbler.data.location.LocationSource
-import xyz.malkki.neostumbler.extensions.getOrDefault
+import xyz.malkki.neostumbler.data.settings.Settings
+import xyz.malkki.neostumbler.data.settings.getBooleanFlow
+import xyz.malkki.neostumbler.data.settings.getEnumFlow
+import xyz.malkki.neostumbler.data.settings.getIntFlow
+import xyz.malkki.neostumbler.data.settings.getStringSetFlow
 import xyz.malkki.neostumbler.extensions.getQuantityString
 import xyz.malkki.neostumbler.extensions.isWifiScanThrottled
 import xyz.malkki.neostumbler.extensions.toPercentage
@@ -156,7 +154,7 @@ class ScannerService : Service() {
 
     private val startedAt = System.currentTimeMillis()
 
-    private val settingsStore: DataStore<Preferences> by inject<DataStore<Preferences>>(PREFERENCES)
+    private val settings: Settings by inject()
 
     private val scanReportSaver: ScanReportSaver by inject()
 
@@ -249,13 +247,9 @@ class ScannerService : Service() {
         }
 
         coroutineScope.launch {
-            settingsStore.data.collectLatest {
-                notificationStyle =
-                    settingsStore.getOrDefault(
-                        stringPreferencesKey(PreferenceKeys.SCANNER_NOTIFICATION_STYLE),
-                        NotificationStyle.BASIC,
-                    )
-            }
+            settings
+                .getEnumFlow(PreferenceKeys.SCANNER_NOTIFICATION_STYLE, NotificationStyle.BASIC)
+                .collectLatest { notificationStyle = it }
         }
     }
 
@@ -271,13 +265,8 @@ class ScannerService : Service() {
 
             scanning = true
 
-            settingsStore.data.collectLatest {
-                val lowBatteryThreshold =
-                    settingsStore.getOrDefault(
-                        intPreferencesKey(PreferenceKeys.PAUSE_ON_BATTERY_LEVEL_THRESHOLD),
-                        0,
-                    )
-
+            settings.getIntFlow(PreferenceKeys.PAUSE_ON_BATTERY_LEVEL_THRESHOLD, 0).collectLatest {
+                lowBatteryThreshold ->
                 val batteryLevelOkFlow =
                     if (lowBatteryThreshold == 0) {
                         // Pause on low battery disabled -> just return true
@@ -301,26 +290,21 @@ class ScannerService : Service() {
 
     private suspend fun runScanner() = coroutineScope {
         val wifiScanDistance =
-            settingsStore.getOrDefault(
-                intPreferencesKey(PreferenceKeys.WIFI_SCAN_DISTANCE),
-                DEFAULT_WIFI_SCAN_DISTANCE,
-            )
+            settings
+                .getIntFlow(PreferenceKeys.WIFI_SCAN_DISTANCE, DEFAULT_WIFI_SCAN_DISTANCE)
+                .first()
 
         val cellScanDistance =
-            settingsStore.getOrDefault(
-                intPreferencesKey(PreferenceKeys.CELL_SCAN_DISTANCE),
-                DEFAULT_CELL_SCAN_DISTANCE,
-            )
+            settings
+                .getIntFlow(PreferenceKeys.CELL_SCAN_DISTANCE, DEFAULT_CELL_SCAN_DISTANCE)
+                .first()
 
         Timber.d(
             "Scan distances: ${wifiScanDistance}m - Wi-Fis, ${cellScanDistance}m - cell towers"
         )
 
         val wifiFilterList =
-            settingsStore.getOrDefault(
-                stringSetPreferencesKey(PreferenceKeys.WIFI_FILTER_LIST),
-                emptySet(),
-            )
+            settings.getStringSetFlow(PreferenceKeys.WIFI_FILTER_LIST, emptySet()).first()
 
         val locationFlow =
             locationSource
@@ -338,20 +322,16 @@ class ScannerService : Service() {
         val bluetoothBeaconSource = getBluetoothBeaconSource()
 
         val movementDetectorType =
-            settingsStore.getOrDefault(
-                stringPreferencesKey(PreferenceKeys.MOVEMENT_DETECTOR),
-                MovementDetectorType.LOCATION,
-            )
+            settings
+                .getEnumFlow(PreferenceKeys.MOVEMENT_DETECTOR, MovementDetectorType.LOCATION)
+                .first()
 
         val movementDetector = getMovementDetector(movementDetectorType, locationFlow)
 
         val airPressureSource = getAirPressureSource()
 
         val filterMovingDevices =
-            settingsStore.getOrDefault(
-                booleanPreferencesKey(PreferenceKeys.FILTER_MOVING_DEVICES),
-                true,
-            )
+            settings.getBooleanFlow(PreferenceKeys.FILTER_MOVING_DEVICES, true).first()
 
         val scanner =
             WirelessScanner(
@@ -591,10 +571,7 @@ class ScannerService : Service() {
 
     private suspend fun getWifiAccessPointSource(): ActiveWifiAccessPointSource {
         val ignoreScanThrottlingPreference =
-            settingsStore.getOrDefault(
-                booleanPreferencesKey(PreferenceKeys.IGNORE_SCAN_THROTTLING),
-                false,
-            )
+            settings.getBooleanFlow(PreferenceKeys.IGNORE_SCAN_THROTTLING, false).first()
 
         val wifiScanThrottled = !ignoreScanThrottlingPreference || isWifiScanThrottled() == true
 

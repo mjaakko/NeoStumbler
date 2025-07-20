@@ -43,7 +43,9 @@ import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.core.Position
 import xyz.malkki.neostumbler.core.Position.Source
 import xyz.malkki.neostumbler.data.location.LocationSource
-import xyz.malkki.neostumbler.domain.LatLng
+import xyz.malkki.neostumbler.data.settings.DataStoreSettings
+import xyz.malkki.neostumbler.data.settings.Settings
+import xyz.malkki.neostumbler.geography.LatLng
 
 class AreaPickerTest {
     @get:Rule
@@ -116,6 +118,8 @@ class AreaPickerTest {
                             produceFile = { testContext.preferencesDataStoreFile("prefs") },
                         )
                     }
+
+                    single<Settings> { DataStoreSettings(get(PREFERENCES)) }
 
                     single<LocationSource> {
                         object : LocationSource {

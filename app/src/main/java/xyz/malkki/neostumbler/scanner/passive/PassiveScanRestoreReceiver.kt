@@ -5,16 +5,13 @@ import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.data.settings.Settings
+import xyz.malkki.neostumbler.data.settings.getBooleanFlow
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 
 /** Restores passive scanning after reboot or app upgrade */
@@ -24,16 +21,14 @@ class PassiveScanRestoreReceiver : BroadcastReceiver(), KoinComponent {
             setOf(Intent.ACTION_BOOT_COMPLETED, Intent.ACTION_MY_PACKAGE_REPLACED)
     }
 
-    private val settingsStore: DataStore<Preferences> by inject(PREFERENCES)
+    private val settings: Settings by inject()
 
     private val passiveScanManager: PassiveScanManager by inject()
 
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action in ALLOWED_ACTIONS) {
             val passiveScanEnabled = runBlocking {
-                settingsStore.data
-                    .map { it[booleanPreferencesKey(PreferenceKeys.PASSIVE_SCAN_ENABLED)] == true }
-                    .first()
+                settings.getBooleanFlow(PreferenceKeys.PASSIVE_SCAN_ENABLED, false).first()
             }
 
             if (passiveScanEnabled) {

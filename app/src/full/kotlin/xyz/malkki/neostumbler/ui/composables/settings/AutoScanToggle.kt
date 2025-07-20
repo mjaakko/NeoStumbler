@@ -22,35 +22,26 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.ContextCompat
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import org.koin.compose.koinInject
 import timber.log.Timber
-import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.data.settings.Settings
+import xyz.malkki.neostumbler.data.settings.getBooleanFlow
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.getActivity
 import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.scanner.autoscan.ActivityTransitionReceiver
 import xyz.malkki.neostumbler.ui.composables.ToggleWithAction
 import xyz.malkki.neostumbler.ui.composables.shared.PermissionsDialog
-
-private fun DataStore<Preferences>.autoScanEnabled(): Flow<Boolean?> =
-    data.map { it[booleanPreferencesKey(PreferenceKeys.AUTOSCAN_ENABLED)] }.distinctUntilChanged()
 
 private fun Context.checkGoogleApiAvailability(): Pair<Boolean, Boolean> {
     val googleApiAvailability = GoogleApiAvailability.getInstance()
@@ -84,13 +75,15 @@ private val REQUIRED_PERMISSIONS: Array<String> =
 
 @SuppressLint("MissingPermission")
 @Composable
-fun AutoScanToggle() {
+fun AutoScanToggle(settings: Settings = koinInject()) {
     val context = LocalContext.current
 
     val coroutineScope = rememberCoroutineScope()
 
-    val settingsStore = koinInject<DataStore<Preferences>>(PREFERENCES)
-    val enabled = settingsStore.autoScanEnabled().collectAsState(initial = false)
+    val enabled =
+        settings
+            .getBooleanFlow(PreferenceKeys.AUTOSCAN_ENABLED, false)
+            .collectAsState(initial = false)
 
     val (isGoogleApiAvailable, isGoogleApiAvailabilityUserResolvable) =
         remember(context) { context.checkGoogleApiAvailability() }
@@ -116,7 +109,7 @@ fun AutoScanToggle() {
             // returns (this can happen e.g. when using a stub implementation of GPlay services)
             withTimeout(2.seconds) { ActivityTransitionReceiver.enable(context) }
 
-            settingsStore.edit { it[booleanPreferencesKey(PreferenceKeys.AUTOSCAN_ENABLED)] = true }
+            settings.edit { setBoolean(PreferenceKeys.AUTOSCAN_ENABLED, true) }
 
             Timber.i("Enabled activity transition listener")
         } catch (e: Exception) {
@@ -128,7 +121,7 @@ fun AutoScanToggle() {
 
     suspend fun disableAutoScan() {
         ActivityTransitionReceiver.disable(context)
-        settingsStore.edit { it[booleanPreferencesKey(PreferenceKeys.AUTOSCAN_ENABLED)] = false }
+        settings.edit { setBoolean(PreferenceKeys.AUTOSCAN_ENABLED, false) }
 
         Timber.i("Disabled activity transition listener")
     }
@@ -243,7 +236,7 @@ fun AutoScanToggle() {
     ToggleWithAction(
         title = stringResource(R.string.autoscan_when_moving),
         enabled = (isGoogleApiAvailable || isGoogleApiAvailabilityUserResolvable),
-        checked = enabled.value == true,
+        checked = enabled.value,
         action = { checked ->
             // If Google APIs are not available, try to make them available before doing anything
             if (!isGoogleApiAvailable) {

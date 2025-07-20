@@ -23,9 +23,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import java.io.IOException
 import kotlin.math.roundToInt
@@ -52,13 +49,13 @@ import org.maplibre.android.plugins.annotation.LineManager
 import org.maplibre.android.plugins.annotation.LineOptions
 import org.maplibre.android.utils.ColorUtils
 import timber.log.Timber
-import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.data.settings.Settings
+import xyz.malkki.neostumbler.data.settings.getEnum
 import xyz.malkki.neostumbler.db.entities.ReportWithData
 import xyz.malkki.neostumbler.db.entities.latLng
 import xyz.malkki.neostumbler.domain.asMapLibreLatLng
-import xyz.malkki.neostumbler.extensions.get
 import xyz.malkki.neostumbler.geography.LatLng
 import xyz.malkki.neostumbler.ichnaea.Geolocate
 import xyz.malkki.neostumbler.ichnaea.IchnaeaClient
@@ -77,13 +74,12 @@ import xyz.malkki.neostumbler.ui.map.updateMapStyleIfNeeded
 
 private const val MAP_ZOOM_LEVEL = 15.0
 
-private fun DataStore<Preferences>.mapStyleUrl(): Flow<String> =
-    data.map { prefs ->
-        val tileSource =
-            prefs.get<MapTileSource>(PreferenceKeys.MAP_TILE_SOURCE) ?: MapTileSource.DEFAULT
+private fun Settings.mapStyleUrl(): Flow<String> =
+    getSnapshotFlow().map { prefs ->
+        val tileSource = prefs.getEnum(PreferenceKeys.MAP_TILE_SOURCE) ?: MapTileSource.DEFAULT
 
         if (tileSource == MapTileSource.CUSTOM) {
-            prefs[stringPreferencesKey(PreferenceKeys.MAP_TILE_SOURCE_CUSTOM_URL)] ?: ""
+            prefs.getString(PreferenceKeys.MAP_TILE_SOURCE_CUSTOM_URL) ?: ""
         } else {
             tileSource.sourceUrl!!
         }
@@ -93,14 +89,14 @@ private fun DataStore<Preferences>.mapStyleUrl(): Flow<String> =
 fun ReportMap(
     reportWithData: ReportWithData,
     modifier: Modifier = Modifier,
-    settingsStore: DataStore<Preferences> = koinInject(PREFERENCES),
+    settings: Settings = koinInject(),
     httpClientProvider: Deferred<Call.Factory> = koinInject(),
 ) {
     val lifecycle = LocalLifecycleOwner.current.lifecycle
 
     val density = LocalDensity.current
 
-    val mapStyleUrl by settingsStore.mapStyleUrl().collectAsState(initial = null)
+    val mapStyleUrl by settings.mapStyleUrl().collectAsState(initial = null)
 
     val httpClient = produceState<Call.Factory?>(null) { value = httpClientProvider.await() }
 
@@ -315,12 +311,12 @@ private val GEOLOCATE_RETRY_DELAY = 20.seconds
 @Composable
 private fun getEstimatedReportLocation(
     reportWithData: ReportWithData,
-    settingsStore: DataStore<Preferences> = koinInject(PREFERENCES),
+    settings: Settings = koinInject(),
     httpClientProvider: Deferred<Call.Factory> = koinInject(),
 ): State<GeolocateResponseDto?> {
     val geolocate =
         produceState<Geolocate?>(null) {
-            val ichnaeaParams = settingsStore.getIchnaeaParams()
+            val ichnaeaParams = settings.getIchnaeaParams()
 
             if (ichnaeaParams != null) {
                 value = IchnaeaClient(httpClientProvider.await(), ichnaeaParams)

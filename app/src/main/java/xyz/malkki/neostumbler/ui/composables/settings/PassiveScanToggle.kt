@@ -11,19 +11,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
-import kotlin.collections.contains
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
-import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.data.settings.Settings
+import xyz.malkki.neostumbler.data.settings.getBooleanFlow
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.scanner.passive.PassiveScanManager
@@ -38,14 +31,9 @@ private val passiveScanPermissions =
         }
         .toTypedArray()
 
-private fun DataStore<Preferences>.passiveScanEnabled(): Flow<Boolean?> =
-    data
-        .map { it[booleanPreferencesKey(PreferenceKeys.PASSIVE_SCAN_ENABLED)] }
-        .distinctUntilChanged()
-
 @Composable
 fun PassiveScanToggle(
-    settingsStore: DataStore<Preferences> = koinInject(PREFERENCES),
+    settings: Settings = koinInject(),
     passiveScanManager: PassiveScanManager = koinInject(),
 ) {
     val context = LocalContext.current
@@ -54,7 +42,10 @@ fun PassiveScanToggle(
 
     val showConfirmationDialog = rememberSaveable { mutableStateOf(false) }
 
-    val enabled = settingsStore.passiveScanEnabled().collectAsState(initial = false)
+    val enabled =
+        settings
+            .getBooleanFlow(PreferenceKeys.PASSIVE_SCAN_ENABLED, false)
+            .collectAsState(initial = false)
 
     val missingPermissionsBasic = remember {
         mutableStateOf(context.checkMissingPermissions(*passiveScanPermissions))
@@ -76,9 +67,7 @@ fun PassiveScanToggle(
             @SuppressLint("MissingPermission") passiveScanManager.enablePassiveScanning()
 
             coroutineScope.launch {
-                settingsStore.edit {
-                    it[booleanPreferencesKey(PreferenceKeys.PASSIVE_SCAN_ENABLED)] = true
-                }
+                settings.edit { setBoolean(PreferenceKeys.PASSIVE_SCAN_ENABLED, true) }
             }
         } else if (missingPermissionsBasic.value.isNotEmpty()) {
             showBasicPermissionsDialog.value = true
@@ -145,16 +134,14 @@ fun PassiveScanToggle(
     ToggleWithAction(
         title = stringResource(id = R.string.passive_scanning_title),
         enabled = true,
-        checked = enabled.value == true,
+        checked = enabled.value,
         action = { enabled ->
             if (enabled) {
                 showConfirmationDialog.value = true
             } else {
                 passiveScanManager.disablePassiveScanning()
 
-                settingsStore.edit {
-                    it[booleanPreferencesKey(PreferenceKeys.PASSIVE_SCAN_ENABLED)] = false
-                }
+                settings.edit { setBoolean(PreferenceKeys.PASSIVE_SCAN_ENABLED, false) }
             }
         },
     )

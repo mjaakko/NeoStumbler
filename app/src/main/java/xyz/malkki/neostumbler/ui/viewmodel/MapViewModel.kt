@@ -5,10 +5,6 @@ import android.annotation.SuppressLint
 import android.app.Application
 import androidx.collection.MutableLongIntMap
 import androidx.collection.MutableObjectIntMap
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import java.io.IOException
@@ -45,11 +41,12 @@ import timber.log.Timber
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.data.location.LocationSource
+import xyz.malkki.neostumbler.data.settings.Settings
+import xyz.malkki.neostumbler.data.settings.getEnum
 import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.db.dao.getReportsInsideBoundingBox
 import xyz.malkki.neostumbler.db.entities.ReportWithLocation
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
-import xyz.malkki.neostumbler.extensions.get
 import xyz.malkki.neostumbler.geography.LatLng
 import xyz.malkki.neostumbler.ui.map.MapTileSource
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel.HeatMapTile
@@ -68,7 +65,7 @@ private val TILEJSON_RETRY_DELAY = 30.seconds
 
 class MapViewModel(
     application: Application,
-    private val settingsStore: DataStore<Preferences>,
+    settings: Settings,
     private val httpClientProvider: Deferred<Call.Factory>,
     private val reportDatabaseManager: ReportDatabaseManager,
     private val locationSource: LocationSource,
@@ -78,14 +75,14 @@ class MapViewModel(
         get() = _httpClient.asStateFlow()
 
     val mapTileSourceUrl: Flow<String> =
-        settingsStore.data
+        settings
+            .getSnapshotFlow()
             .map { prefs ->
                 val mapTileSource =
-                    prefs.get<MapTileSource>(PreferenceKeys.MAP_TILE_SOURCE)
-                        ?: MapTileSource.DEFAULT
+                    prefs.getEnum(PreferenceKeys.MAP_TILE_SOURCE) ?: MapTileSource.DEFAULT
 
                 if (mapTileSource == MapTileSource.CUSTOM) {
-                    prefs[stringPreferencesKey(PreferenceKeys.MAP_TILE_SOURCE_CUSTOM_URL)] ?: ""
+                    prefs.getString(PreferenceKeys.MAP_TILE_SOURCE_CUSTOM_URL) ?: ""
                 } else {
                     mapTileSource.sourceUrl!!
                 }
@@ -93,12 +90,11 @@ class MapViewModel(
             .distinctUntilChanged()
 
     val coverageTileJsonUrl: Flow<String?> =
-        settingsStore.data.map { prefs ->
-            val coverageLayerEnabled =
-                prefs[booleanPreferencesKey(PreferenceKeys.COVERAGE_LAYER_ENABLED)]
+        settings.getSnapshotFlow().map { prefs ->
+            val coverageLayerEnabled = prefs.getBoolean(PreferenceKeys.COVERAGE_LAYER_ENABLED)
 
             if (coverageLayerEnabled != false) {
-                prefs[stringPreferencesKey(PreferenceKeys.COVERAGE_TILE_JSON_URL)]
+                prefs.getString(PreferenceKeys.COVERAGE_TILE_JSON_URL)
             } else {
                 null
             }

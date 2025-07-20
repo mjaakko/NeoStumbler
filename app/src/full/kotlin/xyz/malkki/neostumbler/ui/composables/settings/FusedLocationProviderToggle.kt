@@ -4,40 +4,33 @@ import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.res.stringResource
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import org.koin.compose.koinInject
-import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.scanner.passive.PassiveScanManager
 import xyz.malkki.neostumbler.ui.composables.ToggleWithAction
 
-private fun DataStore<Preferences>.fusedProviderAndPassiveScanEnabled():
-    Flow<Pair<Boolean, Boolean>> =
-    data
+private fun Settings.fusedProviderAndPassiveScanEnabled(): Flow<Pair<Boolean, Boolean>> =
+    getSnapshotFlow()
         .map { prefs ->
-            val preferFusedLocation =
-                prefs[booleanPreferencesKey(PreferenceKeys.PREFER_FUSED_LOCATION)] != false
-            val passiveScanEnabled =
-                prefs[booleanPreferencesKey(PreferenceKeys.PASSIVE_SCAN_ENABLED)] == true
+            val fused = prefs.getBoolean(PreferenceKeys.PREFER_FUSED_LOCATION) != false
+            val passive = prefs.getBoolean(PreferenceKeys.PASSIVE_SCAN_ENABLED) == true
 
-            preferFusedLocation to passiveScanEnabled
+            fused to passive
         }
         .distinctUntilChanged()
 
 @Composable
 fun FusedLocationProviderToggle(
-    settingsStore: DataStore<Preferences> = koinInject(PREFERENCES),
+    settings: Settings = koinInject(),
     passiveScanManager: PassiveScanManager = koinInject(),
 ) {
     val state =
-        settingsStore.fusedProviderAndPassiveScanEnabled().collectAsState(initial = true to false)
+        settings.fusedProviderAndPassiveScanEnabled().collectAsState(initial = true to false)
     val (preferFusedLocationProvider, passiveScanEnabled) = state.value
 
     ToggleWithAction(
@@ -46,9 +39,7 @@ fun FusedLocationProviderToggle(
         enabled = true,
         checked = preferFusedLocationProvider,
         action = { checked ->
-            settingsStore.edit {
-                it[booleanPreferencesKey(PreferenceKeys.PREFER_FUSED_LOCATION)] = checked
-            }
+            settings.edit { setBoolean(PreferenceKeys.PREFER_FUSED_LOCATION, checked) }
 
             @SuppressLint(
                 "MissingPermission"

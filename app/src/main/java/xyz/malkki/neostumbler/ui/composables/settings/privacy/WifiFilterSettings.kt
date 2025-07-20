@@ -22,33 +22,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
-import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.data.settings.Settings
+import xyz.malkki.neostumbler.data.settings.getStringSetFlow
 import xyz.malkki.neostumbler.extensions.getQuantityString
 import xyz.malkki.neostumbler.ui.composables.settings.SettingsItem
 
-private fun DataStore<Preferences>.wifiFilterList(): Flow<Set<String>> =
-    data.map { prefs ->
-        prefs[stringSetPreferencesKey(PreferenceKeys.WIFI_FILTER_LIST)] ?: emptySet()
-    }
-
 @Composable
-fun WifiFilterSettings(settingsStore: DataStore<Preferences> = koinInject(PREFERENCES)) {
+fun WifiFilterSettings(settings: Settings = koinInject()) {
     val context = LocalContext.current
 
     val coroutineScope = rememberCoroutineScope()
 
-    val wifiFilterList by settingsStore.wifiFilterList().collectAsStateWithLifecycle(emptySet())
+    val wifiFilterList by
+        settings
+            .getStringSetFlow(PreferenceKeys.WIFI_FILTER_LIST, emptySet())
+            .collectAsStateWithLifecycle(emptySet())
 
     var dialogOpen by rememberSaveable { mutableStateOf(false) }
 
@@ -58,9 +51,8 @@ fun WifiFilterSettings(settingsStore: DataStore<Preferences> = koinInject(PREFER
             onWifiFilterListChanged = { newWifiFilterList ->
                 coroutineScope.launch {
                     if (newWifiFilterList != null) {
-                        settingsStore.edit { prefs ->
-                            prefs[stringSetPreferencesKey(PreferenceKeys.WIFI_FILTER_LIST)] =
-                                newWifiFilterList
+                        settings.edit {
+                            setStringSet(PreferenceKeys.WIFI_FILTER_LIST, newWifiFilterList)
                         }
                     }
 

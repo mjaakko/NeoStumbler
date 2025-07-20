@@ -194,6 +194,8 @@ dependencies {
     implementation(project(":app:data:location:android"))
     "fullImplementation"(project(":app:data:location:googleplay"))
 
+    implementation(project(":app:data:settings:android-datastore"))
+
     implementation(platform(libs.koinBom))
     implementation(libs.koinCore)
     implementation(libs.koinAndroid)

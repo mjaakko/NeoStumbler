@@ -38,6 +38,8 @@ import org.koin.dsl.koinApplication
 import org.koin.dsl.module
 import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.data.settings.DataStoreSettings
+import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.db.entities.CellTowerEntity
 import xyz.malkki.neostumbler.db.entities.PositionEntity
 import xyz.malkki.neostumbler.db.entities.Report
@@ -113,6 +115,8 @@ class ReportMapTest {
                     }
 
                     single<DataStore<Preferences>>(PREFERENCES) { settingsStore }
+
+                    single<Settings> { DataStoreSettings(get(PREFERENCES)) }
                 }
             )
         }

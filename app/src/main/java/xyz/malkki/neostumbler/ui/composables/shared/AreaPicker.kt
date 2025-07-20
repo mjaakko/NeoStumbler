@@ -36,9 +36,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.Deferred
@@ -55,27 +52,26 @@ import org.maplibre.android.plugins.annotation.Circle
 import org.maplibre.android.plugins.annotation.CircleManager
 import org.maplibre.android.plugins.annotation.CircleOptions
 import org.maplibre.android.utils.ColorUtils
-import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.data.location.LocationSource
+import xyz.malkki.neostumbler.data.settings.Settings
+import xyz.malkki.neostumbler.data.settings.getEnum
 import xyz.malkki.neostumbler.domain.asDomainLatLng
 import xyz.malkki.neostumbler.domain.asMapLibreLatLng
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
-import xyz.malkki.neostumbler.extensions.get
 import xyz.malkki.neostumbler.geography.LatLng
 import xyz.malkki.neostumbler.ui.map.LifecycleAwareMapView
 import xyz.malkki.neostumbler.ui.map.MapTileSource
 import xyz.malkki.neostumbler.ui.map.setAttributionMargin
 import xyz.malkki.neostumbler.ui.map.updateMapStyleIfNeeded
 
-private fun DataStore<Preferences>.mapStyleUrl(): Flow<String> =
-    data.map { prefs ->
-        val tileSource =
-            prefs.get<MapTileSource>(PreferenceKeys.MAP_TILE_SOURCE) ?: MapTileSource.DEFAULT
+private fun Settings.mapStyleUrl(): Flow<String> =
+    getSnapshotFlow().map { prefs ->
+        val tileSource = prefs.getEnum(PreferenceKeys.MAP_TILE_SOURCE) ?: MapTileSource.DEFAULT
 
         if (tileSource == MapTileSource.CUSTOM) {
-            prefs.get(stringPreferencesKey(PreferenceKeys.MAP_TILE_SOURCE_CUSTOM_URL)) ?: ""
+            prefs.getString(PreferenceKeys.MAP_TILE_SOURCE_CUSTOM_URL) ?: ""
         } else {
             tileSource.sourceUrl!!
         }
@@ -154,7 +150,7 @@ private fun getCurrentLocation(
 
 @Composable
 fun AreaPickerMap(
-    settingsStore: DataStore<Preferences> = koinInject(PREFERENCES),
+    settings: Settings = koinInject(),
     httpClientProvider: Deferred<Call.Factory> = koinInject(),
     onCircleUpdated: (Pair<LatLng, Double>) -> Unit,
 ) {
@@ -162,7 +158,7 @@ fun AreaPickerMap(
 
     val density = LocalDensity.current
 
-    val mapStyleUrl by settingsStore.mapStyleUrl().collectAsState(initial = null)
+    val mapStyleUrl by settings.mapStyleUrl().collectAsState(initial = null)
 
     val httpClient = produceState<Call.Factory?>(null) { value = httpClientProvider.await() }
 

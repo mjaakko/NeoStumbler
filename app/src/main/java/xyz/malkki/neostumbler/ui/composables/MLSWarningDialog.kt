@@ -16,16 +16,13 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.text.getSpans
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.compose.koinInject
-import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.extensions.getTextCompat
 import xyz.malkki.neostumbler.utils.OneTimeActionHelper
 import xyz.malkki.neostumbler.utils.SuggestedService
@@ -36,12 +33,10 @@ private const val MLS_WARNING = "mls_warning"
 private const val DEFAULT_SERVICE_ID = "beacondb"
 
 @Composable
-fun MLSWarningDialog() {
+fun MLSWarningDialog(settings: Settings = koinInject()) {
     val context = LocalContext.current
 
     val coroutineScope = rememberCoroutineScope()
-
-    val settingsStore = koinInject<DataStore<Preferences>>(PREFERENCES)
 
     val oneTimeActionHelper = koinInject<OneTimeActionHelper>()
 
@@ -88,23 +83,16 @@ fun MLSWarningDialog() {
                     enabled = defaultServiceParams.value != null,
                     onClick = {
                         coroutineScope.launch {
-                            settingsStore.updateData { prefs ->
+                            settings.edit {
                                 val (baseUrl, path) = defaultServiceParams.value!!.endpoint
 
-                                prefs.toMutablePreferences().apply {
-                                    set(
-                                        stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT),
-                                        baseUrl,
-                                    )
-                                    set(stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH), path)
-
-                                    remove(stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY))
-
-                                    set(
-                                        stringPreferencesKey(PreferenceKeys.COVERAGE_TILE_JSON_URL),
-                                        defaultServiceParams.value!!.coverageTileJsonUrl,
-                                    )
-                                }
+                                setString(PreferenceKeys.GEOSUBMIT_ENDPOINT, baseUrl)
+                                setString(PreferenceKeys.GEOSUBMIT_PATH, path)
+                                removeString(PreferenceKeys.GEOSUBMIT_API_KEY)
+                                setString(
+                                    PreferenceKeys.COVERAGE_TILE_JSON_URL,
+                                    defaultServiceParams.value!!.coverageTileJsonUrl,
+                                )
                             }
 
                             oneTimeActionHelper.markActionShown(MLS_WARNING)

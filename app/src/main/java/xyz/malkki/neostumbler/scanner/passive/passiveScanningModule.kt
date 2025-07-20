@@ -2,7 +2,6 @@ package xyz.malkki.neostumbler.scanner.passive
 
 import org.koin.dsl.module
 import xyz.malkki.neostumbler.PASSIVE_SCAN_STATE
-import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.data.emitter.MultiSubscriptionPassiveCellInfoSource
 import xyz.malkki.neostumbler.data.emitter.PassiveCellTowerSource
 import xyz.malkki.neostumbler.data.emitter.PassiveWifiAccessPointSource
@@ -13,7 +12,7 @@ val passiveScanningModule = module {
 
     single<PassiveWifiAccessPointSource> { WifiManagerPassiveWifiAccessPointSource(get()) }
 
-    single { PassiveScanManager(get(), get(PREFERENCES)) }
+    single { PassiveScanManager(get(), get()) }
 
     single { PassiveScanStateManager(get(PASSIVE_SCAN_STATE)) }
 

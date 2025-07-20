@@ -21,56 +21,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
-import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.ichnaea.IchnaeaParams
+import xyz.malkki.neostumbler.ichnaea.mapper.getIchnaeaParamsFlow
 import xyz.malkki.neostumbler.ui.composables.settings.ParamField
 import xyz.malkki.neostumbler.ui.composables.settings.SettingsItem
 import xyz.malkki.neostumbler.ui.composables.settings.UrlField
 
-private fun DataStore<Preferences>.geosubmitParams(): Flow<IchnaeaParams?> =
-    data
-        .map { preferences ->
-            val endpoint = preferences[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)]
-            val submisionPath =
-                preferences[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH)]
-                    ?: IchnaeaParams.DEFAULT_SUBMISSION_PATH
-            val locatePath =
-                preferences[stringPreferencesKey(PreferenceKeys.GEOLOCATE_PATH)]
-                    ?: IchnaeaParams.DEFAULT_LOCATE_PATH
-
-            val apiKey = preferences[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY)]
-
-            if (endpoint != null) {
-                IchnaeaParams(
-                    baseUrl = endpoint,
-                    submissionPath = submisionPath,
-                    locatePath = locatePath,
-                    apiKey = apiKey,
-                )
-            } else {
-                null
-            }
-        }
-        .distinctUntilChanged()
-
 @Composable
-fun GeosubmitEndpointSettings(
-    settingsStore: DataStore<Preferences> = koinInject<DataStore<Preferences>>(PREFERENCES)
-) {
+fun GeosubmitEndpointSettings(settings: Settings = koinInject()) {
     val coroutineScope = rememberCoroutineScope()
 
-    val params = settingsStore.geosubmitParams().collectAsState(initial = null)
+    val params = settings.getIchnaeaParamsFlow().collectAsState(initial = null)
 
     val dialogOpen = rememberSaveable { mutableStateOf(false) }
 
@@ -80,25 +46,21 @@ fun GeosubmitEndpointSettings(
             onDialogClose = { newParams ->
                 if (newParams != null) {
                     coroutineScope.launch {
-                        settingsStore.edit { prefs ->
-                            prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)] =
-                                newParams.baseUrl
+                        settings.edit {
+                            setString(PreferenceKeys.GEOSUBMIT_ENDPOINT, newParams.baseUrl)
 
-                            prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH)] =
-                                newParams.submissionPath
+                            setString(PreferenceKeys.GEOSUBMIT_PATH, newParams.submissionPath)
 
                             if (newParams.locatePath != null) {
-                                prefs[stringPreferencesKey(PreferenceKeys.GEOLOCATE_PATH)] =
-                                    newParams.locatePath!!
+                                setString(PreferenceKeys.GEOLOCATE_PATH, newParams.locatePath!!)
                             } else {
-                                prefs.remove(stringPreferencesKey(PreferenceKeys.GEOLOCATE_PATH))
+                                removeString(PreferenceKeys.GEOLOCATE_PATH)
                             }
 
                             if (newParams.apiKey != null) {
-                                prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY)] =
-                                    newParams.apiKey!!
+                                setString(PreferenceKeys.GEOSUBMIT_API_KEY, newParams.apiKey!!)
                             } else {
-                                prefs.remove(stringPreferencesKey(PreferenceKeys.GEOSUBMIT_API_KEY))
+                                removeString(PreferenceKeys.GEOSUBMIT_API_KEY)
                             }
                         }
 

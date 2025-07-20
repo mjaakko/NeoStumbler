@@ -25,21 +25,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.intPreferencesKey
 import kotlin.math.roundToInt
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
-import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
-
-private fun DataStore<Preferences>.getValue(preferenceKey: String): Flow<Int?> =
-    data.map { it[intPreferencesKey(preferenceKey)] }.distinctUntilChanged()
+import xyz.malkki.neostumbler.data.settings.Settings
+import xyz.malkki.neostumbler.data.settings.getIntFlow
 
 @Composable
 fun SliderSetting(
@@ -49,15 +40,15 @@ fun SliderSetting(
     step: Int = 1,
     valueFormatter: (Int) -> String = { it.toString() },
     default: Int,
-    settingsStore: DataStore<Preferences> = koinInject<DataStore<Preferences>>(PREFERENCES),
+    settings: Settings = koinInject<Settings>(),
     saveButtonText: String = stringResource(R.string.save),
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    val preferenceValue = settingsStore.getValue(preferenceKey).collectAsState(initial = default)
+    val preferenceValue =
+        settings.getIntFlow(preferenceKey, default).collectAsState(initial = default)
 
-    val sliderValue =
-        remember(preferenceValue.value) { mutableIntStateOf(preferenceValue.value ?: default) }
+    val sliderValue = remember(preferenceValue.value) { mutableIntStateOf(preferenceValue.value) }
 
     val dialogOpen = rememberSaveable { mutableStateOf(false) }
 
@@ -67,7 +58,7 @@ fun SliderSetting(
                 dialogOpen.value = false
 
                 // Reset slider value to default when dialog is closed without saving
-                sliderValue.intValue = preferenceValue.value ?: default
+                sliderValue.intValue = preferenceValue.value
             }
         ) {
             Surface(
@@ -104,9 +95,7 @@ fun SliderSetting(
                         modifier = Modifier.align(Alignment.End),
                         onClick = {
                             coroutineScope.launch {
-                                settingsStore.edit { prefs ->
-                                    prefs[intPreferencesKey(preferenceKey)] = sliderValue.intValue
-                                }
+                                settings.edit { setInt(preferenceKey, sliderValue.intValue) }
 
                                 dialogOpen.value = false
                             }
@@ -121,7 +110,7 @@ fun SliderSetting(
 
     SettingsItem(
         title = title,
-        description = valueFormatter.invoke(preferenceValue.value ?: default),
+        description = valueFormatter.invoke(preferenceValue.value),
         onClick = { dialogOpen.value = true },
     )
 }

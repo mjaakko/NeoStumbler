@@ -34,24 +34,18 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import org.koin.android.ext.android.inject
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.data.settings.Settings
+import xyz.malkki.neostumbler.data.settings.getBooleanFlow
 import xyz.malkki.neostumbler.ui.screens.MapScreen
 import xyz.malkki.neostumbler.ui.screens.ReportsScreen
 import xyz.malkki.neostumbler.ui.screens.SettingsScreen
 import xyz.malkki.neostumbler.ui.screens.StatisticsScreen
 import xyz.malkki.neostumbler.ui.theme.NeoStumblerTheme
-
-private fun DataStore<Preferences>.useDynamicColor(): Flow<Boolean> =
-    data.map { prefs -> prefs[booleanPreferencesKey(PreferenceKeys.DYNAMIC_COLOR_THEME)] == true }
 
 class MainActivity : AppCompatActivity() {
     companion object {
@@ -59,12 +53,12 @@ class MainActivity : AppCompatActivity() {
         const val EXTRA_REQUEST_BACKGROUND_PERMISSION = "request_background_permission"
     }
 
-    private val dataStore: DataStore<Preferences> by inject<DataStore<Preferences>>(PREFERENCES)
+    private val settings: Settings by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val dynamicColorFlow =
-            dataStore
-                .useDynamicColor()
+            settings
+                .getBooleanFlow(PreferenceKeys.DYNAMIC_COLOR_THEME, false)
                 .stateIn(lifecycleScope, started = SharingStarted.Eagerly, initialValue = null)
 
         installSplashScreen().apply { setKeepOnScreenCondition { dynamicColorFlow.value == null } }

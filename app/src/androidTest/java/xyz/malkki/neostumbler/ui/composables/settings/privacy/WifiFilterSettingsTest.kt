@@ -27,6 +27,7 @@ import org.junit.Rule
 import org.junit.Test
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.data.settings.DataStoreSettings
 
 class WifiFilterSettingsTest {
     private val testContext: Context = ApplicationProvider.getApplicationContext()
@@ -41,7 +42,9 @@ class WifiFilterSettingsTest {
                 produceFile = { testContext.preferencesDataStoreFile("prefs") },
             )
 
-        composeTestRule.setContent { WifiFilterSettings(settingsStore = settingsStore) }
+        composeTestRule.setContent {
+            WifiFilterSettings(settings = DataStoreSettings(settingsStore))
+        }
 
         composeTestRule
             .onNodeWithText(testContext.getString(R.string.wifi_filter_settings_title))
