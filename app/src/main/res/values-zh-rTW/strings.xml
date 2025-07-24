@@ -193,4 +193,7 @@
     <string name="crash_log_title">崩潰日誌</string>
     <string name="crash_log_entry_title">崩潰 #%d</string>
     <string name="distance_to_estimated_location">距離估計位置：%d 公尺</string>
+    <string name="map_tile_source_custom_title">自定義</string>
+    <string name="map_tile_source_custom_style_url">自定義地圖樣式 URL</string>
+    <string name="map_show_coverage_layer">顯示覆蓋率地圖</string>
 </resources>
