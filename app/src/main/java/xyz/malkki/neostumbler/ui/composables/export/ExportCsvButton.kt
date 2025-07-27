@@ -21,28 +21,18 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Date
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.db.ReportDatabaseManager
+import xyz.malkki.neostumbler.data.reports.ReportProvider
 import xyz.malkki.neostumbler.export.CsvExportWorker
 import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.ui.composables.shared.DateRangePickerDialog
 
-private fun ReportDatabaseManager.getSelectableDatesSet(): Flow<Set<LocalDate>> {
-    return reportDb.flatMapLatest { it.reportDao().getReportDates() }.map { it.toSet() }
-}
-
 @Composable
-fun ExportCsvButton() {
+fun ExportCsvButton(reportProvider: ReportProvider = koinInject()) {
     val context = LocalContext.current
 
-    val reportDatabaseManager: ReportDatabaseManager = koinInject()
-
-    val selectableDates =
-        reportDatabaseManager.getSelectableDatesSet().collectAsStateWithLifecycle(null)
+    val selectableDates = reportProvider.getReportDates().collectAsStateWithLifecycle(null)
 
     val dialogOpen = rememberSaveable { mutableStateOf(false) }
 

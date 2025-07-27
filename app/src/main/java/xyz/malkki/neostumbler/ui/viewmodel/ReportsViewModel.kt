@@ -2,33 +2,22 @@ package xyz.malkki.neostumbler.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
-import xyz.malkki.neostumbler.db.ReportDatabaseManager
-import xyz.malkki.neostumbler.db.entities.ReportWithStats
+import xyz.malkki.neostumbler.core.report.ReportWithStats
+import xyz.malkki.neostumbler.data.reports.ReportProvider
+import xyz.malkki.neostumbler.data.reports.ReportRemover
 
-class ReportsViewModel(reportDatabaseManager: ReportDatabaseManager) : ViewModel() {
-    private val db = reportDatabaseManager.reportDb
+class ReportsViewModel(reportProvider: ReportProvider, private val reportRemover: ReportRemover) :
+    ViewModel() {
+    val reportsTotal = reportProvider.getReportCount().distinctUntilChanged()
+    val reportsNotUploaded = reportProvider.getNotUploadedReportCount().distinctUntilChanged()
+    val lastUpload = reportProvider.getLastReportUploadTime().distinctUntilChanged()
 
-    val reportsTotal = db.flatMapLatest { it.reportDao().getReportCount() }.distinctUntilChanged()
-    val reportsNotUploaded =
-        db.flatMapLatest { it.reportDao().getReportCountNotUploaded() }.distinctUntilChanged()
-
-    val reports: Flow<PagingData<ReportWithStats>> =
-        db.flatMapLatest {
-            Pager(PagingConfig(pageSize = 40, prefetchDistance = 5)) {
-                    it.reportDao().getAllReportsWithStats()
-                }
-                .flow
-        }
-
-    val lastUpload = db.flatMapLatest { it.reportDao().getLastUploadTime() }.distinctUntilChanged()
+    val reports: Flow<PagingData<ReportWithStats>> = reportProvider.getReportsWithStats()
 
     fun deleteReport(reportId: Long) =
-        viewModelScope.launch { db.value.reportDao().delete(reportId) }
+        viewModelScope.launch { reportRemover.deleteReport(reportId) }
 }

@@ -21,9 +21,10 @@ import timber.log.Timber
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.data.reports.ReportProvider
+import xyz.malkki.neostumbler.data.reports.ReportSaver
 import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.data.settings.getBooleanFlow
-import xyz.malkki.neostumbler.db.ReportDatabaseManager
 import xyz.malkki.neostumbler.http.isRetryable
 import xyz.malkki.neostumbler.ichnaea.mapper.getIchnaeaParams
 
@@ -56,7 +57,8 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) :
 
     private val settings: Settings by inject()
 
-    private val reportDatabaseManager: ReportDatabaseManager by inject()
+    private val reportProvider: ReportProvider by inject()
+    private val reportSaver: ReportSaver by inject()
 
     private suspend fun getGeosubmitApi(): Geosubmit? {
         return settings.getIchnaeaParams()?.let { geosubmitParams ->
@@ -80,7 +82,8 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) :
         val reportSender =
             ReportSender(
                 geosubmit = geosubmit,
-                reportDao = reportDatabaseManager.reportDb.value.reportDao(),
+                reportProvider = reportProvider,
+                reportSaver = reportSaver,
             )
 
         val sendWithReducedMetadata =

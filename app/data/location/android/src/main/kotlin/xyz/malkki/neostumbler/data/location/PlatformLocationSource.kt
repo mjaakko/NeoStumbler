@@ -15,67 +15,70 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import timber.log.Timber
 import xyz.malkki.neostumbler.core.Position
+import xyz.malkki.neostumbler.core.observation.PositionObservation
 import xyz.malkki.neostumbler.executors.ImmediateExecutor
-import xyz.malkki.neostumbler.mapper.toPosition
+import xyz.malkki.neostumbler.mapper.toPositionObservation
 
 class PlatformLocationSource(context: Context) : LocationSource {
     private val appContext = context.applicationContext
 
     @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-    override fun getLocations(interval: Duration, usePassiveProvider: Boolean): Flow<Position> =
-        callbackFlow {
-            val locationManager =
-                appContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    override fun getLocations(
+        interval: Duration,
+        usePassiveProvider: Boolean,
+    ): Flow<PositionObservation> = callbackFlow {
+        val locationManager =
+            appContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-            val locationListener =
-                object : LocationListenerCompat {
-                    override fun onLocationChanged(location: Location) {
-                        val source =
-                            if (location.provider == LocationManager.NETWORK_PROVIDER) {
-                                Position.Source.NETWORK
-                            } else {
-                                Position.Source.GPS
-                            }
+        val locationListener =
+            object : LocationListenerCompat {
+                override fun onLocationChanged(location: Location) {
+                    val source =
+                        if (location.provider == LocationManager.NETWORK_PROVIDER) {
+                            Position.Source.NETWORK
+                        } else {
+                            Position.Source.GPS
+                        }
 
-                        trySendBlocking(location.toPosition(source = source))
-                    }
-
-                    override fun onProviderDisabled(provider: String) {
-                        Timber.w("Location provider $provider disabled")
-                    }
-
-                    override fun onProviderEnabled(provider: String) {
-                        Timber.i("Location provider $provider enabled")
-                    }
+                    trySendBlocking(location.toPositionObservation(source = source))
                 }
 
-            val locationIntervalMillis = interval.inWholeMilliseconds
-
-            val provider =
-                if (usePassiveProvider) {
-                    LocationManager.PASSIVE_PROVIDER
-                } else {
-                    LocationManager.GPS_PROVIDER
+                override fun onProviderDisabled(provider: String) {
+                    Timber.w("Location provider $provider disabled")
                 }
 
-            val locationRequest =
-                LocationRequestCompat.Builder(locationIntervalMillis)
-                    .setQuality(LocationRequestCompat.QUALITY_HIGH_ACCURACY)
-                    .setMinUpdateIntervalMillis(locationIntervalMillis)
-                    .setMaxUpdateDelayMillis(0)
-                    .setMinUpdateDistanceMeters(0.0f)
-                    .setMaxUpdates(Int.MAX_VALUE)
-                    .setDurationMillis(Long.MAX_VALUE)
-                    .build()
+                override fun onProviderEnabled(provider: String) {
+                    Timber.i("Location provider $provider enabled")
+                }
+            }
 
-            LocationManagerCompat.requestLocationUpdates(
-                locationManager,
-                provider,
-                locationRequest,
-                ImmediateExecutor,
-                locationListener,
-            )
+        val locationIntervalMillis = interval.inWholeMilliseconds
 
-            awaitClose { LocationManagerCompat.removeUpdates(locationManager, locationListener) }
-        }
+        val provider =
+            if (usePassiveProvider) {
+                LocationManager.PASSIVE_PROVIDER
+            } else {
+                LocationManager.GPS_PROVIDER
+            }
+
+        val locationRequest =
+            LocationRequestCompat.Builder(locationIntervalMillis)
+                .setQuality(LocationRequestCompat.QUALITY_HIGH_ACCURACY)
+                .setMinUpdateIntervalMillis(locationIntervalMillis)
+                .setMaxUpdateDelayMillis(0)
+                .setMinUpdateDistanceMeters(0.0f)
+                .setMaxUpdates(Int.MAX_VALUE)
+                .setDurationMillis(Long.MAX_VALUE)
+                .build()
+
+        LocationManagerCompat.requestLocationUpdates(
+            locationManager,
+            provider,
+            locationRequest,
+            ImmediateExecutor,
+            locationListener,
+        )
+
+        awaitClose { LocationManagerCompat.removeUpdates(locationManager, locationListener) }
+    }
 }

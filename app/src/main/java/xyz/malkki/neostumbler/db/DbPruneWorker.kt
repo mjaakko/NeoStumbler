@@ -12,6 +12,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import timber.log.Timber
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.data.reports.ReportRemover
 import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.data.settings.getIntFlow
 
@@ -27,7 +28,7 @@ class DbPruneWorker(appContext: Context, params: WorkerParameters) :
         const val DEFAULT_MAX_AGE_DAYS: Int = 60
     }
 
-    private val reportDatabaseManager: ReportDatabaseManager by inject()
+    private val reportRemover: ReportRemover by inject()
 
     private val settings: Settings by inject()
 
@@ -38,8 +39,6 @@ class DbPruneWorker(appContext: Context, params: WorkerParameters) :
     }
 
     override suspend fun doWork(): Result {
-        val reportDao = reportDatabaseManager.reportDb.value.reportDao()
-
         val maxAgeDays = getMaxAgeDays()
         if (maxAgeDays < 0) {
             // If the max age is negative, DB pruning has been disabled in the settings -> succeed
@@ -51,7 +50,8 @@ class DbPruneWorker(appContext: Context, params: WorkerParameters) :
 
         Timber.i("Deleting reports older than $minTimestamp")
 
-        val (deleteCount, duration) = measureTimedValue { reportDao.deleteOlderThan(minTimestamp) }
+        val (deleteCount, duration) =
+            measureTimedValue { reportRemover.deleteOlderThan(minTimestamp) }
 
         Timber.i("Deleted $deleteCount reports in ${duration.toString(DurationUnit.SECONDS, 1)}")
 

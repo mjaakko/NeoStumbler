@@ -14,37 +14,26 @@ import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
-import java.time.LocalDate
 import java.time.ZoneId
 import java.util.UUID
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.db.ReportDatabaseManager
+import xyz.malkki.neostumbler.data.reports.ReportProvider
 import xyz.malkki.neostumbler.ichnaea.ReportSendWorker
 import xyz.malkki.neostumbler.ui.composables.reports.ToastOnReportUpload
 import xyz.malkki.neostumbler.ui.composables.shared.DateRangePickerDialog
 
-private fun ReportDatabaseManager.getSelectableDatesSet(): Flow<Set<LocalDate>> {
-    return reportDb.flatMapLatest { it.reportDao().getReportDates() }.map { it.toSet() }
-}
-
 @Composable
-fun ReportReuploadButton() {
+fun ReportReuploadButton(reportProvider: ReportProvider = koinInject()) {
     val context = LocalContext.current
-
-    val reportDatabaseManager: ReportDatabaseManager = koinInject()
 
     val enqueuedUploadWork = rememberSaveable { mutableStateOf<UUID?>(null) }
 
     ToastOnReportUpload(workId = enqueuedUploadWork)
 
-    val selectableDates =
-        reportDatabaseManager.getSelectableDatesSet().collectAsStateWithLifecycle(null)
+    val selectableDates = reportProvider.getReportDates().collectAsStateWithLifecycle(null)
 
     val dialogOpen = rememberSaveable { mutableStateOf(false) }
 

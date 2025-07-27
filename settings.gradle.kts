@@ -36,6 +36,10 @@ include(":app:data:settings:api")
 
 include(":app:data:settings:android-datastore")
 
+include(":app:data:reports:api")
+
+include(":app:data:reports:room")
+
 include(":libs:beacon-library-utils")
 
 include(":libs:room-converters")

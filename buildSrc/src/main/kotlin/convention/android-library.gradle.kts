@@ -14,5 +14,8 @@ android {
         targetCompatibility = JavaVersion.toVersion(project.extra["jvmTarget"]!!)
     }
 
-    defaultConfig { minSdk = 29 }
+    defaultConfig {
+        minSdk = 29
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
 }

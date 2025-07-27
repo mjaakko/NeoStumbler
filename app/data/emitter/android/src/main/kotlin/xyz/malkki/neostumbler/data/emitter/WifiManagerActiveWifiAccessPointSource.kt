@@ -27,7 +27,9 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import xyz.malkki.neostumbler.broadcastreceiverflow.broadcastReceiverFlow
-import xyz.malkki.neostumbler.core.WifiAccessPoint
+import xyz.malkki.neostumbler.core.MacAddress
+import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
+import xyz.malkki.neostumbler.core.observation.EmitterObservation
 import xyz.malkki.neostumbler.data.emitter.internal.RateLimiter
 import xyz.malkki.neostumbler.data.emitter.internal.delayWithMinDuration
 import xyz.malkki.neostumbler.data.emitter.mapper.toWifiAccessPoint
@@ -94,41 +96,36 @@ class WifiManagerActiveWifiAccessPointSource(
     @RequiresPermission(
         allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_WIFI_STATE]
     )
-    override fun getWifiAccessPointFlow(scanInterval: Flow<Duration>): Flow<List<WifiAccessPoint>> =
-        channelFlow {
-            launch(Dispatchers.Default) {
-                val scanInterval =
-                    scanInterval
-                        .map {
-                            it.coerceIn(minimumValue = minScanInterval, maximumValue = MAX_INTERVAL)
-                        }
-                        .stateIn(
-                            this,
-                            started = SharingStarted.Eagerly,
-                            initialValue = MAX_INTERVAL,
-                        )
+    override fun getWifiAccessPointFlow(
+        scanInterval: Flow<Duration>
+    ): Flow<List<EmitterObservation<WifiAccessPoint, MacAddress>>> = channelFlow {
+        launch(Dispatchers.Default) {
+            val scanInterval =
+                scanInterval
+                    .map {
+                        it.coerceIn(minimumValue = minScanInterval, maximumValue = MAX_INTERVAL)
+                    }
+                    .stateIn(this, started = SharingStarted.Eagerly, initialValue = MAX_INTERVAL)
 
-                while (true) {
-                    doWifiScan()
+            while (true) {
+                doWifiScan()
 
-                    val scannedAt = timeSource.invoke()
-                    delayWithMinDuration(scannedAt, timeSource, scanInterval)
-                }
+                val scannedAt = timeSource.invoke()
+                delayWithMinDuration(scannedAt, timeSource, scanInterval)
+            }
+        }
+
+        val scanResultFlow =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                getWifiScanFlowR(wifiManager)
+            } else {
+                getWifiScanFlowLegacy(appContext, wifiManager)
             }
 
-            val scanResultFlow =
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    getWifiScanFlowR(wifiManager)
-                } else {
-                    getWifiScanFlowLegacy(appContext, wifiManager)
-                }
-
-            scanResultFlow
-                .map { scanResults ->
-                    scanResults.map { scanResult -> scanResult.toWifiAccessPoint() }
-                }
-                .collect(::send)
-        }
+        scanResultFlow
+            .map { scanResults -> scanResults.map { scanResult -> scanResult.toWifiAccessPoint() } }
+            .collect(::send)
+    }
 
     @RequiresApi(Build.VERSION_CODES.R)
     @RequiresPermission(Manifest.permission.ACCESS_WIFI_STATE)

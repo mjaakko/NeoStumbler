@@ -2,18 +2,19 @@ package xyz.malkki.neostumbler.data.emitter.mapper
 
 import android.net.wifi.ScanResult
 import android.os.Build
-import xyz.malkki.neostumbler.core.WifiAccessPoint
-import xyz.malkki.neostumbler.core.WifiAccessPoint.RadioType
+import xyz.malkki.neostumbler.core.MacAddress
+import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
+import xyz.malkki.neostumbler.core.observation.EmitterObservation
 
-internal fun ScanResult.toWifiAccessPoint(): WifiAccessPoint {
+internal fun ScanResult.toWifiAccessPoint(): EmitterObservation<WifiAccessPoint, MacAddress> {
     val radioType =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             when (wifiStandard) {
-                ScanResult.WIFI_STANDARD_11BE -> RadioType.BE
-                ScanResult.WIFI_STANDARD_11AX -> RadioType.AX
-                ScanResult.WIFI_STANDARD_11AC -> RadioType.AC
-                ScanResult.WIFI_STANDARD_11N -> RadioType.N
-                ScanResult.WIFI_STANDARD_LEGACY -> RadioType.G
+                ScanResult.WIFI_STANDARD_11BE -> WifiAccessPoint.RadioType.BE
+                ScanResult.WIFI_STANDARD_11AX -> WifiAccessPoint.RadioType.AX
+                ScanResult.WIFI_STANDARD_11AC -> WifiAccessPoint.RadioType.AC
+                ScanResult.WIFI_STANDARD_11N -> WifiAccessPoint.RadioType.N
+                ScanResult.WIFI_STANDARD_LEGACY -> WifiAccessPoint.RadioType.G
                 else -> null
             }
         } else {
@@ -35,13 +36,16 @@ internal fun ScanResult.toWifiAccessPoint(): WifiAccessPoint {
             null
         }
 
-    return WifiAccessPoint(
-        macAddress = BSSID,
-        radioType = radioType,
-        channel = channelNumber,
-        frequency = frequency,
-        signalStrength = level,
-        ssid = ssidString,
+    return EmitterObservation(
+        emitter =
+            WifiAccessPoint(
+                macAddress = MacAddress(BSSID),
+                radioType = radioType,
+                channel = channelNumber,
+                frequency = frequency,
+                signalStrength = level,
+                ssid = ssidString,
+            ),
         timestamp = timestampMillis,
     )
 }

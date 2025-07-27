@@ -11,14 +11,17 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.merge
 import timber.log.Timber
-import xyz.malkki.neostumbler.core.CellTower
+import xyz.malkki.neostumbler.core.emitter.CellTower
+import xyz.malkki.neostumbler.core.observation.EmitterObservation
 import xyz.malkki.neostumbler.data.emitter.internal.getActiveSubscriptionIds
 
 class MultiSubscriptionActiveCellInfoSource(private val context: Context) : ActiveCellInfoSource {
     @RequiresPermission(
         allOf = [Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION]
     )
-    override fun getCellInfoFlow(interval: Flow<Duration>): Flow<List<CellTower>> {
+    override fun getCellInfoFlow(
+        interval: Flow<Duration>
+    ): Flow<List<EmitterObservation<CellTower, String>>> {
         val subscriptionManager = context.getSystemService<SubscriptionManager>()!!
         val telephonyManager = context.getSystemService<TelephonyManager>()!!
 

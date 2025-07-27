@@ -7,6 +7,7 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 import xyz.malkki.neostumbler.core.Position
 import xyz.malkki.neostumbler.core.Position.Source
+import xyz.malkki.neostumbler.core.observation.PositionObservation
 import xyz.malkki.neostumbler.mapper.internal.elapsedRealtimeMillisCompat
 
 /*
@@ -16,7 +17,10 @@ import xyz.malkki.neostumbler.mapper.internal.elapsedRealtimeMillisCompat
  */
 private val MAX_TIMESTAMP_DRIFT = 30.seconds
 
-fun Location.toPosition(source: Source, airPressure: Double? = null): Position {
+fun Location.toPositionObservation(
+    source: Source,
+    airPressure: Double? = null,
+): PositionObservation {
     val timestamp =
         if (
             abs(elapsedRealtimeMillisCompat - SystemClock.elapsedRealtime()).milliseconds >=
@@ -27,17 +31,22 @@ fun Location.toPosition(source: Source, airPressure: Double? = null): Position {
             elapsedRealtimeMillisCompat
         }
 
-    return Position(
-        latitude = latitude,
-        longitude = longitude,
-        accuracy = accuracy.takeIf { hasAccuracy() && it.isFinite() }?.toDouble(),
-        altitude = altitude.takeIf { hasAltitude() && it.isFinite() },
-        altitudeAccuracy =
-            verticalAccuracyMeters.takeIf { hasVerticalAccuracy() && it.isFinite() }?.toDouble(),
-        heading = bearing.takeIf { hasBearing() && it.isFinite() }?.toDouble(),
-        speed = speed.takeIf { hasSpeed() && it.isFinite() }?.toDouble(),
-        pressure = airPressure,
-        source = source,
+    return PositionObservation(
+        position =
+            Position(
+                latitude = latitude,
+                longitude = longitude,
+                accuracy = accuracy.takeIf { hasAccuracy() && it.isFinite() }?.toDouble(),
+                altitude = altitude.takeIf { hasAltitude() && it.isFinite() },
+                altitudeAccuracy =
+                    verticalAccuracyMeters
+                        .takeIf { hasVerticalAccuracy() && it.isFinite() }
+                        ?.toDouble(),
+                heading = bearing.takeIf { hasBearing() && it.isFinite() }?.toDouble(),
+                speed = speed.takeIf { hasSpeed() && it.isFinite() }?.toDouble(),
+                pressure = airPressure,
+                source = source,
+            ),
         timestamp = timestamp,
     )
 }

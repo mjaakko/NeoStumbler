@@ -12,8 +12,6 @@ data class Position(
     val speed: Double? = null,
     val pressure: Double? = null,
     val source: Source,
-    /** Timestamp in milliseconds since boot */
-    val timestamp: Long,
 ) {
     val latLng: LatLng
         get() = LatLng(latitude, longitude)

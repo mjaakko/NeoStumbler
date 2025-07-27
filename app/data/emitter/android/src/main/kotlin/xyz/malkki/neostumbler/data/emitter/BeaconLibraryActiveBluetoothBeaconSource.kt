@@ -14,7 +14,9 @@ import org.altbeacon.beacon.BeaconManager
 import org.altbeacon.beacon.RangeNotifier
 import org.altbeacon.beacon.Region
 import timber.log.Timber
-import xyz.malkki.neostumbler.core.BluetoothBeacon
+import xyz.malkki.neostumbler.core.MacAddress
+import xyz.malkki.neostumbler.core.emitter.BluetoothBeacon
+import xyz.malkki.neostumbler.core.observation.EmitterObservation
 import xyz.malkki.neostumbler.data.emitter.mapper.toBluetoothBeacon
 
 class BeaconLibraryActiveBluetoothBeaconSource(context: Context) : ActiveBluetoothBeaconSource {
@@ -52,7 +54,8 @@ class BeaconLibraryActiveBluetoothBeaconSource(context: Context) : ActiveBluetoo
         }
     }
 
-    override fun getBluetoothBeaconFlow(): Flow<List<BluetoothBeacon>> =
+    override fun getBluetoothBeaconFlow():
+        Flow<List<EmitterObservation<BluetoothBeacon, MacAddress>>> =
         getBeaconFlow(appContext)
             .flowOn(
                 // Beacon listener has to run on the main thread because of Android Beacon Library

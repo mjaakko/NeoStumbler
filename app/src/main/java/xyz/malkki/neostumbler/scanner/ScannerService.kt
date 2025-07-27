@@ -53,8 +53,7 @@ import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.broadcastreceiverflow.broadcastReceiverFlow
 import xyz.malkki.neostumbler.constants.PreferenceKeys
-import xyz.malkki.neostumbler.core.CellTower
-import xyz.malkki.neostumbler.core.Position
+import xyz.malkki.neostumbler.core.observation.PositionObservation
 import xyz.malkki.neostumbler.data.emitter.ActiveBluetoothBeaconSource
 import xyz.malkki.neostumbler.data.emitter.ActiveCellInfoSource
 import xyz.malkki.neostumbler.data.emitter.ActiveWifiAccessPointSource
@@ -62,6 +61,7 @@ import xyz.malkki.neostumbler.data.emitter.BeaconLibraryActiveBluetoothBeaconSou
 import xyz.malkki.neostumbler.data.emitter.MultiSubscriptionActiveCellInfoSource
 import xyz.malkki.neostumbler.data.emitter.WifiManagerActiveWifiAccessPointSource
 import xyz.malkki.neostumbler.data.location.LocationSource
+import xyz.malkki.neostumbler.data.reports.ReportSaver
 import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.data.settings.getBooleanFlow
 import xyz.malkki.neostumbler.data.settings.getEnumFlow
@@ -77,7 +77,6 @@ import xyz.malkki.neostumbler.scanner.movement.MovementDetectorType
 import xyz.malkki.neostumbler.scanner.movement.SignificantMotionMovementDetector
 import xyz.malkki.neostumbler.scanner.postprocess.AutoDetectingMovingWifiBluetoothFilterer
 import xyz.malkki.neostumbler.scanner.postprocess.HiddenWifiFilterer
-import xyz.malkki.neostumbler.scanner.postprocess.ReportPostProcessor
 import xyz.malkki.neostumbler.scanner.postprocess.SsidBasedWifiFilterer
 import xyz.malkki.neostumbler.scanner.quicksettings.ScannerTileService
 import xyz.malkki.neostumbler.scanner.source.AirPressureSource
@@ -156,7 +155,7 @@ class ScannerService : Service() {
 
     private val settings: Settings by inject()
 
-    private val scanReportSaver: ScanReportSaver by inject()
+    private val reportSaver: ReportSaver by inject()
 
     private val locationSource: LocationSource by inject()
 
@@ -352,7 +351,7 @@ class ScannerService : Service() {
                 airPressureSource = { airPressureSource.getAirPressureFlow(LOCATION_INTERVAL / 2) },
                 movementDetector = movementDetector,
                 postProcessors =
-                    buildList<ReportPostProcessor> {
+                    buildList {
                         add(HiddenWifiFilterer())
                         add(SsidBasedWifiFilterer(wifiFilterList))
 
@@ -363,7 +362,7 @@ class ScannerService : Service() {
             )
 
         scanner.createReports().collect { reportData ->
-            scanReportSaver.saveReport(reportData)
+            reportSaver.createReport(reportData)
 
             _reportsCreated.update { it + 1 }
 
@@ -523,16 +522,19 @@ class ScannerService : Service() {
 
     private fun getMovementDetector(
         movementDetectorType: MovementDetectorType,
-        locationFlow: Flow<Position>,
+        locationFlow: Flow<PositionObservation>,
     ): MovementDetector {
         return when (movementDetectorType) {
             MovementDetectorType.NONE -> ConstantMovementDetector
-            MovementDetectorType.LOCATION -> LocationBasedMovementDetector { locationFlow }
+            MovementDetectorType.LOCATION ->
+                LocationBasedMovementDetector { locationFlow.map { it.position } }
             MovementDetectorType.SIGNIFICANT_MOTION ->
                 SignificantMotionMovementDetector(
                     sensorManager = sensorManager,
                     locationSource = {
-                        locationSource.getLocations(5.seconds, usePassiveProvider = true)
+                        locationSource.getLocations(5.seconds, usePassiveProvider = true).map {
+                            it.position
+                        }
                     },
                 )
         }
@@ -554,7 +556,7 @@ class ScannerService : Service() {
         return if (PermissionHelper.hasReadPhoneStatePermission(this)) {
             MultiSubscriptionActiveCellInfoSource(this@ScannerService)
         } else {
-            ActiveCellInfoSource { emptyFlow<List<CellTower>>() }
+            ActiveCellInfoSource { emptyFlow() }
         }
     }
 

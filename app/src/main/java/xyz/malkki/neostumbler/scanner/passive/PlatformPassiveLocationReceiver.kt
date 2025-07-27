@@ -14,7 +14,7 @@ import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import xyz.malkki.neostumbler.core.Position
-import xyz.malkki.neostumbler.mapper.toPosition
+import xyz.malkki.neostumbler.mapper.toPositionObservation
 
 class PlatformPassiveLocationReceiver : BroadcastReceiver(), KoinComponent {
     companion object {
@@ -79,7 +79,7 @@ class PlatformPassiveLocationReceiver : BroadcastReceiver(), KoinComponent {
                         }
                     }
 
-                location.toPosition(source = source)
+                location.toPositionObservation(source = source)
             }
 
         runBlocking {

@@ -135,13 +135,17 @@ private fun getCurrentLocation(
     context: Context = LocalContext.current,
     locationSource: LocationSource = koinInject(),
 ): State<LatLng?> =
-    produceState<LatLng?>(initialValue = null) {
+    produceState(initialValue = null) {
         value =
             if (
                 context.checkMissingPermissions(Manifest.permission.ACCESS_FINE_LOCATION).isEmpty()
             ) {
                 @SuppressLint("MissingPermission")
-                locationSource.getLocations(1.seconds, usePassiveProvider = false).first().latLng
+                locationSource
+                    .getLocations(1.seconds, usePassiveProvider = false)
+                    .first()
+                    .position
+                    .latLng
             } else {
                 // If we don't have location permission, just show any location to avoid crashing
                 LatLng(0.0, 0.0)

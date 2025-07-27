@@ -4,31 +4,26 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import java.time.LocalDate
 import java.time.ZoneOffset
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.db.ReportDatabase
+import xyz.malkki.neostumbler.data.reports.ReportProvider
+import xyz.malkki.neostumbler.data.reports.ReportRemover
 import xyz.malkki.neostumbler.extensions.getQuantityString
 import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.ui.composables.shared.DateRangePickerDialog
 
-private fun Flow<ReportDatabase>.selectableDates(): Flow<Set<LocalDate>> {
-    return flatMapLatest { db -> db.reportDao().getReportDates().map { it.toSet() } }
-}
-
 @Composable
-fun DeleteReportsByDate(reportDb: StateFlow<ReportDatabase>) {
+fun DeleteReportsByDate(
+    reportProvider: ReportProvider = koinInject(),
+    reportRemover: ReportRemover = koinInject(),
+) {
     val context = LocalContext.current
 
     val coroutineScope = rememberCoroutineScope()
@@ -36,8 +31,7 @@ fun DeleteReportsByDate(reportDb: StateFlow<ReportDatabase>) {
     val showDatePicker = rememberSaveable { mutableStateOf(false) }
 
     val selectableDates =
-        remember(reportDb) { reportDb.selectableDates() }
-            .collectAsStateWithLifecycle(initialValue = null)
+        reportProvider.getReportDates().collectAsStateWithLifecycle(initialValue = null)
 
     if (showDatePicker.value) {
         DateRangePickerDialog(
@@ -57,7 +51,7 @@ fun DeleteReportsByDate(reportDb: StateFlow<ReportDatabase>) {
                             .toInstant()
 
                     coroutineScope.launch {
-                        val deletedCount = reportDb.value.reportDao().deleteFromTimeRange(from, to)
+                        val deletedCount = reportRemover.deleteByDate(from, to)
 
                         context.showToast(
                             context.getQuantityString(

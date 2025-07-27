@@ -27,25 +27,24 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.retryWhen
 import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import okhttp3.Call
 import org.geohex.geohex4j.GeoHex
 import timber.log.Timber
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.core.report.ReportWithLocation
 import xyz.malkki.neostumbler.data.location.LocationSource
+import xyz.malkki.neostumbler.data.reports.ReportProvider
 import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.data.settings.getEnum
-import xyz.malkki.neostumbler.db.ReportDatabaseManager
-import xyz.malkki.neostumbler.db.dao.getReportsInsideBoundingBox
-import xyz.malkki.neostumbler.db.entities.ReportWithLocation
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.geography.LatLng
 import xyz.malkki.neostumbler.ui.map.MapTileSource
@@ -67,7 +66,7 @@ class MapViewModel(
     application: Application,
     settings: Settings,
     private val httpClientProvider: Deferred<Call.Factory>,
-    private val reportDatabaseManager: ReportDatabaseManager,
+    private val reportProvider: ReportProvider,
     private val locationSource: LocationSource,
 ) : AndroidViewModel(application) {
     private val _httpClient = MutableStateFlow<Call.Factory?>(null)
@@ -134,9 +133,12 @@ class MapViewModel(
 
     private val mapBounds = Channel<Pair<LatLng, LatLng>>(capacity = Channel.Factory.CONFLATED)
 
-    val latestReportPosition = flow {
-        emit(reportDatabaseManager.reportDb.value.positionDao().getLatestPosition())
-    }
+    val latestReportPosition =
+        reportProvider
+            .getLatestReportLocation()
+            .map { report -> report?.let { LatLng(it.latitude, it.longitude) } }
+            .take(1)
+            .shareIn(viewModelScope, started = SharingStarted.Eagerly)
 
     val heatMapTiles =
         mapBounds
@@ -146,14 +148,12 @@ class MapViewModel(
                 val (minLat, minLon) = bounds.first
                 val (maxLat, maxLon) = bounds.second
 
-                reportDatabaseManager.reportDb.value
-                    .reportDao()
-                    .getReportsInsideBoundingBox(
-                        minLatitude = minLat,
-                        minLongitude = minLon,
-                        maxLatitude = maxLat,
-                        maxLongitude = maxLon,
-                    )
+                reportProvider.getReportsInsideBoundingBox(
+                    minLatitude = minLat,
+                    minLongitude = minLon,
+                    maxLatitude = maxLat,
+                    maxLongitude = maxLon,
+                )
             }
             .combine(
                 flow = zoom.map { zoom -> mapZoomToGeohexResolution(zoom) }.distinctUntilChanged(),

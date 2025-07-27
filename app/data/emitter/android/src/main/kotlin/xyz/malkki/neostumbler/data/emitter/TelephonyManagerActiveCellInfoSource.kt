@@ -20,8 +20,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.isActive
 import timber.log.Timber
-import xyz.malkki.neostumbler.core.CellTower
-import xyz.malkki.neostumbler.core.CellTower.Companion.fillMissingData
+import xyz.malkki.neostumbler.core.emitter.CellTower
+import xyz.malkki.neostumbler.core.emitter.CellTower.Companion.fillMissingData
+import xyz.malkki.neostumbler.core.observation.EmitterObservation
 import xyz.malkki.neostumbler.data.emitter.internal.delayWithMinDuration
 import xyz.malkki.neostumbler.data.emitter.internal.getServiceStateFlow
 import xyz.malkki.neostumbler.data.emitter.mapper.toCellTower
@@ -43,7 +44,9 @@ class TelephonyManagerActiveCellInfoSource(
     @RequiresPermission(
         allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_PHONE_STATE]
     )
-    override fun getCellInfoFlow(interval: Flow<Duration>): Flow<List<CellTower>> =
+    override fun getCellInfoFlow(
+        interval: Flow<Duration>
+    ): Flow<List<EmitterObservation<CellTower, String>>> =
         callbackFlow {
                 val initialServiceState = telephonyManager.serviceState
 
@@ -84,7 +87,7 @@ class TelephonyManagerActiveCellInfoSource(
                                     .fillMissingData(serviceState.value?.operatorNumeric)
                                     // Filter cell infos which don't have enough useful data to be
                                     // collected
-                                    .filter { it.hasEnoughData() }
+                                    .filter { it.emitter.hasEnoughData() }
 
                             trySendBlocking(cellTowers)
                             rendezvousQueue.trySendBlocking(Unit)

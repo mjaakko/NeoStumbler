@@ -16,52 +16,57 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import xyz.malkki.neostumbler.core.Position
+import xyz.malkki.neostumbler.core.observation.PositionObservation
 import xyz.malkki.neostumbler.executors.ImmediateExecutor
-import xyz.malkki.neostumbler.mapper.toPosition
+import xyz.malkki.neostumbler.mapper.toPositionObservation
 
 class FusedLocationSource(context: Context) : LocationSource {
     private val appContext = context.applicationContext
 
     @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-    override fun getLocations(interval: Duration, usePassiveProvider: Boolean): Flow<Position> =
-        callbackFlow {
-            val fusedLocationProviderClient =
-                LocationServices.getFusedLocationProviderClient(appContext)
+    override fun getLocations(
+        interval: Duration,
+        usePassiveProvider: Boolean,
+    ): Flow<PositionObservation> = callbackFlow {
+        val fusedLocationProviderClient =
+            LocationServices.getFusedLocationProviderClient(appContext)
 
-            val locationIntervalMillis = interval.inWholeMilliseconds
+        val locationIntervalMillis = interval.inWholeMilliseconds
 
-            val locationRequest =
-                LocationRequest.Builder(locationIntervalMillis)
-                    .setWaitForAccurateLocation(!usePassiveProvider)
-                    .setMinUpdateIntervalMillis(locationIntervalMillis)
-                    .setMaxUpdateDelayMillis(0)
-                    .setGranularity(Granularity.GRANULARITY_FINE)
-                    .setPriority(
-                        if (usePassiveProvider) {
-                            Priority.PRIORITY_PASSIVE
-                        } else {
-                            Priority.PRIORITY_HIGH_ACCURACY
-                        }
-                    )
-                    .build()
+        val locationRequest =
+            LocationRequest.Builder(locationIntervalMillis)
+                .setWaitForAccurateLocation(!usePassiveProvider)
+                .setMinUpdateIntervalMillis(locationIntervalMillis)
+                .setMaxUpdateDelayMillis(0)
+                .setGranularity(Granularity.GRANULARITY_FINE)
+                .setPriority(
+                    if (usePassiveProvider) {
+                        Priority.PRIORITY_PASSIVE
+                    } else {
+                        Priority.PRIORITY_HIGH_ACCURACY
+                    }
+                )
+                .build()
 
-            val locationCallback =
-                object : LocationCallback() {
-                    override fun onLocationResult(locationResult: LocationResult) {
-                        locationResult.locations.forEach { location ->
-                            trySendBlocking(location.toPosition(source = Position.Source.FUSED))
-                        }
+        val locationCallback =
+            object : LocationCallback() {
+                override fun onLocationResult(locationResult: LocationResult) {
+                    locationResult.locations.forEach { location ->
+                        trySendBlocking(
+                            location.toPositionObservation(source = Position.Source.FUSED)
+                        )
                     }
                 }
+            }
 
-            fusedLocationProviderClient
-                .requestLocationUpdates(locationRequest, ImmediateExecutor, locationCallback)
-                .await()
+        fusedLocationProviderClient
+            .requestLocationUpdates(locationRequest, ImmediateExecutor, locationCallback)
+            .await()
 
-            awaitClose {
-                fusedLocationProviderClient.flushLocations().addOnCompleteListener {
-                    fusedLocationProviderClient.removeLocationUpdates(locationCallback)
-                }
+        awaitClose {
+            fusedLocationProviderClient.flushLocations().addOnCompleteListener {
+                fusedLocationProviderClient.removeLocationUpdates(locationCallback)
             }
         }
+    }
 }

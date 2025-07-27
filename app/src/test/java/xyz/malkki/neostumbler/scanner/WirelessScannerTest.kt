@@ -15,12 +15,15 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertThrows
 import org.junit.Test
-import xyz.malkki.neostumbler.core.BluetoothBeacon
+import xyz.malkki.neostumbler.core.MacAddress
 import xyz.malkki.neostumbler.core.Position
 import xyz.malkki.neostumbler.core.Position.Source
-import xyz.malkki.neostumbler.core.WifiAccessPoint
+import xyz.malkki.neostumbler.core.emitter.BluetoothBeacon
+import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
+import xyz.malkki.neostumbler.core.observation.EmitterObservation
+import xyz.malkki.neostumbler.core.observation.PositionObservation
+import xyz.malkki.neostumbler.core.report.ReportData
 import xyz.malkki.neostumbler.domain.AirPressureObservation
-import xyz.malkki.neostumbler.scanner.data.ReportData
 import xyz.malkki.neostumbler.scanner.postprocess.HiddenWifiFilterer
 
 class WirelessScannerTest {
@@ -30,12 +33,15 @@ class WirelessScannerTest {
             WirelessScanner(
                 locationSource = {
                     flowOf(
-                        Position(
-                            latitude = 50.0,
-                            longitude = 10.0,
-                            accuracy = 15.0,
+                        PositionObservation(
+                            position =
+                                Position(
+                                    latitude = 50.0,
+                                    longitude = 10.0,
+                                    accuracy = 15.0,
+                                    source = Source.GPS,
+                                ),
                             timestamp = 0,
-                            source = Source.GPS,
                         )
                     )
                 },
@@ -58,12 +64,15 @@ class WirelessScannerTest {
             WirelessScanner(
                 locationSource = {
                     flowOf(
-                        Position(
-                            latitude = 50.0,
-                            longitude = 10.0,
-                            accuracy = 15.0,
+                        PositionObservation(
+                            position =
+                                Position(
+                                    latitude = 50.0,
+                                    longitude = 10.0,
+                                    accuracy = 15.0,
+                                    source = Source.GPS,
+                                ),
                             timestamp = 60000,
-                            source = Source.GPS,
                         )
                     )
                 },
@@ -72,14 +81,17 @@ class WirelessScannerTest {
                 bluetoothBeaconSource = {
                     flowOf(
                         listOf(
-                            BluetoothBeacon(
-                                macAddress = "01:01:01:01:01",
-                                signalStrength = -68,
+                            EmitterObservation(
+                                emitter =
+                                    BluetoothBeacon(
+                                        macAddress = MacAddress("01:01:01:01:01"),
+                                        signalStrength = -68,
+                                        beaconType = null,
+                                        id1 = null,
+                                        id2 = null,
+                                        id3 = null,
+                                    ),
                                 timestamp = 25000,
-                                beaconType = null,
-                                id1 = null,
-                                id2 = null,
-                                id3 = null,
                             )
                         )
                     )
@@ -100,12 +112,15 @@ class WirelessScannerTest {
             WirelessScanner(
                 locationSource = {
                     flowOf(
-                        Position(
-                            latitude = 50.0,
-                            longitude = 10.0,
-                            accuracy = 15.0,
+                        PositionObservation(
+                            position =
+                                Position(
+                                    latitude = 50.0,
+                                    longitude = 10.0,
+                                    accuracy = 15.0,
+                                    source = Source.GPS,
+                                ),
                             timestamp = 0,
-                            source = Source.GPS,
                         )
                     )
                 },
@@ -113,22 +128,28 @@ class WirelessScannerTest {
                 wifiAccessPointSource = {
                     flowOf(
                         listOf(
-                            WifiAccessPoint(
-                                macAddress = "01:01:01:01:01:01",
-                                radioType = WifiAccessPoint.RadioType.AC,
-                                channel = null,
-                                frequency = null,
-                                signalStrength = null,
-                                ssid = "test_nomap",
+                            EmitterObservation(
+                                emitter =
+                                    WifiAccessPoint(
+                                        macAddress = MacAddress("01:01:01:01:01:01"),
+                                        radioType = WifiAccessPoint.RadioType.AC,
+                                        channel = null,
+                                        frequency = null,
+                                        signalStrength = null,
+                                        ssid = "test_nomap",
+                                    ),
                                 timestamp = 0,
                             ),
-                            WifiAccessPoint(
-                                macAddress = "02:02:02:02:02:02",
-                                radioType = WifiAccessPoint.RadioType.AC,
-                                channel = null,
-                                frequency = null,
-                                signalStrength = null,
-                                ssid = "",
+                            EmitterObservation(
+                                emitter =
+                                    WifiAccessPoint(
+                                        macAddress = MacAddress("02:02:02:02:02:02"),
+                                        radioType = WifiAccessPoint.RadioType.AC,
+                                        channel = null,
+                                        frequency = null,
+                                        signalStrength = null,
+                                        ssid = "",
+                                    ),
                                 timestamp = 0,
                             ),
                         )
@@ -155,12 +176,15 @@ class WirelessScannerTest {
                         delay(1000)
 
                         val position =
-                            Position(
-                                latitude = 50.0,
-                                longitude = 10.0,
-                                accuracy = 15.0,
+                            PositionObservation(
+                                position =
+                                    Position(
+                                        latitude = 50.0,
+                                        longitude = 10.0,
+                                        accuracy = 15.0,
+                                        source = Source.GPS,
+                                    ),
                                 timestamp = 0,
-                                source = Source.GPS,
                             )
 
                         emit(position)
@@ -171,13 +195,16 @@ class WirelessScannerTest {
                 bluetoothBeaconSource = {
                     flowOf(
                         listOf(
-                            BluetoothBeacon(
-                                macAddress = "01:01:01:01:01:01",
-                                beaconType = null,
-                                id1 = null,
-                                id2 = null,
-                                id3 = null,
-                                signalStrength = -75,
+                            EmitterObservation(
+                                emitter =
+                                    BluetoothBeacon(
+                                        macAddress = MacAddress("01:01:01:01:01:01"),
+                                        beaconType = null,
+                                        id1 = null,
+                                        id2 = null,
+                                        id3 = null,
+                                        signalStrength = -75,
+                                    ),
                                 timestamp = 0,
                             )
                         )
@@ -209,7 +236,7 @@ class WirelessScannerTest {
 
         val report = reports.first()
 
-        assertNotNull(report.position.pressure)
-        assertEquals(1013.25, report.position.pressure!!, 0.01)
+        assertNotNull(report.position.position.pressure)
+        assertEquals(1013.25, report.position.position.pressure!!, 0.01)
     }
 }

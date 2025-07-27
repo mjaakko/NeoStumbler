@@ -42,6 +42,7 @@ import org.koin.dsl.module
 import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.core.Position
 import xyz.malkki.neostumbler.core.Position.Source
+import xyz.malkki.neostumbler.core.observation.PositionObservation
 import xyz.malkki.neostumbler.data.location.LocationSource
 import xyz.malkki.neostumbler.data.settings.DataStoreSettings
 import xyz.malkki.neostumbler.data.settings.Settings
@@ -96,10 +97,9 @@ class AreaPickerTest {
     @Test
     fun testAreaPicker() = runTest {
         val fakeLocation =
-            Position(
-                latitude = 40.689100,
-                longitude = -74.044300,
-                source = Source.GPS,
+            PositionObservation(
+                position =
+                    Position(latitude = 40.689100, longitude = -74.044300, source = Source.GPS),
                 timestamp = 0,
             )
 
@@ -126,7 +126,7 @@ class AreaPickerTest {
                             override fun getLocations(
                                 interval: Duration,
                                 usePassiveProvider: Boolean,
-                            ): Flow<Position> {
+                            ): Flow<PositionObservation> {
                                 return flowOf(fakeLocation)
                             }
                         }

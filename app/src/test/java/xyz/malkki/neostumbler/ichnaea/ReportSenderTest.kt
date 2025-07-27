@@ -12,11 +12,13 @@ import org.mockito.kotlin.doReturnConsecutively
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
-import xyz.malkki.neostumbler.db.dao.ReportDao
-import xyz.malkki.neostumbler.db.entities.PositionEntity
-import xyz.malkki.neostumbler.db.entities.Report
-import xyz.malkki.neostumbler.db.entities.ReportWithData
-import xyz.malkki.neostumbler.db.entities.WifiAccessPointEntity
+import xyz.malkki.neostumbler.core.MacAddress
+import xyz.malkki.neostumbler.core.Position
+import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
+import xyz.malkki.neostumbler.core.report.ReportEmitter
+import xyz.malkki.neostumbler.core.report.ReportPosition
+import xyz.malkki.neostumbler.data.reports.ReportProvider
+import xyz.malkki.neostumbler.data.reports.ReportSaver
 
 class ReportSenderTest {
     private val reportTimestamp = Instant.now()!!
@@ -28,51 +30,50 @@ class ReportSenderTest {
     fun setup() {
         val reports =
             listOf(
-                ReportWithData(
-                    report =
-                        Report(
-                            id = 1,
-                            timestamp = reportTimestamp,
-                            uploaded = false,
-                            uploadTimestamp = null,
-                        ),
-                    positionEntity =
-                        PositionEntity(
-                            id = 1,
-                            latitude = 56.414156,
-                            longitude = 18.724728,
-                            accuracy = 15.4,
+                xyz.malkki.neostumbler.core.report.Report(
+                    id = 1,
+                    timestamp = reportTimestamp,
+                    uploaded = false,
+                    uploadTimestamp = null,
+                    position =
+                        ReportPosition(
+                            position =
+                                Position(
+                                    latitude = 56.414156,
+                                    longitude = 18.724728,
+                                    accuracy = 15.4,
+                                    altitude = null,
+                                    altitudeAccuracy = null,
+                                    heading = 14.516,
+                                    pressure = null,
+                                    speed = 5.6378,
+                                    source = Position.Source.GPS,
+                                ),
                             age = 1000,
-                            altitude = null,
-                            altitudeAccuracy = null,
-                            heading = 14.516,
-                            pressure = null,
-                            speed = 5.6378,
-                            source = "gps",
-                            reportId = 1,
                         ),
-                    wifiAccessPointEntities =
+                    wifiAccessPoints =
                         listOf(
-                            WifiAccessPointEntity(
+                            ReportEmitter(
                                 id = 1,
-                                macAddress = "01:01:01:01:01:01",
-                                radioType = null,
+                                emitter =
+                                    WifiAccessPoint(
+                                        macAddress = MacAddress("01:01:01:01:01:01"),
+                                        radioType = null,
+                                        channel = null,
+                                        frequency = null,
+                                        signalStrength = null,
+                                        ssid = "test_network",
+                                    ),
                                 age = 1500,
-                                channel = null,
-                                frequency = null,
-                                signalStrength = null,
-                                signalToNoiseRatio = null,
-                                ssid = "test_network",
-                                reportId = 1,
                             )
                         ),
-                    cellTowerEntities = emptyList(),
-                    bluetoothBeaconEntities = emptyList(),
+                    cellTowers = emptyList(),
+                    bluetoothBeacons = emptyList(),
                 )
             )
 
-        val reportDao =
-            mock<ReportDao> {
+        val reportProvider =
+            mock<ReportProvider> {
                 onBlocking { getNotUploadedReports(any()) } doReturnConsecutively
                     listOf(reports, emptyList())
 
@@ -82,7 +83,12 @@ class ReportSenderTest {
 
         geosubmit = mock<Geosubmit>()
 
-        reportSender = ReportSender(geosubmit, reportDao)
+        reportSender =
+            ReportSender(
+                geosubmit = geosubmit,
+                reportProvider = reportProvider,
+                reportSaver = mock<ReportSaver>(),
+            )
     }
 
     @Test

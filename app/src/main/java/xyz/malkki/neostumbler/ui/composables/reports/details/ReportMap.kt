@@ -51,10 +51,9 @@ import org.maplibre.android.utils.ColorUtils
 import timber.log.Timber
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.core.report.Report
 import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.data.settings.getEnum
-import xyz.malkki.neostumbler.db.entities.ReportWithData
-import xyz.malkki.neostumbler.db.entities.latLng
 import xyz.malkki.neostumbler.domain.asMapLibreLatLng
 import xyz.malkki.neostumbler.geography.LatLng
 import xyz.malkki.neostumbler.ichnaea.Geolocate
@@ -87,7 +86,7 @@ private fun Settings.mapStyleUrl(): Flow<String> =
 
 @Composable
 fun ReportMap(
-    reportWithData: ReportWithData,
+    report: Report,
     modifier: Modifier = Modifier,
     settings: Settings = koinInject(),
     httpClientProvider: Deferred<Call.Factory> = koinInject(),
@@ -100,7 +99,7 @@ fun ReportMap(
 
     val httpClient = produceState<Call.Factory?>(null) { value = httpClientProvider.await() }
 
-    val estimatedLocation = getEstimatedReportLocation(reportWithData)
+    val estimatedLocation = getEstimatedReportLocation(report)
 
     if (mapStyleUrl == null || httpClient.value == null) {
         CenteredCircularProgressIndicator(modifier = modifier.fillMaxWidth().height(150.dp))
@@ -120,7 +119,7 @@ fun ReportMap(
                     mapView.localizeLabelNames()
 
                     mapView.getMapAsync { map ->
-                        val cameraPos = reportWithData.positionEntity.latLng.asMapLibreLatLng()
+                        val cameraPos = report.position.position.latLng.asMapLibreLatLng()
 
                         map.cameraPosition =
                             CameraPosition.Builder().target(cameraPos).zoom(MAP_ZOOM_LEVEL).build()
@@ -154,14 +153,14 @@ fun ReportMap(
                             circleManager.deleteAll()
 
                             if (estimatedLocation.value != null) {
-                                val actualLocationLatLng = reportWithData.positionEntity.latLng
+                                val actualLocationLatLng = report.position.position.latLng
                                 val estimatedLocationLatLng =
                                     estimatedLocation.value!!.location.latLng
 
                                 map.setCameraPositionToContain(
                                     listOf(
                                         actualLocationLatLng to
-                                            (reportWithData.positionEntity.accuracy ?: 0.0),
+                                            (report.position.position.accuracy ?: 0.0),
                                         estimatedLocationLatLng to
                                             estimatedLocation.value!!.accuracy,
                                     )
@@ -184,10 +183,10 @@ fun ReportMap(
                                 projection = map.projection,
                                 center =
                                     LatLng(
-                                        reportWithData.positionEntity.latitude,
-                                        reportWithData.positionEntity.longitude,
+                                        report.position.position.latitude,
+                                        report.position.position.longitude,
                                     ),
-                                radius = reportWithData.positionEntity.accuracy ?: 0.0,
+                                radius = report.position.position.accuracy ?: 0.0,
                                 color = Color.Blue.toArgb(),
                             )
                         }
@@ -198,7 +197,7 @@ fun ReportMap(
 
             if (estimatedLocation.value != null) {
                 EstimatedDistance(
-                    reportLocation = reportWithData.positionEntity.latLng,
+                    reportLocation = report.position.position.latLng,
                     estimatedLocation = estimatedLocation.value!!.location.latLng,
                 )
             }
@@ -310,7 +309,7 @@ private val GEOLOCATE_RETRY_DELAY = 20.seconds
 
 @Composable
 private fun getEstimatedReportLocation(
-    reportWithData: ReportWithData,
+    report: Report,
     settings: Settings = koinInject(),
     httpClientProvider: Deferred<Call.Factory> = koinInject(),
 ): State<GeolocateResponseDto?> {
@@ -323,37 +322,39 @@ private fun getEstimatedReportLocation(
             }
         }
 
-    return produceState(null, reportWithData, geolocate.value) {
+    return produceState(null, report, geolocate.value) {
         val flow = flow {
             val locateResponse =
                 geolocate.value?.getLocation(
                     GeolocateRequestDto(
                         considerIp = false,
                         bluetoothBeacons =
-                            reportWithData.bluetoothBeaconEntities.map {
+                            report.bluetoothBeacons.map {
                                 BluetoothBeaconDto(
-                                    macAddress = it.macAddress,
-                                    signalStrength = it.signalStrength,
+                                    macAddress = it.emitter.macAddress.value,
+                                    signalStrength = it.emitter.signalStrength,
                                 )
                             },
                         wifiAccessPoints =
-                            reportWithData.wifiAccessPointEntities.map {
+                            report.wifiAccessPoints.map {
                                 WifiAccessPointDto(
-                                    macAddress = it.macAddress,
-                                    signalStrength = it.signalStrength,
+                                    macAddress = it.emitter.macAddress.value,
+                                    signalStrength = it.emitter.signalStrength,
                                 )
                             },
                         cellTowers =
-                            reportWithData.cellTowerEntities
-                                .filter { it.cellId != null }
+                            report.cellTowers
+                                .filter { it.emitter.cellId != null }
                                 .map {
                                     CellTowerDto(
-                                        radioType = it.radioType,
-                                        mobileCountryCode = it.mobileCountryCode!!.toIntOrNull()!!,
-                                        mobileNetworkCode = it.mobileNetworkCode!!.toIntOrNull()!!,
-                                        locationAreaCode = it.locationAreaCode,
-                                        cellId = it.cellId,
-                                        signalStrength = it.signalStrength,
+                                        radioType = it.emitter.radioType.name.lowercase(),
+                                        mobileCountryCode =
+                                            it.emitter.mobileCountryCode!!.toIntOrNull()!!,
+                                        mobileNetworkCode =
+                                            it.emitter.mobileNetworkCode!!.toIntOrNull()!!,
+                                        locationAreaCode = it.emitter.locationAreaCode,
+                                        cellId = it.emitter.cellId,
+                                        signalStrength = it.emitter.signalStrength,
                                     )
                                 },
                     )

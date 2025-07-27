@@ -2,13 +2,15 @@ package xyz.malkki.neostumbler.scanner.passive
 
 import android.Manifest
 import androidx.annotation.RequiresPermission
-import xyz.malkki.neostumbler.core.CellTower
-import xyz.malkki.neostumbler.core.Position
-import xyz.malkki.neostumbler.core.WifiAccessPoint
+import xyz.malkki.neostumbler.core.MacAddress
+import xyz.malkki.neostumbler.core.emitter.CellTower
+import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
+import xyz.malkki.neostumbler.core.observation.EmitterObservation
+import xyz.malkki.neostumbler.core.observation.PositionObservation
 import xyz.malkki.neostumbler.data.emitter.PassiveCellTowerSource
 import xyz.malkki.neostumbler.data.emitter.PassiveWifiAccessPointSource
+import xyz.malkki.neostumbler.data.reports.ReportSaver
 import xyz.malkki.neostumbler.geography.LatLng
-import xyz.malkki.neostumbler.scanner.ScanReportSaver
 import xyz.malkki.neostumbler.scanner.ScannerService
 import xyz.malkki.neostumbler.scanner.ScanningConstants
 import xyz.malkki.neostumbler.scanner.createReports
@@ -24,7 +26,7 @@ class PassiveScanReportCreator(
     private val passiveWifiAccessPointSource: PassiveWifiAccessPointSource,
     private val passiveCellTowerSource: PassiveCellTowerSource,
     private val passiveScanStateManager: PassiveScanStateManager,
-    private val scanReportSaver: ScanReportSaver,
+    private val reportSaver: ReportSaver,
     private val postProcessors: List<ReportPostProcessor>,
 ) {
     @RequiresPermission(
@@ -35,7 +37,7 @@ class PassiveScanReportCreator(
                 Manifest.permission.READ_PHONE_STATE,
             ]
     )
-    suspend fun createPassiveScanReport(positions: List<Position>) {
+    suspend fun createPassiveScanReport(positions: List<PositionObservation>) {
         if (ScannerService.serviceRunning.value) {
             // If the active scanning service is running, we don't need to create passive reports
             return
@@ -43,8 +45,8 @@ class PassiveScanReportCreator(
 
         val filteredPositions =
             positions.filter {
-                it.accuracy != null &&
-                    it.accuracy!! <= ScanningConstants.LOCATION_MAX_ACCURACY_METERS
+                it.position.accuracy != null &&
+                    it.position.accuracy!! <= ScanningConstants.LOCATION_MAX_ACCURACY_METERS
             }
 
         if (filteredPositions.isEmpty()) {
@@ -55,7 +57,7 @@ class PassiveScanReportCreator(
         if (
             lastLocation != null &&
                 filteredPositions.none {
-                    LatLng(it.latitude, it.longitude).distanceTo(lastLocation) >
+                    LatLng(it.position.latitude, it.position.longitude).distanceTo(lastLocation) >
                         MIN_DISTANCE_FROM_LAST_LOCATION
                 }
         ) {
@@ -84,15 +86,16 @@ class PassiveScanReportCreator(
 
         reports
             .maxByOrNull { it.position.timestamp }
-            ?.let { passiveScanStateManager.updateLastReportLocation(it.position.latLng) }
+            ?.let { passiveScanStateManager.updateLastReportLocation(it.position.position.latLng) }
 
-        reports.forEach { reportData -> scanReportSaver.saveReport(reportData) }
+        reports.forEach { reportData -> reportSaver.createReport(reportData) }
     }
 
     @RequiresPermission(
         allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_WIFI_STATE]
     )
-    private suspend fun getWifiAccessPoints(): List<WifiAccessPoint> {
+    private suspend fun getWifiAccessPoints():
+        List<EmitterObservation<WifiAccessPoint, MacAddress>> {
         val maxTimestamp = passiveScanStateManager.getMaxWifiTimestamp()
 
         return passiveWifiAccessPointSource.getWifiAccessPoints().filter {
@@ -103,7 +106,7 @@ class PassiveScanReportCreator(
     @RequiresPermission(
         allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_PHONE_STATE]
     )
-    private suspend fun getCellTowers(): List<CellTower> {
+    private suspend fun getCellTowers(): List<EmitterObservation<CellTower, String>> {
         val maxTimestamp = passiveScanStateManager.getMaxCellTimestamp()
 
         return passiveCellTowerSource.getCellTowers().filter {

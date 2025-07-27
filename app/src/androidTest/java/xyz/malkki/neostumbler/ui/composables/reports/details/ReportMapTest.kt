@@ -38,12 +38,12 @@ import org.koin.dsl.koinApplication
 import org.koin.dsl.module
 import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.core.Position
+import xyz.malkki.neostumbler.core.emitter.CellTower
+import xyz.malkki.neostumbler.core.report.ReportEmitter
+import xyz.malkki.neostumbler.core.report.ReportPosition
 import xyz.malkki.neostumbler.data.settings.DataStoreSettings
 import xyz.malkki.neostumbler.data.settings.Settings
-import xyz.malkki.neostumbler.db.entities.CellTowerEntity
-import xyz.malkki.neostumbler.db.entities.PositionEntity
-import xyz.malkki.neostumbler.db.entities.Report
-import xyz.malkki.neostumbler.db.entities.ReportWithData
 
 class ReportMapTest {
     private val requests: MutableList<Request> = mutableListOf()
@@ -124,51 +124,51 @@ class ReportMapTest {
         composeTestRule.setContent {
             KoinIsolatedContext(koin) {
                 ReportMap(
-                    reportWithData =
-                        ReportWithData(
-                            report =
-                                Report(
-                                    id = 1,
-                                    timestamp = Instant.now(),
-                                    uploaded = false,
-                                    uploadTimestamp = null,
-                                ),
-                            positionEntity =
-                                PositionEntity(
-                                    id = 1,
-                                    latitude = 53.3677,
-                                    longitude = 42.141656,
-                                    accuracy = 10.0,
+                    report =
+                        xyz.malkki.neostumbler.core.report.Report(
+                            id = 1,
+                            timestamp = Instant.now(),
+                            uploaded = false,
+                            uploadTimestamp = null,
+                            position =
+                                ReportPosition(
+                                    position =
+                                        Position(
+                                            latitude = 53.3677,
+                                            longitude = 42.141656,
+                                            accuracy = 10.0,
+                                            altitude = null,
+                                            altitudeAccuracy = null,
+                                            heading = null,
+                                            pressure = null,
+                                            speed = null,
+                                            source = Position.Source.GPS,
+                                        ),
                                     age = 1000,
-                                    altitude = null,
-                                    altitudeAccuracy = null,
-                                    heading = null,
-                                    pressure = null,
-                                    speed = null,
-                                    source = "gps",
-                                    reportId = 1,
                                 ),
-                            wifiAccessPointEntities = emptyList(),
-                            cellTowerEntities =
+                            wifiAccessPoints = emptyList(),
+                            cellTowers =
                                 listOf(
-                                    CellTowerEntity(
+                                    ReportEmitter(
                                         id = 1,
-                                        radioType = "lte",
-                                        mobileCountryCode = "1",
-                                        mobileNetworkCode = "1",
-                                        cellId = 321,
-                                        locationAreaCode = 555,
-                                        asu = null,
-                                        primaryScramblingCode = null,
-                                        serving = null,
-                                        signalStrength = null,
-                                        timingAdvance = null,
-                                        arfcn = null,
+                                        emitter =
+                                            CellTower(
+                                                radioType = CellTower.RadioType.LTE,
+                                                mobileCountryCode = "1",
+                                                mobileNetworkCode = "1",
+                                                cellId = 321,
+                                                locationAreaCode = 555,
+                                                asu = null,
+                                                primaryScramblingCode = null,
+                                                serving = null,
+                                                signalStrength = null,
+                                                timingAdvance = null,
+                                                arfcn = null,
+                                            ),
                                         age = 1000,
-                                        reportId = 1,
                                     )
                                 ),
-                            bluetoothBeaconEntities = emptyList(),
+                            bluetoothBeacons = emptyList(),
                         ),
                     modifier = Modifier.size(300.dp),
                 )

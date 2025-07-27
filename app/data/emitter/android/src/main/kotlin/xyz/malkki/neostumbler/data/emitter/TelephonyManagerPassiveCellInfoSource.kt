@@ -5,8 +5,9 @@ import android.content.Context
 import android.telephony.TelephonyManager
 import androidx.annotation.RequiresPermission
 import androidx.core.content.getSystemService
-import xyz.malkki.neostumbler.core.CellTower
-import xyz.malkki.neostumbler.core.CellTower.Companion.fillMissingData
+import xyz.malkki.neostumbler.core.emitter.CellTower
+import xyz.malkki.neostumbler.core.emitter.CellTower.Companion.fillMissingData
+import xyz.malkki.neostumbler.core.observation.EmitterObservation
 import xyz.malkki.neostumbler.data.emitter.mapper.toCellTower
 
 class TelephonyManagerPassiveCellInfoSource(private val telephonyManager: TelephonyManager) :
@@ -21,7 +22,7 @@ class TelephonyManagerPassiveCellInfoSource(private val telephonyManager: Teleph
                 Manifest.permission.READ_PHONE_STATE,
             ]
     )
-    override fun getCellTowers(): List<CellTower> {
+    override fun getCellTowers(): List<EmitterObservation<CellTower, String>> {
         val serviceState = telephonyManager.serviceState
 
         return telephonyManager.allCellInfo

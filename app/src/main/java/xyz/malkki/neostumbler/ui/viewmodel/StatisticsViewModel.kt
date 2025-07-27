@@ -8,22 +8,17 @@ import com.patrykandpatrick.vico.core.common.data.ExtraStore
 import java.time.LocalDate
 import java.util.SortedMap
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import xyz.malkki.neostumbler.db.ReportDatabaseManager
-import xyz.malkki.neostumbler.db.dao.StatisticsDao
-import xyz.malkki.neostumbler.ui.viewmodel.StatisticsViewModel.DataType
+import xyz.malkki.neostumbler.data.reports.ReportStatisticsProvider
 
-class StatisticsViewModel(reportDatabaseManager: ReportDatabaseManager) : ViewModel() {
+class StatisticsViewModel(reportStatisticsProvider: ReportStatisticsProvider) : ViewModel() {
     enum class DataType {
         WIFIS,
         CELLS,
@@ -40,9 +35,6 @@ class StatisticsViewModel(reportDatabaseManager: ReportDatabaseManager) : ViewMo
         val MAX_Y_VALUE_KEY = ExtraStore.Key<Long>()
     }
 
-    private val statisticsDao: Flow<StatisticsDao> =
-        reportDatabaseManager.reportDb.mapLatest { it.statisticsDao() }
-
     private val _selectedDataType = MutableStateFlow(DataType.WIFIS)
     val selectedDataType: StateFlow<DataType>
         get() = _selectedDataType.asStateFlow()
@@ -55,15 +47,13 @@ class StatisticsViewModel(reportDatabaseManager: ReportDatabaseManager) : ViewMo
 
     init {
         viewModelScope.launch(Dispatchers.Default) {
-            val dataTypeFlow = _selectedDataType.onEach { _loading.value = State.LOADING }
-
-            statisticsDao
-                .combine(dataTypeFlow) { a, b -> a to b }
-                .flatMapLatest { (dao, dataType) ->
+            _selectedDataType
+                .onEach { _loading.value = State.LOADING }
+                .flatMapLatest { dataType ->
                     when (dataType) {
-                        DataType.WIFIS -> dao.newWifisPerDay()
-                        DataType.CELLS -> dao.newCellsPerDay()
-                        DataType.BEACONS -> dao.newBeaconsPerDay()
+                        DataType.WIFIS -> reportStatisticsProvider.getNewWifisPerDay()
+                        DataType.CELLS -> reportStatisticsProvider.getNewCellsPerDay()
+                        DataType.BEACONS -> reportStatisticsProvider.getNewBluetoothsPerDay()
                     }
                 }
                 .map { cumulativeSum(it.toSortedMap()).map { it.key.toEpochDay() to it.value } }

@@ -1,12 +1,9 @@
 plugins {
     id("convention.android-app")
-    alias(libs.plugins.ksp)
     alias(libs.plugins.kotlinCompose)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.bundletool)
 }
-
-private val DB_SCHEMAS_DIR = "$projectDir/schemas"
 
 bundletool {
     signingConfig {
@@ -15,11 +12,6 @@ bundletool {
         keyAlias = System.getenv("SIGNING_KEY_ALIAS")
         keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
     }
-}
-
-ksp {
-    arg("room.schemaLocation", DB_SCHEMAS_DIR)
-    arg("room.incremental", "true")
 }
 
 android {
@@ -77,8 +69,6 @@ android {
             "\"" + androidResources.localeFilters.joinToString(",") + "\"",
         )
     }
-
-    sourceSets { getByName("androidTest") { assets { srcDir(files(DB_SCHEMAS_DIR)) } } }
 
     androidResources { generateLocaleConfig = true }
 
@@ -196,6 +186,8 @@ dependencies {
 
     implementation(project(":app:data:settings:android-datastore"))
 
+    implementation(project(":app:data:reports:room"))
+
     implementation(platform(libs.koinBom))
     implementation(libs.koinCore)
     implementation(libs.koinAndroid)
@@ -249,13 +241,6 @@ dependencies {
     "fullImplementation"(libs.playservices.location)
 
     implementation(libs.androidx.datastore.preferences)
-
-    implementation(libs.androidx.roomRuntime)
-    annotationProcessor(libs.androidx.roomCompiler)
-    ksp(libs.androidx.roomCompiler)
-    implementation(libs.androidx.roomKtx)
-    implementation(libs.androidx.roomPaging)
-    androidTestImplementation(libs.androidx.roomTesting)
 
     implementation(libs.androidx.workRuntime)
     implementation(libs.androidx.workRuntimeKtx)

@@ -1,79 +1,80 @@
 package xyz.malkki.neostumbler.ichnaea.mapper
 
-import xyz.malkki.neostumbler.db.entities.BluetoothBeaconEntity
-import xyz.malkki.neostumbler.db.entities.CellTowerEntity
-import xyz.malkki.neostumbler.db.entities.PositionEntity
-import xyz.malkki.neostumbler.db.entities.WifiAccessPointEntity
+import xyz.malkki.neostumbler.core.MacAddress
+import xyz.malkki.neostumbler.core.Position
+import xyz.malkki.neostumbler.core.emitter.BluetoothBeacon
+import xyz.malkki.neostumbler.core.emitter.CellTower
+import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
+import xyz.malkki.neostumbler.core.report.ReportEmitter
+import xyz.malkki.neostumbler.core.report.ReportPosition
 import xyz.malkki.neostumbler.ichnaea.dto.BluetoothBeaconDto
 import xyz.malkki.neostumbler.ichnaea.dto.CellTowerDto
 import xyz.malkki.neostumbler.ichnaea.dto.ReportDto.PositionDto
 import xyz.malkki.neostumbler.ichnaea.dto.WifiAccessPointDto
 
-fun BluetoothBeaconEntity.toDto(): BluetoothBeaconDto {
+fun ReportEmitter<BluetoothBeacon, MacAddress>.toDto(): BluetoothBeaconDto {
     return BluetoothBeaconDto(
-        macAddress = macAddress,
-        name = name,
-        beaconType = beaconType,
-        id1 = id1,
-        id2 = id2,
-        id3 = id3,
+        macAddress = emitter.macAddress.value,
+        name = null,
+        beaconType = emitter.beaconType,
+        id1 = emitter.id1,
+        id2 = emitter.id2,
+        id3 = emitter.id3,
+        signalStrength = emitter.signalStrength,
         age = age,
-        signalStrength = signalStrength,
     )
 }
 
-fun CellTowerEntity.toDto(): CellTowerDto {
+fun ReportEmitter<CellTower, String>.toDto(): CellTowerDto {
     return CellTowerDto(
-        radioType = radioType,
-        mobileCountryCode = mobileCountryCode?.toIntOrNull(),
-        mobileCountryCodeStr = mobileCountryCode,
-        mobileNetworkCode = mobileNetworkCode?.toIntOrNull(),
-        mobileNetworkCodeStr = mobileNetworkCode,
-        locationAreaCode = locationAreaCode,
-        cellId = cellId,
+        radioType = emitter.radioType.name.lowercase(),
+        mobileCountryCode = emitter.mobileCountryCode?.toIntOrNull(),
+        mobileCountryCodeStr = emitter.mobileCountryCode,
+        mobileNetworkCode = emitter.mobileNetworkCode?.toIntOrNull(),
+        mobileNetworkCodeStr = emitter.mobileNetworkCode,
+        locationAreaCode = emitter.locationAreaCode,
+        cellId = emitter.cellId,
+        asu = emitter.asu,
+        primaryScramblingCode = emitter.primaryScramblingCode,
+        serving = emitter.serving,
+        signalStrength = emitter.signalStrength,
+        timingAdvance = emitter.timingAdvance,
+        arfcn = emitter.arfcn,
         age = age,
-        asu = asu,
-        primaryScramblingCode = primaryScramblingCode,
-        serving = serving,
-        signalStrength = signalStrength,
-        timingAdvance = timingAdvance,
-        arfcn = arfcn,
     )
 }
 
-fun WifiAccessPointEntity.toDto(): WifiAccessPointDto {
+fun ReportEmitter<WifiAccessPoint, MacAddress>.toDto(): WifiAccessPointDto {
     return WifiAccessPointDto(
-        macAddress = macAddress,
-        radioType = radioType,
+        macAddress = emitter.macAddress.value,
+        radioType = emitter.radioType?.to802String(),
+        ssid = emitter.ssid,
+        channel = emitter.channel,
+        frequency = emitter.frequency,
+        signalStrength = emitter.signalStrength,
+        signalToNoiseRatio = null,
         age = age,
-        channel = channel,
-        frequency = frequency,
-        signalStrength = signalStrength,
-        signalToNoiseRatio = signalToNoiseRatio,
-        ssid = ssid,
     )
 }
 
-fun PositionEntity.toDto(): PositionDto {
-    // Ichnaea Geosubmit officially only supports these sources
-    // https://ichnaea.readthedocs.io/en/latest/api/geosubmit2.html#position-fields
-    val source =
-        if (source == "gps") {
-            "gps"
-        } else {
-            "fused"
-        }
-
+fun ReportPosition.toDto(): PositionDto {
     return PositionDto(
-        latitude = latitude,
-        longitude = longitude,
-        accuracy = accuracy?.takeUnless { it.isNaN() },
+        latitude = position.latitude,
+        longitude = position.longitude,
+        accuracy = position.accuracy?.takeUnless { it.isNaN() },
         age = age,
-        altitude = altitude?.takeUnless { it.isNaN() },
-        altitudeAccuracy = altitudeAccuracy?.takeUnless { it.isNaN() },
-        heading = heading?.takeUnless { it.isNaN() },
-        pressure = pressure?.takeUnless { it.isNaN() },
-        speed = speed?.takeUnless { it.isNaN() },
-        source = source,
+        altitude = position.altitude?.takeUnless { it.isNaN() },
+        altitudeAccuracy = position.altitudeAccuracy?.takeUnless { it.isNaN() },
+        heading = position.heading?.takeUnless { it.isNaN() },
+        pressure = position.pressure?.takeUnless { it.isNaN() },
+        speed = position.speed?.takeUnless { it.isNaN() },
+        // Ichnaea Geosubmit officially only supports these sources
+        // https://ichnaea.readthedocs.io/en/latest/api/geosubmit2.html#position-fields
+        source =
+            if (position.source == Position.Source.GPS) {
+                "gps"
+            } else {
+                "fused"
+            },
     )
 }
