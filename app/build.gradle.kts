@@ -149,7 +149,7 @@ android {
         }
     }
 
-    lint { lintConfig = file("app/lint.xml") }
+    lint { lintConfig = projectDir.resolve("lint.xml") }
 }
 
 tasks.register("printVersionName") {
