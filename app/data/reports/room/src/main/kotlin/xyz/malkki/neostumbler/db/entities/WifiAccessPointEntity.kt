@@ -30,7 +30,6 @@ internal data class WifiAccessPointEntity(
     val channel: Int?,
     val frequency: Int?,
     val signalStrength: Int?,
-    val signalToNoiseRatio: Int?,
     val ssid: String?,
     @ColumnInfo(index = true) val reportId: Long?,
 ) {
@@ -59,7 +58,6 @@ internal data class WifiAccessPointEntity(
                 channel = wifiAccessPoint.channel,
                 frequency = wifiAccessPoint.frequency,
                 signalStrength = wifiAccessPoint.signalStrength,
-                signalToNoiseRatio = null,
                 ssid = wifiAccessPoint.ssid,
                 reportId = reportId,
             )

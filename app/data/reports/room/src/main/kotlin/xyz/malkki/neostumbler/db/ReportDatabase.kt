@@ -16,12 +16,13 @@ import xyz.malkki.neostumbler.db.entities.CellTowerEntity
 import xyz.malkki.neostumbler.db.entities.PositionEntity
 import xyz.malkki.neostumbler.db.entities.Report
 import xyz.malkki.neostumbler.db.entities.WifiAccessPointEntity
+import xyz.malkki.neostumbler.db.migrations.DropUnusedColumns
 import xyz.malkki.neostumbler.db.migrations.RenamePositionToPositionEntity
 import xyz.malkki.neostumbler.db.migrations.RenameTablesToEntities
 import xyz.malkki.neostumbler.roomconverters.InstantConverters
 import xyz.malkki.neostumbler.roomconverters.LocalDateConverters
 
-internal const val REPORT_DB_VERSION = 9
+internal const val REPORT_DB_VERSION = 10
 
 @Database(
     exportSchema = true,
@@ -44,6 +45,7 @@ internal const val REPORT_DB_VERSION = 9
             AutoMigration(from = 6, to = 7),
             AutoMigration(from = 7, to = 8, spec = RenamePositionToPositionEntity::class),
             AutoMigration(from = 8, to = 9),
+            AutoMigration(from = 9, to = 10, spec = DropUnusedColumns::class),
         ],
 )
 @TypeConverters(InstantConverters::class, LocalDateConverters::class)
