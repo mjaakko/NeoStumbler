@@ -11,7 +11,7 @@
     </plurals>
     <string name="toast_reports_upload_failed_no_endpoint">העלאת דיווחים נכשלה, בגלל שלא הוגדרה נקודת קצה</string>
     <string name="yes">כן</string>
-    <string name="unknown_cell_id">מזהה סלולרי לא מוכר</string>
+    <string name="unknown_cell_id">מזהה אנטנה לא מוכר</string>
     <string name="save">שמירה</string>
     <string name="cancel">ביטול</string>
     <string name="use">שימוש</string>
@@ -43,24 +43,24 @@
     <string name="scanning_status_not_active">הסריקה <annotation style="status">לא פעילה</annotation></string>
     <string name="stop_scanning">הפסקת הסריקה</string>
     <string name="toast_reports_upload_failed">העלאת דיווחים נכשלה</string>
-    <string name="altitude_metres">גובה: %s מ\'</string>
-    <string name="speed_metres_per_second">מהירות: %s מ\'\\ש\'</string>
-    <string name="signal_strength_dbm">עוצמת אות:%d dBm</string>
+    <string name="altitude_metres">גובה: %s מ׳</string>
+    <string name="speed_metres_per_second">מהירות: %s מ׳ לשנ׳</string>
+    <string name="signal_strength_dbm">עוצמת אות: ‎%d dBm</string>
     <string name="mcc">MCC: %s</string>
     <string name="mnc">MNC: %s</string>
-    <string name="beacon_type">סוג משואה:%s</string>
-    <string name="radio_type">סוג:%s</string>
-    <string name="satellites_in_use">%1$d⁄%2$d לווינים בשימוש</string>
+    <string name="beacon_type">סוג משואה: %s</string>
+    <string name="radio_type">סוג: %s</string>
+    <string name="satellites_in_use">%1$d⁄%2$d לוויינים בשימוש</string>
     <string name="ignore_battery_optimizations_title">התעלמות ממיטוב סוללה</string>
-    <string name="battery_optimizations_not_disabled_warning">מיטוב סוללה לא כובה</string>
-    <string name="send_reports_automatically_title">שליחת דיווחים באופן אוטומטי</string>
+    <string name="battery_optimizations_not_disabled_warning">מיטוב סוללה לא הושבת</string>
+    <string name="send_reports_automatically_title">לשלוח דיווחים אוטומטית</string>
     <string name="send_reports_automatically_never">לעולם לא</string>
     <string name="send_reports_automatically_on_any_network">בכל רשת</string>
     <string name="send_reports_automatically_on_unmetered_network">ברשת לא מדודה</string>
-    <string name="export_data">ייצוא מידע</string>
-    <string name="export_no_file_chosen">לא ניתן לייצא מידע, בגלל שלא נוצר קובץ</string>
-    <string name="export_started">מידע מיוצא מ%1$s ל%2$s</string>
-    <string name="export_csv">ייצוא כCSV</string>
+    <string name="export_data">ייצוא נתונים</string>
+    <string name="export_no_file_chosen">לא ניתן לייצא נתונים, כיוון שלא נוצר קובץ</string>
+    <string name="export_started">נתונים מיוצאים מ־%1$s ל־%2$s</string>
+    <string name="export_csv">ייצוא כ־CSV</string>
     <string name="export_raw_database">ייצוא מסד נתונים גולמי</string>
     <string name="export_raw_database_compress">דחיסת קובץ מסד הנתונים</string>
     <string name="import_raw_database">ייבוא מסד נתונים גולמי</string>
@@ -78,9 +78,9 @@
     <string name="mls_warning_title">שירות המיקום של Mozilla נסגר</string>
     <string name="endpoint">נקודת קצה</string>
     <string name="api_key">מפתח API (אופציונלי)</string>
-    <string name="ignore_battery_optimizations_description">לתוצאות הכי טובות, מוטב סוללה צריך להיות כבוי. סריקה אלחוטית וגישת מיקום מאוד מוגבלות כשמיטוב סוללה פעיל והמסך כבוי</string>
+    <string name="ignore_battery_optimizations_description">לתוצאות הכי טובות, מיטוב סוללה צריך להיות כבוי. סריקה אלחוטית וגישת מיקום מאוד מוגבלות כשמיטוב סוללה פעיל והמסך כבוי</string>
     <string name="export_notification_channel_name">ייצוא נתונים</string>
-    <string name="notification_exporting_data">מייצא נתונים…</string>
+    <string name="notification_exporting_data">נתונים מיוצאים…</string>
     <string name="import_data">ייבוא נתונים</string>
     <string name="submission_path">כתובת לשליחת נתונים</string>
     <string name="locate_path">כתובת לאיתור מיקום</string>
@@ -165,14 +165,14 @@
     <string name="ok">בסדר</string>
     <string name="no_thanks">לא תודה</string>
     <string name="reset">איפוס</string>
-    <string name="beacon_id">מזהה %d:%s</string>
+    <string name="beacon_id">מזהה %d‏: %s</string>
     <plurals name="reports_created">
-        <item quantity="one">דיווח %d נוצר</item>
-        <item quantity="two">%d דיווחים נוצרו</item>
-        <item quantity="other">%d דיווחים נוצרו</item>
+        <item quantity="one">נוצר דיווח</item>
+        <item quantity="two">נוצרו שני דיווחים</item>
+        <item quantity="other">נוצרו %d דיווחים</item>
     </plurals>
     <string name="suggested_service_terms_of_use">תנאי שימוש</string>
-    <string name="notification_sending_reports">שולח דיווחים</string>
+    <string name="notification_sending_reports">דיווחים נשלחים</string>
     <string name="coverage_layer_tile_json_url">כתובת JSON של אריח לשכבת כיסוי למפה</string>
     <string name="passive_scanning_title">איסוף נתונים פאסיבי</string>
     <string name="notification_wireless_scanning_title">סריקה אלחוטית פעילה</string>
@@ -202,4 +202,8 @@
     <string name="moving_device_filter_title">סינון מכשירים בתנועה</string>
     <string name="text_copied_to_clipboard">הטקסט הועתק ללוח!</string>
     <string name="crash_log_title">יומן קריסה</string>
+    <string name="distance_to_estimated_location">מרחק מהמקום המשוערך: %d מ׳</string>
+    <string name="map_tile_source_custom_title">מותאם אישית</string>
+    <string name="map_tile_source_custom_style_url">כתובת סגנון מפה מותאם אישית</string>
+    <string name="map_show_coverage_layer">הצגת שכבת כיסוי</string>
 </resources>
