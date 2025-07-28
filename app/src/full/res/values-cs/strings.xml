@@ -6,4 +6,5 @@
     <string name="permission_rationale_background_location_autoscan">Automatické skenování při pohybu potřebuje povolení přístupu k poloze v pozadí</string>
     <string name="permission_rationale_activity_recognition">Automatické skenování při pohybu potřebuje povolení přístupu k aktivitě</string>
     <string name="prefer_fused_location_description">Spojená poloha kombinuje informace ze zdrojů jiných než GPS k určení polohy</string>
+    <string name="autoscan_failed_to_enable_description">Automatické skenování při pohybu používá Služby Google Play pro rozeznání pohybu, které nemusí být na vašem zařízení dostupné</string>
 </resources>
