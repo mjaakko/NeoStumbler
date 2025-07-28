@@ -202,4 +202,8 @@
     <string name="moving_device_filter_title">סינון מכשירים בתנועה</string>
     <string name="text_copied_to_clipboard">הטקסט הועתק ללוח!</string>
     <string name="crash_log_title">יומן קריסה</string>
+    <string name="distance_to_estimated_location">מרחק מהמיקום המוערך:%d מ\'</string>
+    <string name="map_tile_source_custom_title">מותאם אישית</string>
+    <string name="map_tile_source_custom_style_url">URL של סטייל מפה מותאם אישית</string>
+    <string name="map_show_coverage_layer">הצגת שכבת כיסוי</string>
 </resources>
