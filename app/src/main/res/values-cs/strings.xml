@@ -202,4 +202,8 @@
     <string name="moving_device_filter_description">Pohybující se sítě Wi-Fi a Bluetooth majáky jsou automaticky detekovány a filtrovány z reportů</string>
     <string name="moving_device_filter_title">Filtrovat pohybující zařízení</string>
     <string name="crash_log_entry_title">Chyba #%d</string>
+    <string name="distance_to_estimated_location">Vzdálenost k odhadované poloze: %d m</string>
+    <string name="map_tile_source_custom_title">Vlastní</string>
+    <string name="map_tile_source_custom_style_url">URL vlastního stylu mapy</string>
+    <string name="map_show_coverage_layer">Zobrazit vrstvu pokrytí</string>
 </resources>
