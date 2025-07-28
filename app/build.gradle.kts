@@ -128,8 +128,13 @@ android {
 
     packaging {
         resources {
+            // Licenses
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
-            // We don"t use these codec - they are probably pulled in with some library
+            excludes += "/META-INF/**/LICENSE.txt"
+            // OSGI and GraalVM metadata not needed on Android
+            excludes += "/META-INF/**/OSGI-INF/*"
+            excludes += "/META-INF/native-image/**/*"
+            // We don"t use these codecs for anything
             excludes += "**/apache/**/codec/**/*"
             // No need for beacon distance models used by Android Beacon Library
             excludes += "**/model-distance-calculations.json"
