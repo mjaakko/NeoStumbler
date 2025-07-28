@@ -41,6 +41,6 @@ jobs:
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
       - name: Build project
         # Gradle build cache does not work with CodeQL
-        run: ./gradlew assembleDebug --no-build-cache
+        run: ./gradlew assembleAll --no-build-cache
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3

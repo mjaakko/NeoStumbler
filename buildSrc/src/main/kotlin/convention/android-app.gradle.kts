@@ -28,3 +28,31 @@ android {
         targetSdk = 36
     }
 }
+
+tasks.register("lintAll") {
+    dependsOn(
+        project.android.productFlavors
+            .map { productFlavor -> productFlavor.name.replaceFirstChar { it.uppercase() } }
+            .map { flavorName -> tasks.named("lint${flavorName}Debug") }
+    )
+}
+
+tasks.register("assembleAll") {
+    dependsOn(
+        tasks.named("assembleDebug"),
+        tasks.named("assembleAndroidTest"),
+        project.android.productFlavors
+            .map { productFlavor -> productFlavor.name.replaceFirstChar { it.uppercase() } }
+            .map { flavorName -> tasks.named("assemble${flavorName}DebugUnitTest") },
+    )
+}
+
+tasks.register("unitTest") {
+    dependsOn(
+        project.android.productFlavors
+            .map { productFlavor -> productFlavor.name.replaceFirstChar { it.uppercase() } }
+            .map { flavorName -> tasks.named("test${flavorName}DebugUnitTest") }
+    )
+}
+
+tasks.register("androidTest") { dependsOn(tasks.named("connectedAndroidTest")) }

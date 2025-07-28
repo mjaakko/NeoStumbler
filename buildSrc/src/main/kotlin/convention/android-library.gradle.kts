@@ -19,3 +19,17 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 }
+
+tasks.register("lintAll") { dependsOn(tasks.named("lintDebug")) }
+
+tasks.register("assembleAll") {
+    dependsOn(
+        tasks.named("assembleDebug"),
+        tasks.named("assembleAndroidTest"),
+        tasks.named("assembleDebugUnitTest"),
+    )
+}
+
+tasks.register("unitTest") { dependsOn(tasks.named("testDebugUnitTest")) }
+
+tasks.register("androidTest") { dependsOn(tasks.named("connectedAndroidTest")) }
