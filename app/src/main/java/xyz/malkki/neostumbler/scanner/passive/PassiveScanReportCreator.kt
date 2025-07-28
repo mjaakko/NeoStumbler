@@ -1,19 +1,16 @@
 package xyz.malkki.neostumbler.scanner.passive
 
 import android.Manifest
-import android.annotation.SuppressLint
-import android.content.Context
-import android.net.wifi.WifiManager
-import android.telephony.SubscriptionManager
-import android.telephony.TelephonyManager
 import androidx.annotation.RequiresPermission
-import androidx.core.content.getSystemService
-import xyz.malkki.neostumbler.domain.CellTower
-import xyz.malkki.neostumbler.domain.CellTower.Companion.fillMissingData
-import xyz.malkki.neostumbler.domain.LatLng
-import xyz.malkki.neostumbler.domain.Position
-import xyz.malkki.neostumbler.domain.WifiAccessPoint
-import xyz.malkki.neostumbler.scanner.ScanReportSaver
+import xyz.malkki.neostumbler.core.MacAddress
+import xyz.malkki.neostumbler.core.emitter.CellTower
+import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
+import xyz.malkki.neostumbler.core.observation.EmitterObservation
+import xyz.malkki.neostumbler.core.observation.PositionObservation
+import xyz.malkki.neostumbler.data.emitter.PassiveCellTowerSource
+import xyz.malkki.neostumbler.data.emitter.PassiveWifiAccessPointSource
+import xyz.malkki.neostumbler.data.reports.ReportSaver
+import xyz.malkki.neostumbler.geography.LatLng
 import xyz.malkki.neostumbler.scanner.ScannerService
 import xyz.malkki.neostumbler.scanner.ScanningConstants
 import xyz.malkki.neostumbler.scanner.createReports
@@ -26,18 +23,12 @@ import xyz.malkki.neostumbler.scanner.postprocess.ReportPostProcessor
 private const val MIN_DISTANCE_FROM_LAST_LOCATION = 50
 
 class PassiveScanReportCreator(
-    context: Context,
+    private val passiveWifiAccessPointSource: PassiveWifiAccessPointSource,
+    private val passiveCellTowerSource: PassiveCellTowerSource,
     private val passiveScanStateManager: PassiveScanStateManager,
-    private val scanReportSaver: ScanReportSaver,
+    private val reportSaver: ReportSaver,
     private val postProcessors: List<ReportPostProcessor>,
 ) {
-    private val appContext = context.applicationContext
-
-    private val wifiManager = appContext.getSystemService<WifiManager>()!!
-
-    private val subscriptionManager = appContext.getSystemService<SubscriptionManager>()!!
-    private val telephonyManager = appContext.getSystemService<TelephonyManager>()!!
-
     @RequiresPermission(
         allOf =
             [
@@ -46,7 +37,7 @@ class PassiveScanReportCreator(
                 Manifest.permission.READ_PHONE_STATE,
             ]
     )
-    suspend fun createPassiveScanReport(positions: List<Position>) {
+    suspend fun createPassiveScanReport(positions: List<PositionObservation>) {
         if (ScannerService.serviceRunning.value) {
             // If the active scanning service is running, we don't need to create passive reports
             return
@@ -54,7 +45,8 @@ class PassiveScanReportCreator(
 
         val filteredPositions =
             positions.filter {
-                it.accuracy != null && it.accuracy <= ScanningConstants.LOCATION_MAX_ACCURACY_METERS
+                it.position.accuracy != null &&
+                    it.position.accuracy!! <= ScanningConstants.LOCATION_MAX_ACCURACY_METERS
             }
 
         if (filteredPositions.isEmpty()) {
@@ -65,7 +57,7 @@ class PassiveScanReportCreator(
         if (
             lastLocation != null &&
                 filteredPositions.none {
-                    LatLng(it.latitude, it.longitude).distanceTo(lastLocation) >
+                    LatLng(it.position.latitude, it.position.longitude).distanceTo(lastLocation) >
                         MIN_DISTANCE_FROM_LAST_LOCATION
                 }
         ) {
@@ -94,42 +86,31 @@ class PassiveScanReportCreator(
 
         reports
             .maxByOrNull { it.position.timestamp }
-            ?.let { passiveScanStateManager.updateLastReportLocation(it.position.latLng) }
+            ?.let { passiveScanStateManager.updateLastReportLocation(it.position.position.latLng) }
 
-        reports.forEach { reportData -> scanReportSaver.saveReport(reportData) }
+        reports.forEach { reportData -> reportSaver.createReport(reportData) }
     }
 
     @RequiresPermission(
         allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_WIFI_STATE]
     )
-    private suspend fun getWifiAccessPoints(): List<WifiAccessPoint> {
+    private suspend fun getWifiAccessPoints():
+        List<EmitterObservation<WifiAccessPoint, MacAddress>> {
         val maxTimestamp = passiveScanStateManager.getMaxWifiTimestamp()
 
-        return wifiManager.scanResults
-            .map { WifiAccessPoint.fromScanResult(it) }
-            .filter { maxTimestamp == null || it.timestamp > maxTimestamp }
+        return passiveWifiAccessPointSource.getWifiAccessPoints().filter {
+            maxTimestamp == null || it.timestamp > maxTimestamp
+        }
     }
 
     @RequiresPermission(
         allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_PHONE_STATE]
     )
-    private suspend fun getCellTowers(): List<CellTower> {
-        val telephonyManagers =
-            subscriptionManager.activeSubscriptionInfoList?.map {
-                telephonyManager.createForSubscriptionId(it.subscriptionId)
-            } ?: emptyList()
-
+    private suspend fun getCellTowers(): List<EmitterObservation<CellTower, String>> {
         val maxTimestamp = passiveScanStateManager.getMaxCellTimestamp()
 
-        return telephonyManagers
-            .flatMap {
-                @SuppressLint("MissingPermission") val serviceState = it.serviceState
-
-                it.allCellInfo
-                    .mapNotNull { cellInfo -> CellTower.fromCellInfo(cellInfo) }
-                    .fillMissingData(serviceState?.operatorNumeric)
-                    .filter { it.hasEnoughData() }
-            }
-            .filter { maxTimestamp == null || it.timestamp > maxTimestamp }
+        return passiveCellTowerSource.getCellTowers().filter {
+            maxTimestamp == null || it.timestamp > maxTimestamp
+        }
     }
 }

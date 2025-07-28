@@ -24,7 +24,7 @@ import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import timber.log.Timber
-import xyz.malkki.neostumbler.db.ReportDatabaseManager
+import xyz.malkki.neostumbler.data.reports.ReportProvider
 import xyz.malkki.neostumbler.scanner.ScannerService
 
 class LocationReceiver : BroadcastReceiver(), KoinComponent {
@@ -73,7 +73,7 @@ class LocationReceiver : BroadcastReceiver(), KoinComponent {
         }
     }
 
-    private val reportDatabaseManager: ReportDatabaseManager by inject()
+    private val reportProvider: ReportProvider by inject()
 
     override fun onReceive(context: Context, intent: Intent) {
         if (LocationAvailability.hasLocationAvailability(intent)) {
@@ -98,11 +98,9 @@ class LocationReceiver : BroadcastReceiver(), KoinComponent {
 
     @SuppressLint("MissingPermission")
     private fun tryStartAutoscan(context: Context, currentLocation: Location) {
-        val reportDao = reportDatabaseManager.reportDb.value.reportDao()
-
         val reportMinTimestamp = Instant.now().minus(Duration.ofDays(30))
         Timber.d("Querying reports newer than $reportMinTimestamp")
-        val reports = runBlocking { reportDao.getReportsNewerThan(reportMinTimestamp) }
+        val reports = runBlocking { reportProvider.getReportsNewerThan(reportMinTimestamp) }
 
         val reportsNearCurrentLocation =
             reports.count { report ->

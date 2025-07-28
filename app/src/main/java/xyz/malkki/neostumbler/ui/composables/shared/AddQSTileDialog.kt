@@ -13,7 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.getSystemService
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.utils.ImmediateExecutor
+import xyz.malkki.neostumbler.executors.ImmediateExecutor
 
 /**
  * Shows a dialog which prompts to add a quick settings tile

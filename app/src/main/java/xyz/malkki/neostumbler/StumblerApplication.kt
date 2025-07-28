@@ -36,16 +36,30 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import timber.log.Timber
-import xyz.malkki.neostumbler.beacons.IBeaconParser
-import xyz.malkki.neostumbler.beacons.StubDistanceCalculator
+import xyz.malkki.neostumbler.beaconlibrary.IBeaconParser
+import xyz.malkki.neostumbler.beaconlibrary.StubDistanceCalculator
 import xyz.malkki.neostumbler.crashlog.CrashLogManager
 import xyz.malkki.neostumbler.crashlog.FileCrashLogManager
+import xyz.malkki.neostumbler.data.reports.RawReportImportExport
+import xyz.malkki.neostumbler.data.reports.ReportExportProvider
+import xyz.malkki.neostumbler.data.reports.ReportProvider
+import xyz.malkki.neostumbler.data.reports.ReportRemover
+import xyz.malkki.neostumbler.data.reports.ReportSaver
+import xyz.malkki.neostumbler.data.reports.ReportStatisticsProvider
+import xyz.malkki.neostumbler.data.reports.ReportStorageMetadataProvider
+import xyz.malkki.neostumbler.data.settings.DataStoreSettings
 import xyz.malkki.neostumbler.db.DbPruneWorker
 import xyz.malkki.neostumbler.db.ReportDatabaseManager
+import xyz.malkki.neostumbler.db.RoomRawReportImportExport
+import xyz.malkki.neostumbler.db.RoomReportExportProvider
+import xyz.malkki.neostumbler.db.RoomReportProvider
+import xyz.malkki.neostumbler.db.RoomReportRemover
+import xyz.malkki.neostumbler.db.RoomReportSaver
+import xyz.malkki.neostumbler.db.RoomReportStatisticsProvider
+import xyz.malkki.neostumbler.db.RoomReportStorageMetadataProvider
 import xyz.malkki.neostumbler.export.CsvExporter
 import xyz.malkki.neostumbler.http.getCallFactory
 import xyz.malkki.neostumbler.location.locationModule
-import xyz.malkki.neostumbler.scanner.ScanReportSaver
 import xyz.malkki.neostumbler.scanner.passive.passiveScanningModule
 import xyz.malkki.neostumbler.scanner.postprocess.postProcessorsModule
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
@@ -90,15 +104,29 @@ class StumblerApplication : Application() {
 
             modules(module { single<CrashLogManager> { FileCrashLogManager(crashLogDirectory) } })
 
-            modules(module { single { ReportDatabaseManager(get()) } })
-
             modules(
                 module {
-                    factory { CsvExporter(get(), get()) }
+                    single { ReportDatabaseManager(get()) }
 
-                    single { ScanReportSaver(get()) }
+                    single<ReportStorageMetadataProvider> {
+                        RoomReportStorageMetadataProvider(get())
+                    }
+
+                    single<RawReportImportExport> { RoomRawReportImportExport(get(), get()) }
+
+                    single<ReportStatisticsProvider> { RoomReportStatisticsProvider(get()) }
+
+                    single<ReportProvider> { RoomReportProvider(get()) }
+
+                    single<ReportSaver> { RoomReportSaver(get()) }
+
+                    single<ReportRemover> { RoomReportRemover(get()) }
+
+                    single<ReportExportProvider> { RoomReportExportProvider(get()) }
                 }
             )
+
+            modules(module { factory { CsvExporter(get(), get()) } })
 
             modules(
                 module {
@@ -123,17 +151,21 @@ class StumblerApplication : Application() {
 
                     single(PREFERENCES) { settingsStore }
 
+                    single<xyz.malkki.neostumbler.data.settings.Settings> {
+                        DataStoreSettings(get(PREFERENCES))
+                    }
+
                     single { OneTimeActionHelper(oneTimeActionsStore) }
                 }
             )
 
             modules(
                 module {
-                    viewModel { MapViewModel(get(), get(PREFERENCES), get(), get(), get()) }
+                    viewModel { MapViewModel(get(), get(), get(), get(), get()) }
 
                     viewModel { StatisticsViewModel(get()) }
 
-                    viewModel { ReportsViewModel(get()) }
+                    viewModel { ReportsViewModel(get(), get()) }
                 }
             )
         }

@@ -38,24 +38,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import java.text.DecimalFormat
-import java.util.Locale
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapLatest
-import okhttp3.internal.toHexString
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.db.ReportDatabaseManager
-import xyz.malkki.neostumbler.db.entities.BluetoothBeaconEntity
-import xyz.malkki.neostumbler.db.entities.CellTowerEntity
-import xyz.malkki.neostumbler.db.entities.ReportWithData
-import xyz.malkki.neostumbler.db.entities.WifiAccessPointEntity
-import xyz.malkki.neostumbler.db.entities.latLng
-import xyz.malkki.neostumbler.domain.LatLng
+import xyz.malkki.neostumbler.core.MacAddress
+import xyz.malkki.neostumbler.core.emitter.BluetoothBeacon
+import xyz.malkki.neostumbler.core.emitter.CellTower
+import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
+import xyz.malkki.neostumbler.core.report.Report
+import xyz.malkki.neostumbler.core.report.ReportEmitter
+import xyz.malkki.neostumbler.data.reports.ReportProvider
 import xyz.malkki.neostumbler.extensions.roundToString
+import xyz.malkki.neostumbler.geography.LatLng
 import xyz.malkki.neostumbler.ui.composables.shared.formattedDate
-
-private fun ReportDatabaseManager.getReport(reportId: Long): Flow<ReportWithData> =
-    reportDb.flatMapLatest { it.reportDao().getReport(reportId) }
 
 private const val WIFIS = 0
 private const val CELLS = 1
@@ -97,12 +91,8 @@ private fun Coordinates(latLng: LatLng) {
 }
 
 @Composable
-private fun ReportDetails(
-    reportId: Long,
-    reportDatabaseManager: ReportDatabaseManager = koinInject(),
-) {
-    val report =
-        reportDatabaseManager.getReport(reportId).collectAsStateWithLifecycle(initialValue = null)
+private fun ReportDetails(reportId: Long, reportProvider: ReportProvider = koinInject()) {
+    val report = reportProvider.getReport(reportId).collectAsStateWithLifecycle(initialValue = null)
 
     if (report.value == null) {
         Box(
@@ -113,15 +103,15 @@ private fun ReportDetails(
         }
     } else {
         Text(
-            text = formattedDate(report.value!!.report.timestamp),
+            text = formattedDate(report.value!!.timestamp),
             style = MaterialTheme.typography.titleLarge,
         )
 
-        ReportMap(modifier = Modifier.padding(top = 8.dp), reportWithData = report.value!!)
+        ReportMap(modifier = Modifier.padding(top = 8.dp), report = report.value!!)
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Coordinates(latLng = report.value!!.positionEntity.latLng)
+        Coordinates(latLng = report.value!!.position.position.latLng)
 
         val decimalFormat = DecimalFormat("#.#")
 
@@ -129,7 +119,7 @@ private fun ReportDetails(
             text =
                 stringResource(
                     R.string.speed_metres_per_second,
-                    decimalFormat.format(report.value!!.positionEntity.speed ?: 0.0),
+                    decimalFormat.format(report.value!!.position.position.speed ?: 0.0),
                 ),
             style = MaterialTheme.typography.bodySmall,
         )
@@ -138,7 +128,7 @@ private fun ReportDetails(
             text =
                 stringResource(
                     R.string.altitude_metres,
-                    decimalFormat.format(report.value!!.positionEntity.altitude ?: 0.0),
+                    decimalFormat.format(report.value!!.position.position.altitude ?: 0.0),
                 ),
             style = MaterialTheme.typography.bodySmall,
         )
@@ -148,7 +138,7 @@ private fun ReportDetails(
 }
 
 @Composable
-private fun ReportDataLists(report: ReportWithData) {
+private fun ReportDataLists(report: Report) {
     val selectedTabIndex = rememberSaveable { mutableIntStateOf(WIFIS) }
 
     PrimaryTabRow(selectedTabIndex = selectedTabIndex.intValue) {
@@ -178,26 +168,26 @@ private fun ReportDataLists(report: ReportWithData) {
 
     when (selectedTabIndex.intValue) {
         WIFIS -> {
-            if (report.wifiAccessPointEntities.isEmpty()) {
+            if (report.wifiAccessPoints.isEmpty()) {
                 NoData()
             } else {
-                ReportWifisList(report.wifiAccessPointEntities)
+                ReportWifisList(report.wifiAccessPoints)
             }
         }
 
         CELLS -> {
-            if (report.cellTowerEntities.isEmpty()) {
+            if (report.cellTowers.isEmpty()) {
                 NoData()
             } else {
-                ReportCellsList(report.cellTowerEntities)
+                ReportCellsList(report.cellTowers)
             }
         }
 
         BLUETOOTHS -> {
-            if (report.bluetoothBeaconEntities.isEmpty()) {
+            if (report.bluetoothBeacons.isEmpty()) {
                 NoData()
             } else {
-                ReportBluetoothBeaconsList(report.bluetoothBeaconEntities)
+                ReportBluetoothBeaconsList(report.bluetoothBeacons)
             }
         }
     }
@@ -213,25 +203,33 @@ private fun NoData() {
 }
 
 @Composable
-private fun ReportWifisList(wifiAccessPoints: List<WifiAccessPointEntity>) {
+private fun ReportWifisList(wifiAccessPoints: List<ReportEmitter<WifiAccessPoint, MacAddress>>) {
     val sortedWifiAccessPoints =
-        remember(wifiAccessPoints) { wifiAccessPoints.sortedByDescending { it.signalStrength } }
+        remember(wifiAccessPoints) {
+            wifiAccessPoints.sortedByDescending { it.emitter.signalStrength }
+        }
 
     LazyColumn(modifier = listSize, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        items(items = sortedWifiAccessPoints, key = { it.id!! }) { wifiAccessPoint ->
+        items(items = sortedWifiAccessPoints, key = { it.id }) { wifiAccessPoint ->
             Column(modifier = Modifier.wrapContentHeight().fillMaxWidth()) {
-                Text(text = wifiAccessPoint.ssid ?: "", style = MaterialTheme.typography.titleSmall)
+                Text(
+                    text = wifiAccessPoint.emitter.ssid ?: "",
+                    style = MaterialTheme.typography.titleSmall,
+                )
 
-                Text(text = wifiAccessPoint.macAddress, style = MaterialTheme.typography.bodySmall)
+                Text(
+                    text = wifiAccessPoint.emitter.macAddress.value,
+                    style = MaterialTheme.typography.bodySmall,
+                )
 
-                wifiAccessPoint.radioType?.let { radioType ->
+                wifiAccessPoint.emitter.radioType?.let { radioType ->
                     Text(
                         text = stringResource(R.string.radio_type, radioType),
                         style = MaterialTheme.typography.bodySmall,
                     )
                 }
 
-                wifiAccessPoint.signalStrength?.let { signalStrength ->
+                wifiAccessPoint.emitter.signalStrength?.let { signalStrength ->
                     Text(
                         text = stringResource(R.string.signal_strength_dbm, signalStrength),
                         style = MaterialTheme.typography.bodySmall,
@@ -243,13 +241,13 @@ private fun ReportWifisList(wifiAccessPoints: List<WifiAccessPointEntity>) {
 }
 
 @Composable
-private fun ReportCellsList(cellTowers: List<CellTowerEntity>) {
+private fun ReportCellsList(cellTowers: List<ReportEmitter<CellTower, String>>) {
     val sortedCellTowers =
         remember(cellTowers) {
             cellTowers
-                .sortedByDescending { it.signalStrength }
+                .sortedByDescending { it.emitter.signalStrength }
                 .sortedBy {
-                    if (it.cellId == null) {
+                    if (it.emitter.cellId == null) {
                         0
                     } else {
                         -1
@@ -258,29 +256,31 @@ private fun ReportCellsList(cellTowers: List<CellTowerEntity>) {
         }
 
     LazyColumn(modifier = listSize, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        items(items = sortedCellTowers, key = { it.id!! }) { cellTower ->
+        items(items = sortedCellTowers, key = { it.id }) { cellTower ->
             Column(modifier = Modifier.wrapContentHeight().fillMaxWidth()) {
                 Text(
-                    text = cellTower.cellId?.toString() ?: stringResource(R.string.unknown_cell_id),
+                    text =
+                        cellTower.emitter.cellId?.toString()
+                            ?: stringResource(R.string.unknown_cell_id),
                     style = MaterialTheme.typography.titleSmall,
                 )
 
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                    cellTower.mobileCountryCode?.let { mcc ->
+                    cellTower.emitter.mobileCountryCode?.let { mcc ->
                         Text(
                             text = stringResource(R.string.mcc, mcc),
                             style = MaterialTheme.typography.bodySmall,
                         )
                     }
 
-                    cellTower.mobileNetworkCode?.let { mnc ->
+                    cellTower.emitter.mobileNetworkCode?.let { mnc ->
                         Text(
                             text = stringResource(R.string.mnc, mnc),
                             style = MaterialTheme.typography.bodySmall,
                         )
                     }
 
-                    cellTower.locationAreaCode?.let { lac ->
+                    cellTower.emitter.locationAreaCode?.let { lac ->
                         Text(
                             text = stringResource(R.string.lac, lac),
                             style = MaterialTheme.typography.bodySmall,
@@ -289,17 +289,14 @@ private fun ReportCellsList(cellTowers: List<CellTowerEntity>) {
 
                     Text(
                         text =
-                            stringResource(
-                                R.string.radio_type,
-                                cellTower.radioType.uppercase(Locale.ROOT),
-                            ),
+                            stringResource(R.string.radio_type, cellTower.emitter.radioType.name),
                         style = MaterialTheme.typography.bodySmall,
                     )
                 }
 
                 Text(
                     text =
-                        cellTower.signalStrength?.let {
+                        cellTower.emitter.signalStrength?.let {
                             stringResource(R.string.signal_strength_dbm, it)
                         } ?: "",
                     style = MaterialTheme.typography.bodySmall,
@@ -309,26 +306,36 @@ private fun ReportCellsList(cellTowers: List<CellTowerEntity>) {
     }
 }
 
-@OptIn(ExperimentalStdlibApi::class)
 @Composable
-private fun ReportBluetoothBeaconsList(bluetoothBeacons: List<BluetoothBeaconEntity>) {
+private fun ReportBluetoothBeaconsList(
+    bluetoothBeacons: List<ReportEmitter<BluetoothBeacon, MacAddress>>
+) {
     val sortedBluetoothBeaconSource =
-        remember(bluetoothBeacons) { bluetoothBeacons.sortedByDescending { it.signalStrength } }
+        remember(bluetoothBeacons) {
+            bluetoothBeacons.sortedByDescending { it.emitter.signalStrength }
+        }
 
     LazyColumn(modifier = listSize, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        items(items = sortedBluetoothBeaconSource, key = { it.id!! }) { bluetoothBeacon ->
+        items(items = sortedBluetoothBeaconSource, key = { it.id }) { bluetoothBeacon ->
             Column(modifier = Modifier.wrapContentHeight().fillMaxWidth()) {
-                Text(text = bluetoothBeacon.macAddress, style = MaterialTheme.typography.titleSmall)
+                Text(
+                    text = bluetoothBeacon.emitter.macAddress.value,
+                    style = MaterialTheme.typography.titleSmall,
+                )
 
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                    bluetoothBeacon.beaconType?.let { beaconType ->
+                    bluetoothBeacon.emitter.beaconType?.let { beaconType ->
                         Text(
                             text = stringResource(R.string.beacon_type, beaconType.toHexString()),
                             style = MaterialTheme.typography.bodySmall,
                         )
                     }
 
-                    listOf(bluetoothBeacon.id1, bluetoothBeacon.id2, bluetoothBeacon.id3)
+                    listOf(
+                            bluetoothBeacon.emitter.id1,
+                            bluetoothBeacon.emitter.id2,
+                            bluetoothBeacon.emitter.id3,
+                        )
                         .forEachIndexed { index, id ->
                             if (id != null) {
                                 Text(
@@ -345,9 +352,9 @@ private fun ReportBluetoothBeaconsList(bluetoothBeacons: List<BluetoothBeaconEnt
 
                 Text(
                     text =
-                        bluetoothBeacon.signalStrength?.let {
+                        bluetoothBeacon.emitter.signalStrength.let {
                             stringResource(R.string.signal_strength_dbm, it)
-                        } ?: "",
+                        },
                     style = MaterialTheme.typography.bodySmall,
                 )
             }

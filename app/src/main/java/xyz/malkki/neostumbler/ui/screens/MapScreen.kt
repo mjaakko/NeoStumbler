@@ -51,7 +51,9 @@ import org.maplibre.android.style.layers.PropertyFactory
 import org.maplibre.android.style.sources.VectorSource
 import org.maplibre.android.utils.ColorUtils as MapLibreColorUtils
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.domain.LatLng.Companion.asDomainLatLng
+import xyz.malkki.neostumbler.core.observation.PositionObservation
+import xyz.malkki.neostumbler.domain.asDomainLatLng
+import xyz.malkki.neostumbler.domain.asMapLibreLatLng
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.ui.composables.map.MapSettingsButton
 import xyz.malkki.neostumbler.ui.composables.shared.KeepScreenOn
@@ -241,7 +243,9 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                             if (trackMyLocation.value) {
                                 map.cameraPosition =
                                     CameraPosition.Builder()
-                                        .target(myLocation.value!!.latLng.asMapLibreLatLng())
+                                        .target(
+                                            myLocation.value!!.position.latLng.asMapLibreLatLng()
+                                        )
                                         .build()
                             }
                         }
@@ -305,12 +309,12 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
     }
 }
 
-private fun xyz.malkki.neostumbler.domain.Position.asPlatformLocation(): Location {
+private fun PositionObservation.asPlatformLocation(): Location {
     return Location("manual").apply {
-        this.latitude = this@asPlatformLocation.latitude
-        this.longitude = this@asPlatformLocation.longitude
-        if (this@asPlatformLocation.accuracy != null) {
-            this.accuracy = this@asPlatformLocation.accuracy.toFloat()
+        this.latitude = position.latitude
+        this.longitude = position.longitude
+        if (position.accuracy != null) {
+            this.accuracy = position.accuracy!!.toFloat()
         }
     }
 }

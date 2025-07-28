@@ -8,7 +8,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import xyz.malkki.neostumbler.domain.LatLng
+import xyz.malkki.neostumbler.geography.LatLng
 
 private const val WIFI_TIMESTAMP = "wifi"
 private const val CELL_TIMESTAMP = "cell"

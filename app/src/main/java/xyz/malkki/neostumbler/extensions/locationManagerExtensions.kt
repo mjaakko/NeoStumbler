@@ -9,7 +9,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import xyz.malkki.neostumbler.utils.ImmediateExecutor
+import xyz.malkki.neostumbler.executors.ImmediateExecutor
 
 @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
 fun LocationManager.getGnssStatusFlow(): Flow<GnssStatusCompat?> =

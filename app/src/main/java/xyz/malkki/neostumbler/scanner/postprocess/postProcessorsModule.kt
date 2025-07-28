@@ -1,24 +1,19 @@
 package xyz.malkki.neostumbler.scanner.postprocess
 
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.stringSetPreferencesKey
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.koin.dsl.bind
 import org.koin.dsl.module
-import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.constants.PreferenceKeys
-import xyz.malkki.neostumbler.extensions.getOrDefault
+import xyz.malkki.neostumbler.data.settings.Settings
+import xyz.malkki.neostumbler.data.settings.getStringSetFlow
 
 val postProcessorsModule = module {
     factory {
-        val settingsStore: DataStore<Preferences> = get(PREFERENCES)
+        val settings: Settings = get()
 
         val wifiFilterList = runBlocking {
-            settingsStore.getOrDefault(
-                stringSetPreferencesKey(PreferenceKeys.WIFI_FILTER_LIST),
-                emptySet(),
-            )
+            settings.getStringSetFlow(PreferenceKeys.WIFI_FILTER_LIST, emptySet()).first()
         }
 
         SsidBasedWifiFilterer(wifiFilterList)

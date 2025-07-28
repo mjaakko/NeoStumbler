@@ -7,16 +7,16 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import xyz.malkki.neostumbler.domain.Position
-import xyz.malkki.neostumbler.domain.Position.Source
+import xyz.malkki.neostumbler.core.Position
+import xyz.malkki.neostumbler.core.Position.Source
 
 class LocationBasedMovementDetectorTest {
     @Test
     fun `Test that no movement is detected when the location does not change`() {
         val locationFlow =
             flowOf(
-                Position(latitude = 0.0, longitude = 0.0, source = Source.GPS, timestamp = 0),
-                Position(latitude = 0.0, longitude = 0.0, source = Source.GPS, timestamp = 0),
+                Position(latitude = 0.0, longitude = 0.0, source = Source.GPS),
+                Position(latitude = 0.0, longitude = 0.0, source = Source.GPS),
             )
 
         val movementDetector =
@@ -34,8 +34,8 @@ class LocationBasedMovementDetectorTest {
     fun `Test that movement is detected when the location changes`() {
         val locationFlow =
             flowOf(
-                Position(latitude = 0.0, longitude = 0.0, source = Source.GPS, timestamp = 0),
-                Position(latitude = 10.0, longitude = 10.0, source = Source.GPS, timestamp = 0),
+                Position(latitude = 0.0, longitude = 0.0, source = Source.GPS),
+                Position(latitude = 10.0, longitude = 10.0, source = Source.GPS),
             )
 
         val movementDetector =

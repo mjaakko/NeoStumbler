@@ -1,6 +1,6 @@
 package xyz.malkki.neostumbler.scanner.postprocess
 
-import xyz.malkki.neostumbler.scanner.data.ReportData
+import xyz.malkki.neostumbler.core.report.ReportData
 
 /**
  * Post-processes a report, e.g. by filtering its data

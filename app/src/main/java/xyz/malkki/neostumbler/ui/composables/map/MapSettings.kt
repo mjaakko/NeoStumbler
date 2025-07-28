@@ -28,19 +28,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
-import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
-import xyz.malkki.neostumbler.extensions.get
+import xyz.malkki.neostumbler.data.settings.Settings
+import xyz.malkki.neostumbler.data.settings.getEnum
+import xyz.malkki.neostumbler.data.settings.setEnum
 import xyz.malkki.neostumbler.ui.composables.settings.SettingsToggle
 import xyz.malkki.neostumbler.ui.composables.settings.UrlField
 import xyz.malkki.neostumbler.ui.composables.shared.Dialog
@@ -48,28 +45,22 @@ import xyz.malkki.neostumbler.ui.map.MapTileSource
 
 private typealias TileSourceAndStyleUrl = Pair<MapTileSource, String>
 
-private fun DataStore<Preferences>.selectedMapTileSourceAndStyleUrl(): Flow<TileSourceAndStyleUrl> =
-    data.map { prefs ->
-        val tileSource =
-            prefs.get<MapTileSource>(PreferenceKeys.MAP_TILE_SOURCE) ?: MapTileSource.DEFAULT
-        val styleUrl = prefs[stringPreferencesKey(PreferenceKeys.MAP_TILE_SOURCE_CUSTOM_URL)] ?: ""
+private fun Settings.selectedMapTileSourceAndStyleUrl(): Flow<TileSourceAndStyleUrl> =
+    getSnapshotFlow().map { prefs ->
+        val tileSource = prefs.getEnum(PreferenceKeys.MAP_TILE_SOURCE) ?: MapTileSource.DEFAULT
+        val styleUrl = prefs.getString(PreferenceKeys.MAP_TILE_SOURCE_CUSTOM_URL) ?: ""
 
         tileSource to styleUrl
     }
 
 @Composable
-fun MapSettingsButton(
-    modifier: Modifier,
-    settingsStore: DataStore<Preferences> = koinInject<DataStore<Preferences>>(PREFERENCES),
-) {
+fun MapSettingsButton(modifier: Modifier, settings: Settings = koinInject()) {
     val coroutineScope = rememberCoroutineScope()
 
     var dialogOpen by rememberSaveable { mutableStateOf(false) }
 
     val selectedMapTileSourceAndStyleUrl by
-        settingsStore
-            .selectedMapTileSourceAndStyleUrl()
-            .collectAsStateWithLifecycle(initialValue = null)
+        settings.selectedMapTileSourceAndStyleUrl().collectAsStateWithLifecycle(initialValue = null)
 
     if (dialogOpen) {
         val selectedMapTileSource = selectedMapTileSourceAndStyleUrl?.first
@@ -80,12 +71,10 @@ fun MapSettingsButton(
             onCloseDialog = { newSettings ->
                 if (newSettings != null) {
                     coroutineScope.launch {
-                        settingsStore.edit { prefs ->
-                            prefs[stringPreferencesKey(PreferenceKeys.MAP_TILE_SOURCE)] =
-                                newSettings.first.name
+                        settings.edit {
+                            setEnum(PreferenceKeys.MAP_TILE_SOURCE, newSettings.first)
 
-                            prefs[stringPreferencesKey(PreferenceKeys.MAP_TILE_SOURCE_CUSTOM_URL)] =
-                                newSettings.second
+                            setString(PreferenceKeys.MAP_TILE_SOURCE_CUSTOM_URL, newSettings.second)
                         }
                     }
                 }

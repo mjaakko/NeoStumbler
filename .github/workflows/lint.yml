@@ -28,10 +28,7 @@ jobs:
         run: ./gradlew detekt
   lint:
     needs: static-analysis
-    strategy:
-      matrix:
-        version: [ full, fdroid ]
-    name: Run lint checks (${{ matrix.version }})
+    name: Run lint checks
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -44,10 +41,5 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
-      - name: Capitalize version name
-        id: capitalize-version
-        uses: ASzc/change-string-case-action@v6
-        with:
-          string: ${{ matrix.version }}
       - name: Run Android lint checks
-        run: ./gradlew lint${{ steps.capitalize-version.outputs.capitalized }}Debug
+        run: ./gradlew lintAll

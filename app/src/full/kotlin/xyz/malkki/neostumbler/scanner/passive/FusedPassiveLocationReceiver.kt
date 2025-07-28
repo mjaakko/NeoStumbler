@@ -10,7 +10,8 @@ import com.google.android.gms.location.LocationResult
 import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import xyz.malkki.neostumbler.domain.Position
+import xyz.malkki.neostumbler.core.Position
+import xyz.malkki.neostumbler.mapper.toPositionObservation
 
 class FusedPassiveLocationReceiver : BroadcastReceiver(), KoinComponent {
     companion object {
@@ -38,7 +39,7 @@ class FusedPassiveLocationReceiver : BroadcastReceiver(), KoinComponent {
 
             val positions =
                 locationResult.locations.map {
-                    Position.fromLocation(it, source = Position.Source.FUSED)
+                    it.toPositionObservation(source = Position.Source.FUSED)
                 }
 
             runBlocking {

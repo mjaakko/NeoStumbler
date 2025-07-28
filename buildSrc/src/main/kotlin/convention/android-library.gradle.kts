@@ -1,0 +1,35 @@
+package convention
+
+plugins {
+    id("convention.kotlin")
+    id("org.jetbrains.kotlin.android")
+    id("com.android.library")
+}
+
+android {
+    compileSdk = 36
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.toVersion(project.extra["jvmTarget"]!!)
+        targetCompatibility = JavaVersion.toVersion(project.extra["jvmTarget"]!!)
+    }
+
+    defaultConfig {
+        minSdk = 29
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+}
+
+tasks.register("lintAll") { dependsOn(tasks.named("lintDebug")) }
+
+tasks.register("assembleAll") {
+    dependsOn(
+        tasks.named("assembleDebug"),
+        tasks.named("assembleAndroidTest"),
+        tasks.named("assembleDebugUnitTest"),
+    )
+}
+
+tasks.register("unitTest") { dependsOn(tasks.named("testDebugUnitTest")) }
+
+tasks.register("androidTest") { dependsOn(tasks.named("connectedAndroidTest")) }

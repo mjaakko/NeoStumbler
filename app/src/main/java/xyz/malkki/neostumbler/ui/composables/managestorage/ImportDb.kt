@@ -12,8 +12,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import java.util.zip.GZIPInputStream
-import kotlin.io.buffered
-import kotlin.io.copyTo
 import kotlin.io.path.createTempFile
 import kotlin.io.path.deleteIfExists
 import kotlin.io.path.outputStream
@@ -23,14 +21,18 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.db.ReportDatabaseManager
+import xyz.malkki.neostumbler.data.reports.RawReportImportExport
+import xyz.malkki.neostumbler.data.reports.ReportProvider
 import xyz.malkki.neostumbler.extensions.getQuantityString
 import xyz.malkki.neostumbler.extensions.isGzipped
 import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.ui.composables.shared.ConfirmationDialog
 
 @Composable
-fun ImportDb(reportDatabaseManager: ReportDatabaseManager = koinInject()) {
+fun ImportDb(
+    rawReportImportExport: RawReportImportExport = koinInject(),
+    reportProvider: ReportProvider = koinInject(),
+) {
     val context = LocalContext.current
 
     val coroutineContext = rememberCoroutineScope()
@@ -73,14 +75,10 @@ fun ImportDb(reportDatabaseManager: ReportDatabaseManager = koinInject()) {
                         }
                     }
 
-                    if (ReportDatabaseManager.validateDatabase(context, tempDbFile)) {
-                        reportDatabaseManager.importDb(tempDbFile)
+                    if (rawReportImportExport.validateRawReports(tempDbFile)) {
+                        rawReportImportExport.importRawReports(tempDbFile)
 
-                        val reportCount =
-                            reportDatabaseManager.reportDb.value
-                                .reportDao()
-                                .getReportCount()
-                                .first()
+                        val reportCount = reportProvider.getReportCount().first()
                         context.showToast(
                             context.getQuantityString(
                                 R.plurals.import_database_successful,

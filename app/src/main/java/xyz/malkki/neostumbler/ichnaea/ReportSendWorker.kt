@@ -5,9 +5,6 @@ import android.content.Context
 import android.content.pm.ServiceInfo
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.ForegroundInfo
@@ -17,17 +14,19 @@ import java.io.IOException
 import java.time.Instant
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import okhttp3.Call
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import timber.log.Timber
-import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
-import xyz.malkki.neostumbler.db.ReportDatabaseManager
+import xyz.malkki.neostumbler.data.reports.ReportProvider
+import xyz.malkki.neostumbler.data.reports.ReportSaver
+import xyz.malkki.neostumbler.data.settings.Settings
+import xyz.malkki.neostumbler.data.settings.getBooleanFlow
 import xyz.malkki.neostumbler.http.isRetryable
+import xyz.malkki.neostumbler.ichnaea.mapper.getIchnaeaParams
 
 // By default, WorkManager will retry indefinitely.
 // If uploading hasn't been successful after 5 retries,
@@ -56,12 +55,13 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) :
 
     private val httpClientProvider: Deferred<Call.Factory> by inject<Deferred<Call.Factory>>()
 
-    private val settingsStore: DataStore<Preferences> by inject<DataStore<Preferences>>(PREFERENCES)
+    private val settings: Settings by inject()
 
-    private val reportDatabaseManager: ReportDatabaseManager by inject()
+    private val reportProvider: ReportProvider by inject()
+    private val reportSaver: ReportSaver by inject()
 
     private suspend fun getGeosubmitApi(): Geosubmit? {
-        return settingsStore.getIchnaeaParams()?.let { geosubmitParams ->
+        return settings.getIchnaeaParams()?.let { geosubmitParams ->
             Timber.d(
                 "Using endpoint ${geosubmitParams.submissionPath} with API key ${geosubmitParams.apiKey} for Geosubmit"
             )
@@ -82,15 +82,12 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) :
         val reportSender =
             ReportSender(
                 geosubmit = geosubmit,
-                reportDao = reportDatabaseManager.reportDb.value.reportDao(),
+                reportProvider = reportProvider,
+                reportSaver = reportSaver,
             )
 
         val sendWithReducedMetadata =
-            settingsStore.data
-                .map { prefs ->
-                    prefs[booleanPreferencesKey(PreferenceKeys.REDUCED_METADATA)] == true
-                }
-                .first()
+            settings.getBooleanFlow(PreferenceKeys.REDUCED_METADATA, false).first()
 
         val reupload =
             inputData.hasKeyWithValueOfType<Long>(INPUT_REUPLOAD_FROM) &&

@@ -3,10 +3,10 @@ package xyz.malkki.neostumbler.export
 import android.app.Notification
 import android.content.Context
 import android.content.pm.ServiceInfo
-import android.net.Uri
 import android.os.FileUtils
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
@@ -20,8 +20,7 @@ import org.koin.core.component.inject
 import timber.log.Timber
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
-import xyz.malkki.neostumbler.db.ReportDatabaseManager
-import xyz.malkki.neostumbler.extensions.copyTo
+import xyz.malkki.neostumbler.data.reports.RawReportImportExport
 
 class DatabaseExportWorker(appContext: Context, private val params: WorkerParameters) :
     CoroutineWorker(appContext, params), KoinComponent {
@@ -32,7 +31,7 @@ class DatabaseExportWorker(appContext: Context, private val params: WorkerParame
         private const val DATABASE_EXPORT_NOTIFICATION_ID = 200001
     }
 
-    private val reportDatabaseManager: ReportDatabaseManager by inject()
+    private val rawReportsImportExport: RawReportImportExport by inject()
 
     private fun createNotification(): Notification {
         return NotificationCompat.Builder(
@@ -67,14 +66,12 @@ class DatabaseExportWorker(appContext: Context, private val params: WorkerParame
 
         val compress = params.inputData.getBoolean(INPUT_COMPRESS, false)
 
-        val uri = Uri.parse(params.inputData.getString(INPUT_OUTPUT_URI)!!)
+        val uri = params.inputData.getString(INPUT_OUTPUT_URI)!!.toUri()
 
         val tempFile = createTempFile(applicationContext.cacheDir.toPath(), "export", "db")
 
         try {
-            val reportDb = reportDatabaseManager.reportDb.value
-
-            reportDb.openHelper.writableDatabase.copyTo(tempFile)
+            rawReportsImportExport.exportRawReports(tempFile)
 
             val rawOutputStream = applicationContext.contentResolver.openOutputStream(uri)!!
 

@@ -1,19 +1,9 @@
-import kotlin.math.roundToInt
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("com.google.devtools.ksp")
-    id("org.jetbrains.kotlin.plugin.compose")
-    id("org.jetbrains.kotlin.plugin.serialization")
-    id("app.accrescent.tools.bundletool")
-    id("com.ncorti.ktfmt.gradle")
-    id("io.gitlab.arturbosch.detekt")
+    id("convention.android-app")
+    alias(libs.plugins.kotlinCompose)
+    alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.bundletool)
 }
-
-private val DB_SCHEMAS_DIR = "$projectDir/schemas"
 
 bundletool {
     signingConfig {
@@ -22,11 +12,6 @@ bundletool {
         keyAlias = System.getenv("SIGNING_KEY_ALIAS")
         keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
     }
-}
-
-ksp {
-    arg("room.schemaLocation", DB_SCHEMAS_DIR)
-    arg("room.incremental", "true")
 }
 
 android {
@@ -44,13 +29,8 @@ android {
 
     defaultConfig {
         applicationId = "xyz.malkki.neostumbler"
-        minSdk = 29
-        targetSdk = 36
         versionCode = 39
         versionName = "2.1.3"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables { useSupportLibrary = true }
 
         androidResources {
             // Configure supported languages here to avoid including incomplete translations in the
@@ -89,8 +69,6 @@ android {
             "\"" + androidResources.localeFilters.joinToString(",") + "\"",
         )
     }
-
-    sourceSets { getByName("androidTest") { assets { srcDir(files(DB_SCHEMAS_DIR)) } } }
 
     androidResources { generateLocaleConfig = true }
 
@@ -131,6 +109,7 @@ android {
         }
         create("full") {
             dimension = "version"
+            isDefault = true
 
             ndk { abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64") }
         }
@@ -141,13 +120,6 @@ android {
             resValue("string", "app_name", "NeoStumbler (dev, $flavorName)")
         }
     }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlin { compilerOptions { jvmTarget = JvmTarget.JVM_17 } }
 
     buildFeatures {
         buildConfig = true
@@ -177,13 +149,7 @@ android {
         }
     }
 
-    // These are not needed because the app is not published to Google Play
-    dependenciesInfo {
-        includeInApk = false
-        includeInBundle = false
-    }
-
-    lint { lintConfig = file("app/lint.xml") }
+    lint { lintConfig = projectDir.resolve("lint.xml") }
 }
 
 tasks.register("printVersionName") {
@@ -194,31 +160,35 @@ tasks.register("printVersionName") {
 
 kotlin {
     compilerOptions {
-        freeCompilerArgs.add("-opt-in=kotlin.io.path.ExperimentalPathApi")
-        freeCompilerArgs.add("-opt-in=kotlin.time.ExperimentalTime")
-        freeCompilerArgs.add("-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi")
         freeCompilerArgs.add("-opt-in=androidx.compose.material3.ExperimentalMaterial3Api")
         freeCompilerArgs.add("-opt-in=androidx.compose.foundation.ExperimentalFoundationApi")
-        freeCompilerArgs.add("-opt-in=kotlinx.coroutines.FlowPreview")
-        freeCompilerArgs.add("-opt-in=kotlinx.serialization.ExperimentalSerializationApi")
     }
-}
-
-tasks.withType<Test>().configureEach {
-    testLogging {
-        exceptionFormat = TestExceptionFormat.FULL
-        showStackTraces = true
-    }
-
-    maxParallelForks =
-        (Runtime.getRuntime().availableProcessors() / 2.0).roundToInt().coerceAtLeast(1)
-
-    // Don't generate test reports, because currently we don't use them for anything
-    reports.html.required = false
-    reports.junitXml.required = false
 }
 
 dependencies {
+    implementation(project(":libs:beacon-library-utils"))
+    implementation(project(":libs:geography"))
+    implementation(project(":libs:ichnaea"))
+    implementation(project(":libs:utils"))
+    implementation(project(":libs:room-converters"))
+    implementation(project(":libs:executors"))
+    implementation(project(":libs:broadcast-receiver-flow"))
+
+    implementation(project(":app:core"))
+    implementation(project(":app:core:mapper:android-location"))
+
+    implementation(project(":app:data:emitter:api"))
+    implementation(project(":app:data:location:api"))
+
+    implementation(project(":app:data:emitter:android"))
+
+    implementation(project(":app:data:location:android"))
+    "fullImplementation"(project(":app:data:location:googleplay"))
+
+    implementation(project(":app:data:settings:android-datastore"))
+
+    implementation(project(":app:data:reports:room"))
+
     implementation(platform(libs.koinBom))
     implementation(libs.koinCore)
     implementation(libs.koinAndroid)
@@ -273,13 +243,6 @@ dependencies {
 
     implementation(libs.androidx.datastore.preferences)
 
-    implementation(libs.androidx.roomRuntime)
-    annotationProcessor(libs.androidx.roomCompiler)
-    ksp(libs.androidx.roomCompiler)
-    implementation(libs.androidx.roomKtx)
-    implementation(libs.androidx.roomPaging)
-    androidTestImplementation(libs.androidx.roomTesting)
-
     implementation(libs.androidx.workRuntime)
     implementation(libs.androidx.workRuntimeKtx)
 
@@ -287,6 +250,7 @@ dependencies {
 
     implementation(platform(libs.okhttpBom))
     implementation(libs.okhttp)
+    implementation(libs.okhttpCoroutines)
     implementation(libs.okhttpLoggingInterceptor)
     testImplementation(libs.okhttpMockWebServer)
 
@@ -311,12 +275,3 @@ dependencies {
 
     androidTestImplementation(libs.awaitilityKotlin)
 }
-
-configurations.configureEach {
-    resolutionStrategy {
-        force("org.hamcrest:hamcrest-core:3+")
-        force("org.hamcrest:hamcrest-library:3+")
-    }
-}
-
-ktfmt { kotlinLangStyle() }

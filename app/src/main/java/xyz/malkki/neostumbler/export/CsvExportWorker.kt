@@ -3,9 +3,9 @@ package xyz.malkki.neostumbler.export
 import android.app.Notification
 import android.content.Context
 import android.content.pm.ServiceInfo
-import android.net.Uri
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
@@ -70,7 +70,7 @@ class CsvExportWorker(appContext: Context, private val params: WorkerParameters)
 
         setForeground(getForegroundInfo())
 
-        val uri = Uri.parse(params.inputData.getString(INPUT_OUTPUT_URI))
+        val uri = params.inputData.getString(INPUT_OUTPUT_URI)!!.toUri()
 
         val from = Instant.ofEpochMilli(params.inputData.getLong(INPUT_FROM, 0))
         val to = Instant.ofEpochMilli(params.inputData.getLong(INPUT_TO, 0))
@@ -78,7 +78,12 @@ class CsvExportWorker(appContext: Context, private val params: WorkerParameters)
         val time = measureTime { csvExporter.exportToFile(uri, from, to) }
 
         Timber.i(
-            "Exported data for time period [$from, $to] to $uri in ${time.toString(DurationUnit.SECONDS, 1)}"
+            "Exported data for time period [$from, $to] to $uri in ${
+                time.toString(
+                    DurationUnit.SECONDS,
+                    1,
+                )
+            }"
         )
 
         return Result.success()

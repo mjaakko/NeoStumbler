@@ -2,13 +2,12 @@ package xyz.malkki.neostumbler.ichnaea
 
 import java.time.Instant
 import java.time.temporal.ChronoUnit
-import xyz.malkki.neostumbler.db.dao.ReportDao
-import xyz.malkki.neostumbler.db.entities.ReportWithData
+import xyz.malkki.neostumbler.core.report.Report
+import xyz.malkki.neostumbler.data.reports.ReportProvider
+import xyz.malkki.neostumbler.data.reports.ReportSaver
 import xyz.malkki.neostumbler.extensions.roundToMultipleOf
-import xyz.malkki.neostumbler.ichnaea.dto.BluetoothBeaconDto
-import xyz.malkki.neostumbler.ichnaea.dto.CellTowerDto
 import xyz.malkki.neostumbler.ichnaea.dto.ReportDto
-import xyz.malkki.neostumbler.ichnaea.dto.WifiAccessPointDto
+import xyz.malkki.neostumbler.ichnaea.mapper.toDto
 
 /**
  * Limit the number of reports per batch to 999
@@ -26,7 +25,11 @@ private const val REDUCED_METADATA_SPEED_ACCURACY = 2.0
 // Send heading with 30 degree accuracy
 private const val REDUCED_METADATA_HEADING_ACCURACY = 30.0
 
-class ReportSender(private val geosubmit: Geosubmit, private val reportDao: ReportDao) {
+class ReportSender(
+    private val geosubmit: Geosubmit,
+    private val reportProvider: ReportProvider,
+    private val reportSaver: ReportSaver,
+) {
     suspend fun reuploadReports(
         from: Instant,
         to: Instant,
@@ -34,8 +37,8 @@ class ReportSender(private val geosubmit: Geosubmit, private val reportDao: Repo
         progressListener: (suspend (Int) -> Unit)? = null,
     ) {
         val reportBatches =
-            reportDao
-                .getAllReportsForTimerange(from, to)
+            reportProvider
+                .getReportsForTimerange(fromTimestamp = from, toTimestamp = to)
                 .let {
                     if (reducedMetadata) {
                         it.shuffled()
@@ -65,9 +68,9 @@ class ReportSender(private val geosubmit: Geosubmit, private val reportDao: Repo
         while (true) {
             val batch =
                 if (reducedMetadata) {
-                    reportDao.getRandomNotUploadedReports(MAX_REPORTS_PER_BATCH)
+                    reportProvider.getRandomNotUploadedReports(MAX_REPORTS_PER_BATCH)
                 } else {
-                    reportDao.getNotUploadedReports(MAX_REPORTS_PER_BATCH)
+                    reportProvider.getNotUploadedReports(MAX_REPORTS_PER_BATCH)
                 }
 
             if (batch.isEmpty()) {
@@ -82,7 +85,7 @@ class ReportSender(private val geosubmit: Geosubmit, private val reportDao: Repo
         }
     }
 
-    private suspend fun List<ReportWithData>.sendBatch(reduceMetadata: Boolean) {
+    private suspend fun List<Report>.sendBatch(reduceMetadata: Boolean) {
         val dtos = map { report ->
             if (reduceMetadata) {
                 report.toDto().reduceMetadata()
@@ -98,28 +101,20 @@ class ReportSender(private val geosubmit: Geosubmit, private val reportDao: Repo
         val updatedReports =
             filter {
                     // Do not update upload timestamp for reports which were reuploaded
-                    !it.report.uploaded
+                    !it.uploaded
                 }
-                .map { it.report.copy(uploaded = true, uploadTimestamp = now) }
-                .toTypedArray()
+                .map { it.id }
 
-        reportDao.update(*updatedReports)
+        reportSaver.markAsUploaded(uploadTimestamp = now, *updatedReports.toLongArray())
     }
 
-    private fun ReportWithData.toDto(): ReportDto {
+    private fun Report.toDto(): ReportDto {
         return ReportDto(
-            timestamp = report.timestamp.toEpochMilli(),
-            position = ReportDto.PositionDto.fromDbEntity(positionEntity),
-            wifiAccessPoints =
-                wifiAccessPointEntities.map(WifiAccessPointDto::fromDbEntity).takeIf {
-                    it.isNotEmpty()
-                },
-            cellTowers =
-                cellTowerEntities.map(CellTowerDto::fromDbEntity).takeIf { it.isNotEmpty() },
-            bluetoothBeacons =
-                bluetoothBeaconEntities.map(BluetoothBeaconDto::fromDbEntity).takeIf {
-                    it.isNotEmpty()
-                },
+            timestamp = timestamp.toEpochMilli(),
+            position = position.toDto(),
+            wifiAccessPoints = wifiAccessPoints.map { it.toDto() }.takeIf { it.isNotEmpty() },
+            cellTowers = cellTowers.map { it.toDto() }.takeIf { it.isNotEmpty() },
+            bluetoothBeacons = bluetoothBeacons.map { it.toDto() }.takeIf { it.isNotEmpty() },
         )
     }
 

@@ -17,15 +17,17 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import timber.log.Timber
+import xyz.malkki.neostumbler.core.MacAddress
+import xyz.malkki.neostumbler.core.emitter.BluetoothBeacon
+import xyz.malkki.neostumbler.core.emitter.CellTower
+import xyz.malkki.neostumbler.core.emitter.Emitter
+import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
+import xyz.malkki.neostumbler.core.observation.EmitterObservation
+import xyz.malkki.neostumbler.core.observation.PositionObservation
+import xyz.malkki.neostumbler.core.report.ReportData
 import xyz.malkki.neostumbler.domain.AirPressureObservation
-import xyz.malkki.neostumbler.domain.BluetoothBeacon
-import xyz.malkki.neostumbler.domain.CellTower
-import xyz.malkki.neostumbler.domain.ObservedDevice
-import xyz.malkki.neostumbler.domain.Position
-import xyz.malkki.neostumbler.domain.WifiAccessPoint
 import xyz.malkki.neostumbler.extensions.buffer
 import xyz.malkki.neostumbler.extensions.combineWithLatestFrom
-import xyz.malkki.neostumbler.scanner.data.ReportData
 import xyz.malkki.neostumbler.scanner.movement.ConstantMovementDetector
 import xyz.malkki.neostumbler.scanner.movement.MovementDetector
 import xyz.malkki.neostumbler.scanner.postprocess.ReportPostProcessor
@@ -42,38 +44,43 @@ private val AIR_PRESSURE_MAX_AGE = 2.seconds
 private val LOCATION_BUFFER_DURATION = 10.seconds
 
 class WirelessScanner(
-    private val locationSource: () -> Flow<Position>,
+    private val locationSource: () -> Flow<PositionObservation>,
     private val airPressureSource: () -> Flow<AirPressureObservation>,
-    private val cellInfoSource: () -> Flow<List<CellTower>>,
-    private val wifiAccessPointSource: () -> Flow<List<WifiAccessPoint>>,
-    private val bluetoothBeaconSource: () -> Flow<List<BluetoothBeacon>>,
+    private val cellInfoSource: () -> Flow<List<EmitterObservation<CellTower, String>>>,
+    private val wifiAccessPointSource:
+        () -> Flow<List<EmitterObservation<WifiAccessPoint, MacAddress>>>,
+    private val bluetoothBeaconSource:
+        () -> Flow<List<EmitterObservation<BluetoothBeacon, MacAddress>>>,
     private val movementDetector: MovementDetector = ConstantMovementDetector,
     private val postProcessors: List<ReportPostProcessor> = emptyList(),
 ) {
-    private fun getLocationsWithAirPressure(): Flow<Position> {
+    private fun getLocationsWithAirPressure(): Flow<PositionObservation> {
         val locationFlow = locationSource.invoke()
         val airPressureFlow = airPressureSource.invoke()
 
         return locationFlow.combineWithLatestFrom(airPressureFlow) { location, airPressure ->
             location.copy(
-                pressure =
-                    airPressure
-                        ?.takeIf {
-                            // Use air pressure data only if it's not too old
-                            abs(location.timestamp - it.timestamp).milliseconds <=
-                                AIR_PRESSURE_MAX_AGE
-                        }
-                        ?.airPressure
-                        ?.toDouble()
+                position =
+                    location.position.copy(
+                        pressure =
+                            airPressure
+                                ?.takeIf {
+                                    // Use air pressure data only if it's not too old
+                                    abs(location.timestamp - it.timestamp).milliseconds <=
+                                        AIR_PRESSURE_MAX_AGE
+                                }
+                                ?.airPressure
+                                ?.toDouble()
+                    )
             )
         }
     }
 
-    private suspend fun <K, V : ObservedDevice<K>> startCollectingData(
+    private suspend fun <E : Emitter<K>, K> startCollectingData(
         isMovingFlow: Flow<Boolean>,
-        dataSource: () -> Flow<List<V>>,
+        dataSource: () -> Flow<List<EmitterObservation<E, K>>>,
         mapMutex: Mutex,
-        map: MutableMap<K, V>,
+        map: MutableMap<K, EmitterObservation<E, K>>,
     ) {
         isMovingFlow
             .flatMapLatest { isMoving ->
@@ -83,26 +90,33 @@ class WirelessScanner(
                     emptyFlow()
                 }
             }
-            .collect { data -> mapMutex.withLock { data.forEach { map[it.uniqueKey] = it } } }
+            .collect { data ->
+                mapMutex.withLock { data.forEach { map[it.emitter.uniqueKey] = it } }
+            }
     }
 
-    private fun Flow<Position>.filterInaccurateLocations(): Flow<Position> = filter { location ->
-        location.accuracy != null &&
-            location.accuracy <= ScanningConstants.LOCATION_MAX_ACCURACY_METERS
-    }
-
-    private fun Flow<Position>.distinctUntilChangedSignificantly(): Flow<Position> =
-        distinctUntilChanged { a, b ->
-            abs(a.timestamp - b.timestamp).milliseconds <= LOCATION_MAX_AGE_UNTIL_CHANGED &&
-                a.latLng.distanceTo(b.latLng) <= LOCATION_MAX_DISTANCE_DIFF_UNTIL_CHANGED
+    private fun Flow<PositionObservation>.filterInaccurateLocations(): Flow<PositionObservation> =
+        filter { positionObservation ->
+            positionObservation.position.accuracy != null &&
+                positionObservation.position.accuracy!! <=
+                    ScanningConstants.LOCATION_MAX_ACCURACY_METERS
         }
+
+    private fun Flow<PositionObservation>.distinctUntilChangedSignificantly():
+        Flow<PositionObservation> = distinctUntilChanged { a, b ->
+        abs(a.timestamp - b.timestamp).milliseconds <= LOCATION_MAX_AGE_UNTIL_CHANGED &&
+            a.position.latLng.distanceTo(b.position.latLng) <=
+                LOCATION_MAX_DISTANCE_DIFF_UNTIL_CHANGED
+    }
 
     fun createReports(): Flow<ReportData> = channelFlow {
         val mutex = Mutex()
 
-        val wifiAccessPointByMacAddr = mutableMapOf<String, WifiAccessPoint>()
-        val bluetoothBeaconsByMacAddr = mutableMapOf<String, BluetoothBeacon>()
-        val cellTowersByKey = mutableMapOf<String, CellTower>()
+        val wifiAccessPointByMacAddr =
+            mutableMapOf<MacAddress, EmitterObservation<WifiAccessPoint, MacAddress>>()
+        val bluetoothBeaconsByMacAddr =
+            mutableMapOf<MacAddress, EmitterObservation<BluetoothBeacon, MacAddress>>()
+        val cellTowersByKey = mutableMapOf<String, EmitterObservation<CellTower, String>>()
 
         val isMovingFlow =
             movementDetector

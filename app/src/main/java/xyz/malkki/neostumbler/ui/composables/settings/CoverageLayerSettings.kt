@@ -23,32 +23,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
-import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.data.settings.Settings
+import xyz.malkki.neostumbler.data.settings.getStringFlow
 import xyz.malkki.neostumbler.ui.composables.settings.geosubmit.SuggestedServicesDialog
 
-private fun DataStore<Preferences>.coverageLayerTileJsonUrl(): Flow<String?> =
-    data
-        .map { preferences ->
-            preferences[stringPreferencesKey(PreferenceKeys.COVERAGE_TILE_JSON_URL)]
-        }
-        .distinctUntilChanged()
-
 @Composable
-fun CoverageLayerSettings(settingsStore: DataStore<Preferences> = koinInject(PREFERENCES)) {
+fun CoverageLayerSettings(settings: Settings = koinInject()) {
     val coroutineScope = rememberCoroutineScope()
 
-    val tileJsonUrl = settingsStore.coverageLayerTileJsonUrl().collectAsState(initial = null)
+    val tileJsonUrl =
+        settings
+            .getStringFlow(PreferenceKeys.COVERAGE_TILE_JSON_URL, "")
+            .collectAsState(initial = null)
 
     val dialogOpen = rememberSaveable { mutableStateOf(false) }
 
@@ -58,14 +48,11 @@ fun CoverageLayerSettings(settingsStore: DataStore<Preferences> = koinInject(PRE
             onDialogClose = { newTileJsonUrl, save ->
                 coroutineScope.launch {
                     if (save) {
-                        settingsStore.edit { prefs ->
+                        settings.edit {
                             if (newTileJsonUrl.isNullOrEmpty()) {
-                                prefs.remove(
-                                    stringPreferencesKey(PreferenceKeys.COVERAGE_TILE_JSON_URL)
-                                )
+                                removeString(PreferenceKeys.COVERAGE_TILE_JSON_URL)
                             } else {
-                                prefs[stringPreferencesKey(PreferenceKeys.COVERAGE_TILE_JSON_URL)] =
-                                    newTileJsonUrl
+                                setString(PreferenceKeys.COVERAGE_TILE_JSON_URL, newTileJsonUrl)
                             }
                         }
                     }

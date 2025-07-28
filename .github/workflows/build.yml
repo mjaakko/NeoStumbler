@@ -11,10 +11,7 @@ concurrency:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        version: [full, fdroid]
-    name: Build debug APK (${{ matrix.version }})
+    name: Build debug APKs
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
@@ -24,20 +21,21 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - name: Capitalize version name
-        id: capitalize-version
-        uses: ASzc/change-string-case-action@v6
-        with:
-          string: ${{ matrix.version }}
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
-      - name: Build debug APK
-        run: ./gradlew assemble${{ steps.capitalize-version.outputs.capitalized }}Debug
-      - name: Upload debug APK as artifact
+      - name: Build debug APKs
+        run: ./gradlew assembleAll
+      - name: Upload debug froid APK as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app-${{ matrix.version }}-debug.apk
-          path: app/build/outputs/apk/${{ matrix.version }}/debug/app-${{ matrix.version }}-debug.apk
+          name: app-full-debug.apk
+          path: app/build/outputs/apk/full/debug/app-full-debug.apk
+          retention-days: 1
+      - name: Upload debug full APK as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-full-debug.apk
+          path: app/build/outputs/apk/full/debug/app-full-debug.apk
           retention-days: 1

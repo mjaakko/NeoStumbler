@@ -5,10 +5,6 @@ import android.annotation.SuppressLint
 import android.app.Application
 import androidx.collection.MutableLongIntMap
 import androidx.collection.MutableObjectIntMap
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import java.io.IOException
@@ -31,26 +27,26 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.retryWhen
 import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import okhttp3.Call
 import org.geohex.geohex4j.GeoHex
 import timber.log.Timber
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
-import xyz.malkki.neostumbler.db.ReportDatabaseManager
-import xyz.malkki.neostumbler.db.dao.getReportsInsideBoundingBox
-import xyz.malkki.neostumbler.db.entities.ReportWithLocation
-import xyz.malkki.neostumbler.domain.LatLng
+import xyz.malkki.neostumbler.core.report.ReportWithLocation
+import xyz.malkki.neostumbler.data.location.LocationSource
+import xyz.malkki.neostumbler.data.reports.ReportProvider
+import xyz.malkki.neostumbler.data.settings.Settings
+import xyz.malkki.neostumbler.data.settings.getEnum
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
-import xyz.malkki.neostumbler.extensions.get
-import xyz.malkki.neostumbler.location.LocationSource
+import xyz.malkki.neostumbler.geography.LatLng
 import xyz.malkki.neostumbler.ui.map.MapTileSource
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel.HeatMapTile
 import xyz.malkki.neostumbler.utils.getTileJsonLayerIds
@@ -68,9 +64,9 @@ private val TILEJSON_RETRY_DELAY = 30.seconds
 
 class MapViewModel(
     application: Application,
-    private val settingsStore: DataStore<Preferences>,
+    settings: Settings,
     private val httpClientProvider: Deferred<Call.Factory>,
-    private val reportDatabaseManager: ReportDatabaseManager,
+    private val reportProvider: ReportProvider,
     private val locationSource: LocationSource,
 ) : AndroidViewModel(application) {
     private val _httpClient = MutableStateFlow<Call.Factory?>(null)
@@ -78,14 +74,14 @@ class MapViewModel(
         get() = _httpClient.asStateFlow()
 
     val mapTileSourceUrl: Flow<String> =
-        settingsStore.data
+        settings
+            .getSnapshotFlow()
             .map { prefs ->
                 val mapTileSource =
-                    prefs.get<MapTileSource>(PreferenceKeys.MAP_TILE_SOURCE)
-                        ?: MapTileSource.DEFAULT
+                    prefs.getEnum(PreferenceKeys.MAP_TILE_SOURCE) ?: MapTileSource.DEFAULT
 
                 if (mapTileSource == MapTileSource.CUSTOM) {
-                    prefs[stringPreferencesKey(PreferenceKeys.MAP_TILE_SOURCE_CUSTOM_URL)] ?: ""
+                    prefs.getString(PreferenceKeys.MAP_TILE_SOURCE_CUSTOM_URL) ?: ""
                 } else {
                     mapTileSource.sourceUrl!!
                 }
@@ -93,12 +89,11 @@ class MapViewModel(
             .distinctUntilChanged()
 
     val coverageTileJsonUrl: Flow<String?> =
-        settingsStore.data.map { prefs ->
-            val coverageLayerEnabled =
-                prefs[booleanPreferencesKey(PreferenceKeys.COVERAGE_LAYER_ENABLED)]
+        settings.getSnapshotFlow().map { prefs ->
+            val coverageLayerEnabled = prefs.getBoolean(PreferenceKeys.COVERAGE_LAYER_ENABLED)
 
             if (coverageLayerEnabled != false) {
-                prefs[stringPreferencesKey(PreferenceKeys.COVERAGE_TILE_JSON_URL)]
+                prefs.getString(PreferenceKeys.COVERAGE_TILE_JSON_URL)
             } else {
                 null
             }
@@ -128,7 +123,7 @@ class MapViewModel(
                 .isEmpty()
         )
 
-    private val _mapCenter = MutableStateFlow<LatLng>(LatLng.ORIGIN)
+    private val _mapCenter = MutableStateFlow(LatLng.ORIGIN)
     val mapCenter: StateFlow<LatLng>
         get() = _mapCenter.asStateFlow()
 
@@ -138,9 +133,12 @@ class MapViewModel(
 
     private val mapBounds = Channel<Pair<LatLng, LatLng>>(capacity = Channel.Factory.CONFLATED)
 
-    val latestReportPosition = flow {
-        emit(reportDatabaseManager.reportDb.value.positionDao().getLatestPosition())
-    }
+    val latestReportPosition =
+        reportProvider
+            .getLatestReportLocation()
+            .map { report -> report?.let { LatLng(it.latitude, it.longitude) } }
+            .take(1)
+            .shareIn(viewModelScope, started = SharingStarted.Eagerly)
 
     val heatMapTiles =
         mapBounds
@@ -150,14 +148,12 @@ class MapViewModel(
                 val (minLat, minLon) = bounds.first
                 val (maxLat, maxLon) = bounds.second
 
-                reportDatabaseManager.reportDb.value
-                    .reportDao()
-                    .getReportsInsideBoundingBox(
-                        minLatitude = minLat,
-                        minLongitude = minLon,
-                        maxLatitude = maxLat,
-                        maxLongitude = maxLon,
-                    )
+                reportProvider.getReportsInsideBoundingBox(
+                    minLatitude = minLat,
+                    minLongitude = minLon,
+                    maxLatitude = maxLat,
+                    maxLongitude = maxLon,
+                )
             }
             .combine(
                 flow = zoom.map { zoom -> mapZoomToGeohexResolution(zoom) }.distinctUntilChanged(),

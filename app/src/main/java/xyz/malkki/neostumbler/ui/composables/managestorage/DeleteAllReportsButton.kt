@@ -9,17 +9,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.db.ReportDatabase
+import xyz.malkki.neostumbler.data.reports.ReportRemover
 import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.ui.composables.shared.ConfirmationDialog
 
 @Composable
-fun DeleteAllReportsButton(reportDb: StateFlow<ReportDatabase>) {
+fun DeleteAllReportsButton(reportRemover: ReportRemover = koinInject()) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
@@ -35,7 +33,7 @@ fun DeleteAllReportsButton(reportDb: StateFlow<ReportDatabase>) {
                 showConfirmationDialog.value = false
 
                 coroutineScope.launch {
-                    withContext(Dispatchers.IO) { reportDb.value.clearAllTables() }
+                    reportRemover.deleteAll()
 
                     context.showToast(
                         ContextCompat.getString(context, R.string.toast_deleted_all_reports)

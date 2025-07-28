@@ -5,13 +5,9 @@ import android.content.Context
 import android.location.LocationManager
 import androidx.annotation.RequiresPermission
 import androidx.core.content.getSystemService
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
+import xyz.malkki.neostumbler.data.settings.Settings
 
-class PassiveScanManager(
-    private val context: Context,
-    private val settingsStore: DataStore<Preferences>,
-) {
+class PassiveScanManager(private val context: Context, private val settings: Settings) {
     @RequiresPermission(
         allOf =
             [

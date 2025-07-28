@@ -63,7 +63,7 @@ import androidx.paging.compose.itemKey
 import java.text.DecimalFormat
 import org.koin.androidx.compose.koinViewModel
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.db.entities.ReportWithStats
+import xyz.malkki.neostumbler.core.report.ReportWithStats
 import xyz.malkki.neostumbler.extensions.defaultLocale
 import xyz.malkki.neostumbler.extensions.getQuantityString
 import xyz.malkki.neostumbler.scanner.ScannerService

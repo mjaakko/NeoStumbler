@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
+import xyz.malkki.neostumbler.data.settings.DataStoreSettings
 import xyz.malkki.neostumbler.ui.composables.settings.SliderSetting
 
 class SliderSettingTest {
@@ -49,7 +50,7 @@ class SliderSettingTest {
                 step = step,
                 default = 0,
                 valueFormatter = { "value: $it" },
-                settingsStore = settingsStore,
+                settings = DataStoreSettings(settingsStore),
                 saveButtonText = "save",
             )
         }

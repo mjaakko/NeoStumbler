@@ -3,12 +3,14 @@ package xyz.malkki.neostumbler.scanner
 import kotlin.math.abs
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
-import xyz.malkki.neostumbler.domain.BluetoothBeacon
-import xyz.malkki.neostumbler.domain.CellTower
-import xyz.malkki.neostumbler.domain.ObservedDevice
-import xyz.malkki.neostumbler.domain.Position
-import xyz.malkki.neostumbler.domain.WifiAccessPoint
-import xyz.malkki.neostumbler.scanner.data.ReportData
+import xyz.malkki.neostumbler.core.MacAddress
+import xyz.malkki.neostumbler.core.emitter.BluetoothBeacon
+import xyz.malkki.neostumbler.core.emitter.CellTower
+import xyz.malkki.neostumbler.core.emitter.Emitter
+import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
+import xyz.malkki.neostumbler.core.observation.EmitterObservation
+import xyz.malkki.neostumbler.core.observation.PositionObservation
+import xyz.malkki.neostumbler.core.report.ReportData
 import xyz.malkki.neostumbler.scanner.postprocess.ReportPostProcessor
 
 // Maximum age for observed devices. This is used to filter out old data when e.g. there is no GPS
@@ -16,10 +18,10 @@ import xyz.malkki.neostumbler.scanner.postprocess.ReportPostProcessor
 private val OBSERVED_DEVICE_MAX_AGE = 30.seconds
 
 fun createReports(
-    positions: List<Position>,
-    cellTowers: List<CellTower>,
-    wifiAccessPoints: List<WifiAccessPoint>,
-    bluetoothBeacons: List<BluetoothBeacon>,
+    positions: List<PositionObservation>,
+    cellTowers: List<EmitterObservation<CellTower, String>>,
+    wifiAccessPoints: List<EmitterObservation<WifiAccessPoint, MacAddress>>,
+    bluetoothBeacons: List<EmitterObservation<BluetoothBeacon, MacAddress>>,
     postProcessors: List<ReportPostProcessor>,
 ): List<ReportData> {
     val cellTowersByPosition = cellTowers.groupByMinTimestampDiff(positions).filterOldData()
@@ -49,16 +51,18 @@ fun createReports(
         .filter { report -> !report.isEmpty }
 }
 
-private fun <D : ObservedDevice<*>> List<D>.groupByMinTimestampDiff(
-    positions: List<Position>
-): Map<Position, List<D>> = groupBy { device ->
-    positions.minBy { position -> abs(position.timestamp - device.timestamp) }
+private fun <E : Emitter<K>, K> List<EmitterObservation<E, K>>.groupByMinTimestampDiff(
+    positions: List<PositionObservation>
+): Map<PositionObservation, List<EmitterObservation<E, K>>> = groupBy { observation ->
+    positions.minBy { position -> abs(position.timestamp - observation.timestamp) }
 }
 
-private fun <D : ObservedDevice<*>> Map<Position, List<D>>.filterOldData() =
+private fun <E : Emitter<K>, K> Map<PositionObservation, List<EmitterObservation<E, K>>>
+    .filterOldData() =
     mapValues { (position, devices) ->
-            devices.filter { device ->
-                abs(device.timestamp - position.timestamp).milliseconds <= OBSERVED_DEVICE_MAX_AGE
+            devices.filter { observation ->
+                abs(observation.timestamp - position.timestamp).milliseconds <=
+                    OBSERVED_DEVICE_MAX_AGE
             }
         }
         .filterValues { it.isNotEmpty() }

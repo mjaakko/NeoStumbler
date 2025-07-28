@@ -1,6 +1,6 @@
 package xyz.malkki.neostumbler.scanner.postprocess
 
-import xyz.malkki.neostumbler.scanner.data.ReportData
+import xyz.malkki.neostumbler.core.report.ReportData
 
 /**
  * Filters Wi-Fi networks that should not be sent to geolocation services, i.e. hidden networks with
@@ -11,7 +11,7 @@ class HiddenWifiFilterer : ReportPostProcessor {
         return reportData.copy(
             wifiAccessPoints =
                 reportData.wifiAccessPoints.filter { wifiAccessPoint ->
-                    val ssid = wifiAccessPoint.ssid
+                    val ssid = wifiAccessPoint.emitter.ssid
 
                     !ssid.isNullOrBlank() &&
                         !ssid.endsWith("_nomap")

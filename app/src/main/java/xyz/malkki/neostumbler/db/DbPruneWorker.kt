@@ -1,22 +1,20 @@
 package xyz.malkki.neostumbler.db
 
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.WorkerParameters
 import java.time.ZonedDateTime
 import kotlin.time.DurationUnit
 import kotlin.time.measureTimedValue
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.first
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import timber.log.Timber
-import xyz.malkki.neostumbler.PREFERENCES
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.data.reports.ReportRemover
+import xyz.malkki.neostumbler.data.settings.Settings
+import xyz.malkki.neostumbler.data.settings.getIntFlow
 
 /** Worker for deleting old scan reports from the local DB */
 class DbPruneWorker(appContext: Context, params: WorkerParameters) :
@@ -30,20 +28,18 @@ class DbPruneWorker(appContext: Context, params: WorkerParameters) :
         const val DEFAULT_MAX_AGE_DAYS: Int = 60
     }
 
-    private val reportDatabaseManager: ReportDatabaseManager by inject()
+    private val reportRemover: ReportRemover by inject()
 
-    private val settingsStore: DataStore<Preferences> by inject<DataStore<Preferences>>(PREFERENCES)
+    private val settings: Settings by inject()
 
-    private suspend fun getMaxAgeDays(): Int? {
-        return settingsStore.data
-            .map { prefs -> prefs[intPreferencesKey(PreferenceKeys.DB_PRUNE_DATA_MAX_AGE_DAYS)] }
-            .firstOrNull()
+    private suspend fun getMaxAgeDays(): Int {
+        return settings
+            .getIntFlow(PreferenceKeys.DB_PRUNE_DATA_MAX_AGE_DAYS, DEFAULT_MAX_AGE_DAYS)
+            .first()
     }
 
     override suspend fun doWork(): Result {
-        val reportDao = reportDatabaseManager.reportDb.value.reportDao()
-
-        val maxAgeDays = getMaxAgeDays() ?: DEFAULT_MAX_AGE_DAYS
+        val maxAgeDays = getMaxAgeDays()
         if (maxAgeDays < 0) {
             // If the max age is negative, DB pruning has been disabled in the settings -> succeed
             // immediately
@@ -54,7 +50,8 @@ class DbPruneWorker(appContext: Context, params: WorkerParameters) :
 
         Timber.i("Deleting reports older than $minTimestamp")
 
-        val (deleteCount, duration) = measureTimedValue { reportDao.deleteOlderThan(minTimestamp) }
+        val (deleteCount, duration) =
+            measureTimedValue { reportRemover.deleteOlderThan(minTimestamp) }
 
         Timber.i("Deleted $deleteCount reports in ${duration.toString(DurationUnit.SECONDS, 1)}")
 
