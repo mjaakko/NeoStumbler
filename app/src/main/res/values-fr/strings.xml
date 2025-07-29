@@ -187,8 +187,8 @@
     <string name="settings_group_privacy">Vie privée</string>
     <plurals name="wifi_filter_settings_description">
         <item quantity="one">%d SSID filtré</item>
-        <item quantity="many">%d de SSIDs filtrés</item>
-        <item quantity="other">%d SSIDs filtrés</item>
+        <item quantity="many">%d SSID filtrés</item>
+        <item quantity="other">%d SSID filtrés</item>
     </plurals>
     <string name="wifi_filter_settings_title">Filtrer les Wi-Fis par SSID</string>
     <string name="wifi_filter_settings_hint">Les réseaux Wi-Fi dont le SSID contient l\'un de ces mots-clés ne sont pas collectés</string>
@@ -216,4 +216,10 @@
     <string name="moving_device_filter_title">Filtrer les appareils mobiles</string>
     <string name="crash_log_title">Journal de plantage</string>
     <string name="crash_log_entry_title">Plantage #%d</string>
+    <string name="text_copied_to_clipboard">Texte copié !</string>
+    <string name="distance_to_estimated_location">Distance à la localisation estimée : %d m</string>
+    <string name="moving_device_filter_description">Les réseaux Wi-Fi et balises Bluetooth mobiles sont automatiquement détectés et supprimés des rapports</string>
+    <string name="map_tile_source_custom_title">Personnalisé</string>
+    <string name="map_tile_source_custom_style_url">URL du style de carte personnalisé</string>
+    <string name="map_show_coverage_layer">Afficher la couverture</string>
 </resources>
