@@ -24,10 +24,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -35,8 +32,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entry
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
+import androidx.navigation3.ui.NavDisplay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.serialization.Serializable
 import org.koin.android.ext.android.inject
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.data.settings.Settings
@@ -70,6 +75,8 @@ class MainActivity : AppCompatActivity() {
         setContent {
             val dynamicColorState = dynamicColorFlow.collectAsState()
 
+            val navigationBackstack = rememberNavBackStack(ReportsNavKey)
+
             NeoStumblerTheme(dynamicColor = dynamicColorState.value == true) {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize()) {
@@ -78,26 +85,24 @@ class MainActivity : AppCompatActivity() {
                             Tab(
                                 title = stringResource(R.string.map_tab_title),
                                 icon = rememberVectorPainter(Icons.Filled.Place),
-                                render = { MapScreen() },
+                                navKey = MapNavKey,
                             ),
                             Tab(
                                 title = stringResource(R.string.reports_tab_title),
                                 icon = rememberVectorPainter(Icons.AutoMirrored.Default.List),
-                                render = { ReportsScreen() },
+                                navKey = ReportsNavKey,
                             ),
                             Tab(
                                 title = stringResource(R.string.statistics_tab_title),
                                 icon = painterResource(id = R.drawable.statistics_24),
-                                render = { StatisticsScreen() },
+                                navKey = StatisticsNavKey,
                             ),
                             Tab(
                                 title = stringResource(R.string.settings_tab_title),
                                 icon = rememberVectorPainter(Icons.Filled.Settings),
-                                render = { SettingsScreen() },
+                                navKey = SettingsNavKey,
                             ),
                         )
-
-                    val selectedTabIndex = rememberSaveable { mutableIntStateOf(1) }
 
                     Scaffold(
                         topBar = {
@@ -113,19 +118,36 @@ class MainActivity : AppCompatActivity() {
                         },
                         bottomBar = {
                             NavigationBar {
-                                tabs.forEachIndexed { index, (title, icon) ->
+                                tabs.forEach { (title, icon, navKey) ->
                                     NavigationBarItem(
                                         icon = { Icon(icon, contentDescription = title) },
                                         label = { Text(title) },
-                                        selected = selectedTabIndex.intValue == index,
-                                        onClick = { selectedTabIndex.intValue = index },
+                                        selected = navigationBackstack.last() == navKey,
+                                        onClick = {
+                                            navigationBackstack.removeLastOrNull()
+                                            navigationBackstack.add(navKey)
+                                        },
                                     )
                                 }
                             }
                         },
                         content = {
                             Column(modifier = Modifier.fillMaxSize().padding(paddingValues = it)) {
-                                tabs[selectedTabIndex.intValue].render()
+                                NavDisplay(
+                                    entryDecorators =
+                                        listOf(
+                                            rememberSavedStateNavEntryDecorator(),
+                                            rememberViewModelStoreNavEntryDecorator(),
+                                        ),
+                                    backStack = navigationBackstack,
+                                    entryProvider =
+                                        entryProvider {
+                                            entry<MapNavKey> { MapScreen() }
+                                            entry<ReportsNavKey> { ReportsScreen() }
+                                            entry<StatisticsNavKey> { StatisticsScreen() }
+                                            entry<SettingsNavKey> { SettingsScreen() }
+                                        },
+                                )
                             }
                         },
                         contentWindowInsets =
@@ -136,9 +158,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private data class Tab(
-        val title: String,
-        val icon: Painter,
-        val render: @Composable () -> Unit,
-    )
+    private data class Tab(val title: String, val icon: Painter, val navKey: NavKey)
+
+    @Serializable private object MapNavKey : NavKey
+
+    @Serializable private object ReportsNavKey : NavKey
+
+    @Serializable private object StatisticsNavKey : NavKey
+
+    @Serializable private object SettingsNavKey : NavKey
 }

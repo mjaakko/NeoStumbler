@@ -175,15 +175,11 @@ dependencies {
     implementation(project(":libs:geography"))
     implementation(project(":libs:ichnaea"))
     implementation(project(":libs:utils"))
-    implementation(project(":libs:room-converters"))
     implementation(project(":libs:executors"))
     implementation(project(":libs:broadcast-receiver-flow"))
 
     implementation(project(":app:core"))
     implementation(project(":app:core:mapper:android-location"))
-
-    implementation(project(":app:data:emitter:api"))
-    implementation(project(":app:data:location:api"))
 
     implementation(project(":app:data:emitter:android"))
 
@@ -206,13 +202,12 @@ dependencies {
 
     implementation(libs.androidx.splashscreen)
 
-    implementation(libs.androidx.lifecycleRuntime)
-    implementation(libs.androidx.lifecycleRuntimeCompose)
-    implementation(libs.androidx.lifecycleViewmodel)
-    implementation(libs.androidx.lifecycleViewmodelCompose)
+    implementation(libs.bundles.androidxLifecycle)
 
     implementation(libs.androidx.pagingCommon)
     implementation(libs.androidx.pagingCompose)
+
+    implementation(libs.bundles.androidxNavigation)
 
     val composeBom = platform(libs.androidx.composeBom)
     implementation(composeBom)
@@ -248,8 +243,7 @@ dependencies {
 
     implementation(libs.androidx.datastore.preferences)
 
-    implementation(libs.androidx.workRuntime)
-    implementation(libs.androidx.workRuntimeKtx)
+    implementation(libs.bundles.androidxWork)
 
     implementation(libs.timber)
 
@@ -263,15 +257,13 @@ dependencies {
 
     implementation(libs.androidBeaconLibrary)
 
-    implementation(libs.mapLibre)
-    implementation(libs.mapLibreAnnotationsPlugin)
+    implementation(libs.bundles.mapLibre)
 
     implementation(libs.geohex)
 
     implementation(libs.fastcsv)
 
-    implementation(libs.vicoCompose)
-    implementation(libs.vicoComposeMaterial3)
+    implementation(libs.bundles.vico)
 
     "fullImplementation"(libs.playservices.cronet)
     "fullImplementation"(libs.cronetOkhttp)
