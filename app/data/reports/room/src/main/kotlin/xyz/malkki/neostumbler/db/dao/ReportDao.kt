@@ -148,7 +148,9 @@ internal interface ReportDao {
         maxLongitude: Double,
     ): Flow<List<ReportWithLocation>>
 
-    @Query("SELECT DISTINCT DATE(ROUND(r.timestamp / 1000), 'unixepoch') FROM Report r")
+    @Query(
+        "SELECT DISTINCT DATE(ROUND(r.timestamp / 1000), 'unixepoch', 'localtime') FROM Report r"
+    )
     fun getReportDates(): Flow<List<LocalDate>>
 }
 
