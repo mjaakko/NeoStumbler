@@ -222,7 +222,7 @@ private fun ReportWifisList(wifiAccessPoints: List<ReportEmitter<WifiAccessPoint
                     style = MaterialTheme.typography.bodySmall,
                 )
 
-                wifiAccessPoint.emitter.radioType?.let { radioType ->
+                wifiAccessPoint.emitter.radioType?.to802String()?.let { radioType ->
                     Text(
                         text = stringResource(R.string.radio_type, radioType),
                         style = MaterialTheme.typography.bodySmall,
