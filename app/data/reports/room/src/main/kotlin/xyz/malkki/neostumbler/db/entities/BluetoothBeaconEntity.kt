@@ -1,12 +1,9 @@
 package xyz.malkki.neostumbler.db.entities
 
-import android.os.SystemClock
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import java.time.Instant
-import java.time.temporal.ChronoUnit
 import xyz.malkki.neostumbler.core.MacAddress
 import xyz.malkki.neostumbler.core.emitter.BluetoothBeacon
 import xyz.malkki.neostumbler.core.observation.EmitterObservation
@@ -36,18 +33,12 @@ internal data class BluetoothBeaconEntity(
     companion object {
         fun fromBluetoothBeacon(
             reportId: Long,
-            reportTimestamp: Instant,
+            reportTimestamp: Long,
             emitterObservation: EmitterObservation<BluetoothBeacon, MacAddress>,
         ): BluetoothBeaconEntity {
             val beacon = emitterObservation.emitter
 
-            val age =
-                maxOf(
-                    0,
-                    Instant.now()
-                        .minusMillis(SystemClock.elapsedRealtime() - emitterObservation.timestamp)
-                        .until(reportTimestamp, ChronoUnit.MILLIS),
-                )
+            val age = reportTimestamp - emitterObservation.timestamp
 
             return BluetoothBeaconEntity(
                 id = 0,

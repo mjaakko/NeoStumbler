@@ -17,36 +17,51 @@ class RoomReportSaver(private val reportDatabaseManager: ReportDatabaseManager) 
         val reportDatabase = reportDatabaseManager.reportDb.value
 
         reportDatabase.withTransaction {
-            val reportTimestamp =
-                Instant.now()
-                    .minusMillis(SystemClock.elapsedRealtime() - (reportData.position.timestamp))
+            // Location timestamp is used for the report timestamp (note that this is milliseconds
+            // since boot)
+            val reportTimestamp = reportData.position.timestamp
 
-            val report = Report(id = 0, reportTimestamp, false, null)
+            val reportTimestampInstant =
+                Instant.now().minusMillis(SystemClock.elapsedRealtime() - reportTimestamp)
+
+            val report = Report(id = 0, reportTimestampInstant, false, null)
             val reportId = reportDatabase.reportDao().insert(report)
 
             val positionEntity =
                 PositionEntity.createFromPositionObservation(
-                    reportId,
-                    reportTimestamp,
-                    reportData.position,
+                    reportId = reportId,
+                    reportTimestamp = reportTimestamp,
+                    positionObservation = reportData.position,
                 )
             reportDatabase.positionDao().insert(positionEntity)
 
             val wifiAccessPointEntities =
                 reportData.wifiAccessPoints.map {
-                    WifiAccessPointEntity.fromWifiAccessPoint(it, reportTimestamp, reportId)
+                    WifiAccessPointEntity.fromWifiAccessPoint(
+                        emitterObservation = it,
+                        reportTimestamp = reportTimestamp,
+                        reportId = reportId,
+                    )
                 }
             reportDatabase.wifiAccessPointDao().insertAll(*wifiAccessPointEntities.toTypedArray())
 
             val cellTowerEntities =
                 reportData.cellTowers.map {
-                    CellTowerEntity.fromCellTower(it, reportTimestamp, reportId)
+                    CellTowerEntity.fromCellTower(
+                        emitterObservation = it,
+                        reportTimestamp = reportTimestamp,
+                        reportId = reportId,
+                    )
                 }
             reportDatabase.cellTowerDao().insertAll(*cellTowerEntities.toTypedArray())
 
             val bluetoothBeaconEntities =
                 reportData.bluetoothBeacons.map {
-                    BluetoothBeaconEntity.fromBluetoothBeacon(reportId, reportTimestamp, it)
+                    BluetoothBeaconEntity.fromBluetoothBeacon(
+                        reportId = reportId,
+                        reportTimestamp = reportTimestamp,
+                        emitterObservation = it,
+                    )
                 }
             reportDatabase.bluetoothBeaconDao().insertAll(*bluetoothBeaconEntities.toTypedArray())
 

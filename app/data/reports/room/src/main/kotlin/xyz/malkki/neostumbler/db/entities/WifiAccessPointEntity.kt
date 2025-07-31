@@ -1,12 +1,9 @@
 package xyz.malkki.neostumbler.db.entities
 
-import android.os.SystemClock
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import java.time.Instant
-import java.time.temporal.ChronoUnit
 import xyz.malkki.neostumbler.core.MacAddress
 import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
 import xyz.malkki.neostumbler.core.observation.EmitterObservation
@@ -36,19 +33,12 @@ internal data class WifiAccessPointEntity(
     companion object {
         fun fromWifiAccessPoint(
             emitterObservation: EmitterObservation<WifiAccessPoint, MacAddress>,
-            reportTimestamp: Instant,
+            reportTimestamp: Long,
             reportId: Long,
         ): WifiAccessPointEntity {
             val wifiAccessPoint = emitterObservation.emitter
 
-            // Report time is truncated to seconds -> age can be negative by some milliseconds
-            val age =
-                maxOf(
-                    0,
-                    Instant.now()
-                        .minusMillis(SystemClock.elapsedRealtime() - (emitterObservation.timestamp))
-                        .until(reportTimestamp, ChronoUnit.MILLIS),
-                )
+            val age = reportTimestamp - emitterObservation.timestamp
 
             return WifiAccessPointEntity(
                 id = null,
