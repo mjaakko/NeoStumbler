@@ -4,7 +4,6 @@ import android.app.Notification
 import android.content.Context
 import android.content.pm.ServiceInfo
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.ForegroundInfo
@@ -25,6 +24,7 @@ import xyz.malkki.neostumbler.data.reports.ReportProvider
 import xyz.malkki.neostumbler.data.reports.ReportSaver
 import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.data.settings.getBooleanFlow
+import xyz.malkki.neostumbler.extensions.getTextCompat
 import xyz.malkki.neostumbler.http.isRetryable
 import xyz.malkki.neostumbler.ichnaea.mapper.getIchnaeaParams
 
@@ -168,7 +168,7 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) :
             .setLocalOnly(true)
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_DEFERRED)
             .setContentTitle(
-                ContextCompat.getString(applicationContext, R.string.notification_sending_reports)
+                applicationContext.getTextCompat(R.string.notification_sending_reports)
             )
             .setSmallIcon(R.drawable.sync_24)
             .build()

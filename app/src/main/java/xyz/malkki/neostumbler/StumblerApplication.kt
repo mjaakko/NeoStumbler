@@ -4,7 +4,6 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -58,6 +57,7 @@ import xyz.malkki.neostumbler.db.RoomReportSaver
 import xyz.malkki.neostumbler.db.RoomReportStatisticsProvider
 import xyz.malkki.neostumbler.db.RoomReportStorageMetadataProvider
 import xyz.malkki.neostumbler.export.CsvExporter
+import xyz.malkki.neostumbler.extensions.getTextCompat
 import xyz.malkki.neostumbler.http.getCallFactory
 import xyz.malkki.neostumbler.location.locationModule
 import xyz.malkki.neostumbler.scanner.passive.passiveScanningModule
@@ -202,10 +202,7 @@ class StumblerApplication : Application() {
         val scannerNotificationChannel =
             NotificationChannel(
                     STUMBLING_NOTIFICATION_CHANNEL_ID,
-                    ContextCompat.getString(
-                        this,
-                        R.string.scanner_status_notification_channel_name,
-                    ),
+                    getTextCompat(R.string.scanner_status_notification_channel_name),
                     NotificationManager.IMPORTANCE_LOW,
                 )
                 .apply {
@@ -217,7 +214,7 @@ class StumblerApplication : Application() {
         val reportUploadNotificationChannel =
             NotificationChannel(
                     REPORT_UPLOAD_NOTIFICATION_CHANNEL_ID,
-                    ContextCompat.getString(this, R.string.report_upload_notification_channel_name),
+                    getTextCompat(R.string.report_upload_notification_channel_name),
                     NotificationManager.IMPORTANCE_LOW,
                 )
                 .apply {
@@ -229,7 +226,7 @@ class StumblerApplication : Application() {
         val exportNotificationChannel =
             NotificationChannel(
                     EXPORT_NOTIFICATION_CHANNEL_ID,
-                    ContextCompat.getString(this, R.string.export_notification_channel_name),
+                    getTextCompat(R.string.export_notification_channel_name),
                     NotificationManager.IMPORTANCE_DEFAULT,
                 )
                 .apply {

@@ -8,7 +8,6 @@ import android.content.Intent
 import android.os.Build
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
-import androidx.core.content.ContextCompat
 import androidx.core.service.quicksettings.PendingIntentActivityWrapper
 import androidx.core.service.quicksettings.TileServiceCompat
 import kotlinx.coroutines.CoroutineScope
@@ -23,6 +22,7 @@ import xyz.malkki.neostumbler.MainActivity
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.getQuantityString
+import xyz.malkki.neostumbler.extensions.getTextCompat
 import xyz.malkki.neostumbler.scanner.ScannerService
 import xyz.malkki.neostumbler.utils.OneTimeActionHelper
 import xyz.malkki.neostumbler.utils.PermissionHelper
@@ -76,13 +76,8 @@ class ScannerTileService : TileService() {
                         qsTile
                             .apply {
                                 // Label has to be updated here to support per-app locales even
-                                // though it's
-                                // specified in the manifest
-                                label =
-                                    ContextCompat.getString(
-                                        this@ScannerTileService,
-                                        R.string.wireless_scanning,
-                                    )
+                                // though it's specified in the manifest
+                                label = getTextCompat(R.string.wireless_scanning)
 
                                 subtitle =
                                     if (scanningActive) {

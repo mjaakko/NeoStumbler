@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.provider.Settings
@@ -11,8 +12,9 @@ import android.widget.Toast
 import androidx.annotation.IntDef
 import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat
+import androidx.core.app.LocaleManagerCompat
 import androidx.core.content.getSystemService
+import androidx.core.os.ConfigurationCompat
 import androidx.core.os.LocaleListCompat
 import java.util.Locale
 
@@ -82,11 +84,23 @@ fun Context.getQuantityString(
     quantity: Int,
     vararg formatArgs: Any = emptyArray<Any>(),
 ): String {
-    return ContextCompat.getContextForLanguage(this)
-        .resources
-        .getQuantityString(resId, quantity, *formatArgs)
+    return getContextForUserLanguage().resources.getQuantityString(resId, quantity, *formatArgs)
 }
 
 fun Context.getTextCompat(@StringRes resId: Int): CharSequence {
-    return ContextCompat.getContextForLanguage(this).resources.getText(resId)
+    return getContextForUserLanguage().resources.getText(resId)
+}
+
+/** Creates a [Context] which uses the user-configured language */
+private fun Context.getContextForUserLanguage(): Context {
+    // ContextCompat should be able to do this, but it doesn't seem to work reliably
+    val locales = LocaleManagerCompat.getApplicationLocales(this)
+
+    return if (!locales.isEmpty) {
+        Configuration(this.resources.configuration)
+            .apply { ConfigurationCompat.setLocales(this, locales) }
+            .let { configuration -> createConfigurationContext(configuration) }
+    } else {
+        this
+    }
 }
