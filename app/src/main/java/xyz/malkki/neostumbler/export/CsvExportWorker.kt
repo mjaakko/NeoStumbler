@@ -4,7 +4,6 @@ import android.app.Notification
 import android.content.Context
 import android.content.pm.ServiceInfo
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
@@ -18,6 +17,7 @@ import org.koin.core.component.inject
 import timber.log.Timber
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
+import xyz.malkki.neostumbler.extensions.getTextCompat
 
 class CsvExportWorker(appContext: Context, private val params: WorkerParameters) :
     CoroutineWorker(appContext, params), KoinComponent {
@@ -39,9 +39,7 @@ class CsvExportWorker(appContext: Context, private val params: WorkerParameters)
             .setOngoing(true)
             .setLocalOnly(true)
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
-            .setContentTitle(
-                ContextCompat.getString(applicationContext, R.string.notification_exporting_data)
-            )
+            .setContentTitle(applicationContext.getTextCompat(R.string.notification_exporting_data))
             .setSmallIcon(R.drawable.upload_file_24)
             .build()
     }

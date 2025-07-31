@@ -20,7 +20,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.FOREGROUND_SERVICE_DEFERRED
 import androidx.core.app.NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE
 import androidx.core.app.PendingIntentCompat
-import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CoroutineScope
@@ -68,6 +67,7 @@ import xyz.malkki.neostumbler.data.settings.getEnumFlow
 import xyz.malkki.neostumbler.data.settings.getIntFlow
 import xyz.malkki.neostumbler.data.settings.getStringSetFlow
 import xyz.malkki.neostumbler.extensions.getQuantityString
+import xyz.malkki.neostumbler.extensions.getTextCompat
 import xyz.malkki.neostumbler.extensions.isWifiScanThrottled
 import xyz.malkki.neostumbler.extensions.toPercentage
 import xyz.malkki.neostumbler.scanner.movement.ConstantMovementDetector
@@ -422,7 +422,9 @@ class ScannerService : Service() {
             )
         val satellitesInUseText =
             gpsStats?.let {
-                ContextCompat.getString(applicationContext, R.string.satellites_in_use)
+                applicationContext
+                    .getTextCompat(R.string.satellites_in_use)
+                    .toString()
                     .format(it.satellitesUsedInFix, it.satellitesTotal)
             }
 
@@ -434,10 +436,7 @@ class ScannerService : Service() {
                 setSmallIcon(R.drawable.radar_24)
 
                 setContentTitle(
-                    ContextCompat.getString(
-                        applicationContext,
-                        R.string.notification_wireless_scanning_title,
-                    )
+                    applicationContext.getTextCompat(R.string.notification_wireless_scanning_title)
                 )
 
                 if (
@@ -487,7 +486,7 @@ class ScannerService : Service() {
                 addAction(
                     NotificationCompat.Action(
                         R.drawable.stop_24,
-                        ContextCompat.getString(applicationContext, R.string.stop),
+                        applicationContext.getTextCompat(R.string.stop),
                         stopScanningIntent,
                     )
                 )
