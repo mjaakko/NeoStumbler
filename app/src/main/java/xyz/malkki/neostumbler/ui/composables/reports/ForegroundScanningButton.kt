@@ -38,9 +38,9 @@ import xyz.malkki.neostumbler.ui.composables.shared.PermissionsDialog
 import xyz.malkki.neostumbler.utils.OneTimeActionHelper
 
 private val requiredPermissions =
-    mutableListOf<String>()
-        .apply {
+    buildList {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+
                 add(Manifest.permission.POST_NOTIFICATIONS)
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -142,8 +142,14 @@ fun ForegroundScanningButton() {
     }
 
     LaunchedEffect(intent) {
-        if (intent?.getBooleanExtra(MainActivity.EXTRA_START_SCANNING, false) == true) {
+        val shouldStartScanning =
+            intent?.getBooleanExtra(MainActivity.EXTRA_START_SCANNING, false) == true
+
+        if (shouldStartScanning) {
             startScanning()
+
+            // Modify the intent to avoid restarting scanning after a configuration change
+            context.getActivity()?.intent?.putExtra(MainActivity.EXTRA_START_SCANNING, false)
         }
     }
 

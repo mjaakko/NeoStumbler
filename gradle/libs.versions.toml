@@ -11,6 +11,7 @@ androidxLifecycle = "2.9.1"
 androidxPaging = "3.3.6"
 androidxRoom = "2.7.2"
 androidxWork = "2.10.2"
+androidxNavigation = "1.0.0-alpha05"
 
 androidxComposeBom = "2025.06.01"
 
@@ -35,6 +36,7 @@ androidx-lifecycleRuntimeCompose = { module = "androidx.lifecycle:lifecycle-runt
 androidx-lifecycleRuntime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
 androidx-lifecycleViewmodelCompose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidxLifecycle" }
 androidx-lifecycleViewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidxLifecycle" }
+androidx-lifecycleViewmodelNavigation = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version = "1.0.0-alpha03" }
 
 androidx-pagingCommon = { module = "androidx.paging:paging-common-ktx", version.ref = "androidxPaging" }
 androidx-pagingCompose = { module = "androidx.paging:paging-compose", version.ref = "androidxPaging" }
@@ -49,6 +51,10 @@ androidx-composeUiTestManifest = { module = "androidx.compose.ui:ui-test-manifes
 androidx-composeMaterial3 = { module = "androidx.compose.material3:material3" }
 androidx-composeMaterialIconsExtended = { module = "androidx.compose.material:material-icons-extended-android" }
 androidx-composeUiTestJunit = { module = "androidx.compose.ui:ui-test-junit4" }
+
+androidx-navigationRuntime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "androidxNavigation" }
+androidx-navigationUi = { module = "androidx.navigation3:navigation3-ui", version.ref = "androidxNavigation" }
+
 
 androidx-testJunit = { module = "androidx.test.ext:junit", version = "1.2.1" }
 androidx-testEspresso = { module = "androidx.test.espresso:espresso-core", version = "3.6.1" }
@@ -125,3 +131,14 @@ bundletool = { id = "app.accrescent.tools.bundletool", version = "0.2.4" }
 ktfmt = { id = "com.ncorti.ktfmt.gradle", version = "0.23.0" }
 
 detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.8" }
+
+[bundles]
+vico = ["vicoCompose", "vicoComposeMaterial3"]
+
+mapLibre = ["mapLibre", "mapLibreAnnotationsPlugin"]
+
+androidxWork = ["androidx-workRuntime", "androidx-workRuntimeKtx"]
+
+androidxLifecycle = ["androidx-lifecycleRuntime", "androidx-lifecycleRuntimeCompose", "androidx-lifecycleViewmodel", "androidx-lifecycleViewmodelCompose"]
+
+androidxNavigation = ["androidx-navigationRuntime", "androidx-navigationUi", "androidx-lifecycleViewmodelNavigation"]
