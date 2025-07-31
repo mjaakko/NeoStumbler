@@ -1,13 +1,10 @@
 package xyz.malkki.neostumbler.db.entities
 
-import android.os.SystemClock
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import java.time.Instant
-import java.time.temporal.ChronoUnit
 import xyz.malkki.neostumbler.core.Position
 import xyz.malkki.neostumbler.core.observation.PositionObservation
 import xyz.malkki.neostumbler.core.report.ReportPosition
@@ -41,19 +38,10 @@ internal data class PositionEntity(
     companion object {
         fun createFromPositionObservation(
             reportId: Long,
-            reportTimestamp: Instant,
+            reportTimestamp: Long,
             positionObservation: PositionObservation,
         ): PositionEntity {
-            // Report time is truncated to seconds -> age can be negative by some milliseconds
-            val age =
-                maxOf(
-                    0,
-                    Instant.now()
-                        .minusMillis(
-                            SystemClock.elapsedRealtime() - (positionObservation.timestamp)
-                        )
-                        .until(reportTimestamp, ChronoUnit.MILLIS),
-                )
+            val age = reportTimestamp - positionObservation.timestamp
 
             return PositionEntity(
                 id = 0,
