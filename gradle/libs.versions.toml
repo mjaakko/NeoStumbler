@@ -109,7 +109,7 @@ fastcsv = { module = "de.siegmar:fastcsv", version = "3.7.0" }
 vicoCompose = { module = "com.patrykandpatrick.vico:compose", version.ref = "vico" }
 vicoComposeMaterial3 = { module = "com.patrykandpatrick.vico:compose-m3", version.ref = "vico" }
 
-mockitoKotlin = { module = "org.mockito.kotlin:mockito-kotlin", version = "5.4.0" }
+mockitoKotlin = { module = "org.mockito.kotlin:mockito-kotlin", version = "6.0.0" }
 
 awaitilityKotlin = { module = "org.awaitility:awaitility-kotlin", version = "4.3.0" }
 
