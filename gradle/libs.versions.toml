@@ -58,7 +58,7 @@ androidx-navigationUi = { module = "androidx.navigation3:navigation3-ui", versio
 
 androidx-testJunit = { module = "androidx.test.ext:junit", version = "1.2.1" }
 androidx-testEspresso = { module = "androidx.test.espresso:espresso-core", version = "3.6.1" }
-androidx-testRules = { module = "androidx.test:rules", version = "1.6.1" }
+androidx-testRules = { module = "androidx.test:rules", version = "1.7.0" }
 
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version = "1.1.4" }
 
