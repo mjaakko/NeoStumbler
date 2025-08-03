@@ -64,7 +64,9 @@ fun CoverageLayerSettings(settings: Settings = koinInject()) {
 
     SettingsItem(
         title = stringResource(R.string.coverage_layer),
-        description = tileJsonUrl.value ?: stringResource(R.string.coverage_layer_no_configured),
+        description =
+            tileJsonUrl.value.takeIf { !it.isNullOrBlank() }
+                ?: stringResource(R.string.coverage_layer_no_configured),
         onClick = { dialogOpen.value = true },
     )
 }
