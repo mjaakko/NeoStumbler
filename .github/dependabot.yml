@@ -20,6 +20,9 @@ updates:
         patterns:
           - 'com.android.application'
           - 'com.android.library'
+      androidx-test:
+        patterns:
+          - 'androidx.test*'
       hamcrest:
         patterns:
           - 'org.hamcrest*'
