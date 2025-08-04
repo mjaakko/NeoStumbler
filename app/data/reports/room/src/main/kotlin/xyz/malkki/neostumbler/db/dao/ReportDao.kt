@@ -23,7 +23,7 @@ internal interface ReportDao {
 
     @Query(
         """
-            UPDATE Report SET uploaded = 1 AND uploadTimestamp = :uploadTimestamp WHERE id IN (:reportIds)
+            UPDATE Report SET uploaded = '1', uploadTimestamp = :uploadTimestamp WHERE id IN (:reportIds)
         """
     )
     suspend fun markUpdated(uploadTimestamp: Instant, vararg reportIds: Long)
