@@ -93,7 +93,7 @@
     <string name="permission_rationale_post_notifications">Voor tonen van status­meldingen zĳn meldings­rechten vereist</string>
     <string name="bug_report_button">Probleem melden</string>
     <string name="save">Opslaan</string>
-    <string name="use">Gebruik</string>
+    <string name="use">Gebruiken</string>
     <string name="wireless_scanning">Draadloos scannen</string>
     <string name="import_data">Gegevens importeren</string>
     <string name="wifi_icon_description">Wifi-icoon</string>
@@ -142,7 +142,7 @@
     <string name="wifi_scan_frequency">Scan­frequentie voor wifi</string>
     <string name="cell_tower_scan_frequency">Scan­frequentie voor zend­masten</string>
     <string name="every_x_meters">Elke %d meter</string>
-    <string name="map_tile_source">Kaart bron</string>
+    <string name="map_tile_source">Kaarttegel­bron</string>
     <string name="mls_warning_text">Mozilla Location Service is gesloten en accepteert geen gegevens­inzendingen meer. Als alternatief voor MLS kunt u data naar beaconDB sturen, dat een service biedt die compatibel is met MLS\n\nLet op: beaconDB is nog in ontwikkeling en dit heeft invloed op de manier waarop uw data wordt verwerkt. U kunt het <annotation link="privacy_policy">privacy­beleid</annotation> lezen voor meer informatie\n\nWilt u beaconDB instellen als eind­punt? Dit kan later worden geconfigureerd in de instellingen</string>
     <string name="toast_reports_upload_failed_no_endpoint">Het uploaden van rapporten is mislukt, omdat er geen eind­punt is geconfigureerd</string>
     <string name="no_endpoint_configured">Geen eind­punt geconfigureerd</string>
@@ -154,7 +154,7 @@
     <string name="invalid_url">Ongeldige URL</string>
     <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Oké</string>
     <string name="troubleshooting_not_ok" tools:ignore="Typos">Probleem</string>
-    <string name="system_default_language">Systeem taal</string>
+    <string name="system_default_language">Standaard­taal van systeem</string>
     <string name="waiting_for_location">Wachten op locatie</string>
     <string name="delete_reports_from_area">Rapporten van gebied verwĳderen</string>
     <string name="export_raw_database_compress">comprimeer het databasebestand</string>
@@ -197,4 +197,8 @@
     <string name="delete_all">Alles verwĳderen</string>
     <string name="moving_device_filter_title">Bewegende apparaten wegfilteren</string>
     <string name="moving_device_filter_description">Bewegende wifi-netwerken en Bluetooth-bakens worden automatisch gedetecteerd en uit rapporten gefilterd</string>
+    <string name="distance_to_estimated_location">Afstand tot de geschatte locatie: %d m</string>
+    <string name="map_tile_source_custom_title">Aangepast</string>
+    <string name="map_tile_source_custom_style_url">Url voor aangepaste kaartstĳl</string>
+    <string name="map_show_coverage_layer">Dekkings­laag weergeven</string>
 </resources>
