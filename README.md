@@ -23,6 +23,9 @@ Services) such as [beaconDB](https://beacondb.net/).
 
 ## Downloads
 
+> [!TIP]
+> See the [user guide](docs/user_guide.md) for more details on how to use NeoStumbler
+
 There are two variants available:
 
 * *full* - includes all features
