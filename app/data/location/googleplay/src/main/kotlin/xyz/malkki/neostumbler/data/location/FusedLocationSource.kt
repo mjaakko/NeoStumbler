@@ -63,10 +63,6 @@ class FusedLocationSource(context: Context) : LocationSource {
             .requestLocationUpdates(locationRequest, ImmediateExecutor, locationCallback)
             .await()
 
-        awaitClose {
-            fusedLocationProviderClient.flushLocations().addOnCompleteListener {
-                fusedLocationProviderClient.removeLocationUpdates(locationCallback)
-            }
-        }
+        awaitClose { fusedLocationProviderClient.removeLocationUpdates(locationCallback) }
     }
 }
