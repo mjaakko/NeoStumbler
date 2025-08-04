@@ -35,9 +35,7 @@ fun createReports(
     return positions
         .map { position ->
             val cellTowersForPosition = cellTowersByPosition[position] ?: emptyList()
-            // At least 2 Wi-Fi access points are needed for valid Geosubmit reports
-            val wifiAccessPointsForPosition =
-                wifiAccessPointsByPosition[position]?.takeIf { it.size >= 2 } ?: emptyList()
+            val wifiAccessPointsForPosition = wifiAccessPointsByPosition[position] ?: emptyList()
             val bluetoothBeaconsForPosition = bluetoothBeaconsByPosition[position] ?: emptyList()
 
             ReportData(
