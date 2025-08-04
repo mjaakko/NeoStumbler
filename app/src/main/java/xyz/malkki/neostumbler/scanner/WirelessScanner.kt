@@ -171,16 +171,8 @@ class WirelessScanner(
                         val cells = cellTowersByKey.values.toList()
                         cellTowersByKey.clear()
 
-                        // Take Wi-Fis only if there's at least two, because two are needed for a
-                        // valid Geosubmit report
-                        val wifis =
-                            if (wifiAccessPointByMacAddr.size >= 2) {
-                                wifiAccessPointByMacAddr.values.toList().apply {
-                                    wifiAccessPointByMacAddr.clear()
-                                }
-                            } else {
-                                emptyList()
-                            }
+                        val wifis = wifiAccessPointByMacAddr.values.toList()
+                        wifiAccessPointByMacAddr.clear()
 
                         val bluetooths = bluetoothBeaconsByMacAddr.values.toList()
                         bluetoothBeaconsByMacAddr.clear()
