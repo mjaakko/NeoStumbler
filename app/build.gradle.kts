@@ -7,10 +7,10 @@ plugins {
 
 bundletool {
     signingConfig {
-        storeFile = file("../keystore.jks")
-        storePassword = System.getenv("SIGNING_STORE_PASSWORD")
-        keyAlias = System.getenv("SIGNING_KEY_ALIAS")
-        keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
+        storeFile.set(rootProject.layout.projectDirectory.file("keystore.jks"))
+        storePassword.set(providers.environmentVariable("SIGNING_STORE_PASSWORD"))
+        keyAlias.set(providers.environmentVariable("SIGNING_KEY_ALIAS"))
+        keyPassword.set(providers.environmentVariable("SIGNING_KEY_PASSWORD"))
     }
 }
 
@@ -21,9 +21,9 @@ android {
     signingConfigs {
         create("release") {
             storeFile = file("../keystore.jks")
-            storePassword = System.getenv("SIGNING_STORE_PASSWORD")
-            keyAlias = System.getenv("SIGNING_KEY_ALIAS")
-            keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
+            storePassword = providers.environmentVariable("SIGNING_STORE_PASSWORD").orNull
+            keyAlias = providers.environmentVariable("SIGNING_KEY_ALIAS").orNull
+            keyPassword = providers.environmentVariable("SIGNING_KEY_PASSWORD").orNull
         }
     }
 
