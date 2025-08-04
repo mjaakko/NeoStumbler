@@ -72,13 +72,13 @@ The application has two product flavors:
 
 ### Building
 
-* Build debug APK: `./gradlew buildFullDebug` or `./gradlew buildFdroidDebug`
-* Build release APK: `./gradlew buildFullRelease` or `./gradlew buildFdroidRelease`
+* Build debug APK: `./gradlew :app:assembleFullDebug` or `./gradlew :app:assembleFdroidDebug`
+* Build release APK: `./gradlew :app:assembleFullRelease` or `./gradlew :app:assembleFdroidRelease`
     * Note that by default this will build a signed APK
         * This needs a Java keystore file named `keystore.jks` in the project root directory and
-          setting values for environment variables (see `app/build.gradle`)
+          setting values for environment variables (see `app/build.gradle.kts`)
         * Alternatively, to build an unsigned APK, remove `signingConfigs` block from
-          `app/build.gradle`
+          `app/build.gradle.kts`
 
 ## Contributing
 
