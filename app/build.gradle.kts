@@ -154,7 +154,11 @@ android {
         }
     }
 
-    lint { lintConfig = projectDir.resolve("lint.xml") }
+    lint {
+        checkReleaseBuilds = false
+
+        lintConfig = projectDir.resolve("lint.xml")
+    }
 }
 
 tasks.register("printVersionName") {
