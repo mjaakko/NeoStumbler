@@ -10,7 +10,7 @@
         Automatic scanning uses Google Play Services activity recognition, which might not be available on your device
     </string>
     <string name="permission_rationale_background_location_autoscan">
-        Automatically starting scanning needs permission for background location
+        Automatically starting scanning when the app is not active needs permission for background location
     </string>
     <string name="permission_rationale_activity_recognition">
         Automatically starting scanning needs access to current activity

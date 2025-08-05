@@ -260,10 +260,10 @@
         Käyttölupa ilmoituksiin tarvitaan statusilmoitusten näyttämistä varten
     </string>
     <string name="permission_rationale_background_location_quick_settings">
-        Käyttölupa laitteen sijaintiin aina tarvitaan skannaamisen aloittamiseksi pika-asetuksista
+        Käyttölupa laitteen sijaintiin aina tarvitaan skannaamisen aloittamiseksi pika-asetuksista.\n\nHuomaa, että tämä on Android-käyttöjärjestelmän rajoitus. Sijaintia ei käytetä taustalla, ellet ota käyttöön passiivista tai automaattista skannausta
     </string>
     <string name="permission_rationale_background_location_passive_scan">
-        Sijaintipäivitysten saamiseksi sovelluksen ollessa suljettuna tarvitaan käyttölupa laitteen sijaintiin aina
+        Passiivinen datan keräys tarvitsee käyttöluvan sijaintiin aina raporttien luomiseksi sovelluksen ollessa taustalla
     </string>
     <string name="permission_rationale_location_map">
         Käyttölupa laitteen sijaintiin tarvitaan oman sijainnin näyttämiseksi kartalla

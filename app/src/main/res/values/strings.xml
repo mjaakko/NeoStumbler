@@ -255,10 +255,10 @@
         Showing status notification needs permission for notifications
     </string>
     <string name="permission_rationale_background_location_quick_settings">
-        Starting scanning from the quick settings needs access to location in the background
+        Starting scanning from the quick settings needs access to location in the background.\n\nNote that this is a restriction imposed by the Android operating system. Your location is not accessed in the background if you do not enable passive or automatic scanning
     </string>
     <string name="permission_rationale_background_location_passive_scan">
-        Receiving location updates when the app is not active requires access to location in the background
+        Passive data collection requires access to location in the background to create reports when the app is not active
     </string>
     <string name="permission_rationale_location_map">
         Showing your location on the map needs permission for location
