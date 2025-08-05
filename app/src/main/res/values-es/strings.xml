@@ -84,7 +84,7 @@
     <string name="permission_rationale_read_phone_state">Se necesitan permisos de teléfono para escanear torres de telefonía</string>
     <string name="permission_rationale_bluetooth">Se necesitan permisos de Bluetooth para escanear balizas Bluetooth</string>
     <string name="permission_rationale_post_notifications">Se necesitan permisos de notificación para mostrar el estado del escaneo</string>
-    <string name="permission_rationale_background_location_quick_settings">Se necesitan permisos de ubicación en segundo plano para iniciar el escaneo desde los ajustes rápidos</string>
+    <string name="permission_rationale_background_location_quick_settings">Se necesitan permisos de ubicación en segundo plano para iniciar el escaneo desde los ajustes rápidos.\n\nTen en cuenta que está restricción es impuesta por el sistema operativo. No se accede a tu ubicación en segundo plano si no habilitas el escaneo pasivo o automático.</string>
     <string name="permission_rationale_location_map">Se necesitan permisos de ubicación para mostrar tu ubicación en el mapa</string>
     <string name="troubleshooting_title">Detectar problemas</string>
     <string name="troubleshooting_description">Solucionar problemas comunes en escaneo</string>
@@ -194,7 +194,7 @@
     <string name="pause_scanning_on_low_battery_title">Pausar escaneo con batería baja</string>
     <string name="passive_scanning_title">Escaneo pasivo</string>
     <string name="passive_scanning_description">El escaneo pasivo crea informes en segundo plano con un impacto mínimo en la batería usando datos solicitados por otras aplicaciones.\n\nLa efectividad del escaneo pasivo dependerá del tipo de dispositivo, las aplicaciones que use y si tiene un proveedor de ubicación combinada disponible.\n\nTenga en cuenta que el escaneo pasivo no funciona con las balizas Bluetooth.\n\n¿Quieres activar el escaneo pasivo?</string>
-    <string name="permission_rationale_background_location_passive_scan">Recibir actualizaciones de ubicación cuando la aplicación no está activa requiere permisos de acceso a la ubicación en segundo plano</string>
+    <string name="permission_rationale_background_location_passive_scan">La obtención pasiva de datos requiere acceso a la ubicación en segundo plano para crear informes cuando la aplicación no esté activa</string>
     <string name="crash_log_title">Registro de errores</string>
     <string name="text_copied_to_clipboard">¡Texto copiado al portapapeles!</string>
     <string name="crash_log_entry_title">Error #%d</string>
