@@ -66,7 +66,7 @@
     <string name="permission_rationale_read_phone_state">Acesso ao status do telefone é necessário para a busca por redes móveis</string>
     <string name="permission_rationale_bluetooth">Para fazer a busca por sinalizadores Bluetooth, é necessária a permissão de Bluetooth</string>
     <string name="permission_rationale_post_notifications">Para mostrar a notificação de estado, é necessária a permissão de notificações</string>
-    <string name="permission_rationale_background_location_quick_settings">Para começar a busca pelas configurações rápidas, é necessário acesso à localização em segundo plano</string>
+    <string name="permission_rationale_background_location_quick_settings">Para iniciar a busca pelas configurações rápidas, é necessário acesso à localização em segundo plano.\n\nObserve que esta é uma restrição imposta pelo sistema operacional Android. Sua localização não será acessada em segundo plano se você não ativar a busca passiva ou automática</string>
     <string name="permission_rationale_location_map">
         Para mostrar sua localização no mapa, é necessário a permissão de localização
     </string>
@@ -194,7 +194,7 @@
     <string name="disabled">Desativado</string>
     <string name="pause_scanning_on_low_battery_title">Pausar a busca quando a bateria estiver fraca</string>
     <string name="pause_scanning_on_low_battery_description">Quando o nível da bateria está abaixo de %d%%</string>
-    <string name="permission_rationale_background_location_passive_scan">Receber atualizações de localização enquanto o app não está ativo requer o acesso à localização em segundo plano</string>
+    <string name="permission_rationale_background_location_passive_scan">A coleta passiva de dados requer acesso à localização em segundo plano para criar relatórios enquanto o app não está ativo</string>
     <string name="passive_scanning_title">Coleta passiva de dados</string>
     <string name="passive_scanning_description">A coleta passiva cria relatórios em segundo plano, tendo um impacto mínimo na bateria, já que usa os dados que já foram solicitados por outros aplicativos.\n\nA eficácia da coleta passiva pode depender do tipo do seu dispositivo, os apps que você usa, e se o provedor de localização unido está disponível.\n\nObserve que a coleta passiva não funciona com sinalizadores Bluetooth.\n\nVocê gostaria de ativar a coleta de dados passiva?</string>
     <string name="copy">Copiar</string>
