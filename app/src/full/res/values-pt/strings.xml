@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="permission_rationale_background_location_autoscan">Scans automáticos precisam da permissão para aceder a localização em segundo plano</string>
+    <string name="permission_rationale_background_location_autoscan">Os scans automáticos quando a app não está aberta requerem acesso à localização em segundo plano</string>
     <string name="prefer_fused_location_title">Preferir provedor de localização combinada</string>
     <string name="autoscan_when_moving">Scan automático durante movimento</string>
     <string name="autoscan_failed_to_enable_title">Houve uma falha ao ativar o scan automático</string>
