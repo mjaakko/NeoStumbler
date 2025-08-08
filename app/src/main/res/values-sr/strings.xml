@@ -1,3 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="ok">OK</string>
+    <string name="no_thanks">Ne hvala</string>
+    <string name="yes">Da</string>
+    <string name="no">Ne</string>
+    <string name="reset">Resetuj</string>
+    <string name="save">Sačuvaj</string>
+    <string name="cancel">Otkaži</string>
+    <string name="stop">Zaustavi</string>
+    <string name="delete">Obriši</string>
+    <string name="delete_all">Obriši sve</string>
+    <string name="no_data">Nema podataka</string>
+    <string name="copy">Kopiraj</string>
+    <string name="text_copied_to_clipboard">Tekst je kopiran u međumemoriju!</string>
+    <string name="disabled">Onemogućeno</string>
+    <string name="waiting_for_location">Čekam lokaciju</string>
+    <string name="failed_to_open_selected_file">Neuspešno otvaranje izabranog fajla</string>
+    <string name="permissions_needed">Potrebne dozvole</string>
+    <string name="permissions_not_granted">Dozvole koje su potrebne nisu odobrene</string>
+    <string name="wifi_icon_description">Wi-Fi ikonica</string>
+    <string name="cell_tower_icon_description">Ikonica tornja za mobilnu telefoniju</string>
+    <string name="bluetooth_icon_description">Bluetooth ikonica</string>
+    <string name="warning_icon_description">Ikonica upozorenja</string>
+    <string name="scanner_status_notification_channel_name">Stanje skeniranja</string>
+    <string name="wireless_scanning">Mrežno skeniranje</string>
+    <string name="map_tab_title">Mapa</string>
+    <string name="reports_tab_title">Izveštaji</string>
+    <string name="unknown_cell_id">Nepoznati ID tornja za mobilnu telefoniju</string>
+    <string name="cells">Tornjevi</string>
+    <string name="statistics_tab_title">Statistike</string>
+    <string name="settings_tab_title">Podešavanja</string>
+    <string name="send_reports">Pošalji izveštaje</string>
+    <string name="reports">Izveštaji:</string>
+    <string name="reports_total">Ukupno izveštaja: %d</string>
+    <string name="cell_tower_scan_frequency">Učestalost skeniranja tornjeva za mobilnu telefoniju</string>
+    <string name="permission_rationale_read_phone_state">Pristup stanju telefona je potreban za skeniranje tornjeva za mrežnu telefoniju</string>
+    <string name="reports_not_uploaded">Neotpremljenih izveštaja: %d</string>
+    <string name="reports_last_uploaded">Izveštaji otpremljeni poslednji put: %s</string>
+    <string name="reports_last_uploaded_never">nikada</string>
+    <string name="reports_empty">Još nema izveštaja</string>
+    <string name="start_scanning">Započni skeniranje</string>
+    <string name="stop_scanning">Zaustavi skeniranje</string>
+    <string name="scanning_status_active">Skeniranje <annotation style="status">aktivno</annotation></string>
+    <string name="scanning_status_not_active">Skeniranje <annotation style="status">nije aktivno</annotation></string>
+    <string name="delete_report">Obriši izveštaj</string>
+    <string name="delete_report_confirmation">Da li ste sigurni da želite da obrišete izveštaj?</string>
+    <plurals name="toast_reports_uploaded">
+        <item quantity="one">Otpremljen %d izveštaj</item>
+        <item quantity="few">Otpremljeno %d izveštaja</item>
+        <item quantity="other">Otpremljeno %d izveštaja</item>
+    </plurals>
+    <string name="toast_reports_upload_failed">Neuspešno otpremljanje izveštaja</string>
+    <string name="toast_reports_upload_failed_no_endpoint">Neuspešno otpremanje izveštaja, jer nije konfigurisana nijedna odredišna tačka</string>
+    <string name="distance_to_estimated_location">Udaljenost od procenjene lokacije: %d m</string>
+    <string name="speed_metres_per_second">Brzina: %s m/s</string>
+    <string name="altitude_metres">Nadmorska visina: %s m</string>
+    <string name="signal_strength_dbm">Jačina signala: %d dBm</string>
+    <string name="mcc">MCC: %s</string>
+    <string name="mnc">MNC: %s</string>
+    <string name="lac">LAC: %s</string>
+    <string name="radio_type">Tip: %s</string>
+    <string name="beacon_type">Tip bejkona: %s</string>
+    <string name="beacon_id">ID%d: %s</string>
+    <string name="report_upload_notification_channel_name">Izveštaji otpremljeni</string>
+    <string name="notification_sending_reports">Slanje izveštaja</string>
+    <string name="notification_wireless_scanning_title">Mrežno skeniranje je aktivno</string>
+    <plurals name="reports_created">
+        <item quantity="one">%d izveštaj sačinjen</item>
+        <item quantity="few">%d izveštaja sačinjeno</item>
+        <item quantity="other">%d izveštaja sačinjeno</item>
+    </plurals>
+    <string name="satellites_in_use">%1$d⁄%2$d satelita u upotrebi</string>
+    <string name="ignore_battery_optimizations_title">Zanemari optimizacije baterije</string>
+    <string name="ignore_battery_optimizations_description">Za najbolje rezultate, optimizacija baterije treba da bude onemogućena. Bežično skeniranje i pristup lokaciji su značajno ograničeni kada je optimizacija baterije aktivna i ekran isključen</string>
+    <string name="battery_optimizations_not_disabled_warning">Optimizacije baterije nisu onemogućene</string>
+    <string name="send_reports_automatically_title">Automatski šalji izveštaje</string>
+    <string name="send_reports_automatically_never">Nikada</string>
+    <string name="send_reports_automatically_on_any_network">Na bilo kojoj mreži</string>
+    <string name="send_reports_automatically_on_unmetered_network">Na neograničenoj mreži</string>
+    <string name="export_notification_channel_name">Izvoz podataka</string>
+    <string name="notification_exporting_data">Izvoženje podataka…</string>
+    <string name="export_data">Izvezi podatke</string>
+    <string name="export_no_file_chosen">Ne mogu izvesti podatke, zato što fajl nije napravljen</string>
+    <string name="export_started">Izvoženje podataka od %1$s do %2$s</string>
+    <string name="export_csv">Izvezi u CSV formatu</string>
+    <string name="export_raw_database">Izvezi neobrađenu bazu podataka</string>
+    <string name="export_raw_database_compress">Sažmi bazu podataka</string>
+    <string name="import_data">Uvezi podatke</string>
+    <string name="import_raw_database">Uvezi neobrađenu bazu podataka</string>
+    <string name="import_raw_database_description">Uvoz neobrađene baze podataka će zameniti postojeću bazu podataka</string>
+    <string name="import_database_not_valid">Odabrani fajl ne sadrži važeću bazu podataka</string>
+    <plurals name="import_database_successful">
+        <item quantity="one">Uvezena baza podataka sa %d izveštajem</item>
+        <item quantity="few">Uvezena baza podataka sa %d izveštaja</item>
+        <item quantity="other">Uvezena baza podataka sa %d izveštaja</item>
+    </plurals>
+    <string name="reupload_data">Ponovo otpremi podatke</string>
+    <string name="wifis">Wi-Fi-ji</string>
+    <string name="beacons">Bluetooth bejkoni</string>
+    <string name="add_quick_settings_tile">Dodaj brzu pločicu u podešavanjima za lako pokretanje skeniranja?</string>
+    <string name="mls_warning_title">MLS je ugašen</string>
+    <string name="mls_warning_text">Mozilla Location Service je ugašen i više ne prihvata slanje podataka. Kao alternativa MLS-u, možete slati podatke na beaconDB, koji pruža servis kompatibilan sa MLS-om.\n\nNapominjemo da je beaconDB još uvek u fazi razvoja, što utiče na način na koji se vaši podaci obrađuju. Više informacija možete pročitati u <annotation link="privacy_policy">politici privatnosti</annotation>.\n\nDa li želite da postavite beaconDB kao krajnju tačku? Ovo se kasnije može podesiti u podešavanjima</string>
+    <string name="endpoint">Krajnja tačka</string>
 </resources>
