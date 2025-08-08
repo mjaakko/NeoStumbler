@@ -1,3 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="prefer_fused_location_title">Preferiraj objedinjeni pružalac lokacije</string>
+    <string name="prefer_fused_location_description">Objedinjeni pružalac lokacije može da kombinuje podatke iz drugih izvora pored GPS-a kako bi odredio lokaciju</string>
+    <string name="permission_rationale_background_location_autoscan">Automatsko započinjanje skeniranja dok aplikacija nije aktivna zahteva dozvolu za pristup lokaciji u pozadini</string>
+    <string name="permission_rationale_activity_recognition">Automatsko započinjanje skeniranja zahteva pristup trenutnoj aktivnosti</string>
+    <string name="autoscan_when_moving">Automatsko skeniranje tokom kretanja</string>
+    <string name="autoscan_failed_to_enable_title">Neuspešno omogućavanje automatskog skeniranja</string>
+    <string name="autoscan_failed_to_enable_description">Automatsko skeniranje koristi prepoznavanje aktivnosti iz Google Play servisa, koje možda nije dostupno na vašem uređaju</string>
 </resources>
