@@ -88,3 +88,7 @@ The statistics screen shows the number of unique transmitters detected over time
 ### Cannot enable automatic scanning
 
 Automatic scanning uses Google Play Services activity recognition API to detect when the device is moving. In case you're using sandboxed Google Play Services (e.g. with GrapheneOS), you need to grant the physical activity permission for *both* NeoStumbler and Google Play Services. See [this section](https://grapheneos.org/usage#sandboxed-google-play-location-sharing) from GrapheneOS documentation for more details
+
+### Reports are not being created / location does not work
+
+Custom ROMs which do not use Google Play Services for the fused location provider (notably GrapheneOS) might not work with the *Prefer fused location provider* option enabled in NeoStumbler. In this case, try disabling that option or using the `fdroid` variant of NeoStumbler, which does not the ability to use fused location provider at all
