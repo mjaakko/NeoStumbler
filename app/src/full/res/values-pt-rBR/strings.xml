@@ -2,9 +2,9 @@
 <resources>
     <string name="prefer_fused_location_title">Preferir provedor de localização unido</string>
     <string name="autoscan_when_moving">Busca automática ao se mover</string>
-    <string name="autoscan_failed_to_enable_title">Falha ao ativar a busca automática</string>
-    <string name="permission_rationale_background_location_autoscan">Para começar a busca automaticamente, é necessário a permissão de localização em segundo plano</string>
-    <string name="permission_rationale_activity_recognition">Para começar a busca automaticamente, é necessário acesso à atividade atual</string>
+    <string name="autoscan_failed_to_enable_title">Falha ao ativar a coleta automática</string>
+    <string name="permission_rationale_background_location_autoscan">Para iniciar a coleta automaticamente quando o app não está ativo, é necessário a permissão de localização em segundo plano</string>
+    <string name="permission_rationale_activity_recognition">Para iniciar a coleta automaticamente, é necessário acesso à atividade atual</string>
     <string name="prefer_fused_location_description">Esse provedor de localização pode combinar dados de outras fontes para determinar a localização</string>
-    <string name="autoscan_failed_to_enable_description">A busca automática usa o serviço de reconhecimento de atividade do Google Play, que pode não estar disponível no seu dispositivo</string>
+    <string name="autoscan_failed_to_enable_description">A coleta automática usa o serviço de reconhecimento de atividade do Google Play, que pode não estar disponível no seu dispositivo</string>
 </resources>

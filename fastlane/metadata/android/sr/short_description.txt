@@ -1,0 +1,1 @@
+Aplikacija za prikupljanje bežičnih mreža za geolokacione servise

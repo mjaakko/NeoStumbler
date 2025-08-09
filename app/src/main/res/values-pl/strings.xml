@@ -100,7 +100,7 @@
     <string name="reports">Raporty:</string>
     <string name="send_reports_automatically_title">Wysyłaj raporty automatycznie</string>
     <string name="settings_group_reports">Raporty</string>
-    <string name="report_upload_notification_channel_name">Wysłania raportów</string>
+    <string name="report_upload_notification_channel_name">Przesyłanie raportów</string>
     <string name="reports_total">Całkowita liczba raportów: %d</string>
     <string name="reports_not_uploaded">Liczba raportów do wysłania: %d</string>
     <string name="stop_scanning">Zatrzymaj skanowanie</string>
@@ -166,7 +166,7 @@
     <string name="speed_metres_per_second">Prędkość: %s m/s</string>
     <string name="altitude_metres">Wysokość: %s m</string>
     <string name="signal_strength_dbm">Moc sygnału: %d dBm</string>
-    <string name="unknown_cell_id">Nieznane ID komórki</string>
+    <string name="unknown_cell_id">Nieznane ID stacji przekaźnikowej</string>
     <string name="mcc">MCC: %s</string>
     <string name="mnc">MNC: %s</string>
     <string name="lac">LAC: %s</string>
@@ -207,4 +207,7 @@
     <string name="delete_reports_from_area">Usuń raporty z obszaru</string>
     <string name="crash_log_title">Dziennik błędów</string>
     <string name="crash_log_entry_title">Awaria #%d</string>
+    <string name="distance_to_estimated_location">Dystans do szacunkowej lokalizacji: %d m</string>
+    <string name="map_tile_source_custom_title">Niestandardowy</string>
+    <string name="map_tile_source_custom_style_url">Niestandardowy styl mapy URL</string>
 </resources>

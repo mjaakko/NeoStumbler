@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="permission_rationale_fine_location">Para os relatórios serem úteis, a app precisa de ter permissão para aceder a localização precisa</string>
     <string name="permission_rationale_bluetooth">É necessário permitir acesso ao Bluetooth para procurar Bluetooth beacons</string>
-    <string name="permission_rationale_background_location_quick_settings">Iniciar scans a partir das definições rápidas precisa de acesso à localização em segundo plano</string>
+    <string name="permission_rationale_background_location_quick_settings">Para iniciar scans a partir das definições rápidas, é necessário permitir acesso à localização em segundo plano.\n\nNote que esta é uma limitação imposta pelo próprio Android. A sua localização não é acedida em segundo plano se não ativar a recolha passiva de dados ou o scan automático</string>
     <string name="stop_scanning">Parar scan</string>
     <string name="reset">Redefinir</string>
     <string name="save">Guardar</string>
@@ -194,7 +194,7 @@
     <string name="reduced_metadata_description">Relatórios são enviados em ordem aleatória com carimbos de data/hora e metadados truncados</string>
     <string name="pause_scanning_on_low_battery_title">Pausar scan quando a bateria estiver baixa</string>
     <string name="passive_scanning_title">Recolha passiva de dados</string>
-    <string name="permission_rationale_background_location_passive_scan">Para atualizar a localização quando a app não está ativa, a app precisa de acesso à localização em segundo plano</string>
+    <string name="permission_rationale_background_location_passive_scan">Recolha passiva requer acesso à localização em segundo plano para criar relatórios quando a app não está aberta</string>
     <string name="delete_all">Apagar tudo</string>
     <string name="copy">Copiar</string>
     <string name="text_copied_to_clipboard">Texto copiado para o clipboard!</string>

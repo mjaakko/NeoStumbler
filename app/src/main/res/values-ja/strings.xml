@@ -143,9 +143,7 @@
     <string name="permission_rationale_post_notifications">
         ステータス通知を表示するためには通知へのアクセス権が必要です
     </string>
-    <string name="permission_rationale_background_location_quick_settings">
-        クイック設定からスキャンを開始するには、バックグラウンドで位置情報にアクセスする必要があります
-    </string>
+    <string name="permission_rationale_background_location_quick_settings">クイック設定からスキャンを開始するには、バックグラウンドで位置情報にアクセスする必要があります</string>
     <string name="permission_rationale_location_map">
         地図上に現在地を表示するには、位置情報へのアクセス権が必要です
     </string>

@@ -12,8 +12,8 @@
     <string name="wifi_icon_description">Ícone de Wi-Fi</string>
     <string name="cell_tower_icon_description">Ícone de redes móveis</string>
     <string name="bluetooth_icon_description">Ícone de Bluetooth</string>
-    <string name="scanner_status_notification_channel_name">Estado da busca</string>
-    <string name="wireless_scanning">Busca por redes sem-fio</string>
+    <string name="scanner_status_notification_channel_name">Estado da coleta</string>
+    <string name="wireless_scanning">Coleta de redes sem-fio</string>
     <string name="map_tab_title">Mapa</string>
     <string name="reports_tab_title">Relatórios</string>
     <string name="statistics_tab_title">Estatísticas</string>
@@ -23,8 +23,8 @@
     <string name="reports_total">Total de relatórios: %d</string>
     <string name="reports_not_uploaded">Relatórios não enviados: %d</string>
     <string name="reports_last_uploaded">Último envio: %s</string>
-    <string name="start_scanning">Iniciar busca</string>
-    <string name="stop_scanning">Parar busca</string>
+    <string name="start_scanning">Iniciar coleta</string>
+    <string name="stop_scanning">Interromper coleta</string>
     <string name="delete_report">Apagar relatório</string>
     <string name="delete_report_confirmation">Você tem certeza que deseja apagar o relatório?</string>
     <plurals name="toast_reports_uploaded">
@@ -35,27 +35,27 @@
     <string name="toast_reports_upload_failed">Falha ao enviar relatórios</string>
     <string name="report_upload_notification_channel_name">Envio de relatórios</string>
     <string name="notification_sending_reports">Enviando relatórios</string>
-    <string name="notification_wireless_scanning_title">Busca por redes sem-fio ativa</string>
+    <string name="notification_wireless_scanning_title">Coleta de redes sem-fio ativa</string>
     <plurals name="reports_created">
         <item quantity="one">%d relatório criado</item>
         <item quantity="many">%d de relatórios criados</item>
         <item quantity="other">%d relatórios criados</item>
     </plurals>
     <string name="ignore_battery_optimizations_title">Ignorar otimizações de bateria</string>
-    <string name="ignore_battery_optimizations_description">Para resultados melhores, as otimizações de bateria devem ser desativadas. A busca por redes sem-fio e o acesso à localização é significativamente sufocado quando as otimizações de bateria estão ativas e a tela está desligada</string>
+    <string name="ignore_battery_optimizations_description">Para resultados melhores, as otimizações de bateria devem ser desativadas. A coleta de redes sem-fio e o acesso à localização é significativamente sufocado quando as otimizações de bateria estão ativas e a tela está desligada</string>
     <string name="battery_optimizations_not_disabled_warning">As otimizações de bateria não foram desativadas</string>
     <string name="send_reports_automatically_title">Enviar relatórios automaticamente</string>
-    <string name="export_notification_channel_name">Exportação de dados</string>
+    <string name="export_notification_channel_name">Exporte de dados</string>
     <string name="notification_exporting_data">Exportando dados…</string>
     <string name="export_data">Exportar dados</string>
-    <string name="export_no_file_chosen">Não foi possível exportar dados, pois nenhum arquivo foi criado</string>
+    <string name="export_no_file_chosen">Não é possível exportar dados, pois nenhum arquivo foi criado</string>
     <string name="export_started">Exportando dados de %1$s para %2$s</string>
     <string name="reupload_data">Re-enviar dados</string>
     <string name="wifis">Redes Wi-Fi</string>
     <string name="cells">Redes móveis</string>
     <string name="beacons">Sinalizadores Bluetooth</string>
-    <string name="add_quick_settings_tile">Adicionar bloco às configurações rápidas para iniciar a busca facilmente?</string>
-    <string name="endpoint">Ponto de coleta</string>
+    <string name="add_quick_settings_tile">Adicionar bloco às configurações rápidas para iniciar a coleta facilmente?</string>
+    <string name="endpoint">Ponto de entrega</string>
     <string name="submission_path">Caminho para envios</string>
     <string name="api_key">Chave de API (opcional)</string>
     <string name="settings_ignore_wifi_scan_throttling_title">Ignorar limitações de busca por Wi-Fi</string>
@@ -63,10 +63,10 @@
     <string name="wifi_scan_throttling_explanation">Você precisa desativar as limitações de busca por Wi-Fi nas configurações do seu dispositivo para usar esta funcionalidade. Isto normalmente pode ser feito pelas opções de desenvolvedor</string>
     <string name="show_my_location">Mostrar minha localização</string>
     <string name="permission_rationale_fine_location">Criar relatórios com dados de localização úteis requer a permissão de localização precisa</string>
-    <string name="permission_rationale_read_phone_state">Acesso ao status do telefone é necessário para a busca por redes móveis</string>
-    <string name="permission_rationale_bluetooth">Para fazer a busca por sinalizadores Bluetooth, é necessária a permissão de Bluetooth</string>
+    <string name="permission_rationale_read_phone_state">Acesso ao status do telefone é necessário para a coleta de redes móveis</string>
+    <string name="permission_rationale_bluetooth">Para fazer a coleta de sinalizadores Bluetooth, é necessária a permissão de Bluetooth</string>
     <string name="permission_rationale_post_notifications">Para mostrar a notificação de estado, é necessária a permissão de notificações</string>
-    <string name="permission_rationale_background_location_quick_settings">Para começar a busca pelas configurações rápidas, é necessário acesso à localização em segundo plano</string>
+    <string name="permission_rationale_background_location_quick_settings">Para iniciar a coleta pelas configurações rápidas, é necessário acesso à localização em segundo plano.\n\nObserve que esta é uma restrição imposta pelo sistema operacional Android. Sua localização não será acessada em segundo plano se você não ativar a coleta passiva ou automática</string>
     <string name="permission_rationale_location_map">
         Para mostrar sua localização no mapa, é necessário a permissão de localização
     </string>
@@ -77,13 +77,13 @@
     <string name="satellites_in_use">%1$d⁄%2$d satélites em uso</string>
     <string name="suggested_service_terms_of_use">Termos de uso</string>
     <string name="settings_group_reports">Relatórios</string>
-    <string name="settings_group_scanning">Busca</string>
+    <string name="settings_group_scanning">Coleta</string>
     <string name="settings_group_other">Outros</string>
     <string name="movement_detection">Detecção de movimento</string>
     <string name="movement_detection_none_title">Nenhuma</string>
-    <string name="movement_detection_none_description">Continuar a busca mesmo ao parar de mover</string>
+    <string name="movement_detection_none_description">Continuar a coleta mesmo ao parar de mover</string>
     <string name="movement_detection_location_title">Baseado na localização</string>
-    <string name="movement_detection_location_description">Pausa a busca quando a localização não muda. Mantém o GPS ativo</string>
+    <string name="movement_detection_location_description">Pausa a coleta quando a localização não muda. Mantém o GPS ativo</string>
     <string name="movement_detection_significant_motion_title">Sensor de movimento</string>
     <string name="notification_style">Estilo da notificação</string>
     <string name="notification_style_minimal_title">Mínima</string>
@@ -96,7 +96,7 @@
     <string name="suggested_service_website">Site</string>
     <string name="suggested_service_hosted_by">Hospedado por:</string>
     <string name="suggested_services_title">Serviços sugeridos</string>
-    <string name="movement_detection_significant_motion_description">Pausa a busca e o GPS quando nenhum movimento significativo é detectado. Economiza bateria, mas pode não funcionar bem em alguns dispositivos</string>
+    <string name="movement_detection_significant_motion_description">Pausa a coleta e o GPS quando nenhum movimento significativo é detectado. Economiza bateria, mas pode não funcionar bem em alguns dispositivos</string>
     <string name="app_language">Idioma</string>
     <string name="use_dynamic_color_ui">Usar cores dinâmicas na interface</string>
     <string name="delete">Apagar</string>
@@ -116,7 +116,7 @@
     <string name="db_prune_never">Nunca</string>
     <string name="manage_storage_title">Gerenciar armazenamento</string>
     <string name="troubleshooting_title">Resolução de problemas</string>
-    <string name="troubleshooting_description">Resolva problemas comuns na busca</string>
+    <string name="troubleshooting_description">Resolva problemas comuns com a coleta</string>
     <string name="troubleshooting_permissions_granted">Permissões concedidas</string>
     <string name="troubleshooting_battery_optimizations_disabled">Otimizações de bateria desativadas</string>
     <string name="troubleshooting_fix">Resolver</string>
@@ -144,16 +144,16 @@
         <item quantity="other">O banco de dados foi importado com %d relatórios</item>
     </plurals>
     <string name="no_data">Não há dados</string>
-    <string name="settings_ignore_wifi_scan_throttling_description">Se a busca estiver limitada, somente 4 poderão ser feitas em um período de 2 minutos</string>
+    <string name="settings_ignore_wifi_scan_throttling_description">Se a busca for limitada, somente 4 delas poderão ser feitas em um período de 2 minutos</string>
     <string name="wifi_scan_frequency">Frequência de busca por redes Wi-Fi</string>
     <string name="every_x_meters">A cada %d metros</string>
     <string name="cell_tower_scan_frequency">Frequência de busca por redes móveis</string>
     <string name="map_tile_source">Fonte dos blocos do mapa</string>
     <string name="reports_last_uploaded_never">nunca</string>
     <string name="reports_empty">Não há relatórios ainda</string>
-    <string name="no_endpoint_configured">Não há um ponto de coleta configurado</string>
-    <string name="toast_reports_upload_failed_no_endpoint">Falha ao enviar relatórios, pois nenhum ponto de coleta foi configurado</string>
-    <string name="mls_warning_text">O Mozilla Location Services foi encerrado e não aceita mais envios. Como uma alternativa, você pode enviar dados ao beaconDB, que fornece um serviço compatível com o MLS\n\nNote que o beaconDB ainda está em desenvolvimento e isso afeta como seus dados são tratados. Você pode ler a <annotation link="privacy_policy">política de privacidade</annotation> para mais informações\n\nVocê gostaria de configurar o beaconDB como o ponto de coleta? Isso pode ser alterado mais tarde nas configurações</string>
+    <string name="no_endpoint_configured">Não há um ponto de entrega configurado</string>
+    <string name="toast_reports_upload_failed_no_endpoint">Falha ao enviar relatórios, pois nenhum ponto de entrega foi configurado</string>
+    <string name="mls_warning_text">O Mozilla Location Services foi encerrado e não aceita mais envios. Como uma alternativa, você pode enviar dados ao beaconDB, que fornece um serviço compatível com o MLS\n\nNote que o beaconDB ainda está em desenvolvimento e isso afeta como seus dados são tratados. Você pode ler a <annotation link="privacy_policy">política de privacidade</annotation> para mais informações\n\nVocê gostaria de configurar o beaconDB como o ponto de entrega? Isso pode ser alterado mais tarde nas configurações</string>
     <string name="coverage_layer">Camada de cobertura do mapa</string>
     <string name="coverage_layer_tile_json_url">URL TileJSON para a camada de cobertura do mapa (opcional)</string>
     <string name="invalid_url">URL inválido</string>
@@ -164,8 +164,8 @@
     <string name="waiting_for_location">Esperando pela localização</string>
     <string name="delete_reports_from_area">Apagar relatórios de uma área</string>
     <string name="export_raw_database_compress">Comprimir o arquivo do banco de dados</string>
-    <string name="scanning_status_active">Busca <annotation style="status">ativa</annotation></string>
-    <string name="scanning_status_not_active">Busca <annotation style="status">inativa</annotation></string>
+    <string name="scanning_status_active">Coleta <annotation style="status">ativa</annotation></string>
+    <string name="scanning_status_not_active">Coleta <annotation style="status">inativa</annotation></string>
     <string name="speed_metres_per_second">Velocidade: %s m/s</string>
     <string name="altitude_metres">Altitude: %s m</string>
     <string name="signal_strength_dbm">Força do sinal: %d dBm</string>
@@ -192,9 +192,9 @@
         <item quantity="other">%d SSIDs filtrados</item>
     </plurals>
     <string name="disabled">Desativado</string>
-    <string name="pause_scanning_on_low_battery_title">Pausar a busca quando a bateria estiver fraca</string>
+    <string name="pause_scanning_on_low_battery_title">Pausar a coleta quando a bateria estiver fraca</string>
     <string name="pause_scanning_on_low_battery_description">Quando o nível da bateria está abaixo de %d%%</string>
-    <string name="permission_rationale_background_location_passive_scan">Receber atualizações de localização enquanto o app não está ativo requer o acesso à localização em segundo plano</string>
+    <string name="permission_rationale_background_location_passive_scan">A coleta passiva de dados requer acesso à localização em segundo plano para criar relatórios enquanto o app não está ativo</string>
     <string name="passive_scanning_title">Coleta passiva de dados</string>
     <string name="passive_scanning_description">A coleta passiva cria relatórios em segundo plano, tendo um impacto mínimo na bateria, já que usa os dados que já foram solicitados por outros aplicativos.\n\nA eficácia da coleta passiva pode depender do tipo do seu dispositivo, os apps que você usa, e se o provedor de localização unido está disponível.\n\nObserve que a coleta passiva não funciona com sinalizadores Bluetooth.\n\nVocê gostaria de ativar a coleta de dados passiva?</string>
     <string name="copy">Copiar</string>
