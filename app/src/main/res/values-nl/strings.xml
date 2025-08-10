@@ -15,7 +15,7 @@
     <string name="stop">Stoppen</string>
     <string name="import_raw_database">Ruwe database importeren</string>
     <string name="import_raw_database_description">Het importeren van een ruwe database zal de huidige database vervangen</string>
-    <string name="permission_rationale_background_location_quick_settings">Het starten van scannen vanuit de snelle instellingen vereist toegang tot locatie op de achtergrond</string>
+    <string name="permission_rationale_background_location_quick_settings">Het starten van scannen vanuit de snelle instellingen vereist toegang tot locatie op de achtergrond.\n\nDit is een beperking van het Android-besturingssysteem. Uw locatie wordt niet op de achtergrond geraadpleegd als u passief of automatisch scannen niet inschakelt.</string>
     <string name="notification_wireless_scanning_title">Draadloos scannen actief</string>
     <string name="movement_detection_none_description">Blĳf zoeken, zelfs wanneer er niet wordt bewogen</string>
     <string name="notification_style_basic_description">Toont het aantal verzamelde rapporten</string>
@@ -189,7 +189,7 @@
     <string name="reduced_metadata_description">Rapporten in willekeurige volgorde verzenden, zonder tĳd­stempels en andere meta­gegevens</string>
     <string name="pause_scanning_on_low_battery_title">Scannen pauzeren bĳ laag accu­percentage</string>
     <string name="pause_scanning_on_low_battery_description">Wanneer het accu­percentage lager is dan %d%%</string>
-    <string name="permission_rationale_background_location_passive_scan">Om locatie-updates te ontvangen wanneer de app niet actief is, is toegang tot de locatie op de achtergrond vereist</string>
+    <string name="permission_rationale_background_location_passive_scan">Voor passieve gegevens­verzameling is toegang tot de locatie op de achtergrond nodig om rapporten te kunnen maken wanneer de app niet actief is</string>
     <string name="copy">Kopiëren</string>
     <string name="text_copied_to_clipboard">Tekst gekopieerd naar klembord!</string>
     <string name="crash_log_title">Crash­logboek</string>
