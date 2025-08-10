@@ -5,7 +5,9 @@ kotlin = "2.2.0"
 
 kotlinxCoroutines = "1.10.2"
 
-androidGradlePlugin = "8.12.0"
+# F-Droid does not support AGP 8.12+, see https://gitlab.com/fdroid/admin/-/issues/593
+#noinspection AndroidGradlePluginVersion
+androidGradlePlugin = "8.11.1"
 
 androidxLifecycle = "2.9.2"
 androidxPaging = "3.3.6"
