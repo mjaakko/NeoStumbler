@@ -3,7 +3,7 @@
     <string name="prefer_fused_location_title">Préférer fused location provider</string>
     <string name="autoscan_when_moving">Mesures automatiques pendant le déplacement</string>
     <string name="autoscan_failed_to_enable_title">Échec de l\'activation des mesures automatiques</string>
-    <string name="permission_rationale_background_location_autoscan">L\'autorisation d\'accéder à la localisation en arrière-plan est nécessaire pour démarrer des mesures automatiques</string>
+    <string name="permission_rationale_background_location_autoscan">L\'autorisation d\'accéder à la localisation en arrière-plan est nécessaire pour démarrer des mesures automatiques quand l\'application n\'est pas active</string>
     <string name="permission_rationale_activity_recognition">
         L\'autorisation d\'accéder à l\'activité actuelle est nécessaire pour démarrer des mesures automatiques
     </string>
