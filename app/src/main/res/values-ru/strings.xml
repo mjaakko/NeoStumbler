@@ -127,7 +127,7 @@
     <string name="movement_detection_significant_motion_description">Ставит на паузу сканирование когда не было зарегистрировано сильное движение. Сохраняет батарею, но не работает на некоторых устройствах</string>
     <string name="notification_style">Стиль уведомления</string>
     <string name="permission_rationale_read_phone_state">Доступ к телефону необходим для сканирования вышек связи</string>
-    <string name="permission_rationale_background_location_quick_settings">Старт сканирования с помощью плитки быстрых настроек требует доступа к геолокации в фоновом режиме</string>
+    <string name="permission_rationale_background_location_quick_settings">Старт сканирования с помощью плитки быстрых настроек требует доступа к геолокации в фоновом режиме.\n\nЗаметьте, что это ограничение установлено операционной системой Android. Ваша геолокация не используется в фоновом режиме если вы не включите пассивное или автоматическое сканирование</string>
     <string name="troubleshooting_fix">Исправить</string>
     <string name="db_prune_one_month">После одного месяца</string>
     <string name="bug_report_button">Сообщить об ошибке</string>
@@ -199,7 +199,7 @@
     <string name="pause_scanning_on_low_battery_title">Приостанавливать сканирование при низком заряде</string>
     <string name="pause_scanning_on_low_battery_description">Когда заряд меньше чем %d%%</string>
     <string name="passive_scanning_title">Пассивный сбор данных</string>
-    <string name="permission_rationale_background_location_passive_scan">Получение обновлений геолокации когда приложение не активно требует доступу к геолокации в фоновом режиме</string>
+    <string name="permission_rationale_background_location_passive_scan">Пассивный сбор данных требует доступ к геолокации в фоне для создания отчётов, когда приложение не активно</string>
     <string name="delete_all">Удалить всё</string>
     <string name="copy">Копировать</string>
     <string name="text_copied_to_clipboard">Текст скопировать в буфер обмена!</string>
