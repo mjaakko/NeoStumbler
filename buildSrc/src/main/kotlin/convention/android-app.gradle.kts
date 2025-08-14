@@ -31,9 +31,7 @@ android {
 
 tasks.register("lintAll") {
     dependsOn(
-        project.android.productFlavors
-            .map { productFlavor -> productFlavor.name.replaceFirstChar { it.uppercase() } }
-            .map { flavorName -> tasks.named("lint${flavorName}Debug") }
+        tasks.named { it.startsWith("lint") && !it.startsWith("lintFix") && it.endsWith("Debug") }
     )
 }
 
@@ -41,18 +39,12 @@ tasks.register("assembleAll") {
     dependsOn(
         tasks.named("assembleDebug"),
         tasks.named("assembleAndroidTest"),
-        project.android.productFlavors
-            .map { productFlavor -> productFlavor.name.replaceFirstChar { it.uppercase() } }
-            .map { flavorName -> tasks.named("assemble${flavorName}DebugUnitTest") },
+        tasks.named { it.startsWith("assemble") && it.endsWith("DebugUnitTest") },
     )
 }
 
 tasks.register("unitTest") {
-    dependsOn(
-        project.android.productFlavors
-            .map { productFlavor -> productFlavor.name.replaceFirstChar { it.uppercase() } }
-            .map { flavorName -> tasks.named("test${flavorName}DebugUnitTest") }
-    )
+    dependsOn(tasks.named { it.startsWith("test") && it.endsWith("DebugUnitTest") })
 }
 
 tasks.register("androidTest") { dependsOn(tasks.named("connectedAndroidTest")) }
