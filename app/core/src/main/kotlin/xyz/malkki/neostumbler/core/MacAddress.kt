@@ -6,7 +6,7 @@ private const val GROUP_COUNT = 6
 private const val GROUP_SIZE = 2
 
 @JvmInline
-value class MacAddress private constructor(private val raw: Long) {
+value class MacAddress private constructor(val raw: Long) {
     constructor(macAddress: String) : this(macAddress.replace(":", "").uppercase().hexToLong())
 
     init {

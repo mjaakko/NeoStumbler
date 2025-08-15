@@ -199,6 +199,8 @@ dependencies {
     implementation(libs.koinAndroid)
     implementation(libs.koinAndroidxCompose)
 
+    implementation(libs.androidx.collection)
+
     implementation(libs.androidx.core)
     implementation(libs.androidx.activityCompose)
 
