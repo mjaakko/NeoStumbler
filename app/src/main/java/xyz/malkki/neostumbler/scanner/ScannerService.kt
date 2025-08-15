@@ -356,7 +356,7 @@ class ScannerService : Service() {
                         add(SsidBasedWifiFilterer(wifiFilterList))
 
                         if (filterMovingDevices) {
-                            add(AutoDetectingMovingWifiBluetoothFilterer())
+                            add(AutoDetectingMovingWifiBluetoothFilterer(deterministic = false))
                         }
                     },
             )

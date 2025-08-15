@@ -2,13 +2,23 @@ package xyz.malkki.neostumbler.scanner.postprocess
 
 import androidx.collection.mutableLongObjectMapOf
 import androidx.collection.mutableLongSetOf
+import kotlin.random.Random
 import xyz.malkki.neostumbler.core.report.ReportData
 import xyz.malkki.neostumbler.geography.LatLng
 
 private const val MAX_DISTANCE_FROM_EXISTING = 500.0
 
+// 1 in 100 chance to not filter the report
+private const val NO_FILTER_PROBABILITY_COUNT = 100
+
+/**
+ * @param deterministic If `true`, moving devices are always filtered. If `false`, there is a 1%
+ *   chance that moving devices won't be filtered. The idea is to make sure that the server has
+ *   enough data to learn that the device is moving
+ */
 class AutoDetectingMovingWifiBluetoothFilterer(
-    private val maxDistanceFromExisting: Double = MAX_DISTANCE_FROM_EXISTING
+    private val maxDistanceFromExisting: Double = MAX_DISTANCE_FROM_EXISTING,
+    private val deterministic: Boolean = true,
 ) : ReportPostProcessor {
     private val wifiLocations = mutableLongObjectMapOf<LatLng>()
     private val bluetoothLocations = mutableLongObjectMapOf<LatLng>()
@@ -44,6 +54,10 @@ class AutoDetectingMovingWifiBluetoothFilterer(
                 }
                 .map { it.emitter.macAddress.raw }
                 .toLongArray()
+
+        if (!deterministic && Random.nextInt(0, NO_FILTER_PROBABILITY_COUNT) == 0) {
+            return reportData
+        }
 
         return reportData.copy(
             wifiAccessPoints =
