@@ -187,6 +187,8 @@ dependencies {
 
     implementation(project(":app:data:emitter:android"))
 
+    implementation(project(":app:data:geocoder:android"))
+
     implementation(project(":app:data:location:android"))
     "fullImplementation"(project(":app:data:location:googleplay"))
 

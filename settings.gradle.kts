@@ -26,6 +26,10 @@ include(":app:data:emitter:api")
 
 include(":app:data:emitter:android")
 
+include(":app:data:geocoder:api")
+
+include(":app:data:geocoder:android")
+
 include(":app:data:location:api")
 
 include(":app:data:location:android")

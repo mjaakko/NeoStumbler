@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.extensions
+package xyz.malkki.neostumbler.data.geocoder.extensions
 
 import android.location.Address
 import android.location.Geocoder
@@ -10,7 +10,7 @@ import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-suspend fun Geocoder.getFromLocationSuspending(
+internal suspend fun Geocoder.getFromLocationSuspending(
     latitude: Double,
     longitude: Double,
     maxResults: Int,
