@@ -103,25 +103,45 @@ android {
         }
     }
 
-    buildFeatures { flavorDimensions += "version" }
+    flavorDimensions +=
+        listOf(
+            // Whether the flavor includes non-free components such as Google Play Services
+            "nonfreeComponents",
+            // Whether the flavor is compatible with Google Play policies
+            "gplayCompatible",
+        )
 
     productFlavors {
+        // fdroid build flavor must not include any nonfree components
         create("fdroid") {
-            dimension = "version"
+            dimension = "nonfreeComponents"
 
             applicationId = defaultConfig.applicationId + ".fdroid"
         }
+        // full build flavor can include nonfree components such as Google Play Services
         create("full") {
-            dimension = "version"
+            dimension = "nonfreeComponents"
             isDefault = true
 
             ndk { abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64") }
+        }
+
+        // Default build flavor which doesn't need to be compatible with Google Play Policies
+        create("default") {
+            dimension = "gplayCompatible"
+            isDefault = true
+        }
+
+        create("gplay") {
+            dimension = "gplayCompatible"
+
+            applicationId = defaultConfig.applicationId + ".gplay"
         }
     }
 
     applicationVariants.configureEach {
         if (buildType.isDebuggable) {
-            resValue("string", "app_name", "NeoStumbler (dev, $flavorName)")
+            resValue("string", "app_name", "NS (dev, $flavorName)")
         }
     }
 
@@ -162,6 +182,21 @@ android {
         checkReleaseBuilds = false
 
         lintConfig = projectDir.resolve("lint.xml")
+    }
+}
+
+androidComponents {
+    beforeVariants { variant ->
+        val flavorByDimension = variant.productFlavors.toMap()
+
+        if (
+            flavorByDimension["nonfreeComponents"] == "fdroid" &&
+                flavorByDimension["gplayCompatible"] == "gplay"
+        ) {
+            // fdroid variant does not have to be compliant with Google Play policies, so let's
+            // disable the variant
+            variant.enable = false
+        }
     }
 }
 
