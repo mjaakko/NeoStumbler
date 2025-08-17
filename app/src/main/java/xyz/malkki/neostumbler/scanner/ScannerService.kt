@@ -53,6 +53,8 @@ import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.broadcastreceiverflow.broadcastReceiverFlow
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.core.observation.PositionObservation
+import xyz.malkki.neostumbler.data.airpressure.AirPressureSource
+import xyz.malkki.neostumbler.data.airpressure.PressureSensorAirPressureSource
 import xyz.malkki.neostumbler.data.emitter.ActiveBluetoothBeaconSource
 import xyz.malkki.neostumbler.data.emitter.ActiveCellInfoSource
 import xyz.malkki.neostumbler.data.emitter.ActiveWifiAccessPointSource
@@ -79,8 +81,6 @@ import xyz.malkki.neostumbler.scanner.postprocess.AutoDetectingMovingWifiBluetoo
 import xyz.malkki.neostumbler.scanner.postprocess.HiddenWifiFilterer
 import xyz.malkki.neostumbler.scanner.postprocess.SsidBasedWifiFilterer
 import xyz.malkki.neostumbler.scanner.quicksettings.ScannerTileService
-import xyz.malkki.neostumbler.scanner.source.AirPressureSource
-import xyz.malkki.neostumbler.scanner.source.PressureSensorAirPressureSource
 import xyz.malkki.neostumbler.scanner.speed.SmoothenedGpsSpeedSource
 import xyz.malkki.neostumbler.utils.GpsStats
 import xyz.malkki.neostumbler.utils.PermissionHelper

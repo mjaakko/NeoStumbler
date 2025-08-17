@@ -22,6 +22,10 @@ include(":app:core")
 
 include(":app:core:mapper:android-location")
 
+include(":app:data:airpressure:api")
+
+include(":app:data:airpressure:android")
+
 include(":app:data:emitter:api")
 
 include(":app:data:emitter:android")
