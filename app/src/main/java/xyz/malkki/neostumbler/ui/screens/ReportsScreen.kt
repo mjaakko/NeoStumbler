@@ -1,6 +1,5 @@
 package xyz.malkki.neostumbler.ui.screens
 
-import android.location.Geocoder as AndroidGeocoder
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -42,6 +41,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -62,10 +62,12 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import java.text.DecimalFormat
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.core.report.ReportWithStats
 import xyz.malkki.neostumbler.extensions.defaultLocale
 import xyz.malkki.neostumbler.extensions.getQuantityString
+import xyz.malkki.neostumbler.geography.LatLng
 import xyz.malkki.neostumbler.scanner.ScannerService
 import xyz.malkki.neostumbler.ui.composables.MLSWarningDialog
 import xyz.malkki.neostumbler.ui.composables.ReportUploadButton
@@ -79,9 +81,7 @@ import xyz.malkki.neostumbler.ui.composables.shared.formattedDate
 import xyz.malkki.neostumbler.ui.composables.shared.getAddress
 import xyz.malkki.neostumbler.ui.modifiers.handleDisplayCutouts
 import xyz.malkki.neostumbler.ui.viewmodel.ReportsViewModel
-import xyz.malkki.neostumbler.utils.geocoder.CachingGeocoder
-import xyz.malkki.neostumbler.utils.geocoder.Geocoder
-import xyz.malkki.neostumbler.utils.geocoder.PlatformGeocoder
+import xyz.malkki.neostumbler.utils.geocoder.CachedGeocoder
 
 @Composable
 fun ReportsScreen(viewModel: ReportsViewModel = koinViewModel()) {
@@ -210,11 +210,6 @@ private fun Reports(
     val listAtTop by remember { derivedStateOf { listState.firstVisibleItemIndex == 0 } }
     var listWasAtTop by remember { mutableStateOf(listAtTop) }
 
-    val context = LocalContext.current
-    val geocoder = remember {
-        CachingGeocoder(PlatformGeocoder(AndroidGeocoder(context, context.defaultLocale), 1))
-    }
-
     val reportToShow = rememberSaveable { mutableStateOf<Long?>(null) }
 
     val reportToDelete = rememberSaveable { mutableStateOf<Long?>(null) }
@@ -276,7 +271,6 @@ private fun Reports(
                         if (report != null) {
                             Report(
                                 report = report,
-                                geocoder = geocoder,
                                 onShowReportDetails = { reportId -> reportToShow.value = reportId },
                                 onDeleteReport = { reportId -> reportToDelete.value = reportId },
                             )
@@ -331,11 +325,20 @@ private fun ReportPlaceholder(modifier: Modifier = Modifier) {
 private fun Report(
     modifier: Modifier = Modifier,
     report: ReportWithStats,
-    geocoder: Geocoder,
     onShowReportDetails: (Long) -> Unit,
     onDeleteReport: (Long) -> Unit,
+    geocoder: xyz.malkki.neostumbler.data.geocoder.Geocoder = koinInject(),
 ) {
-    val address = getAddress(report.latitude, report.longitude, geocoder = geocoder)
+    val coroutineScope = rememberCoroutineScope()
+    val cachedGeocoder =
+        remember(geocoder, coroutineScope) { CachedGeocoder(coroutineScope, geocoder) }
+
+    val address =
+        getAddress(
+            latLng = LatLng(report.latitude, report.longitude),
+            locale = LocalContext.current.defaultLocale,
+            geocoder = cachedGeocoder,
+        )
 
     Column(
         modifier =
