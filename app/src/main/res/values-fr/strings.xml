@@ -78,7 +78,7 @@
     <string name="permission_rationale_post_notifications">
         L\'autorisation d\'accéder aux notifications est nécessaire pour afficher une notification de l\'activité
     </string>
-    <string name="permission_rationale_background_location_quick_settings">L\'autorisation d\'accéder à la localisation en arrière-plan est nécessaire pour démarrer des mesures à partir des réglages rapides</string>
+    <string name="permission_rationale_background_location_quick_settings">L\'autorisation d\'accéder à la localisation en arrière-plan est nécessaire pour démarrer des mesures à partir des réglages rapides\n\nVeuillez noter qu\'il s\'agit d\'une restriction imposée par le système d’exploitation Android. Votre localisation n\'est pas accédée en arrière-plan si vous n\'activez pas la collecte de données passive ou automatique.</string>
     <string name="permission_rationale_location_map">
         L\'autorisation d\'accéder à la localisation est nécessaire pour afficher votre emplacement sur la carte
     </string>
@@ -207,7 +207,7 @@
     <string name="beacon_id">ID%d: %s</string>
     <string name="pause_scanning_on_low_battery_title">Pause du scanning en cas de batterie faible</string>
     <string name="pause_scanning_on_low_battery_description">Lorsque le niveau de la batterie est inférieur à %d%%</string>
-    <string name="permission_rationale_background_location_passive_scan">La réception de mises à jour de localisation lorsque l\'application n\'est pas active nécessite l\'accès à la localisation en arrière-plan</string>
+    <string name="permission_rationale_background_location_passive_scan">La collecte passive de données nécessite l\'accès à la localisation en arrière-plan pour créer des rapports quand l\'application n\'est pas active</string>
     <string name="delete_reports_from_area">Supprimer les rapports de la zone</string>
     <string name="copy">Copier</string>
     <string name="delete_all">Tout supprimer</string>

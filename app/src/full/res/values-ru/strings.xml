@@ -2,7 +2,7 @@
 <resources>
     <string name="autoscan_when_moving">Автоматическое сканирование при движении</string>
     <string name="permission_rationale_activity_recognition">Автоматически начинающееся сканирование требует доступа к текущей активности</string>
-    <string name="permission_rationale_background_location_autoscan">Автоматически начинающееся сканирование требует разрешения для геолокации в фоновом режиме</string>
+    <string name="permission_rationale_background_location_autoscan">Автоматически начинающееся сканирование когда приложение не активно требует разрешения для геолокации в фоновом режиме</string>
     <string name="autoscan_failed_to_enable_title">Не удалось включить автоматическое сканирование</string>
     <string name="prefer_fused_location_title">Предпочитать объединённого поставщика местоположения</string>
     <string name="prefer_fused_location_description">Объединённый поставщик геолокаций может объединять данные из других источников, отличных от GPS для определения геолокации</string>
