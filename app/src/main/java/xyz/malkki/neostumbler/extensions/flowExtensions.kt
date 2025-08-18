@@ -4,11 +4,9 @@ import kotlin.time.Duration
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.scan
-import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.launch
 
@@ -49,13 +47,6 @@ fun <T> Flow<T>.buffer(window: Duration): Flow<List<T>> = channelFlow {
         }
     }
 }
-
-/** Only emits the latest value received from the source flow within the specified [interval] */
-fun <T> Flow<T>.throttleLast(interval: Duration): Flow<T> =
-    conflate().transform {
-        emit(it)
-        delay(interval)
-    }
 
 fun <A, B, C> Flow<A>.combineWithLatestFrom(other: Flow<B>, combiner: (A, B?) -> C): Flow<C> =
     channelFlow {

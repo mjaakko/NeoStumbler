@@ -18,12 +18,12 @@ import org.junit.Test
 import xyz.malkki.neostumbler.core.MacAddress
 import xyz.malkki.neostumbler.core.Position
 import xyz.malkki.neostumbler.core.Position.Source
+import xyz.malkki.neostumbler.core.airpressure.AirPressureObservation
 import xyz.malkki.neostumbler.core.emitter.BluetoothBeacon
 import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
 import xyz.malkki.neostumbler.core.observation.EmitterObservation
 import xyz.malkki.neostumbler.core.observation.PositionObservation
 import xyz.malkki.neostumbler.core.report.ReportData
-import xyz.malkki.neostumbler.domain.AirPressureObservation
 import xyz.malkki.neostumbler.scanner.postprocess.HiddenWifiFilterer
 
 class WirelessScannerTest {

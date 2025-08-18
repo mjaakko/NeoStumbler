@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.domain
+package xyz.malkki.neostumbler.core.airpressure
 
 data class AirPressureObservation(
     /** Air pressure in hPa */

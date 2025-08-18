@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.scanner.source
+package xyz.malkki.neostumbler.data.airpressure
 
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -9,8 +9,8 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import xyz.malkki.neostumbler.domain.AirPressureObservation
-import xyz.malkki.neostumbler.extensions.throttleLast
+import kotlinx.coroutines.flow.sample
+import xyz.malkki.neostumbler.core.airpressure.AirPressureObservation
 
 class PressureSensorAirPressureSource(private val sensorManager: SensorManager) :
     AirPressureSource {
@@ -41,5 +41,5 @@ class PressureSensorAirPressureSource(private val sensorManager: SensorManager) 
                 awaitClose { sensorManager.unregisterListener(listener) }
             }
             // SensorManager can send data more often than requested -> throttle the flow
-            .throttleLast(interval)
+            .sample(interval)
 }

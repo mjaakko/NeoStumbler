@@ -53,15 +53,6 @@ class FlowExtensionsTest {
     }
 
     @Test
-    fun `Test throttle last`() = runBlocking {
-        val flow = (1..30).toList().asFlow().onEach { delay(100) }
-
-        val values = flow.throttleLast(1.seconds).toList()
-
-        assertEquals(listOf(1, 10, 20, 30), values)
-    }
-
-    @Test
     fun `Test combineWithLatestFrom with an empty flow`() = runBlocking {
         val a = flowOf(1)
         val b = emptyFlow<Int>()
