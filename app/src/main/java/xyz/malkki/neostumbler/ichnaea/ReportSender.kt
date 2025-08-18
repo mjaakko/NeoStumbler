@@ -10,14 +10,16 @@ import xyz.malkki.neostumbler.ichnaea.dto.ReportDto
 import xyz.malkki.neostumbler.ichnaea.mapper.toDto
 
 /**
- * Limit the number of reports per batch to 999
+ * Limit the number of reports per batch to 950
  *
  * This is used for:
  * 1. avoiding too large payloads
  * 2. not exceeding SQLite variable limit on older Android versions (see
  *    https://www.sqlite.org/limits.html)
+ *     * Note that this also includes columns to be updated with a variable so the batch size has to
+ *       be smaller than the SQLite limit of 999
  */
-private const val MAX_REPORTS_PER_BATCH = 999
+private const val MAX_REPORTS_PER_BATCH = 950
 
 // Send speed with 2 m/s accuracy
 private const val REDUCED_METADATA_SPEED_ACCURACY = 2.0
