@@ -124,3 +124,7 @@ Custom ROMs which do not use Google Play Services for the fused location provide
 with the *Prefer fused location provider* option enabled in NeoStumbler. In this case, try disabling that option or
 using the `fdroid` variant of NeoStumbler, which does not the ability to use fused location provider at all
 
+## Changing the language doesn't work
+
+This can happen in some cases when you have more than one system language available. Currently the best workaround is to
+force stop NeoStumbler, which should reset the language resolution to use the correct language
