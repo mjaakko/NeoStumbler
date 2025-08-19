@@ -2,7 +2,7 @@
 <resources>
     <string name="autoscan_when_moving">移动时自动扫描</string>
     <string name="autoscan_failed_to_enable_title">启用自动扫描失败</string>
-    <string name="permission_rationale_background_location_autoscan">自动启动扫描需要后台定位权限</string>
+    <string name="permission_rationale_background_location_autoscan">应用在后台时自动启动扫描需要后台定位权限</string>
     <string name="permission_rationale_activity_recognition">自动启用扫描需要获取当前活动</string>
     <string name="prefer_fused_location_title">偏好融合定位服务</string>
     <string name="prefer_fused_location_description">融合定位服务可通过GPS之外的来源确定位置</string>
