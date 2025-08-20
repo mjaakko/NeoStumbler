@@ -193,7 +193,6 @@ dependencies {
     implementation(project(":libs:ichnaea"))
     implementation(project(":libs:utils"))
     implementation(project(":libs:executors"))
-    implementation(project(":libs:broadcast-receiver-flow"))
 
     implementation(project(":app:core"))
     implementation(project(":app:core:mapper:android-location"))
@@ -201,6 +200,7 @@ dependencies {
     implementation(project(":app:data:emitter:android"))
 
     implementation(project(":app:data:airpressure:android"))
+    implementation(project(":app:data:battery:android"))
 
     implementation(project(":app:data:geocoder:android"))
 

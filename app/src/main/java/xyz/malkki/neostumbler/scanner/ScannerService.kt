@@ -7,11 +7,9 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.ServiceInfo
 import android.hardware.Sensor
 import android.hardware.SensorManager
-import android.os.BatteryManager
 import android.os.IBinder
 import android.os.PowerManager
 import android.os.PowerManager.PARTIAL_WAKE_LOCK
@@ -50,11 +48,11 @@ import timber.log.Timber
 import xyz.malkki.neostumbler.MainActivity
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
-import xyz.malkki.neostumbler.broadcastreceiverflow.broadcastReceiverFlow
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.core.observation.PositionObservation
 import xyz.malkki.neostumbler.data.airpressure.AirPressureSource
 import xyz.malkki.neostumbler.data.airpressure.PressureSensorAirPressureSource
+import xyz.malkki.neostumbler.data.battery.BatteryLevelMonitor
 import xyz.malkki.neostumbler.data.emitter.ActiveBluetoothBeaconSource
 import xyz.malkki.neostumbler.data.emitter.ActiveCellInfoSource
 import xyz.malkki.neostumbler.data.emitter.ActiveWifiAccessPointSource
@@ -158,6 +156,8 @@ class ScannerService : Service() {
     private val reportSaver: ReportSaver by inject()
 
     private val locationSource: LocationSource by inject()
+
+    private val batteryLevelMonitor: BatteryLevelMonitor by inject()
 
     private lateinit var wakeLock: WakeLock
 
@@ -495,13 +495,10 @@ class ScannerService : Service() {
     }
 
     private fun getBatteryLevelMonitorFlow(minBatteryPercentage: Int): Flow<Boolean> {
-        return broadcastReceiverFlow(IntentFilter(Intent.ACTION_BATTERY_CHANGED))
-            .map { intent ->
-                val batteryPct =
-                    intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0).toFloat() /
-                        intent.getIntExtra(BatteryManager.EXTRA_SCALE, 1)
-
-                batteryPct >= minBatteryPercentage.toPercentage()
+        return batteryLevelMonitor
+            .getBatteryLevelFlow()
+            .map { batteryLevelMonitor ->
+                batteryLevelMonitor >= minBatteryPercentage.toPercentage()
             }
             .distinctUntilChanged()
             .onEach { batteryLevelOk ->
