@@ -157,4 +157,66 @@ class AutoDetectingMovingWifiBluetoothFiltererTest {
             } == true
         )
     }
+
+    @Test
+    fun `Test moving device can be included in a report in non-deterministic mode`() {
+        val filterer =
+            AutoDetectingMovingWifiBluetoothFilterer(
+                maxDistanceFromExisting = 500.0,
+                deterministic = false,
+            )
+
+        val position1 =
+            PositionObservation(
+                Position(
+                    latitude = 40.689100,
+                    longitude = -74.044300,
+                    source = Position.Source.GPS,
+                ),
+                timestamp = 0,
+            )
+
+        val report1 =
+            ReportData(
+                position = position1,
+                cellTowers = emptyList(),
+                wifiAccessPoints =
+                    listOf(
+                        EmitterObservation(
+                            WifiAccessPoint(macAddress = MacAddress("01:01:01:01:01:01")),
+                            timestamp = 0,
+                        )
+                    ),
+                bluetoothBeacons = emptyList(),
+            )
+
+        filterer.postProcessReport(report1)
+
+        val afterMoving = position1.position.latLng.destination(700.0, 43.15)
+
+        val position2 =
+            PositionObservation(
+                position =
+                    Position(
+                        latitude = afterMoving.latitude,
+                        longitude = afterMoving.longitude,
+                        source = Position.Source.GPS,
+                    ),
+                timestamp = 0,
+            )
+
+        val report2 = report1.copy(position = position2)
+
+        var notFiltered = false
+
+        @Suppress("UnusedPrivateProperty")
+        for (i in 1..1000) {
+            if (filterer.postProcessReport(report2)!!.wifiAccessPoints.isNotEmpty()) {
+                notFiltered = true
+                break
+            }
+        }
+
+        assertTrue(notFiltered)
+    }
 }
