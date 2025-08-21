@@ -90,9 +90,21 @@ class LifecycleAwareMapView(context: Context) : MapView(context) {
 private fun getLocalizedLabelExpression(locale: Locale): Expression {
     val preferredLanguage =
         if (locale.language == "zh") {
-            // Handle different Chinese scripts by preferring the simplified script if it's chosen
-            // by the user or if the country is China
-            if (locale.script == "Hans" || (locale.script.isEmpty() && locale.country == "CN")) {
+            /**
+             * Handle different Chinese scripts by preferring the simplified script in any of the
+             * following cases:
+             * * it's chosen by the user
+             * * if the country is China and the user has not selected the traditional script
+             * * if there's no preferred script and no specific country variant (Android OS uses
+             *   simplified script in this case, see
+             *   https://github.com/mjaakko/NeoStumbler/issues/790)
+             */
+            @Suppress("ComplexCondition")
+            if (
+                locale.script == "Hans" ||
+                    (locale.country == "CN" && locale.script != "Hant") ||
+                    (locale.country.isEmpty() && locale.script.isEmpty())
+            ) {
                 arrayOf(
                     Expression.get("name:zh-Hans"),
                     Expression.get("name:zh-Hant"),
