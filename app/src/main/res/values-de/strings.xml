@@ -65,7 +65,7 @@
     <string name="permission_rationale_read_phone_state">Zugriff auf das Telefon wird benötigt, um Mobilfunkmasten zu scannen</string>
     <string name="permission_rationale_bluetooth">Das Scannen von Bluetooth-Beacons benötigt die Bluetooth-Berechtigung</string>
     <string name="permission_rationale_post_notifications">Das Anzeigen der Status-Benachrichtigung benötigt die Benachrichtigungsberechtigung</string>
-    <string name="permission_rationale_background_location_quick_settings">Um das Scannen von der Schnelleinstellungskachel zu starten, wird der Hintergrundzugriff auf den Standort benötigt</string>
+    <string name="permission_rationale_background_location_quick_settings">Für den Start des Scans über die Schnelleinstellungen ist im Hintergrund Zugriff auf den Standort erforderlich.\n\nBeachten Sie, dass dies eine Einschränkung des Android-Betriebssystems ist. Ihr Standort wird im Hintergrund nicht abgerufen, wenn Sie weder passives noch automatisches Scannen aktivieren.</string>
     <string name="permission_rationale_location_map">Die Anzeige deines Standorts auf der Karte erfordert eine Berechtigung für den Standort</string>
     <string name="movement_detection_location_description">Pausiert Scannen, wenn Standort sich nicht ändert. Hält GPS aktiv</string>
     <string name="notification_style_minimal_description">Zeigt Benachrichtigung ohne Details</string>
@@ -188,7 +188,7 @@
         <item quantity="other">%d SSIDs gefiltert</item>
     </plurals>
     <string name="passive_scanning_title">Passives Datensammeln</string>
-    <string name="permission_rationale_background_location_passive_scan">Um Standortupdates zu empfangen, wenn die App nicht aktiv ist, wird Zugriff auf den Hintergrundstandort benötigt</string>
+    <string name="permission_rationale_background_location_passive_scan">Die passive Datenerfassung erfordert den Zugriff auf den Standort im Hintergrund, um Berichte zu erstellen, wenn die App nicht aktiv ist</string>
     <string name="delete_all">Alles löschen</string>
     <string name="copy">Kopieren</string>
     <string name="text_copied_to_clipboard">Text in die Zwischenablage kopiert!</string>
@@ -197,4 +197,8 @@
     <string name="crash_log_title">Absturzprotokoll</string>
     <string name="crash_log_entry_title">Absturz #%d</string>
     <string name="passive_scanning_description">Bei der passiven Datenerfassung werden Berichte im Hintergrund mit minimalen Auswirkungen auf den Akku erstellt, indem von anderen Anwendungen angeforderte Daten verwendet werden.\n\nDie Effektivität der passiven Datenerfassung hängt von deinem Gerätetyp, den anderen Anwendungen, die du verwendest, und davon ab, ob du einen Anbieter für einen kombinierten Standort zur Verfügung hast.\n\nBeachte, dass die passive Datenerfassung nicht mit Bluetooth-Beacons funktioniert.\n\nMöchtest du die passive Datenerfassung aktivieren?</string>
+    <string name="distance_to_estimated_location">Entfernung zum geschätzten Standort: %d m</string>
+    <string name="map_tile_source_custom_title">Benutzerdefiniert</string>
+    <string name="map_tile_source_custom_style_url">Benutzerdefinierte URL für Kartenstil</string>
+    <string name="map_show_coverage_layer">Abdeckungsebene anzeigen</string>
 </resources>

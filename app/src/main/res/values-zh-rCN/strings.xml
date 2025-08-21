@@ -78,7 +78,7 @@
     <string name="permission_rationale_read_phone_state">扫描信号塔需要获取电话状态权限</string>
     <string name="permission_rationale_bluetooth">扫描蓝牙信标需要蓝牙权限</string>
     <string name="permission_rationale_post_notifications">显示状态通知需要通知权限</string>
-    <string name="permission_rationale_background_location_quick_settings">从快捷开关启动扫描需要后台位置权限</string>
+    <string name="permission_rationale_background_location_quick_settings">从快捷开关启动扫描需要后台位置权限。\n\n请注意，这是安卓操作系统施加的限制。若您未启用被动或自动扫描功能，则不会在后台获取您的位置信息</string>
     <string name="permission_rationale_location_map">显示你的位置需要位置权限</string>
     <string name="cancel">取消</string>
     <string name="stop">停止</string>
@@ -195,5 +195,5 @@
     <string name="passive_scanning_description">被动数据收集会利用其他应用请求的数据，在后台生成报告，耗电量影响极小。\n\n被动数据收集的效果取决于您的设备类型、您正在使用的其他应用，以及您是否启用了融合定位服务。\n\n请注意，被动数据收集不适用于蓝牙信标。\n\n您是否要开启被动数据收集？</string>
     <string name="reduced_metadata_description">报告以随机顺序发送，并截断时间戳及其他元数据</string>
     <string name="reduced_metadata_title">发送报告时去除部分元数据</string>
-    <string name="permission_rationale_background_location_passive_scan">应用处于后台时，需要后台位置权限来更新位置信息</string>
+    <string name="permission_rationale_background_location_passive_scan">应用处于后台时，被动数据收集功能需要后台位置权限来更新位置信息</string>
 </resources>
