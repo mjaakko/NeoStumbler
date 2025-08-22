@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -17,7 +17,7 @@ import org.junit.Test
 class FlowExtensionsTest {
     @Test
     fun `Test flow buffer`() {
-        runBlocking {
+        runTest {
             val flow = flow {
                 repeat(4) { i ->
                     delay(500.milliseconds)
@@ -35,7 +35,7 @@ class FlowExtensionsTest {
     }
 
     @Test
-    fun `Test flow combineAny`() = runBlocking {
+    fun `Test flow combineAny`() = runTest {
         val a = emptyFlow<Int>()
         val b = flow {
             emit(1)
@@ -53,7 +53,7 @@ class FlowExtensionsTest {
     }
 
     @Test
-    fun `Test combineWithLatestFrom with an empty flow`() = runBlocking {
+    fun `Test combineWithLatestFrom with an empty flow`() = runTest {
         val a = flowOf(1)
         val b = emptyFlow<Int>()
 
@@ -64,7 +64,7 @@ class FlowExtensionsTest {
     }
 
     @Test
-    fun `Test combineWithLatestFrom`() = runBlocking {
+    fun `Test combineWithLatestFrom`() = runTest {
         val a = flowOf(1, 2).onEach { delay(500) }
         val b = (1..30).toList().asFlow().onEach { delay(100) }
 
@@ -75,7 +75,7 @@ class FlowExtensionsTest {
     }
 
     @Test
-    fun `Test maxAge`() = runBlocking {
+    fun `Test maxAge`() = runTest {
         val a = flow {
             emit(1)
             delay(2.seconds)
@@ -88,7 +88,7 @@ class FlowExtensionsTest {
     }
 
     @Test
-    fun `Test collecting flow values pairwise`() = runBlocking {
+    fun `Test collecting flow values pairwise`() = runTest {
         val a = flowOf(1, 2, 3)
 
         val values = a.pairwise().toList()
