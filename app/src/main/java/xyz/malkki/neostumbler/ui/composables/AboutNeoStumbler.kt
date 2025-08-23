@@ -93,6 +93,7 @@ fun AboutNeoStumbler() {
                         }
 
                         LicensesButton()
+                        PrivacyPolicyButton()
                     }
                 }
             }

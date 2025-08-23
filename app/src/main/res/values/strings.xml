@@ -314,4 +314,5 @@
     <string name="bug_report_button">Report a bug</string>
     <string name="update_translations_button">Update translations</string>
     <string name="third_party_licenses">Third-party licenses</string>
+    <string name="privacy_policy">Privacy policy</string>
 </resources>

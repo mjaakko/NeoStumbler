@@ -139,9 +139,22 @@ android {
         }
     }
 
+    sourceSets {
+        getByName("gplay") {
+            assets {
+                directories +=
+                    project.layout.buildDirectory.dir("privacypolicy").get().asFile.absolutePath
+            }
+        }
+    }
+
     applicationVariants.configureEach {
         if (buildType.isDebuggable) {
             resValue("string", "app_name", "NS (dev, $flavorName)")
+        }
+
+        if (productFlavors.any { it.name == "gplay" }) {
+            mergeAssetsProvider.configure { dependsOn(tasks.named("copyPrivacyPolicy")) }
         }
     }
 
@@ -183,6 +196,11 @@ android {
 
         lintConfig = projectDir.resolve("lint.xml")
     }
+}
+
+tasks.register<Copy>("copyPrivacyPolicy") {
+    from(rootProject.layout.projectDirectory.file("docs/privacy_policy.md"))
+    into(project.layout.buildDirectory.dir("privacypolicy"))
 }
 
 androidComponents {
@@ -326,6 +344,8 @@ dependencies {
     implementation(libs.bundles.vico)
 
     implementation(libs.bundles.aboutLibraries)
+
+    "gplayImplementation"(libs.bundles.multiplatformMarkdownRenderer)
 
     "fullImplementation"(libs.playservices.cronet)
     "fullImplementation"(libs.cronetOkhttp)
