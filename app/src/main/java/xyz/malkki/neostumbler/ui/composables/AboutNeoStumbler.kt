@@ -1,7 +1,6 @@
 package xyz.malkki.neostumbler.ui.composables
 
 import android.content.Context
-import android.content.Intent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -30,20 +29,17 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import xyz.malkki.neostumbler.BuildConfig
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.extensions.defaultLocale
 import xyz.malkki.neostumbler.extensions.toLtr
+import xyz.malkki.neostumbler.utils.CustomTabsLinkInteractionListener
 import xyz.malkki.neostumbler.utils.getBugReportUrl
+import xyz.malkki.neostumbler.utils.openUrl
 
 @Composable
 fun AboutNeoStumbler() {
     val context = LocalContext.current
-
-    fun openUrl(url: String) {
-        context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
-    }
 
     val showDialog = rememberSaveable { mutableStateOf(false) }
 
@@ -84,11 +80,15 @@ fun AboutNeoStumbler() {
 
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        Button(onClick = { openUrl(getBugReportUrl()) }) {
+                        Button(onClick = { context.startActivity(openUrl(getBugReportUrl())) }) {
                             Text(text = stringResource(R.string.bug_report_button))
                         }
 
-                        Button(onClick = { openUrl(getTranslationsUrl(context)) }) {
+                        Button(
+                            onClick = {
+                                context.startActivity(openUrl(getTranslationsUrl(context)))
+                            }
+                        ) {
                             Text(text = stringResource(R.string.update_translations_button))
                         }
 
@@ -110,6 +110,8 @@ fun AboutNeoStumbler() {
 
 @Composable
 private fun getAuthorsText(): AnnotatedString {
+    val context = LocalContext.current
+
     val author = stringResource(R.string.author)
     val contributors = stringResource(R.string.contributors)
 
@@ -125,7 +127,11 @@ private fun getAuthorsText(): AnnotatedString {
         )
 
         addLink(
-            url = LinkAnnotation.Url("https://github.com/mjaakko/NeoStumbler/graphs/contributors"),
+            url =
+                LinkAnnotation.Url(
+                    "https://github.com/mjaakko/NeoStumbler/graphs/contributors",
+                    linkInteractionListener = CustomTabsLinkInteractionListener(context),
+                ),
             start = raw.indexOf(contributors),
             end = raw.indexOf(contributors) + contributors.length,
         )
