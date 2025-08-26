@@ -48,12 +48,12 @@ class PlatformPassiveLocationReceiver : BroadcastReceiver(), KoinComponent {
                 )
                 ?.filterIsInstance<Location>() ?: emptyList()
         } else if (hasExtra(LocationManager.KEY_LOCATION_CHANGED)) {
-            listOf(
-                IntentCompat.getParcelableExtra<Location>(
+            listOfNotNull(
+                IntentCompat.getParcelableExtra(
                     this,
                     LocationManager.KEY_LOCATION_CHANGED,
                     Location::class.java,
-                )!!
+                )
             )
         } else {
             emptyList()
