@@ -1,3 +1,6 @@
+[*]
+insert_final_newline = true
+
 [{*.kt,*.kts}]
 indent_style = space
 insert_final_newline = true
