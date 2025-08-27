@@ -1,8 +1,12 @@
+import com.mikepenz.aboutlibraries.plugin.DuplicateMode
+import com.mikepenz.aboutlibraries.plugin.DuplicateRule
+
 plugins {
     id("convention.android-app")
     alias(libs.plugins.kotlinCompose)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.bundletool)
+    alias(libs.plugins.aboutLibraries)
 }
 
 bundletool {
@@ -174,6 +178,15 @@ kotlin {
     }
 }
 
+aboutLibraries {
+    offlineMode = true
+
+    library {
+        duplicationMode = DuplicateMode.MERGE
+        duplicationRule = DuplicateRule.GROUP
+    }
+}
+
 dependencies {
     implementation(project(":libs:beacon-library-utils"))
     implementation(project(":libs:geography"))
@@ -274,6 +287,8 @@ dependencies {
     implementation(libs.fastcsv)
 
     implementation(libs.bundles.vico)
+
+    implementation(libs.bundles.aboutLibraries)
 
     "fullImplementation"(libs.playservices.cronet)
     "fullImplementation"(libs.cronetOkhttp)
