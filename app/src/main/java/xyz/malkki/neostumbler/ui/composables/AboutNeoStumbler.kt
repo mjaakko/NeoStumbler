@@ -91,6 +91,8 @@ fun AboutNeoStumbler() {
                         Button(onClick = { openUrl(getTranslationsUrl(context)) }) {
                             Text(text = stringResource(R.string.update_translations_button))
                         }
+
+                        LicensesButton()
                     }
                 }
             }
