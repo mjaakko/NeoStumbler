@@ -38,4 +38,7 @@ object PreferenceKeys {
     // Privacy options
     const val WIFI_FILTER_LIST = "wifi_filter_list"
     const val REDUCED_METADATA = "reduced_metadata"
+
+    const val USERNAME = "user name"
+    const val USER_EMAIL = "user email"
 }

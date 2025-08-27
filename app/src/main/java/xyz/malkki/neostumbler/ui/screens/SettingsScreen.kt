@@ -1,20 +1,28 @@
 package xyz.malkki.neostumbler.ui.screens
 
 import android.os.Build
+import android.util.Patterns
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.input.InputTransformation.Companion.keyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.data.settings.Settings
+import xyz.malkki.neostumbler.data.settings.getStringFlow
 import xyz.malkki.neostumbler.scanner.ScannerService
 import xyz.malkki.neostumbler.ui.composables.AboutNeoStumbler
 import xyz.malkki.neostumbler.ui.composables.ReportReuploadButton
@@ -28,15 +36,40 @@ import xyz.malkki.neostumbler.ui.composables.settings.IgnoreScanThrottlingToggle
 import xyz.malkki.neostumbler.ui.composables.settings.LanguageSwitcher
 import xyz.malkki.neostumbler.ui.composables.settings.ManageStorageSettingsItem
 import xyz.malkki.neostumbler.ui.composables.settings.MovementDetectorSettings
+import xyz.malkki.neostumbler.ui.composables.settings.ParamField
 import xyz.malkki.neostumbler.ui.composables.settings.PassiveScanToggle
 import xyz.malkki.neostumbler.ui.composables.settings.ScannerNotificationStyleSettings
 import xyz.malkki.neostumbler.ui.composables.settings.SettingsGroup
 import xyz.malkki.neostumbler.ui.composables.settings.SettingsToggle
 import xyz.malkki.neostumbler.ui.composables.settings.SliderSetting
+import xyz.malkki.neostumbler.ui.composables.settings.TextSetting
 import xyz.malkki.neostumbler.ui.composables.settings.geosubmit.GeosubmitEndpointSettings
 import xyz.malkki.neostumbler.ui.composables.settings.privacy.WifiFilterSettings
 import xyz.malkki.neostumbler.ui.composables.troubleshooting.TroubleshootingSettingsItem
 import xyz.malkki.neostumbler.ui.modifiers.handleDisplayCutouts
+
+@Composable
+private fun PlantVillageSettings() {
+    SettingsGroup(title="PlantVillage") {
+        TextSetting(
+            label = "name",
+            key = PreferenceKeys.USERNAME,
+            default = ""
+        )
+
+        TextSetting(
+            label = "email",
+            key = PreferenceKeys.USER_EMAIL,
+            filter = {
+                it.replace(" ", "")
+            },
+            isError = {
+                !Patterns.EMAIL_ADDRESS.matcher(it).matches()
+            },
+            default = ""
+        )
+    }
+}
 
 @Composable
 private fun ReportSettings() {
@@ -147,11 +180,14 @@ private fun OtherSettings() {
 fun SettingsScreen() {
     Column(
         modifier =
-            Modifier.padding(horizontal = 16.dp)
+            Modifier
+                .padding(horizontal = 16.dp)
                 .verticalScroll(rememberScrollState())
                 .handleDisplayCutouts()
     ) {
         Spacer(modifier = Modifier.height(16.dp))
+
+        PlantVillageSettings()
 
         ReportSettings()
 

@@ -81,6 +81,7 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) :
 
         val reportSender =
             ReportSender(
+                settings = settings,
                 geosubmit = geosubmit,
                 reportProvider = reportProvider,
                 reportSaver = reportSaver,

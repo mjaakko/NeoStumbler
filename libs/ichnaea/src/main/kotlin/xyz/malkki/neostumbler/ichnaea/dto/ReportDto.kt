@@ -5,6 +5,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ReportDto(
     val timestamp: Long,
+    val username: String,
+    val email: String,
     val position: PositionDto,
     val wifiAccessPoints: List<WifiAccessPointDto>?,
     val cellTowers: List<CellTowerDto>?,

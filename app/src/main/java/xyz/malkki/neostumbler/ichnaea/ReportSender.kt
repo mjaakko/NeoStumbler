@@ -2,9 +2,13 @@ package xyz.malkki.neostumbler.ichnaea
 
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import kotlinx.coroutines.flow.first
+import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.core.report.Report
 import xyz.malkki.neostumbler.data.reports.ReportProvider
 import xyz.malkki.neostumbler.data.reports.ReportSaver
+import xyz.malkki.neostumbler.data.settings.Settings
+import xyz.malkki.neostumbler.data.settings.getStringFlow
 import xyz.malkki.neostumbler.extensions.roundToMultipleOf
 import xyz.malkki.neostumbler.ichnaea.dto.ReportDto
 import xyz.malkki.neostumbler.ichnaea.mapper.toDto
@@ -28,6 +32,7 @@ private const val REDUCED_METADATA_SPEED_ACCURACY = 2.0
 private const val REDUCED_METADATA_HEADING_ACCURACY = 30.0
 
 class ReportSender(
+    private val settings: Settings,
     private val geosubmit: Geosubmit,
     private val reportProvider: ReportProvider,
     private val reportSaver: ReportSaver,
@@ -38,6 +43,10 @@ class ReportSender(
         reducedMetadata: Boolean,
         progressListener: (suspend (Int) -> Unit)? = null,
     ) {
+
+        val email = settings.getStringFlow(PreferenceKeys.USER_EMAIL, "").first()
+        val username = settings.getStringFlow(PreferenceKeys.USERNAME, "").first()
+
         val reportBatches =
             reportProvider
                 .getReportsForTimerange(fromTimestamp = from, toTimestamp = to)
@@ -53,7 +62,9 @@ class ReportSender(
         var sent = 0
 
         reportBatches.forEach {
-            it.sendBatch(reduceMetadata = reducedMetadata)
+            it.sendBatch(reduceMetadata = reducedMetadata,
+                username = username,
+                email = email)
 
             sent += it.size
 
@@ -67,6 +78,9 @@ class ReportSender(
     ) {
         var sent = 0
 
+        val email = settings.getStringFlow(PreferenceKeys.USER_EMAIL, "").first()
+        val username = settings.getStringFlow(PreferenceKeys.USERNAME, "").first()
+
         while (true) {
             val batch =
                 if (reducedMetadata) {
@@ -79,7 +93,11 @@ class ReportSender(
                 break
             }
 
-            batch.sendBatch(reduceMetadata = reducedMetadata)
+            batch.sendBatch(
+                reduceMetadata = reducedMetadata,
+                username = username,
+                email = email,
+            )
 
             sent += batch.size
 
@@ -87,12 +105,16 @@ class ReportSender(
         }
     }
 
-    private suspend fun List<Report>.sendBatch(reduceMetadata: Boolean) {
-        val dtos = map { report ->
+    private suspend fun List<Report>.sendBatch(
+        username: String,
+        email: String,
+        reduceMetadata: Boolean) {
+
+        val dtos = map { report -> 
             if (reduceMetadata) {
-                report.toDto().reduceMetadata()
+                report.toDto(username, email).reduceMetadata()
             } else {
-                report.toDto()
+                report.toDto(username, email)
             }
         }
 
@@ -110,13 +132,15 @@ class ReportSender(
         reportSaver.markAsUploaded(uploadTimestamp = now, *updatedReports.toLongArray())
     }
 
-    private fun Report.toDto(): ReportDto {
+    private fun Report.toDto(username:String, email: String): ReportDto {
         return ReportDto(
             timestamp = timestamp.toEpochMilli(),
             position = position.toDto(),
             wifiAccessPoints = wifiAccessPoints.map { it.toDto() }.takeIf { it.isNotEmpty() },
             cellTowers = cellTowers.map { it.toDto() }.takeIf { it.isNotEmpty() },
             bluetoothBeacons = bluetoothBeacons.map { it.toDto() }.takeIf { it.isNotEmpty() },
+            username = username,
+            email = email,
         )
     }
 
