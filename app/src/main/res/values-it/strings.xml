@@ -47,7 +47,7 @@
     <string name="export_notification_channel_name">Esportazione dati</string>
     <string name="notification_exporting_data">Esportazione dati in corso…</string>
     <string name="export_data">Esportazione dati</string>
-    <string name="export_no_file_chosen">Impossibile esportare i dati in quanto un file non è stato creato</string>
+    <string name="export_no_file_chosen">Impossibile esportare i dati perché nessun file è stato creato</string>
     <string name="export_started">Esportazione dati da %1$s a %2$s</string>
     <string name="export_csv">Esporta come CSV</string>
     <string name="export_raw_database">Esporta database grezzo</string>
@@ -140,7 +140,7 @@
     <string name="toast_deleted_all_reports">Tutti i rilevamenti eliminati</string>
     <string name="no_data">Nessun dato</string>
     <string name="permission_rationale_fine_location">Per creare rilevamenti con dati sulla posizione utili è necessaria l\'autorizzazione per la posizione esatta</string>
-    <string name="permission_rationale_background_location_quick_settings">L\'avvio della scansione dalle impostazioni rapide richiede l\'accesso alla posizione in background</string>
+    <string name="permission_rationale_background_location_quick_settings">L\'avvio della scansione dalle impostazioni rapide richiede l\'accesso alla posizione in background.\n\nNota che questa è una restrizione imposta dal sistema operativo Android. La tua posizione non è accessibile in background se non abiliti la scansione passiva o automatica</string>
     <string name="movement_detection_significant_motion_description">Ferma la scansione e il GPS quando non vi è movimento significativo. Risparmia batteria, ma non è affidabile su alcuni dispositivi</string>
     <string name="toast_reports_upload_failed_no_endpoint">Impossibile inviare rilevamenti in quanto non è stato configurato un endpoint</string>
     <string name="no_endpoint_configured">Nessun endpoint configurato</string>
@@ -168,7 +168,7 @@
     <string name="invalid_url">URL non valido</string>
     <string name="send_reports_automatically_never">Mai</string>
     <string name="send_reports_automatically_on_any_network">Da qualsiasi rete</string>
-    <string name="send_reports_automatically_on_unmetered_network">Da reti a consumo</string>
+    <string name="send_reports_automatically_on_unmetered_network">Su reti a consumo</string>
     <string name="locate_path">Percorso geolocalizzazione</string>
     <string name="coverage_layer_no_configured">Nessun layer di copertura mappa configurato</string>
     <string name="system_default_language">Lingua di default del sistema</string>
@@ -187,4 +187,19 @@
     <string name="wifi_filter_settings_hint">Le reti Wi-Fi con queste parole chiave negli SSID non vengono rilevate</string>
     <string name="reduced_metadata_title">Invia rilevamenti con meno metadati</string>
     <string name="reduced_metadata_description">I rilevamenti vengono inviati in ordine casuale con gli orari ed altri metadati troncati</string>
+    <string name="copy">Copia</string>
+    <string name="text_copied_to_clipboard">Testo copiato negli appunti!</string>
+    <string name="distance_to_estimated_location">Distanza dalla posizione stimata: %d m</string>
+    <string name="pause_scanning_on_low_battery_title">Sospendi scansione con batteria scarica</string>
+    <string name="pause_scanning_on_low_battery_description">Quando la carica è sotto %d%%</string>
+    <string name="moving_device_filter_title">Filtra dispositivi mobili</string>
+    <string name="moving_device_filter_description">Reti Wi-Fi e beacon Bluetooth mobili vengono rilevati e filtrati automaticamente dai report</string>
+    <string name="passive_scanning_title">Raccolta dati passiva</string>
+    <string name="passive_scanning_description">La raccolta dati passiva crea report in background con un impatto minimo sulla batteria utilizzando i dati richiesti da altre applicazioni.\n\nL\'efficacia della raccolta dati passiva dipenderà dal tipo di dispositivo, dalle altre app che stai utilizzando e se hai disponibile un provider di posizione fuso.\n\nNota che la raccolta dati passiva non funziona con i beacon Bluetooth.\n\nVuoi abilitare la raccolta dati passiva?</string>
+    <string name="map_tile_source_custom_title">Personalizzato</string>
+    <string name="map_tile_source_custom_style_url">URL stile mappa personalizzato</string>
+    <string name="crash_log_title">Registro errori</string>
+    <string name="crash_log_entry_title">Errore #%d</string>
+    <string name="delete_all">Cancella tutto</string>
+    <string name="disabled">Disattivato</string>
 </resources>
