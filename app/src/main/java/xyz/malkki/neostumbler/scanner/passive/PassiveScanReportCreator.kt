@@ -64,7 +64,7 @@ class PassiveScanReportCreator(
             return
         }
 
-        val cellTowers = getCellTowers()
+        val cellTowers = getCellTowers().filterDuplicates()
         cellTowers
             .maxOfOrNull { it.timestamp }
             ?.let { passiveScanStateManager.updateMaxCellTimestamp(it) }
@@ -89,6 +89,17 @@ class PassiveScanReportCreator(
             ?.let { passiveScanStateManager.updateLastReportLocation(it.position.position.latLng) }
 
         reports.forEach { reportData -> reportSaver.createReport(reportData) }
+    }
+
+    /** Filters duplicate cell towers by choosing the one with most recent timestamp */
+    private fun List<EmitterObservation<CellTower, String>>.filterDuplicates():
+        List<EmitterObservation<CellTower, String>> {
+        return groupBy { it.emitter.uniqueKey }
+            .mapValues { cellTowers ->
+                cellTowers.value.maxByOrNull { cellTower -> cellTower.timestamp }
+            }
+            .values
+            .filterNotNull()
     }
 
     @RequiresPermission(
