@@ -40,7 +40,7 @@ androidx-lifecycleRuntimeCompose = { module = "androidx.lifecycle:lifecycle-runt
 androidx-lifecycleRuntime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
 androidx-lifecycleViewmodelCompose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidxLifecycle" }
 androidx-lifecycleViewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidxLifecycle" }
-androidx-lifecycleViewmodelNavigation = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version = "1.0.0-alpha04" }
+androidx-lifecycleViewmodelNavigation = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version = "2.10.0-alpha03" }
 
 androidx-pagingCommon = { module = "androidx.paging:paging-common-ktx", version.ref = "androidxPaging" }
 androidx-pagingCompose = { module = "androidx.paging:paging-compose", version.ref = "androidxPaging" }
