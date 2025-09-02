@@ -110,7 +110,7 @@
     <string name="settings_ignore_wifi_scan_throttling_description">Kai skenavimas ribojamas, tinklus galima skenuoti ne dažniau kaip keturis kartus per dvi minutes</string>
     <string name="troubleshooting_fix">Taisyti</string>
     <string name="settings_ignore_wifi_scan_throttling_title">Nepaisyti „Wi-Fi“ skenavimo ribojimų</string>
-    <string name="permission_rationale_background_location_quick_settings">Skenavimui pradėti iš sparčiosios prieigos reikia leidimo pasiekti vietovę kai programa veikia fone</string>
+    <string name="permission_rationale_background_location_quick_settings">Skenavimui pradėti iš sparčiosios prieigos reikia leidimo pasiekti vietovę kai programa veikia fone.\n\nTai – „Android“ operacinės sistemos apribojimas. Jūsų vietovės duomenys fone nebus naudojami, jei neįgalinsite pasyviojo ar automatinio skenavimo</string>
     <string name="use_dynamic_color_ui">Sąsajoje naudoti dinamines spalvas</string>
     <string name="db_size">Duomenų bazės dydis: %s</string>
     <string name="delete_data">Šalinti duomenis</string>
@@ -194,7 +194,7 @@
     <string name="disabled">Išjungta</string>
     <string name="pause_scanning_on_low_battery_title">Pristabdyti skenavimą, nukritus akumuliatoriaus įkrovai</string>
     <string name="pause_scanning_on_low_battery_description">Įkrovai nukritus žemiau %d%%</string>
-    <string name="permission_rationale_background_location_passive_scan">Vietovės atnaujinimams gauti kai programa nėra aktyvi reikia leidimo pasiekti vietovę kai programa veikia fone</string>
+    <string name="permission_rationale_background_location_passive_scan">Pasyviajam duomenų rinkimui ir ataskaitų formavimui reikia leidimo pasiekti vietovę kai programa veikia fone</string>
     <string name="delete_all">Šalinti visas</string>
     <string name="copy">Kopijuoti</string>
     <string name="crash_log_title">Strigčių žurnalas</string>
@@ -202,4 +202,8 @@
     <string name="moving_device_filter_description">Mobilieji belaidžiai tinklai ir „Bluetooth“ siųstuvai automatiškai aptinkami ir neįtraukiami į ataskaitas</string>
     <string name="moving_device_filter_title">Neįtraukti mobiliųjų įrenginių</string>
     <string name="text_copied_to_clipboard">Tekstas nukopijuotas į iškarpinę!</string>
+    <string name="distance_to_estimated_location">Atstumas iki numanomo tikslo: %d m</string>
+    <string name="map_tile_source_custom_title">Tinkintas</string>
+    <string name="map_tile_source_custom_style_url">Tinkintas žemėlapio stiliaus URL</string>
+    <string name="map_show_coverage_layer">Rodyti aprėpties sluoksnį</string>
 </resources>
