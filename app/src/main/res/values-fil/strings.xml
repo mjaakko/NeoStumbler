@@ -1,3 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="ok">OK</string>
+    <string name="no_thanks">Hindi, salamat</string>
+    <string name="yes">Oo</string>
+    <string name="no">Hindi</string>
+    <string name="reset">I-reset</string>
+    <string name="save">I-save</string>
+    <string name="cancel">Kanselahin</string>
+    <string name="use">Gamitin</string>
+    <string name="stop">Itigil</string>
+    <string name="delete">Burahin</string>
+    <string name="delete_all">Burahin lahat</string>
+    <string name="no_data">Walang data</string>
+    <string name="copy">Kopyahin</string>
+    <string name="text_copied_to_clipboard">Kinopya ang text sa clipboard!</string>
+    <string name="disabled">Naka-disable</string>
+    <string name="waiting_for_location">Naghihintay para sa lokasyon</string>
+    <string name="failed_to_open_selected_file">Nabigong buksan ang piniling file</string>
+    <string name="permissions_needed">Kinakailangan ang mga pahintulot</string>
+    <string name="permissions_not_granted">Hindi binigay ang mga pahintulot na kinakailangan</string>
+    <string name="wifi_icon_description">Icon ng Wi-Fi</string>
+    <string name="cell_tower_icon_description">Icon ng cell tower</string>
 </resources>
