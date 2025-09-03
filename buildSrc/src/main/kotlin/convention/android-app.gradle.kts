@@ -17,10 +17,11 @@ android {
         targetCompatibility = JavaVersion.toVersion(project.extra["jvmTarget"]!!)
     }
 
-    // These are not needed because the app is not published to Google Play
     dependenciesInfo {
-        includeInApk = false
-        includeInBundle = false
+        // Add dependencies info block only if specifically enabled with a Gradle property
+        // See https://android.izzysoft.de/articles/named/iod-scan-apkchecks#blobs
+        includeInApk = project.hasProperty("includeDependenciesInfo")
+        includeInBundle = project.hasProperty("includeDependenciesInfo")
     }
 
     defaultConfig {
