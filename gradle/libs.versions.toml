@@ -13,7 +13,7 @@ androidxLifecycle = "2.9.3"
 androidxPaging = "3.3.6"
 androidxRoom = "2.7.2"
 androidxWork = "2.10.3"
-androidxNavigation = "1.0.0-alpha08"
+androidxNavigation = "1.0.0-alpha06"
 
 androidxComposeBom = "2025.08.01"
 
@@ -42,7 +42,7 @@ androidx-lifecycleRuntimeCompose = { module = "androidx.lifecycle:lifecycle-runt
 androidx-lifecycleRuntime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
 androidx-lifecycleViewmodelCompose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidxLifecycle" }
 androidx-lifecycleViewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidxLifecycle" }
-androidx-lifecycleViewmodelNavigation = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version = "2.10.0-alpha03" }
+androidx-lifecycleViewmodelNavigation = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version = "1.0.0-alpha04" }
 
 androidx-pagingCommon = { module = "androidx.paging:paging-common-ktx", version.ref = "androidxPaging" }
 androidx-pagingCompose = { module = "androidx.paging:paging-compose", version.ref = "androidxPaging" }
