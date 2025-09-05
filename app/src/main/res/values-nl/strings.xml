@@ -201,4 +201,5 @@
     <string name="map_tile_source_custom_title">Aangepast</string>
     <string name="map_tile_source_custom_style_url">Url voor aangepaste kaartstĳl</string>
     <string name="map_show_coverage_layer">Dekkings­laag weergeven</string>
+    <string name="third_party_licenses">Licenties van derden</string>
 </resources>

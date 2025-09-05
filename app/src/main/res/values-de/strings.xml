@@ -140,7 +140,7 @@
     <string name="author_text">Mit ❤️ von %1$s und %2$s erstellt</string>
     <string name="no_data">Keine Daten vorhanden</string>
     <string name="every_x_meters">Alle %d Meter</string>
-    <string name="wifi_scan_frequency">Häufigkeit des WLAN Scans</string>
+    <string name="wifi_scan_frequency">Häufigkeit der WLAN-Suche</string>
     <string name="cell_tower_scan_frequency">Häufigkeit des Mobilfunk-Scans</string>
     <string name="map_tile_source">Kartenkachelquelle</string>
     <string name="settings_ignore_wifi_scan_throttling_description">Wenn das Scannen gedrosselt ist, können maximal vier Scans innerhalb von zwei Minuten durchgeführt werden</string>
@@ -161,7 +161,7 @@
     <string name="export_raw_database_compress">Datenbankdatei komprimieren</string>
     <string name="send_reports_automatically_on_any_network">Über alle Verbindungen</string>
     <string name="locate_path">Pfad für Geolokalisierung</string>
-    <string name="system_default_language">Standartsystemsprache</string>
+    <string name="system_default_language">Standardsystemsprache</string>
     <string name="delete_reports_from_area">Messwerte nach Bereich löschen</string>
     <string name="lac">LAC: %s</string>
     <string name="send_reports_automatically_on_unmetered_network">Nur über ungetaktete Verbindungen</string>
@@ -193,7 +193,7 @@
     <string name="copy">Kopieren</string>
     <string name="text_copied_to_clipboard">Text in die Zwischenablage kopiert!</string>
     <string name="moving_device_filter_title">Sich bewegende Geräte herausfiltern</string>
-    <string name="moving_device_filter_description">Sich bewegende Wi-Fi-Netzwerke und Bluetooth-Beacons werden automatisch erkannt und aus den Berichten herausgefiltert</string>
+    <string name="moving_device_filter_description">Sich bewegende WLAN-Netzwerke und Bluetooth-Beacons werden automatisch erkannt und aus den Berichten herausgefiltert</string>
     <string name="crash_log_title">Absturzprotokoll</string>
     <string name="crash_log_entry_title">Absturz #%d</string>
     <string name="passive_scanning_description">Bei der passiven Datenerfassung werden Berichte im Hintergrund mit minimalen Auswirkungen auf den Akku erstellt, indem von anderen Anwendungen angeforderte Daten verwendet werden.\n\nDie Effektivität der passiven Datenerfassung hängt von deinem Gerätetyp, den anderen Anwendungen, die du verwendest, und davon ab, ob du einen Anbieter für einen kombinierten Standort zur Verfügung hast.\n\nBeachte, dass die passive Datenerfassung nicht mit Bluetooth-Beacons funktioniert.\n\nMöchtest du die passive Datenerfassung aktivieren?</string>

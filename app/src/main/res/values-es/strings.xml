@@ -206,4 +206,5 @@
     <string name="map_tile_source_custom_style_url">Dirección del estilo de mapa personalizado</string>
     <string name="map_show_coverage_layer">Mostrar capa de cobertura</string>
     <string name="distance_to_estimated_location">Distancia a la ubicación estimada: %d m</string>
+    <string name="third_party_licenses">Licencias de terceros</string>
 </resources>

@@ -208,4 +208,5 @@
     <string name="map_tile_source_custom_title">Personalizado</string>
     <string name="map_tile_source_custom_style_url">URL do estilo do mapa personalizado</string>
     <string name="map_show_coverage_layer">Mostrar a camada de cobertura</string>
+    <string name="third_party_licenses">Licenças de terceiros</string>
 </resources>
