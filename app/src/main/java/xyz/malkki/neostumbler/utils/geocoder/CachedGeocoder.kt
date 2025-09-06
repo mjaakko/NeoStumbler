@@ -2,11 +2,13 @@ package xyz.malkki.neostumbler.utils.geocoder
 
 import androidx.collection.SieveCache
 import java.util.Locale
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withTimeoutOrNull
 import org.geohex.geohex4j.GeoHex
 import xyz.malkki.neostumbler.data.geocoder.Geocoder
 import xyz.malkki.neostumbler.geography.LatLng
@@ -21,6 +23,14 @@ private const val CACHE_MAX_SIZE = 100
  */
 private const val GEOHEX_RESOLUTION = 10
 
+/**
+ * Devices without a geocoder (or with the geocoder disabled) never return a value -> use a timeout
+ * to avoid waiting indefinitely
+ *
+ * There is no reliable way to check whether a geocoder available other than to try using it
+ */
+private val GEOCODE_TIMEOUT = 20.seconds
+
 class CachedGeocoder(private val coroutineScope: CoroutineScope, private val geocoder: Geocoder) :
     Geocoder {
     private val mutex = Mutex()
@@ -31,7 +41,11 @@ class CachedGeocoder(private val coroutineScope: CoroutineScope, private val geo
             createValueFromKey = { (geohexCode, locale) ->
                 val zone = GeoHex.getZoneByCode(geohexCode)
 
-                coroutineScope.async { geocoder.getAddress(locale, LatLng(zone.lat, zone.lon)) }
+                coroutineScope.async {
+                    withTimeoutOrNull(GEOCODE_TIMEOUT) {
+                        geocoder.getAddress(locale, LatLng(zone.lat, zone.lon))
+                    }
+                }
             },
         )
 
