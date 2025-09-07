@@ -7,11 +7,9 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.ServiceInfo
 import android.hardware.Sensor
 import android.hardware.SensorManager
-import android.os.BatteryManager
 import android.os.IBinder
 import android.os.PowerManager
 import android.os.PowerManager.PARTIAL_WAKE_LOCK
@@ -50,17 +48,19 @@ import timber.log.Timber
 import xyz.malkki.neostumbler.MainActivity
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
-import xyz.malkki.neostumbler.broadcastreceiverflow.broadcastReceiverFlow
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.core.observation.PositionObservation
 import xyz.malkki.neostumbler.data.airpressure.AirPressureSource
 import xyz.malkki.neostumbler.data.airpressure.PressureSensorAirPressureSource
+import xyz.malkki.neostumbler.data.battery.BatteryLevelMonitor
 import xyz.malkki.neostumbler.data.emitter.ActiveBluetoothBeaconSource
 import xyz.malkki.neostumbler.data.emitter.ActiveCellInfoSource
 import xyz.malkki.neostumbler.data.emitter.ActiveWifiAccessPointSource
 import xyz.malkki.neostumbler.data.emitter.BeaconLibraryActiveBluetoothBeaconSource
 import xyz.malkki.neostumbler.data.emitter.MultiSubscriptionActiveCellInfoSource
 import xyz.malkki.neostumbler.data.emitter.WifiManagerActiveWifiAccessPointSource
+import xyz.malkki.neostumbler.data.location.GpsStatus
+import xyz.malkki.neostumbler.data.location.GpsStatusSource
 import xyz.malkki.neostumbler.data.location.LocationSource
 import xyz.malkki.neostumbler.data.reports.ReportSaver
 import xyz.malkki.neostumbler.data.settings.Settings
@@ -71,6 +71,7 @@ import xyz.malkki.neostumbler.data.settings.getStringSetFlow
 import xyz.malkki.neostumbler.extensions.getQuantityString
 import xyz.malkki.neostumbler.extensions.getTextCompat
 import xyz.malkki.neostumbler.extensions.isWifiScanThrottled
+import xyz.malkki.neostumbler.extensions.maxAge
 import xyz.malkki.neostumbler.extensions.toPercentage
 import xyz.malkki.neostumbler.scanner.movement.ConstantMovementDetector
 import xyz.malkki.neostumbler.scanner.movement.LocationBasedMovementDetector
@@ -82,9 +83,7 @@ import xyz.malkki.neostumbler.scanner.postprocess.HiddenWifiFilterer
 import xyz.malkki.neostumbler.scanner.postprocess.SsidBasedWifiFilterer
 import xyz.malkki.neostumbler.scanner.quicksettings.ScannerTileService
 import xyz.malkki.neostumbler.scanner.speed.SmoothenedGpsSpeedSource
-import xyz.malkki.neostumbler.utils.GpsStats
 import xyz.malkki.neostumbler.utils.PermissionHelper
-import xyz.malkki.neostumbler.utils.getGpsStatsFlow
 
 @SuppressLint("MissingPermission")
 class ScannerService : Service() {
@@ -138,8 +137,8 @@ class ScannerService : Service() {
 
         private val gpsActive = MutableStateFlow(false)
 
-        private val _gpsStats = MutableStateFlow<GpsStats?>(null)
-        val gpsStats: StateFlow<GpsStats?>
+        private val _gpsStats = MutableStateFlow<GpsStatus?>(null)
+        val gpsStats: StateFlow<GpsStatus?>
             get() = _gpsStats.asStateFlow()
 
         private val _reportsCreated = MutableStateFlow(0)
@@ -158,6 +157,10 @@ class ScannerService : Service() {
     private val reportSaver: ReportSaver by inject()
 
     private val locationSource: LocationSource by inject()
+
+    private val batteryLevelMonitor: BatteryLevelMonitor by inject()
+
+    private val gpsStatusSource: GpsStatusSource by inject()
 
     private lateinit var wakeLock: WakeLock
 
@@ -224,7 +227,7 @@ class ScannerService : Service() {
             gpsActive
                 .flatMapLatest { isGpsActive ->
                     if (isGpsActive) {
-                        getGpsStatsFlow(this@ScannerService)
+                        gpsStatusSource.getGpsStatusFlow().maxAge(30.seconds)
                     } else {
                         flowOf(null)
                     }
@@ -235,11 +238,11 @@ class ScannerService : Service() {
         coroutineScope.launch {
             gpsStats
                 .combine(reportsCreated) { a, b -> a to b }
-                .collect { (gpsStats, reportsCount) ->
+                .collect { (gpsStatus, reportsCount) ->
                     if (notificationManager.areNotificationsEnabled()) {
                         notificationManager.notify(
                             NOTIFICATION_ID,
-                            createNotification(reportsCreated = reportsCount, gpsStats = gpsStats),
+                            createNotification(reportsCreated = reportsCount, gpsStatus = gpsStatus),
                         )
                     }
                 }
@@ -413,7 +416,10 @@ class ScannerService : Service() {
         super.onDestroy()
     }
 
-    private fun createNotification(reportsCreated: Int, gpsStats: GpsStats? = null): Notification {
+    private fun createNotification(
+        reportsCreated: Int,
+        gpsStatus: GpsStatus? = null,
+    ): Notification {
         val reportsCreatedText =
             applicationContext.getQuantityString(
                 R.plurals.reports_created,
@@ -421,7 +427,7 @@ class ScannerService : Service() {
                 reportsCreated,
             )
         val satellitesInUseText =
-            gpsStats?.let {
+            gpsStatus?.let {
                 applicationContext
                     .getTextCompat(R.string.satellites_in_use)
                     .toString()
@@ -495,13 +501,10 @@ class ScannerService : Service() {
     }
 
     private fun getBatteryLevelMonitorFlow(minBatteryPercentage: Int): Flow<Boolean> {
-        return broadcastReceiverFlow(IntentFilter(Intent.ACTION_BATTERY_CHANGED))
-            .map { intent ->
-                val batteryPct =
-                    intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0).toFloat() /
-                        intent.getIntExtra(BatteryManager.EXTRA_SCALE, 1)
-
-                batteryPct >= minBatteryPercentage.toPercentage()
+        return batteryLevelMonitor
+            .getBatteryLevelFlow()
+            .map { batteryLevelMonitor ->
+                batteryLevelMonitor >= minBatteryPercentage.toPercentage()
             }
             .distinctUntilChanged()
             .onEach { batteryLevelOk ->

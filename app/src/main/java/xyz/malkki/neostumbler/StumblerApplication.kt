@@ -39,8 +39,12 @@ import xyz.malkki.neostumbler.beaconlibrary.IBeaconParser
 import xyz.malkki.neostumbler.beaconlibrary.StubDistanceCalculator
 import xyz.malkki.neostumbler.crashlog.CrashLogManager
 import xyz.malkki.neostumbler.crashlog.FileCrashLogManager
+import xyz.malkki.neostumbler.data.battery.AndroidBatteryLevelMonitor
+import xyz.malkki.neostumbler.data.battery.BatteryLevelMonitor
 import xyz.malkki.neostumbler.data.geocoder.AndroidGeocoder
 import xyz.malkki.neostumbler.data.geocoder.Geocoder
+import xyz.malkki.neostumbler.data.location.AndroidGpsStatusSource
+import xyz.malkki.neostumbler.data.location.GpsStatusSource
 import xyz.malkki.neostumbler.data.reports.RawReportImportExport
 import xyz.malkki.neostumbler.data.reports.ReportExportProvider
 import xyz.malkki.neostumbler.data.reports.ReportProvider
@@ -125,6 +129,14 @@ class StumblerApplication : Application() {
                     single<ReportRemover> { RoomReportRemover(get()) }
 
                     single<ReportExportProvider> { RoomReportExportProvider(get()) }
+                }
+            )
+
+            modules(
+                module {
+                    single<BatteryLevelMonitor> { AndroidBatteryLevelMonitor(get()) }
+
+                    single<GpsStatusSource> { AndroidGpsStatusSource(get()) }
                 }
             )
 
