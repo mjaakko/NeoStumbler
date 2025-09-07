@@ -209,4 +209,7 @@
     <string name="map_tile_source_custom_style_url">URL do estilo do mapa personalizado</string>
     <string name="map_show_coverage_layer">Mostrar a camada de cobertura</string>
     <string name="third_party_licenses">Licenças de terceiros</string>
+    <string name="geocoder_settings_title">Tradutor de endereços</string>
+    <string name="geocoder_default_title">Padrão</string>
+    <string name="geocoder_disabled_title">Desativado</string>
 </resources>
