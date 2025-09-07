@@ -64,7 +64,11 @@ import java.text.DecimalFormat
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
+import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.core.report.ReportWithStats
+import xyz.malkki.neostumbler.data.geocoder.Geocoder
+import xyz.malkki.neostumbler.data.settings.Settings
+import xyz.malkki.neostumbler.data.settings.getEnumFlow
 import xyz.malkki.neostumbler.extensions.defaultLocale
 import xyz.malkki.neostumbler.extensions.getQuantityString
 import xyz.malkki.neostumbler.geography.LatLng
@@ -82,6 +86,8 @@ import xyz.malkki.neostumbler.ui.composables.shared.getAddress
 import xyz.malkki.neostumbler.ui.modifiers.handleDisplayCutouts
 import xyz.malkki.neostumbler.ui.viewmodel.ReportsViewModel
 import xyz.malkki.neostumbler.utils.geocoder.CachedGeocoder
+import xyz.malkki.neostumbler.utils.geocoder.GeocoderType
+import xyz.malkki.neostumbler.utils.geocoder.StubGeocoder
 
 @Composable
 fun ReportsScreen(viewModel: ReportsViewModel = koinViewModel()) {
@@ -202,7 +208,25 @@ private fun Reports(
     modifier: Modifier = Modifier,
     reportsViewModel: ReportsViewModel,
     listBottomPadding: Dp,
+    geocoder: Geocoder = koinInject(),
+    settings: Settings = koinInject(),
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
+    val geocoderType by
+        settings
+            .getEnumFlow(PreferenceKeys.GEOCODER_TYPE, GeocoderType.DEFAULT)
+            .collectAsStateWithLifecycle(initialValue = null)
+
+    val cachedGeocoder =
+        remember(geocoderType, geocoder, coroutineScope) {
+            if (geocoderType == GeocoderType.DEFAULT) {
+                CachedGeocoder(coroutineScope, geocoder)
+            } else {
+                StubGeocoder
+            }
+        }
+
     val reports = reportsViewModel.reports.collectAsLazyPagingItems()
 
     val listState = rememberLazyListState()
@@ -273,6 +297,7 @@ private fun Reports(
                                 report = report,
                                 onShowReportDetails = { reportId -> reportToShow.value = reportId },
                                 onDeleteReport = { reportId -> reportToDelete.value = reportId },
+                                geocoder = cachedGeocoder,
                             )
                         } else {
                             ReportPlaceholder()
@@ -327,17 +352,13 @@ private fun Report(
     report: ReportWithStats,
     onShowReportDetails: (Long) -> Unit,
     onDeleteReport: (Long) -> Unit,
-    geocoder: xyz.malkki.neostumbler.data.geocoder.Geocoder = koinInject(),
+    geocoder: Geocoder,
 ) {
-    val coroutineScope = rememberCoroutineScope()
-    val cachedGeocoder =
-        remember(geocoder, coroutineScope) { CachedGeocoder(coroutineScope, geocoder) }
-
     val address =
         getAddress(
             latLng = LatLng(report.latitude, report.longitude),
             locale = LocalContext.current.defaultLocale,
-            geocoder = cachedGeocoder,
+            geocoder = geocoder,
         )
 
     Column(
