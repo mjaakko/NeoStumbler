@@ -14,30 +14,29 @@ internal suspend fun Geocoder.getFromLocationSuspending(
     latitude: Double,
     longitude: Double,
     maxResults: Int,
-): List<Address> {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        return suspendCoroutine { continuation ->
-            getFromLocation(
-                latitude,
-                longitude,
-                maxResults,
-                object : Geocoder.GeocodeListener {
-                    override fun onGeocode(addresses: MutableList<Address>) {
-                        continuation.resume(addresses)
-                    }
+): List<Address> =
+    withContext(Dispatchers.IO) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            suspendCoroutine { continuation ->
+                getFromLocation(
+                    latitude,
+                    longitude,
+                    maxResults,
+                    object : Geocoder.GeocodeListener {
+                        override fun onGeocode(addresses: MutableList<Address>) {
+                            continuation.resume(addresses)
+                        }
 
-                    override fun onError(errorMessage: String?) {
-                        continuation.resumeWithException(
-                            IOException("Geocoding failed: $errorMessage")
-                        )
-                    }
-                },
-            )
-        }
-    } else {
-        return withContext(Dispatchers.IO) {
+                        override fun onError(errorMessage: String?) {
+                            continuation.resumeWithException(
+                                IOException("Geocoding failed: $errorMessage")
+                            )
+                        }
+                    },
+                )
+            }
+        } else {
             @Suppress("DEPRECATION")
             return@withContext getFromLocation(latitude, longitude, maxResults) ?: emptyList()
         }
     }
-}

@@ -274,6 +274,10 @@
     <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Ok</string>
     <string name="troubleshooting_not_ok" tools:ignore="Typos">Not ok</string>
 
+    <string name="geocoder_settings_title">Geocoder</string>
+    <string name="geocoder_default_title">Default</string>
+    <string name="geocoder_disabled_title">Disabled</string>
+
     <string name="use_dynamic_color_ui">Use dynamic colors in the UI</string>
 
     <string name="db_prune_title">Delete sent reports</string>
