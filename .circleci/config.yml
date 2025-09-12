@@ -28,7 +28,7 @@ jobs:
       - checkout
       - run:
           name: "copy keystore"
-          command: echo -n ${ANDROID_KEYSTORE} | base64 -d > keystore.jks
+          command: echo -n ${keystore} | base64 -d > keystore.jks
       
       - run:
           name: "build"
