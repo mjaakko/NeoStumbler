@@ -34,7 +34,7 @@ jobs:
           name: "build"
           command: ./gradlew app:build
       - store_artifacts: # stores artifacts on all branches, not generally necessary
-          path: app/build/outputs/apk/saved/
+          path: app/build/outputs/apk/
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/guides/orchestrate/workflows/ & https://circleci.com/docs/reference/configuration-reference/#workflows
