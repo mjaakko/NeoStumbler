@@ -278,6 +278,10 @@
     <string name="troubleshooting_fix">Korjaa</string>
     <string name="troubleshooting_not_ok">Ei kunnossa</string>
 
+    <string name="geocoder_settings_title">Geokoodaus</string>
+    <string name="geocoder_default_title">Oletus</string>
+    <string name="geocoder_disabled_title">Ei käytössä</string>
+
     <string name="use_dynamic_color_ui">Käytä dynaamisia värejä käyttöliittymässä</string>
 
     <string name="db_prune_title">Poista lähetetyt raportit</string>
@@ -313,6 +317,7 @@
     <string name="contributors">kehittäjäyhteisö</string>
     <string name="bug_report_button">Ilmoita bugista</string>
     <string name="update_translations_button">Päivitä käännöksiä</string>
+    <string name="third_party_licenses">Kolmannen osapuolen lisenssit</string>
 
     <string name="reports_last_uploaded_never">ei ikinä</string>
 

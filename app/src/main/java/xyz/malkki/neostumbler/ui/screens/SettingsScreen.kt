@@ -24,6 +24,7 @@ import xyz.malkki.neostumbler.ui.composables.settings.CoverageLayerSettings
 import xyz.malkki.neostumbler.ui.composables.settings.CrashLogSettingsItem
 import xyz.malkki.neostumbler.ui.composables.settings.DbPruneSettings
 import xyz.malkki.neostumbler.ui.composables.settings.FusedLocationToggle
+import xyz.malkki.neostumbler.ui.composables.settings.GeocoderSettings
 import xyz.malkki.neostumbler.ui.composables.settings.IgnoreScanThrottlingToggle
 import xyz.malkki.neostumbler.ui.composables.settings.LanguageSwitcher
 import xyz.malkki.neostumbler.ui.composables.settings.ManageStorageSettingsItem
@@ -126,6 +127,7 @@ private fun OtherSettings() {
     SettingsGroup(title = stringResource(id = R.string.settings_group_other)) {
         ScannerNotificationStyleSettings()
         LanguageSwitcher()
+        GeocoderSettings()
 
         // Dynamic color is available on Android 12+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {

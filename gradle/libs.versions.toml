@@ -1,7 +1,7 @@
 [versions]
 koin = "4.1.0"
 
-kotlin = "2.2.0"
+kotlin = "2.2.10"
 
 kotlinxCoroutines = "1.10.2"
 
@@ -9,15 +9,17 @@ kotlinxCoroutines = "1.10.2"
 #noinspection AndroidGradlePluginVersion
 androidGradlePlugin = "8.11.1"
 
-androidxLifecycle = "2.9.2"
+androidxLifecycle = "2.9.3"
 androidxPaging = "3.3.6"
 androidxRoom = "2.7.2"
 androidxWork = "2.10.3"
 androidxNavigation = "1.0.0-alpha06"
 
-androidxComposeBom = "2025.07.00"
+androidxComposeBom = "2025.08.01"
 
 vico = "2.1.3"
+
+aboutLibraries = "13.0.0-b01"
 
 [libraries]
 koinBom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
@@ -30,7 +32,7 @@ androidx-collection = { module = "androidx.collection:collection", version = "1.
 androidx-annotation = { module = "androidx.annotation:annotation", version = "1.9.1" }
 
 androidx-activityCompose = { module = "androidx.activity:activity-compose", version = "1.10.1" }
-androidx-core = { module = "androidx.core:core-ktx", version = "1.16.0" }
+androidx-core = { module = "androidx.core:core-ktx", version = "1.17.0" }
 
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.7.1" }
 
@@ -102,7 +104,7 @@ kotlinx-serializationJson = { module = "org.jetbrains.kotlinx:kotlinx-serializat
 
 androidBeaconLibrary = { module = "org.altbeacon:android-beacon-library", version = "2.21.0" }
 
-mapLibre = { module = "org.maplibre.gl:android-sdk", version = "11.13.0" }
+mapLibre = { module = "org.maplibre.gl:android-sdk", version = "11.13.1" }
 mapLibreAnnotationsPlugin = { module = "org.maplibre.gl:android-plugin-annotation-v9", version = "3.0.2" }
 
 geohex = { module = "org.geohex.geohex4j:geohex4j", version = "3.2.2" }
@@ -117,6 +119,9 @@ mockitoKotlin = { module = "org.mockito.kotlin:mockito-kotlin", version = "6.0.0
 
 awaitilityKotlin = { module = "org.awaitility:awaitility-kotlin", version = "4.3.0" }
 
+aboutLibrariesCore = { module = "com.mikepenz:aboutlibraries-core", version.ref = "aboutLibraries" }
+aboutLibrariesCompose = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "aboutLibraries" }
+
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 androidLibrary = { id = "com.android.library", version.ref = "androidGradlePlugin" }
@@ -128,13 +133,15 @@ kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlinCompose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
-ksp = { id = "com.google.devtools.ksp", version = "2.2.0-2.0.2" }
+ksp = { id = "com.google.devtools.ksp", version = "2.2.10-2.0.2" }
 
 bundletool = { id = "app.accrescent.tools.bundletool", version = "0.2.4" }
 
 ktfmt = { id = "com.ncorti.ktfmt.gradle", version = "0.23.0" }
 
 detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.8" }
+
+aboutLibraries = { id = "com.mikepenz.aboutlibraries.plugin.android", version.ref = "aboutLibraries" }
 
 [bundles]
 vico = ["vicoCompose", "vicoComposeMaterial3"]
@@ -146,3 +153,5 @@ androidxWork = ["androidx-workRuntime", "androidx-workRuntimeKtx"]
 androidxLifecycle = ["androidx-lifecycleRuntime", "androidx-lifecycleRuntimeCompose", "androidx-lifecycleViewmodel", "androidx-lifecycleViewmodelCompose"]
 
 androidxNavigation = ["androidx-navigationRuntime", "androidx-navigationUi", "androidx-lifecycleViewmodelNavigation"]
+
+aboutLibraries = ["aboutLibrariesCore", "aboutLibrariesCompose"]

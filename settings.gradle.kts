@@ -26,6 +26,10 @@ include(":app:data:airpressure:api")
 
 include(":app:data:airpressure:android")
 
+include(":app:data:battery:api")
+
+include(":app:data:battery:android")
+
 include(":app:data:emitter:api")
 
 include(":app:data:emitter:android")
