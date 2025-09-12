@@ -31,7 +31,6 @@ android {
         applicationId = "xyz.malkki.neostumbler"
         versionCode = System.getProperty("version_code", "1").toInt() + 100
         versionName = "2.1.6"
-        setProperty("archivesBaseName", "pv-stumbler-$versionName-$versionCode")
 
 
         androidResources {
