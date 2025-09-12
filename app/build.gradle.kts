@@ -36,7 +36,6 @@ android {
         versionCode = System.getProperty("version_code", "1").toInt() + 100
         versionName = "2.1.7"
 
-
         androidResources {
             // Configure supported languages here to avoid including incomplete translations in the
             // releases
@@ -165,11 +164,6 @@ android {
         lintConfig = projectDir.resolve("lint.xml")
     }
 }
-
-base {
-        archivesName = "${android.defaultConfig.applicationId}-${android.defaultConfig.versionName}-${android.defaultConfig.versionCode}"
-}
-
 
 tasks.register("printVersionName") {
     val versionName = project.android.defaultConfig.versionName
