@@ -28,7 +28,8 @@ jobs:
       - checkout
       - run:
           name: "copy keystore"
-          command: echo -n ${ANDROID_KEYSTORE} | base64 -d > my.keystore
+          command: echo -n ${ANDROID_KEYSTORE} | base64 -d > keystore.jks
+      
       - run:
           name: "build"
           command: ./gradlew app:build
