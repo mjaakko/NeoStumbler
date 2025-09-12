@@ -163,6 +163,11 @@ android {
     }
 }
 
+base {
+        archivesName = "${android.defaultConfig.applicationId}-${android.defaultConfig.versionName}-${android.defaultConfig.versionCode}"
+}
+
+
 tasks.register("printVersionName") {
     val versionName = project.android.defaultConfig.versionName
 
