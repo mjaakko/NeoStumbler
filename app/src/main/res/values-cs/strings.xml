@@ -50,7 +50,7 @@
     <string name="submission_path">Cesta</string>
     <string name="show_my_location">Ukázat mojí polohu</string>
     <string name="permission_rationale_bluetooth">Skenování Bluetooth majáků potřebuje oprávnění přístupu k Bluetooth</string>
-    <string name="permission_rationale_background_location_quick_settings">Spouštění skenování z rychlých nastavení potřebuje oprávnění přístupu k poloze v pozadí</string>
+    <string name="permission_rationale_background_location_quick_settings">Spouštění skenování z rychlých nastavení potřebuje oprávnění přístupu k poloze v pozadí.\n\nToto je omezení zavedené systémem Android. Vaše poloha nebude používaná pokud je aplikace v pozadí a automatické či pasivní skenování není zvoleno</string>
     <string name="permission_rationale_location_map">Zobrazení polohy na mapě potřebuje oprávnění přístupu k poloze</string>
     <string name="report_upload_notification_channel_name">Nahraných reportů</string>
     <string name="api_key">API klíč (nepovinný)</string>
@@ -193,7 +193,7 @@
     <string name="pause_scanning_on_low_battery_description">Když je úroveň baterie nižší než %d%%</string>
     <string name="passive_scanning_title">Pasivní sběr dat</string>
     <string name="passive_scanning_description">Pasivní sběr dat vytváří reporty v pozadí s minimálním dopadem na baterii využíváním dat vyžadovaných jinými aplikacemi.\n\nÚčinnost pasivního sběru dat bude záviset na typu vašeho zařízení, aplikacích které používáte, a na tom, zda máte k dispozici spojenou polohu..\n\nPasivní sběr dat nefunguje s Bluetooth majáky.\n\nChcete spustit pasivní sběr dat?</string>
-    <string name="permission_rationale_background_location_passive_scan">Aktualizací polohy když aplikace není aktivní vyžaduje přístup k poloze v pozadí</string>
+    <string name="permission_rationale_background_location_passive_scan">Pasivní sběr dat vyžaduje přístup k poloze na pozadí pro vytváření reportů, když je aplikace v pozadí</string>
     <string name="db_schema_version">Verze schéma databáze: %d</string>
     <string name="delete_all">Smazat vše</string>
     <string name="copy">Kopírovat</string>
@@ -206,4 +206,8 @@
     <string name="map_tile_source_custom_title">Vlastní</string>
     <string name="map_tile_source_custom_style_url">URL vlastního stylu mapy</string>
     <string name="map_show_coverage_layer">Zobrazit vrstvu pokrytí</string>
+    <string name="geocoder_settings_title">Geokodér</string>
+    <string name="geocoder_default_title">Výchozí</string>
+    <string name="geocoder_disabled_title">Vypnutý</string>
+    <string name="third_party_licenses">Licence třetích stran</string>
 </resources>

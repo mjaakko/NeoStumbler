@@ -220,4 +220,6 @@
     <string name="map_tile_source_custom_title">Personnalisé</string>
     <string name="map_tile_source_custom_style_url">URL du style de carte personnalisé</string>
     <string name="map_show_coverage_layer">Afficher la couverture</string>
+    <string name="geocoder_default_title">Par défaut</string>
+    <string name="geocoder_disabled_title">Désactivé</string>
 </resources>

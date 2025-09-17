@@ -211,4 +211,5 @@
     <string name="map_tile_source_custom_title">Пользовательский</string>
     <string name="map_tile_source_custom_style_url">URL пользовательского стиля карты</string>
     <string name="map_show_coverage_layer">Показывать слой покрытия</string>
+    <string name="third_party_licenses">Сторонние лицензии</string>
 </resources>
