@@ -211,4 +211,5 @@
     <string name="map_tile_source_custom_title">Niestandardowy</string>
     <string name="map_tile_source_custom_style_url">Niestandardowy styl mapy URL</string>
     <string name="map_show_coverage_layer">Pokaż warstwę pokrycia</string>
+    <string name="geocoder_disabled_title">Wyłączono</string>
 </resources>

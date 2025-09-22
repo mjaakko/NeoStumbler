@@ -207,4 +207,7 @@
     <string name="map_show_coverage_layer">Mostrar capa de cobertura</string>
     <string name="distance_to_estimated_location">Distancia a la ubicación estimada: %d m</string>
     <string name="third_party_licenses">Licencias de terceros</string>
+    <string name="geocoder_disabled_title">Deshabilitado</string>
+    <string name="geocoder_settings_title">Geocodificador</string>
+    <string name="geocoder_default_title">Por defecto</string>
 </resources>

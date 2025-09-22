@@ -38,7 +38,7 @@
     <string name="reports">Rapporten:</string>
     <string name="reports_total">Aantal rapporten: %d</string>
     <string name="reports_not_uploaded">Niet-geüploade rapporten: %d</string>
-    <string name="reports_last_uploaded">Laatst geüploade rapporten: %s</string>
+    <string name="reports_last_uploaded">Laatst geüploade rapport: %s</string>
     <string name="start_scanning">Scannen starten</string>
     <string name="reports_tab_title">Rapporten</string>
     <string name="delete_report">Rapport verwĳderen</string>
@@ -202,4 +202,7 @@
     <string name="map_tile_source_custom_style_url">Url voor aangepaste kaartstĳl</string>
     <string name="map_show_coverage_layer">Dekkings­laag weergeven</string>
     <string name="third_party_licenses">Licenties van derden</string>
+    <string name="geocoder_settings_title">Geocoder</string>
+    <string name="geocoder_default_title">Standaard</string>
+    <string name="geocoder_disabled_title">Uitgeschakeld</string>
 </resources>
