@@ -10,6 +10,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withTimeoutOrNull
 import org.geohex.geohex4j.GeoHex
+import timber.log.Timber
 import xyz.malkki.neostumbler.data.geocoder.Geocoder
 import xyz.malkki.neostumbler.geography.LatLng
 
@@ -43,7 +44,17 @@ class CachedGeocoder(private val coroutineScope: CoroutineScope, private val geo
 
                 coroutineScope.async {
                     withTimeoutOrNull(GEOCODE_TIMEOUT) {
-                        geocoder.getAddress(locale, LatLng(zone.lat, zone.lon))
+                        @Suppress("TooGenericExceptionCaught")
+                        try {
+                            geocoder.getAddress(locale, LatLng(zone.lat, zone.lon))
+                        } catch (ex: Exception) {
+                            Timber.w(
+                                ex,
+                                "Failed to geocode address for location ${zone.lat}, ${zone.lon}",
+                            )
+
+                            null
+                        }
                     }
                 }
             },
