@@ -1,3 +1,9 @@
+---
+title: Geosubmit format
+order: 2
+---
+
+
 NeoStumbler includes a few additions in its Geosubmit requests compared to the
 standard [Ichnaea Geosubmit v2 format](https://ichnaea.readthedocs.io/en/latest/api/geosubmit2.html).
 The format is backward compatible with Geosubmit v2, but if you are running a custom server, make

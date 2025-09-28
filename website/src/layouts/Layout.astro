@@ -1,0 +1,43 @@
+---
+import PageList from '../components/PageList.astro'
+import '../styles/global.css'
+
+const { pageTitle } = Astro.props
+
+const siteTitle = "NeoStumbler"
+---
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="icon" href="/favicon.ico" sizes="any">
+		<meta name="generator" content={Astro.generator} />
+		<title>{pageTitle ? `${pageTitle} – ${siteTitle}` : siteTitle}</title>
+	</head>
+	<body class="flex flex-col">
+		<header class="bg-red-500 p-3 z-1 shadow-lg">
+			<div class="max-w-6xl mx-auto">
+				<span class="font-sans text-lg text-white">{siteTitle}</span>
+			</div>
+		</header>
+		<div class="container max-w-5xl mx-auto py-6 p-2 bg-white flex-grow flex gap-4 justify-end flex-col-reverse md:flex-row">
+			<PageList class="md:w-42 flex-none" />
+
+			<div class="flex-none w-full h-px md:w-px md:h-full border-t-0 bg-neutral-200"/>
+
+			<main>
+				<slot />
+			</main>
+		</div>
+	</body>
+</html>
+
+<style>
+	html,
+	body {
+		margin: 0;
+		width: 100%;
+		height: 100%;
+	}
+</style>
