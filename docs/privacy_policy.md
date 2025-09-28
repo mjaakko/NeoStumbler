@@ -1,3 +1,8 @@
+---
+title: Privacy policy
+order: 3
+---
+
 NeoStumbler respects your privacy. No data is collected or transmitted from the app without your explicit consent.
 
 The purpose of NeoStumbler is to collect locations of wireless devices, such as Wi-Fi access points and cell towers.
