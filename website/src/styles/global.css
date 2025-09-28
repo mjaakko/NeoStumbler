@@ -1,0 +1,11 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@layer base {
+    a {
+       @apply text-sky-500
+    }
+    a:hover {
+        @apply text-sky-700
+    }
+}

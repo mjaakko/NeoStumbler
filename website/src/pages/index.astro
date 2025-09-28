@@ -1,0 +1,39 @@
+---
+import DownloadBadge from '../components/DownloadBadge.astro';
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout>
+	<div class="flex flex-col gap-4">
+		<section class="flex flex-col gap-2">
+			<p>
+				NeoStumbler is an Android application for collecting locations of cell towers, Wi-Fi access points and Bluetooth beacons. 
+			</p>
+
+			<p>
+				NeoStumbler can contribute data to geolocation services with an Ichnaea-compatible API to provide geolocation capabilities for use cases
+				such as indoor positioning, custom Android ROMs, and Linux-based operating systems. An example of such geolcoation service is beaconDB.
+			</p>
+
+			<p>
+				More about NeoStumbler in <a href="https://github.com/mjaakko/NeoStumbler">GitHub</a>
+			</p>
+		</section>
+
+		<section>
+			<h2 class="text-md font-bold">Download</h2>
+
+			<div class="flex flex-row gap-2">
+				<DownloadBadge
+					url="https://f-droid.org/packages/xyz.malkki.neostumbler.fdroid/"
+					image="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+					alt="Get it on F-Droid"/>
+
+				<DownloadBadge
+					url="https://accrescent.app/app/xyz.malkki.neostumbler"
+					image="https://accrescent.app/badges/get-it-on.png"
+					alt="Get it on Accrescent" />
+			</div>
+		</section>
+	</div>
+</Layout>

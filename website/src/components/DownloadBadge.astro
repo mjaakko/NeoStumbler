@@ -1,0 +1,13 @@
+---
+import { Image } from 'astro:assets';
+
+const { url, alt, image } = Astro.props
+---
+<a href={url}>
+    <Image
+        class="w-50 md:w-65"
+        src={image}
+        alt={alt}
+        inferSize={true}
+        layout="constrained" />
+</a>

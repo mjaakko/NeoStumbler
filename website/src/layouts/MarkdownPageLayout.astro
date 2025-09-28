@@ -1,0 +1,14 @@
+---
+import Layout from "./Layout.astro";
+
+const { title } = Astro.props
+---
+
+<Layout pageTitle={title}>
+    <article>
+        <h1 class="font-sans font-semibold text-xl">{title}</h1>
+        <div class="prose prose-a:text-sky-500 prose-a:hover:text-sky-700 prose-a:no-underline max-w-none">
+            <slot/>
+        </div>
+    </article>
+</Layout>
