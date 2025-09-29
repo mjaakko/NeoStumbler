@@ -8,6 +8,7 @@ on:
       - '**/*.txt'
       - '**/*.xml'
       - '**/*.json'
+      - 'website/**'
   schedule:
     - cron: '27 4 1 * *'
 
