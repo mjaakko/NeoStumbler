@@ -42,7 +42,9 @@ fun PrivacyPolicyDialog(onDialogClosed: () -> Unit) {
 
     val markdownState = rememberMarkdownState {
         withContext(Dispatchers.IO) {
-            context.assets.open("privacy_policy.md").use { it.reader().readText() }
+            context.assets.open("privacy_policy.md").use {
+                it.reader().buffered().lineSequence().readMarkdownWithoutFrontmatter()
+            }
         }
     }
 
@@ -77,5 +79,20 @@ fun PrivacyPolicyDialog(onDialogClosed: () -> Unit) {
                     },
                 ),
         )
+    }
+}
+
+private fun Sequence<String>.readMarkdownWithoutFrontmatter(): String {
+    return buildString {
+        var frontmatter = false
+
+        for (line in this@readMarkdownWithoutFrontmatter) {
+            if (line == "---") {
+                frontmatter = !frontmatter
+            } else if (!frontmatter) {
+                append(line)
+                append('\n')
+            }
+        }
     }
 }
