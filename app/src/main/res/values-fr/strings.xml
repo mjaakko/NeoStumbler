@@ -78,7 +78,7 @@
     <string name="permission_rationale_post_notifications">
         L\'autorisation d\'accéder aux notifications est nécessaire pour afficher une notification de l\'activité
     </string>
-    <string name="permission_rationale_background_location_quick_settings">L\'autorisation d\'accéder à la localisation en arrière-plan est nécessaire pour démarrer des mesures à partir des réglages rapides\n\nVeuillez noter qu\'il s\'agit d\'une restriction imposée par le système d’exploitation Android. Votre localisation n\'est pas accédée en arrière-plan si vous n\'activez pas la collecte de données passive ou automatique.</string>
+    <string name="permission_rationale_background_location_quick_settings">L\'autorisation d\'accéder à la localisation en arrière-plan est nécessaire pour démarrer des mesures à partir des réglages rapides\n\nVeuillez noter qu\'il s\'agit d\'une restriction imposée par le système d’exploitation Android. On n\'accède pas à votre localisation en arrière-plan si vous n\'activez pas la collecte de données passive ou automatique.</string>
     <string name="permission_rationale_location_map">
         L\'autorisation d\'accéder à la localisation est nécessaire pour afficher votre emplacement sur la carte
     </string>
@@ -193,18 +193,18 @@
     <string name="reduced_metadata_title">Envoyer des rapports avec moins de métadonnées</string>
     <string name="db_schema_version">Version du schéma de la base de données : %d</string>
     <string name="reduced_metadata_description">Les rapports sont envoyés dans un ordre aléatoire, les horodatages et autres métadonnées étant tronqués</string>
-    <string name="radio_type">Type: %s</string>
-    <string name="beacon_type">Type de beacon: %s</string>
+    <string name="radio_type">Type : %s</string>
+    <string name="beacon_type">Type de balise : %s</string>
     <string name="send_reports_automatically_on_any_network">Sur n\'importe quel réseau</string>
     <string name="export_raw_database_compress">Compression du fichier de la base de données</string>
     <string name="send_reports_automatically_on_unmetered_network">Sur un réseau sans compteur</string>
     <string name="locate_path">Chemin d\'accès pour la géolocalisation</string>
     <string name="scanning_status_not_active">Scanning <annotation style="status">non actif</annotation></string>
     <string name="unknown_cell_id">ID de cellule inconnu</string>
-    <string name="mcc">MCC: %s</string>
-    <string name="mnc">MNC: %s</string>
-    <string name="lac">LAC: %s</string>
-    <string name="beacon_id">ID%d: %s</string>
+    <string name="mcc">MCC : %s</string>
+    <string name="mnc">MNC : %s</string>
+    <string name="lac">LAC : %s</string>
+    <string name="beacon_id">ID%d : %s</string>
     <string name="pause_scanning_on_low_battery_title">Pause du scanning en cas de batterie faible</string>
     <string name="pause_scanning_on_low_battery_description">Lorsque le niveau de la batterie est inférieur à %d%%</string>
     <string name="permission_rationale_background_location_passive_scan">La collecte passive de données nécessite l\'accès à la localisation en arrière-plan pour créer des rapports quand l\'application n\'est pas active</string>
@@ -222,4 +222,6 @@
     <string name="map_show_coverage_layer">Afficher la couverture</string>
     <string name="geocoder_default_title">Par défaut</string>
     <string name="geocoder_disabled_title">Désactivé</string>
+    <string name="geocoder_settings_title">Géocodeur</string>
+    <string name="third_party_licenses">Licences tierces</string>
 </resources>
