@@ -172,7 +172,7 @@
     <string name="scanning_status_active">Scan <annotation style="status">aktiv</annotation></string>
     <string name="speed_metres_per_second">Geschwindigkeit: %s m/s</string>
     <string name="send_reports_automatically_never">Nie</string>
-    <string name="troubleshooting_not_ok" tools:ignore="Typos">Problem</string>
+    <string name="troubleshooting_not_ok" tools:ignore="Typos">Nicht in Ordnung</string>
     <string name="waiting_for_location">Auf Standort warten</string>
     <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Ok</string>
     <string name="settings_group_privacy">Datenschutz</string>
@@ -202,4 +202,7 @@
     <string name="map_tile_source_custom_style_url">Benutzerdefinierte URL für Kartenstil</string>
     <string name="map_show_coverage_layer">Abdeckungsebene anzeigen</string>
     <string name="geocoder_default_title">Standard</string>
+    <string name="geocoder_settings_title">Geocoder</string>
+    <string name="geocoder_disabled_title">Deaktiviert</string>
+    <string name="third_party_licenses">Drittanbieter-Lizenzen</string>
 </resources>
