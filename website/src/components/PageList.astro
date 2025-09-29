@@ -9,6 +9,6 @@ const pages = (await getCollection('docs')).toSorted((a, b) => {
 ---
 <nav class={className} {...rest}>
 	<ul class="list-disc pl-5">
-		{pages.map((page) => <li><a href={page.id}>{page.data.title}</a></li>)}
+		{pages.map((page) => <li><a href={`/${page.id}`}>{page.data.title}</a></li>)}
 	</ul>
 </nav>
