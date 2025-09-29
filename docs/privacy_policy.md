@@ -3,6 +3,8 @@ title: Privacy policy
 order: 3
 ---
 
+*This privacy policy applies for the variant of NeoStumbler available in Google Play*
+
 NeoStumbler respects your privacy. No data is collected or transmitted from the app without your explicit consent.
 
 The purpose of NeoStumbler is to collect locations of wireless devices, such as Wi-Fi access points and cell towers.
@@ -13,9 +15,8 @@ to send the collected reports to a third-party service, please review their priv
 information, see the *Third-party services* section.
 
 By default, the report collection process is only active when it is explicitly started from the user interface. It is
-possible to start the report collection process automatically when the device starts moving and to collect reports
-passively in the background when the app is not active. These features need access to the background location permission
-and need to be explicitly enabled in the settings.
+also possible to collect reports passively in the background when the app is not active. This feature needs access to
+the background location permission and has to be explicitly enabled in the settings.
 
 No personally identifiable information, such as names, phone numbers, email addresses, is collected by NeoStumbler. If
 you choose to use a feature, which interacts with a third-party service, the third-party service provider will see your
