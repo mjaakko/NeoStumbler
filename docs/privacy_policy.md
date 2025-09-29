@@ -32,8 +32,8 @@ privacy policy of BeaconDB can be found at [this link](https://beacondb.net/priv
 Using the map requires fetching map tiles from a third-party service. By default, map tiles are fetched from
 OpenStreetMap under their [terms of use](https://osmfoundation.org/wiki/Terms_of_Use).
 
-Using the *fused location provider* or enabling the *automatic scanning* feature utilizes functionality provided by
-Google Play Services. You can review their privacy policy at [this link](https://www.google.com/policies/privacy/).
+Using the *fused location provider* utilizes functionality provided by Google Play Services. You can review their
+privacy policy at [this link](https://www.google.com/policies/privacy/).
 
 ## Opt-out
 
