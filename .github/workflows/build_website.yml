@@ -36,7 +36,7 @@ jobs:
         id: deployment
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist/
+          path: website/dist/
   deploy:
     needs: build
     if: startsWith(github.ref, 'refs/tags/')
