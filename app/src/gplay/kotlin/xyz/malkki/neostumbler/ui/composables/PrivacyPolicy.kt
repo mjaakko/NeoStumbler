@@ -1,5 +1,6 @@
 package xyz.malkki.neostumbler.ui.composables
 
+import android.content.Context
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -7,12 +8,15 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mikepenz.markdown.compose.components.markdownComponents
@@ -24,6 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.ui.composables.shared.Dialog
+import xyz.malkki.neostumbler.utils.openUrl
 
 @Composable
 fun PrivacyPolicyButton() {
@@ -51,34 +56,42 @@ fun PrivacyPolicyDialog(onDialogClosed: () -> Unit) {
     val scrollState = rememberScrollState()
 
     Dialog(onDismissRequest = onDialogClosed, title = stringResource(R.string.privacy_policy)) {
-        Markdown(
-            modifier = Modifier.verticalScroll(state = scrollState),
-            markdownState = markdownState,
-            components =
-                markdownComponents(
-                    paragraph = {
-                        MarkdownParagraph(
-                            modifier = Modifier.padding(vertical = 4.dp),
-                            node = it.node,
-                            content = it.content,
-                        )
-                    },
-                    heading1 = {
-                        MarkdownHeader(
-                            style = MaterialTheme.typography.titleLarge,
-                            node = it.node,
-                            content = it.content,
-                        )
-                    },
-                    heading2 = {
-                        MarkdownHeader(
-                            style = MaterialTheme.typography.titleMedium,
-                            node = it.node,
-                            content = it.content,
-                        )
-                    },
-                ),
-        )
+        CompositionLocalProvider(LocalUriHandler provides CustomTabsUriHandler(context)) {
+            Markdown(
+                modifier = Modifier.verticalScroll(state = scrollState),
+                markdownState = markdownState,
+                components =
+                    markdownComponents(
+                        paragraph = {
+                            MarkdownParagraph(
+                                modifier = Modifier.padding(vertical = 4.dp),
+                                node = it.node,
+                                content = it.content,
+                            )
+                        },
+                        heading1 = {
+                            MarkdownHeader(
+                                style = MaterialTheme.typography.titleLarge,
+                                node = it.node,
+                                content = it.content,
+                            )
+                        },
+                        heading2 = {
+                            MarkdownHeader(
+                                style = MaterialTheme.typography.titleMedium,
+                                node = it.node,
+                                content = it.content,
+                            )
+                        },
+                    ),
+            )
+        }
+    }
+}
+
+private class CustomTabsUriHandler(private val context: Context) : UriHandler {
+    override fun openUri(uri: String) {
+        context.startActivity(openUrl(uri))
     }
 }
 
