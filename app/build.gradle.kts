@@ -218,6 +218,8 @@ dependencies {
 
     implementation(libs.androidx.collection)
 
+    implementation(libs.androidx.browser)
+
     implementation(libs.androidx.core)
     implementation(libs.androidx.activityCompose)
 

@@ -24,6 +24,7 @@ import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.extensions.getTextCompat
+import xyz.malkki.neostumbler.utils.CustomTabsLinkInteractionListener
 import xyz.malkki.neostumbler.utils.OneTimeActionHelper
 import xyz.malkki.neostumbler.utils.SuggestedService
 
@@ -61,7 +62,11 @@ fun MLSWarningDialog(settings: Settings = koinInject()) {
                 append(spannedString)
 
                 addLink(
-                    url = LinkAnnotation.Url(defaultServiceParams.value?.termsOfUse ?: ""),
+                    url =
+                        LinkAnnotation.Url(
+                            defaultServiceParams.value?.termsOfUse ?: "",
+                            linkInteractionListener = CustomTabsLinkInteractionListener(context),
+                        ),
                     start = spannedString.getSpanStart(privacyPolicyLink),
                     end = spannedString.getSpanEnd(privacyPolicyLink),
                 )
