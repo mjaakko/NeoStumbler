@@ -318,6 +318,7 @@
     <string name="bug_report_button">Ilmoita bugista</string>
     <string name="update_translations_button">Päivitä käännöksiä</string>
     <string name="third_party_licenses">Kolmannen osapuolen lisenssit</string>
+    <string name="privacy_policy">Yksityisyydensuoja</string>
 
     <string name="reports_last_uploaded_never">ei ikinä</string>
 

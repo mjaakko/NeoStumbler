@@ -35,33 +35,45 @@ jobs:
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
-        run: ./gradlew :app:assembleFdroidRelease
+        run: ./gradlew :app:assembleFdroidDefaultRelease
       - name: Build full release APK
         env:
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
-        run: ./gradlew -PenableAbiSplit :app:assembleFullRelease
+        run: ./gradlew -PenableAbiSplit :app:assembleFullDefaultRelease
       - name: Upload APKs as assets to the GitHub release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            app/build/outputs/apk/fdroid/release/app-fdroid-release.apk
-            app/build/outputs/apk/full/release/app-full-universal-release.apk
-            app/build/outputs/apk/full/release/app-full-armeabi-v7a-release.apk
-            app/build/outputs/apk/full/release/app-full-arm64-v8a-release.apk
-            app/build/outputs/apk/full/release/app-full-x86-release.apk
-            app/build/outputs/apk/full/release/app-full-x86_64-release.apk
+            app/build/outputs/apk/fdroidDefault/release/app-fdroid-default-release.apk
+            app/build/outputs/apk/fullDefault/release/app-full-default-universal-release.apk
+            app/build/outputs/apk/fullDefault/release/app-full-default-armeabi-v7a-release.apk
+            app/build/outputs/apk/fullDefault/release/app-full-default-arm64-v8a-release.apk
       # Build APK set for Accrescent
-      - name: Build release APK set
+      - name: Build release APK set for Accrescent
         env:
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
-        run: ./gradlew :app:buildApksFullRelease
+        run: ./gradlew :app:buildApksFullDefaultRelease
       - name: Upload release APK set as build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app-fullRelease.apks
-          path: app/build/outputs/apkset/fullRelease/app-fullRelease.apks
+          name: app-fullDefaultRelease.apks
+          path: app/build/outputs/apkset/fullDefaultRelease/app-fullDefaultRelease.apks
+          retention-days: 7
+      # Build app bundle for Google Play
+      - name: Build app bundle for Google Play
+        env:
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+        run: ./gradlew :app:bundleFullGplayRelease
+      - name: Upload app bundle as build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-full-gplay-release.aab
+          path: app/build/outputs/bundle/fullGplayRelease/app-full-gplay-release.aab
+          compression-level: 0
           retention-days: 7

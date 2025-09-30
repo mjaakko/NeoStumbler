@@ -21,6 +21,8 @@ vico = "2.1.3"
 
 aboutLibraries = "13.0.0-b01"
 
+multiplatformMarkdownRenderer = "0.35.0"
+
 [libraries]
 koinBom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
 koinAndroid = { module = "io.insert-koin:koin-android" }
@@ -117,6 +119,9 @@ fastcsv = { module = "de.siegmar:fastcsv", version = "3.7.0" }
 vicoCompose = { module = "com.patrykandpatrick.vico:compose", version.ref = "vico" }
 vicoComposeMaterial3 = { module = "com.patrykandpatrick.vico:compose-m3", version.ref = "vico" }
 
+multiplatformMarkdownRendererAndroid = { module = "com.mikepenz:multiplatform-markdown-renderer-android", version.ref = "multiplatformMarkdownRenderer" }
+multiplatformMarkdownRendererM3 = { module = "com.mikepenz:multiplatform-markdown-renderer-m3", version.ref = "multiplatformMarkdownRenderer" }
+
 mockitoKotlin = { module = "org.mockito.kotlin:mockito-kotlin", version = "6.0.0" }
 
 awaitilityKotlin = { module = "org.awaitility:awaitility-kotlin", version = "4.3.0" }
@@ -157,3 +162,5 @@ androidxLifecycle = ["androidx-lifecycleRuntime", "androidx-lifecycleRuntimeComp
 androidxNavigation = ["androidx-navigationRuntime", "androidx-navigationUi", "androidx-lifecycleViewmodelNavigation"]
 
 aboutLibraries = ["aboutLibrariesCore", "aboutLibrariesCompose"]
+
+multiplatformMarkdownRenderer = ["multiplatformMarkdownRendererAndroid", "multiplatformMarkdownRendererM3"]

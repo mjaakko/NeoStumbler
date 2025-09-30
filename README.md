@@ -68,15 +68,20 @@ Accrescent is that only the assets needed for your device are downloaded.
 
 ## Development
 
-The application has two product flavors:
+The application has three product flavors:
 
-* `full` - includes all features
-* `fdroid` - features dependent on closed-source components (i.e. Google Play Services) are removed
+* `fdroidDefault` - no closed components, features dependent on closed-source components (i.e.
+  Google Play Services) are not included
+* `fullDefault` - includes closed components, no features missing
+* `fullGplay` - *work in progress*, based on `fullDefault`, but has some minor differences to make
+  it compliant with Google Play requirements
 
 ### Building
 
-* Build debug APK: `./gradlew :app:assembleFullDebug` or `./gradlew :app:assembleFdroidDebug`
-* Build release APK: `./gradlew :app:assembleFullRelease` or `./gradlew :app:assembleFdroidRelease`
+* Build debug APK: `./gradlew :app:assembleFullDefaultDebug` or
+  `./gradlew :app:assembleFdroidDefaultDebug`
+* Build release APK: `./gradlew :app:assembleFullDefaultRelease` or
+  `./gradlew :app:assembleFdroidDefaultRelease`
     * Note that by default this will build a signed APK
         * This needs a Java keystore file named `keystore.jks` in the project root directory and
           setting values for environment variables (see `app/build.gradle.kts`)

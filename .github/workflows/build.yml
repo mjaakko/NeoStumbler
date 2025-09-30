@@ -30,12 +30,12 @@ jobs:
       - name: Upload debug froid APK as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app-fdroid-debug.apk
-          path: app/build/outputs/apk/fdroid/debug/app-fdroid-debug.apk
+          name: app-fdroid-default-debug.apk
+          path: app/build/outputs/apk/fdroidDefault/debug/app-fdroid-default-debug.apk
           retention-days: 1
       - name: Upload debug full APK as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app-full-debug.apk
-          path: app/build/outputs/apk/full/debug/app-full-debug.apk
+          name: app-full-default-debug.apk
+          path: app/build/outputs/apk/fullDefault/debug/app-full-default-debug.apk
           retention-days: 1
