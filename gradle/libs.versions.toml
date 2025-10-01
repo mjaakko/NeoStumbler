@@ -122,7 +122,7 @@ vicoComposeMaterial3 = { module = "com.patrykandpatrick.vico:compose-m3", versio
 multiplatformMarkdownRendererAndroid = { module = "com.mikepenz:multiplatform-markdown-renderer-android", version.ref = "multiplatformMarkdownRenderer" }
 multiplatformMarkdownRendererM3 = { module = "com.mikepenz:multiplatform-markdown-renderer-m3", version.ref = "multiplatformMarkdownRenderer" }
 
-mockitoKotlin = { module = "org.mockito.kotlin:mockito-kotlin", version = "6.0.0" }
+mockitoKotlin = { module = "org.mockito.kotlin:mockito-kotlin", version = "6.1.0" }
 
 awaitilityKotlin = { module = "org.awaitility:awaitility-kotlin", version = "4.3.0" }
 
