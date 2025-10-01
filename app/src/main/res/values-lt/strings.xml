@@ -206,4 +206,9 @@
     <string name="map_tile_source_custom_title">Tinkintas</string>
     <string name="map_tile_source_custom_style_url">Tinkintas žemėlapio stiliaus URL</string>
     <string name="map_show_coverage_layer">Rodyti aprėpties sluoksnį</string>
+    <string name="geocoder_settings_title">„Geocoder“</string>
+    <string name="geocoder_default_title">Numatytoji reikšmė</string>
+    <string name="geocoder_disabled_title">Išjungta</string>
+    <string name="third_party_licenses">Trečiųjų šalių licencijos</string>
+    <string name="privacy_policy">Privatumo nuostatai</string>
 </resources>
