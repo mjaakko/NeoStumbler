@@ -210,4 +210,5 @@
     <string name="geocoder_default_title">Výchozí</string>
     <string name="geocoder_disabled_title">Vypnutý</string>
     <string name="third_party_licenses">Licence třetích stran</string>
+    <string name="privacy_policy">Zásady ochrany osobních údajů</string>
 </resources>
