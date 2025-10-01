@@ -144,7 +144,7 @@ ksp = { id = "com.google.devtools.ksp", version = "2.2.10-2.0.2" }
 
 bundletool = { id = "app.accrescent.tools.bundletool", version = "0.2.4" }
 
-ktfmt = { id = "com.ncorti.ktfmt.gradle", version = "0.23.0" }
+ktfmt = { id = "com.ncorti.ktfmt.gradle", version = "0.24.0" }
 
 detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.8" }
 
