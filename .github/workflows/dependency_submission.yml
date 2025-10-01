@@ -19,7 +19,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - name: Submit Gradle dependency graph
-        uses: gradle/actions/dependency-submission@v4
+        uses: gradle/actions/dependency-submission@v5
         with:
           dependency-graph: 'generate-and-submit'
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
