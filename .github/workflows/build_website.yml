@@ -34,7 +34,7 @@ jobs:
       - name: Upload website as GitHub Pages artifact
         if: startsWith(github.ref, 'refs/tags/')
         id: deployment
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: website/dist/
   deploy:
