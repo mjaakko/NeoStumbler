@@ -56,11 +56,11 @@ class WifiFilterSettingsTest {
             .onNode(isFocusable().and(isEditable()))
             .performTextInput(
                 """
-            ssid_1
-            ssid_2
-            
-            ssid_3
-        """
+                    ssid_1
+                    ssid_2
+                    
+                    ssid_3
+                """
                     .trimIndent()
             )
 
