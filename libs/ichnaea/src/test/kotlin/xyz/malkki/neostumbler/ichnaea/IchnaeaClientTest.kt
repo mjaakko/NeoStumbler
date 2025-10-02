@@ -88,16 +88,16 @@ class IchnaeaClientTest {
             MockResponse().apply {
                 setBody(
                     """
-                    {
-                      "license": "test license",
-                      "location": {
-                        "lat": 50.42352,
-                        "lng": 12.32135
-                      },
-                      "accuracy": 25000,
-                      "fallback": "ipf"
-                    }
-                """
+                        {
+                          "license": "test license",
+                          "location": {
+                            "lat": 50.42352,
+                            "lng": 12.32135
+                          },
+                          "accuracy": 25000,
+                          "fallback": "ipf"
+                        }
+                    """
                         .trimIndent()
                 )
             }
