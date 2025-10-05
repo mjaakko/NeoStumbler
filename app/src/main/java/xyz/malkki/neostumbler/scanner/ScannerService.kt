@@ -56,7 +56,7 @@ import xyz.malkki.neostumbler.data.battery.BatteryLevelMonitor
 import xyz.malkki.neostumbler.data.emitter.ActiveBluetoothBeaconSource
 import xyz.malkki.neostumbler.data.emitter.ActiveCellInfoSource
 import xyz.malkki.neostumbler.data.emitter.ActiveWifiAccessPointSource
-import xyz.malkki.neostumbler.data.emitter.BeaconLibraryActiveBluetoothBeaconSource
+import xyz.malkki.neostumbler.data.emitter.BLEScannerBluetoothBeaconSource
 import xyz.malkki.neostumbler.data.emitter.MultiSubscriptionActiveCellInfoSource
 import xyz.malkki.neostumbler.data.emitter.WifiManagerActiveWifiAccessPointSource
 import xyz.malkki.neostumbler.data.location.GpsStatus
@@ -563,11 +563,8 @@ class ScannerService : Service() {
     }
 
     private fun getBluetoothBeaconSource(): ActiveBluetoothBeaconSource {
-        return if (
-            PermissionHelper.hasBluetoothScanPermission(this) &&
-                (application as StumblerApplication).bluetoothScanAvailable
-        ) {
-            BeaconLibraryActiveBluetoothBeaconSource(this@ScannerService)
+        return if (PermissionHelper.hasBluetoothScanPermission(this)) {
+            BLEScannerBluetoothBeaconSource(this@ScannerService)
         } else {
             ActiveBluetoothBeaconSource { emptyFlow() }
         }

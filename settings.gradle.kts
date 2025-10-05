@@ -56,7 +56,7 @@ include(":app:data:reports:api")
 
 include(":app:data:reports:room")
 
-include(":libs:beacon-library-utils")
+include(":libs:beacon-parser")
 
 include(":libs:room-converters")
 

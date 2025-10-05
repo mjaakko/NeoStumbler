@@ -104,8 +104,6 @@ cronetOkhttp = { module = "com.google.net.cronet:cronet-okhttp", version = "0.1.
 
 kotlinx-serializationJson = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.9.0" }
 
-androidBeaconLibrary = { module = "org.altbeacon:android-beacon-library", version = "2.21.0" }
-
 mapLibre = { module = "org.maplibre.gl:android-sdk", version = "12.2.1" }
 mapLibreAnnotationsPlugin = { module = "org.maplibre.gl:android-plugin-annotation-v9", version = "3.0.2" }
 
@@ -126,6 +124,8 @@ awaitilityKotlin = { module = "org.awaitility:awaitility-kotlin", version = "4.3
 
 aboutLibrariesCore = { module = "com.mikepenz:aboutlibraries-core", version.ref = "aboutLibraries" }
 aboutLibrariesCompose = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "aboutLibraries" }
+
+androidBeaconLibrary = { module = "org.altbeacon:android-beacon-library", version = "2.21.1" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "androidGradlePlugin" }
