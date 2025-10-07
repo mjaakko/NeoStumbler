@@ -205,4 +205,5 @@
     <string name="geocoder_settings_title">Geocoder</string>
     <string name="geocoder_default_title">Standaard</string>
     <string name="geocoder_disabled_title">Uitgeschakeld</string>
+    <string name="privacy_policy">Privacy­beleid</string>
 </resources>
