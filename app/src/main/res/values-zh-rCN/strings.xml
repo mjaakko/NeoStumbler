@@ -196,4 +196,9 @@
     <string name="reduced_metadata_description">报告以随机顺序发送，并截断时间戳及其他元数据</string>
     <string name="reduced_metadata_title">发送报告时去除部分元数据</string>
     <string name="permission_rationale_background_location_passive_scan">应用处于后台时，被动数据收集功能需要后台位置权限来更新位置信息</string>
+    <string name="geocoder_settings_title">地理编码服务</string>
+    <string name="geocoder_default_title">默认</string>
+    <string name="geocoder_disabled_title">不使用</string>
+    <string name="third_party_licenses">第三方许可证</string>
+    <string name="privacy_policy">隐私权政策</string>
 </resources>
