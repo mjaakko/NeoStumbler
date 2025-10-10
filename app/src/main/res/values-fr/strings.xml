@@ -78,7 +78,7 @@
     <string name="permission_rationale_post_notifications">
         L\'autorisation d\'accéder aux notifications est nécessaire pour afficher une notification de l\'activité
     </string>
-    <string name="permission_rationale_background_location_quick_settings">L\'autorisation d\'accéder à la localisation en arrière-plan est nécessaire pour démarrer des mesures à partir des réglages rapides\n\nVeuillez noter qu\'il s\'agit d\'une restriction imposée par le système d’exploitation Android. On n\'accède pas à votre localisation en arrière-plan si vous n\'activez pas la collecte de données passive ou automatique.</string>
+    <string name="permission_rationale_background_location_quick_settings">L\'autorisation d\'accéder à la localisation en arrière-plan est nécessaire pour démarrer des mesures à partir des réglages rapides.\n\nVeuillez noter qu\'il s\'agit d\'une restriction imposée par le système d’exploitation Android. On n\'accède pas à votre localisation en arrière-plan si vous n\'activez pas la collecte de données passive ou automatique</string>
     <string name="permission_rationale_location_map">
         L\'autorisation d\'accéder à la localisation est nécessaire pour afficher votre emplacement sur la carte
     </string>
