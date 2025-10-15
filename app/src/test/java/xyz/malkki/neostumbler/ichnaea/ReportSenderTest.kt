@@ -2,6 +2,7 @@ package xyz.malkki.neostumbler.ichnaea
 
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -109,10 +110,13 @@ class ReportSenderTest {
 
             assertEquals(56.414156, sentReports.first().position.latitude, 0.0001)
             assertEquals(18.724728, sentReports.first().position.longitude, 0.0001)
+            assertEquals(1000L, sentReports.first().position.age)
 
             assertEquals(5.6378, sentReports.first().position.speed!!, 0.0001)
 
             assertEquals(reportTimestamp.toEpochMilli(), sentReports.first().timestamp)
+
+            assertEquals(1500L, sentReports.first().wifiAccessPoints?.firstOrNull()?.age)
         }
     }
 
@@ -134,6 +138,7 @@ class ReportSenderTest {
 
             assertEquals(56.414156, sentReports.first().position.latitude, 0.0001)
             assertEquals(18.724728, sentReports.first().position.longitude, 0.0001)
+            assertEquals(1000, sentReports.first().position.age)
 
             assertEquals(6.0, sentReports.first().position.speed!!, 0.0001)
             assertEquals(0.0, sentReports.first().position.heading!!, 0.0001)
@@ -142,6 +147,24 @@ class ReportSenderTest {
                 reportTimestamp.truncatedTo(ChronoUnit.DAYS).toEpochMilli(),
                 sentReports.first().timestamp,
             )
+        }
+    }
+
+    @Test
+    fun `Test sending reports with age shift`() = runTest {
+        reportSender.sendNotUploadedReports(reducedMetadata = false, ageShift = 30.seconds)
+
+        argumentCaptor {
+            verify(geosubmit, times(1)).sendReports(capture())
+
+            val sentReports = firstValue
+
+            assertEquals(1, sentReports.size)
+
+            val report = sentReports.first()
+
+            assertEquals(31000L, report.position.age)
+            assertEquals(31500L, report.wifiAccessPoints?.firstOrNull()?.age)
         }
     }
 }
