@@ -10,21 +10,30 @@ implementations with the same API are also usable.
 
 ## 1. Installing
 
-There are two variants available:
+There are three variants available:
 
-* **full** - includes all features, uses closed components (i.e. Google Play Services)
-* **fdroid** - does not use closed components, some features missing
+* **fullDefault** - includes all features, uses closed components (i.e. Google Play Services)
+* **fullGplay** - same as *fullDefault*, except does not have the automatic scanning feature and contains some quirks to
+  comply with Google Play store policies
+* **fdroidDefault** - does not use closed components, some features missing
 
-The **full** variant can be downloaded from:
+The *full* variants are only useful if you have Google Play services (or a compatible alternative for Google Play
+services) on your device.
+
+The **fullDefault** variant can be downloaded from:
 
 * [Accrescent](https://accrescent.app/app/xyz.malkki.neostumbler)
 * [GitHub releases](https://github.com/mjaakko/NeoStumbler/releases)
 
-The **fdroid** variant can be downloaded from:
+The **fdroidDefault** variant can be downloaded from:
 
 * [F-Droid](https://f-droid.org/packages/xyz.malkki.neostumbler.fdroid/)
 * [IzzyOnDroid](https://apt.izzysoft.de/fdroid/index/apk/xyz.malkki.neostumbler.fdroid)
 * [GitHub releases](https://github.com/mjaakko/NeoStumbler/releases)
+
+The **fullGplay** variant can be downloaded from:
+
+* [Google Play](https://play.google.com/store/apps/details?id=xyz.malkki.neostumbler.gplay)
 
 The versions marked as *pre-release* are beta versions of the next version of NeoStumbler.
 

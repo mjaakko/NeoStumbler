@@ -14,6 +14,13 @@
     height="80">
 </a>
 
+<a href="https://play.google.com/store/apps/details?id=xyz.malkki.neostumbler.gplay" style="float:right;">
+  <img
+    alt="Get it on Google Play"
+    src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png"
+    height="80">
+</a>
+
 # NeoStumbler
 
 NeoStumbler is an Android application for collecting locations of cell towers, Wi-Fi access points
@@ -24,12 +31,13 @@ Services) such as [beaconDB](https://beacondb.net/).
 ## Downloads
 
 > [!TIP]
-> See the [user guide](docs/user_guide.md) for more details on how to use NeoStumbler
+> See the [user guide](https://neostumbler.malkki.xyz/user_guide/) for more details on how to use NeoStumbler
 
-There are two variants available:
+There are three variants available:
 
-* *full* - includes all features
-* *fdroid* - does not include closed components (i.e. Google Play Services)
+* *fullDefault* - includes all features
+* *fullGplay* - includes all features (except automatic scanning) and complies with Google Play store policies
+* *fdroidDefault* - does not include closed components (i.e. Google Play Services)
     * Features missing:
         * [Fused location provider](https://developers.google.com/location-context/fused-location-provider)
         * Automatic scanning based
@@ -56,6 +64,10 @@ The *full* variant is available
 from [Accrescent](https://accrescent.app/app/xyz.malkki.neostumbler). The advantage of using
 Accrescent is that only the assets needed for your device are downloaded.
 
+A modified version of the *full* variant is also available
+on [Google Play](https://play.google.com/store/apps/details?id=xyz.malkki.neostumbler.gplay). This version does not
+include the automatic scanning feature and contains some minor quirks to comply with Google Play policies.
+
 ## Features
 
 * Supports latest Android versions
@@ -73,7 +85,7 @@ The application has three product flavors:
 * `fdroidDefault` - no closed components, features dependent on closed-source components (i.e.
   Google Play Services) are not included
 * `fullDefault` - includes closed components, no features missing
-* `fullGplay` - *work in progress*, based on `fullDefault`, but has some minor differences to make
+* `fullGplay` - based on `fullDefault`, but has some minor differences to make
   it compliant with Google Play requirements
 
 ### Building
