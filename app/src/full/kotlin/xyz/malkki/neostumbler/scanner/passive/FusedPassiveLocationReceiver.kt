@@ -35,18 +35,20 @@ class FusedPassiveLocationReceiver : BroadcastReceiver(), KoinComponent {
 
     override fun onReceive(context: Context, intent: Intent) {
         if (LocationResult.hasResult(intent)) {
-            val locationResult = LocationResult.extractResult(intent)!!
+            val locationResult = LocationResult.extractResult(intent)
 
             val positions =
-                locationResult.locations.map {
+                locationResult?.locations?.map {
                     it.toPositionObservation(source = Position.Source.FUSED)
                 }
 
-            runBlocking {
-                // We can assume that we have the location permission, because we are receiving
-                // locations
-                @SuppressLint("MissingPermission")
-                passiveScanReportCreator.createPassiveScanReport(positions)
+            if (positions != null) {
+                runBlocking {
+                    // We can assume that we have the location permission, because we are receiving
+                    // locations
+                    @SuppressLint("MissingPermission")
+                    passiveScanReportCreator.createPassiveScanReport(positions)
+                }
             }
         }
     }
