@@ -185,7 +185,7 @@
     <string name="author_text">נוצר עם ❤️ על ידי %1$s ו%2$s</string>
     <string name="contributors">תורמים</string>
     <string name="troubleshooting_permissions_granted">הרשאות ניתנו</string>
-    <string name="permission_rationale_background_location_quick_settings">התחלת הסריקה מההגדרות המהירות דורשת גישה למיקום ברקע</string>
+    <string name="permission_rationale_background_location_quick_settings">התחלת הסריקה מההגדרות המהירות דורשת גישה למיקום ברקע.\n\nנא לשים לב שמקור ההגבלה הזאת היא מערכת ההפעלה Android. אין גישה למקום שלך ברקע מבלי להפעיל סריקה אוטומטית או סבילה</string>
     <string name="troubleshooting_battery_optimizations_disabled">מיטוב סוללה כבוי</string>
     <string name="troubleshooting_description">תיקון בעיות נפוצות בסריקה</string>
     <string name="scanning_status_active">הסריקה <annotation style="status">פעילה</annotation></string>
@@ -194,7 +194,7 @@
     <string name="lac">LAC: %s</string>
     <string name="passive_scanning_description">איסוף נתונים פאסיבי יוצר דיווחים ברקע עם סוללה מינימלית על ידי שימוש בנתונים שאפליקציות אחרות מבקשות. \n\nהיעילות של איסוף נתונים פאסיבי תהיה תלויה בסוג המכשיר, האפליקציות האחרות שבשימוש ואם יש ספק מיקום משולב זמין.\n\nיש להוסיף שאיסוף נתונים פאסיבי לא עובד עם משואות Bluetooth.\n\nהאם להפעיל איסוף נתונים פאסיבי?</string>
     <string name="report_upload_notification_channel_name">העלאות דיווחים</string>
-    <string name="permission_rationale_background_location_passive_scan">קבלת עדכוני מיקום כשהאפליקציה לא פעילה דורשת גישה למיקום ברקע</string>
+    <string name="permission_rationale_background_location_passive_scan">איסוף נתונים סביל דורש גישה למיקום ברקע כדי ליצור דוחות כשהיישומון לא פעיל</string>
     <string name="delete_all">מחק הכל</string>
     <string name="copy">העתקה</string>
     <string name="crash_log_entry_title">קריסה #%d</string>
@@ -206,4 +206,9 @@
     <string name="map_tile_source_custom_title">מותאם אישית</string>
     <string name="map_tile_source_custom_style_url">כתובת סגנון מפה מותאם אישית</string>
     <string name="map_show_coverage_layer">הצגת שכבת כיסוי</string>
+    <string name="geocoder_default_title">ברירת מחדל</string>
+    <string name="geocoder_disabled_title">מושבת</string>
+    <string name="third_party_licenses">רישיונות צד־שלישי</string>
+    <string name="privacy_policy">מדיניות פרטיות</string>
+    <string name="geocoder_settings_title">Geocoder</string>
 </resources>
