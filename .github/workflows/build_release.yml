@@ -58,7 +58,7 @@ jobs:
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
         run: ./gradlew :app:buildApksFullDefaultRelease
       - name: Upload release APK set as build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: app-fullDefaultRelease.apks
           path: app/build/outputs/apkset/fullDefaultRelease/app-fullDefaultRelease.apks
@@ -71,7 +71,7 @@ jobs:
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
         run: ./gradlew :app:bundleFullGplayRelease
       - name: Upload app bundle as build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: app-full-gplay-release.aab
           path: app/build/outputs/bundle/fullGplayRelease/app-full-gplay-release.aab
