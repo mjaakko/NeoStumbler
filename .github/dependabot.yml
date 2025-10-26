@@ -32,3 +32,9 @@ updates:
       interval: "monthly"
     target-branch: "master"
     open-pull-requests-limit: 5
+  - package-ecosystem: "npm"
+    directory: "website/"
+    schedule:
+      interval: "quarterly"
+    target-branch: "master"
+    open-pull-requests-limit: 10
