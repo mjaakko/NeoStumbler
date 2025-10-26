@@ -1,7 +1,7 @@
 [versions]
 koin = "4.1.1"
 
-kotlin = "2.2.20"
+kotlin = "2.2.21"
 
 kotlinxCoroutines = "1.10.2"
 
@@ -140,7 +140,7 @@ kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlinCompose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
-ksp = { id = "com.google.devtools.ksp", version = "2.2.20-2.0.3" }
+ksp = { id = "com.google.devtools.ksp", version = "2.3.0" }
 
 bundletool = { id = "app.accrescent.tools.bundletool", version = "0.2.4" }
 
