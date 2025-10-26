@@ -38,3 +38,8 @@ updates:
       interval: "quarterly"
     target-branch: "master"
     open-pull-requests-limit: 10
+    groups:
+      tailwindcss:
+        patterns:
+          - 'tailwindcss'
+          - '@tailwindcss/*'
