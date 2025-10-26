@@ -91,7 +91,7 @@ kotlinx-coroutinesPlayServices = { module = "org.jetbrains.kotlinx:kotlinx-corou
 kotlinx-coroutinesTest = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test" }
 
 playservices-location = { module = "com.google.android.gms:play-services-location", version = "21.3.0" }
-playservices-cronet = { module = "com.google.android.gms:play-services-cronet", version = "18.1.0" }
+playservices-cronet = { module = "com.google.android.gms:play-services-cronet", version = "18.1.1" }
 
 timber = { module = "com.jakewharton.timber:timber", version = "5.0.1" }
 
