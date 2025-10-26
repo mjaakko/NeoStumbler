@@ -306,6 +306,20 @@ private fun ReportCellsList(cellTowers: List<ReportEmitter<CellTower, String>>) 
     }
 }
 
+private val BEACON_TYPE_FORMATTER = HexFormat { number { removeLeadingZeros = true } }
+
+private const val BEACON_TYPE_CODE_IBEACON = 0x0215
+private const val BEACON_TYPE_CODE_ALTBEACON = 0xbeac
+
+@Composable
+private fun beaconTypeName(beaconType: Int): String {
+    return when (beaconType) {
+        BEACON_TYPE_CODE_IBEACON -> stringResource(R.string.beacon_type_ibeacon)
+        BEACON_TYPE_CODE_ALTBEACON -> stringResource(R.string.beacon_type_altbeacon)
+        else -> beaconType.toHexString(BEACON_TYPE_FORMATTER)
+    }
+}
+
 @Composable
 private fun ReportBluetoothBeaconsList(
     bluetoothBeacons: List<ReportEmitter<BluetoothBeacon, MacAddress>>
@@ -326,7 +340,7 @@ private fun ReportBluetoothBeaconsList(
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                     bluetoothBeacon.emitter.beaconType?.let { beaconType ->
                         Text(
-                            text = stringResource(R.string.beacon_type, beaconType.toHexString()),
+                            text = stringResource(R.string.beacon_type, beaconTypeName(beaconType)),
                             style = MaterialTheme.typography.bodySmall,
                         )
                     }
@@ -341,9 +355,7 @@ private fun ReportBluetoothBeaconsList(
                                 Text(
                                     text = stringResource(R.string.beacon_id, index + 1, id),
                                     maxLines = 1,
-                                    // FIXME: change this to middle ellipsis when Compose 1.8.0 is
-                                    // released
-                                    overflow = TextOverflow.Ellipsis,
+                                    overflow = TextOverflow.MiddleEllipsis,
                                     style = MaterialTheme.typography.bodySmall,
                                 )
                             }
