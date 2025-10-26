@@ -12,6 +12,6 @@
     "@tailwindcss/typography": "^0.5.16",
     "@tailwindcss/vite": "^4.1.13",
     "astro": "^5.15.1",
-    "tailwindcss": "^4.1.13"
+    "tailwindcss": "^4.1.16"
   }
 }
