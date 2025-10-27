@@ -108,7 +108,7 @@ kotlinx-serializationJson = { module = "org.jetbrains.kotlinx:kotlinx-serializat
 
 androidBeaconLibrary = { module = "org.altbeacon:android-beacon-library", version = "2.21.0" }
 
-mapLibre = { module = "org.maplibre.gl:android-sdk", version = "12.0.0" }
+mapLibre = { module = "org.maplibre.gl:android-sdk", version = "12.0.1" }
 mapLibreAnnotationsPlugin = { module = "org.maplibre.gl:android-plugin-annotation-v9", version = "3.0.2" }
 
 geohex = { module = "org.geohex.geohex4j:geohex4j", version = "3.2.2" }
