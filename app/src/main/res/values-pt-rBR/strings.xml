@@ -213,4 +213,6 @@
     <string name="geocoder_default_title">Padrão</string>
     <string name="geocoder_disabled_title">Desativado</string>
     <string name="privacy_policy">Política de privacidade</string>
+    <string name="beacon_type_ibeacon">iBeacon</string>
+    <string name="beacon_type_altbeacon">AltBeacon</string>
 </resources>
