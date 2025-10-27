@@ -82,6 +82,8 @@
 
     <string name="beacon_type">Beacon type: %s</string>
     <string name="beacon_id">ID%d: %s</string>
+    <string name="beacon_type_ibeacon">iBeacon</string>
+    <string name="beacon_type_altbeacon">AltBeacon</string>
 
     <string name="report_upload_notification_channel_name">Report uploads</string>
     <string name="notification_sending_reports">Sending reports</string>
