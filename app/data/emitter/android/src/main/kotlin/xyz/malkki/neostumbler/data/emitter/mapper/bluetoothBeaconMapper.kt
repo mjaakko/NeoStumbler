@@ -15,9 +15,9 @@ internal fun Beacon.toBluetoothBeacon(): EmitterObservation<BluetoothBeacon, Mac
             BluetoothBeacon(
                 macAddress = MacAddress(bluetoothAddress),
                 beaconType = beaconTypeCode,
-                id1 = id1?.toString(),
-                id2 = id2?.toString(),
-                id3 = id3?.toString(),
+                id1 = identifiers.getOrNull(0)?.toString(),
+                id2 = identifiers.getOrNull(1)?.toString(),
+                id3 = identifiers.getOrNull(2)?.toString(),
                 signalStrength = rssi,
             ),
         timestamp = timestamp,
