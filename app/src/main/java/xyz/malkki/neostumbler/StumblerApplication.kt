@@ -36,6 +36,7 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import timber.log.Timber
 import xyz.malkki.neostumbler.beaconlibrary.IBeaconParser
+import xyz.malkki.neostumbler.beaconlibrary.RuuviTagV5BeaconParser
 import xyz.malkki.neostumbler.beaconlibrary.StubDistanceCalculator
 import xyz.malkki.neostumbler.crashlog.CrashLogManager
 import xyz.malkki.neostumbler.crashlog.FileCrashLogManager
@@ -289,6 +290,7 @@ class StumblerApplication : Application() {
             // Add parsers for common beacons types
             beaconManager.beaconParsers.apply {
                 add(IBeaconParser)
+                add(RuuviTagV5BeaconParser)
                 add(AltBeaconParser())
                 add(BeaconParser(BeaconParser.URI_BEACON_LAYOUT))
                 add(BeaconParser(BeaconParser.EDDYSTONE_TLM_LAYOUT))
