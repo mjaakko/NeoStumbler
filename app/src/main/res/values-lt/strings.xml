@@ -211,4 +211,6 @@
     <string name="geocoder_disabled_title">Išjungta</string>
     <string name="third_party_licenses">Trečiųjų šalių licencijos</string>
     <string name="privacy_policy">Privatumo nuostatai</string>
+    <string name="beacon_type_ibeacon">„iBeacon“</string>
+    <string name="beacon_type_altbeacon">„AltBeacon“</string>
 </resources>
