@@ -206,4 +206,6 @@
     <string name="geocoder_default_title">Standaard</string>
     <string name="geocoder_disabled_title">Uitgeschakeld</string>
     <string name="privacy_policy">Privacy­beleid</string>
+    <string name="beacon_type_ibeacon">iBeacon</string>
+    <string name="beacon_type_altbeacon">AltBeacon</string>
 </resources>
