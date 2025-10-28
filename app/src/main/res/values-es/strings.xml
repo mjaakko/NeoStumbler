@@ -211,5 +211,4 @@
     <string name="geocoder_settings_title">Geocodificador</string>
     <string name="geocoder_default_title">Por defecto</string>
     <string name="privacy_policy">Política de privacidad</string>
-    <string name="beacon_type_ibeacon"></string>
 </resources>
