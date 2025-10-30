@@ -11,7 +11,6 @@ import androidx.work.WorkerParameters
 import androidx.work.hasKeyWithValueOfType
 import java.io.IOException
 import java.time.Instant
-import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.flow.first
 import okhttp3.Call
@@ -61,17 +60,19 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) :
     private val reportProvider: ReportProvider by inject()
     private val reportSaver: ReportSaver by inject()
 
-    private suspend fun getGeosubmitApi(ichnaeaParams: IchnaeaParams): Geosubmit {
-        Timber.d(
-            "Using endpoint ${ichnaeaParams.submissionPath} with API key ${ichnaeaParams.apiKey} for Geosubmit"
-        )
+    private suspend fun getGeosubmitApi(): Geosubmit? {
+        return settings.getIchnaeaParams()?.let { geosubmitParams ->
+            Timber.d(
+                "Using endpoint ${geosubmitParams.submissionPath} with API key ${geosubmitParams.apiKey} for Geosubmit"
+            )
 
-        return IchnaeaClient(httpClientProvider.await(), ichnaeaParams)
+            IchnaeaClient(httpClientProvider.await(), geosubmitParams)
+        }
     }
 
     override suspend fun doWork(): Result {
-        val ichnaeaParams = settings.getIchnaeaParams()
-        val geosubmit = ichnaeaParams?.let { getGeosubmitApi(it) }
+        val geosubmit = getGeosubmitApi()
+
         if (geosubmit == null) {
             return Result.failure(
                 Data.Builder().putInt(OUTPUT_ERROR_TYPE, ERROR_TYPE_NO_ENDPOINT_CONFIGURED).build()
@@ -101,39 +102,13 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) :
                 setProgress(createResultData(reportsSent))
             }
 
-            val ageShift =
-                /**
-                 * Workaround for https://codeberg.org/beacondb/beacondb/issues/138
-                 * - delete this when the fix is merged
-                 */
-                if (ichnaeaParams.baseUrl.contains("beacondb")) {
-                    Timber.i(
-                        "Shifting age values in the report by 45 seconds" +
-                            "to handle BeaconDB not supporting negative values"
-                    )
-
-                    45.seconds
-                } else {
-                    0.seconds
-                }
-
             if (reupload) {
                 val from = Instant.ofEpochMilli(inputData.getLong(INPUT_REUPLOAD_FROM, 0))
                 val to = Instant.ofEpochMilli(inputData.getLong(INPUT_REUPLOAD_TO, 0))
 
-                reportSender.reuploadReports(
-                    from,
-                    to,
-                    sendWithReducedMetadata,
-                    ageShift = ageShift,
-                    progressListener,
-                )
+                reportSender.reuploadReports(from, to, sendWithReducedMetadata, progressListener)
             } else {
-                reportSender.sendNotUploadedReports(
-                    sendWithReducedMetadata,
-                    ageShift = ageShift,
-                    progressListener,
-                )
+                reportSender.sendNotUploadedReports(sendWithReducedMetadata, progressListener)
             }
 
             Result.success(createResultData(reportsSent))

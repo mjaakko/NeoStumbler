@@ -2,8 +2,6 @@ package xyz.malkki.neostumbler.ichnaea
 
 import java.time.Instant
 import java.time.temporal.ChronoUnit
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
 import xyz.malkki.neostumbler.core.report.Report
 import xyz.malkki.neostumbler.data.reports.ReportProvider
 import xyz.malkki.neostumbler.data.reports.ReportSaver
@@ -38,7 +36,6 @@ class ReportSender(
         from: Instant,
         to: Instant,
         reducedMetadata: Boolean,
-        ageShift: Duration = 0.seconds,
         progressListener: (suspend (Int) -> Unit)? = null,
     ) {
         val reportBatches =
@@ -56,7 +53,7 @@ class ReportSender(
         var sent = 0
 
         reportBatches.forEach {
-            it.sendBatch(ageShift = ageShift, reduceMetadata = reducedMetadata)
+            it.sendBatch(reduceMetadata = reducedMetadata)
 
             sent += it.size
 
@@ -66,7 +63,6 @@ class ReportSender(
 
     suspend fun sendNotUploadedReports(
         reducedMetadata: Boolean,
-        ageShift: Duration = 0.seconds,
         progressListener: (suspend (Int) -> Unit)? = null,
     ) {
         var sent = 0
@@ -83,7 +79,7 @@ class ReportSender(
                 break
             }
 
-            batch.sendBatch(ageShift = ageShift, reduceMetadata = reducedMetadata)
+            batch.sendBatch(reduceMetadata = reducedMetadata)
 
             sent += batch.size
 
@@ -91,19 +87,14 @@ class ReportSender(
         }
     }
 
-    private suspend fun List<Report>.sendBatch(
-        reduceMetadata: Boolean,
-        ageShift: Duration = 0.seconds,
-    ) {
-        val dtos =
-            map { report -> report.toDto(ageShift = ageShift) }
-                .map { reportDto ->
-                    if (reduceMetadata) {
-                        reportDto.reduceMetadata()
-                    } else {
-                        reportDto
-                    }
-                }
+    private suspend fun List<Report>.sendBatch(reduceMetadata: Boolean) {
+        val dtos = map { report ->
+            if (reduceMetadata) {
+                report.toDto().reduceMetadata()
+            } else {
+                report.toDto()
+            }
+        }
 
         geosubmit.sendReports(dtos)
 
@@ -119,16 +110,13 @@ class ReportSender(
         reportSaver.markAsUploaded(uploadTimestamp = now, *updatedReports.toLongArray())
     }
 
-    private fun Report.toDto(ageShift: Duration = 0.seconds): ReportDto {
+    private fun Report.toDto(): ReportDto {
         return ReportDto(
             timestamp = timestamp.toEpochMilli(),
-            position = position.toDto(ageShift = ageShift),
-            wifiAccessPoints =
-                wifiAccessPoints.map { it.toDto(ageShift = ageShift) }.takeIf { it.isNotEmpty() },
-            cellTowers =
-                cellTowers.map { it.toDto(ageShift = ageShift) }.takeIf { it.isNotEmpty() },
-            bluetoothBeacons =
-                bluetoothBeacons.map { it.toDto(ageShift = ageShift) }.takeIf { it.isNotEmpty() },
+            position = position.toDto(),
+            wifiAccessPoints = wifiAccessPoints.map { it.toDto() }.takeIf { it.isNotEmpty() },
+            cellTowers = cellTowers.map { it.toDto() }.takeIf { it.isNotEmpty() },
+            bluetoothBeacons = bluetoothBeacons.map { it.toDto() }.takeIf { it.isNotEmpty() },
         )
     }
 
