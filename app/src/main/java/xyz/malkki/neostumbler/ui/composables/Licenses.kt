@@ -11,7 +11,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.mikepenz.aboutlibraries.ui.compose.LibraryDefaults
-import com.mikepenz.aboutlibraries.ui.compose.android.rememberLibraries
+import com.mikepenz.aboutlibraries.ui.compose.android.produceLibraries
 import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.ui.composables.shared.Dialog
@@ -21,7 +21,7 @@ import xyz.malkki.neostumbler.utils.openUrl
 private fun LicensesDialog(onClose: () -> Unit) {
     val context = LocalContext.current
 
-    val libraries by rememberLibraries(R.raw.aboutlibraries)
+    val libraries by produceLibraries(R.raw.aboutlibraries)
 
     Dialog(onDismissRequest = onClose, title = stringResource(R.string.third_party_licenses)) {
         LibrariesContainer(
