@@ -14,10 +14,10 @@ import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -87,7 +87,9 @@ fun SuggestedServicesDialog(onServiceSelected: (SuggestedService?) -> Unit) {
                                     )
                                 },
                                 modifier =
-                                    Modifier.menuAnchor(type = MenuAnchorType.PrimaryNotEditable),
+                                    Modifier.menuAnchor(
+                                        type = ExposedDropdownMenuAnchorType.PrimaryNotEditable
+                                    ),
                             )
 
                             ExposedDropdownMenu(
