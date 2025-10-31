@@ -1,7 +1,5 @@
 package xyz.malkki.neostumbler.ichnaea.mapper
 
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
 import xyz.malkki.neostumbler.core.MacAddress
 import xyz.malkki.neostumbler.core.Position
 import xyz.malkki.neostumbler.core.emitter.BluetoothBeacon
@@ -14,9 +12,7 @@ import xyz.malkki.neostumbler.ichnaea.dto.CellTowerDto
 import xyz.malkki.neostumbler.ichnaea.dto.ReportDto.PositionDto
 import xyz.malkki.neostumbler.ichnaea.dto.WifiAccessPointDto
 
-fun ReportEmitter<BluetoothBeacon, MacAddress>.toDto(
-    ageShift: Duration = 0.seconds
-): BluetoothBeaconDto {
+fun ReportEmitter<BluetoothBeacon, MacAddress>.toDto(): BluetoothBeaconDto {
     return BluetoothBeaconDto(
         macAddress = emitter.macAddress.value,
         name = null,
@@ -25,11 +21,11 @@ fun ReportEmitter<BluetoothBeacon, MacAddress>.toDto(
         id2 = emitter.id2,
         id3 = emitter.id3,
         signalStrength = emitter.signalStrength,
-        age = age + ageShift.inWholeMilliseconds,
+        age = age,
     )
 }
 
-fun ReportEmitter<CellTower, String>.toDto(ageShift: Duration = 0.seconds): CellTowerDto {
+fun ReportEmitter<CellTower, String>.toDto(): CellTowerDto {
     return CellTowerDto(
         radioType = emitter.radioType.name.lowercase(),
         mobileCountryCode = emitter.mobileCountryCode?.toIntOrNull(),
@@ -44,13 +40,11 @@ fun ReportEmitter<CellTower, String>.toDto(ageShift: Duration = 0.seconds): Cell
         signalStrength = emitter.signalStrength,
         timingAdvance = emitter.timingAdvance,
         arfcn = emitter.arfcn,
-        age = age + ageShift.inWholeMilliseconds,
+        age = age,
     )
 }
 
-fun ReportEmitter<WifiAccessPoint, MacAddress>.toDto(
-    ageShift: Duration = 0.seconds
-): WifiAccessPointDto {
+fun ReportEmitter<WifiAccessPoint, MacAddress>.toDto(): WifiAccessPointDto {
     return WifiAccessPointDto(
         macAddress = emitter.macAddress.value,
         radioType = emitter.radioType?.to802String(),
@@ -59,16 +53,16 @@ fun ReportEmitter<WifiAccessPoint, MacAddress>.toDto(
         frequency = emitter.frequency,
         signalStrength = emitter.signalStrength,
         signalToNoiseRatio = null,
-        age = age + ageShift.inWholeMilliseconds,
+        age = age,
     )
 }
 
-fun ReportPosition.toDto(ageShift: Duration = 0.seconds): PositionDto {
+fun ReportPosition.toDto(): PositionDto {
     return PositionDto(
         latitude = position.latitude,
         longitude = position.longitude,
         accuracy = position.accuracy?.takeUnless { it.isNaN() },
-        age = age + ageShift.inWholeMilliseconds,
+        age = age,
         altitude = position.altitude?.takeUnless { it.isNaN() },
         altitudeAccuracy = position.altitudeAccuracy?.takeUnless { it.isNaN() },
         heading = position.heading?.takeUnless { it.isNaN() },
