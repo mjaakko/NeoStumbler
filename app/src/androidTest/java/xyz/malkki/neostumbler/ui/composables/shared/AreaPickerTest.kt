@@ -13,6 +13,7 @@ import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.rule.GrantPermissionRule
 import java.io.IOException
+import kotlin.reflect.KClass
 import kotlin.time.Duration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -85,6 +86,22 @@ class AreaPickerTest {
 
                     override fun timeout(): Timeout {
                         return timeout()
+                    }
+
+                    override fun <T : Any> tag(type: KClass<T>): T? {
+                        return null
+                    }
+
+                    override fun <T> tag(type: Class<out T>): T? {
+                        return null
+                    }
+
+                    override fun <T : Any> tag(type: KClass<T>, computeIfAbsent: () -> T): T {
+                        return computeIfAbsent()
+                    }
+
+                    override fun <T : Any> tag(type: Class<T>, computeIfAbsent: () -> T): T {
+                        return computeIfAbsent()
                     }
                 }
             }
