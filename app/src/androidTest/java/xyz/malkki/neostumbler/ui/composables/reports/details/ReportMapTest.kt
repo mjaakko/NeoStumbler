@@ -16,6 +16,7 @@ import java.io.IOException
 import java.time.Instant
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
+import kotlin.reflect.KClass
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -82,6 +83,22 @@ class ReportMapTest {
 
                     override fun timeout(): Timeout {
                         return timeout()
+                    }
+
+                    override fun <T : Any> tag(type: KClass<T>): T? {
+                        return null
+                    }
+
+                    override fun <T> tag(type: Class<out T>): T? {
+                        return null
+                    }
+
+                    override fun <T : Any> tag(type: KClass<T>, computeIfAbsent: () -> T): T {
+                        return computeIfAbsent()
+                    }
+
+                    override fun <T : Any> tag(type: Class<T>, computeIfAbsent: () -> T): T {
+                        return computeIfAbsent()
                     }
                 }
             }
