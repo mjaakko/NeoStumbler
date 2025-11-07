@@ -28,5 +28,26 @@ class TelephonyManagerPassiveCellInfoSource(private val telephonyManager: Teleph
         return telephonyManager.allCellInfo
             .mapNotNull { cellInfo -> cellInfo.toCellTower() }
             .fillMissingData(serviceState?.operatorNumeric)
+            .filterByOperator(serviceState?.operatorNumeric)
+    }
+
+    private fun List<EmitterObservation<CellTower, String>>.filterByOperator(
+        operatorNumeric: String?
+    ): List<EmitterObservation<CellTower, String>> {
+        if (
+            map { it.emitter.mobileCountryCode to it.emitter.mobileNetworkCode }
+                .distinct()
+                .count() == 1
+        ) {
+            return this
+        }
+
+        /**
+         * [TelephonyManager.getAllCellInfo] can return cells for other subscriptions on the device
+         * -> filter them based on the operator code in the [android.telephony.ServiceState]
+         */
+        return filter {
+            (it.emitter.mobileCountryCode + it.emitter.mobileNetworkCode) == operatorNumeric
+        }
     }
 }
