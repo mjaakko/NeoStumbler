@@ -12,7 +12,7 @@ val passiveScanningModule = module {
 
     single<PassiveWifiAccessPointSource> { WifiManagerPassiveWifiAccessPointSource(get()) }
 
-    single { PassiveScanManager(get(), get()) }
+    single { PassiveScanManager(get(), get(), get()) }
 
     single { PassiveScanStateManager(get(PASSIVE_SCAN_STATE)) }
 

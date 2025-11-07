@@ -7,7 +7,11 @@ import androidx.annotation.RequiresPermission
 import androidx.core.content.getSystemService
 import xyz.malkki.neostumbler.data.settings.Settings
 
-class PassiveScanManager(private val context: Context, private val settings: Settings) {
+class PassiveScanManager(
+    private val context: Context,
+    private val settings: Settings,
+    private val passiveScanStateManager: PassiveScanStateManager,
+) {
     @RequiresPermission(
         allOf =
             [
@@ -19,7 +23,9 @@ class PassiveScanManager(private val context: Context, private val settings: Set
         enablePlatformPassiveScanning(context)
     }
 
-    fun disablePassiveScanning() {
+    suspend fun disablePassiveScanning() {
+        passiveScanStateManager.reset()
+
         val locationManager = context.getSystemService<LocationManager>()!!
 
         locationManager.removeUpdates(PlatformPassiveLocationReceiver.getPendingIntent(context))

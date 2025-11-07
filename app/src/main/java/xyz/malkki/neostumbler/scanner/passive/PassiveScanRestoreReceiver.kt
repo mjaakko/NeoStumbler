@@ -40,7 +40,8 @@ class PassiveScanRestoreReceiver : BroadcastReceiver(), KoinComponent {
                         )
                         .isEmpty()
                 ) {
-                    @SuppressLint("MissingPermission") passiveScanManager.enablePassiveScanning()
+                    @SuppressLint("MissingPermission")
+                    runBlocking { passiveScanManager.enablePassiveScanning() }
                 }
 
                 // TODO: disable passive scanning if permissions have been revoked?

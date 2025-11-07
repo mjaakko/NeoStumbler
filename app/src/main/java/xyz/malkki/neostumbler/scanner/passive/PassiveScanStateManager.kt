@@ -69,4 +69,8 @@ class PassiveScanStateManager(private val passiveScanStateStore: DataStore<Prefe
     suspend fun updateMaxCellTimestamp(timestamp: Long) {
         passiveScanStateStore.edit { it[longPreferencesKey(CELL_TIMESTAMP)] = timestamp }
     }
+
+    suspend fun reset() {
+        passiveScanStateStore.edit { it.clear() }
+    }
 }

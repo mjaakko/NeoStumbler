@@ -64,9 +64,9 @@ fun PassiveScanToggle(
         if (
             missingPermissionsBasic.value.isEmpty() && missingPermissionsAdditional.value.isEmpty()
         ) {
-            @SuppressLint("MissingPermission") passiveScanManager.enablePassiveScanning()
-
             coroutineScope.launch {
+                @SuppressLint("MissingPermission") passiveScanManager.enablePassiveScanning()
+
                 settings.edit { setBoolean(PreferenceKeys.PASSIVE_SCAN_ENABLED, true) }
             }
         } else if (missingPermissionsBasic.value.isNotEmpty()) {
