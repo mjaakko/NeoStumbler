@@ -190,4 +190,7 @@
     <string name="wifi_scan_throttling">WiFi-skanningsbegränsning</string>
     <string name="movement_detection_significant_motion_description">Pausar skanning och GPS när ingen större rörelse upptäcks. Sparar batteri men fungerar inte pålitligt på vissa enheter</string>
     <string name="troubleshooting_wifi_scan_always_available">WiFi-skanning alltid tillgänglig</string>
+    <string name="distance_to_estimated_location">Avstånd till den uppskattade platsen: %d m</string>
+    <string name="geocoder_disabled_title">Inaktiverad</string>
+    <string name="map_show_coverage_layer">Visa täckningslager</string>
 </resources>
