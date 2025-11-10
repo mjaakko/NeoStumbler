@@ -52,7 +52,14 @@ data class CellTower(
                 val mnc =
                     if (mobileNetworkCodes.size == 1) {
                         mobileNetworkCodes.first()
-                    } else if (operatorNumeric?.startsWith(mcc) == true) {
+                    } else if (
+                        /**
+                         * Only use MNC from the service state if none of the cells contains it
+                         * (Android APIs can return cells for multiple operators and in that case we
+                         * can't know which one to use)
+                         */
+                        mobileNetworkCodes.isEmpty() && operatorNumeric?.startsWith(mcc) == true
+                    ) {
                         operatorNumeric.replaceFirst(mcc, "")
                     } else {
                         null

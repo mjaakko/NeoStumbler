@@ -16,6 +16,7 @@ dependencies {
     implementation(libs.androidBeaconLibrary)
 
     testImplementation(libs.junit)
+    testImplementation(libs.mockitoKotlin)
     testImplementation(platform(libs.kotlinx.coroutinesBom))
     testImplementation(libs.kotlinx.coroutinesTest)
 }
