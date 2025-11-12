@@ -6,7 +6,9 @@ import android.app.NotificationManager
 import android.content.Context
 import androidx.core.content.getSystemService
 import androidx.datastore.core.DataStore
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -86,7 +88,21 @@ class StumblerApplication : Application() {
         preferencesDataStore(name = "one_time_actions")
 
     private val passiveScanStateStore: DataStore<Preferences> by
-        preferencesDataStore(name = "passive_scan_state")
+        preferencesDataStore(
+            name = "passive_scan_state",
+            corruptionHandler =
+                ReplaceFileCorruptionHandler { ex ->
+                    /**
+                     * The DataStore seems to get corrupted in some cases (see
+                     * https://github.com/mjaakko/NeoStumbler/issues/863). If this happens, let's
+                     * just recreate it with no content, because the state is only used to avoid
+                     * creating useless reports
+                     */
+                    Timber.w(ex, "Passive scan state has been corrupted. Recreating an empty state")
+
+                    emptyPreferences()
+                },
+        )
 
     var bluetoothScanAvailable by Delegates.notNull<Boolean>()
 

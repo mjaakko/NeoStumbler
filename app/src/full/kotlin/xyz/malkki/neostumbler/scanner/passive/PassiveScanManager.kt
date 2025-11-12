@@ -10,14 +10,17 @@ import com.google.android.gms.location.LocationRequest as LocationRequestFused
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.data.settings.getBooleanFlow
 import xyz.malkki.neostumbler.extensions.isGoogleApisAvailable
 
-class PassiveScanManager(private val context: Context, private val settings: Settings) {
+class PassiveScanManager(
+    private val context: Context,
+    private val settings: Settings,
+    private val passiveScanStateManager: PassiveScanStateManager,
+) {
     @RequiresPermission(
         allOf =
             [
@@ -25,12 +28,11 @@ class PassiveScanManager(private val context: Context, private val settings: Set
                 Manifest.permission.ACCESS_BACKGROUND_LOCATION,
             ]
     )
-    fun enablePassiveScanning() {
+    suspend fun enablePassiveScanning() {
         disablePassiveScanning()
 
-        val preferFusedLocationProvider = runBlocking {
+        val preferFusedLocationProvider =
             settings.getBooleanFlow(PreferenceKeys.PREFER_FUSED_LOCATION, true).first()
-        }
 
         if (context.isGoogleApisAvailable() && preferFusedLocationProvider) {
             enableFusedPassiveScanningFused()
@@ -39,7 +41,9 @@ class PassiveScanManager(private val context: Context, private val settings: Set
         }
     }
 
-    fun disablePassiveScanning() {
+    suspend fun disablePassiveScanning() {
+        passiveScanStateManager.reset()
+
         LocationServices.getFusedLocationProviderClient(context)
             .removeLocationUpdates(FusedPassiveLocationReceiver.getPendingIntent(context))
 

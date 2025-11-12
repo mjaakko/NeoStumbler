@@ -10,19 +10,26 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import xyz.malkki.neostumbler.geography.LatLng
 
-private const val WIFI_TIMESTAMP = "wifi"
-private const val CELL_TIMESTAMP = "cell"
+private const val TIMESTAMP_SUFFIX = "_timestamp"
 
-private const val LAST_LATITUDE = "lat"
-private const val LAST_LONGITUDE = "lng"
+private const val LAST_LATITUDE_SUFFIX = "_lat"
+private const val LAST_LONGITUDE_SUFFIX = "_lng"
 
 /** Helper for handling passive scanning state to avoid creating useless reports */
-class PassiveScanStateManager(private val passiveScanStateStore: DataStore<Preferences>) {
-    suspend fun getLastReportLocation(): LatLng? {
+class PassiveScanStateManager(
+    private val passiveScanStateStore: DataStore<Preferences>,
+    private val timeSource: () -> Long = SystemClock::elapsedRealtime,
+) {
+    enum class DataType {
+        CELL,
+        WIFI,
+    }
+
+    suspend fun getLastReportLocation(dataType: DataType): LatLng? {
         return passiveScanStateStore.data
             .map { data ->
-                val lat = data[doublePreferencesKey(LAST_LATITUDE)]
-                val lng = data[doublePreferencesKey(LAST_LONGITUDE)]
+                val lat = data[doublePreferencesKey(dataType.name + LAST_LATITUDE_SUFFIX)]
+                val lng = data[doublePreferencesKey(dataType.name + LAST_LONGITUDE_SUFFIX)]
 
                 if (lat != null && lng != null) {
                     LatLng(lat, lng)
@@ -33,40 +40,31 @@ class PassiveScanStateManager(private val passiveScanStateStore: DataStore<Prefe
             .first()
     }
 
-    suspend fun updateLastReportLocation(latLng: LatLng) {
+    suspend fun updateLastReportLocation(dataType: DataType, latLng: LatLng) {
         passiveScanStateStore.edit {
-            it[doublePreferencesKey(LAST_LATITUDE)] = latLng.latitude
-            it[doublePreferencesKey(LAST_LONGITUDE)] = latLng.longitude
+            it[doublePreferencesKey(dataType.name + LAST_LATITUDE_SUFFIX)] = latLng.latitude
+            it[doublePreferencesKey(dataType.name + LAST_LONGITUDE_SUFFIX)] = latLng.longitude
         }
     }
 
-    suspend fun getMaxWifiTimestamp(): Long? {
-        val now = SystemClock.elapsedRealtime()
+    suspend fun getMaxTimestamp(dataType: DataType): Long? {
+        val now = timeSource()
 
         return passiveScanStateStore.data
-            .map { it[longPreferencesKey(WIFI_TIMESTAMP)] }
+            .map { it[longPreferencesKey(dataType.name + TIMESTAMP_SUFFIX)] }
             .first()
             // If the timestamp is in the future, the device has rebooted and we can create a new
             // report -> return null
             ?.takeIf { it < now }
     }
 
-    suspend fun updateMaxWifiTimestamp(timestamp: Long) {
-        passiveScanStateStore.edit { it[longPreferencesKey(WIFI_TIMESTAMP)] = timestamp }
+    suspend fun updateMaxTimestamp(dataType: DataType, timestamp: Long) {
+        passiveScanStateStore.edit {
+            it[longPreferencesKey(dataType.name + TIMESTAMP_SUFFIX)] = timestamp
+        }
     }
 
-    suspend fun getMaxCellTimestamp(): Long? {
-        val now = SystemClock.elapsedRealtime()
-
-        return passiveScanStateStore.data
-            .map { it[longPreferencesKey(CELL_TIMESTAMP)] }
-            .first()
-            // If the timestamp is in the future, the device has rebooted and we can create a new
-            // report -> return null
-            ?.takeIf { it < now }
-    }
-
-    suspend fun updateMaxCellTimestamp(timestamp: Long) {
-        passiveScanStateStore.edit { it[longPreferencesKey(CELL_TIMESTAMP)] = timestamp }
+    suspend fun reset() {
+        passiveScanStateStore.edit { it.clear() }
     }
 }

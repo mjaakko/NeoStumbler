@@ -10,7 +10,6 @@ import xyz.malkki.neostumbler.core.observation.PositionObservation
 import xyz.malkki.neostumbler.data.emitter.PassiveCellTowerSource
 import xyz.malkki.neostumbler.data.emitter.PassiveWifiAccessPointSource
 import xyz.malkki.neostumbler.data.reports.ReportSaver
-import xyz.malkki.neostumbler.geography.LatLng
 import xyz.malkki.neostumbler.scanner.ScannerService
 import xyz.malkki.neostumbler.scanner.ScanningConstants
 import xyz.malkki.neostumbler.scanner.createReports
@@ -28,6 +27,7 @@ class PassiveScanReportCreator(
     private val passiveScanStateManager: PassiveScanStateManager,
     private val reportSaver: ReportSaver,
     private val postProcessors: List<ReportPostProcessor>,
+    private val activeScanningRunning: () -> Boolean = { ScannerService.serviceRunning.value },
 ) {
     @RequiresPermission(
         allOf =
@@ -38,7 +38,7 @@ class PassiveScanReportCreator(
             ]
     )
     suspend fun createPassiveScanReport(positions: List<PositionObservation>) {
-        if (ScannerService.serviceRunning.value) {
+        if (activeScanningRunning()) {
             // If the active scanning service is running, we don't need to create passive reports
             return
         }
@@ -53,26 +53,58 @@ class PassiveScanReportCreator(
             return
         }
 
-        val lastLocation = passiveScanStateManager.getLastReportLocation()
+        val cellTowers = getCellTowers().filterDuplicates()
+        val wifiAccessPoints = getWifiAccessPoints()
+
+        val lastLocations =
+            buildList {
+                    if (cellTowers.isNotEmpty()) {
+                        add(
+                            passiveScanStateManager.getLastReportLocation(
+                                PassiveScanStateManager.DataType.CELL
+                            )
+                        )
+                    }
+
+                    if (wifiAccessPoints.isNotEmpty()) {
+                        add(
+                            passiveScanStateManager.getLastReportLocation(
+                                PassiveScanStateManager.DataType.WIFI
+                            )
+                        )
+                    }
+                }
+                .filterNotNull()
+
         if (
-            lastLocation != null &&
-                filteredPositions.none {
-                    LatLng(it.position.latitude, it.position.longitude).distanceTo(lastLocation) >
-                        MIN_DISTANCE_FROM_LAST_LOCATION
+            lastLocations.isNotEmpty() &&
+                lastLocations.none { lastLocation ->
+                    filteredPositions.any { filterPosition ->
+                        filterPosition.position.latLng.distanceTo(lastLocation) >
+                            MIN_DISTANCE_FROM_LAST_LOCATION
+                    }
                 }
         ) {
             return
         }
 
-        val cellTowers = getCellTowers().filterDuplicates()
         cellTowers
             .maxOfOrNull { it.timestamp }
-            ?.let { passiveScanStateManager.updateMaxCellTimestamp(it) }
+            ?.let {
+                passiveScanStateManager.updateMaxTimestamp(
+                    dataType = PassiveScanStateManager.DataType.CELL,
+                    timestamp = it,
+                )
+            }
 
-        val wifiAccessPoints = getWifiAccessPoints()
         wifiAccessPoints
             .maxOfOrNull { it.timestamp }
-            ?.let { passiveScanStateManager.updateMaxWifiTimestamp(it) }
+            ?.let {
+                passiveScanStateManager.updateMaxTimestamp(
+                    dataType = PassiveScanStateManager.DataType.WIFI,
+                    timestamp = it,
+                )
+            }
 
         val reports =
             createReports(
@@ -85,8 +117,24 @@ class PassiveScanReportCreator(
             )
 
         reports
+            .filter { it.wifiAccessPoints.isNotEmpty() }
             .maxByOrNull { it.position.timestamp }
-            ?.let { passiveScanStateManager.updateLastReportLocation(it.position.position.latLng) }
+            ?.let {
+                passiveScanStateManager.updateLastReportLocation(
+                    dataType = PassiveScanStateManager.DataType.WIFI,
+                    it.position.position.latLng,
+                )
+            }
+
+        reports
+            .filter { it.cellTowers.isNotEmpty() }
+            .maxByOrNull { it.position.timestamp }
+            ?.let {
+                passiveScanStateManager.updateLastReportLocation(
+                    dataType = PassiveScanStateManager.DataType.CELL,
+                    it.position.position.latLng,
+                )
+            }
 
         reports.forEach { reportData -> reportSaver.createReport(reportData) }
     }
@@ -107,7 +155,10 @@ class PassiveScanReportCreator(
     )
     private suspend fun getWifiAccessPoints():
         List<EmitterObservation<WifiAccessPoint, MacAddress>> {
-        val maxTimestamp = passiveScanStateManager.getMaxWifiTimestamp()
+        val maxTimestamp =
+            passiveScanStateManager.getMaxTimestamp(
+                dataType = PassiveScanStateManager.DataType.WIFI
+            )
 
         return passiveWifiAccessPointSource.getWifiAccessPoints().filter {
             maxTimestamp == null || it.timestamp > maxTimestamp
@@ -118,7 +169,10 @@ class PassiveScanReportCreator(
         allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_PHONE_STATE]
     )
     private suspend fun getCellTowers(): List<EmitterObservation<CellTower, String>> {
-        val maxTimestamp = passiveScanStateManager.getMaxCellTimestamp()
+        val maxTimestamp =
+            passiveScanStateManager.getMaxTimestamp(
+                dataType = PassiveScanStateManager.DataType.CELL
+            )
 
         return passiveCellTowerSource.getCellTowers().filter {
             maxTimestamp == null || it.timestamp > maxTimestamp
