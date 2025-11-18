@@ -17,13 +17,13 @@ import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
@@ -116,42 +116,46 @@ class MainActivity : AppCompatActivity() {
                                 actions = {},
                             )
                         },
-                        bottomBar = {
-                            NavigationBar {
-                                tabs.forEach { (title, icon, navKey) ->
-                                    NavigationBarItem(
-                                        icon = { Icon(icon, contentDescription = title) },
-                                        label = { Text(title) },
-                                        selected = navigationBackstack.last() == navKey,
-                                        onClick = {
-                                            navigationBackstack.removeLastOrNull()
-                                            navigationBackstack.add(navKey)
-                                        },
+                        content = { paddingValues ->
+                            NavigationSuiteScaffold(
+                                navigationSuiteItems = {
+                                    tabs.forEach { (title, icon, navKey) ->
+                                        item(
+                                            icon = { Icon(icon, contentDescription = title) },
+                                            label = { Text(title) },
+                                            selected = navigationBackstack.last() == navKey,
+                                            onClick = {
+                                                navigationBackstack.removeLastOrNull()
+                                                navigationBackstack.add(navKey)
+                                            },
+                                        )
+                                    }
+                                },
+                                modifier = Modifier.padding(paddingValues = paddingValues),
+                            ) {
+                                Column(modifier = Modifier.fillMaxSize()) {
+                                    NavDisplay(
+                                        entryDecorators =
+                                            listOf(
+                                                rememberSavedStateNavEntryDecorator(),
+                                                rememberViewModelStoreNavEntryDecorator(),
+                                            ),
+                                        backStack = navigationBackstack,
+                                        entryProvider =
+                                            entryProvider {
+                                                entry<MapNavKey> { MapScreen() }
+                                                entry<ReportsNavKey> { ReportsScreen() }
+                                                entry<StatisticsNavKey> { StatisticsScreen() }
+                                                entry<SettingsNavKey> { SettingsScreen() }
+                                            },
                                     )
                                 }
                             }
                         },
-                        content = {
-                            Column(modifier = Modifier.fillMaxSize().padding(paddingValues = it)) {
-                                NavDisplay(
-                                    entryDecorators =
-                                        listOf(
-                                            rememberSavedStateNavEntryDecorator(),
-                                            rememberViewModelStoreNavEntryDecorator(),
-                                        ),
-                                    backStack = navigationBackstack,
-                                    entryProvider =
-                                        entryProvider {
-                                            entry<MapNavKey> { MapScreen() }
-                                            entry<ReportsNavKey> { ReportsScreen() }
-                                            entry<StatisticsNavKey> { StatisticsScreen() }
-                                            entry<SettingsNavKey> { SettingsScreen() }
-                                        },
-                                )
-                            }
-                        },
                         contentWindowInsets =
-                            WindowInsets.systemBars.exclude(WindowInsets.displayCutout),
+                            ScaffoldDefaults.contentWindowInsets
+                                .exclude(WindowInsets.systemBars)
+                                .exclude(WindowInsets.displayCutout),
                     )
                 }
             }
