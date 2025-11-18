@@ -246,6 +246,7 @@ dependencies {
     implementation(project(":libs:ichnaea"))
     implementation(project(":libs:utils"))
     implementation(project(":libs:executors"))
+    implementation(project(":libs:coroutine-broadcast-receiver"))
 
     implementation(project(":app:core"))
     implementation(project(":app:core:mapper:android-location"))

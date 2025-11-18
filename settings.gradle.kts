@@ -65,3 +65,5 @@ include(":libs:ichnaea")
 include(":libs:executors")
 
 include(":libs:broadcast-receiver-flow")
+
+include(":libs:coroutine-broadcast-receiver")
