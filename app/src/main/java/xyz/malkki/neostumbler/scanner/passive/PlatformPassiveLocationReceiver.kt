@@ -2,7 +2,6 @@ package xyz.malkki.neostumbler.scanner.passive
 
 import android.annotation.SuppressLint
 import android.app.PendingIntent
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.location.Location
@@ -10,13 +9,13 @@ import android.location.LocationManager
 import android.os.Build
 import androidx.core.app.PendingIntentCompat
 import androidx.core.content.IntentCompat
-import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import xyz.malkki.neostumbler.core.Position
+import xyz.malkki.neostumbler.coroutinebroadcastreceiver.CoroutineBroadcastReceiver
 import xyz.malkki.neostumbler.mapper.toPositionObservation
 
-class PlatformPassiveLocationReceiver : BroadcastReceiver(), KoinComponent {
+class PlatformPassiveLocationReceiver : CoroutineBroadcastReceiver(), KoinComponent {
     companion object {
         private const val REQUEST_CODE = 123895
 
@@ -60,7 +59,7 @@ class PlatformPassiveLocationReceiver : BroadcastReceiver(), KoinComponent {
         }
     }
 
-    override fun onReceive(context: Context, intent: Intent) {
+    override suspend fun handleIntent(context: Context, intent: Intent) {
         val locations: List<Location> = intent.getLocations()
 
         val positions =
@@ -82,9 +81,7 @@ class PlatformPassiveLocationReceiver : BroadcastReceiver(), KoinComponent {
                 location.toPositionObservation(source = source)
             }
 
-        runBlocking {
-            @SuppressLint("MissingPermission")
-            passiveScanReportCreator.createPassiveScanReport(positions)
-        }
+        @SuppressLint("MissingPermission")
+        passiveScanReportCreator.createPassiveScanReport(positions)
     }
 }

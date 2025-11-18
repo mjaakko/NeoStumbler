@@ -3,7 +3,6 @@ package xyz.malkki.neostumbler.scanner.autoscan
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.PendingIntent
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.location.Location
@@ -24,10 +23,11 @@ import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import timber.log.Timber
+import xyz.malkki.neostumbler.coroutinebroadcastreceiver.CoroutineBroadcastReceiver
 import xyz.malkki.neostumbler.data.reports.ReportProvider
 import xyz.malkki.neostumbler.scanner.ScannerService
 
-class LocationReceiver : BroadcastReceiver(), KoinComponent {
+class LocationReceiver : CoroutineBroadcastReceiver(), KoinComponent {
     companion object {
         const val AUTOSCAN_GEOFENCE_REQUEST_ID = "autoscan"
 
@@ -75,7 +75,7 @@ class LocationReceiver : BroadcastReceiver(), KoinComponent {
 
     private val reportProvider: ReportProvider by inject()
 
-    override fun onReceive(context: Context, intent: Intent) {
+    override suspend fun handleIntent(context: Context, intent: Intent) {
         if (LocationAvailability.hasLocationAvailability(intent)) {
             val isLocationAvailable =
                 LocationAvailability.extractLocationAvailability(intent)?.isLocationAvailable
@@ -135,8 +135,7 @@ class LocationReceiver : BroadcastReceiver(), KoinComponent {
                 .addOnFailureListener { e -> Timber.w(e, "Failed to remove geofences") }
         } else {
             // Otherwise create geofence to detect when user has moved away from the current
-            // location and
-            // try again
+            // location and try again
             val geofencingRequest =
                 GeofencingRequest.Builder()
                     .addGeofence(

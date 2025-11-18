@@ -3,7 +3,6 @@ package xyz.malkki.neostumbler.scanner.autoscan
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.PendingIntent
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -19,10 +18,11 @@ import com.google.android.gms.tasks.Task
 import java.time.Duration
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
+import xyz.malkki.neostumbler.coroutinebroadcastreceiver.CoroutineBroadcastReceiver
 import xyz.malkki.neostumbler.scanner.ScannerService
 import xyz.malkki.neostumbler.scanner.autoscan.LocationReceiver.Companion.AUTOSCAN_GEOFENCE_REQUEST_ID
 
-class ActivityTransitionReceiver : BroadcastReceiver() {
+class ActivityTransitionReceiver : CoroutineBroadcastReceiver() {
     companion object {
         private const val PENDING_INTENT_REQUEST_CODE = 1111
 
@@ -137,7 +137,7 @@ class ActivityTransitionReceiver : BroadcastReceiver() {
         }
     }
 
-    override fun onReceive(context: Context, intent: Intent) {
+    override suspend fun handleIntent(context: Context, intent: Intent) {
         if (ActivityTransitionResult.hasResult(intent)) {
             val result = ActivityTransitionResult.extractResult(intent)!!
 
