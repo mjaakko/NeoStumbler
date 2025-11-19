@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -97,7 +98,7 @@ fun ReportsScreen(viewModel: ReportsViewModel = koinViewModel()) {
 
     MLSWarningDialog()
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.widthIn(max = 800.dp).fillMaxSize()) {
         Column(
             modifier = Modifier.padding(vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
