@@ -6,9 +6,12 @@ import android.location.Location
 import androidx.annotation.ColorInt
 import androidx.collection.forEach
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationSearching
 import androidx.compose.material.icons.filled.MyLocation
@@ -277,7 +280,10 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
             )
         }
 
-        Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+        Box(
+            modifier =
+                Modifier.fillMaxSize().padding(16.dp).windowInsetsPadding(WindowInsets.systemBars)
+        ) {
             MapSettingsButton(modifier = Modifier.size(32.dp).align(Alignment.TopEnd))
 
             FilledIconButton(

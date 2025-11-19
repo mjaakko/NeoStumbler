@@ -13,7 +13,6 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -71,16 +70,11 @@ fun NeoStumblerTheme(
             val activity = view.context as Activity
             val window = activity.window
 
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-                @Suppress("DEPRECATION")
-                window.statusBarColor = colorScheme.primary.toArgb()
-            }
-
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
 
             if (activity is ComponentActivity) {
                 WindowCompat.getInsetsController(window, window.decorView)
-                    .isAppearanceLightStatusBars = darkTheme
+                    .isAppearanceLightStatusBars = !darkTheme
 
                 window.isNavigationBarContrastEnforced = isLandscape
             }
