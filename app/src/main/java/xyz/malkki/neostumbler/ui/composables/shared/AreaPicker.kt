@@ -23,8 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
@@ -35,47 +33,21 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import kotlin.time.Duration.Companion.seconds
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
-import okhttp3.Call
 import org.koin.compose.koinInject
-import org.maplibre.android.MapLibre
 import org.maplibre.android.camera.CameraPosition
-import org.maplibre.android.maps.Style
-import org.maplibre.android.module.http.HttpRequestUtil
 import org.maplibre.android.plugins.annotation.Circle
 import org.maplibre.android.plugins.annotation.CircleManager
 import org.maplibre.android.plugins.annotation.CircleOptions
 import org.maplibre.android.utils.ColorUtils
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.data.location.LocationSource
-import xyz.malkki.neostumbler.data.settings.Settings
-import xyz.malkki.neostumbler.data.settings.getEnum
 import xyz.malkki.neostumbler.domain.asDomainLatLng
 import xyz.malkki.neostumbler.domain.asMapLibreLatLng
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.geography.LatLng
-import xyz.malkki.neostumbler.ui.map.LifecycleAwareMapView
-import xyz.malkki.neostumbler.ui.map.MapTileSource
 import xyz.malkki.neostumbler.ui.map.setAttributionMargin
-import xyz.malkki.neostumbler.ui.map.updateMapStyleIfNeeded
-
-private fun Settings.mapStyleUrl(): Flow<String> =
-    getSnapshotFlow().map { prefs ->
-        val tileSource = prefs.getEnum(PreferenceKeys.MAP_TILE_SOURCE) ?: MapTileSource.DEFAULT
-
-        if (tileSource == MapTileSource.CUSTOM) {
-            prefs.getString(PreferenceKeys.MAP_TILE_SOURCE_CUSTOM_URL) ?: ""
-        } else {
-            tileSource.sourceUrl!!
-        }
-    }
 
 @Composable
 fun AreaPickerDialog(
@@ -153,22 +125,12 @@ private fun getCurrentLocation(
     }
 
 @Composable
-fun AreaPickerMap(
-    settings: Settings = koinInject(),
-    httpClientProvider: Deferred<Call.Factory> = koinInject(),
-    onCircleUpdated: (Pair<LatLng, Double>) -> Unit,
-) {
-    val lifecycle = LocalLifecycleOwner.current.lifecycle
-
+fun AreaPickerMap(onCircleUpdated: (Pair<LatLng, Double>) -> Unit) {
     val density = LocalDensity.current
-
-    val mapStyleUrl by settings.mapStyleUrl().collectAsState(initial = null)
-
-    val httpClient = produceState<Call.Factory?>(null) { value = httpClientProvider.await() }
 
     val currentLocation = getCurrentLocation()
 
-    if (mapStyleUrl == null || httpClient.value == null || currentLocation.value == null) {
+    if (currentLocation.value == null) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
@@ -183,76 +145,57 @@ fun AreaPickerMap(
         val circleManager = remember { mutableStateOf<CircleManager?>(null) }
         val circle = remember { mutableStateOf<Circle?>(null) }
 
-        AndroidView(
+        ComposableMap(
             modifier = Modifier.fillMaxSize(),
-            factory = { context ->
-                MapLibre.getInstance(context)
-                HttpRequestUtil.setOkHttpClient(httpClient.value)
-
-                val mapView = LifecycleAwareMapView(context)
-                mapView.localizeLabelNames()
-
-                mapView.getMapAsync { map ->
-                    map.addOnCameraMoveListener {
-                        mapCenter.value = map.cameraPosition.target!!.asDomainLatLng()
-                    }
-
-                    val cameraPos = currentLocation.value!!.asMapLibreLatLng()
-
-                    map.cameraPosition =
-                        CameraPosition.Builder().target(cameraPos).zoom(DEFAULT_ZOOM).build()
-
-                    map.setMinZoomPreference(MIN_ZOOM)
-                    map.setMaxZoomPreference(MAX_ZOOM)
-
-                    map.setAttributionMargin(density)
-
-                    map.uiSettings.isRotateGesturesEnabled = false
-
-                    val styleBuilder = Style.Builder().fromUri(mapStyleUrl!!)
-
-                    map.setStyle(styleBuilder) { style ->
-                        circleManager.value = CircleManager(mapView, map, style)
-
-                        val radius =
-                            density.run {
-                                (CIRCLE_SCALE_FACTOR * minOf(map.width, map.height)).toDp() / 2
-                            }
-
-                        circle.value =
-                            circleManager.value!!.create(
-                                createCircle(map.cameraPosition.target!!, radius)
-                            )
-                    }
+            onInit = { map, mapView ->
+                map.addOnCameraMoveListener {
+                    mapCenter.value = map.cameraPosition.target!!.asDomainLatLng()
                 }
 
-                mapView
-            },
-            update = { mapView ->
-                mapView.lifecycle = lifecycle
+                val cameraPos = currentLocation.value!!.asMapLibreLatLng()
 
+                map.cameraPosition =
+                    CameraPosition.Builder().target(cameraPos).zoom(DEFAULT_ZOOM).build()
+
+                map.setMinZoomPreference(MIN_ZOOM)
+                map.setMaxZoomPreference(MAX_ZOOM)
+
+                map.setAttributionMargin(density)
+
+                map.uiSettings.isRotateGesturesEnabled = false
+
+                map.getStyle { style ->
+                    circleManager.value = CircleManager(mapView, map, style)
+
+                    val radius =
+                        density.run {
+                            (CIRCLE_SCALE_FACTOR * minOf(map.width, map.height)).toDp() / 2
+                        }
+
+                    circle.value =
+                        circleManager.value!!.create(
+                            createCircle(map.cameraPosition.target!!, radius)
+                        )
+                }
+            },
+            updateMap = { map ->
                 val mapCenter = mapCenter.value
                 val circle = circle.value
 
                 val circleManager = circleManager.value
 
-                mapView.getMapAsync { map ->
-                    if (circle != null && mapCenter != null && circleManager != null) {
-                        circle.latLng = mapCenter.asMapLibreLatLng()
+                if (circle != null && mapCenter != null && circleManager != null) {
+                    circle.latLng = mapCenter.asMapLibreLatLng()
 
-                        circleManager.update(circle)
+                    circleManager.update(circle)
 
-                        onCircleUpdated.invoke(
-                            mapCenter to
-                                circle.circleRadius *
-                                    map.projection.getMetersPerPixelAtLatitude(mapCenter.latitude)
-                        )
-                    }
-
-                    mapStyleUrl?.let { map.updateMapStyleIfNeeded(it) }
+                    onCircleUpdated.invoke(
+                        mapCenter to
+                            circle.circleRadius *
+                                map.projection.getMetersPerPixelAtLatitude(mapCenter.latitude)
+                    )
                 }
             },
-            onRelease = { view -> view.lifecycle = null },
         )
     }
 }

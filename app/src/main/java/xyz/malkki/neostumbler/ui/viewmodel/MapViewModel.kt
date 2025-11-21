@@ -25,7 +25,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -34,7 +33,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.retryWhen
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.launch
 import okhttp3.Call
 import org.geohex.geohex4j.GeoHex
 import timber.log.Timber
@@ -44,10 +42,8 @@ import xyz.malkki.neostumbler.core.report.ReportWithLocation
 import xyz.malkki.neostumbler.data.location.LocationSource
 import xyz.malkki.neostumbler.data.reports.ReportProvider
 import xyz.malkki.neostumbler.data.settings.Settings
-import xyz.malkki.neostumbler.data.settings.getEnum
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.geography.LatLng
-import xyz.malkki.neostumbler.ui.map.MapTileSource
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel.HeatMapTile
 import xyz.malkki.neostumbler.utils.getTileJsonLayerIds
 
@@ -69,25 +65,6 @@ class MapViewModel(
     private val reportProvider: ReportProvider,
     private val locationSource: LocationSource,
 ) : AndroidViewModel(application) {
-    private val _httpClient = MutableStateFlow<Call.Factory?>(null)
-    val httpClient: StateFlow<Call.Factory?>
-        get() = _httpClient.asStateFlow()
-
-    val mapTileSourceUrl: Flow<String> =
-        settings
-            .getSnapshotFlow()
-            .map { prefs ->
-                val mapTileSource =
-                    prefs.getEnum(PreferenceKeys.MAP_TILE_SOURCE) ?: MapTileSource.DEFAULT
-
-                if (mapTileSource == MapTileSource.CUSTOM) {
-                    prefs.getString(PreferenceKeys.MAP_TILE_SOURCE_CUSTOM_URL) ?: ""
-                } else {
-                    mapTileSource.sourceUrl!!
-                }
-            }
-            .distinctUntilChanged()
-
     val coverageTileJsonUrl: Flow<String?> =
         settings.getSnapshotFlow().map { prefs ->
             val coverageLayerEnabled = prefs.getBoolean(PreferenceKeys.COVERAGE_LAYER_ENABLED)
@@ -100,9 +77,10 @@ class MapViewModel(
         }
 
     val coverageTileJsonLayerIds: Flow<List<String>> =
-        combine(coverageTileJsonUrl, httpClient.filterNotNull()) { a, b -> a to b }
-            .mapLatest { (coverageTileJsonUrl, httpClient) ->
-                coverageTileJsonUrl?.let { getTileJsonLayerIds(it, httpClient) } ?: emptyList()
+        coverageTileJsonUrl
+            .mapLatest { coverageTileJsonUrl ->
+                coverageTileJsonUrl?.let { getTileJsonLayerIds(it, httpClientProvider.await()) }
+                    ?: emptyList()
             }
             .retryWhen { cause, attempt ->
                 if (cause is IOException) {
@@ -174,13 +152,6 @@ class MapViewModel(
                 emptyFlow()
             }
         }
-
-    init {
-        viewModelScope.launch {
-            val httpClient = httpClientProvider.await()
-            _httpClient.value = httpClient
-        }
-    }
 
     fun setShowMyLocation(value: Boolean) {
         showMyLocation.value = value
