@@ -20,6 +20,7 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -203,11 +204,12 @@ fun SettingsScreen() {
                                         .background(
                                             color =
                                                 if (selectedSettingsGroup == it) {
-                                                    MaterialTheme.colorScheme.surfaceVariant
+                                                    MaterialTheme.colorScheme.primaryContainer
                                                 } else {
                                                     MaterialTheme.colorScheme.surface
                                                 }
                                         )
+                                        .padding(8.dp)
                             ) {
                                 Text(
                                     modifier = Modifier.align(Alignment.CenterStart),
@@ -223,6 +225,8 @@ fun SettingsScreen() {
 
                     AboutNeoStumbler()
                 }
+
+                VerticalDivider(modifier = Modifier.fillMaxHeight())
 
                 Column(modifier = Modifier.weight(1f).verticalScroll(rememberScrollState())) {
                     when (selectedSettingsGroup) {
@@ -242,13 +246,15 @@ fun SettingsScreen() {
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
 
-                ReportSettings()
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    ReportSettings()
 
-                ScanningSettings()
+                    ScanningSettings()
 
-                PrivacySettings()
+                    PrivacySettings()
 
-                OtherSettings()
+                    OtherSettings()
+                }
 
                 Spacer(modifier = Modifier.height(8.dp))
 

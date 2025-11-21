@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,24 +16,23 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun SettingsItem(title: String, description: String? = null, onClick: () -> Unit) {
-    Surface(
+    Column(
         modifier =
             Modifier.fillMaxWidth()
                 .wrapContentHeight()
                 .defaultMinSize(minHeight = 48.dp)
-                .clickable { onClick.invoke() }
+                .clickable { onClick.invoke() },
+        verticalArrangement = Arrangement.Center,
     ) {
-        Column(verticalArrangement = Arrangement.Center) {
-            Text(text = title, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            if (description != null) {
-                Text(
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Light,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    text = description,
-                )
-            }
+        Text(text = title, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        if (description != null) {
+            Text(
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Light,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                text = description,
+            )
         }
     }
 }
