@@ -34,6 +34,8 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -180,27 +182,38 @@ private fun ReportStats(modifier: Modifier = Modifier, reportsViewModel: Reports
         reportsLastUploaded.value?.let { formattedDate(it) }
             ?: stringResource(R.string.reports_last_uploaded_never)
 
-    Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-        FlowRow(
-            modifier = Modifier.weight(1.0f),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            maxItemsInEachRow = 2,
-        ) {
-            Text(
-                text = stringResource(R.string.reports_total, reportsTotal.value ?: 0),
-                style = MaterialTheme.typography.bodySmall,
-            )
-            Text(
-                text = stringResource(R.string.reports_not_uploaded, reportsNotUploaded.value ?: 0),
-                style = MaterialTheme.typography.bodySmall,
-            )
-            Text(
-                text = stringResource(R.string.reports_last_uploaded, lastUploadedText),
-                style = MaterialTheme.typography.bodySmall,
-            )
-        }
+    OutlinedCard(modifier = modifier.fillMaxWidth()) {
+        Surface(color = MaterialTheme.colorScheme.primaryContainer) {
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                FlowRow(
+                    modifier = Modifier.weight(1.0f),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    maxItemsInEachRow = 2,
+                ) {
+                    Text(
+                        text = stringResource(R.string.reports_total, reportsTotal.value ?: 0),
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                    Text(
+                        text =
+                            stringResource(
+                                R.string.reports_not_uploaded,
+                                reportsNotUploaded.value ?: 0,
+                            ),
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                    Text(
+                        text = stringResource(R.string.reports_last_uploaded, lastUploadedText),
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                }
 
-        ReportUploadButton(reportsViewModel = reportsViewModel)
+                ReportUploadButton(reportsViewModel = reportsViewModel)
+            }
+        }
     }
 }
 
