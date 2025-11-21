@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
@@ -91,7 +92,8 @@ fun MapSettingsButton(modifier: Modifier, settings: Settings = koinInject()) {
         colors = IconButtonDefaults.filledTonalIconButtonColors(),
     ) {
         Icon(
-            painter = painterResource(id = R.drawable.layers_18),
+            modifier = Modifier.requiredSize(18.dp),
+            painter = painterResource(id = R.drawable.layers_24px),
             contentDescription = stringResource(id = R.string.map_tile_source),
         )
     }

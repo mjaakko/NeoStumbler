@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
@@ -15,21 +16,27 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import xyz.malkki.neostumbler.R
 
+private val WARNING_SIZE = 14.sp
+
 @Composable
 fun Warning(@StringRes warningText: Int) {
+    val density = LocalDensity.current
+
     Row(
         modifier = Modifier.wrapContentSize().padding(top = 2.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Icon(
-            painter = painterResource(id = R.drawable.warning_14sp),
+            modifier = Modifier.requiredSize(density.run { WARNING_SIZE.toDp() }),
+            painter = painterResource(id = R.drawable.warning_24px),
             tint = MaterialTheme.colorScheme.onErrorContainer,
             contentDescription = stringResource(id = R.string.warning_icon_description),
         )
@@ -38,7 +45,7 @@ fun Warning(@StringRes warningText: Int) {
         Text(
             modifier = Modifier.fillMaxWidth().wrapContentHeight(),
             text = stringResource(id = warningText),
-            style = MaterialTheme.typography.labelSmall.copy(fontSize = 14.sp),
+            style = MaterialTheme.typography.labelSmall.copy(fontSize = WARNING_SIZE),
             color = MaterialTheme.colorScheme.onErrorContainer,
         )
     }

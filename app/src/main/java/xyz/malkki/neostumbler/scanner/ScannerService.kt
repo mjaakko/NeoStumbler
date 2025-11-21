@@ -439,7 +439,7 @@ class ScannerService : Service() {
                 StumblerApplication.STUMBLING_NOTIFICATION_CHANNEL_ID,
             )
             .apply {
-                setSmallIcon(R.drawable.radar_24)
+                setSmallIcon(R.drawable.radar_24px)
 
                 setContentTitle(
                     applicationContext.getTextCompat(R.string.notification_wireless_scanning_title)
@@ -491,7 +491,7 @@ class ScannerService : Service() {
                 setContentIntent(mainActivityIntent)
                 addAction(
                     NotificationCompat.Action(
-                        R.drawable.stop_24,
+                        R.drawable.stop_24px,
                         applicationContext.getTextCompat(R.string.stop),
                         stopScanningIntent,
                     )

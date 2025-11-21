@@ -170,7 +170,7 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) :
             .setContentTitle(
                 applicationContext.getTextCompat(R.string.notification_sending_reports)
             )
-            .setSmallIcon(R.drawable.sync_24)
+            .setSmallIcon(R.drawable.sync_24px)
             .build()
     }
 }

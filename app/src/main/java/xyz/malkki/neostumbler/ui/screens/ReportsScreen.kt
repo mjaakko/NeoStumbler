@@ -1,5 +1,6 @@
 package xyz.malkki.neostumbler.ui.screens
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,10 +26,6 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Bluetooth
-import androidx.compose.material.icons.filled.CellTower
-import androidx.compose.material.icons.filled.Wifi
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.HorizontalDivider
@@ -50,12 +47,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -397,7 +393,7 @@ private fun Report(
             Spacer(modifier = Modifier.weight(1.0f))
 
             EmitterCount(
-                icon = Icons.Default.Wifi,
+                iconId = R.drawable.wifi_24px,
                 iconDescription = stringResource(R.string.wifi_icon_description),
                 count = report.wifiAccessPointCount,
             )
@@ -405,7 +401,7 @@ private fun Report(
             Spacer(modifier = Modifier.width(2.dp))
 
             EmitterCount(
-                icon = Icons.Default.CellTower,
+                iconId = R.drawable.cell_tower_24px,
                 iconDescription = stringResource(R.string.cell_tower_icon_description),
                 count = report.cellTowerCount,
             )
@@ -413,7 +409,7 @@ private fun Report(
             Spacer(modifier = Modifier.width(2.dp))
 
             EmitterCount(
-                icon = Icons.Default.Bluetooth,
+                iconId = R.drawable.bluetooth_24px,
                 iconDescription = stringResource(R.string.bluetooth_icon_description),
                 count = report.bluetoothBeaconCount,
             )
@@ -424,7 +420,7 @@ private fun Report(
 }
 
 @Composable
-private fun EmitterCount(icon: ImageVector, iconDescription: String, count: Int) {
+private fun EmitterCount(@DrawableRes iconId: Int, iconDescription: String, count: Int) {
     val decimalFormat = remember { DecimalFormat("0") }
 
     val localDensity = LocalDensity.current
@@ -436,7 +432,7 @@ private fun EmitterCount(icon: ImageVector, iconDescription: String, count: Int)
         horizontalArrangement = Arrangement.Absolute.SpaceBetween,
     ) {
         Icon(
-            painter = rememberVectorPainter(icon),
+            painter = painterResource(iconId),
             contentDescription = iconDescription,
             modifier = Modifier.requiredSize(textHeightDp),
         )

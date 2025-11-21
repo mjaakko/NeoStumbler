@@ -13,10 +13,6 @@ import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.Place
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -30,7 +26,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -151,13 +146,10 @@ class MainActivity : AppCompatActivity() {
     @Composable
     private fun getTabs(): List<Tab> {
         return listOf(
-            Tab(icon = rememberVectorPainter(Icons.Filled.Place), navKey = MapNavKey),
-            Tab(
-                icon = rememberVectorPainter(Icons.AutoMirrored.Default.List),
-                navKey = ReportsNavKey,
-            ),
-            Tab(icon = painterResource(id = R.drawable.statistics_24), navKey = StatisticsNavKey),
-            Tab(icon = rememberVectorPainter(Icons.Filled.Settings), navKey = SettingsNavKey),
+            Tab(icon = painterResource(id = R.drawable.map_24px), navKey = MapNavKey),
+            Tab(icon = painterResource(id = R.drawable.list_24px), navKey = ReportsNavKey),
+            Tab(icon = painterResource(id = R.drawable.monitoring_24px), navKey = StatisticsNavKey),
+            Tab(icon = painterResource(id = R.drawable.settings_24px), navKey = SettingsNavKey),
         )
     }
 
