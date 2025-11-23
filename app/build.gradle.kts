@@ -300,7 +300,7 @@ dependencies {
     debugImplementation(libs.androidx.composeUiTestManifest)
 
     implementation(libs.androidx.composeMaterial3)
-    implementation(libs.androidx.composeMaterialIconsExtended)
+    implementation(libs.androidx.composeMaterial3AdaptiveNavigationSuite)
 
     androidTestImplementation(libs.androidx.composeUiTestJunit)
 

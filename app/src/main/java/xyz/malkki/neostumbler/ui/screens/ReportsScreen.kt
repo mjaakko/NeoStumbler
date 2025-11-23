@@ -1,5 +1,6 @@
 package xyz.malkki.neostumbler.ui.screens
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,21 +19,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Bluetooth
-import androidx.compose.material.icons.filled.CellTower
-import androidx.compose.material.icons.filled.Wifi
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -47,12 +47,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -61,12 +60,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import java.text.DecimalFormat
+import kotlinx.coroutines.flow.StateFlow
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.core.report.ReportWithStats
 import xyz.malkki.neostumbler.data.geocoder.Geocoder
+import xyz.malkki.neostumbler.data.location.GpsStatusSource
 import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.data.settings.getEnumFlow
 import xyz.malkki.neostumbler.extensions.defaultLocale
@@ -97,7 +98,7 @@ fun ReportsScreen(viewModel: ReportsViewModel = koinViewModel()) {
 
     MLSWarningDialog()
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.widthIn(max = 800.dp).fillMaxSize()) {
         Column(
             modifier = Modifier.padding(vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -124,11 +125,19 @@ fun ReportsScreen(viewModel: ReportsViewModel = koinViewModel()) {
 }
 
 @Composable
-private fun ScanningControllerCard(modifier: Modifier = Modifier) {
+private fun ScanningControllerCard(
+    modifier: Modifier = Modifier,
+    scanningActiveFlow: StateFlow<Boolean> = ScannerService.serviceRunning,
+    reporsCreatedFlow: StateFlow<Int> = ScannerService.reportsCreated,
+    gpsStatusSource: GpsStatusSource = koinInject(),
+) {
     val context = LocalContext.current
 
-    val scanningActive by ScannerService.serviceRunning.collectAsStateWithLifecycle()
-    val reportsCreated by ScannerService.reportsCreated.collectAsStateWithLifecycle()
+    val scanningActive by scanningActiveFlow.collectAsStateWithLifecycle()
+    val reportsCreated by reporsCreatedFlow.collectAsStateWithLifecycle()
+
+    val gpsAvailable by
+        gpsStatusSource.isGpsAvailable().collectAsStateWithLifecycle(initialValue = false)
 
     ElevatedCard(
         modifier = modifier.wrapContentHeight().sizeIn(maxWidth = 400.dp).fillMaxWidth(),
@@ -163,7 +172,10 @@ private fun ScanningControllerCard(modifier: Modifier = Modifier) {
                 )
             }
 
-            GpsStatus()
+            if (gpsAvailable) {
+                // Only show GPS status when the device has a GPS to avoid confusion
+                GpsStatus()
+            }
         }
     }
 }
@@ -179,27 +191,38 @@ private fun ReportStats(modifier: Modifier = Modifier, reportsViewModel: Reports
         reportsLastUploaded.value?.let { formattedDate(it) }
             ?: stringResource(R.string.reports_last_uploaded_never)
 
-    Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-        FlowRow(
-            modifier = Modifier.weight(1.0f),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            maxItemsInEachRow = 2,
-        ) {
-            Text(
-                text = stringResource(R.string.reports_total, reportsTotal.value ?: 0),
-                style = MaterialTheme.typography.bodySmall,
-            )
-            Text(
-                text = stringResource(R.string.reports_not_uploaded, reportsNotUploaded.value ?: 0),
-                style = MaterialTheme.typography.bodySmall,
-            )
-            Text(
-                text = stringResource(R.string.reports_last_uploaded, lastUploadedText),
-                style = MaterialTheme.typography.bodySmall,
-            )
-        }
+    OutlinedCard(modifier = modifier.fillMaxWidth()) {
+        Surface(color = MaterialTheme.colorScheme.primaryContainer) {
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                FlowRow(
+                    modifier = Modifier.weight(1.0f),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    maxItemsInEachRow = 2,
+                ) {
+                    Text(
+                        text = stringResource(R.string.reports_total, reportsTotal.value ?: 0),
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                    Text(
+                        text =
+                            stringResource(
+                                R.string.reports_not_uploaded,
+                                reportsNotUploaded.value ?: 0,
+                            ),
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                    Text(
+                        text = stringResource(R.string.reports_last_uploaded, lastUploadedText),
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                }
 
-        ReportUploadButton(reportsViewModel = reportsViewModel)
+                ReportUploadButton(reportsViewModel = reportsViewModel)
+            }
+        }
     }
 }
 
@@ -383,7 +406,7 @@ private fun Report(
             Spacer(modifier = Modifier.weight(1.0f))
 
             EmitterCount(
-                icon = Icons.Default.Wifi,
+                iconId = R.drawable.wifi_24px,
                 iconDescription = stringResource(R.string.wifi_icon_description),
                 count = report.wifiAccessPointCount,
             )
@@ -391,7 +414,7 @@ private fun Report(
             Spacer(modifier = Modifier.width(2.dp))
 
             EmitterCount(
-                icon = Icons.Default.CellTower,
+                iconId = R.drawable.cell_tower_24px,
                 iconDescription = stringResource(R.string.cell_tower_icon_description),
                 count = report.cellTowerCount,
             )
@@ -399,7 +422,7 @@ private fun Report(
             Spacer(modifier = Modifier.width(2.dp))
 
             EmitterCount(
-                icon = Icons.Default.Bluetooth,
+                iconId = R.drawable.bluetooth_24px,
                 iconDescription = stringResource(R.string.bluetooth_icon_description),
                 count = report.bluetoothBeaconCount,
             )
@@ -410,7 +433,7 @@ private fun Report(
 }
 
 @Composable
-private fun EmitterCount(icon: ImageVector, iconDescription: String, count: Int) {
+private fun EmitterCount(@DrawableRes iconId: Int, iconDescription: String, count: Int) {
     val decimalFormat = remember { DecimalFormat("0") }
 
     val localDensity = LocalDensity.current
@@ -422,7 +445,7 @@ private fun EmitterCount(icon: ImageVector, iconDescription: String, count: Int)
         horizontalArrangement = Arrangement.Absolute.SpaceBetween,
     ) {
         Icon(
-            painter = rememberVectorPainter(icon),
+            painter = painterResource(iconId),
             contentDescription = iconDescription,
             modifier = Modifier.requiredSize(textHeightDp),
         )

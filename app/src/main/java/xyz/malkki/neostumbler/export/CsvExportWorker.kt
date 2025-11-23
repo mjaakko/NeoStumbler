@@ -40,7 +40,7 @@ class CsvExportWorker(appContext: Context, private val params: WorkerParameters)
             .setLocalOnly(true)
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
             .setContentTitle(applicationContext.getTextCompat(R.string.notification_exporting_data))
-            .setSmallIcon(R.drawable.upload_file_24)
+            .setSmallIcon(R.drawable.upload_24px)
             .build()
     }
 

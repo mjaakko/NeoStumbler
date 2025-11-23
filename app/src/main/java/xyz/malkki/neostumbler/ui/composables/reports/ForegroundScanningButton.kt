@@ -5,9 +5,6 @@ import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.os.Build
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -17,8 +14,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -218,13 +215,13 @@ private fun StartStopScanningButton(
             }
         val icon =
             if (isScanning) {
-                Icons.Default.Stop
+                R.drawable.stop_24px
             } else {
-                Icons.Default.PlayArrow
+                R.drawable.play_arrow_24px
             }
 
         Icon(
-            painter = rememberVectorPainter(icon),
+            painter = painterResource(id = icon),
             contentDescription = stringResource(stringResId),
             modifier = Modifier.size(36.dp),
         )

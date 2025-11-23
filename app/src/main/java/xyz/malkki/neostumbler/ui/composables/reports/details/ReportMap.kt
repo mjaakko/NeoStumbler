@@ -2,15 +2,12 @@ package xyz.malkki.neostumbler.ui.composables.reports.details
 
 import androidx.annotation.ColorInt
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
@@ -18,31 +15,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import java.io.IOException
 import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.retryWhen
 import okhttp3.Call
 import org.koin.compose.koinInject
-import org.maplibre.android.MapLibre
 import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.camera.CameraUpdateFactory
 import org.maplibre.android.geometry.LatLngBounds
 import org.maplibre.android.maps.MapLibreMap
 import org.maplibre.android.maps.Projection
-import org.maplibre.android.maps.Style
-import org.maplibre.android.module.http.HttpRequestUtil
 import org.maplibre.android.plugins.annotation.CircleManager
 import org.maplibre.android.plugins.annotation.CircleOptions
 import org.maplibre.android.plugins.annotation.LineManager
@@ -50,10 +39,8 @@ import org.maplibre.android.plugins.annotation.LineOptions
 import org.maplibre.android.utils.ColorUtils
 import timber.log.Timber
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.core.report.Report
 import xyz.malkki.neostumbler.data.settings.Settings
-import xyz.malkki.neostumbler.data.settings.getEnum
 import xyz.malkki.neostumbler.domain.asMapLibreLatLng
 import xyz.malkki.neostumbler.geography.LatLng
 import xyz.malkki.neostumbler.ichnaea.Geolocate
@@ -65,142 +52,84 @@ import xyz.malkki.neostumbler.ichnaea.dto.GeolocateResponseDto
 import xyz.malkki.neostumbler.ichnaea.dto.WifiAccessPointDto
 import xyz.malkki.neostumbler.ichnaea.dto.latLng
 import xyz.malkki.neostumbler.ichnaea.mapper.getIchnaeaParams
-import xyz.malkki.neostumbler.ui.composables.shared.CenteredCircularProgressIndicator
-import xyz.malkki.neostumbler.ui.map.LifecycleAwareMapView
-import xyz.malkki.neostumbler.ui.map.MapTileSource
-import xyz.malkki.neostumbler.ui.map.setAttributionMargin
-import xyz.malkki.neostumbler.ui.map.updateMapStyleIfNeeded
+import xyz.malkki.neostumbler.ui.composables.shared.ComposableMap
 
 private const val MAP_ZOOM_LEVEL = 15.0
 
-private fun Settings.mapStyleUrl(): Flow<String> =
-    getSnapshotFlow().map { prefs ->
-        val tileSource = prefs.getEnum(PreferenceKeys.MAP_TILE_SOURCE) ?: MapTileSource.DEFAULT
-
-        if (tileSource == MapTileSource.CUSTOM) {
-            prefs.getString(PreferenceKeys.MAP_TILE_SOURCE_CUSTOM_URL) ?: ""
-        } else {
-            tileSource.sourceUrl!!
-        }
-    }
-
 @Composable
-fun ReportMap(
-    report: Report,
-    modifier: Modifier = Modifier,
-    settings: Settings = koinInject(),
-    httpClientProvider: Deferred<Call.Factory> = koinInject(),
-) {
-    val lifecycle = LocalLifecycleOwner.current.lifecycle
-
-    val density = LocalDensity.current
-
-    val mapStyleUrl by settings.mapStyleUrl().collectAsState(initial = null)
-
-    val httpClient = produceState<Call.Factory?>(null) { value = httpClientProvider.await() }
-
+fun ReportMap(report: Report, modifier: Modifier = Modifier) {
     val estimatedLocation = getEstimatedReportLocation(report)
 
-    if (mapStyleUrl == null || httpClient.value == null) {
-        CenteredCircularProgressIndicator(modifier = modifier.fillMaxWidth().height(150.dp))
-    } else {
-        val circleManager = remember { mutableStateOf<CircleManager?>(null) }
+    val circleManager = remember { mutableStateOf<CircleManager?>(null) }
 
-        val lineManager = remember { mutableStateOf<LineManager?>(null) }
+    val lineManager = remember { mutableStateOf<LineManager?>(null) }
 
-        Box(modifier.fillMaxWidth().height(150.dp), contentAlignment = Alignment.TopCenter) {
-            AndroidView(
-                modifier = Modifier.fillMaxSize(),
-                factory = { context ->
-                    MapLibre.getInstance(context)
-                    HttpRequestUtil.setOkHttpClient(httpClient.value)
+    Box(modifier.fillMaxWidth().height(150.dp), contentAlignment = Alignment.TopCenter) {
+        ComposableMap(
+            onInit = { map, mapView ->
+                val cameraPos = report.position.position.latLng.asMapLibreLatLng()
 
-                    val mapView = LifecycleAwareMapView(context)
-                    mapView.localizeLabelNames()
+                map.cameraPosition =
+                    CameraPosition.Builder().target(cameraPos).zoom(MAP_ZOOM_LEVEL).build()
 
-                    mapView.getMapAsync { map ->
-                        val cameraPos = report.position.position.latLng.asMapLibreLatLng()
+                map.uiSettings.setAllGesturesEnabled(false)
 
-                        map.cameraPosition =
-                            CameraPosition.Builder().target(cameraPos).zoom(MAP_ZOOM_LEVEL).build()
+                map.getStyle { style ->
+                    lineManager.value = LineManager(mapView, map, style)
 
-                        map.setAttributionMargin(density)
+                    circleManager.value = CircleManager(mapView, map, style)
+                }
+            },
+            updateMap = { map ->
+                val lineManager = lineManager.value
+                val circleManager = circleManager.value
 
-                        map.uiSettings.setAllGesturesEnabled(false)
+                if (circleManager != null && lineManager != null) {
+                    circleManager.deleteAll()
 
-                        val styleBuilder = Style.Builder().fromUri(mapStyleUrl!!)
+                    if (estimatedLocation.value != null) {
+                        val actualLocationLatLng = report.position.position.latLng
+                        val estimatedLocationLatLng = estimatedLocation.value!!.location.latLng
 
-                        map.setStyle(styleBuilder) { style ->
-                            lineManager.value = LineManager(mapView, map, style)
-
-                            circleManager.value = CircleManager(mapView, map, style)
-                        }
-                    }
-
-                    mapView
-                },
-                update = { mapView ->
-                    mapView.lifecycle = lifecycle
-
-                    val lineManager = lineManager.value
-
-                    val circleManager = circleManager.value
-
-                    mapView.getMapAsync { map ->
-                        mapStyleUrl?.let { map.updateMapStyleIfNeeded(it) }
-
-                        if (circleManager != null && lineManager != null) {
-                            circleManager.deleteAll()
-
-                            if (estimatedLocation.value != null) {
-                                val actualLocationLatLng = report.position.position.latLng
-                                val estimatedLocationLatLng =
-                                    estimatedLocation.value!!.location.latLng
-
-                                map.setCameraPositionToContain(
-                                    listOf(
-                                        actualLocationLatLng to
-                                            (report.position.position.accuracy ?: 0.0),
-                                        estimatedLocationLatLng to
-                                            estimatedLocation.value!!.accuracy,
-                                    )
-                                )
-
-                                circleManager.drawLocationCircle(
-                                    projection = map.projection,
-                                    center = estimatedLocation.value!!.location.latLng,
-                                    radius = estimatedLocation.value!!.accuracy,
-                                    color = Color.Magenta.toArgb(),
-                                )
-
-                                lineManager.drawLineBetweenActualAndEstimatedLocation(
-                                    actual = actualLocationLatLng,
-                                    estimated = estimatedLocationLatLng,
-                                )
-                            }
-
-                            circleManager.drawLocationCircle(
-                                projection = map.projection,
-                                center =
-                                    LatLng(
-                                        report.position.position.latitude,
-                                        report.position.position.longitude,
-                                    ),
-                                radius = report.position.position.accuracy ?: 0.0,
-                                color = Color.Blue.toArgb(),
+                        map.setCameraPositionToContain(
+                            listOf(
+                                actualLocationLatLng to (report.position.position.accuracy ?: 0.0),
+                                estimatedLocationLatLng to estimatedLocation.value!!.accuracy,
                             )
-                        }
-                    }
-                },
-                onRelease = { view -> view.lifecycle = null },
-            )
+                        )
 
-            if (estimatedLocation.value != null) {
-                EstimatedDistance(
-                    reportLocation = report.position.position.latLng,
-                    estimatedLocation = estimatedLocation.value!!.location.latLng,
-                )
-            }
+                        circleManager.drawLocationCircle(
+                            projection = map.projection,
+                            center = estimatedLocation.value!!.location.latLng,
+                            radius = estimatedLocation.value!!.accuracy,
+                            color = Color.Magenta.toArgb(),
+                        )
+
+                        lineManager.drawLineBetweenActualAndEstimatedLocation(
+                            actual = actualLocationLatLng,
+                            estimated = estimatedLocationLatLng,
+                        )
+                    }
+
+                    circleManager.drawLocationCircle(
+                        projection = map.projection,
+                        center =
+                            LatLng(
+                                report.position.position.latitude,
+                                report.position.position.longitude,
+                            ),
+                        radius = report.position.position.accuracy ?: 0.0,
+                        color = Color.Blue.toArgb(),
+                    )
+                }
+            },
+        )
+
+        if (estimatedLocation.value != null) {
+            EstimatedDistance(
+                reportLocation = report.position.position.latLng,
+                estimatedLocation = estimatedLocation.value!!.location.latLng,
+            )
         }
     }
 }

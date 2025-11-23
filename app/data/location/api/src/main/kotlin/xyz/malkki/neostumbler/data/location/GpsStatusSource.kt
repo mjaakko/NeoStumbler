@@ -4,6 +4,8 @@ import kotlinx.coroutines.flow.Flow
 
 data class GpsStatus(val satellitesUsedInFix: Int, val satellitesTotal: Int)
 
-fun interface GpsStatusSource {
+interface GpsStatusSource {
     fun getGpsStatusFlow(): Flow<GpsStatus?>
+
+    fun isGpsAvailable(): Flow<Boolean>
 }

@@ -6,34 +6,31 @@ import android.location.Location
 import androidx.annotation.ColorInt
 import androidx.collection.forEach
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.LocationSearching
-import androidx.compose.material.icons.filled.MyLocation
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.graphics.ColorUtils
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.gson.JsonPrimitive
+import kotlin.math.abs
 import org.koin.androidx.compose.koinViewModel
-import org.maplibre.android.MapLibre
 import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.geometry.LatLng
 import org.maplibre.android.gestures.MoveGestureDetector
@@ -42,7 +39,6 @@ import org.maplibre.android.location.LocationComponentConstants
 import org.maplibre.android.location.modes.RenderMode
 import org.maplibre.android.maps.MapLibreMap
 import org.maplibre.android.maps.Style
-import org.maplibre.android.module.http.HttpRequestUtil
 import org.maplibre.android.plugins.annotation.Fill
 import org.maplibre.android.plugins.annotation.FillManager
 import org.maplibre.android.plugins.annotation.FillOptions
@@ -56,11 +52,9 @@ import xyz.malkki.neostumbler.domain.asDomainLatLng
 import xyz.malkki.neostumbler.domain.asMapLibreLatLng
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.ui.composables.map.MapSettingsButton
+import xyz.malkki.neostumbler.ui.composables.shared.ComposableMap
 import xyz.malkki.neostumbler.ui.composables.shared.KeepScreenOn
 import xyz.malkki.neostumbler.ui.composables.shared.PermissionsDialog
-import xyz.malkki.neostumbler.ui.map.LifecycleAwareMapView
-import xyz.malkki.neostumbler.ui.map.setAttributionMargin
-import xyz.malkki.neostumbler.ui.map.updateMapStyleIfNeeded
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
 
 @ColorInt private const val HEAT_LOW: Int = 0x78d278ff
@@ -74,16 +68,12 @@ private const val COVERAGE_OPACITY = 0.4f
 private const val MIN_ZOOM = 3.0
 private const val MAX_ZOOM = 15.0
 
-// This method is long and complex because we are mixing Compose with Views
+// This method is long because we are mixing Compose with Views
 // FIXME: try to break this into smaller pieces and then remove these suppressions
-@Suppress("LongMethod", "CyclomaticComplexMethod")
+@Suppress("LongMethod")
 @Composable
 fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
     val context = LocalContext.current
-
-    val lifecycle = LocalLifecycleOwner.current.lifecycle
-
-    val density = LocalDensity.current
 
     val showPermissionDialog = rememberSaveable { mutableStateOf(false) }
 
@@ -91,24 +81,24 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
 
     val fillManager = remember { mutableStateOf<FillManager?>(null) }
 
-    val httpClient = mapViewModel.httpClient.collectAsState(initial = null)
-
-    val mapTileSourceUrl = mapViewModel.mapTileSourceUrl.collectAsState(initial = null)
-
-    val coverageTileJsonUrl = mapViewModel.coverageTileJsonUrl.collectAsState(initial = null)
+    val coverageTileJsonUrl =
+        mapViewModel.coverageTileJsonUrl.collectAsStateWithLifecycle(initialValue = null)
 
     val coverageTileJsonLayerIds =
-        mapViewModel.coverageTileJsonLayerIds.collectAsState(initial = emptyList<String>())
+        mapViewModel.coverageTileJsonLayerIds.collectAsStateWithLifecycle(
+            initialValue = emptyList()
+        )
 
-    val latestReportPosition = mapViewModel.latestReportPosition.collectAsState(initial = null)
+    val heatMapTiles =
+        mapViewModel.heatMapTiles.collectAsStateWithLifecycle(initialValue = emptyMap())
 
-    val heatMapTiles = mapViewModel.heatMapTiles.collectAsState(initial = emptyMap())
-
-    val myLocation =
+    val myLocation by
         mapViewModel.myLocation.collectAsStateWithLifecycle(
             initialValue = null,
             minActiveState = Lifecycle.State.RESUMED,
         )
+
+    val mapViewport by mapViewModel.mapViewport.collectAsStateWithLifecycle(initialValue = null)
 
     if (showPermissionDialog.value) {
         PermissionsDialog(
@@ -135,149 +125,87 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
     KeepScreenOn()
 
     Box(modifier = Modifier.fillMaxSize()) {
-        if (mapTileSourceUrl.value != null && httpClient.value != null) {
-            AndroidView(
-                modifier = Modifier.fillMaxSize(),
-                factory = { context ->
-                    MapLibre.getInstance(context)
-                    HttpRequestUtil.setOkHttpClient(httpClient.value)
+        ComposableMap(
+            modifier = Modifier.fillMaxSize(),
+            onInit = { map, mapView ->
+                map.addOnMoveListener(OnMapMoveBeginListener { trackMyLocation.value = false })
 
-                    val mapView = LifecycleAwareMapView(context)
-                    mapView.context.registerComponentCallbacks(mapView.componentCallback)
+                map.addOnCameraMoveListener {
+                    mapViewModel.setMapViewport(
+                        center = map.cameraPosition.target!!.asDomainLatLng(),
+                        zoom = map.cameraPosition.zoom,
+                    )
 
-                    mapView.localizeLabelNames()
+                    mapViewModel.setMapBounds(
+                        minLatitude = map.projection.visibleRegion.latLngBounds.latitudeSouth,
+                        maxLatitude = map.projection.visibleRegion.latLngBounds.latitudeNorth,
+                        minLongitude = map.projection.visibleRegion.latLngBounds.longitudeWest,
+                        maxLongitude = map.projection.visibleRegion.latLngBounds.longitudeEast,
+                    )
+                }
 
-                    mapView.getMapAsync { map ->
-                        map.addOnMoveListener(
-                            object : MapLibreMap.OnMoveListener {
-                                override fun onMoveBegin(p0: MoveGestureDetector) {
-                                    trackMyLocation.value = false
-                                }
+                map.setMinZoomPreference(MIN_ZOOM)
+                map.setMaxZoomPreference(MAX_ZOOM)
 
-                                override fun onMove(p0: MoveGestureDetector) {}
+                map.uiSettings.isRotateGesturesEnabled = false
 
-                                override fun onMoveEnd(p0: MoveGestureDetector) {}
-                            }
+                map.getStyle { style ->
+                    map.locationComponent.activateLocationComponent(
+                        LocationComponentActivationOptions.builder(context, style)
+                            // Set location engine to null, because we provide locations by
+                            // ourself
+                            .locationEngine(null)
+                            .useDefaultLocationEngine(false)
+                            .useSpecializedLocationLayer(true)
+                            .build()
+                    )
+                    @SuppressLint("MissingPermission")
+                    map.locationComponent.isLocationComponentEnabled = true
+                    map.locationComponent.renderMode = RenderMode.COMPASS
+
+                    fillManager.value =
+                        FillManager(
+                            mapView,
+                            map,
+                            style,
+                            LocationComponentConstants.SHADOW_LAYER,
+                            null,
                         )
+                }
+            },
+            updateMap = { map ->
+                // Only update the camera position when it's at the default location to avoid jank
+                if (map.cameraPosition.target?.isCloseToOrigin() == true) {
+                    val (center, zoom) = mapViewport!!
 
-                        map.addOnCameraMoveListener {
-                            val mapCenter = map.cameraPosition.target!!.asDomainLatLng()
+                    map.cameraPosition =
+                        CameraPosition.Builder()
+                            .target(center.asMapLibreLatLng())
+                            .zoom(zoom)
+                            .build()
+                }
 
-                            mapViewModel.setMapCenter(mapCenter)
-                            mapViewModel.setZoom(map.cameraPosition.zoom)
+                if (myLocation != null && map.locationComponent.isLocationComponentActivated) {
+                    map.locationComponent.forceLocationUpdate(myLocation!!.asPlatformLocation())
 
-                            mapViewModel.setMapBounds(
-                                minLatitude =
-                                    map.projection.visibleRegion.latLngBounds.latitudeSouth,
-                                maxLatitude =
-                                    map.projection.visibleRegion.latLngBounds.latitudeNorth,
-                                minLongitude =
-                                    map.projection.visibleRegion.latLngBounds.longitudeWest,
-                                maxLongitude =
-                                    map.projection.visibleRegion.latLngBounds.longitudeEast,
-                            )
-                        }
-
-                        map.setMinZoomPreference(MIN_ZOOM)
-                        map.setMaxZoomPreference(MAX_ZOOM)
-
-                        map.setAttributionMargin(density)
-
-                        map.uiSettings.isRotateGesturesEnabled = false
-
-                        val styleBuilder = Style.Builder().fromUri(mapTileSourceUrl.value!!)
-
-                        map.setStyle(styleBuilder) { style ->
-                            map.locationComponent.activateLocationComponent(
-                                LocationComponentActivationOptions.builder(context, style)
-                                    // Set location engine to null, because we provide locations by
-                                    // ourself
-                                    .locationEngine(null)
-                                    .useDefaultLocationEngine(false)
-                                    .useSpecializedLocationLayer(true)
-                                    .build()
-                            )
-                            @SuppressLint("MissingPermission")
-                            map.locationComponent.isLocationComponentEnabled = true
-                            map.locationComponent.renderMode = RenderMode.COMPASS
-
-                            fillManager.value =
-                                FillManager(
-                                    mapView,
-                                    map,
-                                    style,
-                                    LocationComponentConstants.SHADOW_LAYER,
-                                    null,
-                                )
-                        }
-                    }
-
-                    mapView
-                },
-                update = { mapView ->
-                    mapView.lifecycle = lifecycle
-
-                    mapView.getMapAsync { map ->
-                        // Call repeatedly in update() because latestReportPosition may not be
-                        // available in factory()
-                        val target =
-                            if (mapViewModel.mapCenter.value.isOrigin()) {
-                                latestReportPosition.value
-                            } else {
-                                mapViewModel.mapCenter.value
-                            }
+                    if (trackMyLocation.value) {
                         map.cameraPosition =
                             CameraPosition.Builder()
-                                .target(target?.asMapLibreLatLng())
-                                .zoom(mapViewModel.zoom.value)
+                                .target(myLocation!!.position.latLng.asMapLibreLatLng())
                                 .build()
-
-                        if (
-                            myLocation.value != null &&
-                                map.locationComponent.isLocationComponentActivated
-                        ) {
-                            map.locationComponent.forceLocationUpdate(
-                                myLocation.value!!.asPlatformLocation()
-                            )
-
-                            if (trackMyLocation.value) {
-                                map.cameraPosition =
-                                    CameraPosition.Builder()
-                                        .target(
-                                            myLocation.value!!.position.latLng.asMapLibreLatLng()
-                                        )
-                                        .build()
-                            }
-                        }
-
-                        mapTileSourceUrl.value?.let { map.updateMapStyleIfNeeded(it) }
-
-                        addCoverage(map, coverageTileJsonUrl.value, coverageTileJsonLayerIds.value)
                     }
+                }
 
-                    fillManager.value?.let { createHeatMapFill(it, heatMapTiles.value) }
-                },
-                onRelease = { view ->
-                    view.context.unregisterComponentCallbacks(view.componentCallback)
+                addCoverage(map, coverageTileJsonUrl.value, coverageTileJsonLayerIds.value)
 
-                    view.getMapAsync { map ->
-                        // No permission is needed to disable the location component
-                        @SuppressLint("MissingPermission")
-                        try {
-                            // The location component has to be disabled before destroying the view
-                            map.locationComponent.isLocationComponentEnabled = false
-                        } catch (_: IllegalStateException) {
-                            // And if disabling the location component fails, it's safe to destroy
-                            // the view
-                        }
-                    }
+                fillManager.value?.let { createHeatMapFill(it, heatMapTiles.value) }
+            },
+        )
 
-                    view.lifecycle = null
-                },
-            )
-        }
-
-        Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+        Box(
+            modifier =
+                Modifier.fillMaxSize().padding(16.dp).windowInsetsPadding(WindowInsets.systemBars)
+        ) {
             MapSettingsButton(modifier = Modifier.size(32.dp).align(Alignment.TopEnd))
 
             FilledIconButton(
@@ -298,15 +226,32 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                 Icon(
                     painter =
                         if (trackMyLocation.value) {
-                            rememberVectorPainter(Icons.Default.MyLocation)
+                            painterResource(id = R.drawable.my_location_24px)
                         } else {
-                            rememberVectorPainter(Icons.Default.LocationSearching)
+                            painterResource(id = R.drawable.location_searching_24px)
                         },
                     contentDescription = stringResource(id = R.string.show_my_location),
                 )
             }
         }
     }
+}
+
+private class OnMapMoveBeginListener(private val onMoveBegin: () -> Unit) :
+    MapLibreMap.OnMoveListener {
+    override fun onMoveBegin(p0: MoveGestureDetector) {
+        onMoveBegin()
+    }
+
+    override fun onMove(p0: MoveGestureDetector) {}
+
+    override fun onMoveEnd(p0: MoveGestureDetector) {}
+}
+
+private const val MAX_COORDINATE_DIFF = 0.00001
+
+private fun LatLng.isCloseToOrigin(): Boolean {
+    return abs(latitude) < MAX_COORDINATE_DIFF && abs(longitude) < MAX_COORDINATE_DIFF
 }
 
 private fun PositionObservation.asPlatformLocation(): Location {

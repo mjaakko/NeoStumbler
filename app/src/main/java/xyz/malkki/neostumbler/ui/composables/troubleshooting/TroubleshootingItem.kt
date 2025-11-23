@@ -6,9 +6,6 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -17,7 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
@@ -39,9 +36,9 @@ fun TroubleshootingItem(title: String, stateFlow: Flow<Boolean>, fixAction: () -
                 modifier = Modifier.padding(horizontal = 8.dp),
                 painter =
                     if (isOk) {
-                        rememberVectorPainter(Icons.Default.CheckCircle)
+                        painterResource(id = R.drawable.check_circle_24px)
                     } else {
-                        rememberVectorPainter(Icons.Default.Error)
+                        painterResource(id = R.drawable.error_24px)
                     },
                 tint =
                     if (isOk) {

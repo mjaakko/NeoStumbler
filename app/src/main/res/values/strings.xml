@@ -237,6 +237,8 @@
     <string name="app_language">Language</string>
     <string name="system_default_language">System default language</string>
 
+    <string name="map_data_sources">Map data sources</string>
+
     <string name="map_tile_source">Map tile source</string>
     <string name="map_tile_source_custom_title">Custom</string>
     <string name="map_tile_source_custom_style_url">Custom map style URL</string>

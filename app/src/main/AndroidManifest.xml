@@ -47,7 +47,7 @@
             android:name=".scanner.quicksettings.ScannerTileService"
             android:enabled="true"
             android:exported="true"
-            android:icon="@drawable/radar_24"
+            android:icon="@drawable/radar_24px"
             android:label="@string/wireless_scanning"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>

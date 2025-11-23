@@ -1,7 +1,5 @@
 package xyz.malkki.neostumbler.ui.composables
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -11,8 +9,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.work.BackoffPolicy
@@ -105,7 +103,7 @@ fun ReportUploadButton(modifier: Modifier = Modifier, reportsViewModel: ReportsV
         },
     ) {
         Icon(
-            painter = rememberVectorPainter(Icons.Default.Upload),
+            painter = painterResource(id = R.drawable.upload_24px),
             contentDescription = stringResource(R.string.send_reports),
         )
     }

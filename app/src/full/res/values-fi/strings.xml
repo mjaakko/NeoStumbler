@@ -2,6 +2,8 @@
     <string name="prefer_fused_location_title">Suosi yhdistettyä sijainnintarjoajaa</string>
     <string name="prefer_fused_location_description">Yhdistetty sijainnintarjoaja voi käyttää myös muita datalähteitä kuin GPS sijainnin määrittämiseen</string>
 
+    <string name="fused_location_no_gps_warning">Laitteessa ei ole GPS-vastaanotinta</string>
+
     <string name="autoscan_when_moving">Skannaa automaattisesti liikkuessa</string>
 
     <string name="autoscan_failed_to_enable_title">Automaattisen skannaamisen käyttöönotto ei onnistunut</string>
