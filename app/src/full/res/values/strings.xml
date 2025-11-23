@@ -2,6 +2,9 @@
 <resources>
     <string name="prefer_fused_location_title">Prefer fused location provider</string>
     <string name="prefer_fused_location_description">Fused location provider can combine data from sources other than GPS to determine the location</string>
+
+    <string name="fused_location_no_gps_warning">Device does not have a GPS receiver</string>
+
     <string name="autoscan_when_moving">Automatic scanning while moving</string>
     <string name="autoscan_failed_to_enable_title">
         Failed to enable automatic scanning
