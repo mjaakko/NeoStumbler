@@ -6,6 +6,7 @@ dependencies {
     api(project(":app:data:location:api"))
 
     implementation(project(":libs:executors"))
+    implementation(project(":libs:broadcast-receiver-flow"))
     implementation(project(":app:core:mapper:android-location"))
 
     implementation(libs.androidx.core)

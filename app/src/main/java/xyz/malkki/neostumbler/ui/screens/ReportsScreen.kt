@@ -60,12 +60,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import java.text.DecimalFormat
+import kotlinx.coroutines.flow.StateFlow
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.core.report.ReportWithStats
 import xyz.malkki.neostumbler.data.geocoder.Geocoder
+import xyz.malkki.neostumbler.data.location.GpsStatusSource
 import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.data.settings.getEnumFlow
 import xyz.malkki.neostumbler.extensions.defaultLocale
@@ -123,11 +125,19 @@ fun ReportsScreen(viewModel: ReportsViewModel = koinViewModel()) {
 }
 
 @Composable
-private fun ScanningControllerCard(modifier: Modifier = Modifier) {
+private fun ScanningControllerCard(
+    modifier: Modifier = Modifier,
+    scanningActiveFlow: StateFlow<Boolean> = ScannerService.serviceRunning,
+    reporsCreatedFlow: StateFlow<Int> = ScannerService.reportsCreated,
+    gpsStatusSource: GpsStatusSource = koinInject(),
+) {
     val context = LocalContext.current
 
-    val scanningActive by ScannerService.serviceRunning.collectAsStateWithLifecycle()
-    val reportsCreated by ScannerService.reportsCreated.collectAsStateWithLifecycle()
+    val scanningActive by scanningActiveFlow.collectAsStateWithLifecycle()
+    val reportsCreated by reporsCreatedFlow.collectAsStateWithLifecycle()
+
+    val gpsAvailable by
+        gpsStatusSource.isGpsAvailable().collectAsStateWithLifecycle(initialValue = false)
 
     ElevatedCard(
         modifier = modifier.wrapContentHeight().sizeIn(maxWidth = 400.dp).fillMaxWidth(),
@@ -162,7 +172,10 @@ private fun ScanningControllerCard(modifier: Modifier = Modifier) {
                 )
             }
 
-            GpsStatus()
+            if (gpsAvailable) {
+                // Only show GPS status when the device has a GPS to avoid confusion
+                GpsStatus()
+            }
         }
     }
 }
