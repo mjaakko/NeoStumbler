@@ -224,6 +224,12 @@ tasks.register("printVersionName") {
     doLast { println(versionName) }
 }
 
+tasks.register("printVersionCode") {
+    val versionCode = project.android.defaultConfig.versionCode
+
+    doLast { println(versionCode) }
+}
+
 kotlin {
     compilerOptions {
         freeCompilerArgs.add("-opt-in=androidx.compose.material3.ExperimentalMaterial3Api")
