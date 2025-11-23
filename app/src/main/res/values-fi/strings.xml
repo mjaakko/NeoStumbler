@@ -240,6 +240,8 @@
     <string name="app_language">Kieli</string>
     <string name="system_default_language">Käyttöjärjestelmän oletuskieli</string>
 
+    <string name="map_data_sources">Kartan tietolähteet</string>
+
     <string name="map_tile_source">Karttatiilien lähde</string>
     <string name="map_tile_source_custom_title">Vapaavalintainen</string>
     <string name="map_tile_source_custom_style_url">Karttatiilien URL</string>

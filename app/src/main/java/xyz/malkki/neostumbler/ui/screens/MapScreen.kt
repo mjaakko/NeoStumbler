@@ -15,14 +15,13 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -30,6 +29,7 @@ import androidx.core.graphics.ColorUtils
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.gson.JsonPrimitive
+import kotlin.math.abs
 import org.koin.androidx.compose.koinViewModel
 import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.geometry.LatLng
@@ -55,7 +55,6 @@ import xyz.malkki.neostumbler.ui.composables.map.MapSettingsButton
 import xyz.malkki.neostumbler.ui.composables.shared.ComposableMap
 import xyz.malkki.neostumbler.ui.composables.shared.KeepScreenOn
 import xyz.malkki.neostumbler.ui.composables.shared.PermissionsDialog
-import xyz.malkki.neostumbler.ui.map.setAttributionMargin
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
 
 @ColorInt private const val HEAT_LOW: Int = 0x78d278ff
@@ -76,28 +75,30 @@ private const val MAX_ZOOM = 15.0
 fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
     val context = LocalContext.current
 
-    val density = LocalDensity.current
-
     val showPermissionDialog = rememberSaveable { mutableStateOf(false) }
 
     val trackMyLocation = rememberSaveable { mutableStateOf(false) }
 
     val fillManager = remember { mutableStateOf<FillManager?>(null) }
 
-    val coverageTileJsonUrl = mapViewModel.coverageTileJsonUrl.collectAsState(initial = null)
+    val coverageTileJsonUrl =
+        mapViewModel.coverageTileJsonUrl.collectAsStateWithLifecycle(initialValue = null)
 
     val coverageTileJsonLayerIds =
-        mapViewModel.coverageTileJsonLayerIds.collectAsState(initial = emptyList())
+        mapViewModel.coverageTileJsonLayerIds.collectAsStateWithLifecycle(
+            initialValue = emptyList()
+        )
 
-    val latestReportPosition = mapViewModel.latestReportPosition.collectAsState(initial = null)
+    val heatMapTiles =
+        mapViewModel.heatMapTiles.collectAsStateWithLifecycle(initialValue = emptyMap())
 
-    val heatMapTiles = mapViewModel.heatMapTiles.collectAsState(initial = emptyMap())
-
-    val myLocation =
+    val myLocation by
         mapViewModel.myLocation.collectAsStateWithLifecycle(
             initialValue = null,
             minActiveState = Lifecycle.State.RESUMED,
         )
+
+    val mapViewport by mapViewModel.mapViewport.collectAsStateWithLifecycle(initialValue = null)
 
     if (showPermissionDialog.value) {
         PermissionsDialog(
@@ -127,23 +128,13 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
         ComposableMap(
             modifier = Modifier.fillMaxSize(),
             onInit = { map, mapView ->
-                map.addOnMoveListener(
-                    object : MapLibreMap.OnMoveListener {
-                        override fun onMoveBegin(p0: MoveGestureDetector) {
-                            trackMyLocation.value = false
-                        }
-
-                        override fun onMove(p0: MoveGestureDetector) {}
-
-                        override fun onMoveEnd(p0: MoveGestureDetector) {}
-                    }
-                )
+                map.addOnMoveListener(OnMapMoveBeginListener { trackMyLocation.value = false })
 
                 map.addOnCameraMoveListener {
-                    val mapCenter = map.cameraPosition.target!!.asDomainLatLng()
-
-                    mapViewModel.setMapCenter(mapCenter)
-                    mapViewModel.setZoom(map.cameraPosition.zoom)
+                    mapViewModel.setMapViewport(
+                        center = map.cameraPosition.target!!.asDomainLatLng(),
+                        zoom = map.cameraPosition.zoom,
+                    )
 
                     mapViewModel.setMapBounds(
                         minLatitude = map.projection.visibleRegion.latLngBounds.latitudeSouth,
@@ -155,8 +146,6 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
 
                 map.setMinZoomPreference(MIN_ZOOM)
                 map.setMaxZoomPreference(MAX_ZOOM)
-
-                map.setAttributionMargin(density)
 
                 map.uiSettings.isRotateGesturesEnabled = false
 
@@ -185,31 +174,24 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                 }
             },
             updateMap = { map ->
-                // Call repeatedly in update() because latestReportPosition may not be
-                // available in factory()
-                val target =
-                    if (mapViewModel.mapCenter.value.isOrigin()) {
-                        latestReportPosition.value
-                    } else {
-                        mapViewModel.mapCenter.value
-                    }
-                map.cameraPosition =
-                    CameraPosition.Builder()
-                        .target(target?.asMapLibreLatLng())
-                        .zoom(mapViewModel.zoom.value)
-                        .build()
+                // Only update the camera position when it's at the default location to avoid jank
+                if (map.cameraPosition.target?.isCloseToOrigin() == true) {
+                    val (center, zoom) = mapViewport!!
 
-                if (
-                    myLocation.value != null && map.locationComponent.isLocationComponentActivated
-                ) {
-                    map.locationComponent.forceLocationUpdate(
-                        myLocation.value!!.asPlatformLocation()
-                    )
+                    map.cameraPosition =
+                        CameraPosition.Builder()
+                            .target(center.asMapLibreLatLng())
+                            .zoom(zoom)
+                            .build()
+                }
+
+                if (myLocation != null && map.locationComponent.isLocationComponentActivated) {
+                    map.locationComponent.forceLocationUpdate(myLocation!!.asPlatformLocation())
 
                     if (trackMyLocation.value) {
                         map.cameraPosition =
                             CameraPosition.Builder()
-                                .target(myLocation.value!!.position.latLng.asMapLibreLatLng())
+                                .target(myLocation!!.position.latLng.asMapLibreLatLng())
                                 .build()
                     }
                 }
@@ -253,6 +235,23 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
             }
         }
     }
+}
+
+private class OnMapMoveBeginListener(private val onMoveBegin: () -> Unit) :
+    MapLibreMap.OnMoveListener {
+    override fun onMoveBegin(p0: MoveGestureDetector) {
+        onMoveBegin()
+    }
+
+    override fun onMove(p0: MoveGestureDetector) {}
+
+    override fun onMoveEnd(p0: MoveGestureDetector) {}
+}
+
+private const val MAX_COORDINATE_DIFF = 0.00001
+
+private fun LatLng.isCloseToOrigin(): Boolean {
+    return abs(latitude) < MAX_COORDINATE_DIFF && abs(longitude) < MAX_COORDINATE_DIFF
 }
 
 private fun PositionObservation.asPlatformLocation(): Location {

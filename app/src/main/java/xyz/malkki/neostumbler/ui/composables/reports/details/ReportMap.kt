@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -54,14 +53,11 @@ import xyz.malkki.neostumbler.ichnaea.dto.WifiAccessPointDto
 import xyz.malkki.neostumbler.ichnaea.dto.latLng
 import xyz.malkki.neostumbler.ichnaea.mapper.getIchnaeaParams
 import xyz.malkki.neostumbler.ui.composables.shared.ComposableMap
-import xyz.malkki.neostumbler.ui.map.setAttributionMargin
 
 private const val MAP_ZOOM_LEVEL = 15.0
 
 @Composable
 fun ReportMap(report: Report, modifier: Modifier = Modifier) {
-    val density = LocalDensity.current
-
     val estimatedLocation = getEstimatedReportLocation(report)
 
     val circleManager = remember { mutableStateOf<CircleManager?>(null) }
@@ -75,8 +71,6 @@ fun ReportMap(report: Report, modifier: Modifier = Modifier) {
 
                 map.cameraPosition =
                     CameraPosition.Builder().target(cameraPos).zoom(MAP_ZOOM_LEVEL).build()
-
-                map.setAttributionMargin(density)
 
                 map.uiSettings.setAllGesturesEnabled(false)
 

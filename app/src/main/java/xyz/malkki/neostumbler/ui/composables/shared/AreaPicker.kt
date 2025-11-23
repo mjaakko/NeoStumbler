@@ -47,7 +47,6 @@ import xyz.malkki.neostumbler.domain.asDomainLatLng
 import xyz.malkki.neostumbler.domain.asMapLibreLatLng
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.geography.LatLng
-import xyz.malkki.neostumbler.ui.map.setAttributionMargin
 
 @Composable
 fun AreaPickerDialog(
@@ -159,8 +158,6 @@ fun AreaPickerMap(onCircleUpdated: (Pair<LatLng, Double>) -> Unit) {
 
                 map.setMinZoomPreference(MIN_ZOOM)
                 map.setMaxZoomPreference(MAX_ZOOM)
-
-                map.setAttributionMargin(density)
 
                 map.uiSettings.isRotateGesturesEnabled = false
 
