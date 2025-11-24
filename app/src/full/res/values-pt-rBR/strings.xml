@@ -7,4 +7,5 @@
     <string name="permission_rationale_activity_recognition">Para iniciar a coleta automaticamente, é necessário acesso à atividade atual</string>
     <string name="prefer_fused_location_description">Esse provedor de localização pode combinar dados de outras fontes para determinar a localização</string>
     <string name="autoscan_failed_to_enable_description">A coleta automática usa o serviço de reconhecimento de atividade do Google Play, que pode não estar disponível no seu dispositivo</string>
+    <string name="fused_location_no_gps_warning">O dispositivo não tem um receptor de GPS</string>
 </resources>
