@@ -46,14 +46,13 @@ jobs:
         id: get-changelog
         run: |
           VERSION_CODE="$(./gradlew -q printVersionCode)"
-          CHANGELOG_PATH="fastlane/metadata/android/en-US/changelogs/${VERSION_CODE}.txt"
-          CHANGELOG="$([[ -f $CHANGELOG_PATH ]] && cat "$CHANGELOG_PATH")"
-          echo "CHANGELOG=$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "CHANGELOG_PATH=fastlane/metadata/android/en-US/changelogs/${VERSION_CODE}.txt" >> $GITHUB_OUTPUT
       - name: Upload APKs as assets to the GitHub release
         uses: softprops/action-gh-release@v2
         with:
           name: ${{ steps.get-version.outputs.VERSION_NAME }}
-          body: ${{ steps.get-changelog.outputs.CHANGELOG }}
+          body: ""
+          body_path: ${{ steps.get-changelog.outputs.CHANGELOG_PATH }}
           # Publish as a draft to allow creating immutable releases
           draft: true
           files: |
