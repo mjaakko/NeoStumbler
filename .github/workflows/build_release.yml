@@ -42,9 +42,20 @@ jobs:
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
         run: ./gradlew -PenableAbiSplit :app:assembleFullDefaultRelease
+      - name: Get changelog
+        id: get-changelog
+        run: |
+          VERSION_CODE="$(./gradlew -q printVersionCode)"
+          CHANGELOG_PATH="fastlane/metadata/android/en-US/changelogs/${VERSION_CODE}.txt"
+          CHANGELOG="$([[ -f $CHANGELOG_PATH ]] && cat "$CHANGELOG_PATH")"
+          echo "CHANGELOG=$CHANGELOG" >> $GITHUB_OUTPUT
       - name: Upload APKs as assets to the GitHub release
         uses: softprops/action-gh-release@v2
         with:
+          name: ${{ steps.get-version.outputs.VERSION_NAME }}
+          body: ${{ steps.get-changelog.outputs.CHANGELOG }}
+          # Publish as a draft to allow creating immutable releases
+          draft: true
           files: |
             app/build/outputs/apk/fdroidDefault/release/app-fdroid-default-release.apk
             app/build/outputs/apk/fullDefault/release/app-full-default-universal-release.apk
