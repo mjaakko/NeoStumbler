@@ -1,0 +1,19 @@
+UI / UX
+- Migrated to Material 3 style UI
+- Changed icons to Material Symbols
+- Improved UI for larger screens
+- Removed the title bar from the map screen
+- Added support for dark map styles
+- Fixed map attribution dialog not using the selected theme
+- GPS status is no longer shown when the device doesn't have a GPS receiver
+
+Passive data collection
+- Invalid duplicate cell towers are filtered from passively created reports when using multiple SIMs
+- Passive data collection now creates reports more aggressively by checking if the previous report contains same type of data
+
+Technical
+- Broadcasts are now handled asynchronously for better performance
+- Added corruption handler to passive scan state store
+
+Other
+- Updated translations
