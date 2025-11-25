@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.location.Location
 import androidx.annotation.ColorInt
 import androidx.collection.forEach
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -62,8 +63,11 @@ import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
 
 private const val COVERAGE_SOURCE_ID = "coverage-source"
 private const val COVERAGE_LAYER_PREFIX = "coverage-layer-"
+
 private const val COVERAGE_COLOR = "#ff8000"
+private const val COVERAGE_COLOR_DARK = "#ffbb00"
 private const val COVERAGE_OPACITY = 0.4f
+private const val COVERAGE_OPACITY_DARK = 0.25f
 
 private const val MIN_ZOOM = 3.0
 private const val MAX_ZOOM = 15.0
@@ -196,7 +200,22 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                     }
                 }
 
-                addCoverage(map, coverageTileJsonUrl.value, coverageTileJsonLayerIds.value)
+                map.addCoverageLayerFromTileJson(
+                    coverageTileJsonUrl.value,
+                    coverageTileJsonLayerIds.value,
+                    color =
+                        if (isSystemInDarkTheme()) {
+                            COVERAGE_COLOR_DARK
+                        } else {
+                            COVERAGE_COLOR
+                        },
+                    opacity =
+                        if (isSystemInDarkTheme()) {
+                            COVERAGE_OPACITY_DARK
+                        } else {
+                            COVERAGE_OPACITY
+                        },
+                )
 
                 fillManager.value?.let { createHeatMapFill(it, heatMapTiles.value) }
             },
@@ -264,15 +283,15 @@ private fun PositionObservation.asPlatformLocation(): Location {
     }
 }
 
-private fun addCoverageLayer(style: Style, layerIds: List<String>) {
+private fun addCoverageLayer(style: Style, layerIds: List<String>, color: String, opacity: Float) {
     for (id in layerIds) {
         val layer = style.getLayer(COVERAGE_LAYER_PREFIX + id)
         if (layer == null) {
             style.addLayer(
                 FillLayer(COVERAGE_LAYER_PREFIX + id, COVERAGE_SOURCE_ID).apply {
                     withProperties(
-                        PropertyFactory.fillColor(COVERAGE_COLOR),
-                        PropertyFactory.fillOpacity(COVERAGE_OPACITY),
+                        PropertyFactory.fillColor(color),
+                        PropertyFactory.fillOpacity(opacity),
                     )
                     sourceLayer = id
                 }
@@ -283,8 +302,13 @@ private fun addCoverageLayer(style: Style, layerIds: List<String>) {
     }
 }
 
-private fun addCoverage(mapLibreMap: MapLibreMap, tileJsonUrl: String?, layerIds: List<String>) {
-    mapLibreMap.getStyle { style ->
+private fun MapLibreMap.addCoverageLayerFromTileJson(
+    tileJsonUrl: String?,
+    layerIds: List<String>,
+    color: String,
+    opacity: Float,
+) {
+    getStyle { style ->
         if (tileJsonUrl != null) {
             val vectorSource = style.getSource(COVERAGE_SOURCE_ID) as? VectorSource
             if (vectorSource == null || vectorSource.uri != tileJsonUrl) {
@@ -292,7 +316,7 @@ private fun addCoverage(mapLibreMap: MapLibreMap, tileJsonUrl: String?, layerIds
                 style.addSource(VectorSource(COVERAGE_SOURCE_ID, tileJsonUrl))
             }
 
-            addCoverageLayer(style, layerIds)
+            addCoverageLayer(style, layerIds, color, opacity)
         } else {
             // Remove coverage layers
             style.layers
