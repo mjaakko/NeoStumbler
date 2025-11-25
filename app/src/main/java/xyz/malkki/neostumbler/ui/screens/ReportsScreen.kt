@@ -11,15 +11,18 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -140,7 +143,12 @@ private fun ScanningControllerCard(
         gpsStatusSource.isGpsAvailable().collectAsStateWithLifecycle(initialValue = false)
 
     ElevatedCard(
-        modifier = modifier.wrapContentHeight().sizeIn(maxWidth = 400.dp).fillMaxWidth(),
+        modifier =
+            modifier
+                .wrapContentHeight()
+                .sizeIn(maxWidth = 400.dp)
+                .fillMaxWidth()
+                .windowInsetsPadding(WindowInsets.navigationBars),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
     ) {
         Row(
