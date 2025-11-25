@@ -192,7 +192,7 @@ private fun ReportStats(modifier: Modifier = Modifier, reportsViewModel: Reports
             ?: stringResource(R.string.reports_last_uploaded_never)
 
     OutlinedCard(modifier = modifier.fillMaxWidth()) {
-        Surface(color = MaterialTheme.colorScheme.primaryContainer) {
+        Surface(color = MaterialTheme.colorScheme.secondaryContainer) {
             Row(
                 modifier = Modifier.fillMaxWidth().padding(16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
