@@ -212,4 +212,11 @@
     <string name="map_tile_source_custom_style_url">URL пользовательского стиля карты</string>
     <string name="map_show_coverage_layer">Показывать слой покрытия</string>
     <string name="third_party_licenses">Сторонние лицензии</string>
+    <string name="beacon_type_ibeacon">iBeacon</string>
+    <string name="beacon_type_altbeacon">AltBeacon</string>
+    <string name="map_data_sources">Источники данных карты</string>
+    <string name="geocoder_settings_title">Геокодер</string>
+    <string name="geocoder_default_title">По умолчанию</string>
+    <string name="geocoder_disabled_title">Выключен</string>
+    <string name="privacy_policy">Политика конфиденциальности</string>
 </resources>
