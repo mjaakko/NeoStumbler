@@ -12,14 +12,14 @@ jobs:
     name: Build release APKs
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
       - name: Set up JDK 17
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5
         with:
           distribution: 'temurin'
           java-version: '17'
       - name: Set up Gradle build action
-        uses: gradle/actions/setup-gradle@v5
+        uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5
         with:
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
       - name: Get version name
@@ -48,7 +48,7 @@ jobs:
           VERSION_CODE="$(./gradlew -q printVersionCode)"
           echo "CHANGELOG_PATH=fastlane/metadata/android/en-US/changelogs/${VERSION_CODE}.txt" >> $GITHUB_OUTPUT
       - name: Upload APKs as assets to the GitHub release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@5be0e66d93ac7ed76da52eca8bb058f665c3a5fe # v2
         with:
           name: ${{ steps.get-version.outputs.VERSION_NAME }}
           body: ""
@@ -68,7 +68,7 @@ jobs:
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
         run: ./gradlew :app:buildApksFullDefaultRelease
       - name: Upload release APK set as build artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
           name: app-fullDefaultRelease.apks
           path: app/build/outputs/apkset/fullDefaultRelease/app-fullDefaultRelease.apks
@@ -81,7 +81,7 @@ jobs:
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
         run: ./gradlew :app:bundleFullGplayRelease
       - name: Upload app bundle as build artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
           name: app-full-gplay-release.aab
           path: app/build/outputs/bundle/fullGplayRelease/app-full-gplay-release.aab
