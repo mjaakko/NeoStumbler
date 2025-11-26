@@ -211,4 +211,7 @@
     <string name="geocoder_disabled_title">Vypnutý</string>
     <string name="third_party_licenses">Licence třetích stran</string>
     <string name="privacy_policy">Zásady ochrany osobních údajů</string>
+    <string name="beacon_type_ibeacon">iBeacon</string>
+    <string name="beacon_type_altbeacon">AltBeacon</string>
+    <string name="map_data_sources">Zdroje map</string>
 </resources>
