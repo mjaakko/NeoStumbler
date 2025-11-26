@@ -14,14 +14,12 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun SettingsGroup(title: String, content: @Composable () -> Unit) {
     Card {
-        Surface(color = MaterialTheme.colorScheme.primaryContainer) {
+        Surface(color = MaterialTheme.colorScheme.secondaryContainer) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
                     text = title,
-                    style =
-                        MaterialTheme.typography.titleMedium.copy(
-                            color = MaterialTheme.colorScheme.primary
-                        ),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.secondary,
                 )
 
                 Column(
