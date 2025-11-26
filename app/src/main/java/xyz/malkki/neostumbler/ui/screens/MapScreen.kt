@@ -61,6 +61,9 @@ import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
 @ColorInt private const val HEAT_LOW: Int = 0x78d278ff
 @ColorInt private const val HEAT_HIGH: Int = 0x78aa00ff
 
+@ColorInt private const val HEAT_LOW_DARK: Int = 0x65de9cff
+@ColorInt private const val HEAT_HIGH_DARK: Int = 0x65bb45ff
+
 private const val COVERAGE_SOURCE_ID = "coverage-source"
 private const val COVERAGE_LAYER_PREFIX = "coverage-layer-"
 
@@ -217,7 +220,21 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                         },
                 )
 
-                fillManager.value?.let { createHeatMapFill(it, heatMapTiles.value) }
+                fillManager.value?.createHeatMapFill(
+                    heatMapTiles.value,
+                    colorLow =
+                        if (isSystemInDarkTheme()) {
+                            HEAT_LOW_DARK
+                        } else {
+                            HEAT_LOW
+                        },
+                    colorHigh =
+                        if (isSystemInDarkTheme()) {
+                            HEAT_HIGH_DARK
+                        } else {
+                            HEAT_HIGH
+                        },
+                )
             },
         )
 
@@ -328,14 +345,15 @@ private fun MapLibreMap.addCoverageLayerFromTileJson(
     }
 }
 
-private fun createHeatMapFill(
-    fillManager: FillManager,
+private fun FillManager.createHeatMapFill(
     tiles: Map<String, MapViewModel.HeatMapTile>,
+    colorLow: Int,
+    colorHigh: Int,
 ) {
     val updated = mutableSetOf<String>()
     val toDelete = mutableListOf<Fill>()
 
-    fillManager.annotations.forEach { _, fill ->
+    annotations.forEach { _, fill ->
         val hexKey = fill.data!!.asString
 
         if (hexKey !in tiles) {
@@ -345,7 +363,7 @@ private fun createHeatMapFill(
 
             val color =
                 MapLibreColorUtils.colorToRgbaString(
-                    ColorUtils.blendARGB(HEAT_LOW, HEAT_HIGH, tile.heatPct)
+                    ColorUtils.blendARGB(colorLow, colorHigh, tile.heatPct)
                 )
 
             if (color != fill.fillColor) {
@@ -356,12 +374,12 @@ private fun createHeatMapFill(
         }
     }
 
-    fillManager.delete(toDelete)
+    delete(toDelete)
 
     tiles
         .filter { it.key !in updated }
         .forEach { (hexKey, tile) ->
-            val color = ColorUtils.blendARGB(HEAT_LOW, HEAT_HIGH, tile.heatPct)
+            val color = ColorUtils.blendARGB(colorLow, colorHigh, tile.heatPct)
 
             val fillOptions =
                 FillOptions()
@@ -370,6 +388,6 @@ private fun createHeatMapFill(
                     .withFillOutlineColor("#00000000")
                     .withLatLngs(listOf(tile.outline.map { LatLng(it.latitude, it.longitude) }))
 
-            fillManager.create(fillOptions)
+            create(fillOptions)
         }
 }
