@@ -208,4 +208,5 @@
     <string name="privacy_policy">Privacy­beleid</string>
     <string name="beacon_type_ibeacon">iBeacon</string>
     <string name="beacon_type_altbeacon">AltBeacon</string>
+    <string name="map_data_sources">Gegevens­bronnen van kaart</string>
 </resources>
