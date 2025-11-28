@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.withContext
-import xyz.malkki.neostumbler.utils.watchDirectory
+import xyz.malkki.neostumbler.crashlog.internal.watchDirectory
 
 /** @property crashLogDirectory Directory which contains the log files */
 class FileCrashLogManager(private val crashLogDirectory: Path) : CrashLogManager {

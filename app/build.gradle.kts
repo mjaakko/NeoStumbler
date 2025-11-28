@@ -257,6 +257,8 @@ dependencies {
     implementation(project(":app:core"))
     implementation(project(":app:core:mapper:android-location"))
 
+    implementation(project(":app:data:crashlog:android"))
+
     implementation(project(":app:data:emitter:android"))
 
     implementation(project(":app:data:airpressure:android"))

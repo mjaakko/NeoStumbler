@@ -30,6 +30,10 @@ include(":app:data:battery:api")
 
 include(":app:data:battery:android")
 
+include(":app:data:crashlog:api")
+
+include(":app:data:crashlog:android")
+
 include(":app:data:emitter:api")
 
 include(":app:data:emitter:android")

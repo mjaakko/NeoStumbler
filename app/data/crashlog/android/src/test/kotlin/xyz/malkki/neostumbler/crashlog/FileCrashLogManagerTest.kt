@@ -2,11 +2,11 @@ package xyz.malkki.neostumbler.crashlog
 
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
-import junit.framework.TestCase.assertEquals
 import kotlin.io.path.listDirectoryEntries
 import kotlin.io.path.writeText
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder

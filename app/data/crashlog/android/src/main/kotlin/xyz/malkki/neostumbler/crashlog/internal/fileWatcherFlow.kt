@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.utils
+package xyz.malkki.neostumbler.crashlog.internal
 
 import android.os.FileObserver
 import java.nio.file.Path
@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
 /** @param mask Event type mask from [FileObserver] */
-fun watchDirectory(directory: Path, mask: Int = FileObserver.ALL_EVENTS): Flow<Unit> =
+internal fun watchDirectory(directory: Path, mask: Int = FileObserver.ALL_EVENTS): Flow<Unit> =
     callbackFlow {
         val fileObserver =
             object : FileObserver(directory.toFile(), mask) {
