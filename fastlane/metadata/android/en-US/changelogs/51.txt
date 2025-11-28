@@ -1,0 +1,6 @@
+UI
+- Adjusted colors for better contrast
+- Fixed content being drawn under system navigation bars on large screens
+
+Other
+- Updated translations
