@@ -1,0 +1,6 @@
+Interface
+- Cores ajustadas para contraste melhor
+- Foi corrigido o conteúdo ser desenhado em baixo da barra de navegação do sistema em telas grandes
+
+Outros
+- Traduções atualizadas
