@@ -9,9 +9,16 @@ import androidx.core.content.getSystemService
 import xyz.malkki.neostumbler.core.emitter.CellTower
 import xyz.malkki.neostumbler.core.observation.EmitterObservation
 
-class MultiSubscriptionPassiveCellInfoSource(context: Context) : PassiveCellTowerSource {
-    private val subscriptionManager = context.getSystemService<SubscriptionManager>()!!
-    private val telephonyManager = context.getSystemService<TelephonyManager>()!!
+class MultiSubscriptionPassiveCellInfoSource(
+    private val subscriptionManager: SubscriptionManager,
+    private val telephonyManager: TelephonyManager,
+) : PassiveCellTowerSource {
+    constructor(
+        context: Context
+    ) : this(
+        context.getSystemService<SubscriptionManager>()!!,
+        context.getSystemService<TelephonyManager>()!!,
+    )
 
     @RequiresPermission(
         allOf =
@@ -24,11 +31,16 @@ class MultiSubscriptionPassiveCellInfoSource(context: Context) : PassiveCellTowe
     override fun getCellTowers(): List<EmitterObservation<CellTower, String>> {
         val activeSubscriptions = subscriptionManager.activeSubscriptionInfoList ?: emptyList()
 
-        return activeSubscriptions.flatMap {
-            TelephonyManagerPassiveCellInfoSource(
-                    telephonyManager.createForSubscriptionId(it.subscriptionId)
-                )
-                .getCellTowers()
-        }
+        return activeSubscriptions
+            .flatMap {
+                TelephonyManagerPassiveCellInfoSource(
+                        telephonyManager.createForSubscriptionId(it.subscriptionId)
+                    )
+                    .getCellTowers()
+            }
+            .distinctBy {
+                // Filter duplicates in case different subscriptions use the same cell towers
+                it.emitter.uniqueKey
+            }
     }
 }
