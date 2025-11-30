@@ -3,21 +3,21 @@ package xyz.malkki.neostumbler.export
 import android.app.Notification
 import android.content.Context
 import android.content.pm.ServiceInfo
+import android.net.Uri
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.hasKeyWithValueOfType
+import java.io.IOException
 import java.time.Instant
 import kotlin.time.DurationUnit
 import kotlin.time.measureTime
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import timber.log.Timber
-import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.StumblerApplication
-import xyz.malkki.neostumbler.extensions.getTextCompat
 
 class CsvExportWorker(appContext: Context, private val params: WorkerParameters) :
     CoroutineWorker(appContext, params), KoinComponent {
@@ -25,6 +25,10 @@ class CsvExportWorker(appContext: Context, private val params: WorkerParameters)
         const val INPUT_FROM = "from"
         const val INPUT_TO = "to"
         const val INPUT_OUTPUT_URI = "uri"
+
+        const val INPUT_NOTIFICATION_CHANNEL = "notification_channel"
+        const val INPUT_NOTIFICATION_TITLE = "notification_title"
+        const val INPUT_NOTIFICATION_DRAWABLE = "notification_drawable"
 
         private const val DATA_EXPORT_NOTIFICATION_ID = 200000
     }
@@ -34,13 +38,18 @@ class CsvExportWorker(appContext: Context, private val params: WorkerParameters)
     private fun createNotification(): Notification {
         return NotificationCompat.Builder(
                 applicationContext,
-                StumblerApplication.EXPORT_NOTIFICATION_CHANNEL_ID,
+                params.inputData.getString(INPUT_NOTIFICATION_CHANNEL)!!,
             )
             .setOngoing(true)
             .setLocalOnly(true)
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
-            .setContentTitle(applicationContext.getTextCompat(R.string.notification_exporting_data))
-            .setSmallIcon(R.drawable.upload_24px)
+            .setContentTitle(
+                ContextCompat.getString(
+                    applicationContext,
+                    params.inputData.getInt(INPUT_NOTIFICATION_TITLE, 0),
+                )
+            )
+            .setSmallIcon(params.inputData.getInt(INPUT_NOTIFICATION_DRAWABLE, 0))
             .build()
     }
 
@@ -85,5 +94,21 @@ class CsvExportWorker(appContext: Context, private val params: WorkerParameters)
         )
 
         return Result.success()
+    }
+
+    /** Exports data to the specified URI (content://) */
+    private suspend fun CsvExporter.exportToFile(uri: Uri, from: Instant, to: Instant) {
+        applicationContext.contentResolver.openOutputStream(uri, "wt").use { os ->
+            if (os == null) {
+                Timber.w(
+                    "OutputStream was null, maybe the content provider handling %s crashed",
+                    uri.toString(),
+                )
+
+                throw IOException("OutputStream was null")
+            }
+
+            exportToOutputStream(os, from, to)
+        }
     }
 }

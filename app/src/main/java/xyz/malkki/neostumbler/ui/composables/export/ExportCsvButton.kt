@@ -12,11 +12,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.work.Constraints
-import androidx.work.Data
-import androidx.work.OneTimeWorkRequest
-import androidx.work.OutOfQuotaPolicy
-import androidx.work.WorkManager
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -24,12 +19,15 @@ import java.util.Date
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.data.reports.ReportProvider
-import xyz.malkki.neostumbler.export.CsvExportWorker
+import xyz.malkki.neostumbler.export.CsvExportManager
 import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.ui.composables.shared.DateRangePickerDialog
 
 @Composable
-fun ExportCsvButton(reportProvider: ReportProvider = koinInject()) {
+fun ExportCsvButton(
+    reportProvider: ReportProvider = koinInject(),
+    csvExportManager: CsvExportManager = koinInject(),
+) {
     val context = LocalContext.current
 
     val selectableDates = reportProvider.getReportDates().collectAsStateWithLifecycle(null)
@@ -67,29 +65,19 @@ fun ExportCsvButton(reportProvider: ReportProvider = koinInject()) {
                     )
 
                     // Convert to local time
-                    val from = fromDate.atStartOfDay(localTimeZone).toInstant().toEpochMilli()
+                    val from = fromDate.atStartOfDay(localTimeZone).toInstant()
                     val to =
                         toDate
                             // Add one day to include data for the last day in the selected range
                             .plusDays(1)
                             .atStartOfDay(localTimeZone)
                             .toInstant()
-                            .toEpochMilli()
 
-                    WorkManager.getInstance(context)
-                        .enqueue(
-                            OneTimeWorkRequest.Builder(CsvExportWorker::class.java)
-                                .setInputData(
-                                    Data.Builder()
-                                        .putString(CsvExportWorker.INPUT_OUTPUT_URI, uri.toString())
-                                        .putLong(CsvExportWorker.INPUT_FROM, from)
-                                        .putLong(CsvExportWorker.INPUT_TO, to)
-                                        .build()
-                                )
-                                .setConstraints(Constraints.NONE)
-                                .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-                                .build()
-                        )
+                    csvExportManager.startExport(
+                        fromInstant = from,
+                        toInstant = to,
+                        outputFile = uri.toString(),
+                    )
 
                     selectedDates.value = null
                     dialogOpen.value = false

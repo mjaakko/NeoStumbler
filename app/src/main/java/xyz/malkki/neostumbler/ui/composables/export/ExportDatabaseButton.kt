@@ -20,24 +20,22 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import androidx.work.Constraints
-import androidx.work.Data
-import androidx.work.OneTimeWorkRequest
-import androidx.work.OutOfQuotaPolicy
-import androidx.work.WorkManager
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.export.DatabaseExportWorker
+import xyz.malkki.neostumbler.export.DatabaseExportManager
 import xyz.malkki.neostumbler.extensions.showToast
 
 private const val DB_MIME_TYPE = "application/vnd.sqlite3"
@@ -56,28 +54,19 @@ fun ExportDatabaseButton() {
 }
 
 @Composable
-private fun ExportDatabaseDialog(onDialogClose: () -> Unit) {
+private fun ExportDatabaseDialog(
+    onDialogClose: () -> Unit,
+    databaseExportManager: DatabaseExportManager = koinInject(),
+) {
     val context = LocalContext.current
 
-    val compress = rememberSaveable { mutableStateOf(true) }
+    var compress by rememberSaveable { mutableStateOf(true) }
 
     fun onFileSelected(uri: Uri?) {
         if (uri == null) {
             context.showToast(ContextCompat.getString(context, R.string.export_no_file_chosen))
         } else {
-            WorkManager.getInstance(context)
-                .enqueue(
-                    OneTimeWorkRequest.Builder(DatabaseExportWorker::class.java)
-                        .setInputData(
-                            Data.Builder()
-                                .putString(DatabaseExportWorker.INPUT_OUTPUT_URI, uri.toString())
-                                .putBoolean(DatabaseExportWorker.INPUT_COMPRESS, compress.value)
-                                .build()
-                        )
-                        .setConstraints(Constraints.NONE)
-                        .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-                        .build()
-                )
+            databaseExportManager.startExportRawDatabase(outputFile = uri.toString(), compress)
         }
 
         onDialogClose.invoke()
@@ -114,10 +103,7 @@ private fun ExportDatabaseDialog(onDialogClose: () -> Unit) {
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Checkbox(
-                            checked = compress.value,
-                            onCheckedChange = { compress.value = it },
-                        )
+                        Checkbox(checked = compress, onCheckedChange = { compress = it })
 
                         Text(text = stringResource(id = R.string.export_raw_database_compress))
                     }
@@ -125,9 +111,9 @@ private fun ExportDatabaseDialog(onDialogClose: () -> Unit) {
                     TextButton(
                         modifier = Modifier.align(Alignment.End),
                         onClick = {
-                            val fileName = getExportedDbFileName(compress.value)
+                            val fileName = getExportedDbFileName(compress)
 
-                            if (compress.value) {
+                            if (compress) {
                                 compressedDbFilePicker.launch(fileName)
                             } else {
                                 rawDbFilePicker.launch(fileName)

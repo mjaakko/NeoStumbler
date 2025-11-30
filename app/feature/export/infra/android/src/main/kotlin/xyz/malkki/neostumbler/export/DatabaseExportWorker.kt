@@ -3,24 +3,15 @@ package xyz.malkki.neostumbler.export
 import android.app.Notification
 import android.content.Context
 import android.content.pm.ServiceInfo
-import android.os.FileUtils
 import androidx.core.app.NotificationCompat
 import androidx.core.net.toUri
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.hasKeyWithValueOfType
-import java.util.zip.GZIPOutputStream
-import kotlin.io.path.createTempFile
-import kotlin.io.path.deleteIfExists
-import kotlin.io.path.inputStream
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import timber.log.Timber
-import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.StumblerApplication
-import xyz.malkki.neostumbler.data.reports.RawReportImportExport
-import xyz.malkki.neostumbler.extensions.getTextCompat
 
 class DatabaseExportWorker(appContext: Context, private val params: WorkerParameters) :
     CoroutineWorker(appContext, params), KoinComponent {
@@ -28,21 +19,27 @@ class DatabaseExportWorker(appContext: Context, private val params: WorkerParame
         const val INPUT_OUTPUT_URI = "uri"
         const val INPUT_COMPRESS = "compress"
 
+        const val INPUT_NOTIFICATION_CHANNEL = "notification_channel"
+        const val INPUT_NOTIFICATION_TITLE = "notification_title"
+        const val INPUT_NOTIFICATION_DRAWABLE = "notification_drawable"
+
         private const val DATABASE_EXPORT_NOTIFICATION_ID = 200001
     }
 
-    private val rawReportsImportExport: RawReportImportExport by inject()
+    private val databaseExporter: DatabaseExporter by inject()
 
     private fun createNotification(): Notification {
         return NotificationCompat.Builder(
                 applicationContext,
-                StumblerApplication.EXPORT_NOTIFICATION_CHANNEL_ID,
+                params.inputData.getString(INPUT_NOTIFICATION_CHANNEL)!!,
             )
             .setOngoing(true)
             .setLocalOnly(true)
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
-            .setContentTitle(applicationContext.getTextCompat(R.string.notification_exporting_data))
-            .setSmallIcon(R.drawable.upload_24px)
+            .setContentTitle(
+                applicationContext.getString(params.inputData.getInt(INPUT_NOTIFICATION_TITLE, 0))
+            )
+            .setSmallIcon(params.inputData.getInt(INPUT_NOTIFICATION_DRAWABLE, 0))
             .build()
     }
 
@@ -63,30 +60,12 @@ class DatabaseExportWorker(appContext: Context, private val params: WorkerParame
         setForeground(getForegroundInfo())
 
         val compress = params.inputData.getBoolean(INPUT_COMPRESS, false)
-
         val uri = params.inputData.getString(INPUT_OUTPUT_URI)!!.toUri()
 
-        val tempFile = createTempFile(applicationContext.cacheDir.toPath(), "export", "db")
+        val outputStream = applicationContext.contentResolver.openOutputStream(uri)!!
 
-        try {
-            rawReportsImportExport.exportRawReports(tempFile)
+        databaseExporter.exportToOutputStream(outputStream, compress)
 
-            val rawOutputStream = applicationContext.contentResolver.openOutputStream(uri)!!
-
-            val outputStream =
-                if (compress) {
-                    GZIPOutputStream(rawOutputStream)
-                } else {
-                    rawOutputStream
-                }
-
-            tempFile.inputStream().use { input ->
-                outputStream.use { output -> FileUtils.copy(input, output) }
-            }
-
-            return Result.success()
-        } finally {
-            tempFile.deleteIfExists()
-        }
+        return Result.success()
     }
 }

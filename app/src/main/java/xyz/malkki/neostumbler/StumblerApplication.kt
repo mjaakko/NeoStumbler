@@ -21,10 +21,6 @@ import kotlin.io.path.createDirectories
 import kotlin.io.path.deleteIfExists
 import kotlin.io.path.deleteRecursively
 import kotlin.io.path.exists
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.viewModel
@@ -36,31 +32,16 @@ import xyz.malkki.neostumbler.crashlog.CrashLogManager
 import xyz.malkki.neostumbler.crashlog.FileCrashLogManager
 import xyz.malkki.neostumbler.data.battery.AndroidBatteryLevelMonitor
 import xyz.malkki.neostumbler.data.battery.BatteryLevelMonitor
-import xyz.malkki.neostumbler.data.geocoder.AndroidGeocoder
-import xyz.malkki.neostumbler.data.geocoder.Geocoder
 import xyz.malkki.neostumbler.data.location.AndroidGpsStatusSource
 import xyz.malkki.neostumbler.data.location.GpsStatusSource
-import xyz.malkki.neostumbler.data.reports.RawReportImportExport
-import xyz.malkki.neostumbler.data.reports.ReportExportProvider
-import xyz.malkki.neostumbler.data.reports.ReportProvider
-import xyz.malkki.neostumbler.data.reports.ReportRemover
-import xyz.malkki.neostumbler.data.reports.ReportSaver
-import xyz.malkki.neostumbler.data.reports.ReportStatisticsProvider
-import xyz.malkki.neostumbler.data.reports.ReportStorageMetadataProvider
 import xyz.malkki.neostumbler.data.settings.DataStoreSettings
 import xyz.malkki.neostumbler.db.DbPruneWorker
-import xyz.malkki.neostumbler.db.ReportDatabaseManager
-import xyz.malkki.neostumbler.db.RoomRawReportImportExport
-import xyz.malkki.neostumbler.db.RoomReportExportProvider
-import xyz.malkki.neostumbler.db.RoomReportProvider
-import xyz.malkki.neostumbler.db.RoomReportRemover
-import xyz.malkki.neostumbler.db.RoomReportSaver
-import xyz.malkki.neostumbler.db.RoomReportStatisticsProvider
-import xyz.malkki.neostumbler.db.RoomReportStorageMetadataProvider
+import xyz.malkki.neostumbler.di.exportModule
+import xyz.malkki.neostumbler.di.geocoderModule
+import xyz.malkki.neostumbler.di.networkModule
+import xyz.malkki.neostumbler.di.reportDatabaseModule
 import xyz.malkki.neostumbler.di.reviewModule
-import xyz.malkki.neostumbler.export.CsvExporter
 import xyz.malkki.neostumbler.extensions.getTextCompat
-import xyz.malkki.neostumbler.http.getCallFactory
 import xyz.malkki.neostumbler.location.locationModule
 import xyz.malkki.neostumbler.scanner.passive.passiveScanningModule
 import xyz.malkki.neostumbler.scanner.postprocess.postProcessorsModule
@@ -121,27 +102,7 @@ class StumblerApplication : Application() {
 
             modules(module { single<CrashLogManager> { FileCrashLogManager(crashLogDirectory) } })
 
-            modules(
-                module {
-                    single { ReportDatabaseManager(get()) }
-
-                    single<ReportStorageMetadataProvider> {
-                        RoomReportStorageMetadataProvider(get())
-                    }
-
-                    single<RawReportImportExport> { RoomRawReportImportExport(get(), get()) }
-
-                    single<ReportStatisticsProvider> { RoomReportStatisticsProvider(get()) }
-
-                    single<ReportProvider> { RoomReportProvider(get()) }
-
-                    single<ReportSaver> { RoomReportSaver(get()) }
-
-                    single<ReportRemover> { RoomReportRemover(get()) }
-
-                    single<ReportExportProvider> { RoomReportExportProvider(get()) }
-                }
-            )
+            modules(reportDatabaseModule)
 
             modules(
                 module {
@@ -151,20 +112,11 @@ class StumblerApplication : Application() {
                 }
             )
 
-            modules(module { single<Geocoder> { AndroidGeocoder(get()) } })
+            modules(geocoderModule)
 
-            modules(module { factory { CsvExporter(get(), get()) } })
+            modules(networkModule)
 
-            modules(
-                module {
-                    single {
-                        @OptIn(DelicateCoroutinesApi::class)
-                        GlobalScope.async(start = CoroutineStart.LAZY) {
-                            getCallFactory(this@StumblerApplication)
-                        }
-                    }
-                }
-            )
+            modules(exportModule)
 
             modules(locationModule)
 

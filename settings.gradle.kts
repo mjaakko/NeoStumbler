@@ -56,6 +56,12 @@ include(":app:data:reports:api")
 
 include(":app:data:reports:room")
 
+include(":app:feature:export:service")
+
+include(":app:feature:export:infra:api")
+
+include(":app:feature:export:infra:android")
+
 include(":libs:beacon-parser")
 
 include(":libs:room-converters")
