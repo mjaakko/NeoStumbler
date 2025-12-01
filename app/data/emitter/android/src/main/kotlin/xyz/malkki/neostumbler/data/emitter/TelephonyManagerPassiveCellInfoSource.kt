@@ -28,5 +28,7 @@ class TelephonyManagerPassiveCellInfoSource(private val telephonyManager: Teleph
         return telephonyManager.allCellInfo
             .mapNotNull { cellInfo -> cellInfo.toCellTower() }
             .fillMissingData(serviceState?.operatorNumeric)
+            // Filter cell infos which don't have enough useful data to be collected
+            .filter { it.emitter.hasEnoughData() }
     }
 }
