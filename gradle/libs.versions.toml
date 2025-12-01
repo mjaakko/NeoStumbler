@@ -38,7 +38,7 @@ androidx-core = { module = "androidx.core:core-ktx", version = "1.17.0" }
 
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.7.1" }
 
-androidx-splashscreen = { module = "androidx.core:core-splashscreen", version = "1.0.1" }
+androidx-splashscreen = { module = "androidx.core:core-splashscreen", version = "1.2.0" }
 
 androidx-lifecycleRuntimeCompose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidxLifecycle" }
 androidx-lifecycleRuntime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
