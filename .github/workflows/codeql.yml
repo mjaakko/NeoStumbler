@@ -27,7 +27,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@fdbfb4d2750291e159f0156def62b853c2798ca2 # v4
+        uses: github/codeql-action/init@fe4161a26a8629af62121b670040955b330f9af2 # v4
         with:
           languages: 'java-kotlin'
           build-mode: 'manual'
@@ -44,4 +44,4 @@ jobs:
         # Gradle build cache does not work with CodeQL
         run: ./gradlew assembleAll --no-build-cache
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@fdbfb4d2750291e159f0156def62b853c2798ca2 # v4
+        uses: github/codeql-action/analyze@fe4161a26a8629af62121b670040955b330f9af2 # v4
