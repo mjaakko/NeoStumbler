@@ -138,7 +138,7 @@ kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlinCompose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
-ksp = { id = "com.google.devtools.ksp", version = "2.3.0" }
+ksp = { id = "com.google.devtools.ksp", version = "2.3.3" }
 
 bundletool = { id = "app.accrescent.tools.bundletool", version = "0.2.4" }
 
