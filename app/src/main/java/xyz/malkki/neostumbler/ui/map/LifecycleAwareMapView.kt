@@ -88,7 +88,7 @@ class LifecycleAwareMapView(context: Context) : MapView(context) {
 }
 
 private fun getLocalizedLabelExpression(locale: Locale): Expression {
-    val preferredLanguage =
+    val preferredLanguages: MutableList<String> =
         if (locale.language == "zh") {
             /**
              * Handle different Chinese scripts by preferring the simplified script in any of the
@@ -105,32 +105,44 @@ private fun getLocalizedLabelExpression(locale: Locale): Expression {
                     (locale.country == "CN" && locale.script != "Hant") ||
                     (locale.country.isEmpty() && locale.script.isEmpty())
             ) {
-                arrayOf(
-                    Expression.get("name:zh-Hans"),
-                    Expression.get("name:zh-Hant"),
-                    Expression.get("name:zh"),
-                )
+                mutableListOf("name:zh-Hans", "name:zh-Hant", "name:zh")
             } else {
-                arrayOf(
-                    Expression.get("name:zh-Hant"),
-                    Expression.get("name:zh-Hans"),
-                    Expression.get("name:zh"),
-                )
+                mutableListOf("name:zh-Hant", "name:zh-Hans", "name:zh")
             }
         } else {
-            arrayOf(Expression.get("name:${locale.language}"))
+            mutableListOf("name:${locale.language}")
         }
 
-    return Expression.format(
-        Expression.formatEntry(
-            Expression.coalesce(
-                *preferredLanguage,
-                Expression.get("name:en"),
-                // VersaTiles does not seem to support localized labels and uses underscore instead
-                // in the expression
-                Expression.get("name_en"),
-                Expression.get("name"),
-            )
+    preferredLanguages +=
+        listOf(
+            // Fallback to English if the preferred language is not supported
+            "name:en",
+            // VersaTiles does not seem to support localized labels and uses underscore instead
+            // in the expression
+            "name_en",
+            "name",
         )
+
+    fun createExpressionForLanguage(languages: List<String>): Expression {
+        if (languages.isEmpty()) {
+            return Expression.get("name")
+        }
+
+        val language = languages.first()
+
+        return Expression.switchCase(
+            Expression.all(
+                // has -> get rid of nulls
+                Expression.has(language),
+                // neq -> get rid of empty strings
+                Expression.neq(Expression.get(language), ""),
+            ),
+            Expression.get(language),
+            createExpressionForLanguage(languages.subList(1, languages.size)),
+        )
+    }
+
+    return Expression.format(
+        Expression.formatEntry(createExpressionForLanguage(preferredLanguages.distinct()))
     )
 }
