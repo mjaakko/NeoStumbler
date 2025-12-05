@@ -202,7 +202,7 @@
     <string name="permission_rationale_background_location_passive_scan">Пассивный сбор данных требует доступ к геолокации в фоне для создания отчётов, когда приложение не активно</string>
     <string name="delete_all">Удалить всё</string>
     <string name="copy">Копировать</string>
-    <string name="text_copied_to_clipboard">Текст скопировать в буфер обмена!</string>
+    <string name="text_copied_to_clipboard">Текст скопирован в буфер обмена!</string>
     <string name="crash_log_title">Логи падения</string>
     <string name="crash_log_entry_title">Падение #%d</string>
     <string name="moving_device_filter_description">Двигающиеся сети Wi-Fi и маячки Bluetooth автоматически удаляются и фильтруются из отчётов</string>
