@@ -1,0 +1,6 @@
+UI
+- Kleuren aangepast voor een beter contrast
+- Inhoudsweergave onder de systeemnavigatiebalken hersteld voor grote schermen
+
+Overig
+- Vertalingen bijgewerkt
