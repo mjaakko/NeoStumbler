@@ -213,4 +213,5 @@
     <string name="privacy_policy">Privatumo nuostatai</string>
     <string name="beacon_type_ibeacon">„iBeacon“</string>
     <string name="beacon_type_altbeacon">„AltBeacon“</string>
+    <string name="map_data_sources">Žemėlapio duomenų šaltiniai</string>
 </resources>
