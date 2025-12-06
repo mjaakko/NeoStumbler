@@ -1,0 +1,19 @@
+Naudotojo sąsaja:
+- Migruota į „Material 3“ stiliaus išvaizdą
+- Patobulinta sąsaja didesniuose ekranuose
+- Žemėlapio rodinyje panaikinta antraštės juosta
+- Pridėtas tamsių žemėlapių palaikymas
+- Informacijos apie žemėlapį dialogas pataisytas, kad naudotų pasirinktą spalvų paletę
+- GPS būsena neberodoma įrenginiuose, neturinčiuose GPS imtuvo
+
+Pasyvusis duomenų rinkimas:
+- Per klaidą sudubliuoti ryšio bokštai išfiltruojami iš naudojantis keliomis SIM kortelėmis pasyviai surinktų ataskaitų
+- Pasyviojo duomenų rinkimo ataskaitos kuriamos kruopščiau, patikrinant, ar ankstesnėje ataskaitoje yra to paties tipo duomenys
+
+Techniniai pakeitimai:
+- Transliacijos apdorojamos asinchroniškai, siekiant geresnės greitaveikos
+- Pasyviojo skenavimo būsenos kaupykla papildyta pažeistų duomenų apdorojimu
+- Atnaujintos naudojamos programinės bibliotekos
+
+Kita:
+- Atnaujinti vertimai
