@@ -177,7 +177,7 @@
     </plurals>
     <string name="wifi_filter_settings_hint">Ha az SSID az alábbi kulcsszavak bármelyikét tartalmazza, akkor a Wi-Fi hálózat nem lesz naplózva</string>
     <string name="moving_device_filter_title">Mozgó eszközök szűrése</string>
-    <string name="permission_rationale_background_location_passive_scan">Az app háttérben (nem aktív módban) való használatához engedélyezni kell a háttérben való pozíció elérést</string>
+    <string name="permission_rationale_background_location_passive_scan">A passzív adatgyűjtéshez engedélyezni kell a háttérben való helyadat hozzáférést, hogy az app inaktív üzemmódban is tudjon eredményeket rögzíteni</string>
     <string name="crash_log_title">Hibanapló</string>
     <string name="db_schema_version">Az adatbázis séma verziója: %d</string>
     <string name="system_default_language">A rendszer alapértelmezett nyelve</string>
@@ -208,4 +208,5 @@
     <string name="beacon_type_ibeacon">iBeacon</string>
     <string name="beacon_type_altbeacon">AltBeacon</string>
     <string name="map_data_sources">Térkép adatforrás</string>
+    <string name="privacy_policy">Adatvédelmi irányelvek</string>
 </resources>
