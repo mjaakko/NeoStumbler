@@ -1,0 +1,19 @@
+UI / UX
+- Áttérés a Material 3 stílusú felhasználói felületre
+- Az ikonok Material Symbols-ra cserélve
+- A felhasználói felület javítása nagyobb képernyőkhöz
+- A címsor eltávolítása a térkép képernyőről
+- Sötét térképstílusok támogatása
+- A térkép attribútumok párbeszédablakának javítása, amely nem használta a kiválasztott témát
+- A GPS-állapot már nem jelenik meg, ha az eszköz nem rendelkezik GPS-vevővel
+
+Passzív adatgyűjtés
+- Több SIM-kártya használata esetén a passzívan létrehozott eredményekből kiszűri az érvénytelen, duplikált cellaadatokat
+- A passzív adatgyűjtés mostantól hatékonyabban hoz létre eredményeket, ellenőrizve, hogy az előző eredmény tartalmaz-e azonos típusú adatokat
+
+Műszaki
+- A jobb teljesítmény érdekében a jelek adatait mostantól aszinkron módban dolgozza fel
+- Hozzáadva az eseménykezelő a passzív szkennelési állapottárolóhoz 
+
+Egyéb
+- Fordítások frissítése
