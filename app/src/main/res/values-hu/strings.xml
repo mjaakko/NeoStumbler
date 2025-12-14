@@ -121,7 +121,7 @@
     <string name="db_prune_two_months">Két hónap múlva</string>
     <string name="troubleshooting_title">Hibaelhárítás</string>
     <string name="update_translations_button">Fordítás frissítése</string>
-    <string name="permission_rationale_background_location_quick_settings">A gyorsbeállításokból szkennelés indításához engedély szükséges a háttérben való helymeghatározáshoz</string>
+    <string name="permission_rationale_background_location_quick_settings">A gyorsbeállításokból szkennelés indításához engedélyezni kell a háttérben való helymeghatározást. Enélkül az Android nem engedélyezi a futtatást és az adatgyűjtést</string>
     <string name="use_dynamic_color_ui">Dimanikus színek használata a grafikus felületen</string>
     <string name="db_prune_six_months">Hat honap múlva</string>
     <string name="db_size">Adatbázis mérete: %s</string>
