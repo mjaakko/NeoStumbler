@@ -9,11 +9,14 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
@@ -181,7 +184,8 @@ fun SettingsScreen() {
 
             Row(
                 modifier =
-                    Modifier.padding(horizontal = 24.dp, vertical = 16.dp).handleDisplayCutouts(),
+                    Modifier.padding(horizontal = 24.dp, vertical = 16.dp)
+                        .windowInsetsPadding(WindowInsets.safeContent),
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Column(modifier = Modifier.width(250.dp).fillMaxHeight()) {
