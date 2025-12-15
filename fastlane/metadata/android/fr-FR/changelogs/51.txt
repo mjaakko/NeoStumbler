@@ -1,0 +1,6 @@
+Interface
+- Couleurs ajustées pour un meilleur contraste
+- Correction d'un problème qui pouvait afficher du contenu sous la barre de navigation système sur grand écran
+
+Autres
+- Mise à jour des traductions

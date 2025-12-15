@@ -1,0 +1,19 @@
+Interface
+- Interface Material 3
+- Icônes remplacées par celles de Material Symbols
+- Meilleure interface pour les grands écrans
+- Suppression de la barre de titre sur la carte
+- Thèmes sombres sur la carte
+- Correction de l'attribution de la carte qui n'utilisait pas le thème
+- L'état du GPS n'est plus affiché si l'appareil n'en a pas
+
+Collecte de données passive
+- Filtrage des antennes téléphoniques si plusieurs cartes SIM sont utilisées
+- Davantage de rapports sont créés en comparant les types de données avec le rapport précédent
+
+Technique
+- Gestion asynchrone des diffusions
+- Détection de corruption lors du scan passif
+
+Autres
+- Mise à jour des traductions

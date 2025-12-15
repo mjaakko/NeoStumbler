@@ -9,4 +9,5 @@
     </string>
     <string name="prefer_fused_location_description">Fused location provider peut combiner les données à partir d\'autres sources que le GPS pour déterminer l\'emplacement</string>
     <string name="autoscan_failed_to_enable_description">Les mesures automatiques utilisent les services Google Play, qui pourraient ne pas être disponible sur votre appareil</string>
+    <string name="fused_location_no_gps_warning">L\'appareil n\'a pas de récepteur GPS</string>
 </resources>

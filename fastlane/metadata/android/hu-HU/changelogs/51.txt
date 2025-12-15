@@ -1,0 +1,6 @@
+UI
+- A színek kontrasztjának javítása
+- A nagy képernyőkön a rendszer navigációs sávjai alatt megjelenő tartalom javítása
+
+Egyéb
+- Fordítások frissítése

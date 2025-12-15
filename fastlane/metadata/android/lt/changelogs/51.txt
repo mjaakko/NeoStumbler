@@ -1,0 +1,6 @@
+Naudotojo sąsaja:
+- Siekiant geresnio kontrasto, pakoreguotos naudojamos spalvos
+- Sutvarkyta problema, dėl kurios didesniuose ekranuose programos turinys galėjo būti atvaizduojamas po sistemos navigacijos juostomis
+
+Kita:
+- Atnaujinti vertimai

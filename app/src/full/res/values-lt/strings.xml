@@ -7,4 +7,5 @@
     <string name="permission_rationale_activity_recognition">Automatiniam skenavimui reikalingas leidimas prieigai prie fizinės veiklos</string>
     <string name="prefer_fused_location_description">Jungtinė vietovės tarnyba gali kombinuoti vietovės nustatymo duomenis iš kitų šaltinių nei GPS</string>
     <string name="autoscan_failed_to_enable_description">Automatiniam skenavimui naudojamas „Google Play Services“ veiklos aptikimas. Gali būti, kad jūsų įrenginyje jis nepalaikomas</string>
+    <string name="fused_location_no_gps_warning">Įrenginyje neaptiktas GPS imtuvas</string>
 </resources>
