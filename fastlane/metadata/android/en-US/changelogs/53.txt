@@ -1,0 +1,3 @@
+- Fixed content being drawn under system bars in the settings on larger screens
+- Fixed map labels not loading with VersaTiles
+- Updated translations
