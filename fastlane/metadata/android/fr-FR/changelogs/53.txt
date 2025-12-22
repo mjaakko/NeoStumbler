@@ -1,0 +1,3 @@
+- Correction d'un problème qui pouvait afficher du contenu sous la barre de navigation système sur grand écran
+- Correction des textes de la carte qui ne s'affichaient pas avec VersaTiles
+- Mise à jour des traductions
