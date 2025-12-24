@@ -1,7 +1,7 @@
 plugins { id("convention.kotlin-library") }
 
 dependencies {
-    api(project(":app:core"))
+    api(project(":app:core:domain"))
 
     api(platform(libs.kotlinx.coroutinesBom))
     api(libs.kotlinx.coroutinesCore)

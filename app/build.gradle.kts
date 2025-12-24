@@ -255,8 +255,8 @@ dependencies {
     implementation(project(":libs:executors"))
     implementation(project(":libs:coroutine-broadcast-receiver"))
 
-    implementation(project(":app:core"))
-    implementation(project(":app:core:mapper:android-location"))
+    implementation(project(":app:core:domain"))
+    implementation(project(":app:core:domain:mapper:android-location"))
 
     implementation(project(":app:data:crashlog:android"))
 

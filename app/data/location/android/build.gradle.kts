@@ -7,7 +7,7 @@ dependencies {
 
     implementation(project(":libs:executors"))
     implementation(project(":libs:broadcast-receiver-flow"))
-    implementation(project(":app:core:mapper:android-location"))
+    implementation(project(":app:core:domain:mapper:android-location"))
 
     implementation(libs.androidx.core)
     implementation(libs.timber)

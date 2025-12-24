@@ -18,9 +18,9 @@ rootProject.name = "NeoStumbler"
 
 include(":app")
 
-include(":app:core")
+include(":app:core:domain")
 
-include(":app:core:mapper:android-location")
+include(":app:core:domain:mapper:android-location")
 
 include(":app:data:airpressure:api")
 
