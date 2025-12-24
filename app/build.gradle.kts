@@ -96,7 +96,6 @@ android {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
-                "altbeacon.pro",
             )
 
             ndk { abiFilters += listOf("armeabi-v7a", "arm64-v8a") }
@@ -247,7 +246,6 @@ aboutLibraries {
 }
 
 dependencies {
-    implementation(project(":libs:beacon-library-utils"))
     implementation(project(":libs:geography"))
     implementation(project(":libs:ichnaea"))
     implementation(project(":libs:utils"))
@@ -341,8 +339,6 @@ dependencies {
     testImplementation(libs.okhttpMockWebServer)
 
     implementation(libs.kotlinx.serializationJson)
-
-    implementation(libs.androidBeaconLibrary)
 
     implementation(libs.bundles.mapLibre)
 
