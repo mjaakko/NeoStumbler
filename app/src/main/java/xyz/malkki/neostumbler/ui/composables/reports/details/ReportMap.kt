@@ -24,11 +24,9 @@ import com.google.gson.JsonObject
 import java.io.IOException
 import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.seconds
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.retryWhen
-import okhttp3.Call
 import org.koin.compose.koinInject
 import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.camera.CameraUpdateFactory
@@ -58,6 +56,7 @@ import xyz.malkki.neostumbler.ichnaea.dto.GeolocateResponseDto
 import xyz.malkki.neostumbler.ichnaea.dto.WifiAccessPointDto
 import xyz.malkki.neostumbler.ichnaea.dto.latLng
 import xyz.malkki.neostumbler.ichnaea.mapper.getIchnaeaParams
+import xyz.malkki.neostumbler.network.HttpCallFactoryProvider
 import xyz.malkki.neostumbler.ui.composables.shared.ComposableMap
 import xyz.malkki.neostumbler.utils.maplibre.needsRecreation
 
@@ -301,14 +300,14 @@ private val GEOLOCATE_RETRY_DELAY = 20.seconds
 private fun getEstimatedReportLocation(
     report: Report,
     settings: Settings = koinInject(),
-    httpClientProvider: Deferred<Call.Factory> = koinInject(),
+    httpClientProvider: HttpCallFactoryProvider = koinInject(),
 ): State<GeolocateResponseDto?> {
     val geolocate =
         produceState<Geolocate?>(null) {
             val ichnaeaParams = settings.getIchnaeaParams()
 
             if (ichnaeaParams != null) {
-                value = IchnaeaClient(httpClientProvider.await(), ichnaeaParams)
+                value = IchnaeaClient(httpClientProvider.getHttpCallFactory(), ichnaeaParams)
             }
         }
 

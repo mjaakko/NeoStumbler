@@ -38,11 +38,11 @@ import xyz.malkki.neostumbler.data.settings.DataStoreSettings
 import xyz.malkki.neostumbler.db.DbPruneWorker
 import xyz.malkki.neostumbler.di.exportModule
 import xyz.malkki.neostumbler.di.geocoderModule
-import xyz.malkki.neostumbler.di.networkModule
 import xyz.malkki.neostumbler.di.reportDatabaseModule
 import xyz.malkki.neostumbler.di.reviewModule
 import xyz.malkki.neostumbler.extensions.getTextCompat
 import xyz.malkki.neostumbler.location.locationModule
+import xyz.malkki.neostumbler.network.networkModule
 import xyz.malkki.neostumbler.scanner.passive.passiveScanningModule
 import xyz.malkki.neostumbler.scanner.postprocess.postProcessorsModule
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel

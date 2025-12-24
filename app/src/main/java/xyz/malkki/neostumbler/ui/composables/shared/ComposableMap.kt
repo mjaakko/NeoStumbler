@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import kotlinx.coroutines.Deferred
 import okhttp3.Call
 import org.koin.compose.koinInject
 import org.maplibre.android.MapLibre
@@ -45,6 +44,7 @@ import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.data.settings.getEnumFlow
 import xyz.malkki.neostumbler.data.settings.getStringFlow
+import xyz.malkki.neostumbler.network.HttpCallFactoryProvider
 import xyz.malkki.neostumbler.ui.map.LifecycleAwareMapView
 import xyz.malkki.neostumbler.ui.map.MapTileSource
 
@@ -54,7 +54,7 @@ fun ComposableMap(
     onInit: @DisallowComposableCalls (MapLibreMap, MapView) -> Unit,
     onStyleUpdated: @DisallowComposableCalls (Style) -> Unit,
     updateMap: @Composable (MapLibreMap) -> Unit,
-    httpClientProvider: Deferred<Call.Factory> = koinInject(),
+    httpClientProvider: HttpCallFactoryProvider = koinInject(),
     settings: Settings = koinInject(),
 ) {
     val lifecycle = LocalLifecycleOwner.current.lifecycle
@@ -68,7 +68,9 @@ fun ComposableMap(
     var attributionDialogOpen by rememberSaveable { mutableStateOf(false) }
 
     val httpClient by
-        produceState<Call.Factory?>(null, httpClientProvider) { value = httpClientProvider.await() }
+        produceState<Call.Factory?>(null, httpClientProvider) {
+            value = httpClientProvider.getHttpCallFactory()
+        }
 
     val mapTileSource by
         settings

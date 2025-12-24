@@ -18,11 +18,7 @@ import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
 import kotlin.reflect.KClass
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.test.runTest
 import okhttp3.Call
 import okhttp3.Callback
@@ -45,6 +41,7 @@ import xyz.malkki.neostumbler.core.report.ReportEmitter
 import xyz.malkki.neostumbler.core.report.ReportPosition
 import xyz.malkki.neostumbler.data.settings.DataStoreSettings
 import xyz.malkki.neostumbler.data.settings.Settings
+import xyz.malkki.neostumbler.network.HttpCallFactoryProvider
 
 class ReportMapTest {
     private val requests: MutableList<Request> = mutableListOf()
@@ -127,9 +124,7 @@ class ReportMapTest {
                 module {
                     androidContext(testContext)
 
-                    single<Deferred<Call.Factory>> {
-                        @OptIn(DelicateCoroutinesApi::class) GlobalScope.async { mockHttpClient }
-                    }
+                    single<HttpCallFactoryProvider> { HttpCallFactoryProvider { mockHttpClient } }
 
                     single<DataStore<Preferences>>(PREFERENCES) { settingsStore }
 

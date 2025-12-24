@@ -16,11 +16,7 @@ import java.io.IOException
 import kotlin.reflect.KClass
 import kotlin.time.Duration
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
@@ -48,6 +44,7 @@ import xyz.malkki.neostumbler.data.location.LocationSource
 import xyz.malkki.neostumbler.data.settings.DataStoreSettings
 import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.geography.LatLng
+import xyz.malkki.neostumbler.network.HttpCallFactoryProvider
 
 class AreaPickerTest {
     @get:Rule
@@ -125,9 +122,7 @@ class AreaPickerTest {
                 module {
                     androidContext(testContext)
 
-                    single<Deferred<Call.Factory>> {
-                        @OptIn(DelicateCoroutinesApi::class) GlobalScope.async { mockHttpClient }
-                    }
+                    single<HttpCallFactoryProvider> { HttpCallFactoryProvider { mockHttpClient } }
 
                     single<DataStore<Preferences>>(PREFERENCES) {
                         PreferenceDataStoreFactory.create(

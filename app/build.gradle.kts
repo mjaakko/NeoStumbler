@@ -257,6 +257,7 @@ dependencies {
 
     implementation(project(":app:core:domain"))
     implementation(project(":app:core:domain:mapper:android-location"))
+    implementation(project(":app:core:network"))
 
     implementation(project(":app:data:crashlog:android"))
 

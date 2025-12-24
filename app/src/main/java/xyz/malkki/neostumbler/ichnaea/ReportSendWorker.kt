@@ -11,9 +11,7 @@ import androidx.work.WorkerParameters
 import androidx.work.hasKeyWithValueOfType
 import java.io.IOException
 import java.time.Instant
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.flow.first
-import okhttp3.Call
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import timber.log.Timber
@@ -25,8 +23,9 @@ import xyz.malkki.neostumbler.data.reports.ReportSaver
 import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.data.settings.getBooleanFlow
 import xyz.malkki.neostumbler.extensions.getTextCompat
-import xyz.malkki.neostumbler.http.isRetryable
 import xyz.malkki.neostumbler.ichnaea.mapper.getIchnaeaParams
+import xyz.malkki.neostumbler.network.HttpCallFactoryProvider
+import xyz.malkki.neostumbler.network.NetworkErrorHandler
 
 // By default, WorkManager will retry indefinitely.
 // If uploading hasn't been successful after 5 retries,
@@ -53,7 +52,8 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) :
         const val ERROR_TYPE_NO_ENDPOINT_CONFIGURED: Int = 1000
     }
 
-    private val httpClientProvider: Deferred<Call.Factory> by inject<Deferred<Call.Factory>>()
+    private val httpClientProvider: HttpCallFactoryProvider by inject()
+    private val networkErrorHandler: NetworkErrorHandler by inject()
 
     private val settings: Settings by inject()
 
@@ -66,7 +66,7 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) :
                 "Using endpoint ${geosubmitParams.submissionPath} with API key ${geosubmitParams.apiKey} for Geosubmit"
             )
 
-            IchnaeaClient(httpClientProvider.await(), geosubmitParams)
+            IchnaeaClient(httpClientProvider.getHttpCallFactory(), geosubmitParams)
         }
     }
 
@@ -148,7 +148,7 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) :
             return true
         }
 
-        return exception.isRetryable()
+        return networkErrorHandler.isRetryable(exception)
     }
 
     override suspend fun getForegroundInfo(): ForegroundInfo {

@@ -22,6 +22,8 @@ include(":app:core:domain")
 
 include(":app:core:domain:mapper:android-location")
 
+include(":app:core:network")
+
 include(":app:data:airpressure:api")
 
 include(":app:data:airpressure:android")
