@@ -7,4 +7,5 @@
     <string name="permission_rationale_activity_recognition">Um das Automatische Scannen zu starten, wird Zugriff auf die aktuelle Aktivität benötigt</string>
     <string name="prefer_fused_location_description">Der Anbieter eines kombinierten Standorts kombiniert Daten anderer Quellen als GPS, um den Standort zu bestimmen</string>
     <string name="autoscan_failed_to_enable_description">Das automatische Scannen verwendet die Aktivitätserkennung von Google Play Services, die auf deinem Gerät möglicherweise nicht verfügbar ist</string>
+    <string name="fused_location_no_gps_warning">Gerät hat keinen GPS-Empfänger</string>
 </resources>
