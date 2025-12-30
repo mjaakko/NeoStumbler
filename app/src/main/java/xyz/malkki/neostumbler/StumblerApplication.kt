@@ -40,6 +40,7 @@ import xyz.malkki.neostumbler.di.exportModule
 import xyz.malkki.neostumbler.di.geocoderModule
 import xyz.malkki.neostumbler.di.reportDatabaseModule
 import xyz.malkki.neostumbler.di.reviewModule
+import xyz.malkki.neostumbler.di.uploadModule
 import xyz.malkki.neostumbler.extensions.getTextCompat
 import xyz.malkki.neostumbler.location.locationModule
 import xyz.malkki.neostumbler.network.networkModule
@@ -117,6 +118,8 @@ class StumblerApplication : Application() {
             modules(networkModule)
 
             modules(exportModule)
+
+            modules(uploadModule)
 
             modules(locationModule)
 

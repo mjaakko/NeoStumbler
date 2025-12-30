@@ -276,6 +276,7 @@ dependencies {
     implementation(project(":app:data:reports:room"))
 
     implementation(project(":app:feature:export:infra:android"))
+    implementation(project(":app:feature:ichnaea-upload:infra:android"))
 
     implementation(platform(libs.koinBom))
     implementation(libs.koinCore)

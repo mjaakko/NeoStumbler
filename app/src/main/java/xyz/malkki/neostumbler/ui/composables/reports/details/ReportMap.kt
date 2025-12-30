@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.gson.JsonObject
 import java.io.IOException
 import kotlin.math.roundToInt
@@ -45,18 +46,14 @@ import org.maplibre.geojson.Point
 import timber.log.Timber
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.core.report.Report
-import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.domain.asMapLibreLatLng
 import xyz.malkki.neostumbler.geography.LatLng
-import xyz.malkki.neostumbler.ichnaea.Geolocate
-import xyz.malkki.neostumbler.ichnaea.IchnaeaClient
 import xyz.malkki.neostumbler.ichnaea.dto.BluetoothBeaconDto
 import xyz.malkki.neostumbler.ichnaea.dto.GeolocateRequestDto
 import xyz.malkki.neostumbler.ichnaea.dto.GeolocateResponseDto
 import xyz.malkki.neostumbler.ichnaea.dto.WifiAccessPointDto
 import xyz.malkki.neostumbler.ichnaea.dto.latLng
-import xyz.malkki.neostumbler.ichnaea.mapper.getIchnaeaParams
-import xyz.malkki.neostumbler.network.HttpCallFactoryProvider
+import xyz.malkki.neostumbler.ichnaeaupload.IchnaeaClientProvider
 import xyz.malkki.neostumbler.ui.composables.shared.ComposableMap
 import xyz.malkki.neostumbler.utils.maplibre.needsRecreation
 
@@ -299,17 +296,10 @@ private val GEOLOCATE_RETRY_DELAY = 20.seconds
 @Composable
 private fun getEstimatedReportLocation(
     report: Report,
-    settings: Settings = koinInject(),
-    httpClientProvider: HttpCallFactoryProvider = koinInject(),
+    ichnaeaClientProvider: IchnaeaClientProvider = koinInject(),
 ): State<GeolocateResponseDto?> {
     val geolocate =
-        produceState<Geolocate?>(null) {
-            val ichnaeaParams = settings.getIchnaeaParams()
-
-            if (ichnaeaParams != null) {
-                value = IchnaeaClient(httpClientProvider.getHttpCallFactory(), ichnaeaParams)
-            }
-        }
+        ichnaeaClientProvider.ichnaeaClient.collectAsStateWithLifecycle(initialValue = null)
 
     return produceState(null, report, geolocate.value) {
         val flow = flow {

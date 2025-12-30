@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.ichnaea
+package xyz.malkki.neostumbler.ichnaeaupload
 
 import android.app.Notification
 import android.content.Context
@@ -11,20 +11,15 @@ import androidx.work.WorkerParameters
 import androidx.work.hasKeyWithValueOfType
 import java.io.IOException
 import java.time.Instant
+import kotlin.time.Duration.Companion.hours
 import kotlinx.coroutines.flow.first
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import timber.log.Timber
-import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.StumblerApplication
-import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.data.reports.ReportProvider
 import xyz.malkki.neostumbler.data.reports.ReportSaver
 import xyz.malkki.neostumbler.data.settings.Settings
-import xyz.malkki.neostumbler.data.settings.getBooleanFlow
-import xyz.malkki.neostumbler.extensions.getTextCompat
-import xyz.malkki.neostumbler.ichnaea.mapper.getIchnaeaParams
-import xyz.malkki.neostumbler.network.HttpCallFactoryProvider
+import xyz.malkki.neostumbler.ichnaea.IchnaeaClient
 import xyz.malkki.neostumbler.network.NetworkErrorHandler
 
 // By default, WorkManager will retry indefinitely.
@@ -39,11 +34,17 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) :
     companion object {
         private const val REPORT_SEND_NOTIFICATION_ID = 55555
 
+        val UPLOAD_INTERVAL = 8.hours
+
         const val PERIODIC_WORK_NAME = "report_upload_periodic"
         const val ONE_TIME_WORK_NAME = "report_upload_one_time"
 
         const val INPUT_REUPLOAD_FROM = "reupload_from"
         const val INPUT_REUPLOAD_TO = "reupload_to"
+
+        const val INPUT_NOTIFICATION_CHANNEL_ID = "notification_channel_id"
+        const val INPUT_NOTIFICATION_TITLE = "notification_title"
+        const val INPUT_NOTIFICATION_ICON = "notification_icon"
 
         const val OUTPUT_REPORTS_SENT = "reports_sent"
         const val OUTPUT_ERROR_TYPE = "error_type"
@@ -52,42 +53,31 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) :
         const val ERROR_TYPE_NO_ENDPOINT_CONFIGURED: Int = 1000
     }
 
-    private val httpClientProvider: HttpCallFactoryProvider by inject()
     private val networkErrorHandler: NetworkErrorHandler by inject()
-
-    private val settings: Settings by inject()
 
     private val reportProvider: ReportProvider by inject()
     private val reportSaver: ReportSaver by inject()
 
-    private suspend fun getGeosubmitApi(): Geosubmit? {
-        return settings.getIchnaeaParams()?.let { geosubmitParams ->
-            Timber.d(
-                "Using endpoint ${geosubmitParams.submissionPath} with API key ${geosubmitParams.apiKey} for Geosubmit"
-            )
+    private val settings: Settings by inject()
 
-            IchnaeaClient(httpClientProvider.getHttpCallFactory(), geosubmitParams)
-        }
-    }
+    private val ichnaeaClientProvider: IchnaeaClientProvider by inject()
 
     override suspend fun doWork(): Result {
-        val geosubmit = getGeosubmitApi()
-
-        if (geosubmit == null) {
-            return Result.failure(
-                Data.Builder().putInt(OUTPUT_ERROR_TYPE, ERROR_TYPE_NO_ENDPOINT_CONFIGURED).build()
-            )
-        }
+        val geosubmit =
+            ichnaeaClientProvider.ichnaeaClient.first()
+                ?: return Result.failure(
+                    Data.Builder()
+                        .putInt(OUTPUT_ERROR_TYPE, ERROR_TYPE_NO_ENDPOINT_CONFIGURED)
+                        .build()
+                )
 
         val reportSender =
             ReportSender(
                 geosubmit = geosubmit,
                 reportProvider = reportProvider,
                 reportSaver = reportSaver,
+                settings = settings,
             )
-
-        val sendWithReducedMetadata =
-            settings.getBooleanFlow(PreferenceKeys.REDUCED_METADATA, false).first()
 
         val reupload =
             inputData.hasKeyWithValueOfType<Long>(INPUT_REUPLOAD_FROM) &&
@@ -106,9 +96,9 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) :
                 val from = Instant.ofEpochMilli(inputData.getLong(INPUT_REUPLOAD_FROM, 0))
                 val to = Instant.ofEpochMilli(inputData.getLong(INPUT_REUPLOAD_TO, 0))
 
-                reportSender.reuploadReports(from, to, sendWithReducedMetadata, progressListener)
+                reportSender.reuploadReports(from, to, progressListener)
             } else {
-                reportSender.sendNotUploadedReports(sendWithReducedMetadata, progressListener)
+                reportSender.sendNotUploadedReports(progressListener)
             }
 
             Result.success(createResultData(reportsSent))
@@ -162,15 +152,15 @@ class ReportSendWorker(appContext: Context, params: WorkerParameters) :
     private fun createNotification(): Notification {
         return NotificationCompat.Builder(
                 applicationContext,
-                StumblerApplication.REPORT_UPLOAD_NOTIFICATION_CHANNEL_ID,
+                inputData.getString(INPUT_NOTIFICATION_CHANNEL_ID)!!,
             )
             .setOngoing(true)
             .setLocalOnly(true)
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_DEFERRED)
             .setContentTitle(
-                applicationContext.getTextCompat(R.string.notification_sending_reports)
+                applicationContext.getString(inputData.getInt(INPUT_NOTIFICATION_TITLE, 0))
             )
-            .setSmallIcon(R.drawable.sync_24px)
+            .setSmallIcon(inputData.getInt(INPUT_NOTIFICATION_ICON, 0))
             .build()
     }
 }

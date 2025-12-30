@@ -49,6 +49,12 @@ import xyz.malkki.neostumbler.ui.map.LifecycleAwareMapView
 import xyz.malkki.neostumbler.ui.map.MapTileSource
 
 @Composable
+private fun HttpCallFactoryProvider.getCallFactoryAsState() =
+    produceState<Call.Factory?>(null, this) {
+        value = this@getCallFactoryAsState.getHttpCallFactory()
+    }
+
+@Composable
 fun ComposableMap(
     modifier: Modifier = Modifier,
     onInit: @DisallowComposableCalls (MapLibreMap, MapView) -> Unit,
@@ -67,10 +73,7 @@ fun ComposableMap(
 
     var attributionDialogOpen by rememberSaveable { mutableStateOf(false) }
 
-    val httpClient by
-        produceState<Call.Factory?>(null, httpClientProvider) {
-            value = httpClientProvider.getHttpCallFactory()
-        }
+    val httpClient by httpClientProvider.getCallFactoryAsState()
 
     val mapTileSource by
         settings

@@ -64,6 +64,12 @@ include(":app:feature:export:infra:api")
 
 include(":app:feature:export:infra:android")
 
+include(":app:feature:ichnaea-upload:service")
+
+include(":app:feature:ichnaea-upload:infra:api")
+
+include(":app:feature:ichnaea-upload:infra:android")
+
 include(":libs:beacon-parser")
 
 include(":libs:room-converters")

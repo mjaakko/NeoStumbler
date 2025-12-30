@@ -1,13 +1,27 @@
-package xyz.malkki.neostumbler.ichnaea
+package xyz.malkki.neostumbler.ichnaeaupload
 
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import kotlin.math.roundToInt
+import kotlinx.coroutines.flow.first
+import xyz.malkki.neostumbler.core.MacAddress
+import xyz.malkki.neostumbler.core.Position
+import xyz.malkki.neostumbler.core.emitter.BluetoothBeacon
+import xyz.malkki.neostumbler.core.emitter.CellTower
+import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
 import xyz.malkki.neostumbler.core.report.Report
+import xyz.malkki.neostumbler.core.report.ReportEmitter
+import xyz.malkki.neostumbler.core.report.ReportPosition
 import xyz.malkki.neostumbler.data.reports.ReportProvider
 import xyz.malkki.neostumbler.data.reports.ReportSaver
-import xyz.malkki.neostumbler.extensions.roundToMultipleOf
+import xyz.malkki.neostumbler.data.settings.Settings
+import xyz.malkki.neostumbler.data.settings.getBooleanFlow
+import xyz.malkki.neostumbler.ichnaea.Geosubmit
+import xyz.malkki.neostumbler.ichnaea.dto.BluetoothBeaconDto
+import xyz.malkki.neostumbler.ichnaea.dto.CellTowerDto
 import xyz.malkki.neostumbler.ichnaea.dto.ReportDto
-import xyz.malkki.neostumbler.ichnaea.mapper.toDto
+import xyz.malkki.neostumbler.ichnaea.dto.ReportDto.PositionDto
+import xyz.malkki.neostumbler.ichnaea.dto.WifiAccessPointDto
 
 /**
  * Limit the number of reports per batch to 950
@@ -31,13 +45,16 @@ class ReportSender(
     private val geosubmit: Geosubmit,
     private val reportProvider: ReportProvider,
     private val reportSaver: ReportSaver,
+    private val settings: Settings,
 ) {
     suspend fun reuploadReports(
         from: Instant,
         to: Instant,
-        reducedMetadata: Boolean,
         progressListener: (suspend (Int) -> Unit)? = null,
     ) {
+        val reducedMetadata =
+            settings.getBooleanFlow(IchnaeaPreferenceKeys.REDUCED_METADATA, false).first()
+
         val reportBatches =
             reportProvider
                 .getReportsForTimerange(fromTimestamp = from, toTimestamp = to)
@@ -61,10 +78,10 @@ class ReportSender(
         }
     }
 
-    suspend fun sendNotUploadedReports(
-        reducedMetadata: Boolean,
-        progressListener: (suspend (Int) -> Unit)? = null,
-    ) {
+    suspend fun sendNotUploadedReports(progressListener: (suspend (Int) -> Unit)? = null) {
+        val reducedMetadata =
+            settings.getBooleanFlow(IchnaeaPreferenceKeys.REDUCED_METADATA, false).first()
+
         var sent = 0
 
         while (true) {
@@ -133,4 +150,73 @@ class ReportSender(
                 ),
         )
     }
+}
+
+private fun Double.roundToMultipleOf(multiple: Double) = (this / multiple).roundToInt() * multiple
+
+private fun ReportEmitter<BluetoothBeacon, MacAddress>.toDto(): BluetoothBeaconDto {
+    return BluetoothBeaconDto(
+        macAddress = emitter.macAddress.value,
+        name = null,
+        beaconType = emitter.beaconType,
+        id1 = emitter.id1,
+        id2 = emitter.id2,
+        id3 = emitter.id3,
+        signalStrength = emitter.signalStrength,
+        age = age,
+    )
+}
+
+private fun ReportEmitter<CellTower, String>.toDto(): CellTowerDto {
+    return CellTowerDto(
+        radioType = emitter.radioType.name.lowercase(),
+        mobileCountryCode = emitter.mobileCountryCode?.toIntOrNull(),
+        mobileCountryCodeStr = emitter.mobileCountryCode,
+        mobileNetworkCode = emitter.mobileNetworkCode?.toIntOrNull(),
+        mobileNetworkCodeStr = emitter.mobileNetworkCode,
+        locationAreaCode = emitter.locationAreaCode,
+        cellId = emitter.cellId,
+        asu = emitter.asu,
+        primaryScramblingCode = emitter.primaryScramblingCode,
+        serving = emitter.serving,
+        signalStrength = emitter.signalStrength,
+        timingAdvance = emitter.timingAdvance,
+        arfcn = emitter.arfcn,
+        age = age,
+    )
+}
+
+private fun ReportEmitter<WifiAccessPoint, MacAddress>.toDto(): WifiAccessPointDto {
+    return WifiAccessPointDto(
+        macAddress = emitter.macAddress.value,
+        radioType = emitter.radioType?.to802String(),
+        ssid = emitter.ssid,
+        channel = emitter.channel,
+        frequency = emitter.frequency,
+        signalStrength = emitter.signalStrength,
+        signalToNoiseRatio = null,
+        age = age,
+    )
+}
+
+private fun ReportPosition.toDto(): PositionDto {
+    return PositionDto(
+        latitude = position.latitude,
+        longitude = position.longitude,
+        accuracy = position.accuracy?.takeUnless { it.isNaN() },
+        age = age,
+        altitude = position.altitude?.takeUnless { it.isNaN() },
+        altitudeAccuracy = position.altitudeAccuracy?.takeUnless { it.isNaN() },
+        heading = position.heading?.takeUnless { it.isNaN() },
+        pressure = position.pressure?.takeUnless { it.isNaN() },
+        speed = position.speed?.takeUnless { it.isNaN() },
+        // Ichnaea Geosubmit officially only supports these sources
+        // https://ichnaea.readthedocs.io/en/latest/api/geosubmit2.html#position-fields
+        source =
+            if (position.source == Position.Source.GPS) {
+                "gps"
+            } else {
+                "fused"
+            },
+    )
 }
