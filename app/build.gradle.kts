@@ -51,6 +51,7 @@ android {
                     "it",
                     "iw",
                     "ja",
+                    "kw",
                     "lt",
                     "nb-rNO",
                     "nl",
