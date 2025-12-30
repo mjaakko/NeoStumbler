@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="autoscan_when_moving">移动时自动扫描</string>
-    <string name="autoscan_failed_to_enable_title">启用自动扫描失败</string>
-    <string name="permission_rationale_background_location_autoscan">应用在后台时自动启动扫描需要后台定位权限</string>
-    <string name="permission_rationale_activity_recognition">自动启用扫描需要获取当前活动</string>
+    <string name="autoscan_failed_to_enable_title">自动扫描启用失败</string>
+    <string name="permission_rationale_background_location_autoscan">应用在后台进行自动扫描时，需要后台定位权限</string>
+    <string name="permission_rationale_activity_recognition">自动扫描需要获取当前活动状态</string>
     <string name="prefer_fused_location_title">偏好融合定位服务</string>
-    <string name="prefer_fused_location_description">融合定位服务可通过GPS之外的来源确定位置</string>
-    <string name="autoscan_failed_to_enable_description">使用 Google Play 服务的活动检测自动扫描，不一定适用于您的设备</string>
+    <string name="prefer_fused_location_description">融合定位服务可结合GPS以外的其他来源确定位置</string>
+    <string name="autoscan_failed_to_enable_description">自动扫描基于 Google Play 服务的活动检测功能，但您的设备似乎不支持此功能</string>
+    <string name="fused_location_no_gps_warning">此设备上没有GPS接收器</string>
 </resources>

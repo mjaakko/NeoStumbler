@@ -205,4 +205,8 @@
     <string name="geocoder_settings_title">Geocoder</string>
     <string name="geocoder_disabled_title">Deaktiviert</string>
     <string name="third_party_licenses">Drittanbieter-Lizenzen</string>
+    <string name="beacon_type_ibeacon">iBeacon</string>
+    <string name="beacon_type_altbeacon">AltBeacon</string>
+    <string name="map_data_sources">Kartendatenquellen</string>
+    <string name="privacy_policy">Datenschutzerklärung</string>
 </resources>
