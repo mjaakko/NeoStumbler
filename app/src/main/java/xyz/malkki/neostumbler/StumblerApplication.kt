@@ -3,6 +3,7 @@ package xyz.malkki.neostumbler
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.os.StrictMode
 import androidx.core.content.getSystemService
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
@@ -19,7 +20,6 @@ import kotlin.io.path.createDirectories
 import kotlin.io.path.deleteIfExists
 import kotlin.io.path.deleteRecursively
 import kotlin.io.path.exists
-import kotlin.properties.Delegates
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -94,13 +94,17 @@ class StumblerApplication : Application() {
                 },
         )
 
-    var bluetoothScanAvailable by Delegates.notNull<Boolean>()
-
     override fun onCreate() {
         super.onCreate()
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
+        }
+
+        if (BuildConfig.DEBUG) {
+            StrictMode.setThreadPolicy(
+                StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build()
+            )
         }
 
         val crashLogDirectory = filesDir.toPath().resolve("crash_log").createDirectories()
