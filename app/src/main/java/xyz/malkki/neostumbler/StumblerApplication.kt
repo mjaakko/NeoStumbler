@@ -15,6 +15,7 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import java.nio.file.Path
 import java.time.Duration
 import kotlin.io.path.createDirectories
 import kotlin.io.path.deleteIfExists
@@ -99,22 +100,17 @@ class StumblerApplication : Application() {
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
-        }
 
-        if (BuildConfig.DEBUG) {
+            // Allow disk reads in strict mode, because it's not feasible to fix them all
+            // (even AndroidX libraries do it..)
             StrictMode.setThreadPolicy(
-                StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build()
+                StrictMode.ThreadPolicy.Builder().detectAll().permitDiskReads().penaltyLog().build()
             )
         }
 
         val crashLogDirectory = filesDir.toPath().resolve("crash_log").createDirectories()
 
-        Thread.setDefaultUncaughtExceptionHandler(
-            FileLoggingUncaughtExceptionHandler(
-                directory = crashLogDirectory,
-                nextHandler = Thread.getDefaultUncaughtExceptionHandler(),
-            )
-        )
+        setupCrashMonitoring(crashLogDirectory)
 
         startKoin {
             androidContext(this@StumblerApplication)
@@ -199,26 +195,34 @@ class StumblerApplication : Application() {
 
         deleteOsmDroidFiles()
 
-        val workManager = WorkManager.getInstance(this)
-
         // Schedule worker for removing old reports
-        workManager.enqueueUniquePeriodicWork(
-            DbPruneWorker.PERIODIC_WORK_NAME,
-            ExistingPeriodicWorkPolicy.UPDATE,
-            PeriodicWorkRequestBuilder<DbPruneWorker>(Duration.ofDays(1))
-                .setConstraints(
-                    Constraints(
-                        requiredNetworkType = NetworkType.NOT_REQUIRED,
-                        requiresCharging = false,
-                        requiresStorageNotLow = false,
-                        requiresDeviceIdle = true,
-                        requiresBatteryNotLow = true,
+        WorkManager.getInstance(this)
+            .enqueueUniquePeriodicWork(
+                DbPruneWorker.PERIODIC_WORK_NAME,
+                ExistingPeriodicWorkPolicy.UPDATE,
+                PeriodicWorkRequestBuilder<DbPruneWorker>(Duration.ofDays(1))
+                    .setConstraints(
+                        Constraints(
+                            requiredNetworkType = NetworkType.NOT_REQUIRED,
+                            requiresCharging = false,
+                            requiresStorageNotLow = false,
+                            requiresDeviceIdle = true,
+                            requiresBatteryNotLow = true,
+                        )
                     )
-                )
-                .build(),
-        )
+                    .build(),
+            )
 
         setupNotificationChannels()
+    }
+
+    private fun setupCrashMonitoring(crashLogDir: Path) {
+        Thread.setDefaultUncaughtExceptionHandler(
+            FileLoggingUncaughtExceptionHandler(
+                directory = crashLogDir,
+                nextHandler = Thread.getDefaultUncaughtExceptionHandler(),
+            )
+        )
     }
 
     private fun setupNotificationChannels() {
