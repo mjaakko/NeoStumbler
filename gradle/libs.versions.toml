@@ -19,7 +19,7 @@ vico = "2.3.6"
 
 aboutLibraries = "13.1.0"
 
-multiplatformMarkdownRenderer = "0.38.1"
+multiplatformMarkdownRenderer = "0.39.0"
 
 [libraries]
 koinBom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
