@@ -1,0 +1,3 @@
+- Sutvarkyta problema, dėl kurios didesniuose ekranuose programos turinys galėjo būti atvaizduojamas po sistemos navigacijos juostomis
+- Pašalinta problema, dėl kurios nebuvo rodomi „VersaTile“ žemėlapių užrašai
+- Atnaujinti vertimai
