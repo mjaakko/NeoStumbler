@@ -1,7 +1,7 @@
 [versions]
 koin = "4.1.1"
 
-kotlin = "2.2.21"
+kotlin = "2.3.0"
 
 kotlinxCoroutines = "1.10.2"
 
