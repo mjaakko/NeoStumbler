@@ -10,12 +10,6 @@ updates:
       kotlinx:
         patterns:
           - 'org.jetbrains.kotlinx*'
-      kotlin-gradle-plugins:
-        patterns:
-          - 'org.jetbrains.kotlin.android'
-          - 'org.jetbrains.kotlin.plugin.compose'
-          - 'org.jetbrains.kotlin.plugin.serialization'
-          - 'com.google.devtools.ksp'
       android-gradle-plugins:
         patterns:
           - 'com.android.application'

@@ -24,7 +24,9 @@ class PressureSensorAirPressureSourceTest {
     @Test
     fun `Test that air pressure source does not emit values more often than requested`() = runTest {
         val mockSensorEvent = mock<SensorEvent>()
-        mockSensorEvent.values = floatArrayOf(1013.25f)
+        val valuesField = mockSensorEvent::class.java.fields.find { it.name == "values" }!!
+        valuesField.isAccessible = true
+        valuesField.set(mockSensorEvent, floatArrayOf(1013.25f))
 
         val mockSensor = mock<Sensor>()
 
