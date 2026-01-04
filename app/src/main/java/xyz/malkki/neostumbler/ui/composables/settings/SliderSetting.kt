@@ -38,7 +38,7 @@ fun SliderSetting(
     preferenceKey: String,
     range: IntRange,
     step: Int = 1,
-    valueFormatter: (Int) -> String = { it.toString() },
+    valueFormatter: @Composable (Int) -> String = { it.toString() },
     default: Int,
     settings: Settings = koinInject<Settings>(),
     saveButtonText: String = stringResource(R.string.save),

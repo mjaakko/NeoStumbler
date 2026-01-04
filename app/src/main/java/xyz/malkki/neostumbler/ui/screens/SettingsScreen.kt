@@ -31,10 +31,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.scanner.ScannerService
@@ -73,8 +71,6 @@ private fun ReportSettings() {
 
 @Composable
 private fun ScanningSettings() {
-    val context = LocalContext.current
-
     SettingsGroup(title = stringResource(id = R.string.settings_group_scanning)) {
         MovementDetectorSettings()
         FusedLocationToggle()
@@ -87,9 +83,9 @@ private fun ScanningSettings() {
             step = 5,
             valueFormatter = {
                 if (it == 0) {
-                    context.getString(R.string.disabled)
+                    stringResource(R.string.disabled)
                 } else {
-                    context.getString(R.string.pause_scanning_on_low_battery_description, it)
+                    stringResource(R.string.pause_scanning_on_low_battery_description, it)
                 }
             },
             default = 0,
@@ -100,9 +96,7 @@ private fun ScanningSettings() {
             // Some translations assume this will always be a multiple of ten
             range = 10..250,
             step = 10,
-            valueFormatter = {
-                ContextCompat.getString(context, R.string.every_x_meters).format(it)
-            },
+            valueFormatter = { stringResource(R.string.every_x_meters, it) },
             default = ScannerService.DEFAULT_WIFI_SCAN_DISTANCE,
         )
 
@@ -112,9 +106,7 @@ private fun ScanningSettings() {
             // Some translations assume this will always be a multiple of ten
             range = 20..500,
             step = 20,
-            valueFormatter = {
-                ContextCompat.getString(context, R.string.every_x_meters).format(it)
-            },
+            valueFormatter = { stringResource(R.string.every_x_meters, it) },
             default = ScannerService.DEFAULT_CELL_SCAN_DISTANCE,
         )
 
