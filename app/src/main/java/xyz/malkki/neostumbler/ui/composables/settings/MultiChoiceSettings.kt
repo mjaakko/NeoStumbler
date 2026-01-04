@@ -40,8 +40,8 @@ fun <O> MultiChoiceSettings(
     options: Collection<O>,
     selectedOption: O,
     disabledOptions: Set<O> = emptySet(),
-    titleProvider: (O) -> String,
-    descriptionProvider: ((O) -> String?)? = null,
+    titleProvider: @Composable (O) -> String,
+    descriptionProvider: @Composable ((O) -> String?)? = null,
     onValueSelected: suspend (O) -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -83,8 +83,8 @@ private fun <O> MultiChoiceSettingsDialog(
     options: Collection<O>,
     selectedOption: O,
     disabledOptions: Set<O> = emptySet(),
-    titleProvider: (O) -> String,
-    descriptionProvider: ((O) -> String?)? = null,
+    titleProvider: @Composable (O) -> String,
+    descriptionProvider: @Composable ((O) -> String?)? = null,
     onValueSelected: (O) -> Unit,
 ) {
     BasicAlertDialog(onDismissRequest = { onValueSelected(selectedOption) }) {
