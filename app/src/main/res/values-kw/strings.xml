@@ -41,7 +41,7 @@
     <string name="scanning_status_active">Arhwilyansow <annotation style="status">byw</annotation></string>
     <string name="scanning_status_not_active">Arhwilyansow<annotation style="status">na byw</annotation></string>
     <string name="delete_report">Dilea derivas</string>
-    <string name="delete_report_confirmation">Os ta sur hwi mynnes dilea an derivas?</string>
+    <string name="delete_report_confirmation">Os ta sur ty mynnes dilea an derivas?</string>
     <plurals name="toast_reports_uploaded">
         <item quantity="zero">Ughkargys %d derivasow</item>
         <item quantity="one">Ughkargys %d derivas</item>
@@ -110,7 +110,7 @@
     <string name="beacons">Beaconys Bluetooth</string>
     <string name="add_quick_settings_tile">Addya prileghen settyansow dhe dalleth yn es arhwilyansow?</string>
     <string name="mls_warning_title">MLS yw marow</string>
-    <string name="mls_warning_text">Gonis Mozilla GPS yw marow ha na fella receva data. Byttegyns, hwi gallos danvon data dhe beaconDB, may provia unn gonis kesplegadow gans GMG\n\nMar pleg, attendya dre beaconDB yw yn displegyans hwath hag an feth ma menni ass hwi data yw handla. Hwi gallos redya an <annotation link="privacy_policy">polici privetter</annotation> dhe moy kudhlow\n\n\nA vynn\'ta gorra beaconDB dhe an diwedhva? Ma gallos chanjys a-wosa yn an settyansow</string>
+    <string name="mls_warning_text">Gonis Mozilla GPS yw marow ha na fella receva data. Byttegyns, ty gallos danvon data dhe beaconDB, may provia unn gonis kesplegadow gans GMG\n\nMar pleg, attendya dre beaconDB yw yn displegyans hwath hag an feth ma menni ass ty data yw handla. Ty gallos redya an <annotation link="privacy_policy">polici privetter</annotation> dhe moy kudhlow\n\n\nA vynn\'ta gorra beaconDB dhe an diwedhva? Ma gallos chanjys a-wosa yn an settyansow</string>
     <string name="endpoint">Diwedhva</string>
     <string name="submission_path">Gorgevren rag data</string>
     <string name="locate_path">Gorgevren rag GPS</string>
@@ -128,7 +128,7 @@
     <string name="settings_ignore_wifi_scan_throttling_title">Skonya aswon finyow arhwilyans Wi-fi</string>
     <string name="settings_ignore_wifi_scan_throttling_description">Mar arhwilyansow yw strothys, arhwilyansow peswar hepken gallos bos performys yn unn termyn a dew mynysennow</string>
     <string name="wifi_scan_throttling">Finyow arhwilyans Wi-fi</string>
-    <string name="wifi_scan_throttling_explanation">Hwi res ungallosegi finyow arhwilans Wi-fi yn an settyansow a agas devis dhe gallosegi an nas ma. Dell yw usys, ma gallos bos gwrys yn an settyansyow teknogel</string>
+    <string name="wifi_scan_throttling_explanation">Ty res ungallosegi finyow arhwilans Wi-fi yn an settyansow a agas devis dhe gallosegi an nas ma. Dell yw usys, ma gallos bos gwrys yn an settyansyow teknogel</string>
     <string name="settings_group_reports">Derivasow</string>
     <string name="settings_group_scanning">Arhwilasow</string>
     <string name="settings_group_privacy">Privetter</string>
@@ -158,7 +158,7 @@
     <string name="movement_detection_location_title">GPS</string>
     <string name="movement_detection_location_description">Powesys arhwilyansow pan tyller na chanjya. GPS pesya byw</string>
     <string name="passive_scanning_title">Kuntel data godhevek</string>
-    <string name="passive_scanning_description">Kuntel data godhevek gul derivasow yn kilva gans effeyth ispoyntel war batri gans gul devnydh a data govynys gans appys aral.\n\nAn effeythuster a kuntel data godhevek kregi war eghen devis, an appys aral hwi devnydhya, ha mar provier kesunys GPS yw kavadow.\n\nAttendya a kuntel data godhevek na oberi gans beaconys Bluetooth.\n\nA vynn\'ta gallosegi kuntel data godhevek?</string>
+    <string name="passive_scanning_description">Kuntel data godhevek gul derivasow yn kilva gans effeyth ispoyntel war batri gans gul devnydh a data govynys gans appys aral.\n\nAn effeythuster a kuntel data godhevek kregi war eghen devis, an appys aral ty devnydhya, ha mar provier kesunys GPS yw kavadow.\n\nAttendya a kuntel data godhevek na oberi gans beaconys Bluetooth.\n\nA vynn\'ta gallosegi kuntel data godhevek?</string>
     <string name="movement_detection_significant_motion_title">Helerghell gwayans</string>
     <string name="movement_detection_significant_motion_description">Powesys arhwilyansow ha GPS pan na gwayans yw helerghi. Sawya batri, mar na oberi fydhyadow war nebes devisyow</string>
     <string name="notification_style">Eghen messach</string>
@@ -180,7 +180,7 @@
     <string name="permission_rationale_read_phone_state">Hedhas dhe studh devis yw res dhe arhwilas touryow kellgowser</string>
     <string name="permission_rationale_bluetooth">Arhwilas beaconys Bluetooth res gront rag Bluetooth</string>
     <string name="permission_rationale_post_notifications">Diskwedhes messach studh res gront rag messajys</string>
-    <string name="permission_rationale_background_location_quick_settings">Dalleth arhwilas a an settyansow res hedhas dhe GPS yn kilva.\n\nAttendya a an fronnans ma yw beghya gans Android. Agas tyller yw na drehedhes yn kilva mar hwi na gallosegi arhwilyansow godhevek po awtomatek</string>
+    <string name="permission_rationale_background_location_quick_settings">Dalleth arhwilas a an settyansow res hedhas dhe GPS yn kilva.\n\nAttendya a an fronnans ma yw beghya gans Android. Agas tyller yw na drehedhes yn kilva mar ty na gallosegi arhwilyansow godhevek po awtomatek</string>
     <string name="permission_rationale_background_location_passive_scan">Kuntel data godhevek res hedhas dhe GPS in kilva dhe gul derivasow pan an app yw na byw</string>
     <string name="permission_rationale_location_map">Diskwedhes agas tyller war an mappa res gront rag GPS</string>
     <string name="troubleshooting_title">Prevessyans</string>
@@ -208,7 +208,7 @@
     <string name="delete_reports_by_date">Dilea derivasow erbynn dydh</string>
     <string name="delete_reports_from_area">Dilea derivasow erbynn tyller</string>
     <string name="delete_all_reports">Dilea oll derivasow</string>
-    <string name="delete_all_reports_confirmation">Os ta sur hwi mynnes dilea oll derivasow?</string>
+    <string name="delete_all_reports_confirmation">Os ta sur ty mynnes dilea oll derivasow?</string>
     <plurals name="toast_deleted_reports">
         <item quantity="zero">Dileys %d derivasow</item>
         <item quantity="one">Dileys %d derivas</item>
