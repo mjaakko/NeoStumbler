@@ -39,7 +39,7 @@
     <string name="start_scanning">Dalleth arhwilyansow</string>
     <string name="stop_scanning">Astel arhwilyansow</string>
     <string name="scanning_status_active">Arhwilyansow <annotation style="status">byw</annotation></string>
-    <string name="scanning_status_not_active">Arhwilyansow<annotation style="status">na byw</annotation></string>
+    <string name="scanning_status_not_active">Arhwilyansow <annotation style="status">na byw</annotation></string>
     <string name="delete_report">Dilea derivas</string>
     <string name="delete_report_confirmation">Os ta sur ty mynnes dilea an derivas?</string>
     <plurals name="toast_reports_uploaded">
@@ -69,12 +69,12 @@
     <string name="notification_sending_reports">Danvon derivasow</string>
     <string name="notification_wireless_scanning_title">Arhwilyansow diwiver byw</string>
     <plurals name="reports_created">
-        <item quantity="zero">%d derivasow gulys</item>
-        <item quantity="one">%d derivas gulys</item>
-        <item quantity="two">%d derivasow gulys</item>
-        <item quantity="few">%d derivasow gulys</item>
-        <item quantity="many">%d derivasow gulys</item>
-        <item quantity="other">%d derivasow gulys</item>
+        <item quantity="zero">%d derivasow gwrys</item>
+        <item quantity="one">%d derivas gwrys</item>
+        <item quantity="two">%d derivasow gwrys</item>
+        <item quantity="few">%d derivasow gwrys</item>
+        <item quantity="many">%d derivasow gwrys</item>
+        <item quantity="other">%d derivasow gwrys</item>
     </plurals>
     <string name="satellites_in_use">%1$d/%2$d lorellow yn usyans</string>
     <string name="ignore_battery_optimizations_title">Skonya aswon erbysyon batri</string>
@@ -87,7 +87,7 @@
     <string name="export_notification_channel_name">Esporth data</string>
     <string name="notification_exporting_data">Esperthi data…</string>
     <string name="export_data">Esperthi data</string>
-    <string name="export_no_file_chosen">Na yllyn esperthi data, dre reson restren vyth yw gulys</string>
+    <string name="export_no_file_chosen">Na yllyn esperthi data, dre reson restren vyth yw gwrys</string>
     <string name="export_started">Experthi data a %1$s dhe %2$s</string>
     <string name="export_csv">Esperthi avel CSV</string>
     <string name="export_raw_database">Esperthi sel dherivadow kriv</string>
@@ -165,13 +165,13 @@
     <string name="notification_style_minimal_title">Ispoyntel</string>
     <string name="notification_style_minimal_description">Diskwedhes an messach gans manylyon vyth</string>
     <string name="notification_style_basic_title">Selyek</string>
-    <string name="notification_style_basic_description">Diskwedhes an niver a derivasow gulys</string>
+    <string name="notification_style_basic_description">Diskwedhes an niver a derivasow gwrys</string>
     <string name="notification_style_detailed_title">Manylys</string>
-    <string name="notification_style_detailed_description">Diskwedhes an niver a derivasow gulys ha an niver a lorellow GNSS</string>
+    <string name="notification_style_detailed_description">Diskwedhes an niver a derivasow gwrys ha an niver a lorellow GNSS</string>
     <string name="app_language">Yeth</string>
     <string name="system_default_language">Yeth defowt system</string>
-    <string name="map_data_sources">Pennfentynnyow data mappa</string>
-    <string name="map_tile_source">Pennfenten data mappa</string>
+    <string name="map_data_sources">Devedhyansow data mappa</string>
+    <string name="map_tile_source">Devedhyans data mappa</string>
     <string name="map_tile_source_custom_title">A-vusur</string>
     <string name="map_tile_source_custom_style_url">Gorgevren gis mappa a-vusur</string>
     <string name="map_show_coverage_layer">Diskwedhes gwiskas efander</string>
