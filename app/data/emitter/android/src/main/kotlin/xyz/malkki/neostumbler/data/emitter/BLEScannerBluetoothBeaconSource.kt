@@ -10,10 +10,12 @@ import androidx.annotation.RequiresPermission
 import androidx.core.content.getSystemService
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filter
@@ -36,6 +38,8 @@ private val THROTTLE_RETRY_DELAY = 5.seconds
 
 // Timeout after which to restart scanning if no results are received
 private val SCAN_RESULT_TIMEOUT = 10.seconds
+
+private const val SCAN_RESULT_BUFFER_SIZE = 10
 
 class BLEScannerBluetoothBeaconSource(context: Context) : ActiveBluetoothBeaconSource {
     companion object {
@@ -144,30 +148,36 @@ class BLEScannerBluetoothBeaconSource(context: Context) : ActiveBluetoothBeaconS
             awaitClose { bleScanner.stopScan(callback) }
         }
 
-        return bluetoothScanFlow.timeout(SCAN_RESULT_TIMEOUT).retry { ex ->
-            if (ex is TimeoutCancellationException) {
-                Timber.i(
-                    "No Bluetooth scan results received in %s, restarting scanning..",
-                    SCAN_RESULT_TIMEOUT.toString(),
-                )
-            } else if (ex is BluetoothScanException) {
-                Timber.w("Bluetooth scan failed: %d", ex.errorCode)
-
-                if (
-                    ex.errorCode == ScanCallback.SCAN_FAILED_SCANNING_TOO_FREQUENTLY ||
-                        ex.errorCode == ScanCallback.SCAN_FAILED_OUT_OF_HARDWARE_RESOURCES
-                ) {
+        return bluetoothScanFlow
+            .buffer(
+                capacity = SCAN_RESULT_BUFFER_SIZE,
+                onBufferOverflow = BufferOverflow.DROP_OLDEST,
+            )
+            .timeout(SCAN_RESULT_TIMEOUT)
+            .retry { ex ->
+                if (ex is TimeoutCancellationException) {
                     Timber.i(
-                        "Scanning too often, retrying after %s",
-                        THROTTLE_RETRY_DELAY.toString(),
+                        "No Bluetooth scan results received in %s, restarting scanning..",
+                        SCAN_RESULT_TIMEOUT.toString(),
                     )
+                } else if (ex is BluetoothScanException) {
+                    Timber.w("Bluetooth scan failed: %d", ex.errorCode)
 
-                    delay(THROTTLE_RETRY_DELAY)
+                    if (
+                        ex.errorCode == ScanCallback.SCAN_FAILED_SCANNING_TOO_FREQUENTLY ||
+                            ex.errorCode == ScanCallback.SCAN_FAILED_OUT_OF_HARDWARE_RESOURCES
+                    ) {
+                        Timber.i(
+                            "Scanning too often, retrying after %s",
+                            THROTTLE_RETRY_DELAY.toString(),
+                        )
+
+                        delay(THROTTLE_RETRY_DELAY)
+                    }
                 }
-            }
 
-            true
-        }
+                true
+            }
     }
 
     private class BluetoothScanException(val errorCode: Int) : Exception()
