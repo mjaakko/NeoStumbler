@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="prefer_fused_location_title">Preferya provier kesunys GPS</string>
-    <string name="prefer_fused_location_description">Provier kesunys GPS gallos kesunya data a-dhia pennfentynnyow anGPS dhe determya an tyller</string>
+    <string name="prefer_fused_location_description">Provier kesunys GPS gallos kesunya data a-dhia devedhyansow anGPS dhe determya an tyller</string>
     <string name="fused_location_no_gps_warning">Devis re na unn degemerer GPS</string>
     <string name="autoscan_when_moving">Arhwilyansow awtomatek ha gwayow</string>
     <string name="autoscan_failed_to_enable_title">Fyllys dhe gallosegi arhwilyansow awtomatek</string>
