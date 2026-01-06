@@ -3,6 +3,7 @@ package xyz.malkki.neostumbler
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.os.StrictMode
 import androidx.core.content.getSystemService
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
@@ -14,12 +15,12 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import java.nio.file.Path
 import java.time.Duration
 import kotlin.io.path.createDirectories
 import kotlin.io.path.deleteIfExists
 import kotlin.io.path.deleteRecursively
 import kotlin.io.path.exists
-import kotlin.properties.Delegates
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -94,23 +95,22 @@ class StumblerApplication : Application() {
                 },
         )
 
-    var bluetoothScanAvailable by Delegates.notNull<Boolean>()
-
     override fun onCreate() {
         super.onCreate()
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
+
+            // Allow disk reads in strict mode, because it's not feasible to fix them all
+            // (even AndroidX libraries do it..)
+            StrictMode.setThreadPolicy(
+                StrictMode.ThreadPolicy.Builder().detectAll().permitDiskReads().penaltyLog().build()
+            )
         }
 
         val crashLogDirectory = filesDir.toPath().resolve("crash_log").createDirectories()
 
-        Thread.setDefaultUncaughtExceptionHandler(
-            FileLoggingUncaughtExceptionHandler(
-                directory = crashLogDirectory,
-                nextHandler = Thread.getDefaultUncaughtExceptionHandler(),
-            )
-        )
+        setupCrashMonitoring(crashLogDirectory)
 
         startKoin {
             androidContext(this@StumblerApplication)
@@ -195,26 +195,34 @@ class StumblerApplication : Application() {
 
         deleteOsmDroidFiles()
 
-        val workManager = WorkManager.getInstance(this)
-
         // Schedule worker for removing old reports
-        workManager.enqueueUniquePeriodicWork(
-            DbPruneWorker.PERIODIC_WORK_NAME,
-            ExistingPeriodicWorkPolicy.UPDATE,
-            PeriodicWorkRequestBuilder<DbPruneWorker>(Duration.ofDays(1))
-                .setConstraints(
-                    Constraints(
-                        requiredNetworkType = NetworkType.NOT_REQUIRED,
-                        requiresCharging = false,
-                        requiresStorageNotLow = false,
-                        requiresDeviceIdle = true,
-                        requiresBatteryNotLow = true,
+        WorkManager.getInstance(this)
+            .enqueueUniquePeriodicWork(
+                DbPruneWorker.PERIODIC_WORK_NAME,
+                ExistingPeriodicWorkPolicy.UPDATE,
+                PeriodicWorkRequestBuilder<DbPruneWorker>(Duration.ofDays(1))
+                    .setConstraints(
+                        Constraints(
+                            requiredNetworkType = NetworkType.NOT_REQUIRED,
+                            requiresCharging = false,
+                            requiresStorageNotLow = false,
+                            requiresDeviceIdle = true,
+                            requiresBatteryNotLow = true,
+                        )
                     )
-                )
-                .build(),
-        )
+                    .build(),
+            )
 
         setupNotificationChannels()
+    }
+
+    private fun setupCrashMonitoring(crashLogDir: Path) {
+        Thread.setDefaultUncaughtExceptionHandler(
+            FileLoggingUncaughtExceptionHandler(
+                directory = crashLogDir,
+                nextHandler = Thread.getDefaultUncaughtExceptionHandler(),
+            )
+        )
     }
 
     private fun setupNotificationChannels() {
