@@ -15,7 +15,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import xyz.malkki.neostumbler.ichnaea.dto.BluetoothBeaconDto
-import xyz.malkki.neostumbler.ichnaea.dto.CellTowerDto
 import xyz.malkki.neostumbler.ichnaea.dto.GeolocateRequestDto
 import xyz.malkki.neostumbler.ichnaea.dto.ReportDto
 
@@ -109,7 +108,7 @@ class IchnaeaClientTest {
                     considerIp = true,
                     cellTowers =
                         listOf(
-                            CellTowerDto(
+                            GeolocateRequestDto.CellTowerDto(
                                 radioType = "lte",
                                 mobileCountryCode = 10,
                                 mobileNetworkCode = 100,
