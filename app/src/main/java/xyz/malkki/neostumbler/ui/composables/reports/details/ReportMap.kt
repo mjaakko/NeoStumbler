@@ -46,7 +46,6 @@ import xyz.malkki.neostumbler.geography.LatLng
 import xyz.malkki.neostumbler.ichnaea.Geolocate
 import xyz.malkki.neostumbler.ichnaea.IchnaeaClient
 import xyz.malkki.neostumbler.ichnaea.dto.BluetoothBeaconDto
-import xyz.malkki.neostumbler.ichnaea.dto.CellTowerDto
 import xyz.malkki.neostumbler.ichnaea.dto.GeolocateRequestDto
 import xyz.malkki.neostumbler.ichnaea.dto.GeolocateResponseDto
 import xyz.malkki.neostumbler.ichnaea.dto.WifiAccessPointDto
@@ -275,7 +274,7 @@ private fun getEstimatedReportLocation(
                             report.cellTowers
                                 .filter { it.emitter.cellId != null }
                                 .map {
-                                    CellTowerDto(
+                                    GeolocateRequestDto.CellTowerDto(
                                         radioType = it.emitter.radioType.name.lowercase(),
                                         mobileCountryCode =
                                             it.emitter.mobileCountryCode!!.toIntOrNull()!!,
@@ -284,6 +283,8 @@ private fun getEstimatedReportLocation(
                                         locationAreaCode = it.emitter.locationAreaCode,
                                         cellId = it.emitter.cellId,
                                         signalStrength = it.emitter.signalStrength,
+                                        psc = it.emitter.primaryScramblingCode,
+                                        timingAdvance = it.emitter.timingAdvance,
                                     )
                                 },
                     )
