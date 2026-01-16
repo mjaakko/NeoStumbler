@@ -56,6 +56,7 @@ import xyz.malkki.neostumbler.db.RoomReportRemover
 import xyz.malkki.neostumbler.db.RoomReportSaver
 import xyz.malkki.neostumbler.db.RoomReportStatisticsProvider
 import xyz.malkki.neostumbler.db.RoomReportStorageMetadataProvider
+import xyz.malkki.neostumbler.di.reviewModule
 import xyz.malkki.neostumbler.export.CsvExporter
 import xyz.malkki.neostumbler.extensions.getTextCompat
 import xyz.malkki.neostumbler.http.getCallFactory
@@ -182,13 +183,15 @@ class StumblerApplication : Application() {
                 }
             )
 
+            modules(reviewModule)
+
             modules(
                 module {
                     viewModel { MapViewModel(get(), get(), get(), get(), get()) }
 
                     viewModel { StatisticsViewModel(get()) }
 
-                    viewModel { ReportsViewModel(get(), get()) }
+                    viewModel { ReportsViewModel(get(), get(), get()) }
                 }
             )
         }

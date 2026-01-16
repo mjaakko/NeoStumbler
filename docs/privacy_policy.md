@@ -35,6 +35,10 @@ OpenStreetMap under their [terms of use](https://osmfoundation.org/wiki/Terms_of
 Using the *fused location provider* utilizes functionality provided by Google Play Services. You can review their
 privacy policy at [this link](https://www.google.com/policies/privacy/).
 
+NeoStumbler can prompt you to submit a review to Google Play. The review will be posted publicly to Google Play under
+their [Terms of Service](https://play.google.com/about/play-terms/index.html). Submitting a review is completely
+optional and submitted reviews can be deleted through Google Play Store.
+
 ## Opt-out
 
 If you do not agree to this privacy policy, please do not install NeoStumbler and uninstall it if you've already
