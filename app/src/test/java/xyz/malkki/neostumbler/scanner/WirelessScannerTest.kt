@@ -9,11 +9,11 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.timeout
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withTimeout
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.withTimeoutOrNull
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertThrows
+import org.junit.Assert.assertNull
 import org.junit.Test
 import xyz.malkki.neostumbler.core.MacAddress
 import xyz.malkki.neostumbler.core.Position
@@ -23,12 +23,11 @@ import xyz.malkki.neostumbler.core.emitter.BluetoothBeacon
 import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
 import xyz.malkki.neostumbler.core.observation.EmitterObservation
 import xyz.malkki.neostumbler.core.observation.PositionObservation
-import xyz.malkki.neostumbler.core.report.ReportData
 import xyz.malkki.neostumbler.scanner.postprocess.HiddenWifiFilterer
 
 class WirelessScannerTest {
     @Test
-    fun `Test no reports are created with no data`() {
+    fun `Test no reports are created with no data`() = runTest {
         val wirelessScanner =
             WirelessScanner(
                 locationSource = {
@@ -53,13 +52,11 @@ class WirelessScannerTest {
 
         val reportFlow = wirelessScanner.createReports()
 
-        assertThrows(TimeoutCancellationException::class.java) {
-            runBlocking { withTimeout(12.seconds) { reportFlow.first() } }
-        }
+        assertNull(withTimeoutOrNull(5.seconds) { reportFlow.first() })
     }
 
     @Test
-    fun `Test no reports are created with old data`() {
+    fun `Test no reports are created with old data`() = runTest {
         val wirelessScanner =
             WirelessScanner(
                 locationSource = {
@@ -101,13 +98,11 @@ class WirelessScannerTest {
 
         val reportFlow = wirelessScanner.createReports()
 
-        assertThrows(TimeoutCancellationException::class.java) {
-            runBlocking { withTimeout(12.seconds) { reportFlow.first() } }
-        }
+        assertNull(withTimeoutOrNull(5.seconds) { reportFlow.first() })
     }
 
     @Test
-    fun `Test no reports are created when Wi-Fi networks have an opt-out`() {
+    fun `Test no reports are created when Wi-Fi networks have an opt-out`() = runTest {
         val wirelessScanner =
             WirelessScanner(
                 locationSource = {
@@ -162,13 +157,11 @@ class WirelessScannerTest {
 
         val reportFlow = wirelessScanner.createReports()
 
-        assertThrows(TimeoutCancellationException::class.java) {
-            runBlocking { withTimeout(12.seconds) { reportFlow.first() } }
-        }
+        assertNull(withTimeoutOrNull(5.seconds) { reportFlow.first() })
     }
 
     @Test
-    fun `Test that a report is created`() {
+    fun `Test that a report is created`() = runTest {
         val wirelessScanner =
             WirelessScanner(
                 locationSource = {
@@ -217,19 +210,15 @@ class WirelessScannerTest {
 
         val reportFlow = wirelessScanner.createReports()
 
-        val reports = runBlocking {
-            val output = mutableListOf<ReportData>()
-
+        val reports = buildList {
             reportFlow
-                .timeout(12.seconds)
+                .timeout(5.seconds)
                 .catch {
                     if (it !is TimeoutCancellationException) {
                         throw it
                     }
                 }
-                .collect(output::add)
-
-            output.toList()
+                .collect(::add)
         }
 
         assertEquals(1, reports.size)

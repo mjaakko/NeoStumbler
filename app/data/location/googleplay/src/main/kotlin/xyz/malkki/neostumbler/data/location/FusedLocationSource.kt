@@ -2,6 +2,7 @@ package xyz.malkki.neostumbler.data.location
 
 import android.Manifest
 import android.content.Context
+import android.location.Location
 import androidx.annotation.RequiresPermission
 import com.google.android.gms.location.Granularity
 import com.google.android.gms.location.LocationCallback
@@ -58,6 +59,9 @@ class FusedLocationSource(context: Context) : LocationSource {
                     }
                 }
             }
+
+        val lastLocation: Location? = fusedLocationProviderClient.lastLocation.await()
+        lastLocation?.toPositionObservation(source = Position.Source.FUSED)?.let { send(it) }
 
         fusedLocationProviderClient
             .requestLocationUpdates(locationRequest, ImmediateExecutor, locationCallback)

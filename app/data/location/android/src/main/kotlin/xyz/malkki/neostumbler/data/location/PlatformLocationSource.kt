@@ -5,6 +5,7 @@ import android.content.Context
 import android.location.Location
 import android.location.LocationManager
 import androidx.annotation.RequiresPermission
+import androidx.core.content.getSystemService
 import androidx.core.location.LocationListenerCompat
 import androidx.core.location.LocationManagerCompat
 import androidx.core.location.LocationRequestCompat
@@ -27,20 +28,16 @@ class PlatformLocationSource(context: Context) : LocationSource {
         interval: Duration,
         usePassiveProvider: Boolean,
     ): Flow<PositionObservation> = callbackFlow {
-        val locationManager =
-            appContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val locationManager = appContext.getSystemService<LocationManager>()!!
 
         val locationListener =
             object : LocationListenerCompat {
                 override fun onLocationChanged(location: Location) {
-                    val source =
-                        if (location.provider == LocationManager.NETWORK_PROVIDER) {
-                            Position.Source.NETWORK
-                        } else {
-                            Position.Source.GPS
-                        }
-
-                    trySendBlocking(location.toPositionObservation(source = source))
+                    trySendBlocking(
+                        location.toPositionObservation(
+                            source = location.provider.locationProviderToPositionSource()
+                        )
+                    )
                 }
 
                 override fun onProviderDisabled(provider: String) {
@@ -61,6 +58,11 @@ class PlatformLocationSource(context: Context) : LocationSource {
                 LocationManager.GPS_PROVIDER
             }
 
+        locationManager
+            .getLastKnownLocation(provider)
+            ?.toPositionObservation(source = provider.locationProviderToPositionSource())
+            ?.let { send(it) }
+
         val locationRequest =
             LocationRequestCompat.Builder(locationIntervalMillis)
                 .setQuality(LocationRequestCompat.QUALITY_HIGH_ACCURACY)
@@ -80,5 +82,13 @@ class PlatformLocationSource(context: Context) : LocationSource {
         )
 
         awaitClose { LocationManagerCompat.removeUpdates(locationManager, locationListener) }
+    }
+
+    private fun String?.locationProviderToPositionSource(): Position.Source {
+        return when (this) {
+            LocationManager.NETWORK_PROVIDER -> Position.Source.NETWORK
+            LocationManager.GPS_PROVIDER -> Position.Source.GPS
+            else -> Position.Source.FUSED
+        }
     }
 }
