@@ -4,7 +4,8 @@
     <string name="autoscan_failed_to_enable_title">فشل في تمكين المسح التلقائي</string>
     <string name="permission_rationale_activity_recognition">المسح التلقائي يحتاج إلى إذن للوصول إلى النشاط الحالي</string>
     <string name="prefer_fused_location_title">يفضل استخدام موفر الموقع المدمج</string>
-    <string name="permission_rationale_background_location_autoscan">المسح التلقائي يحتاج إلى إذن لاستخدام الموقع في الخلفية</string>
+    <string name="permission_rationale_background_location_autoscan">بدء المسح تلقائيًا عندما لا يكون التطبيق نشطًا يتطلب إذنًا لموقع الخلفية</string>
     <string name="prefer_fused_location_description">يمكن لمزود الموقع المدمج دمج البيانات من مصادر أخرى غير نظام تحديد المواقع العالمي (GPS) لتحديد الموقع</string>
     <string name="autoscan_failed_to_enable_description">المسح التلقائي يستخدم خدمات جوجل للتعرف، والتي يمكن ان تكون غير مدعومة من جهازك</string>
+    <string name="fused_location_no_gps_warning">الجهاز لا يحتوي على مستقبل GPS</string>
 </resources>
