@@ -1,0 +1,5 @@
+* Changed BLE beacon scanning to use a custom beacon parser implementation
+* Added primary scrambling code / physical cell ID to geolocate queries
+* Updated dependencies
+* Updated translations
+* Added Cornish translation
