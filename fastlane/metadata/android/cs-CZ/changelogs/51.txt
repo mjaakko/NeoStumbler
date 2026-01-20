@@ -1,0 +1,6 @@
+Uživatelské rozhraní
+- Upravené barvy pro lepší kontrast.
+- Opravené vykreslování obsahu pod systémovými navigačními lištami na velkých obrazovkách.
+
+Ostatní
+- Aktualizované překlady

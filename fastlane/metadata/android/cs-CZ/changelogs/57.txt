@@ -1,0 +1,5 @@
+* Skenování Bluetooth Low Energy majáků nyní používá vlastní implementaci analyzátoru majáků
+* Přidán primární kód pro kódování / fyzické ID buňky pro geolokační dotazy
+* Aktualizované softwarové knihovny
+* Aktualizované překlady
+* Přidán překlad do Kornštiny
