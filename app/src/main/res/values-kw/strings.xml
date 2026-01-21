@@ -110,7 +110,7 @@
     <string name="beacons">Beaconys Bluetooth</string>
     <string name="add_quick_settings_tile">Addya prileghen settyansow dhe dalleth yn es arhwilyansow?</string>
     <string name="mls_warning_title">MLS yw marow</string>
-    <string name="mls_warning_text">Gonis Mozilla GPS yw marow ha na fella receva data. Byttegyns, ty gallos danvon data dhe beaconDB, may provia unn gonis kesplegadow gans GMG\n\nMar pleg, attendya dre beaconDB yw yn displegyans hwath hag an feth ma menni ass ty data yw handla. Ty gallos redya an <annotation link="privacy_policy">polici privetter</annotation> dhe moy kudhlow\n\n\nA vynn\'ta gorra beaconDB dhe an diwedhva? Ma gallos chanjys a-wosa yn an settyansow</string>
+    <string name="mls_warning_text">Gonis Mozilla GPS yw marow ha na fella receva data. Byttegyns, ty gallos danvon data dhe beaconDB, may provia unn gonis kesplegadow gans GMG\n\nMar pleg, attendya dre beaconDB yw yn displegyans hwath hag an feth ma menni ass ty data yw handla. Ty gallos redya an <annotation link="privacy_policy">polici privetter</annotation> dhe kedhlow moy\n\n\nA vynn\'ta gorra beaconDB dhe an diwedhva? Ma gallos chanjys a-wosa yn an settyansow</string>
     <string name="endpoint">Diwedhva</string>
     <string name="submission_path">Gorgevren rag data</string>
     <string name="locate_path">Gorgevren rag GPS</string>
