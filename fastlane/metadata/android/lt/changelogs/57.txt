@@ -1,0 +1,5 @@
+* Patobulintas „Bluetooth LE“ siųstuvų skenavimas (Changed BLE beacon scanning to use a custom beacon parser implementation)
+* Papildytos geolokacijos užklausos (Added primary scrambling code / physical cell ID to geolocate queries)
+* Atnaujintos priklausomybės
+* Atnaujinti vertimai
+* Pridėtas vertimas į kornų kalbą
