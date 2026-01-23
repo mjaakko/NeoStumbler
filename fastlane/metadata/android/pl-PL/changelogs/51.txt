@@ -1,0 +1,6 @@
+Interfejs
+- Poprawiono kolory dla lepszego kontrastu
+- Stała zawartość jest teraz rysowana pod przyciskami nawigacji na dużych ekranach
+
+Inne
+- Aktualizowano tłumaczenia

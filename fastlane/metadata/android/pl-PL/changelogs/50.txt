@@ -1,0 +1,19 @@
+Interfejs użytkownika / UX
+- Migracja do interfejsu Material 3
+- Zmieniono ikony na Material Symbols
+- Poprawiony interfejs dla większych ekranów
+- Usunięto nagłówek z ekranu mapy
+- Dodano wsparcie dla ciemnych motywów map
+- Naprawiono niepoprawny motyw dialogu o autorstwie mapy
+- Status GPS nie jest już pokazywany, gdy urządzenie nie ma odbiornika GPS
+
+Pasywne zbieranie danych
+- Zduplikowane wieże sieci komórkowej są filtrowane z pasywnych raportów, gdy w urządzeniu jest kilka kart SIM
+- Pasywne zbieranie danych teraz tworzy raporty bardziej agresywnie, sprawdzając, czy poprzedni raport zawiera te same dane
+
+Techniczne
+- Broadcasts are now handled asynchronously for better performance
+- Added corruption handler to passive scan state store
+
+Inne
+- Aktualizowano tłumaczenia
