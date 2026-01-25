@@ -61,6 +61,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import java.text.DecimalFormat
 import kotlinx.coroutines.flow.StateFlow
@@ -319,7 +320,11 @@ private fun Reports(
                 state = listState,
                 contentPadding = PaddingValues(bottom = listBottomPadding),
             ) {
-                items(reports.itemCount, key = reports.itemKey { it.reportId }) { index ->
+                items(
+                    reports.itemCount,
+                    key = reports.itemKey { it.reportId },
+                    contentType = reports.itemContentType { "report" },
+                ) { index ->
                     val report = reports[index]
 
                     Column(modifier = Modifier.wrapContentSize().animateItem()) {
