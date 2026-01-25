@@ -1,0 +1,19 @@
+UI / UX
+- Přechod na rozhraní ve stylu Material 3.
+- Změna ikon na styl Material Symbols.
+- Vylepšené rozhraní pro větší obrazovky.
+- Odstraněné záhlaví z obrazovky mapy.
+- Podpora pro tmavé motivy map.
+- Oprava dialogového okna s atributy mapy, které nepoužívalo vybraný motiv.
+- Stav GPS se nezobrazuje, pokud zařízení nemá GPS přijímač.
+
+Pasivní sběr dat
+- Neplatné duplicitní mobilní vysílače jsou filtrovány z pasivně vytvořených zpráv pokud zařízení má více SIM karet.
+- Pasivní sběr dat nyní vytváří zprávy agresivněji tím, že kontroluje pokud předchozí zpráva obsahuje stejný typ dat
+
+Technické
+- Broadcasty jsou nyní zpracovávány asynchronně pro zrychlení aplikace
+- Přidán handler poškození do úložiště stavu pasivního skenování
+
+Ostatní
+- Aktualizované překlady

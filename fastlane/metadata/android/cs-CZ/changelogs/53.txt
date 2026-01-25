@@ -1,0 +1,3 @@
+- Opravené vykreslování obsahu pod systémovými lištami v nastavení na větších obrazovkách
+- Opravené načítání popisků mapy s VersaTiles
+- Aktualizované překlady

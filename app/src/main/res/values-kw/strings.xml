@@ -110,7 +110,7 @@
     <string name="beacons">Beaconys Bluetooth</string>
     <string name="add_quick_settings_tile">Addya prileghen settyansow dhe dalleth yn es arhwilyansow?</string>
     <string name="mls_warning_title">MLS yw marow</string>
-    <string name="mls_warning_text">Gonis Mozilla GPS yw marow ha na fella receva data. Byttegyns, ty gallos danvon data dhe beaconDB, may provia unn gonis kesplegadow gans GMG\n\nMar pleg, attendya dre beaconDB yw yn displegyans hwath hag an feth ma menni ass ty data yw handla. Ty gallos redya an <annotation link="privacy_policy">polici privetter</annotation> dhe moy kudhlow\n\n\nA vynn\'ta gorra beaconDB dhe an diwedhva? Ma gallos chanjys a-wosa yn an settyansow</string>
+    <string name="mls_warning_text">Gonis Mozilla GPS yw marow ha na fella receva data. Byttegyns, ty gallos danvon data dhe beaconDB, may provia unn gonis kesplegadow gans GMG\n\nMar pleg, attendya dre beaconDB yw yn displegyans hwath hag an feth ma menni ass ty data yw handla. Ty gallos redya an <annotation link="privacy_policy">polici privetter</annotation> dhe kedhlow moy\n\n\nA vynn\'ta gorra beaconDB dhe an diwedhva? Ma gallos chanjys a-wosa y\'n settyansow</string>
     <string name="endpoint">Diwedhva</string>
     <string name="submission_path">Gorgevren rag data</string>
     <string name="locate_path">Gorgevren rag GPS</string>
@@ -128,7 +128,7 @@
     <string name="settings_ignore_wifi_scan_throttling_title">Skonya aswon finyow arhwilyans Wi-fi</string>
     <string name="settings_ignore_wifi_scan_throttling_description">Mar arhwilyansow yw strothys, arhwilyansow peswar hepken gallos bos performys yn unn termyn a dew mynysennow</string>
     <string name="wifi_scan_throttling">Finyow arhwilyans Wi-fi</string>
-    <string name="wifi_scan_throttling_explanation">Ty res ungallosegi finyow arhwilans Wi-fi yn an settyansow a agas devis dhe gallosegi an nas ma. Dell yw usys, ma gallos bos gwrys yn an settyansyow teknogel</string>
+    <string name="wifi_scan_throttling_explanation">Ty res ungallosegi finyow arhwilans Wi-fi y\'n settyansow a agas devis dhe gallosegi an nas ma. Dell yw usys, ma gallos bos gwrys y\'n settyansyow teknogel</string>
     <string name="settings_group_reports">Derivasow</string>
     <string name="settings_group_scanning">Arhwilasow</string>
     <string name="settings_group_privacy">Privetter</string>
@@ -181,7 +181,7 @@
     <string name="permission_rationale_bluetooth">Owth arhwilas beaconys Bluetooth res gront rag Bluetooth</string>
     <string name="permission_rationale_post_notifications">Ow diskwedhes messach studh res gront rag messajys</string>
     <string name="permission_rationale_background_location_quick_settings">Ow dalleth arhwilas a an settyansow res hedhas dhe GPS yn kilva.\n\nAttendya a an fronnans ma yw beghya gans Android. Agas tyller yw na drehedhes yn kilva mar ty na gallosegi arhwilyansow godhevek po awtomatek</string>
-    <string name="permission_rationale_background_location_passive_scan">Kuntel data godhevek res hedhas dhe GPS in kilva dhe gul derivasow pan an app yw na byw</string>
+    <string name="permission_rationale_background_location_passive_scan">Kuntel data godhevek res hedhas dhe GPS yn kilva dhe gul derivasow pan an app yw na byw</string>
     <string name="permission_rationale_location_map">Ow diskwedhes agas tyller war an mappa res gront rag GPS</string>
     <string name="troubleshooting_title">Prevessyans</string>
     <string name="troubleshooting_description">Ewnhe kudynnow kemmyn gans arhwilyansow</string>
@@ -195,7 +195,7 @@
     <string name="geocoder_settings_title">Kalkor kenwyn tyller</string>
     <string name="geocoder_default_title">Defowt</string>
     <string name="geocoder_disabled_title">Ungallosegys</string>
-    <string name="use_dynamic_color_ui">Gul devnydh a kolorys dynamek yn an ynterfas</string>
+    <string name="use_dynamic_color_ui">Gul devnydh a kolorys dynamek y\'n ynterfas</string>
     <string name="db_prune_title">Dilea derivasow danvonys</string>
     <string name="db_prune_one_month">Wosa unn mis</string>
     <string name="db_prune_two_months">Wosa dew misyow</string>
@@ -223,7 +223,7 @@
     <string name="about_app">A-dro NeoStumbler</string>
     <string name="app_version">Versyon: %s</string>
     <string name="app_variant">Varien: %s</string>
-    <string name="author_text">Gul gans ❤️ gans %1$s ha %2$s</string>
+    <string name="author_text">Gwrys gans ❤️ gans %1$s ha %2$s</string>
     <string name="contributors">Kevriyadesow</string>
     <string name="bug_report_button">Reportya unn kudyn</string>
     <string name="update_translations_button">Nowedhi treylyansow</string>
