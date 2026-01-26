@@ -53,16 +53,12 @@ internal interface ReportDao {
             r.timestamp AS timestamp,
             p.latitude AS latitude,
             p.longitude AS longitude,
-            COALESCE(wap.wifiAccessPointCount, 0) AS wifiAccessPointCount,
-            COALESCE(ct.cellTowerCount, 0) AS cellTowerCount,
-            COALESCE(bb.bluetoothBeaconCount, 0) AS bluetoothBeaconCount
-        FROM Report r, PositionEntity p
-        LEFT JOIN (SELECT reportId, COUNT(id) AS wifiAccessPointCount FROM WifiAccessPointEntity GROUP BY reportId) AS wap ON wap.reportId = r.id
-        LEFT JOIN (SELECT reportId, COUNT(id) AS cellTowerCount FROM CellTowerEntity GROUP BY reportId) AS ct ON ct.reportId = r.id
-        LEFT JOIN (SELECT reportId, COUNT(id) AS bluetoothBeaconCount FROM BluetoothBeaconEntity GROUP BY reportId) AS bb ON bb.reportId = r.id
-        WHERE r.uploaded = 0 
-        AND r.id = p.reportId
-        GROUP BY r.id
+            (SELECT COUNT(id) FROM WifiAccessPointEntity WHERE reportId = r.id) AS wifiAccessPointCount,
+            (SELECT COUNT(id) FROM CellTowerEntity WHERE reportId = r.id)  AS cellTowerCount,
+            (SELECT COUNT(id) FROM BluetoothBeaconEntity WHERE reportId = r.id)  AS bluetoothBeaconCount
+        FROM Report r
+        INNER JOIN PositionEntity p ON r.id = p.reportId
+        WHERE r.uploaded = 0
         ORDER BY r.timestamp DESC
     """
     )

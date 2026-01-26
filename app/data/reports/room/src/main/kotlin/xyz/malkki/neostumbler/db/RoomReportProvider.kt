@@ -20,8 +20,7 @@ import xyz.malkki.neostumbler.db.entities.toCellTower
 import xyz.malkki.neostumbler.db.entities.toReportPosition
 import xyz.malkki.neostumbler.db.entities.toWifiAccessPoint
 
-private const val PAGE_SIZE = 40
-private const val PREFETCH_DISTANCE = 5
+private const val PAGE_SIZE = 25
 
 class RoomReportProvider(private val reportDatabaseManager: ReportDatabaseManager) :
     ReportProvider {
@@ -51,7 +50,7 @@ class RoomReportProvider(private val reportDatabaseManager: ReportDatabaseManage
 
     override fun getReportsWithStats(): Flow<PagingData<ReportWithStats>> {
         return reportDatabaseManager.reportDb.flatMapLatest { reportDatabase ->
-            Pager(PagingConfig(pageSize = PAGE_SIZE, prefetchDistance = PREFETCH_DISTANCE)) {
+            Pager(PagingConfig(pageSize = PAGE_SIZE)) {
                     reportDatabase.reportDao().getAllReportsWithStats()
                 }
                 .flow
