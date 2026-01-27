@@ -2,10 +2,10 @@
 <resources>
     <string name="prefer_fused_location_title">Preferya provier kesunys GPS</string>
     <string name="prefer_fused_location_description">Provier kesunys GPS gallos kesunya data a-dhia devedhyansow anGPS dhe determya an tyller</string>
-    <string name="fused_location_no_gps_warning">Devis re na unn degemerer GPS</string>
+    <string name="fused_location_no_gps_warning">Devis kavos degemerer GPS vyth</string>
     <string name="autoscan_when_moving">Arhwilyansow awtomatek ha ow gwaya</string>
     <string name="autoscan_failed_to_enable_title">Fyllys dhe gallosegi arhwilyansow awtomatek</string>
-    <string name="autoscan_failed_to_enable_description">Arhwilyansow awtomatek gul devnydh a awsonvos aktivita Gonisyow Google Play, may na bos kavadow yn agas devis</string>
-    <string name="permission_rationale_background_location_autoscan">Ow dalleth awtomatek arhwilyansow pan an app yw na byw res gront dhe GPS kilva</string>
-    <string name="permission_rationale_activity_recognition">Ow dalleth awtomatek arhwilansyow res hedhas dhe aktivita a\'n jydh</string>
+    <string name="autoscan_failed_to_enable_description">Arhwilyansow awtomatek gul devnydh a awsonvos aktivita Gonisyow Google Play, may ny bos kavadow yn dha devis</string>
+    <string name="permission_rationale_background_location_autoscan">Ow dalleth awtomatek arhwilyansow pan an app yw ny byw res gront dhe GPS kilva</string>
+    <string name="permission_rationale_activity_recognition">Ow dalleth awtomatek arhwilansyow res hedhas dhe aktivita a-lemmyn</string>
 </resources>
