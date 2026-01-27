@@ -52,7 +52,7 @@
     </plurals>
     <string name="toast_reports_upload_failed">Fyllis dhe ughkarga derivasow</string>
     <string name="toast_reports_upload_failed_no_endpoint">Fyllis dhe ughkarga derivasow, dre reson diwedhva vyth yw selys</string>
-    <string name="distance_to_estimated_location">Pellder dhe an tyller dysmygrivys: %d m</string>
+    <string name="distance_to_estimated_location">Pellder dhe\'n tyller dysmygrivys: %d m</string>
     <string name="speed_metres_per_second">Skavder: %s m/e</string>
     <string name="altitude_metres">Ughelder: %s m</string>
     <string name="signal_strength_dbm">Krevder sinell: %d dBm</string>
@@ -94,7 +94,7 @@
     <string name="export_raw_database_compress">Lehe an restren sel dherivadow</string>
     <string name="import_data">Ynperthi data</string>
     <string name="import_raw_database">Ynperthi sel dherivadow kriv</string>
-    <string name="import_raw_database_description">Owth ynperthi unn sel dherivadow kriv yw aslea an sel dherivadow a\'n jydh</string>
+    <string name="import_raw_database_description">Owth ynperthi unn sel dherivadow kriv yw aslea an sel dherivadow kyns</string>
     <string name="import_database_not_valid">An restren dewisys na kontaynya unn sel dherivadow ewn</string>
     <plurals name="import_database_successful">
         <item quantity="zero">Ynperthys sel dherivadow gans %d derivasow</item>
@@ -110,7 +110,7 @@
     <string name="beacons">Beaconys Bluetooth</string>
     <string name="add_quick_settings_tile">Addya prileghen settyansow dhe dalleth yn es arhwilyansow?</string>
     <string name="mls_warning_title">MLS yw marow</string>
-    <string name="mls_warning_text">Gonis Mozilla GPS yw marow ha na fella receva data. Byttegyns, ty gallos danvon data dhe beaconDB, may provia unn gonis kesplegadow gans GMG\n\nMar pleg, attendya dre beaconDB yw yn displegyans hwath hag an feth ma menni ass ty data yw handla. Ty gallos redya an <annotation link="privacy_policy">polici privetter</annotation> dhe kedhlow moy\n\n\nA vynn\'ta gorra beaconDB dhe an diwedhva? Ma gallos chanjys a-wosa y\'n settyansow</string>
+    <string name="mls_warning_text">Gonis Mozilla GPS yw marow ha na fella receva data. Byttegyns, ty gallos danvon data dhe beaconDB, may provia unn gonis kesplegadow gans GMG\n\nMar pleg, attendya dre beaconDB yw yn displegyans hwath hag an feth ma menni ass ty data yw handla. Ty gallos redya an <annotation link="privacy_policy">polici privetter</annotation> dhe kedhlow moy\n\n\nA vynn\'ta gorra beaconDB dhe\'n diwedhva? Ma gallos chanjys a-wosa y\'n settyansow</string>
     <string name="endpoint">Diwedhva</string>
     <string name="submission_path">Gorgevren rag data</string>
     <string name="locate_path">Gorgevren rag GPS</string>
@@ -128,7 +128,7 @@
     <string name="settings_ignore_wifi_scan_throttling_title">Skonya aswon finyow arhwilyans Wi-fi</string>
     <string name="settings_ignore_wifi_scan_throttling_description">Mar arhwilyansow yw strothys, arhwilyansow peswar hepken gallos bos performys yn unn termyn a dew mynysennow</string>
     <string name="wifi_scan_throttling">Finyow arhwilyans Wi-fi</string>
-    <string name="wifi_scan_throttling_explanation">Ty res ungallosegi finyow arhwilans Wi-fi y\'n settyansow a agas devis dhe gallosegi an nas ma. Dell yw usys, ma gallos bos gwrys y\'n settyansyow teknogel</string>
+    <string name="wifi_scan_throttling_explanation">Ty res ungallosegi finyow arhwilans Wi-fi y\'n settyansow a dha devis dhe gallosegi an nas ma. Dell yw usys, ma gallos bos gwrys y\'n settyansyow teknogel</string>
     <string name="settings_group_reports">Derivasow</string>
     <string name="settings_group_scanning">Arhwilasow</string>
     <string name="settings_group_privacy">Privetter</string>
@@ -180,9 +180,9 @@
     <string name="permission_rationale_read_phone_state">Hedhas dhe studh devis yw res dhe owth arhwilas touryow kellgowser</string>
     <string name="permission_rationale_bluetooth">Owth arhwilas beaconys Bluetooth res gront rag Bluetooth</string>
     <string name="permission_rationale_post_notifications">Ow diskwedhes messach studh res gront rag messajys</string>
-    <string name="permission_rationale_background_location_quick_settings">Ow dalleth arhwilas a an settyansow res hedhas dhe GPS yn kilva.\n\nAttendya a an fronnans ma yw beghya gans Android. Agas tyller yw na drehedhes yn kilva mar ty na gallosegi arhwilyansow godhevek po awtomatek</string>
+    <string name="permission_rationale_background_location_quick_settings">Ow dalleth arhwilas a\'n settyansow uskis res hedhas dhe GPS yn kilva.\n\nAttendya a\'n fronnans ma yw beghya gans Android. Dha tyller yw na drehedhes yn kilva mar ty ny gallosegi arhwilyansow godhevek po awtomatek</string>
     <string name="permission_rationale_background_location_passive_scan">Kuntel data godhevek res hedhas dhe GPS yn kilva dhe gul derivasow pan an app yw na byw</string>
-    <string name="permission_rationale_location_map">Ow diskwedhes agas tyller war an mappa res gront rag GPS</string>
+    <string name="permission_rationale_location_map">Ow diskwedhes dha tyller war\'n mappa res gront rag GPS</string>
     <string name="troubleshooting_title">Prevessyans</string>
     <string name="troubleshooting_description">Ewnhe kudynnow kemmyn gans arhwilyansow</string>
     <string name="troubleshooting_permissions_granted">Grontys grontys</string>
