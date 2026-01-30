@@ -1,0 +1,5 @@
+* Remplacement de la librairie de mesure BLE par une implémentation dédiée
+* Ajout du "primary scrambling code" et de l'identifiant de cellule physique pour les requêtes de géolocalisation contenant des réseaux cellulaires
+* Mises à jour des dépendances
+* Mise à jour des traductions
+* Ajout d'une traduction en Cornique
