@@ -180,7 +180,7 @@
     <string name="altitude_metres">Altitude : %s m</string>
     <string name="signal_strength_dbm">Intensité du signal : %d dBm</string>
     <string name="scanning_status_active">Scan <annotation style="status">actif</annotation></string>
-    <string name="passive_scanning_description">La collecte passive de données crée des rapports en arrière-plan avec un impact minimal sur la batterie en utilisant les données demandées par d\'autres applications. \n\nL\'efficacité de la collecte passive de données dépend du type d\'appareil, des autres applications que vous utilisez et de la disponibilité ou non d\'un fournisseur de localisation fusionné. \n\nNotez que la collecte passive de données ne fonctionne pas avec les balises Bluetooth. \n\nVoulez-vous activer la collecte passive de données ?</string>
+    <string name="passive_scanning_description">La collecte passive de données crée des rapports en arrière-plan avec un impact minimal sur la batterie en utilisant les données demandées par d\'autres applications. \n\nL\'efficacité de la collecte passive de données dépend du type d\'appareil, des autres applications que vous utilisez et de la disponibilité ou non d\'un fournisseur de localisation fusionné. \n\nVoulez-vous activer la collecte passive de données ?</string>
     <string name="passive_scanning_title">Collecte passive de données</string>
     <string name="settings_group_privacy">Vie privée</string>
     <plurals name="wifi_filter_settings_description">

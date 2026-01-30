@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.data.emitter.internal
+package xyz.malkki.neostumbler.data.emitter.internal.util
 
 import android.content.Context
 import android.content.Intent

@@ -23,8 +23,8 @@ import timber.log.Timber
 import xyz.malkki.neostumbler.core.emitter.CellTower
 import xyz.malkki.neostumbler.core.emitter.CellTower.Companion.fillMissingData
 import xyz.malkki.neostumbler.core.observation.EmitterObservation
-import xyz.malkki.neostumbler.data.emitter.internal.delayWithMinDuration
 import xyz.malkki.neostumbler.data.emitter.internal.getServiceStateFlow
+import xyz.malkki.neostumbler.data.emitter.internal.util.delayWithMinDuration
 import xyz.malkki.neostumbler.data.emitter.mapper.toCellTower
 import xyz.malkki.neostumbler.executors.ImmediateExecutor
 

@@ -209,9 +209,7 @@
         Passive data collection creates reports in the background with minimal battery impact by using data requested by other applications.
 
         \n\nThe effectiveness of passive data collection will depend on your device type, the other apps you\'re using, and whether you have fused location provider available.
-
-        \n\nNote that passive data collection does not work with Bluetooth beacons.
-
+        
         \n\nDo you want to enable passive data collection?
     </string>
 

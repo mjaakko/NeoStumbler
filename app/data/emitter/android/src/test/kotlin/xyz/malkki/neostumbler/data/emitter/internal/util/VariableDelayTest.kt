@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.data.emitter.internal
+package xyz.malkki.neostumbler.data.emitter.internal.util
 
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours

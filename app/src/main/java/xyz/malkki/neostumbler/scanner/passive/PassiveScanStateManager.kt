@@ -23,6 +23,7 @@ class PassiveScanStateManager(
     enum class DataType {
         CELL,
         WIFI,
+        BLUETOOTH,
     }
 
     suspend fun getLastReportLocation(dataType: DataType): LatLng? {

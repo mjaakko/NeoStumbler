@@ -20,6 +20,7 @@ import xyz.malkki.neostumbler.core.emitter.CellTower
 import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
 import xyz.malkki.neostumbler.core.observation.EmitterObservation
 import xyz.malkki.neostumbler.core.observation.PositionObservation
+import xyz.malkki.neostumbler.data.emitter.PassiveBluetoothBeaconSource
 import xyz.malkki.neostumbler.data.emitter.PassiveCellTowerSource
 import xyz.malkki.neostumbler.data.emitter.PassiveWifiAccessPointSource
 import xyz.malkki.neostumbler.data.reports.ReportSaver
@@ -28,6 +29,7 @@ import xyz.malkki.neostumbler.geography.LatLng
 class PassiveScanReportCreatorTest {
     private lateinit var passiveWifiAccessPointSource: PassiveWifiAccessPointSource
     private lateinit var passiveCellTowerSource: PassiveCellTowerSource
+    private lateinit var passiveBluetoothBeaconSource: PassiveBluetoothBeaconSource
     private lateinit var passiveScanStateManager: PassiveScanStateManager
     private lateinit var reportSaver: ReportSaver
 
@@ -37,6 +39,10 @@ class PassiveScanReportCreatorTest {
     fun setup() {
         passiveWifiAccessPointSource = mock<PassiveWifiAccessPointSource>()
         passiveCellTowerSource = mock<PassiveCellTowerSource>()
+        passiveBluetoothBeaconSource =
+            mock<PassiveBluetoothBeaconSource> {
+                onBlocking { getBluetoothBeacons() } doReturn emptyList()
+            }
         passiveScanStateManager =
             mock<PassiveScanStateManager> {
                 val locations = mutableMapOf<PassiveScanStateManager.DataType, LatLng>()
@@ -67,6 +73,7 @@ class PassiveScanReportCreatorTest {
             PassiveScanReportCreator(
                 passiveWifiAccessPointSource = passiveWifiAccessPointSource,
                 passiveCellTowerSource = passiveCellTowerSource,
+                passiveBluetoothBeaconSource = passiveBluetoothBeaconSource,
                 passiveScanStateManager = passiveScanStateManager,
                 reportSaver = reportSaver,
                 postProcessors = emptyList(),

@@ -184,7 +184,7 @@
     <string name="locate_path">Pad voor geolocatie</string>
     <string name="wifi_filter_settings_hint">Wifi-netwerken met een van deze sleutel­woorden in hun SSID worden niet verzameld</string>
     <string name="beacon_id">ID%d: %s</string>
-    <string name="passive_scanning_description">Passieve gegevens­verzameling genereert rapporten op de achtergrond met minimale accu­belasting door gebruik te maken van gegevens die door andere apps worden opgevraagd.\n\nDe effectiviteit van passieve gegevens­verzameling hangt af van uw apparaat­type, de andere apps die u gebruikt en of u een gecombineerde locatie­provider gebruikt.\n\nHoud er rekening mee dat passieve gegevens­verzameling niet werkt met Bluetooth-bakens.\n\nWilt u passieve gegevens­verzameling inschakelen?</string>
+    <string name="passive_scanning_description">Passieve gegevens­verzameling genereert rapporten op de achtergrond met minimale accu­belasting door gebruik te maken van gegevens die door andere apps worden opgevraagd.\n\nDe effectiviteit van passieve gegevens­verzameling hangt af van uw apparaat­type, de andere apps die u gebruikt en of u een gecombineerde locatie­provider gebruikt.\n\nWilt u passieve gegevens­verzameling inschakelen?</string>
     <string name="db_schema_version">Versie van database­schema: %d</string>
     <string name="reduced_metadata_description">Rapporten in willekeurige volgorde verzenden, zonder tĳd­stempels en andere meta­gegevens</string>
     <string name="pause_scanning_on_low_battery_title">Scannen pauzeren bĳ laag accu­percentage</string>

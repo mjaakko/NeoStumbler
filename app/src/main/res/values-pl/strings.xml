@@ -198,7 +198,7 @@
     <string name="moving_device_filter_title">Filtruj urządzenia w ruchu</string>
     <string name="moving_device_filter_description">Poruszające się sieci Wi-Fi i beacony Bluetooth są automatycznie wykrywane i filtrowane z raportów</string>
     <string name="passive_scanning_title">Pasywne zbieranie danych</string>
-    <string name="passive_scanning_description">Pasywne zbieranie danych tworzy raporty w tle przy minimalnym zużyciu baterii przez wykorzystywanie danych żądanych przez inne aplikacje. \n\nEfektywność pasywnego zbierania danych będzie zależała od typu twojego urządzenia, innych aplikacji, których używasz, i tego, czy dostępny jest dostawca zespolonej lokalizacji.\n\nPamiętaj, że pasywne zbieranie danych nie działa z beaconami Bluetooth.\n\nCzy chcesz włączyć pasywne zbieranie danych?</string>
+    <string name="passive_scanning_description">Pasywne zbieranie danych tworzy raporty w tle przy minimalnym zużyciu baterii przez wykorzystywanie danych żądanych przez inne aplikacje. \n\nEfektywność pasywnego zbierania danych będzie zależała od typu twojego urządzenia, innych aplikacji, których używasz, i tego, czy dostępny jest dostawca zespolonej lokalizacji.\n\nCzy chcesz włączyć pasywne zbieranie danych?</string>
     <string name="system_default_language">Domyślny język systemu</string>
     <string name="permission_rationale_background_location_passive_scan">Aktualizowanie lokalizacji, gdy aplikacja nie jest aktywna wymaga dostępu do lokalizacji w tle</string>
     <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">OK</string>

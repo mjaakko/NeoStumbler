@@ -190,7 +190,7 @@
     <string name="reduced_metadata_title">Siųsti ataskaitas su mažiau metaduomenų</string>
     <string name="db_schema_version">Duomenų bazės schemos versija: %d</string>
     <string name="passive_scanning_title">Pasyvusis duomenų rinkimas</string>
-    <string name="passive_scanning_description">Pasyviojo duomenų rinkimo veiksenoje ataskaitos kuriamos foninėje veiksenoje su minimalia įtaka akumuliatoriaus įkrovai, naudojantis kitoms programoms pateiktais duomenimis.\n\nPasyviojo duomenų rinkimo efektyvumas priklausys nuo jūsų įrenginio tipo, kitų naudojamų programų ir to, ar yra prieinama jungtinė vietovės tarnyba.\n\nTurėkite omenyje, jog šioje veiksenoje nebus renkami „Bluetooth“ siųstuvų duomenys.\n\nAr norite įgalinti pasyvųjį duomenų rinkimą?</string>
+    <string name="passive_scanning_description">Pasyviojo duomenų rinkimo veiksenoje ataskaitos kuriamos foninėje veiksenoje su minimalia įtaka akumuliatoriaus įkrovai, naudojantis kitoms programoms pateiktais duomenimis.\n\nPasyviojo duomenų rinkimo efektyvumas priklausys nuo jūsų įrenginio tipo, kitų naudojamų programų ir to, ar yra prieinama jungtinė vietovės tarnyba.\n\nAr norite įgalinti pasyvųjį duomenų rinkimą?</string>
     <string name="disabled">Išjungta</string>
     <string name="pause_scanning_on_low_battery_title">Pristabdyti skenavimą, nukritus akumuliatoriaus įkrovai</string>
     <string name="pause_scanning_on_low_battery_description">Įkrovai nukritus žemiau %d%%</string>

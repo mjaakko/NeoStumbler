@@ -192,7 +192,7 @@
     <string name="reupload_data">העלאת נתונים מחדש</string>
     <string name="mls_warning_text">שירות המיקום של Mozilla נסגר וכבר לא מקבל נתונים. כאלטרנטיבה לMLS, ניתן לשלוח מידע לbeaconDB, שמספק שירות תואם לMLS\n\nנא לשים לב שBeaconDB עוד נמצא בפיתוח וזה משפיע על דרך הטיפול במידע שלך. אפשר לקרוא את <annotation link="privacy_policy">מדיניות הפרטיות</annotation> למידע נוסף\n\nהאם ברצונך לקבוע את beaconDB כנקודת קצה? אפשר לשנות זאת אחר כך בהגדרות</string>
     <string name="lac">LAC: %s</string>
-    <string name="passive_scanning_description">איסוף נתונים פאסיבי יוצר דיווחים ברקע עם סוללה מינימלית על ידי שימוש בנתונים שאפליקציות אחרות מבקשות. \n\nהיעילות של איסוף נתונים פאסיבי תהיה תלויה בסוג המכשיר, האפליקציות האחרות שבשימוש ואם יש ספק מיקום משולב זמין.\n\nיש להוסיף שאיסוף נתונים פאסיבי לא עובד עם משואות Bluetooth.\n\nהאם להפעיל איסוף נתונים פאסיבי?</string>
+    <string name="passive_scanning_description">איסוף נתונים פאסיבי יוצר דיווחים ברקע עם סוללה מינימלית על ידי שימוש בנתונים שאפליקציות אחרות מבקשות. \n\nהיעילות של איסוף נתונים פאסיבי תהיה תלויה בסוג המכשיר, האפליקציות האחרות שבשימוש ואם יש ספק מיקום משולב זמין.\n\nהאם להפעיל איסוף נתונים פאסיבי?</string>
     <string name="report_upload_notification_channel_name">העלאות דיווחים</string>
     <string name="permission_rationale_background_location_passive_scan">איסוף נתונים סביל דורש גישה למיקום ברקע כדי ליצור דוחות כשהיישומון לא פעיל</string>
     <string name="delete_all">מחק הכל</string>

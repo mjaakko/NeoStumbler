@@ -196,7 +196,7 @@
     <string name="pause_scanning_on_low_battery_description">Quando o nível da bateria está abaixo de %d%%</string>
     <string name="permission_rationale_background_location_passive_scan">A coleta passiva de dados requer acesso à localização em segundo plano para criar relatórios enquanto o app não está ativo</string>
     <string name="passive_scanning_title">Coleta passiva de dados</string>
-    <string name="passive_scanning_description">A coleta passiva cria relatórios em segundo plano, tendo um impacto mínimo na bateria, já que usa os dados que já foram solicitados por outros aplicativos.\n\nA eficácia da coleta passiva pode depender do tipo do seu dispositivo, os apps que você usa, e se o provedor de localização unido está disponível.\n\nObserve que a coleta passiva não funciona com sinalizadores Bluetooth.\n\nVocê gostaria de ativar a coleta de dados passiva?</string>
+    <string name="passive_scanning_description">A coleta passiva cria relatórios em segundo plano, tendo um impacto mínimo na bateria, já que usa os dados que já foram solicitados por outros aplicativos.\n\nA eficácia da coleta passiva pode depender do tipo do seu dispositivo, os apps que você usa, e se o provedor de localização unido está disponível.\n\nVocê gostaria de ativar a coleta de dados passiva?</string>
     <string name="copy">Copiar</string>
     <string name="text_copied_to_clipboard">Texto copiado para a área de transferência!</string>
     <string name="delete_all">Apagar tudo</string>
