@@ -1,5 +1,6 @@
 package convention
 
+import io.gitlab.arturbosch.detekt.Detekt
 import kotlin.math.roundToInt
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -55,5 +56,7 @@ configurations.configureEach {
         force("org.hamcrest:hamcrest-library:3+")
     }
 }
+
+tasks.withType<Detekt>().configureEach { jvmTarget = jvmTargetVersion }
 
 ktfmt { kotlinLangStyle() }
