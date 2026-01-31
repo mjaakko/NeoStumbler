@@ -49,7 +49,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -463,9 +462,6 @@ private fun Report(
 private fun EmitterCount(@DrawableRes iconId: Int, iconDescription: String, count: Int) {
     val decimalFormat = remember { DecimalFormat("0") }
 
-    val localDensity = LocalDensity.current
-    var textHeightDp by remember { mutableStateOf(0.dp) }
-
     Row(
         modifier = Modifier.wrapContentSize(),
         verticalAlignment = Alignment.CenterVertically,
@@ -474,14 +470,16 @@ private fun EmitterCount(@DrawableRes iconId: Int, iconDescription: String, coun
         Icon(
             painter = painterResource(iconId),
             contentDescription = iconDescription,
-            modifier = Modifier.requiredSize(textHeightDp),
+            modifier =
+                Modifier.requiredSize(
+                    with(LocalDensity.current) {
+                        MaterialTheme.typography.bodySmall.fontSize.toDp()
+                    }
+                ),
         )
         Spacer(modifier = Modifier.width(2.dp))
         Text(
-            modifier =
-                Modifier.wrapContentWidth().fillMaxHeight().onGloballyPositioned {
-                    textHeightDp = with(localDensity) { it.size.height.toDp() }
-                },
+            modifier = Modifier.wrapContentWidth().fillMaxHeight(),
             text = decimalFormat.format(count),
             style = MaterialTheme.typography.bodySmall,
         )
