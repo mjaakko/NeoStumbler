@@ -95,6 +95,7 @@ The application has three product flavors:
 
 ### Building
 
+* Compile all code, including tests: `./gradlew assembleAll`
 * Build debug APK: `./gradlew :app:assembleFullDefaultDebug` or
   `./gradlew :app:assembleFdroidDefaultDebug`
 * Build release APK: `./gradlew :app:assembleFullDefaultRelease` or
@@ -104,6 +105,14 @@ The application has three product flavors:
           setting values for environment variables (see `app/build.gradle.kts`)
         * Alternatively, to build an unsigned APK, remove `signingConfigs` block from
           `app/build.gradle.kts`
+
+### Tests and quality checks
+
+* Run all unit tests: `./gradlew unitTest`
+* Run all instrumented tests: `./gradlew androidTest`
+* Check code formatting: `./gradlew ktfmtCheck`
+* Static analysis: `./gradlew detekt`
+* Android lint checks: `./gradlew lintAll`
 
 ## Contributing
 
