@@ -28,10 +28,21 @@
 
 # NeoStumbler
 
-NeoStumbler is an Android application for collecting locations of cell towers, Wi-Fi access points
-and Bluetooth beacons to geolocation services, which have an API compatible
-with [Ichnaea](https://ichnaea.readthedocs.io/en/latest/api/geosubmit2.html) (i.e. Mozilla Location
-Services) such as [beaconDB](https://beacondb.net/).
+[NeoStumbler](https://neostumbler.malkki.xyz/) is an Android application designed for mapping wireless infrastructure
+for geolocation purposes. It allows users to collect locations of *cell towers*, *Wi-Fi access points* and *Bluetooth
+beacons* and contribute them to [Ichnaea](https://ichnaea.readthedocs.io/en/latest/api/geosubmit2.html)-compatible (i.e.
+Mozilla Location Services) geolocation services – such as *[beaconDB](https://beacondb.net/)*.
+
+## Features
+
+* **Modern application**: Clean Material 3 UI, support for latest Android versions (10+)
+* **Comprehensive data collection**: Collect locations of cell towers, Wi-Fi access points and Bluetooth beacons
+* **Battery-friendly**: Collect data with minimal battery impact with features such as:
+    * Passive mode – collect data requested by other apps
+    * Motion sensor – pause GPS and network scanning when the device is not moving
+* **Privacy**: Support for reducing sensitive metadata in the collected data
+* **Interactive map**: Visualize collected data on a map and find gaps in the data coverage
+* **Export**: Collected data can be exported into *CSV* or *SQLite* formats
 
 ## Downloads
 
@@ -51,47 +62,34 @@ There are three variants available:
 
 You can install NeoStumbler either from an app store or by downloading an APK
 from [Releases](https://github.com/mjaakko/NeoStumbler/releases) page. Versions marked as
-pre-release are release candidates for the next version of NeoStumbler. These versions should
+*pre-release* are betas or release candidates for the next version of NeoStumbler. These versions should
 generally be usable, but might have some bugs, UI / UX issues and missing translations.
 
-If you install NeoStumbler directly from an APK, you need to check for updates manually or use a
-tool such as Obtainium
+If you install NeoStumbler directly from an APK, you need to check for updates manually or use a tool such as Obtainium.
 
 ### App stores
 
-The *fdroid* variant is available
-from [F-Droid](https://f-droid.org/packages/xyz.malkki.neostumbler.fdroid/) or alternatively
-from [IzzyOnDroid](https://android.izzysoft.de/repo/apk/xyz.malkki.neostumbler.fdroid). Reproducible
-builds are used for building NeoStumbler on F-Droid, which means that it's possible to upgrade an
-existing installation to a newer version from an alternative source.
+The *fdroid* variant is available from [F-Droid](https://f-droid.org/packages/xyz.malkki.neostumbler.fdroid/) or
+alternatively from [IzzyOnDroid](https://android.izzysoft.de/repo/apk/xyz.malkki.neostumbler.fdroid). Reproducible
+builds are used for building NeoStumbler on F-Droid, which means that it's possible to upgrade an existing installation
+to a newer version from an alternative source.
 
-The *full* variant is available
-from [Accrescent](https://accrescent.app/app/xyz.malkki.neostumbler). The advantage of using
-Accrescent is that only the assets needed for your device are downloaded.
+The *full* variant is available from [Accrescent](https://accrescent.app/app/xyz.malkki.neostumbler). The advantage of
+using Accrescent is that only the assets needed for your device are downloaded.
 
 A modified version of the *full* variant is also available
 on [Google Play](https://play.google.com/store/apps/details?id=xyz.malkki.neostumbler.gplay). This version does not
 include the automatic scanning feature and contains some minor quirks to comply with Google Play policies.
 
-## Features
-
-* Supports latest Android versions
-* Collect data for cell towers, Wi-Fi access points and Bluetooth beacons
-    * Data collection can be started automatically while moving (if using the *full* variant with
-      Google Play Services)
-* Scanning can be automatically paused when not moving
-* Map showing the areas where data has been collected
-* Exporting scan data as CSV files or as a raw SQLite file
-
 ## Development
 
 The application has three product flavors:
 
-* `fdroidDefault` - no closed components, features dependent on closed-source components (i.e.
-  Google Play Services) are not included
+* `fdroidDefault` - no closed components, features dependent on closed-source components (i.e. Google Play Services) are
+  not included
 * `fullDefault` - includes closed components, no features missing
-* `fullGplay` - based on `fullDefault`, but has some minor differences to make
-  it compliant with Google Play requirements
+* `fullGplay` - based on `fullDefault`, but has some minor differences to make it compliant with Google Play
+  requirements
 
 ### Building
 
@@ -116,9 +114,10 @@ The application has three product flavors:
 
 ## Contributing
 
-Contributions from the community are welcome and encouraged. Easiest ways to contribute are to
-create and update translations and to create bug reports. Requests for new features are welcome as
-well. If you want to implement a new feature, please create an issue first if there's some design or
+Contributions from the community are welcome and encouraged!
+
+Easiest ways to contribute are to create and update translations and to create bug reports. Requests for new features
+are welcome as well. If you want to implement a new feature, please create an issue first if there's some design or
 planning needed
 
 ### Translations
@@ -127,11 +126,9 @@ planning needed
 <img src="https://hosted.weblate.org/widget/neostumbler/287x66-grey.png" alt="Translation status" />
 </a>
 
-[Weblate](https://hosted.weblate.org/projects/neostumbler/) is used for translations. If you want to
-add translations for your language or to update existing translations, you can do that easily from
-Weblate. If you prefer, you can also update translations via a PR
+[Weblate](https://hosted.weblate.org/projects/neostumbler/) is used for translations. If you want to add translations
+for your language or to update existing translations, you can do that easily from Weblate. If you prefer, you can also
+update translations via a PR
 
-Note that once you've finished translating a new language, it needs to be enabled in the build
-configuration.
-See [this commit](https://github.com/mjaakko/NeoStumbler/commit/2c17e6f71825563fa78510b18a1d8e80596e4797)
-for an example
+Note that once you've finished translating a new language, it needs to be enabled in the build configuration.
+See [this commit](https://github.com/mjaakko/NeoStumbler/commit/2c17e6f71825563fa78510b18a1d8e80596e4797) for an example
