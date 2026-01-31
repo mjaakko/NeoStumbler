@@ -1,4 +1,9 @@
-[![Build status](https://github.com/mjaakko/NeoStumbler/actions/workflows/build.yml/badge.svg)](https://github.com/mjaakko/NeoStumbler/actions/workflows/build.yml) [![License](https://img.shields.io/github/license/mjaakko/NeoStumbler)](./LICENSE) [![Latest release](https://img.shields.io/github/v/release/mjaakko/NeoStumbler)](https://github.com/mjaakko/NeoStumbler/releases/latest) [![Matrix](https://img.shields.io/matrix/neostumbler%3Amatrix.org)](https://matrix.to/#/%23neostumbler:matrix.org) [![Translation status](https://hosted.weblate.org/widget/neostumbler/svg-badge.svg)](https://hosted.weblate.org/engage/neostumbler/)
+[![Build status](https://github.com/mjaakko/NeoStumbler/actions/workflows/build.yml/badge.svg)](https://github.com/mjaakko/NeoStumbler/actions/workflows/build.yml)
+[![License](https://img.shields.io/github/license/mjaakko/NeoStumbler)](./LICENSE)
+[![Latest release](https://img.shields.io/github/v/release/mjaakko/NeoStumbler)](https://github.com/mjaakko/NeoStumbler/releases/latest)
+[![Matrix](https://img.shields.io/matrix/neostumbler%3Amatrix.org)](https://matrix.to/#/%23neostumbler:matrix.org)
+[![Translation status](https://hosted.weblate.org/widget/neostumbler/svg-badge.svg)](https://hosted.weblate.org/engage/neostumbler/)
+![Downloads last month](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fgithub.com%2Fkitswas%2Ffdroid-metrics-dashboard%2Fraw%2Frefs%2Fheads%2Fmain%2Fprocessed%2Fmonthly%2Fxyz.malkki.neostumbler.fdroid.json&query=%24.total_downloads&logo=fdroid&label=Downloads%20last%20month)
 
 <a href="https://f-droid.org/packages/xyz.malkki.neostumbler.fdroid/" style="float: right;">
   <img
