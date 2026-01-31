@@ -136,6 +136,16 @@ Custom ROMs which do not use Google Play Services for the fused location provide
 with the *Prefer fused location provider* option enabled in NeoStumbler. In this case, try disabling that option or
 using the `fdroid` variant of NeoStumbler, which does not the ability to use fused location provider at all
 
+### No Wi-Fi data is collected when the screen is off
+
+Unfortunately some devices prohibit Wi-Fi scanning when the screen is off and don't respect the standard Android option
+to
+make [Wi-Fi scanning always available](https://developer.android.com/reference/android/net/wifi/WifiManager#isScanAlwaysAvailable()).
+This seems to occur at least with Fairphone and Huawei devices.
+
+The only workaround for this is to force the screen to stay on while scanning. You can use an app such
+as [Caffeinate](https://f-droid.org/packages/com.hifnawy.caffeinate/) to do this.
+
 ### Changing the language doesn't work
 
 This can happen in some cases when you have more than one system language available. Currently the best workaround is to
