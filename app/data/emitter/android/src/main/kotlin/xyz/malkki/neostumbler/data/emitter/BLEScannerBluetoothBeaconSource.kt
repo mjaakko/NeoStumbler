@@ -24,15 +24,15 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.retry
 import kotlinx.coroutines.flow.timeout
 import timber.log.Timber
-import xyz.malkki.neostumbler.beaconparser.BeaconLayout.Companion.parseBeaconLayout
-import xyz.malkki.neostumbler.beaconparser.BeaconParser
 import xyz.malkki.neostumbler.core.MacAddress
 import xyz.malkki.neostumbler.core.emitter.BluetoothBeacon
 import xyz.malkki.neostumbler.core.observation.EmitterObservation
+import xyz.malkki.neostumbler.data.emitter.internal.bluetooth.BluetoothBeaconConstants.BEACON_LAYOUTS
+import xyz.malkki.neostumbler.data.emitter.internal.bluetooth.BluetoothBeaconConstants.BEACON_PARSERS
+import xyz.malkki.neostumbler.data.emitter.internal.bluetooth.BluetoothBeaconConstants.KNOWN_BEACON_MANUFACTURERS
 import xyz.malkki.neostumbler.data.emitter.internal.bluetooth.createScanFilters
-import xyz.malkki.neostumbler.data.emitter.internal.getDeviceInteractiveFlow
-
-private const val MS_IN_NS = 1_000_000
+import xyz.malkki.neostumbler.data.emitter.internal.timestampMillis
+import xyz.malkki.neostumbler.data.emitter.internal.util.getDeviceInteractiveFlow
 
 private val THROTTLE_RETRY_DELAY = 5.seconds
 
@@ -43,28 +43,6 @@ private const val SCAN_RESULT_BUFFER_SIZE = 10
 
 class BLEScannerBluetoothBeaconSource(context: Context) : ActiveBluetoothBeaconSource {
     companion object {
-        // These could be defined in a text file
-        private val BEACON_LAYOUTS =
-            listOf(
-                    // AltBeacon
-                    "m:2-3=beac,i:4-19,i:20-21,i:22-23,p:24-24,d:25-25",
-                    // iBeacon
-                    "m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24",
-                    // Eddystone-UID
-                    "s:0-1=feaa,m:2-2=00,p:3-3:-41,i:4-13,i:14-19",
-                    // RuuviTag v5
-                    // https://docs.ruuvi.com/communication/bluetooth-advertisements/data-format-5-rawv2
-                    "m:0-2=990405,i:20-25",
-                )
-                .map { it.parseBeaconLayout() }
-
-        private val BEACON_PARSERS = BEACON_LAYOUTS.map { BeaconParser(it) }
-
-        /**
-         * List of known beacon manufacturer IDs. These are used for scan filters when the screen is
-         * off as otherwise Android does not allow active Bluetooth scanning
-         */
-        private val KNOWN_BEACON_MANUFACTURERS = listOf(0x04c, 0x0118)
 
         private val SCAN_SETTINGS =
             ScanSettings.Builder()
@@ -113,7 +91,7 @@ class BLEScannerBluetoothBeaconSource(context: Context) : ActiveBluetoothBeaconS
                                 id3 = beaconData.identifiers.getOrNull(2)?.toString(),
                                 signalStrength = scanResult.rssi,
                             ),
-                        timestamp = scanResult.timestampNanos / MS_IN_NS,
+                        timestamp = scanResult.timestampMillis,
                     )
                 } ?: emptyList()
             }

@@ -30,8 +30,8 @@ import xyz.malkki.neostumbler.broadcastreceiverflow.broadcastReceiverFlow
 import xyz.malkki.neostumbler.core.MacAddress
 import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
 import xyz.malkki.neostumbler.core.observation.EmitterObservation
-import xyz.malkki.neostumbler.data.emitter.internal.RateLimiter
-import xyz.malkki.neostumbler.data.emitter.internal.delayWithMinDuration
+import xyz.malkki.neostumbler.data.emitter.internal.util.RateLimiter
+import xyz.malkki.neostumbler.data.emitter.internal.util.delayWithMinDuration
 import xyz.malkki.neostumbler.data.emitter.mapper.toWifiAccessPoint
 import xyz.malkki.neostumbler.executors.ImmediateExecutor
 

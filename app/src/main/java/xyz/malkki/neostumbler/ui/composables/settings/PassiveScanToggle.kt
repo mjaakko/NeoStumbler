@@ -2,12 +2,15 @@ package xyz.malkki.neostumbler.ui.composables.settings
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
@@ -28,6 +31,13 @@ private val passiveScanPermissions =
     buildList {
             add(Manifest.permission.ACCESS_FINE_LOCATION)
             add(Manifest.permission.READ_PHONE_STATE)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                add(Manifest.permission.BLUETOOTH_SCAN)
+            } else {
+                add(Manifest.permission.BLUETOOTH)
+                add(Manifest.permission.BLUETOOTH_ADMIN)
+            }
         }
         .toTypedArray()
 
@@ -47,47 +57,48 @@ fun PassiveScanToggle(
             .getBooleanFlow(PreferenceKeys.PASSIVE_SCAN_ENABLED, false)
             .collectAsState(initial = false)
 
-    val missingPermissionsBasic = remember {
+    var missingPermissionsBasic by remember {
         mutableStateOf(context.checkMissingPermissions(*passiveScanPermissions))
     }
     // Background location permission has to be requested separately
-    val missingPermissionsAdditional = remember {
+    var missingPermissionsAdditional by remember {
         mutableStateOf(
             context.checkMissingPermissions(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
         )
     }
 
-    val showBasicPermissionsDialog = rememberSaveable { mutableStateOf(false) }
-    val showAdditionalPermissionsDialog = rememberSaveable { mutableStateOf(false) }
+    var showBasicPermissionsDialog by rememberSaveable { mutableStateOf(false) }
+    var showAdditionalPermissionsDialog by rememberSaveable { mutableStateOf(false) }
 
     fun enablePassiveScan() {
         if (
-            missingPermissionsBasic.value.isEmpty() && missingPermissionsAdditional.value.isEmpty()
+            missingPermissionsBasic.isNotMissingNecessaryPermissions() &&
+                missingPermissionsAdditional.isEmpty()
         ) {
             coroutineScope.launch {
                 @SuppressLint("MissingPermission") passiveScanManager.enablePassiveScanning()
 
                 settings.edit { setBoolean(PreferenceKeys.PASSIVE_SCAN_ENABLED, true) }
             }
-        } else if (missingPermissionsBasic.value.isNotEmpty()) {
-            showBasicPermissionsDialog.value = true
-        } else if (missingPermissionsAdditional.value.isNotEmpty()) {
-            showAdditionalPermissionsDialog.value = true
+        } else if (missingPermissionsBasic.isNotEmpty()) {
+            showBasicPermissionsDialog = true
+        } else {
+            showAdditionalPermissionsDialog = true
         }
     }
 
-    if (showBasicPermissionsDialog.value) {
+    if (showBasicPermissionsDialog) {
         PassiveScanBasicPermissionsDialog(
-            missingPermissions = missingPermissionsBasic.value,
+            missingPermissions = missingPermissionsBasic,
             onPermissionsGranted = { permissions ->
-                showBasicPermissionsDialog.value = false
+                showBasicPermissionsDialog = false
 
-                missingPermissionsBasic.value =
-                    missingPermissionsBasic.value.filter {
+                missingPermissionsBasic =
+                    missingPermissionsBasic.filter {
                         it !in permissions || permissions[it] == false
                     }
 
-                if (missingPermissionsBasic.value.isEmpty()) {
+                if (missingPermissionsBasic.isNotMissingNecessaryPermissions()) {
                     enablePassiveScan()
                 } else {
                     context.showToast(
@@ -98,18 +109,18 @@ fun PassiveScanToggle(
         )
     }
 
-    if (showAdditionalPermissionsDialog.value) {
+    if (showAdditionalPermissionsDialog) {
         PassiveScanAdditionalPermissionsDialog(
-            missingPermissions = missingPermissionsAdditional.value,
+            missingPermissions = missingPermissionsAdditional,
             onPermissionsGranted = { permissions ->
-                showAdditionalPermissionsDialog.value = false
+                showAdditionalPermissionsDialog = false
 
-                missingPermissionsAdditional.value =
-                    missingPermissionsAdditional.value.filter {
+                missingPermissionsAdditional =
+                    missingPermissionsAdditional.filter {
                         it !in permissions || permissions[it] == false
                     }
 
-                if (missingPermissionsAdditional.value.isEmpty()) {
+                if (missingPermissionsAdditional.isEmpty()) {
                     enablePassiveScan()
                 } else {
                     context.showToast(
@@ -147,6 +158,11 @@ fun PassiveScanToggle(
     )
 }
 
+private fun List<String>.isNotMissingNecessaryPermissions(): Boolean {
+    return Manifest.permission.ACCESS_FINE_LOCATION !in this &&
+        Manifest.permission.READ_PHONE_STATE !in this
+}
+
 @Composable
 private fun PassiveScanAdditionalPermissionsDialog(
     missingPermissions: List<String>,
@@ -182,6 +198,22 @@ private fun PassiveScanBasicPermissionsDialog(
                     Manifest.permission.READ_PHONE_STATE,
                     stringResource(id = R.string.permission_rationale_read_phone_state),
                 )
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    put(
+                        Manifest.permission.BLUETOOTH_SCAN,
+                        stringResource(id = R.string.permission_rationale_bluetooth),
+                    )
+                } else {
+                    put(
+                        Manifest.permission.BLUETOOTH,
+                        stringResource(id = R.string.permission_rationale_bluetooth),
+                    )
+                    put(
+                        Manifest.permission.BLUETOOTH_ADMIN,
+                        stringResource(id = R.string.permission_rationale_bluetooth),
+                    )
+                }
             },
         onPermissionsGranted = onPermissionsGranted,
     )

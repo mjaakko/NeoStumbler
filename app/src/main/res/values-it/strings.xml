@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <string name="failed_to_open_selected_file">Impossibile aprire il file selezionato</string>
     <string name="stop">Interrompi</string>
     <string name="map_tab_title">Mappa</string>
@@ -195,7 +195,7 @@
     <string name="moving_device_filter_title">Filtra dispositivi mobili</string>
     <string name="moving_device_filter_description">Reti Wi-Fi e beacon Bluetooth mobili vengono rilevati e filtrati automaticamente dai report</string>
     <string name="passive_scanning_title">Raccolta dati passiva</string>
-    <string name="passive_scanning_description">La raccolta dati passiva crea report in background con un impatto minimo sulla batteria utilizzando i dati richiesti da altre applicazioni.\n\nL\'efficacia della raccolta dati passiva dipenderà dal tipo di dispositivo, dalle altre app che stai utilizzando e se hai disponibile un provider di posizione fuso.\n\nNota che la raccolta dati passiva non funziona con i beacon Bluetooth.\n\nVuoi abilitare la raccolta dati passiva?</string>
+    <string name="passive_scanning_description">La raccolta dati passiva crea report in background con un impatto minimo sulla batteria utilizzando i dati richiesti da altre applicazioni.\n\nL\'efficacia della raccolta dati passiva dipenderà dal tipo di dispositivo, dalle altre app che stai utilizzando e se hai disponibile un provider di posizione fuso.\n\nVuoi abilitare la raccolta dati passiva?</string>
     <string name="map_tile_source_custom_title">Personalizzato</string>
     <string name="map_tile_source_custom_style_url">URL stile mappa personalizzato</string>
     <string name="crash_log_title">Registro errori</string>

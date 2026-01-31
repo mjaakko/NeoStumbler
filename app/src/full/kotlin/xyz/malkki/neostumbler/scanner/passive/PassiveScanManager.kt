@@ -12,14 +12,17 @@ import com.google.android.gms.location.Priority
 import kotlinx.coroutines.flow.first
 import timber.log.Timber
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.data.emitter.PassiveBluetoothBeaconSource
 import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.data.settings.getBooleanFlow
 import xyz.malkki.neostumbler.extensions.isGoogleApisAvailable
+import xyz.malkki.neostumbler.utils.PermissionHelper
 
 class PassiveScanManager(
     private val context: Context,
     private val settings: Settings,
     private val passiveScanStateManager: PassiveScanStateManager,
+    private val passiveBluetoothBeaconSource: PassiveBluetoothBeaconSource,
 ) {
     @RequiresPermission(
         allOf =
@@ -39,6 +42,10 @@ class PassiveScanManager(
         } else {
             enablePlatformPassiveScanning(context)
         }
+
+        if (PermissionHelper.hasBluetoothScanPermission(context)) {
+            passiveBluetoothBeaconSource.enable()
+        }
     }
 
     suspend fun disablePassiveScanning() {
@@ -49,6 +56,10 @@ class PassiveScanManager(
 
         val locationManager = context.getSystemService<LocationManager>()!!
         locationManager.removeUpdates(PlatformPassiveLocationReceiver.getPendingIntent(context))
+
+        if (PermissionHelper.hasBluetoothScanPermission(context)) {
+            passiveBluetoothBeaconSource.disable()
+        }
     }
 
     @RequiresPermission(

@@ -169,7 +169,7 @@
     <string name="mcc">MCC: %s</string>
     <string name="lac">LAC: %s</string>
     <string name="send_reports_automatically_never">Nunca</string>
-    <string name="passive_scanning_description">A recolha passiva de dados cria relatórios em segundo plano usando informação solicitada por outras apps minimizando o impacto na bateria.\n\nA eficácia da recolha passiva de dados depende do dispositivo, das outras aplicações que está a utilizar e se tem um fornecedor de localização combinada disponível.\n\nNote que a recolha passiva de dados não funciona com beacons Bluetooth.\n\nQuer ativar a recolha passiva de dados?</string>
+    <string name="passive_scanning_description">A recolha passiva de dados cria relatórios em segundo plano usando informação solicitada por outras apps minimizando o impacto na bateria.\n\nA eficácia da recolha passiva de dados depende do dispositivo, das outras aplicações que está a utilizar e se tem um fornecedor de localização combinada disponível.\n\nQuer ativar a recolha passiva de dados?</string>
     <string name="disabled">Desativado</string>
     <string name="settings_group_privacy">Privacidade</string>
     <string name="wifi_filter_settings_hint">Redes de Wi-Fi com alguma destas palavras-chave no nome/SSID não são colecionadas</string>

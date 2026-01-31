@@ -1,4 +1,7 @@
-plugins { id("convention.android-library") }
+plugins {
+    id("convention.android-library")
+    alias(libs.plugins.kotlinSerialization)
+}
 
 android {
     namespace = "xyz.malkki.neostumbler.emitters.android"
@@ -11,11 +14,14 @@ dependencies {
 
     implementation(project(":libs:executors"))
     implementation(project(":libs:broadcast-receiver-flow"))
+    implementation(project(":libs:coroutine-broadcast-receiver"))
 
     implementation(project(":libs:beacon-parser"))
 
     implementation(libs.androidx.annotation)
     implementation(libs.androidx.core)
+
+    implementation(libs.kotlinx.serializationJson)
 
     implementation(libs.timber)
 

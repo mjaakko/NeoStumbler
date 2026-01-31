@@ -158,7 +158,7 @@
     <string name="movement_detection_location_title">GPS</string>
     <string name="movement_detection_location_description">Powesys arhwilyansow pan tyller na chanjya. GPS pesya byw</string>
     <string name="passive_scanning_title">Kuntel data godhevek</string>
-    <string name="passive_scanning_description">Kuntel data godhevek gul derivasow yn kilva gans effeyth ispoyntel war batri gans ow devnydhya data govynys gans appys aral.\n\nAn effeythuster a kuntel data godhevek kregi war eghen devis, an appys aral ty ow devnydhya, ha mar provier kesunys GPS yw kavadow.\n\nAttendya a kuntel data godhevek na oberi gans beaconys Bluetooth.\n\nA vynn\'ta gallosegi kuntel data godhevek?</string>
+    <string name="passive_scanning_description">Kuntel data godhevek gul derivasow yn kilva gans effeyth ispoyntel war batri gans ow devnydhya data govynys gans appys aral.\n\nAn effeythuster a kuntel data godhevek kregi war eghen devis, an appys aral ty ow devnydhya, ha mar provier kesunys GPS yw kavadow.\n\nA vynn\'ta gallosegi kuntel data godhevek?</string>
     <string name="movement_detection_significant_motion_title">Helerghell gwayans</string>
     <string name="movement_detection_significant_motion_description">Powesys arhwilyansow ha GPS pan na gwayans yw helerghi. Sawya batri, mar na oberi fydhyadow war nebes devisyow</string>
     <string name="notification_style">Eghen messach</string>

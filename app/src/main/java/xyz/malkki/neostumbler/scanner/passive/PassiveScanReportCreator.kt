@@ -2,14 +2,15 @@ package xyz.malkki.neostumbler.scanner.passive
 
 import android.Manifest
 import androidx.annotation.RequiresPermission
-import xyz.malkki.neostumbler.core.MacAddress
-import xyz.malkki.neostumbler.core.emitter.CellTower
-import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
+import xyz.malkki.neostumbler.core.emitter.Emitter
 import xyz.malkki.neostumbler.core.observation.EmitterObservation
 import xyz.malkki.neostumbler.core.observation.PositionObservation
+import xyz.malkki.neostumbler.core.report.ReportData
+import xyz.malkki.neostumbler.data.emitter.PassiveBluetoothBeaconSource
 import xyz.malkki.neostumbler.data.emitter.PassiveCellTowerSource
 import xyz.malkki.neostumbler.data.emitter.PassiveWifiAccessPointSource
 import xyz.malkki.neostumbler.data.reports.ReportSaver
+import xyz.malkki.neostumbler.geography.LatLng
 import xyz.malkki.neostumbler.scanner.ScannerService
 import xyz.malkki.neostumbler.scanner.ScanningConstants
 import xyz.malkki.neostumbler.scanner.createReports
@@ -24,6 +25,7 @@ private const val MIN_DISTANCE_FROM_LAST_LOCATION = 50
 class PassiveScanReportCreator(
     private val passiveWifiAccessPointSource: PassiveWifiAccessPointSource,
     private val passiveCellTowerSource: PassiveCellTowerSource,
+    private val passiveBluetoothBeaconSource: PassiveBluetoothBeaconSource,
     private val passiveScanStateManager: PassiveScanStateManager,
     private val reportSaver: ReportSaver,
     private val postProcessors: List<ReportPostProcessor>,
@@ -53,28 +55,41 @@ class PassiveScanReportCreator(
             return
         }
 
-        val cellTowers = getCellTowers().filterDuplicates()
-        val wifiAccessPoints = getWifiAccessPoints()
+        val cellTowers =
+            getObservations(
+                    dataType = PassiveScanStateManager.DataType.CELL,
+                    passiveCellTowerSource::getCellTowers,
+                )
+                .filterDuplicates()
+        val wifiAccessPoints =
+            getObservations(
+                    dataType = PassiveScanStateManager.DataType.WIFI,
+                    passiveWifiAccessPointSource::getWifiAccessPoints,
+                )
+                .filterDuplicates()
+        val bluetoothBeacons =
+            getObservations(
+                    dataType = PassiveScanStateManager.DataType.BLUETOOTH,
+                    passiveBluetoothBeaconSource::getBluetoothBeacons,
+                )
+                .filterDuplicates()
 
         val lastLocations =
-            buildList {
+            getLastLocations(
+                buildList {
                     if (cellTowers.isNotEmpty()) {
-                        add(
-                            passiveScanStateManager.getLastReportLocation(
-                                PassiveScanStateManager.DataType.CELL
-                            )
-                        )
+                        add(PassiveScanStateManager.DataType.CELL)
                     }
 
                     if (wifiAccessPoints.isNotEmpty()) {
-                        add(
-                            passiveScanStateManager.getLastReportLocation(
-                                PassiveScanStateManager.DataType.WIFI
-                            )
-                        )
+                        add(PassiveScanStateManager.DataType.WIFI)
+                    }
+
+                    if (bluetoothBeacons.isNotEmpty()) {
+                        add(PassiveScanStateManager.DataType.BLUETOOTH)
                     }
                 }
-                .filterNotNull()
+            )
 
         if (
             lastLocations.isNotEmpty() &&
@@ -88,94 +103,86 @@ class PassiveScanReportCreator(
             return
         }
 
-        cellTowers
-            .maxOfOrNull { it.timestamp }
-            ?.let {
-                passiveScanStateManager.updateMaxTimestamp(
-                    dataType = PassiveScanStateManager.DataType.CELL,
-                    timestamp = it,
-                )
-            }
+        cellTowers.updateMaxObservedTimestamp(dataType = PassiveScanStateManager.DataType.CELL)
 
-        wifiAccessPoints
-            .maxOfOrNull { it.timestamp }
-            ?.let {
-                passiveScanStateManager.updateMaxTimestamp(
-                    dataType = PassiveScanStateManager.DataType.WIFI,
-                    timestamp = it,
-                )
-            }
+        wifiAccessPoints.updateMaxObservedTimestamp(
+            dataType = PassiveScanStateManager.DataType.WIFI
+        )
+
+        bluetoothBeacons.updateMaxObservedTimestamp(
+            dataType = PassiveScanStateManager.DataType.BLUETOOTH
+        )
 
         val reports =
             createReports(
                 positions = filteredPositions,
                 cellTowers = cellTowers,
                 wifiAccessPoints = wifiAccessPoints,
-                // Currently we don't support passive scanning for Bluetooth beacons
-                bluetoothBeacons = emptyList(),
+                bluetoothBeacons = bluetoothBeacons,
                 postProcessors = postProcessors,
             )
 
-        reports
-            .filter { it.wifiAccessPoints.isNotEmpty() }
-            .maxByOrNull { it.position.timestamp }
-            ?.let {
-                passiveScanStateManager.updateLastReportLocation(
-                    dataType = PassiveScanStateManager.DataType.WIFI,
-                    it.position.position.latLng,
-                )
-            }
+        reports.updateLastUsedPosition(PassiveScanStateManager.DataType.CELL) { it.cellTowers }
 
-        reports
-            .filter { it.cellTowers.isNotEmpty() }
-            .maxByOrNull { it.position.timestamp }
-            ?.let {
-                passiveScanStateManager.updateLastReportLocation(
-                    dataType = PassiveScanStateManager.DataType.CELL,
-                    it.position.position.latLng,
-                )
-            }
+        reports.updateLastUsedPosition(PassiveScanStateManager.DataType.WIFI) {
+            it.wifiAccessPoints
+        }
+
+        reports.updateLastUsedPosition(PassiveScanStateManager.DataType.BLUETOOTH) {
+            it.bluetoothBeacons
+        }
 
         reports.forEach { reportData -> reportSaver.createReport(reportData) }
     }
 
-    /** Filters duplicate cell towers by choosing the one with most recent timestamp */
-    private fun List<EmitterObservation<CellTower, String>>.filterDuplicates():
-        List<EmitterObservation<CellTower, String>> {
+    private suspend fun getLastLocations(
+        dataTypes: Collection<PassiveScanStateManager.DataType>
+    ): List<LatLng> {
+        return dataTypes.mapNotNull { dataType ->
+            passiveScanStateManager.getLastReportLocation(dataType)
+        }
+    }
+
+    /** Filters duplicate observations by choosing the one with most recent timestamp */
+    private fun <T : Emitter<K>, K> List<EmitterObservation<T, K>>.filterDuplicates():
+        List<EmitterObservation<T, K>> {
         return groupBy { it.emitter.uniqueKey }
-            .mapValues { cellTowers ->
-                cellTowers.value.maxByOrNull { cellTower -> cellTower.timestamp }
+            .mapValues { observations ->
+                observations.value.maxByOrNull { cellTower -> cellTower.timestamp }
             }
             .values
             .filterNotNull()
     }
 
-    @RequiresPermission(
-        allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_WIFI_STATE]
-    )
-    private suspend fun getWifiAccessPoints():
-        List<EmitterObservation<WifiAccessPoint, MacAddress>> {
-        val maxTimestamp =
-            passiveScanStateManager.getMaxTimestamp(
-                dataType = PassiveScanStateManager.DataType.WIFI
-            )
+    private suspend fun <E : Emitter<K>, K> getObservations(
+        dataType: PassiveScanStateManager.DataType,
+        source: suspend () -> List<EmitterObservation<E, K>>,
+    ): List<EmitterObservation<E, K>> {
+        val maxTimestamp = passiveScanStateManager.getMaxTimestamp(dataType = dataType)
 
-        return passiveWifiAccessPointSource.getWifiAccessPoints().filter {
-            maxTimestamp == null || it.timestamp > maxTimestamp
-        }
+        return source().filter { maxTimestamp == null || it.timestamp > maxTimestamp }
     }
 
-    @RequiresPermission(
-        allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_PHONE_STATE]
-    )
-    private suspend fun getCellTowers(): List<EmitterObservation<CellTower, String>> {
-        val maxTimestamp =
-            passiveScanStateManager.getMaxTimestamp(
-                dataType = PassiveScanStateManager.DataType.CELL
-            )
+    private suspend fun List<EmitterObservation<*, *>>.updateMaxObservedTimestamp(
+        dataType: PassiveScanStateManager.DataType
+    ) {
+        maxOfOrNull { it.timestamp }
+            ?.let {
+                passiveScanStateManager.updateMaxTimestamp(dataType = dataType, timestamp = it)
+            }
+    }
 
-        return passiveCellTowerSource.getCellTowers().filter {
-            maxTimestamp == null || it.timestamp > maxTimestamp
-        }
+    private suspend fun List<ReportData>.updateLastUsedPosition(
+        dataType: PassiveScanStateManager.DataType,
+        extractData: (ReportData) -> List<EmitterObservation<*, *>>,
+    ) {
+        filter { extractData(it).isNotEmpty() }
+            .maxByOrNull { it.position.timestamp }
+            ?.let {
+                passiveScanStateManager.updateLastReportLocation(
+                    dataType = dataType,
+                    latLng = it.position.position.latLng,
+                )
+            }
     }
 }

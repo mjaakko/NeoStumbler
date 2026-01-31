@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.data.emitter.internal
+package xyz.malkki.neostumbler.data.emitter.internal.util
 
 import android.app.UiAutomation
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -6,7 +6,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
+import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -28,11 +28,11 @@ class DeviceInteractivityListenerTest {
 
         instrumentation.uiAutomation.toggleScreen()
 
-        assertEquals(!initialState, screenOnChannel.receive())
+        Assert.assertEquals(!initialState, screenOnChannel.receive())
 
         instrumentation.uiAutomation.toggleScreen()
 
-        assertEquals(initialState, screenOnChannel.receive())
+        Assert.assertEquals(initialState, screenOnChannel.receive())
     }
 
     private fun UiAutomation.toggleScreen() = executeShellCommand("input keyevent 26")
