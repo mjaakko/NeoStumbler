@@ -6,7 +6,6 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -64,7 +63,9 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import java.text.DecimalFormat
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
@@ -75,6 +76,7 @@ import xyz.malkki.neostumbler.data.location.GpsStatusSource
 import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.data.settings.getEnumFlow
 import xyz.malkki.neostumbler.extensions.defaultLocale
+import xyz.malkki.neostumbler.extensions.getActivity
 import xyz.malkki.neostumbler.extensions.getQuantityString
 import xyz.malkki.neostumbler.geography.LatLng
 import xyz.malkki.neostumbler.scanner.ScannerService
@@ -93,6 +95,7 @@ import xyz.malkki.neostumbler.ui.viewmodel.ReportsViewModel
 import xyz.malkki.neostumbler.utils.geocoder.CachedGeocoder
 import xyz.malkki.neostumbler.utils.geocoder.GeocoderType
 import xyz.malkki.neostumbler.utils.geocoder.StubGeocoder
+import xyz.malkki.neostumbler.utils.review.ReviewRequester
 
 @Composable
 fun ReportsScreen(viewModel: ReportsViewModel = koinViewModel()) {
@@ -123,7 +126,8 @@ fun ReportsScreen(viewModel: ReportsViewModel = koinViewModel()) {
             modifier =
                 Modifier.align(Alignment.BottomCenter).padding(8.dp).onPlaced {
                     cardHeight = density.run { it.size.height.toDp() }
-                }
+                },
+            canReviewFlow = viewModel.canRequestReview,
         )
     }
 }
@@ -131,17 +135,23 @@ fun ReportsScreen(viewModel: ReportsViewModel = koinViewModel()) {
 @Composable
 private fun ScanningControllerCard(
     modifier: Modifier = Modifier,
+    canReviewFlow: Flow<Boolean>,
     scanningActiveFlow: StateFlow<Boolean> = ScannerService.serviceRunning,
     reporsCreatedFlow: StateFlow<Int> = ScannerService.reportsCreated,
     gpsStatusSource: GpsStatusSource = koinInject(),
+    reviewRequester: ReviewRequester = koinInject(),
 ) {
     val context = LocalContext.current
+
+    val coroutineScope = rememberCoroutineScope()
 
     val scanningActive by scanningActiveFlow.collectAsStateWithLifecycle()
     val reportsCreated by reporsCreatedFlow.collectAsStateWithLifecycle()
 
     val gpsAvailable by
         gpsStatusSource.isGpsAvailable().collectAsStateWithLifecycle(initialValue = false)
+
+    val canReview by canReviewFlow.collectAsStateWithLifecycle(initialValue = false)
 
     ElevatedCard(
         modifier =
@@ -156,7 +166,15 @@ private fun ScanningControllerCard(
             modifier = Modifier.padding(8.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            ForegroundScanningButton()
+            ForegroundScanningButton(
+                afterStop = {
+                    if (canReview) {
+                        context.getActivity()?.let {
+                            coroutineScope.launch { reviewRequester.requestReview(it) }
+                        }
+                    }
+                }
+            )
 
             Column(modifier = Modifier.align(Alignment.CenterVertically).weight(1.0f)) {
                 Text(
@@ -189,15 +207,14 @@ private fun ScanningControllerCard(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun ReportStats(modifier: Modifier = Modifier, reportsViewModel: ReportsViewModel) {
-    val reportsTotal = reportsViewModel.reportsTotal.collectAsStateWithLifecycle(null)
-    val reportsNotUploaded = reportsViewModel.reportsNotUploaded.collectAsStateWithLifecycle(null)
-    val reportsLastUploaded = reportsViewModel.lastUpload.collectAsStateWithLifecycle(null)
+    val reportsTotal by reportsViewModel.reportsTotal.collectAsStateWithLifecycle()
+    val reportsNotUploaded by reportsViewModel.reportsNotUploaded.collectAsStateWithLifecycle(null)
+    val reportsLastUploaded by reportsViewModel.lastUpload.collectAsStateWithLifecycle(null)
 
     val lastUploadedText =
-        reportsLastUploaded.value?.let { formattedDate(it) }
+        reportsLastUploaded?.let { formattedDate(it) }
             ?: stringResource(R.string.reports_last_uploaded_never)
 
     OutlinedCard(modifier = modifier.fillMaxWidth()) {
@@ -212,15 +229,12 @@ private fun ReportStats(modifier: Modifier = Modifier, reportsViewModel: Reports
                     maxItemsInEachRow = 2,
                 ) {
                     Text(
-                        text = stringResource(R.string.reports_total, reportsTotal.value ?: 0),
+                        text = stringResource(R.string.reports_total, reportsTotal),
                         style = MaterialTheme.typography.bodySmall,
                     )
                     Text(
                         text =
-                            stringResource(
-                                R.string.reports_not_uploaded,
-                                reportsNotUploaded.value ?: 0,
-                            ),
+                            stringResource(R.string.reports_not_uploaded, reportsNotUploaded ?: 0),
                         style = MaterialTheme.typography.bodySmall,
                     )
                     Text(

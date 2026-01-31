@@ -21,6 +21,8 @@ aboutLibraries = "13.2.1"
 
 multiplatformMarkdownRenderer = "0.39.0"
 
+playReview = "2.0.2"
+
 [libraries]
 koinBom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
 koinAndroid = { module = "io.insert-koin:koin-android" }
@@ -90,6 +92,9 @@ kotlinx-coroutinesTest = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-te
 
 playservices-location = { module = "com.google.android.gms:play-services-location", version = "21.3.0" }
 playservices-cronet = { module = "com.google.android.gms:play-services-cronet", version = "18.1.1" }
+
+play-review = { module = "com.google.android.play:review", version.ref = "playReview" }
+play-reviewKtx = { module = "com.google.android.play:review-ktx", version.ref = "playReview" }
 
 timber = { module = "com.jakewharton.timber:timber", version = "5.0.1" }
 

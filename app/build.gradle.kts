@@ -353,6 +353,9 @@ dependencies {
 
     "gplayImplementation"(libs.bundles.multiplatformMarkdownRenderer)
 
+    "gplayImplementation"(libs.play.review)
+    "gplayImplementation"(libs.play.reviewKtx)
+
     "fullImplementation"(libs.playservices.cronet)
     "fullImplementation"(libs.cronetOkhttp)
 

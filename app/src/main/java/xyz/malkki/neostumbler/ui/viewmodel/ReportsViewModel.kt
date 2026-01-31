@@ -5,20 +5,40 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import xyz.malkki.neostumbler.core.report.ReportWithStats
 import xyz.malkki.neostumbler.data.reports.ReportProvider
 import xyz.malkki.neostumbler.data.reports.ReportRemover
+import xyz.malkki.neostumbler.utils.review.ReviewRequester
 
-class ReportsViewModel(reportProvider: ReportProvider, private val reportRemover: ReportRemover) :
-    ViewModel() {
-    val reportsTotal = reportProvider.getReportCount().distinctUntilChanged()
+private const val MIN_REPORTS_FOR_REVIEW = 1000
+
+class ReportsViewModel(
+    reviewRequester: ReviewRequester,
+    reportProvider: ReportProvider,
+    private val reportRemover: ReportRemover,
+) : ViewModel() {
+    val reportsTotal =
+        reportProvider
+            .getReportCount()
+            .stateIn(viewModelScope, started = SharingStarted.Lazily, initialValue = 0)
     val reportsNotUploaded = reportProvider.getNotUploadedReportCount().distinctUntilChanged()
     val lastUpload = reportProvider.getLastReportUploadTime().distinctUntilChanged()
 
     val reports: Flow<PagingData<ReportWithStats>> =
         reportProvider.getReportsWithStats().cachedIn(viewModelScope)
+
+    val canRequestReview: Flow<Boolean> =
+        if (!reviewRequester.isReviewSupported) {
+            flowOf(false)
+        } else {
+            reportsTotal.map { it >= MIN_REPORTS_FOR_REVIEW }
+        }
 
     fun deleteReport(reportId: Long) =
         viewModelScope.launch { reportRemover.deleteReport(reportId) }

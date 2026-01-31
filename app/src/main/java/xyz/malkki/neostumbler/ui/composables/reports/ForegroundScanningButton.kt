@@ -52,7 +52,7 @@ private val requiredPermissions =
         .toTypedArray()
 
 @Composable
-fun ForegroundScanningButton() {
+fun ForegroundScanningButton(afterStop: (() -> Unit)? = null) {
     val context = LocalContext.current
     val intent = context.getActivity()?.intent
 
@@ -150,7 +150,14 @@ fun ForegroundScanningButton() {
         }
     }
 
-    StartStopScanningButton(onStart = { startScanning() }, onStop = { stopScanning() })
+    StartStopScanningButton(
+        onStart = { startScanning() },
+        onStop = {
+            stopScanning()
+
+            afterStop?.invoke()
+        },
+    )
 }
 
 @Composable
@@ -189,17 +196,17 @@ private fun StartStopScanningButton(
             if (isScanning) {
                 onStop()
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                coroutineScope.launch {
                     // Prompt user to add the quick settings tile for scanning
-                    coroutineScope.launch {
-                        val qsTileDialogShown =
-                            oneTimeActionHelper.hasActionBeenShown(
-                                ScannerTileService.ADD_QS_TILE_ACTION_NAME
-                            )
+                    val qsTileDialogShown =
+                        oneTimeActionHelper.hasActionBeenShown(
+                            ScannerTileService.ADD_QS_TILE_ACTION_NAME
+                        )
 
-                        if (!qsTileDialogShown) {
-                            showQuickSettingsDialog.value = true
-                        }
+                    if (
+                        !qsTileDialogShown && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                    ) {
+                        showQuickSettingsDialog.value = true
                     }
                 }
             } else {
