@@ -42,11 +42,11 @@ androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.7.1
 
 androidx-splashscreen = { module = "androidx.core:core-splashscreen", version = "1.2.0" }
 
-androidx-lifecycleRuntimeCompose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidxLifecycle" }
-androidx-lifecycleRuntime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
-androidx-lifecycleViewmodelCompose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidxLifecycle" }
-androidx-lifecycleViewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidxLifecycle" }
-androidx-lifecycleViewmodelNavigation = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version = "androidxLifecycle" }
+androidx-lifecycleRuntimeCompose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "2.10.0" }
+androidx-lifecycleRuntime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "2.10.0" }
+androidx-lifecycleViewmodelCompose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "2.10.0" }
+androidx-lifecycleViewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "2.10.0" }
+androidx-lifecycleViewmodelNavigation = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version = "2.10.0" }
 
 androidx-pagingCommon = { module = "androidx.paging:paging-common-ktx", version.ref = "androidxPaging" }
 androidx-pagingCompose = { module = "androidx.paging:paging-compose", version.ref = "androidxPaging" }
