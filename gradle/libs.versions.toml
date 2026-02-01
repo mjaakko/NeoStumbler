@@ -19,7 +19,7 @@ vico = "2.4.3"
 
 aboutLibraries = "13.2.1"
 
-multiplatformMarkdownRenderer = "0.39.0"
+multiplatformMarkdownRenderer = "0.39.2"
 
 playReview = "2.0.2"
 
