@@ -363,3 +363,12 @@ dependencies {
 
     androidTestImplementation(libs.awaitilityKotlin)
 }
+
+// These dependencies cause issues when using Gradle 9.3.0+ for some reason
+// -> let's force a version that works
+configurations.all {
+    resolutionStrategy {
+        force("androidx.concurrent:concurrent-futures:1.2.0")
+        force("androidx.concurrent:concurrent-futures-ktx:1.2.0")
+    }
+}
