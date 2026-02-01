@@ -10,7 +10,7 @@ androidGradlePlugin = "8.13.2"
 androidxLifecycle = "2.10.0"
 androidxPaging = "3.3.6"
 androidxRoom = "2.8.4"
-androidxWork = "2.11.0"
+androidxWork = "2.11.1"
 androidxNavigation = "1.0.0"
 
 androidxComposeBom = "2025.12.01"
