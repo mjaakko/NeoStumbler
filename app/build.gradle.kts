@@ -368,7 +368,7 @@ dependencies {
 // -> let's force a version that works
 configurations.all {
     resolutionStrategy {
-        force("androidx.concurrent:concurrent-futures:1.2.0")
-        force("androidx.concurrent:concurrent-futures-ktx:1.2.0")
+        force("androidx.concurrent:concurrent-futures:1.3.0")
+        force("androidx.concurrent:concurrent-futures-ktx:1.3.0")
     }
 }
