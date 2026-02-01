@@ -8,7 +8,7 @@ kotlinxCoroutines = "1.10.2"
 androidGradlePlugin = "8.13.2"
 
 androidxLifecycle = "2.10.0"
-androidxPaging = "3.3.6"
+androidxPaging = "3.4.0"
 androidxRoom = "2.8.4"
 androidxWork = "2.11.0"
 androidxNavigation = "1.0.0"
