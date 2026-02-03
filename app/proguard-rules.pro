@@ -19,3 +19,6 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Play Review library is missing this annotation, which causes R8 to fail https://issuetracker.google.com/issues/374691245
+-dontwarn com.google.android.gms.common.annotation.NoNullnessRewrite
