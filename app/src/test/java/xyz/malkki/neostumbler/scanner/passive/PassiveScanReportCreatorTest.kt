@@ -40,29 +40,27 @@ class PassiveScanReportCreatorTest {
         passiveWifiAccessPointSource = mock<PassiveWifiAccessPointSource>()
         passiveCellTowerSource = mock<PassiveCellTowerSource>()
         passiveBluetoothBeaconSource =
-            mock<PassiveBluetoothBeaconSource> {
-                onBlocking { getBluetoothBeacons() } doReturn emptyList()
-            }
+            mock<PassiveBluetoothBeaconSource> { on { getBluetoothBeacons() } doReturn emptyList() }
         passiveScanStateManager =
             mock<PassiveScanStateManager> {
                 val locations = mutableMapOf<PassiveScanStateManager.DataType, LatLng>()
                 val timestamps = mutableMapOf<PassiveScanStateManager.DataType, Long>()
 
-                onBlocking { updateLastReportLocation(any(), any()) } doAnswer
+                on { updateLastReportLocation(any(), any()) } doAnswer
                     { invocation ->
                         locations[invocation.arguments[0] as PassiveScanStateManager.DataType] =
                             invocation.arguments[1] as LatLng
                     }
-                onBlocking { getLastReportLocation(any()) } doAnswer
+                on { getLastReportLocation(any()) } doAnswer
                     { invocation ->
                         locations[invocation.arguments[0]]
                     }
-                onBlocking { updateMaxTimestamp(any(), any()) } doAnswer
+                on { updateMaxTimestamp(any(), any()) } doAnswer
                     { invocation ->
                         timestamps[invocation.arguments[0] as PassiveScanStateManager.DataType] =
                             invocation.arguments[1] as Long
                     }
-                onBlocking { getMaxTimestamp(any()) } doAnswer
+                on { getMaxTimestamp(any()) } doAnswer
                     { invocation ->
                         timestamps[invocation.arguments[0] as PassiveScanStateManager.DataType]
                     }

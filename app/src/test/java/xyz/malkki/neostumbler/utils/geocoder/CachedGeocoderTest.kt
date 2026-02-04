@@ -23,8 +23,7 @@ import xyz.malkki.neostumbler.geography.LatLng
 class CachedGeocoderTest {
     @Test
     fun `Cached geocoder returns cached results for the same coordinate`() = runTest {
-        val mockGeocoder =
-            mock<Geocoder> { onBlocking { getAddress(any(), any()) } doReturn "street 123" }
+        val mockGeocoder = mock<Geocoder> { on { getAddress(any(), any()) } doReturn "street 123" }
 
         val cachedGeocoder = CachedGeocoder(backgroundScope, mockGeocoder)
 
@@ -44,8 +43,8 @@ class CachedGeocoderTest {
     fun `Cached geocoder does not wait for results indefinitely`() = runTest {
         val mockGeocoder =
             mock<Geocoder> {
-                onBlocking { getAddress(any(), any()) } doSuspendableAnswer
-                    { invocation ->
+                on { getAddress(any(), any()) } doSuspendableAnswer
+                    { _ ->
                         delay(10.days)
 
                         "street 123"
