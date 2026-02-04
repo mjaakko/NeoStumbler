@@ -52,8 +52,8 @@ tasks.withType<Test>().configureEach {
 
 configurations.configureEach {
     resolutionStrategy {
-        force("org.hamcrest:hamcrest-core:3+")
-        force("org.hamcrest:hamcrest-library:3+")
+        force("org.hamcrest:hamcrest-core:3.0")
+        force("org.hamcrest:hamcrest-library:3.0")
     }
 }
 
