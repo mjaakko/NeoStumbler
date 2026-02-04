@@ -341,7 +341,7 @@ dependencies {
 
     implementation(libs.kotlinx.serializationJson)
 
-    implementation(libs.bundles.mapLibre)
+    implementation(libs.mapLibre)
 
     implementation(libs.geohex)
 

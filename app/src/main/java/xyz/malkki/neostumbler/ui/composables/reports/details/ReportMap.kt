@@ -1,14 +1,13 @@
 package xyz.malkki.neostumbler.ui.composables.reports.details
 
-import androidx.annotation.ColorInt
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -18,6 +17,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.google.gson.JsonObject
 import java.io.IOException
 import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.seconds
@@ -32,11 +32,15 @@ import org.maplibre.android.camera.CameraUpdateFactory
 import org.maplibre.android.geometry.LatLngBounds
 import org.maplibre.android.maps.MapLibreMap
 import org.maplibre.android.maps.Projection
-import org.maplibre.android.plugins.annotation.CircleManager
-import org.maplibre.android.plugins.annotation.CircleOptions
-import org.maplibre.android.plugins.annotation.LineManager
-import org.maplibre.android.plugins.annotation.LineOptions
-import org.maplibre.android.utils.ColorUtils
+import org.maplibre.android.style.expressions.Expression
+import org.maplibre.android.style.layers.CircleLayer
+import org.maplibre.android.style.layers.LineLayer
+import org.maplibre.android.style.layers.PropertyFactory
+import org.maplibre.android.style.sources.GeoJsonSource
+import org.maplibre.geojson.Feature
+import org.maplibre.geojson.FeatureCollection
+import org.maplibre.geojson.LineString
+import org.maplibre.geojson.Point
 import timber.log.Timber
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.core.report.Report
@@ -53,19 +57,78 @@ import xyz.malkki.neostumbler.ichnaea.dto.latLng
 import xyz.malkki.neostumbler.ichnaea.mapper.getIchnaeaParams
 import xyz.malkki.neostumbler.ui.composables.shared.ComposableMap
 
+@Composable
+private fun EstimatedDistance(reportLocation: LatLng, estimatedLocation: LatLng) {
+    val distance = reportLocation.distanceTo(estimatedLocation).roundToInt()
+
+    Text(
+        text = stringResource(R.string.distance_to_estimated_location, distance),
+        style = MaterialTheme.typography.bodySmall,
+        maxLines = 1,
+        overflow = TextOverflow.MiddleEllipsis,
+    )
+}
+
 private const val MAP_ZOOM_LEVEL = 15.0
 
 @Composable
 fun ReportMap(report: Report, modifier: Modifier = Modifier) {
     val estimatedLocation = getEstimatedReportLocation(report)
 
-    val circleManager = remember { mutableStateOf<CircleManager?>(null) }
+    val lineGeoJsonSource = remember { GeoJsonSource("report-details-line") }
 
-    val lineManager = remember { mutableStateOf<LineManager?>(null) }
+    val circleGeoJsonSource = remember { GeoJsonSource("report-details-locations") }
+
+    val circleFeatures =
+        remember(estimatedLocation.value) {
+            val reportLocationFeature =
+                Feature.fromGeometry(
+                    Point.fromLngLat(
+                        report.position.position.longitude,
+                        report.position.position.latitude,
+                    ),
+                    JsonObject().apply {
+                        addProperty("accuracy", report.position.position.accuracy ?: 0.0)
+                    },
+                    "report-location",
+                )
+
+            val estimatedLocationFeature =
+                estimatedLocation.value?.let {
+                    Feature.fromGeometry(
+                        Point.fromLngLat(it.location.lng, it.location.lat),
+                        JsonObject().apply { addProperty("accuracy", it.accuracy) },
+                        "estimated-location",
+                    )
+                }
+
+            listOfNotNull(reportLocationFeature, estimatedLocationFeature)
+        }
+
+    val lineFeature =
+        remember(estimatedLocation.value) {
+            estimatedLocation.value?.location?.let {
+                LineString.fromLngLats(
+                    listOf(
+                        Point.fromLngLat(
+                            report.position.position.longitude,
+                            report.position.position.latitude,
+                        ),
+                        Point.fromLngLat(it.lng, it.lat),
+                    )
+                )
+            }
+        }
+
+    LaunchedEffect(lineFeature) {
+        if (lineFeature != null) {
+            lineGeoJsonSource.setGeoJson(lineFeature)
+        }
+    }
 
     Box(modifier.fillMaxWidth().height(150.dp), contentAlignment = Alignment.TopCenter) {
         ComposableMap(
-            onInit = { map, mapView ->
+            onInit = { map, _ ->
                 val cameraPos = report.position.position.latLng.asMapLibreLatLng()
 
                 map.cameraPosition =
@@ -74,53 +137,35 @@ fun ReportMap(report: Report, modifier: Modifier = Modifier) {
                 map.uiSettings.setAllGesturesEnabled(false)
 
                 map.getStyle { style ->
-                    lineManager.value = LineManager(mapView, map, style)
+                    style.addSource(circleGeoJsonSource)
 
-                    circleManager.value = CircleManager(mapView, map, style)
+                    style.addSource(lineGeoJsonSource)
+
+                    style.addLayer(createDistanceLineLayer(lineGeoJsonSource.id))
+
+                    style.addLayer(createLocationAccuracyLayer(circleGeoJsonSource.id))
+
+                    style.addLayer(createLocationLayer(circleGeoJsonSource.id))
                 }
             },
             updateMap = { map ->
-                val lineManager = lineManager.value
-                val circleManager = circleManager.value
+                if (estimatedLocation.value != null) {
+                    val actualLocationLatLng = report.position.position.latLng
+                    val estimatedLocationLatLng = estimatedLocation.value!!.location.latLng
 
-                if (circleManager != null && lineManager != null) {
-                    circleManager.deleteAll()
-
-                    if (estimatedLocation.value != null) {
-                        val actualLocationLatLng = report.position.position.latLng
-                        val estimatedLocationLatLng = estimatedLocation.value!!.location.latLng
-
-                        map.setCameraPositionToContain(
-                            listOf(
-                                actualLocationLatLng to (report.position.position.accuracy ?: 0.0),
-                                estimatedLocationLatLng to estimatedLocation.value!!.accuracy,
-                            )
+                    map.setCameraPositionToContain(
+                        listOf(
+                            actualLocationLatLng to (report.position.position.accuracy ?: 0.0),
+                            estimatedLocationLatLng to estimatedLocation.value!!.accuracy,
                         )
-
-                        circleManager.drawLocationCircle(
-                            projection = map.projection,
-                            center = estimatedLocation.value!!.location.latLng,
-                            radius = estimatedLocation.value!!.accuracy,
-                            color = Color.Magenta.toArgb(),
-                        )
-
-                        lineManager.drawLineBetweenActualAndEstimatedLocation(
-                            actual = actualLocationLatLng,
-                            estimated = estimatedLocationLatLng,
-                        )
-                    }
-
-                    circleManager.drawLocationCircle(
-                        projection = map.projection,
-                        center =
-                            LatLng(
-                                report.position.position.latitude,
-                                report.position.position.longitude,
-                            ),
-                        radius = report.position.position.accuracy ?: 0.0,
-                        color = Color.Blue.toArgb(),
                     )
                 }
+
+                // Add meters per pixel property after moving the map to render circles in real
+                // world size
+                circleFeatures.addMeterPerPixelProperty(map.projection)
+
+                circleGeoJsonSource.setGeoJson(FeatureCollection.fromFeatures(circleFeatures))
             },
         )
 
@@ -133,16 +178,80 @@ fun ReportMap(report: Report, modifier: Modifier = Modifier) {
     }
 }
 
-@Composable
-private fun EstimatedDistance(reportLocation: LatLng, estimatedLocation: LatLng) {
-    val distance = reportLocation.distanceTo(estimatedLocation).roundToInt()
+private const val LINE_WIDTH = 2f
+private const val LINE_OPACITY = 0.5f
 
-    Text(
-        text = stringResource(R.string.distance_to_estimated_location, distance),
-        style = MaterialTheme.typography.bodySmall,
-        maxLines = 1,
-        overflow = TextOverflow.MiddleEllipsis,
-    )
+private fun createDistanceLineLayer(sourceId: String): LineLayer {
+
+    return LineLayer("location-distance", sourceId).apply {
+        setProperties(
+            PropertyFactory.lineColor(Expression.color(Color.Black.toArgb())),
+            PropertyFactory.lineWidth(LINE_WIDTH),
+            PropertyFactory.lineOpacity(LINE_OPACITY),
+        )
+    }
+}
+
+private const val ACCURACY_CIRCLE_OPACITY = 0.2f
+
+private const val LOCATION_CIRCLE_RADIUS = 4f
+private const val LOCATION_CIRCLE_BORDER = 1.5f
+
+private fun createLocationAccuracyLayer(sourceId: String): CircleLayer {
+    return CircleLayer("location-accuracy", sourceId).apply {
+        setProperties(
+            PropertyFactory.circleRadius(
+                Expression.division(Expression.get("accuracy"), Expression.get("metersPerPixel"))
+            ),
+            PropertyFactory.circleColor(
+                Expression.switchCase(
+                    Expression.eq(Expression.id(), "estimated-location"),
+                    Expression.color(Color.Magenta.toArgb()),
+                    Expression.color(Color.Blue.toArgb()),
+                )
+            ),
+            PropertyFactory.circleOpacity(ACCURACY_CIRCLE_OPACITY),
+            PropertyFactory.circleStrokeWidth(1f),
+            PropertyFactory.circleStrokeOpacity(2 * ACCURACY_CIRCLE_OPACITY),
+            PropertyFactory.circleStrokeColor(
+                Expression.switchCase(
+                    Expression.eq(Expression.id(), "estimated-location"),
+                    Expression.color(Color.Magenta.toArgb()),
+                    Expression.color(Color.Blue.toArgb()),
+                )
+            ),
+        )
+    }
+}
+
+private fun createLocationLayer(sourceId: String): CircleLayer {
+    return CircleLayer("location", sourceId).apply {
+        setProperties(
+            PropertyFactory.circleRadius(LOCATION_CIRCLE_RADIUS),
+            PropertyFactory.circleColor(
+                Expression.switchCase(
+                    Expression.eq(Expression.id(), "estimated-location"),
+                    Expression.color(Color.Magenta.toArgb()),
+                    Expression.color(Color.Blue.toArgb()),
+                )
+            ),
+            PropertyFactory.circleOpacity(1f),
+            PropertyFactory.circleStrokeWidth(LOCATION_CIRCLE_BORDER),
+            PropertyFactory.circleStrokeOpacity(1f),
+            PropertyFactory.circleStrokeColor(Expression.color(Color.White.toArgb())),
+        )
+    }
+}
+
+private fun List<Feature>.addMeterPerPixelProperty(projection: Projection) {
+    forEach { feature ->
+        val point = feature.geometry() as Point
+
+        feature.addNumberProperty(
+            "metersPerPixel",
+            projection.getMetersPerPixelAtLatitude(point.latitude()),
+        )
+    }
 }
 
 // Map padding when showing both the actual and the estimated location
@@ -176,60 +285,6 @@ private fun getBoundingBoxLatLngs(center: LatLng, radius: Double): List<LatLng> 
     return listOf(
         center.destination(radius, DIRECTION_WEST).destination(radius, DIRECTION_SOUTH),
         center.destination(radius, DIRECTION_NORTH).destination(radius, DIRECTION_EAST),
-    )
-}
-
-private const val LINE_WIDTH = 2f
-private const val LINE_OPACITY = 0.5f
-
-private fun LineManager.drawLineBetweenActualAndEstimatedLocation(
-    actual: LatLng,
-    estimated: LatLng,
-) {
-    deleteAll()
-
-    create(
-        LineOptions()
-            .withLatLngs(listOf(actual.asMapLibreLatLng(), estimated.asMapLibreLatLng()))
-            .withLineColor(ColorUtils.colorToRgbaString(Color.Black.toArgb()))
-            .withLineWidth(LINE_WIDTH)
-            .withLineOpacity(LINE_OPACITY)
-    )
-}
-
-private const val ACCURACY_CIRCLE_OPACITY = 0.2f
-
-private const val LOCATION_CIRCLE_RADIUS = 4f
-private const val LOCATION_CIRCLE_BORDER = 1.5f
-
-private fun CircleManager.drawLocationCircle(
-    projection: Projection,
-    center: LatLng,
-    radius: Double,
-    @ColorInt color: Int,
-) {
-    val radiusDp = radius / projection.getMetersPerPixelAtLatitude(center.latitude)
-
-    create(
-        CircleOptions()
-            .withLatLng(center.asMapLibreLatLng())
-            .withCircleRadius(radiusDp.toFloat())
-            .withCircleColor(ColorUtils.colorToRgbaString(color))
-            .withCircleOpacity(ACCURACY_CIRCLE_OPACITY)
-            .withCircleStrokeWidth(1f)
-            .withCircleStrokeOpacity(2 * ACCURACY_CIRCLE_OPACITY)
-            .withCircleStrokeColor(ColorUtils.colorToRgbaString(color))
-    )
-
-    create(
-        CircleOptions()
-            .withLatLng(center.asMapLibreLatLng())
-            .withCircleRadius(LOCATION_CIRCLE_RADIUS)
-            .withCircleColor(ColorUtils.colorToRgbaString(color))
-            .withCircleOpacity(1f)
-            .withCircleStrokeWidth(LOCATION_CIRCLE_BORDER)
-            .withCircleStrokeOpacity(1f)
-            .withCircleStrokeColor(ColorUtils.colorToRgbaString(Color.White.toArgb()))
     )
 }
 

@@ -4,7 +4,6 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.location.Location
 import androidx.annotation.ColorInt
-import androidx.collection.forEach
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -16,6 +15,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,10 +26,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.ColorUtils
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.google.gson.JsonPrimitive
 import kotlin.math.abs
 import org.koin.androidx.compose.koinViewModel
 import org.maplibre.android.camera.CameraPosition
@@ -40,13 +38,13 @@ import org.maplibre.android.location.LocationComponentConstants
 import org.maplibre.android.location.modes.RenderMode
 import org.maplibre.android.maps.MapLibreMap
 import org.maplibre.android.maps.Style
-import org.maplibre.android.plugins.annotation.Fill
-import org.maplibre.android.plugins.annotation.FillManager
-import org.maplibre.android.plugins.annotation.FillOptions
+import org.maplibre.android.style.expressions.Expression
 import org.maplibre.android.style.layers.FillLayer
 import org.maplibre.android.style.layers.PropertyFactory
+import org.maplibre.android.style.layers.PropertyValue
+import org.maplibre.android.style.sources.GeoJsonSource
 import org.maplibre.android.style.sources.VectorSource
-import org.maplibre.android.utils.ColorUtils as MapLibreColorUtils
+import org.maplibre.geojson.FeatureCollection
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.core.observation.PositionObservation
 import xyz.malkki.neostumbler.domain.asDomainLatLng
@@ -75,6 +73,8 @@ private const val COVERAGE_OPACITY_DARK = 0.25f
 private const val MIN_ZOOM = 3.0
 private const val MAX_ZOOM = 15.0
 
+private const val HEATMAP_LAYER_ID = "neostumbler-heat-map"
+
 // This method is long because we are mixing Compose with Views
 // FIXME: try to break this into smaller pieces and then remove these suppressions
 @Suppress("LongMethod")
@@ -86,7 +86,7 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
 
     val trackMyLocation = rememberSaveable { mutableStateOf(false) }
 
-    val fillManager = remember { mutableStateOf<FillManager?>(null) }
+    val geoJsonSource = remember { GeoJsonSource("neostumbler-heat-map-source") }
 
     val coverageTileJsonUrl =
         mapViewModel.coverageTileJsonUrl.collectAsStateWithLifecycle(initialValue = null)
@@ -96,8 +96,13 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
             initialValue = emptyList()
         )
 
-    val heatMapTiles =
-        mapViewModel.heatMapTiles.collectAsStateWithLifecycle(initialValue = emptyMap())
+    val darkMode = isSystemInDarkTheme()
+
+    LaunchedEffect(geoJsonSource) {
+        mapViewModel.heatMapPolygons.collect { features ->
+            geoJsonSource.setGeoJson(FeatureCollection.fromFeatures(features))
+        }
+    }
 
     val myLocation by
         mapViewModel.myLocation.collectAsStateWithLifecycle(
@@ -134,7 +139,7 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
     Box(modifier = Modifier.fillMaxSize()) {
         ComposableMap(
             modifier = Modifier.fillMaxSize(),
-            onInit = { map, mapView ->
+            onInit = { map, _ ->
                 map.addOnMoveListener(OnMapMoveBeginListener { trackMyLocation.value = false })
 
                 map.addOnCameraMoveListener {
@@ -170,14 +175,14 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                     map.locationComponent.isLocationComponentEnabled = true
                     map.locationComponent.renderMode = RenderMode.COMPASS
 
-                    fillManager.value =
-                        FillManager(
-                            mapView,
-                            map,
-                            style,
-                            LocationComponentConstants.SHADOW_LAYER,
-                            null,
-                        )
+                    style.addSource(geoJsonSource)
+
+                    val heatMapLayer =
+                        FillLayer(HEATMAP_LAYER_ID, geoJsonSource.id).apply {
+                            setProperties(getHeatMapFillColor(darkMode))
+                        }
+
+                    style.addLayerBelow(heatMapLayer, LocationComponentConstants.SHADOW_LAYER)
                 }
             },
             updateMap = { map ->
@@ -220,21 +225,11 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                         },
                 )
 
-                fillManager.value?.createHeatMapFill(
-                    heatMapTiles.value,
-                    colorLow =
-                        if (isSystemInDarkTheme()) {
-                            HEAT_LOW_DARK
-                        } else {
-                            HEAT_LOW
-                        },
-                    colorHigh =
-                        if (isSystemInDarkTheme()) {
-                            HEAT_HIGH_DARK
-                        } else {
-                            HEAT_HIGH
-                        },
-                )
+                map.getStyle { style ->
+                    style.layers
+                        .find { it.id == HEATMAP_LAYER_ID }
+                        ?.setProperties(getHeatMapFillColor(darkMode))
+                }
             },
         )
 
@@ -271,6 +266,31 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
             }
         }
     }
+}
+
+private fun getHeatMapFillColor(darkMode: Boolean): PropertyValue<Expression> {
+    return PropertyFactory.fillColor(
+        Expression.interpolate(
+            Expression.linear(),
+            Expression.get("pct"),
+            Expression.stop(
+                0.0,
+                if (darkMode) {
+                    Expression.color(HEAT_LOW_DARK)
+                } else {
+                    Expression.color(HEAT_LOW)
+                },
+            ),
+            Expression.stop(
+                1.0,
+                if (darkMode) {
+                    Expression.color(HEAT_HIGH_DARK)
+                } else {
+                    Expression.color(HEAT_HIGH)
+                },
+            ),
+        )
+    )
 }
 
 private class OnMapMoveBeginListener(private val onMoveBegin: () -> Unit) :
@@ -343,51 +363,4 @@ private fun MapLibreMap.addCoverageLayerFromTileJson(
             style.removeSource(COVERAGE_SOURCE_ID)
         }
     }
-}
-
-private fun FillManager.createHeatMapFill(
-    tiles: Map<String, MapViewModel.HeatMapTile>,
-    colorLow: Int,
-    colorHigh: Int,
-) {
-    val updated = mutableSetOf<String>()
-    val toDelete = mutableListOf<Fill>()
-
-    annotations.forEach { _, fill ->
-        val hexKey = fill.data!!.asString
-
-        if (hexKey !in tiles) {
-            toDelete += fill
-        } else {
-            val tile = tiles[hexKey]!!
-
-            val color =
-                MapLibreColorUtils.colorToRgbaString(
-                    ColorUtils.blendARGB(colorLow, colorHigh, tile.heatPct)
-                )
-
-            if (color != fill.fillColor) {
-                fill.fillColor = color
-            }
-
-            updated += hexKey
-        }
-    }
-
-    delete(toDelete)
-
-    tiles
-        .filter { it.key !in updated }
-        .forEach { (hexKey, tile) ->
-            val color = ColorUtils.blendARGB(colorLow, colorHigh, tile.heatPct)
-
-            val fillOptions =
-                FillOptions()
-                    .withData(JsonPrimitive(hexKey))
-                    .withFillColor(MapLibreColorUtils.colorToRgbaString(color))
-                    .withFillOutlineColor("#00000000")
-                    .withLatLngs(listOf(tile.outline.map { LatLng(it.latitude, it.longitude) }))
-
-            create(fillOptions)
-        }
 }

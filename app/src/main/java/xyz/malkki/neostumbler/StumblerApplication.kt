@@ -30,6 +30,7 @@ import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import org.maplibre.android.utils.ThreadUtils
 import timber.log.Timber
 import xyz.malkki.neostumbler.crashlog.CrashLogManager
 import xyz.malkki.neostumbler.crashlog.FileCrashLogManager
@@ -108,6 +109,8 @@ class StumblerApplication : Application() {
                 StrictMode.ThreadPolicy.Builder().detectAll().permitDiskReads().penaltyLog().build()
             )
         }
+
+        ThreadUtils.init(this)
 
         val crashLogDirectory = filesDir.toPath().resolve("crash_log").createDirectories()
 

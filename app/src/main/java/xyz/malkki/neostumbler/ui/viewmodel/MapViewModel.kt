@@ -5,8 +5,11 @@ import android.annotation.SuppressLint
 import android.app.Application
 import androidx.collection.MutableLongIntMap
 import androidx.collection.MutableObjectIntMap
+import androidx.collection.MutableObjectList
+import androidx.collection.ObjectList
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.JsonObject
 import java.io.IOException
 import kotlin.math.abs
 import kotlin.math.floor
@@ -15,7 +18,9 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.trySendBlocking
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -35,6 +40,9 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import okhttp3.Call
 import org.geohex.geohex4j.GeoHex
+import org.maplibre.geojson.Feature
+import org.maplibre.geojson.Point
+import org.maplibre.geojson.Polygon
 import timber.log.Timber
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
@@ -44,7 +52,6 @@ import xyz.malkki.neostumbler.data.reports.ReportProvider
 import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.geography.LatLng
-import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel.HeatMapTile
 import xyz.malkki.neostumbler.utils.getTileJsonLayerIds
 
 // The "size" of one report relative to the geohex size. The idea is that hexes with lower
@@ -82,7 +89,7 @@ class MapViewModel(
                 coverageTileJsonUrl?.let { getTileJsonLayerIds(it, httpClientProvider.await()) }
                     ?: emptyList()
             }
-            .retryWhen { cause, attempt ->
+            .retryWhen { cause, _ ->
                 if (cause is IOException) {
                     Timber.w(cause, "Failed to load TileJSON for coverage layer")
 
@@ -107,7 +114,7 @@ class MapViewModel(
 
     private val mapBounds = Channel<Pair<LatLng, LatLng>>(capacity = Channel.CONFLATED)
 
-    val heatMapTiles =
+    val heatMapPolygons =
         mapBounds
             .receiveAsFlow()
             .debounce(0.2.seconds)
@@ -125,13 +132,29 @@ class MapViewModel(
             .combine(
                 flow =
                     mapViewport
-                        .map { it.second }
-                        .map { zoom -> mapZoomToGeohexResolution(zoom) }
+                        .map { (_, zoom) -> mapZoomToGeohexResolution(zoom) }
                         .distinctUntilChanged(),
                 transform = { a, b -> a to b },
             )
             .mapLatest { (reportsWithLocation, resolution) ->
-                reportsWithLocation.calculateHeatMapTiles(resolution)
+                val hexagons = reportsWithLocation.calculateHeatMapTiles(resolution)
+
+                Array<Feature>(hexagons.size) { index ->
+                    val heatMapTile = hexagons[index]
+
+                    val geometry =
+                        Polygon.fromLngLats(
+                            listOf(
+                                heatMapTile.outline.map { (lat, lng) -> Point.fromLngLat(lng, lat) }
+                            )
+                        )
+
+                    Feature.fromGeometry(
+                        geometry,
+                        JsonObject().apply { addProperty("pct", heatMapTile.heatPct) },
+                        heatMapTile.id,
+                    )
+                }
             }
             .flowOn(Dispatchers.Default)
             .shareIn(viewModelScope, started = SharingStarted.Lazily, replay = 1)
@@ -200,20 +223,22 @@ class MapViewModel(
             .toInt()
             .coerceIn(MIN_GEOHEX_RESOLUTION, MAX_GEOHEX_RESOLUTION)
     }
-
-    /** @property heatPct From 0.0 to 1.0 */
-    data class HeatMapTile(val id: String, val outline: List<LatLng>, val heatPct: Float)
 }
+
+/** @property heatPct From 0.0 to 1.0 */
+private data class HeatMapTile(val id: String, val outline: List<LatLng>, val heatPct: Float)
 
 private const val COORDINATE_PRECISION = 0.0001f
 
 @Suppress("MagicNumber")
-private fun List<ReportWithLocation>.calculateHeatMapTiles(
+private suspend fun List<ReportWithLocation>.calculateHeatMapTiles(
     resolution: Int
-): Map<String, HeatMapTile> {
+): ObjectList<HeatMapTile> {
     val truncatedCoords = MutableLongIntMap(size)
 
     forEach {
+        currentCoroutineContext().ensureActive()
+
         // Calculating the hexagons is relatively expensive -> truncate coordinates first to avoid
         // unnecessary calculations
         val lat = it.latitude.toFloat()
@@ -232,6 +257,8 @@ private fun List<ReportWithLocation>.calculateHeatMapTiles(
     val countByHexagon = MutableObjectIntMap<String>()
 
     truncatedCoords.forEach { packedCoord, count ->
+        currentCoroutineContext().ensureActive()
+
         val lat = Float.fromBits((packedCoord shr 32).toInt()).toDouble()
         val lng = Float.fromBits((packedCoord and 0xFFFFFFFF).toInt()).toDouble()
 
@@ -240,17 +267,20 @@ private fun List<ReportWithLocation>.calculateHeatMapTiles(
         countByHexagon.put(hexKey, countByHexagon.getOrDefault(hexKey, 0) + count)
     }
 
-    val heatMapTiles = HashMap<String, HeatMapTile>(countByHexagon.size)
+    val heatMapTiles = MutableObjectList<HeatMapTile>(countByHexagon.size)
 
     countByHexagon.forEach { hexKey, count ->
+        currentCoroutineContext().ensureActive()
+
         val zone = GeoHex.getZoneByCode(hexKey)
 
-        heatMapTiles[hexKey] =
+        heatMapTiles.add(
             HeatMapTile(
                 id = hexKey,
                 outline = zone.hexCoords.map { coord -> LatLng(coord.lat, coord.lon) },
                 heatPct = ((count * REPORT_SIZE) / zone.hexSize).coerceAtMost(1.0).toFloat(),
             )
+        )
     }
 
     return heatMapTiles
