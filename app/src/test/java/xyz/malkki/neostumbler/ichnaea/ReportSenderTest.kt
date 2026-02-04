@@ -74,10 +74,10 @@ class ReportSenderTest {
 
         val reportProvider =
             mock<ReportProvider> {
-                onBlocking { getNotUploadedReports(any()) } doReturnConsecutively
+                on { getNotUploadedReports(any()) } doReturnConsecutively
                     listOf(reports, emptyList())
 
-                onBlocking { getRandomNotUploadedReports(any()) } doReturnConsecutively
+                on { getRandomNotUploadedReports(any()) } doReturnConsecutively
                     listOf(reports, emptyList())
             }
 
