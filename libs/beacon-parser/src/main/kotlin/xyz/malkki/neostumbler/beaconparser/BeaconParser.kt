@@ -1,5 +1,9 @@
 package xyz.malkki.neostumbler.beaconparser
 
+import androidx.collection.LongList
+import androidx.collection.ObjectList
+import androidx.collection.mutableLongListOf
+import androidx.collection.mutableObjectListOf
 import xyz.malkki.neostumbler.beaconparser.BeaconData.Identifier.Companion.toIdentifier
 
 private const val HEX_RADIX = 16
@@ -42,72 +46,87 @@ class BeaconParser(private val beaconLayout: BeaconLayout) {
         }
     }
 
-    private fun parseIdentifiers(pdu: Pdu, scanData: ByteArray): List<ByteArray> {
-        return buildList {
-            for (identifier in beaconLayout.identifiers) {
-                val endIndex = identifier.endOffset + pdu.startIndex
+    private fun parseIdentifiers(pdu: Pdu, scanData: ByteArray): ObjectList<BeaconData.Identifier> {
+        val identifiers = mutableObjectListOf<BeaconData.Identifier>()
 
-                if (endIndex > pdu.endIndex && identifier.variableLength) {
-                    val start = identifier.startOffset + pdu.startIndex
-                    val end = pdu.endIndex + 1
+        for (identifier in beaconLayout.identifiers) {
+            val endIndex = identifier.endOffset + pdu.startIndex
 
-                    if (end > start) {
-                        add(scanData.extractIdentifier(start, end, identifier.littleEndian))
-                    }
-                } else if (endIndex > pdu.endIndex && !allowPduOverflow) {
-                    // can't parse
-                } else {
-                    add(
-                        scanData.extractIdentifier(
+            if (endIndex > pdu.endIndex && identifier.variableLength) {
+                val start = identifier.startOffset + pdu.startIndex
+                val end = pdu.endIndex + 1
+
+                if (end > start) {
+                    identifiers.add(
+                        scanData
+                            .extractIdentifier(start, end, identifier.littleEndian)
+                            .toIdentifier()
+                    )
+                }
+            } else if (endIndex > pdu.endIndex && !allowPduOverflow) {
+                // can't parse
+            } else {
+                identifiers.add(
+                    scanData
+                        .extractIdentifier(
                             identifier.startOffset + pdu.startIndex,
                             endIndex + 1,
                             identifier.littleEndian,
                         )
-                    )
-                }
+                        .toIdentifier()
+                )
             }
         }
+
+        return identifiers
     }
 
-    private fun parseDataFields(pdu: Pdu, scanData: ByteArray): List<Long> {
-        return buildList {
-            for (data in beaconLayout.datas) {
-                val endIndex = data.endOffset + pdu.startIndex
-                if (endIndex > pdu.endIndex && !allowPduOverflow) {
-                    add(0L)
-                } else {
-                    add(
-                        scanData
-                            .let {
-                                if (data.littleEndian) {
-                                    it.reversedArray()
-                                } else {
-                                    it
-                                }
+    private fun parseDataFields(pdu: Pdu, scanData: ByteArray): LongList {
+        val dataFields = mutableLongListOf()
+
+        for (data in beaconLayout.datas) {
+            val endIndex = data.endOffset + pdu.startIndex
+            if (endIndex > pdu.endIndex && !allowPduOverflow) {
+                dataFields.add(0L)
+            } else {
+                dataFields.add(
+                    scanData
+                        .let {
+                            if (data.littleEndian) {
+                                it.reversedArray()
+                            } else {
+                                it
                             }
-                            .copyOfRange(data.startOffset + pdu.startIndex, endIndex)
-                            .toHexString()
-                            .takeIf { it.isNotEmpty() }
-                            ?.toLong(HEX_RADIX) ?: 0L
-                    )
-                }
+                        }
+                        .copyOfRange(data.startOffset + pdu.startIndex, endIndex)
+                        .toHexString()
+                        .takeIf { it.isNotEmpty() }
+                        ?.toLong(HEX_RADIX) ?: 0L
+                )
             }
         }
+
+        return dataFields
     }
 
     fun parseScanData(scanData: ByteArray): BeaconData? {
         val pdus = Pdu.parseFromBleAdvertisement(scanData)
 
-        val parsablePdus =
-            pdus.filter { pdu ->
-                val pduType = Pdu.PduType.fromType(pdu.type)
+        val parsablePdus = mutableObjectListOf<Pdu>()
+        pdus.forEach { pdu ->
+            val pduType = Pdu.PduType.fromType(pdu.type)
 
+            @Suppress("ComplexCondition")
+            if (
                 pduType != null &&
                     pduType.expectedLength == beaconLayout.serviceUuid?.serviceUuid128?.size ||
                     (pduType == Pdu.PduType.MANUFACTURER_DATA_AD) ||
                     (pduType == Pdu.PduType.GATT_SERVICE_DATA_UUID_16_BIT_AD &&
                         beaconLayout.serviceUuid?.serviceUuid != null)
+            ) {
+                parsablePdus.add(pdu)
             }
+        }
 
         parsablePdus.forEach { pdu ->
             val typeCodeBytes =
@@ -145,7 +164,7 @@ class BeaconParser(private val beaconLayout: BeaconLayout) {
 
                 return BeaconData(
                     beaconType = beaconLayout.typeCode.typeCode,
-                    identifiers = identifiers.map { it.toIdentifier() },
+                    identifiers = identifiers,
                     dataFields = dataFields,
                 )
             }

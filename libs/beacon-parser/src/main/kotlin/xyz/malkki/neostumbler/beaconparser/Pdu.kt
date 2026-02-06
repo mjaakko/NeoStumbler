@@ -1,5 +1,8 @@
 package xyz.malkki.neostumbler.beaconparser
 
+import androidx.collection.ObjectList
+import androidx.collection.mutableObjectListOf
+
 private const val UUID_16_BIT_LENGTH = 2
 private const val UUID_32_BIT_LENGTH = 4
 private const val UUID_128_BIT_LENGTH = 16
@@ -45,30 +48,33 @@ internal data class Pdu(
             return null
         }
 
-        fun parseFromBleAdvertisement(bytes: ByteArray): List<Pdu> {
-            fun parsePdus(startIndex: Int, endIndex: Int): List<Pdu> {
-                return buildList {
-                    var index = startIndex
-                    var pdu: Pdu?
+        fun parseFromBleAdvertisement(bytes: ByteArray): ObjectList<Pdu> {
+            fun parsePdus(startIndex: Int, endIndex: Int): ObjectList<Pdu> {
+                val pdus = mutableObjectListOf<Pdu>()
 
-                    do {
-                        pdu = parse(bytes, index)
+                var index = startIndex
+                var pdu: Pdu?
 
-                        if (pdu != null) {
-                            index += pdu.declaredLength + 1
-                            add(pdu)
-                        }
-                    } while (pdu != null && index < endIndex)
-                }
+                do {
+                    pdu = parse(bytes, index)
+
+                    if (pdu != null) {
+                        index += pdu.declaredLength + 1
+                        pdus.add(pdu)
+                    }
+                } while (pdu != null && index < endIndex)
+
+                return pdus
             }
 
-            return buildList {
-                addAll(parsePdus(0, bytes.size.coerceAtMost(PDU_MAX_LENGTH)))
+            val pdus = mutableObjectListOf<Pdu>()
+            pdus.addAll(parsePdus(0, bytes.size.coerceAtMost(PDU_MAX_LENGTH)))
 
-                if (bytes.size > PDU_MAX_LENGTH) {
-                    addAll(parsePdus(PDU_MAX_LENGTH, bytes.size))
-                }
+            if (bytes.size > PDU_MAX_LENGTH) {
+                pdus.addAll(parsePdus(PDU_MAX_LENGTH, bytes.size))
             }
+
+            return pdus
         }
     }
 

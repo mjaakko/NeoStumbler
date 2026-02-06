@@ -1,3 +1,7 @@
 plugins { id("convention.kotlin-library") }
 
-dependencies { testImplementation(libs.junit) }
+dependencies {
+    api(libs.androidx.collection)
+
+    testImplementation(libs.junit)
+}
