@@ -24,6 +24,7 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
@@ -37,6 +38,7 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.retryWhen
 import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import okhttp3.Call
 import org.geohex.geohex4j.GeoHex
@@ -72,18 +74,21 @@ class MapViewModel(
     private val reportProvider: ReportProvider,
     private val locationSource: LocationSource,
 ) : AndroidViewModel(application) {
-    val coverageTileJsonUrl: Flow<String?> =
-        settings.getSnapshotFlow().map { prefs ->
-            val coverageLayerEnabled = prefs.getBoolean(PreferenceKeys.COVERAGE_LAYER_ENABLED)
+    val coverageTileJsonUrl: StateFlow<String?> =
+        settings
+            .getSnapshotFlow()
+            .map { prefs ->
+                val coverageLayerEnabled = prefs.getBoolean(PreferenceKeys.COVERAGE_LAYER_ENABLED)
 
-            if (coverageLayerEnabled != false) {
-                prefs.getString(PreferenceKeys.COVERAGE_TILE_JSON_URL)
-            } else {
-                null
+                if (coverageLayerEnabled != false) {
+                    prefs.getString(PreferenceKeys.COVERAGE_TILE_JSON_URL)
+                } else {
+                    null
+                }
             }
-        }
+            .stateIn(viewModelScope, started = SharingStarted.Lazily, initialValue = null)
 
-    val coverageTileJsonLayerIds: Flow<List<String>> =
+    val coverageTileJsonLayerIds: StateFlow<List<String>> =
         coverageTileJsonUrl
             .mapLatest { coverageTileJsonUrl ->
                 coverageTileJsonUrl?.let { getTileJsonLayerIds(it, httpClientProvider.await()) }
@@ -100,6 +105,7 @@ class MapViewModel(
                     throw cause
                 }
             }
+            .stateIn(viewModelScope, started = SharingStarted.Lazily, initialValue = emptyList())
 
     private val showMyLocation =
         MutableStateFlow(

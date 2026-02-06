@@ -2,6 +2,7 @@ package xyz.malkki.neostumbler.ui.screens
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.location.Location
 import androidx.annotation.ColorInt
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -20,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -82,19 +84,16 @@ private const val HEATMAP_LAYER_ID = "neostumbler-heat-map"
 fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
     val context = LocalContext.current
 
-    val showPermissionDialog = rememberSaveable { mutableStateOf(false) }
+    var showPermissionDialog by rememberSaveable { mutableStateOf(false) }
 
     val trackMyLocation = rememberSaveable { mutableStateOf(false) }
 
     val geoJsonSource = remember { GeoJsonSource("neostumbler-heat-map-source") }
 
-    val coverageTileJsonUrl =
-        mapViewModel.coverageTileJsonUrl.collectAsStateWithLifecycle(initialValue = null)
+    val coverageTileJsonUrl by mapViewModel.coverageTileJsonUrl.collectAsStateWithLifecycle()
 
-    val coverageTileJsonLayerIds =
-        mapViewModel.coverageTileJsonLayerIds.collectAsStateWithLifecycle(
-            initialValue = emptyList()
-        )
+    val coverageTileJsonLayerIds by
+        mapViewModel.coverageTileJsonLayerIds.collectAsStateWithLifecycle()
 
     val darkMode = isSystemInDarkTheme()
 
@@ -112,25 +111,14 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
 
     val mapViewport by mapViewModel.mapViewport.collectAsStateWithLifecycle(initialValue = null)
 
-    if (showPermissionDialog.value) {
-        PermissionsDialog(
-            missingPermissions = listOf(Manifest.permission.ACCESS_FINE_LOCATION),
-            permissionRationales =
-                mapOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION to
-                        stringResource(R.string.permission_rationale_location_map)
-                ),
-            onPermissionsGranted = {
-                showPermissionDialog.value = false
+    if (showPermissionDialog) {
+        MapPermissionsDialog(
+            onPermissionsGranted = { permissionGranted ->
+                showPermissionDialog = false
 
-                val hasPermission =
-                    context
-                        .checkMissingPermissions(Manifest.permission.ACCESS_COARSE_LOCATION)
-                        .isEmpty()
-
-                mapViewModel.setShowMyLocation(hasPermission)
-                trackMyLocation.value = hasPermission
-            },
+                mapViewModel.setShowMyLocation(permissionGranted)
+                trackMyLocation.value = permissionGranted
+            }
         )
     }
 
@@ -162,27 +150,14 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                 map.uiSettings.isRotateGesturesEnabled = false
 
                 map.getStyle { style ->
-                    map.locationComponent.activateLocationComponent(
-                        LocationComponentActivationOptions.builder(context, style)
-                            // Set location engine to null, because we provide locations by
-                            // ourself
-                            .locationEngine(null)
-                            .useDefaultLocationEngine(false)
-                            .useSpecializedLocationLayer(true)
-                            .build()
-                    )
-                    @SuppressLint("MissingPermission")
-                    map.locationComponent.isLocationComponentEnabled = true
-                    map.locationComponent.renderMode = RenderMode.COMPASS
+                    map.setupLocationComponent(context)
 
                     style.addSource(geoJsonSource)
 
-                    val heatMapLayer =
-                        FillLayer(HEATMAP_LAYER_ID, geoJsonSource.id).apply {
-                            setProperties(getHeatMapFillColor(darkMode))
-                        }
-
-                    style.addLayerBelow(heatMapLayer, LocationComponentConstants.SHADOW_LAYER)
+                    style.addLayerBelow(
+                        FillLayer(HEATMAP_LAYER_ID, geoJsonSource.id),
+                        LocationComponentConstants.SHADOW_LAYER,
+                    )
                 }
             },
             updateMap = { map ->
@@ -209,20 +184,9 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                 }
 
                 map.addCoverageLayerFromTileJson(
-                    coverageTileJsonUrl.value,
-                    coverageTileJsonLayerIds.value,
-                    color =
-                        if (isSystemInDarkTheme()) {
-                            COVERAGE_COLOR_DARK
-                        } else {
-                            COVERAGE_COLOR
-                        },
-                    opacity =
-                        if (isSystemInDarkTheme()) {
-                            COVERAGE_OPACITY_DARK
-                        } else {
-                            COVERAGE_OPACITY
-                        },
+                    tileJsonUrl = coverageTileJsonUrl,
+                    layerIds = coverageTileJsonLayerIds,
+                    darkMode = darkMode,
                 )
 
                 map.getStyle { style ->
@@ -239,8 +203,9 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
         ) {
             MapSettingsButton(modifier = Modifier.size(32.dp).align(Alignment.TopEnd))
 
-            FilledIconButton(
+            TrackMyLocationButton(
                 modifier = Modifier.size(48.dp).align(Alignment.BottomEnd),
+                trackMyLocation = trackMyLocation.value,
                 onClick = {
                     if (
                         context
@@ -250,21 +215,52 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                         mapViewModel.setShowMyLocation(true)
                         trackMyLocation.value = true
                     } else {
-                        showPermissionDialog.value = true
+                        showPermissionDialog = true
                     }
                 },
-            ) {
-                Icon(
-                    painter =
-                        if (trackMyLocation.value) {
-                            painterResource(id = R.drawable.my_location_24px)
-                        } else {
-                            painterResource(id = R.drawable.location_searching_24px)
-                        },
-                    contentDescription = stringResource(id = R.string.show_my_location),
-                )
-            }
+            )
         }
+    }
+}
+
+@Composable
+private fun MapPermissionsDialog(onPermissionsGranted: (Boolean) -> Unit) {
+    val context = LocalContext.current
+
+    PermissionsDialog(
+        missingPermissions = listOf(Manifest.permission.ACCESS_FINE_LOCATION),
+        permissionRationales =
+            mapOf(
+                Manifest.permission.ACCESS_FINE_LOCATION to
+                    stringResource(R.string.permission_rationale_location_map)
+            ),
+        onPermissionsGranted = {
+            val hasPermission =
+                context
+                    .checkMissingPermissions(Manifest.permission.ACCESS_COARSE_LOCATION)
+                    .isEmpty()
+
+            onPermissionsGranted(hasPermission)
+        },
+    )
+}
+
+@Composable
+private fun TrackMyLocationButton(
+    modifier: Modifier,
+    trackMyLocation: Boolean,
+    onClick: () -> Unit,
+) {
+    FilledIconButton(modifier = modifier, onClick = onClick) {
+        Icon(
+            painter =
+                if (trackMyLocation) {
+                    painterResource(id = R.drawable.my_location_24px)
+                } else {
+                    painterResource(id = R.drawable.location_searching_24px)
+                },
+            contentDescription = stringResource(id = R.string.show_my_location),
+        )
     }
 }
 
@@ -342,9 +338,21 @@ private fun addCoverageLayer(style: Style, layerIds: List<String>, color: String
 private fun MapLibreMap.addCoverageLayerFromTileJson(
     tileJsonUrl: String?,
     layerIds: List<String>,
-    color: String,
-    opacity: Float,
+    darkMode: Boolean,
 ) {
+    val color =
+        if (darkMode) {
+            COVERAGE_COLOR_DARK
+        } else {
+            COVERAGE_COLOR
+        }
+    val opacity =
+        if (darkMode) {
+            COVERAGE_OPACITY_DARK
+        } else {
+            COVERAGE_OPACITY
+        }
+
     getStyle { style ->
         if (tileJsonUrl != null) {
             val vectorSource = style.getSource(COVERAGE_SOURCE_ID) as? VectorSource
@@ -363,4 +371,18 @@ private fun MapLibreMap.addCoverageLayerFromTileJson(
             style.removeSource(COVERAGE_SOURCE_ID)
         }
     }
+}
+
+private fun MapLibreMap.setupLocationComponent(context: Context) {
+    locationComponent.activateLocationComponent(
+        LocationComponentActivationOptions.builder(context, style!!)
+            // Set location engine to null, because we provide locations by ourself
+            .locationEngine(null)
+            .useDefaultLocationEngine(false)
+            .useSpecializedLocationLayer(true)
+            .build()
+    )
+    @SuppressLint("MissingPermission")
+    locationComponent.isLocationComponentEnabled = true
+    locationComponent.renderMode = RenderMode.COMPASS
 }
