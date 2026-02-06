@@ -1,11 +1,13 @@
 package xyz.malkki.neostumbler.beaconparser
 
+import androidx.collection.LongList
+import androidx.collection.ObjectList
 import java.util.UUID
 
 data class BeaconData(
     val beaconType: Int,
-    val identifiers: List<Identifier>,
-    val dataFields: List<Long>,
+    val identifiers: ObjectList<Identifier>,
+    val dataFields: LongList,
 ) {
     sealed interface Identifier {
 

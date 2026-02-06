@@ -47,7 +47,8 @@ internal class PassiveBluetoothScanReceiver : CoroutineBroadcastReceiver() {
                                 timestamp = scanResult.timestampMillis,
                                 signalStrength = scanResult.rssi,
                                 beaconType = beaconData.beaconType,
-                                identifiers = beaconData.identifiers.map { it.toStoreIdentifier() },
+                                identifiers =
+                                    beaconData.identifiers.asList().map { it.toStoreIdentifier() },
                             )
                         }
                     }

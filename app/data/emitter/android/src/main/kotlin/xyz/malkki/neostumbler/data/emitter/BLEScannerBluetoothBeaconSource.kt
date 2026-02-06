@@ -86,9 +86,24 @@ class BLEScannerBluetoothBeaconSource(context: Context) : ActiveBluetoothBeaconS
                             BluetoothBeacon(
                                 macAddress = MacAddress(scanResult.device.address),
                                 beaconType = beaconData.beaconType,
-                                id1 = beaconData.identifiers.getOrNull(0)?.toString(),
-                                id2 = beaconData.identifiers.getOrNull(1)?.toString(),
-                                id3 = beaconData.identifiers.getOrNull(2)?.toString(),
+                                id1 =
+                                    if (beaconData.identifiers.size > 0) {
+                                        beaconData.identifiers[0].toString()
+                                    } else {
+                                        null
+                                    },
+                                id2 =
+                                    if (beaconData.identifiers.size > 1) {
+                                        beaconData.identifiers[1].toString()
+                                    } else {
+                                        null
+                                    },
+                                id3 =
+                                    if (beaconData.identifiers.size > 2) {
+                                        beaconData.identifiers[2].toString()
+                                    } else {
+                                        null
+                                    },
                                 signalStrength = scanResult.rssi,
                             ),
                         timestamp = scanResult.timestampMillis,
