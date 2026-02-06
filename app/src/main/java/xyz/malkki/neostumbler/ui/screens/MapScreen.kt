@@ -34,7 +34,6 @@ import kotlin.math.abs
 import org.koin.androidx.compose.koinViewModel
 import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.geometry.LatLng
-import org.maplibre.android.gestures.MoveGestureDetector
 import org.maplibre.android.location.LocationComponentActivationOptions
 import org.maplibre.android.location.LocationComponentConstants
 import org.maplibre.android.location.OnCameraTrackingChangedListener
@@ -130,8 +129,6 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
         ComposableMap(
             modifier = Modifier.fillMaxSize(),
             onInit = { map, _ ->
-                map.addOnMoveListener(OnMapMoveBeginListener { trackMyLocation = false })
-
                 map.addOnCameraMoveListener {
                     mapViewModel.setMapViewport(
                         center = map.cameraPosition.target!!.asDomainLatLng(),
@@ -293,17 +290,6 @@ private fun getHeatMapFillColor(darkMode: Boolean): PropertyValue<Expression> {
             ),
         )
     )
-}
-
-private class OnMapMoveBeginListener(private val onMoveBegin: () -> Unit) :
-    MapLibreMap.OnMoveListener {
-    override fun onMoveBegin(p0: MoveGestureDetector) {
-        onMoveBegin()
-    }
-
-    override fun onMove(p0: MoveGestureDetector) {}
-
-    override fun onMoveEnd(p0: MoveGestureDetector) {}
 }
 
 private const val MAX_COORDINATE_DIFF = 0.00001
