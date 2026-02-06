@@ -110,7 +110,6 @@ cronetOkhttp = { module = "com.google.net.cronet:cronet-okhttp", version = "0.1.
 kotlinx-serializationJson = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.10.0" }
 
 mapLibre = { module = "org.maplibre.gl:android-sdk", version = "12.3.1" }
-mapLibreAnnotationsPlugin = { module = "org.maplibre.gl:android-plugin-annotation-v9", version = "3.0.2" }
 
 geohex = { module = "org.geohex.geohex4j:geohex4j", version = "3.2.2" }
 
@@ -155,8 +154,6 @@ aboutLibraries = { id = "com.mikepenz.aboutlibraries.plugin.android", version.re
 
 [bundles]
 vico = ["vicoCompose", "vicoComposeMaterial3"]
-
-mapLibre = ["mapLibre", "mapLibreAnnotationsPlugin"]
 
 androidxWork = ["androidx-workRuntime", "androidx-workRuntimeKtx"]
 

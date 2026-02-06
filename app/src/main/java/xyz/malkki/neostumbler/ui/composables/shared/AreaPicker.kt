@@ -31,16 +31,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.flow.first
 import org.koin.compose.koinInject
 import org.maplibre.android.camera.CameraPosition
-import org.maplibre.android.plugins.annotation.Circle
-import org.maplibre.android.plugins.annotation.CircleManager
-import org.maplibre.android.plugins.annotation.CircleOptions
+import org.maplibre.android.style.layers.CircleLayer
+import org.maplibre.android.style.layers.PropertyFactory
+import org.maplibre.android.style.sources.GeoJsonSource
 import org.maplibre.android.utils.ColorUtils
+import org.maplibre.geojson.Point
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.data.location.LocationSource
 import xyz.malkki.neostumbler.domain.asDomainLatLng
@@ -123,6 +123,10 @@ private fun getCurrentLocation(
             }
     }
 
+private const val CIRCLE_FILL_OPACITY = 0.2f
+private const val CIRCLE_STROKE_OPACITY = 0.9f
+private const val CIRCLE_STROKE_WIDTH = 2f
+
 @Composable
 fun AreaPickerMap(onCircleUpdated: (Pair<LatLng, Double>) -> Unit) {
     val density = LocalDensity.current
@@ -139,16 +143,26 @@ fun AreaPickerMap(onCircleUpdated: (Pair<LatLng, Double>) -> Unit) {
             Text(text = stringResource(R.string.waiting_for_location))
         }
     } else {
-        val mapCenter = remember { mutableStateOf<LatLng?>(null) }
-
-        val circleManager = remember { mutableStateOf<CircleManager?>(null) }
-        val circle = remember { mutableStateOf<Circle?>(null) }
+        val geoJsonSource = remember { GeoJsonSource("circle") }
 
         ComposableMap(
             modifier = Modifier.fillMaxSize(),
-            onInit = { map, mapView ->
+            onInit = { map, _ ->
+                val radius =
+                    density.run { (CIRCLE_SCALE_FACTOR * minOf(map.width, map.height)).toDp() / 2 }
+
                 map.addOnCameraMoveListener {
-                    mapCenter.value = map.cameraPosition.target!!.asDomainLatLng()
+                    val newMapCenter = map.cameraPosition.target!!.asDomainLatLng()
+
+                    val radiusMeters =
+                        radius.value *
+                            map.projection.getMetersPerPixelAtLatitude(newMapCenter.latitude)
+
+                    onCircleUpdated(newMapCenter to radiusMeters)
+
+                    geoJsonSource.setGeoJson(
+                        Point.fromLngLat(newMapCenter.longitude, newMapCenter.latitude)
+                    )
                 }
 
                 val cameraPos = currentLocation.value!!.asMapLibreLatLng()
@@ -162,52 +176,27 @@ fun AreaPickerMap(onCircleUpdated: (Pair<LatLng, Double>) -> Unit) {
                 map.uiSettings.isRotateGesturesEnabled = false
 
                 map.getStyle { style ->
-                    circleManager.value = CircleManager(mapView, map, style)
+                    style.addSource(geoJsonSource)
 
-                    val radius =
-                        density.run {
-                            (CIRCLE_SCALE_FACTOR * minOf(map.width, map.height)).toDp() / 2
+                    style.addLayer(
+                        CircleLayer("circle-layer", geoJsonSource.id).apply {
+                            setProperties(
+                                PropertyFactory.circleColor(
+                                    ColorUtils.colorToRgbaString(Color.CYAN)
+                                ),
+                                PropertyFactory.circleOpacity(CIRCLE_FILL_OPACITY),
+                                PropertyFactory.circleStrokeColor(
+                                    ColorUtils.colorToRgbaString(Color.CYAN)
+                                ),
+                                PropertyFactory.circleStrokeOpacity(CIRCLE_STROKE_OPACITY),
+                                PropertyFactory.circleStrokeWidth(CIRCLE_STROKE_WIDTH),
+                                PropertyFactory.circleRadius(radius.value),
+                            )
                         }
-
-                    circle.value =
-                        circleManager.value!!.create(
-                            createCircle(map.cameraPosition.target!!, radius)
-                        )
-                }
-            },
-            updateMap = { map ->
-                val mapCenter = mapCenter.value
-                val circle = circle.value
-
-                val circleManager = circleManager.value
-
-                if (circle != null && mapCenter != null && circleManager != null) {
-                    circle.latLng = mapCenter.asMapLibreLatLng()
-
-                    circleManager.update(circle)
-
-                    onCircleUpdated.invoke(
-                        mapCenter to
-                            circle.circleRadius *
-                                map.projection.getMetersPerPixelAtLatitude(mapCenter.latitude)
                     )
                 }
             },
+            updateMap = { _ -> },
         )
     }
-}
-
-private const val CIRCLE_FILL_OPACITY = 0.2f
-private const val CIRCLE_STROKE_OPACITY = 0.9f
-private const val CIRCLE_STROKE_WIDTH = 2f
-
-private fun createCircle(center: org.maplibre.android.geometry.LatLng, radius: Dp): CircleOptions {
-    return CircleOptions()
-        .withLatLng(center)
-        .withCircleRadius(radius.value)
-        .withCircleColor(ColorUtils.colorToRgbaString(Color.CYAN))
-        .withCircleOpacity(CIRCLE_FILL_OPACITY)
-        .withCircleStrokeColor(ColorUtils.colorToRgbaString(Color.CYAN))
-        .withCircleStrokeOpacity(CIRCLE_STROKE_OPACITY)
-        .withCircleStrokeWidth(CIRCLE_STROKE_WIDTH)
 }

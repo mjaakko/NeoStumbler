@@ -2,9 +2,9 @@ package xyz.malkki.neostumbler.ui.screens
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.location.Location
 import androidx.annotation.ColorInt
-import androidx.collection.forEach
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -16,37 +16,38 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.ColorUtils
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.google.gson.JsonPrimitive
 import kotlin.math.abs
 import org.koin.androidx.compose.koinViewModel
 import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.geometry.LatLng
-import org.maplibre.android.gestures.MoveGestureDetector
 import org.maplibre.android.location.LocationComponentActivationOptions
 import org.maplibre.android.location.LocationComponentConstants
+import org.maplibre.android.location.OnCameraTrackingChangedListener
+import org.maplibre.android.location.modes.CameraMode
 import org.maplibre.android.location.modes.RenderMode
 import org.maplibre.android.maps.MapLibreMap
 import org.maplibre.android.maps.Style
-import org.maplibre.android.plugins.annotation.Fill
-import org.maplibre.android.plugins.annotation.FillManager
-import org.maplibre.android.plugins.annotation.FillOptions
+import org.maplibre.android.style.expressions.Expression
 import org.maplibre.android.style.layers.FillLayer
 import org.maplibre.android.style.layers.PropertyFactory
+import org.maplibre.android.style.layers.PropertyValue
+import org.maplibre.android.style.sources.GeoJsonSource
 import org.maplibre.android.style.sources.VectorSource
-import org.maplibre.android.utils.ColorUtils as MapLibreColorUtils
+import org.maplibre.geojson.FeatureCollection
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.core.observation.PositionObservation
 import xyz.malkki.neostumbler.domain.asDomainLatLng
@@ -75,6 +76,8 @@ private const val COVERAGE_OPACITY_DARK = 0.25f
 private const val MIN_ZOOM = 3.0
 private const val MAX_ZOOM = 15.0
 
+private const val HEATMAP_LAYER_ID = "neostumbler-heat-map"
+
 // This method is long because we are mixing Compose with Views
 // FIXME: try to break this into smaller pieces and then remove these suppressions
 @Suppress("LongMethod")
@@ -82,22 +85,24 @@ private const val MAX_ZOOM = 15.0
 fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
     val context = LocalContext.current
 
-    val showPermissionDialog = rememberSaveable { mutableStateOf(false) }
+    var showPermissionDialog by rememberSaveable { mutableStateOf(false) }
 
-    val trackMyLocation = rememberSaveable { mutableStateOf(false) }
+    var trackMyLocation by rememberSaveable { mutableStateOf(false) }
 
-    val fillManager = remember { mutableStateOf<FillManager?>(null) }
+    val coverageTileJsonUrl by mapViewModel.coverageTileJsonUrl.collectAsStateWithLifecycle()
 
-    val coverageTileJsonUrl =
-        mapViewModel.coverageTileJsonUrl.collectAsStateWithLifecycle(initialValue = null)
+    val coverageTileJsonLayerIds by
+        mapViewModel.coverageTileJsonLayerIds.collectAsStateWithLifecycle()
 
-    val coverageTileJsonLayerIds =
-        mapViewModel.coverageTileJsonLayerIds.collectAsStateWithLifecycle(
-            initialValue = emptyList()
-        )
+    val darkMode = isSystemInDarkTheme()
 
-    val heatMapTiles =
-        mapViewModel.heatMapTiles.collectAsStateWithLifecycle(initialValue = emptyMap())
+    val geoJsonSource = remember { GeoJsonSource("neostumbler-heat-map-source") }
+
+    LaunchedEffect(geoJsonSource) {
+        mapViewModel.heatMapPolygons.collect { features ->
+            geoJsonSource.setGeoJson(FeatureCollection.fromFeatures(features))
+        }
+    }
 
     val myLocation by
         mapViewModel.myLocation.collectAsStateWithLifecycle(
@@ -105,27 +110,16 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
             minActiveState = Lifecycle.State.RESUMED,
         )
 
-    val mapViewport by mapViewModel.mapViewport.collectAsStateWithLifecycle(initialValue = null)
+    val mapViewport by mapViewModel.mapViewport.collectAsStateWithLifecycle()
 
-    if (showPermissionDialog.value) {
-        PermissionsDialog(
-            missingPermissions = listOf(Manifest.permission.ACCESS_FINE_LOCATION),
-            permissionRationales =
-                mapOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION to
-                        stringResource(R.string.permission_rationale_location_map)
-                ),
-            onPermissionsGranted = {
-                showPermissionDialog.value = false
+    if (showPermissionDialog) {
+        MapPermissionsDialog(
+            onPermissionsGranted = { permissionGranted ->
+                showPermissionDialog = false
 
-                val hasPermission =
-                    context
-                        .checkMissingPermissions(Manifest.permission.ACCESS_COARSE_LOCATION)
-                        .isEmpty()
-
-                mapViewModel.setShowMyLocation(hasPermission)
-                trackMyLocation.value = hasPermission
-            },
+                mapViewModel.setShowMyLocation(permissionGranted)
+                trackMyLocation = permissionGranted
+            }
         )
     }
 
@@ -134,9 +128,7 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
     Box(modifier = Modifier.fillMaxSize()) {
         ComposableMap(
             modifier = Modifier.fillMaxSize(),
-            onInit = { map, mapView ->
-                map.addOnMoveListener(OnMapMoveBeginListener { trackMyLocation.value = false })
-
+            onInit = { map, _ ->
                 map.addOnCameraMoveListener {
                     mapViewModel.setMapViewport(
                         center = map.cameraPosition.target!!.asDomainLatLng(),
@@ -157,84 +149,54 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                 map.uiSettings.isRotateGesturesEnabled = false
 
                 map.getStyle { style ->
-                    map.locationComponent.activateLocationComponent(
-                        LocationComponentActivationOptions.builder(context, style)
-                            // Set location engine to null, because we provide locations by
-                            // ourself
-                            .locationEngine(null)
-                            .useDefaultLocationEngine(false)
-                            .useSpecializedLocationLayer(true)
-                            .build()
+                    map.setupLocationComponent(
+                        context,
+                        trackMyLocation = trackMyLocation,
+                        onCameraTrackingDismissed = { trackMyLocation = false },
                     )
-                    @SuppressLint("MissingPermission")
-                    map.locationComponent.isLocationComponentEnabled = true
-                    map.locationComponent.renderMode = RenderMode.COMPASS
 
-                    fillManager.value =
-                        FillManager(
-                            mapView,
-                            map,
-                            style,
-                            LocationComponentConstants.SHADOW_LAYER,
-                            null,
-                        )
+                    style.addSource(geoJsonSource)
+
+                    style.addLayerBelow(
+                        FillLayer(HEATMAP_LAYER_ID, geoJsonSource.id),
+                        LocationComponentConstants.SHADOW_LAYER,
+                    )
                 }
             },
             updateMap = { map ->
                 // Only update the camera position when it's at the default location to avoid jank
                 if (map.cameraPosition.target?.isCloseToOrigin() == true) {
-                    val (center, zoom) = mapViewport!!
-
                     map.cameraPosition =
                         CameraPosition.Builder()
-                            .target(center.asMapLibreLatLng())
-                            .zoom(zoom)
+                            .target(mapViewport.first.asMapLibreLatLng())
+                            .zoom(mapViewport.second)
                             .build()
                 }
 
-                if (myLocation != null && map.locationComponent.isLocationComponentActivated) {
-                    map.locationComponent.forceLocationUpdate(myLocation!!.asPlatformLocation())
+                if (map.locationComponent.isLocationComponentActivated) {
+                    myLocation?.let {
+                        map.locationComponent.forceLocationUpdate(it.asPlatformLocation())
+                    }
 
-                    if (trackMyLocation.value) {
-                        map.cameraPosition =
-                            CameraPosition.Builder()
-                                .target(myLocation!!.position.latLng.asMapLibreLatLng())
-                                .build()
+                    if (
+                        trackMyLocation &&
+                            map.locationComponent.cameraMode != CameraMode.TRACKING_GPS_NORTH
+                    ) {
+                        map.locationComponent.cameraMode = CameraMode.TRACKING_GPS_NORTH
                     }
                 }
 
                 map.addCoverageLayerFromTileJson(
-                    coverageTileJsonUrl.value,
-                    coverageTileJsonLayerIds.value,
-                    color =
-                        if (isSystemInDarkTheme()) {
-                            COVERAGE_COLOR_DARK
-                        } else {
-                            COVERAGE_COLOR
-                        },
-                    opacity =
-                        if (isSystemInDarkTheme()) {
-                            COVERAGE_OPACITY_DARK
-                        } else {
-                            COVERAGE_OPACITY
-                        },
+                    tileJsonUrl = coverageTileJsonUrl,
+                    layerIds = coverageTileJsonLayerIds,
+                    darkMode = darkMode,
                 )
 
-                fillManager.value?.createHeatMapFill(
-                    heatMapTiles.value,
-                    colorLow =
-                        if (isSystemInDarkTheme()) {
-                            HEAT_LOW_DARK
-                        } else {
-                            HEAT_LOW
-                        },
-                    colorHigh =
-                        if (isSystemInDarkTheme()) {
-                            HEAT_HIGH_DARK
-                        } else {
-                            HEAT_HIGH
-                        },
-                )
+                map.getStyle { style ->
+                    style.layers
+                        .find { it.id == HEATMAP_LAYER_ID }
+                        ?.setProperties(getHeatMapFillColor(darkMode))
+                }
             },
         )
 
@@ -244,8 +206,9 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
         ) {
             MapSettingsButton(modifier = Modifier.size(32.dp).align(Alignment.TopEnd))
 
-            FilledIconButton(
+            TrackMyLocationButton(
                 modifier = Modifier.size(48.dp).align(Alignment.BottomEnd),
+                trackMyLocation = trackMyLocation,
                 onClick = {
                     if (
                         context
@@ -253,35 +216,80 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                             .isEmpty()
                     ) {
                         mapViewModel.setShowMyLocation(true)
-                        trackMyLocation.value = true
+                        trackMyLocation = true
                     } else {
-                        showPermissionDialog.value = true
+                        showPermissionDialog = true
                     }
                 },
-            ) {
-                Icon(
-                    painter =
-                        if (trackMyLocation.value) {
-                            painterResource(id = R.drawable.my_location_24px)
-                        } else {
-                            painterResource(id = R.drawable.location_searching_24px)
-                        },
-                    contentDescription = stringResource(id = R.string.show_my_location),
-                )
-            }
+            )
         }
     }
 }
 
-private class OnMapMoveBeginListener(private val onMoveBegin: () -> Unit) :
-    MapLibreMap.OnMoveListener {
-    override fun onMoveBegin(p0: MoveGestureDetector) {
-        onMoveBegin()
+@Composable
+private fun MapPermissionsDialog(onPermissionsGranted: (Boolean) -> Unit) {
+    val context = LocalContext.current
+
+    PermissionsDialog(
+        missingPermissions = listOf(Manifest.permission.ACCESS_FINE_LOCATION),
+        permissionRationales =
+            mapOf(
+                Manifest.permission.ACCESS_FINE_LOCATION to
+                    stringResource(R.string.permission_rationale_location_map)
+            ),
+        onPermissionsGranted = {
+            val hasPermission =
+                context
+                    .checkMissingPermissions(Manifest.permission.ACCESS_COARSE_LOCATION)
+                    .isEmpty()
+
+            onPermissionsGranted(hasPermission)
+        },
+    )
+}
+
+@Composable
+private fun TrackMyLocationButton(
+    modifier: Modifier,
+    trackMyLocation: Boolean,
+    onClick: () -> Unit,
+) {
+    FilledIconButton(modifier = modifier, onClick = onClick) {
+        Icon(
+            painter =
+                if (trackMyLocation) {
+                    painterResource(id = R.drawable.my_location_24px)
+                } else {
+                    painterResource(id = R.drawable.location_searching_24px)
+                },
+            contentDescription = stringResource(id = R.string.show_my_location),
+        )
     }
+}
 
-    override fun onMove(p0: MoveGestureDetector) {}
-
-    override fun onMoveEnd(p0: MoveGestureDetector) {}
+private fun getHeatMapFillColor(darkMode: Boolean): PropertyValue<Expression> {
+    return PropertyFactory.fillColor(
+        Expression.interpolate(
+            Expression.linear(),
+            Expression.get("pct"),
+            Expression.stop(
+                0.0,
+                if (darkMode) {
+                    Expression.color(HEAT_LOW_DARK)
+                } else {
+                    Expression.color(HEAT_LOW)
+                },
+            ),
+            Expression.stop(
+                1.0,
+                if (darkMode) {
+                    Expression.color(HEAT_HIGH_DARK)
+                } else {
+                    Expression.color(HEAT_HIGH)
+                },
+            ),
+        )
+    )
 }
 
 private const val MAX_COORDINATE_DIFF = 0.00001
@@ -322,9 +330,21 @@ private fun addCoverageLayer(style: Style, layerIds: List<String>, color: String
 private fun MapLibreMap.addCoverageLayerFromTileJson(
     tileJsonUrl: String?,
     layerIds: List<String>,
-    color: String,
-    opacity: Float,
+    darkMode: Boolean,
 ) {
+    val color =
+        if (darkMode) {
+            COVERAGE_COLOR_DARK
+        } else {
+            COVERAGE_COLOR
+        }
+    val opacity =
+        if (darkMode) {
+            COVERAGE_OPACITY_DARK
+        } else {
+            COVERAGE_OPACITY
+        }
+
     getStyle { style ->
         if (tileJsonUrl != null) {
             val vectorSource = style.getSource(COVERAGE_SOURCE_ID) as? VectorSource
@@ -345,49 +365,35 @@ private fun MapLibreMap.addCoverageLayerFromTileJson(
     }
 }
 
-private fun FillManager.createHeatMapFill(
-    tiles: Map<String, MapViewModel.HeatMapTile>,
-    colorLow: Int,
-    colorHigh: Int,
+private fun MapLibreMap.setupLocationComponent(
+    context: Context,
+    trackMyLocation: Boolean,
+    onCameraTrackingDismissed: () -> Unit,
 ) {
-    val updated = mutableSetOf<String>()
-    val toDelete = mutableListOf<Fill>()
-
-    annotations.forEach { _, fill ->
-        val hexKey = fill.data!!.asString
-
-        if (hexKey !in tiles) {
-            toDelete += fill
+    locationComponent.activateLocationComponent(
+        LocationComponentActivationOptions.builder(context, style!!)
+            // Set location engine to null, because we provide locations by ourself
+            .locationEngine(null)
+            .useDefaultLocationEngine(false)
+            .useSpecializedLocationLayer(true)
+            .build()
+    )
+    @SuppressLint("MissingPermission")
+    locationComponent.isLocationComponentEnabled = true
+    locationComponent.renderMode = RenderMode.COMPASS
+    locationComponent.cameraMode =
+        if (trackMyLocation) {
+            CameraMode.TRACKING_GPS_NORTH
         } else {
-            val tile = tiles[hexKey]!!
-
-            val color =
-                MapLibreColorUtils.colorToRgbaString(
-                    ColorUtils.blendARGB(colorLow, colorHigh, tile.heatPct)
-                )
-
-            if (color != fill.fillColor) {
-                fill.fillColor = color
+            CameraMode.NONE
+        }
+    locationComponent.addOnCameraTrackingChangedListener(
+        object : OnCameraTrackingChangedListener {
+            override fun onCameraTrackingDismissed() {
+                onCameraTrackingDismissed()
             }
 
-            updated += hexKey
+            override fun onCameraTrackingChanged(p0: Int) {}
         }
-    }
-
-    delete(toDelete)
-
-    tiles
-        .filter { it.key !in updated }
-        .forEach { (hexKey, tile) ->
-            val color = ColorUtils.blendARGB(colorLow, colorHigh, tile.heatPct)
-
-            val fillOptions =
-                FillOptions()
-                    .withData(JsonPrimitive(hexKey))
-                    .withFillColor(MapLibreColorUtils.colorToRgbaString(color))
-                    .withFillOutlineColor("#00000000")
-                    .withLatLngs(listOf(tile.outline.map { LatLng(it.latitude, it.longitude) }))
-
-            create(fillOptions)
-        }
+    )
 }
