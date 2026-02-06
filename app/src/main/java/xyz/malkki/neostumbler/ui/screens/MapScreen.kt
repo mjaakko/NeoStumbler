@@ -37,6 +37,8 @@ import org.maplibre.android.geometry.LatLng
 import org.maplibre.android.gestures.MoveGestureDetector
 import org.maplibre.android.location.LocationComponentActivationOptions
 import org.maplibre.android.location.LocationComponentConstants
+import org.maplibre.android.location.OnCameraTrackingChangedListener
+import org.maplibre.android.location.modes.CameraMode
 import org.maplibre.android.location.modes.RenderMode
 import org.maplibre.android.maps.MapLibreMap
 import org.maplibre.android.maps.Style
@@ -86,9 +88,7 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
 
     var showPermissionDialog by rememberSaveable { mutableStateOf(false) }
 
-    val trackMyLocation = rememberSaveable { mutableStateOf(false) }
-
-    val geoJsonSource = remember { GeoJsonSource("neostumbler-heat-map-source") }
+    var trackMyLocation by rememberSaveable { mutableStateOf(false) }
 
     val coverageTileJsonUrl by mapViewModel.coverageTileJsonUrl.collectAsStateWithLifecycle()
 
@@ -96,6 +96,8 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
         mapViewModel.coverageTileJsonLayerIds.collectAsStateWithLifecycle()
 
     val darkMode = isSystemInDarkTheme()
+
+    val geoJsonSource = remember { GeoJsonSource("neostumbler-heat-map-source") }
 
     LaunchedEffect(geoJsonSource) {
         mapViewModel.heatMapPolygons.collect { features ->
@@ -109,7 +111,7 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
             minActiveState = Lifecycle.State.RESUMED,
         )
 
-    val mapViewport by mapViewModel.mapViewport.collectAsStateWithLifecycle(initialValue = null)
+    val mapViewport by mapViewModel.mapViewport.collectAsStateWithLifecycle()
 
     if (showPermissionDialog) {
         MapPermissionsDialog(
@@ -117,7 +119,7 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                 showPermissionDialog = false
 
                 mapViewModel.setShowMyLocation(permissionGranted)
-                trackMyLocation.value = permissionGranted
+                trackMyLocation = permissionGranted
             }
         )
     }
@@ -128,7 +130,7 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
         ComposableMap(
             modifier = Modifier.fillMaxSize(),
             onInit = { map, _ ->
-                map.addOnMoveListener(OnMapMoveBeginListener { trackMyLocation.value = false })
+                map.addOnMoveListener(OnMapMoveBeginListener { trackMyLocation = false })
 
                 map.addOnCameraMoveListener {
                     mapViewModel.setMapViewport(
@@ -150,7 +152,11 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                 map.uiSettings.isRotateGesturesEnabled = false
 
                 map.getStyle { style ->
-                    map.setupLocationComponent(context)
+                    map.setupLocationComponent(
+                        context,
+                        trackMyLocation = trackMyLocation,
+                        onCameraTrackingDismissed = { trackMyLocation = false },
+                    )
 
                     style.addSource(geoJsonSource)
 
@@ -163,23 +169,23 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
             updateMap = { map ->
                 // Only update the camera position when it's at the default location to avoid jank
                 if (map.cameraPosition.target?.isCloseToOrigin() == true) {
-                    val (center, zoom) = mapViewport!!
-
                     map.cameraPosition =
                         CameraPosition.Builder()
-                            .target(center.asMapLibreLatLng())
-                            .zoom(zoom)
+                            .target(mapViewport.first.asMapLibreLatLng())
+                            .zoom(mapViewport.second)
                             .build()
                 }
 
-                if (myLocation != null && map.locationComponent.isLocationComponentActivated) {
-                    map.locationComponent.forceLocationUpdate(myLocation!!.asPlatformLocation())
+                if (map.locationComponent.isLocationComponentActivated) {
+                    myLocation?.let {
+                        map.locationComponent.forceLocationUpdate(it.asPlatformLocation())
+                    }
 
-                    if (trackMyLocation.value) {
-                        map.cameraPosition =
-                            CameraPosition.Builder()
-                                .target(myLocation!!.position.latLng.asMapLibreLatLng())
-                                .build()
+                    if (
+                        trackMyLocation &&
+                            map.locationComponent.cameraMode != CameraMode.TRACKING_GPS_NORTH
+                    ) {
+                        map.locationComponent.cameraMode = CameraMode.TRACKING_GPS_NORTH
                     }
                 }
 
@@ -205,7 +211,7 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
 
             TrackMyLocationButton(
                 modifier = Modifier.size(48.dp).align(Alignment.BottomEnd),
-                trackMyLocation = trackMyLocation.value,
+                trackMyLocation = trackMyLocation,
                 onClick = {
                     if (
                         context
@@ -213,7 +219,7 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                             .isEmpty()
                     ) {
                         mapViewModel.setShowMyLocation(true)
-                        trackMyLocation.value = true
+                        trackMyLocation = true
                     } else {
                         showPermissionDialog = true
                     }
@@ -373,7 +379,11 @@ private fun MapLibreMap.addCoverageLayerFromTileJson(
     }
 }
 
-private fun MapLibreMap.setupLocationComponent(context: Context) {
+private fun MapLibreMap.setupLocationComponent(
+    context: Context,
+    trackMyLocation: Boolean,
+    onCameraTrackingDismissed: () -> Unit,
+) {
     locationComponent.activateLocationComponent(
         LocationComponentActivationOptions.builder(context, style!!)
             // Set location engine to null, because we provide locations by ourself
@@ -385,4 +395,19 @@ private fun MapLibreMap.setupLocationComponent(context: Context) {
     @SuppressLint("MissingPermission")
     locationComponent.isLocationComponentEnabled = true
     locationComponent.renderMode = RenderMode.COMPASS
+    locationComponent.cameraMode =
+        if (trackMyLocation) {
+            CameraMode.TRACKING_GPS_NORTH
+        } else {
+            CameraMode.NONE
+        }
+    locationComponent.addOnCameraTrackingChangedListener(
+        object : OnCameraTrackingChangedListener {
+            override fun onCameraTrackingDismissed() {
+                onCameraTrackingDismissed()
+            }
+
+            override fun onCameraTrackingChanged(p0: Int) {}
+        }
+    )
 }

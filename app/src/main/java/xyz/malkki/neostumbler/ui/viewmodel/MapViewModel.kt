@@ -21,7 +21,6 @@ import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -115,7 +114,7 @@ class MapViewModel(
         )
 
     private val _mapViewport = MutableStateFlow(LatLng.ORIGIN to DEFAULT_MAP_ZOOM)
-    val mapViewport: Flow<Pair<LatLng, Double>>
+    val mapViewport: StateFlow<Pair<LatLng, Double>>
         get() = _mapViewport.asStateFlow()
 
     private val mapBounds = Channel<Pair<LatLng, LatLng>>(capacity = Channel.CONFLATED)
