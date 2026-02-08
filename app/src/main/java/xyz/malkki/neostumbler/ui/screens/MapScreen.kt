@@ -3,7 +3,6 @@ package xyz.malkki.neostumbler.ui.screens
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
-import android.location.Location
 import androidx.annotation.ColorInt
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
@@ -20,6 +19,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -28,7 +28,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlin.math.abs
 import org.koin.androidx.compose.koinViewModel
@@ -37,6 +36,7 @@ import org.maplibre.android.geometry.LatLng
 import org.maplibre.android.location.LocationComponentActivationOptions
 import org.maplibre.android.location.LocationComponentConstants
 import org.maplibre.android.location.OnCameraTrackingChangedListener
+import org.maplibre.android.location.engine.LocationEngine
 import org.maplibre.android.location.modes.CameraMode
 import org.maplibre.android.location.modes.RenderMode
 import org.maplibre.android.maps.MapLibreMap
@@ -49,7 +49,6 @@ import org.maplibre.android.style.sources.GeoJsonSource
 import org.maplibre.android.style.sources.VectorSource
 import org.maplibre.geojson.FeatureCollection
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.core.observation.PositionObservation
 import xyz.malkki.neostumbler.domain.asDomainLatLng
 import xyz.malkki.neostumbler.domain.asMapLibreLatLng
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
@@ -58,6 +57,7 @@ import xyz.malkki.neostumbler.ui.composables.shared.ComposableMap
 import xyz.malkki.neostumbler.ui.composables.shared.KeepScreenOn
 import xyz.malkki.neostumbler.ui.composables.shared.PermissionsDialog
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
+import xyz.malkki.neostumbler.utils.maplibre.FlowLocationEngine
 
 @ColorInt private const val HEAT_LOW: Int = 0x78d278ff
 @ColorInt private const val HEAT_HIGH: Int = 0x78aa00ff
@@ -85,6 +85,8 @@ private const val HEATMAP_LAYER_ID = "neostumbler-heat-map"
 fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
     val context = LocalContext.current
 
+    val coroutineScope = rememberCoroutineScope()
+
     var showPermissionDialog by rememberSaveable { mutableStateOf(false) }
 
     var trackMyLocation by rememberSaveable { mutableStateOf(false) }
@@ -103,12 +105,6 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
             geoJsonSource.setGeoJson(FeatureCollection.fromFeatures(features))
         }
     }
-
-    val myLocation by
-        mapViewModel.myLocation.collectAsStateWithLifecycle(
-            initialValue = null,
-            minActiveState = Lifecycle.State.RESUMED,
-        )
 
     val mapViewport by mapViewModel.mapViewport.collectAsStateWithLifecycle()
 
@@ -152,6 +148,11 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                     map.setupLocationComponent(
                         context,
                         trackMyLocation = trackMyLocation,
+                        locationEngine =
+                            FlowLocationEngine(
+                                positionFlow = mapViewModel.myLocation,
+                                coroutineScope = coroutineScope,
+                            ),
                         onCameraTrackingDismissed = { trackMyLocation = false },
                     )
 
@@ -174,10 +175,6 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                 }
 
                 if (map.locationComponent.isLocationComponentActivated) {
-                    myLocation?.let {
-                        map.locationComponent.forceLocationUpdate(it.asPlatformLocation())
-                    }
-
                     if (
                         trackMyLocation &&
                             map.locationComponent.cameraMode != CameraMode.TRACKING_GPS_NORTH
@@ -298,16 +295,6 @@ private fun LatLng.isCloseToOrigin(): Boolean {
     return abs(latitude) < MAX_COORDINATE_DIFF && abs(longitude) < MAX_COORDINATE_DIFF
 }
 
-private fun PositionObservation.asPlatformLocation(): Location {
-    return Location("manual").apply {
-        this.latitude = position.latitude
-        this.longitude = position.longitude
-        if (position.accuracy != null) {
-            this.accuracy = position.accuracy!!.toFloat()
-        }
-    }
-}
-
 private fun addCoverageLayer(style: Style, layerIds: List<String>, color: String, opacity: Float) {
     for (id in layerIds) {
         val layer = style.getLayer(COVERAGE_LAYER_PREFIX + id)
@@ -368,12 +355,12 @@ private fun MapLibreMap.addCoverageLayerFromTileJson(
 private fun MapLibreMap.setupLocationComponent(
     context: Context,
     trackMyLocation: Boolean,
+    locationEngine: LocationEngine,
     onCameraTrackingDismissed: () -> Unit,
 ) {
     locationComponent.activateLocationComponent(
         LocationComponentActivationOptions.builder(context, style!!)
-            // Set location engine to null, because we provide locations by ourself
-            .locationEngine(null)
+            .locationEngine(locationEngine)
             .useDefaultLocationEngine(false)
             .useSpecializedLocationLayer(true)
             .build()
