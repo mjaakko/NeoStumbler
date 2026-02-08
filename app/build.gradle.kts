@@ -196,6 +196,8 @@ android {
 
         lintConfig = projectDir.resolve("lint.xml")
     }
+
+    testOptions { unitTests { isReturnDefaultValues = true } }
 }
 
 tasks.register<Copy>("copyPrivacyPolicy") {

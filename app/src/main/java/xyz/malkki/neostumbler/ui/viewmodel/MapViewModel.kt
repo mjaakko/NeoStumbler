@@ -1,7 +1,6 @@
 package xyz.malkki.neostumbler.ui.viewmodel
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Application
 import androidx.collection.MutableLongIntMap
 import androidx.collection.MutableObjectIntMap
@@ -65,6 +64,8 @@ private const val MIN_GEOHEX_RESOLUTION = 3
 private const val MAX_GEOHEX_RESOLUTION = 9
 
 private val TILEJSON_RETRY_DELAY = 30.seconds
+
+private const val LOCATION_FLOW_TIMEOUT_MILLIS = 1000L
 
 class MapViewModel(
     application: Application,
@@ -165,14 +166,22 @@ class MapViewModel(
             .shareIn(viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
     val myLocation =
-        showMyLocation.flatMapLatest {
-            if (it) {
-                @SuppressLint("MissingPermission")
-                locationSource.getLocations(2.seconds, usePassiveProvider = false)
-            } else {
-                emptyFlow()
+        showMyLocation
+            .flatMapLatest {
+                if (it) {
+                    locationSource.getLocations(0.seconds, usePassiveProvider = false)
+                } else {
+                    emptyFlow()
+                }
             }
-        }
+            .shareIn(
+                viewModelScope,
+                started =
+                    SharingStarted.WhileSubscribed(
+                        stopTimeoutMillis = LOCATION_FLOW_TIMEOUT_MILLIS
+                    ),
+                replay = 1,
+            )
 
     init {
         viewModelScope.launch {
