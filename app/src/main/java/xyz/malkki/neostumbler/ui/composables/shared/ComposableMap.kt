@@ -52,6 +52,7 @@ import xyz.malkki.neostumbler.ui.map.MapTileSource
 fun ComposableMap(
     modifier: Modifier = Modifier,
     onInit: @DisallowComposableCalls (MapLibreMap, MapView) -> Unit,
+    onStyleUpdated: @DisallowComposableCalls (Style) -> Unit,
     updateMap: @Composable (MapLibreMap) -> Unit,
     httpClientProvider: Deferred<Call.Factory> = koinInject(),
     settings: Settings = koinInject(),
@@ -124,7 +125,7 @@ fun ComposableMap(
                     }
 
                     mapView.getMapAsync { map ->
-                        mapTileSourceUrl.let { map.updateMapStyleIfNeeded(it) }
+                        mapTileSourceUrl.let { map.updateMapStyleIfNeeded(it, onStyleUpdated) }
 
                         map.uiSettings.isAttributionEnabled = false
                         map.uiSettings.isLogoEnabled = false
@@ -140,7 +141,7 @@ fun ComposableMap(
                     mapView.lifecycle = lifecycle
 
                     mapView.getMapAsync { map ->
-                        mapTileSourceUrl.let { map.updateMapStyleIfNeeded(it) }
+                        mapTileSourceUrl.let { map.updateMapStyleIfNeeded(it, onStyleUpdated) }
 
                         mapInstance = map
                     }
@@ -179,8 +180,8 @@ private fun Source.getAttribution(context: Context): Collection<Attribution> {
         .attributions
 }
 
-private fun MapLibreMap.updateMapStyleIfNeeded(styleUrl: String) {
+private fun MapLibreMap.updateMapStyleIfNeeded(styleUrl: String, callback: (Style) -> Unit) {
     if (style == null || style!!.uri != styleUrl) {
-        setStyle(Style.Builder().fromUri(styleUrl))
+        setStyle(Style.Builder().fromUri(styleUrl)) { style -> callback(style) }
     }
 }
