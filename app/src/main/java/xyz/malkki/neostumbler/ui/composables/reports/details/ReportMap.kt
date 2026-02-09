@@ -8,8 +8,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -56,6 +59,7 @@ import xyz.malkki.neostumbler.ichnaea.dto.WifiAccessPointDto
 import xyz.malkki.neostumbler.ichnaea.dto.latLng
 import xyz.malkki.neostumbler.ichnaea.mapper.getIchnaeaParams
 import xyz.malkki.neostumbler.ui.composables.shared.ComposableMap
+import xyz.malkki.neostumbler.utils.maplibre.needsRecreation
 
 @Composable
 private fun EstimatedDistance(reportLocation: LatLng, estimatedLocation: LatLng) {
@@ -71,16 +75,20 @@ private fun EstimatedDistance(reportLocation: LatLng, estimatedLocation: LatLng)
 
 private const val MAP_ZOOM_LEVEL = 15.0
 
+private const val LINE_SOURCE_ID = "report-details-line"
+
+private const val CIRCLE_SOURCE_ID = "report-details-locations"
+
 @Composable
 fun ReportMap(report: Report, modifier: Modifier = Modifier) {
-    val estimatedLocation = getEstimatedReportLocation(report)
+    val estimatedLocation by getEstimatedReportLocation(report)
 
-    val lineGeoJsonSource = remember { GeoJsonSource("report-details-line") }
+    var lineGeoJsonSource by remember { mutableStateOf(GeoJsonSource(LINE_SOURCE_ID)) }
 
-    val circleGeoJsonSource = remember { GeoJsonSource("report-details-locations") }
+    var circleGeoJsonSource by remember { mutableStateOf(GeoJsonSource(CIRCLE_SOURCE_ID)) }
 
     val circleFeatures =
-        remember(estimatedLocation.value) {
+        remember(estimatedLocation) {
             val reportLocationFeature =
                 Feature.fromGeometry(
                     Point.fromLngLat(
@@ -94,7 +102,7 @@ fun ReportMap(report: Report, modifier: Modifier = Modifier) {
                 )
 
             val estimatedLocationFeature =
-                estimatedLocation.value?.let {
+                estimatedLocation?.let {
                     Feature.fromGeometry(
                         Point.fromLngLat(it.location.lng, it.location.lat),
                         JsonObject().apply { addProperty("accuracy", it.accuracy) },
@@ -106,8 +114,8 @@ fun ReportMap(report: Report, modifier: Modifier = Modifier) {
         }
 
     val lineFeature =
-        remember(estimatedLocation.value) {
-            estimatedLocation.value?.location?.let {
+        remember(estimatedLocation) {
+            estimatedLocation?.location?.let {
                 LineString.fromLngLats(
                     listOf(
                         Point.fromLngLat(
@@ -120,11 +128,7 @@ fun ReportMap(report: Report, modifier: Modifier = Modifier) {
             }
         }
 
-    LaunchedEffect(lineFeature) {
-        if (lineFeature != null) {
-            lineGeoJsonSource.setGeoJson(lineFeature)
-        }
-    }
+    LaunchedEffect(lineFeature) { lineFeature?.let { lineGeoJsonSource.setGeoJson(it) } }
 
     Box(modifier.fillMaxWidth().height(150.dp), contentAlignment = Alignment.TopCenter) {
         ComposableMap(
@@ -135,28 +139,33 @@ fun ReportMap(report: Report, modifier: Modifier = Modifier) {
                     CameraPosition.Builder().target(cameraPos).zoom(MAP_ZOOM_LEVEL).build()
 
                 map.uiSettings.setAllGesturesEnabled(false)
-
-                map.getStyle { style ->
-                    style.addSource(circleGeoJsonSource)
-
-                    style.addSource(lineGeoJsonSource)
-
-                    style.addLayer(createDistanceLineLayer(lineGeoJsonSource.id))
-
-                    style.addLayer(createLocationAccuracyLayer(circleGeoJsonSource.id))
-
-                    style.addLayer(createLocationLayer(circleGeoJsonSource.id))
+            },
+            onStyleUpdated = { style ->
+                if (circleGeoJsonSource.needsRecreation()) {
+                    circleGeoJsonSource = GeoJsonSource(CIRCLE_SOURCE_ID)
                 }
+                if (lineGeoJsonSource.needsRecreation()) {
+                    lineGeoJsonSource = GeoJsonSource(LINE_SOURCE_ID)
+                }
+
+                style.addSource(circleGeoJsonSource)
+
+                style.addSource(lineGeoJsonSource)
+
+                style.addLayer(createDistanceLineLayer(lineGeoJsonSource.id))
+
+                style.addLayer(createLocationAccuracyLayer(circleGeoJsonSource.id))
+
+                style.addLayer(createLocationLayer(circleGeoJsonSource.id))
             },
             updateMap = { map ->
-                if (estimatedLocation.value != null) {
+                estimatedLocation?.let {
                     val actualLocationLatLng = report.position.position.latLng
-                    val estimatedLocationLatLng = estimatedLocation.value!!.location.latLng
 
                     map.setCameraPositionToContain(
                         listOf(
                             actualLocationLatLng to (report.position.position.accuracy ?: 0.0),
-                            estimatedLocationLatLng to estimatedLocation.value!!.accuracy,
+                            it.location.latLng to it.accuracy,
                         )
                     )
                 }
@@ -169,10 +178,10 @@ fun ReportMap(report: Report, modifier: Modifier = Modifier) {
             },
         )
 
-        if (estimatedLocation.value != null) {
+        if (estimatedLocation != null) {
             EstimatedDistance(
                 reportLocation = report.position.position.latLng,
-                estimatedLocation = estimatedLocation.value!!.location.latLng,
+                estimatedLocation = estimatedLocation!!.location.latLng,
             )
         }
     }
@@ -182,7 +191,6 @@ private const val LINE_WIDTH = 2f
 private const val LINE_OPACITY = 0.5f
 
 private fun createDistanceLineLayer(sourceId: String): LineLayer {
-
     return LineLayer("location-distance", sourceId).apply {
         setProperties(
             PropertyFactory.lineColor(Expression.color(Color.Black.toArgb())),

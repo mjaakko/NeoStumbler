@@ -23,9 +23,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -47,6 +49,7 @@ import xyz.malkki.neostumbler.domain.asDomainLatLng
 import xyz.malkki.neostumbler.domain.asMapLibreLatLng
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.geography.LatLng
+import xyz.malkki.neostumbler.utils.maplibre.needsRecreation
 
 @Composable
 fun AreaPickerDialog(
@@ -143,7 +146,7 @@ fun AreaPickerMap(onCircleUpdated: (Pair<LatLng, Double>) -> Unit) {
             Text(text = stringResource(R.string.waiting_for_location))
         }
     } else {
-        val geoJsonSource = remember { GeoJsonSource("circle") }
+        var geoJsonSource by remember { mutableStateOf(GeoJsonSource("circle")) }
 
         ComposableMap(
             modifier = Modifier.fillMaxSize(),
@@ -163,6 +166,12 @@ fun AreaPickerMap(onCircleUpdated: (Pair<LatLng, Double>) -> Unit) {
                     geoJsonSource.setGeoJson(
                         Point.fromLngLat(newMapCenter.longitude, newMapCenter.latitude)
                     )
+
+                    map.getStyle { style ->
+                        style.layers
+                            .find { it.id == "circle-layer" }
+                            ?.setProperties(PropertyFactory.circleRadius(radius.value))
+                    }
                 }
 
                 val cameraPos = currentLocation.value!!.asMapLibreLatLng()
@@ -174,27 +183,27 @@ fun AreaPickerMap(onCircleUpdated: (Pair<LatLng, Double>) -> Unit) {
                 map.setMaxZoomPreference(MAX_ZOOM)
 
                 map.uiSettings.isRotateGesturesEnabled = false
-
-                map.getStyle { style ->
-                    style.addSource(geoJsonSource)
-
-                    style.addLayer(
-                        CircleLayer("circle-layer", geoJsonSource.id).apply {
-                            setProperties(
-                                PropertyFactory.circleColor(
-                                    ColorUtils.colorToRgbaString(Color.CYAN)
-                                ),
-                                PropertyFactory.circleOpacity(CIRCLE_FILL_OPACITY),
-                                PropertyFactory.circleStrokeColor(
-                                    ColorUtils.colorToRgbaString(Color.CYAN)
-                                ),
-                                PropertyFactory.circleStrokeOpacity(CIRCLE_STROKE_OPACITY),
-                                PropertyFactory.circleStrokeWidth(CIRCLE_STROKE_WIDTH),
-                                PropertyFactory.circleRadius(radius.value),
-                            )
-                        }
-                    )
+            },
+            onStyleUpdated = { style ->
+                if (geoJsonSource.needsRecreation()) {
+                    geoJsonSource = GeoJsonSource("circle")
                 }
+
+                style.addSource(geoJsonSource)
+
+                style.addLayer(
+                    CircleLayer("circle-layer", geoJsonSource.id).apply {
+                        setProperties(
+                            PropertyFactory.circleColor(ColorUtils.colorToRgbaString(Color.CYAN)),
+                            PropertyFactory.circleOpacity(CIRCLE_FILL_OPACITY),
+                            PropertyFactory.circleStrokeColor(
+                                ColorUtils.colorToRgbaString(Color.CYAN)
+                            ),
+                            PropertyFactory.circleStrokeOpacity(CIRCLE_STROKE_OPACITY),
+                            PropertyFactory.circleStrokeWidth(CIRCLE_STROKE_WIDTH),
+                        )
+                    }
+                )
             },
             updateMap = { _ -> },
         )

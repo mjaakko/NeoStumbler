@@ -58,6 +58,7 @@ import xyz.malkki.neostumbler.ui.composables.shared.KeepScreenOn
 import xyz.malkki.neostumbler.ui.composables.shared.PermissionsDialog
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
 import xyz.malkki.neostumbler.utils.maplibre.FlowLocationEngine
+import xyz.malkki.neostumbler.utils.maplibre.needsRecreation
 
 @ColorInt private const val HEAT_LOW: Int = 0x78d278ff
 @ColorInt private const val HEAT_HIGH: Int = 0x78aa00ff
@@ -76,6 +77,7 @@ private const val COVERAGE_OPACITY_DARK = 0.25f
 private const val MIN_ZOOM = 3.0
 private const val MAX_ZOOM = 15.0
 
+private const val HEATMAP_SOURCE_ID = "neostumbler-heat-map-source"
 private const val HEATMAP_LAYER_ID = "neostumbler-heat-map"
 
 // This method is long because we are mixing Compose with Views
@@ -98,7 +100,7 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
 
     val darkMode = isSystemInDarkTheme()
 
-    val geoJsonSource = remember { GeoJsonSource("neostumbler-heat-map-source") }
+    var geoJsonSource by remember { mutableStateOf(GeoJsonSource(HEATMAP_SOURCE_ID)) }
 
     LaunchedEffect(geoJsonSource) {
         mapViewModel.heatMapPolygons.collect { features ->
@@ -155,7 +157,14 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                             ),
                         onCameraTrackingDismissed = { trackMyLocation = false },
                     )
+                }
+            },
+            onStyleUpdated = { style ->
+                if (geoJsonSource.needsRecreation()) {
+                    geoJsonSource = GeoJsonSource(HEATMAP_SOURCE_ID)
+                }
 
+                if (style.getSource(HEATMAP_SOURCE_ID) == null) {
                     style.addSource(geoJsonSource)
 
                     style.addLayerBelow(
