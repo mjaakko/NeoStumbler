@@ -3,6 +3,9 @@ name: Dependency Submission
 on:
   push:
     branches: [ 'master' ]
+    paths:
+      - '**.gradle*'
+      - '**/libs.versions.toml'
 
 permissions:
   contents: write
