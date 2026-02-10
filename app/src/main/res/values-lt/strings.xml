@@ -155,7 +155,7 @@
     <string name="coverage_layer">Aprėpties sluoksnis žemėlapyje</string>
     <string name="coverage_layer_tile_json_url">Žemėlapio „TileJSON“ aprėpties sluoksnio URL</string>
     <string name="invalid_url">Tinkamo URL nėra</string>
-    <string name="coverage_layer_no_configured">„TileJSON“ aprėpties žemėlapio URL nenurodytas</string>
+    <string name="coverage_layer_no_configured">Žemėlapio aprėpties sluoksnis nesukonfigūruotas</string>
     <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Problemų neaptikta</string>
     <string name="troubleshooting_not_ok" tools:ignore="Typos">Aptikta problemų</string>
     <string name="system_default_language">Numatytoji sistemos kalba</string>
