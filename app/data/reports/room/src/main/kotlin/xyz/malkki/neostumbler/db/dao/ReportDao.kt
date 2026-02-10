@@ -59,7 +59,7 @@ internal interface ReportDao {
         FROM Report r
         INNER JOIN PositionEntity p ON r.id = p.reportId
         WHERE r.uploaded = 0
-        ORDER BY r.timestamp DESC
+        ORDER BY r.id DESC
     """
     )
     fun getAllReportsWithStats(): PagingSource<Int, ReportWithStats>
