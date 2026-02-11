@@ -1,0 +1,6 @@
+* Passive mode can now collect data for Bluetooth beacons
+* The gplay variant can now ask to leave a review in the Play Store after stopping scanning
+* Minor performance improvements
+* Fixed a crash on the report list
+* Updated translations
+* Updated dependencies
