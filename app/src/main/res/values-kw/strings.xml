@@ -35,7 +35,7 @@
     <string name="reports_not_uploaded">Derivasow na ughkargys: %d</string>
     <string name="reports_last_uploaded">Derivasow ughkargys a-lergh: %s</string>
     <string name="reports_last_uploaded_never">bynner</string>
-    <string name="reports_empty">Derivasow hwath vyth</string>
+    <string name="reports_empty">Derivasow vyth hwath</string>
     <string name="start_scanning">Dalleth arhwilyansow</string>
     <string name="stop_scanning">Astel arhwilyansow</string>
     <string name="scanning_status_active">Arhwilyansow <annotation style="status">byw</annotation></string>
