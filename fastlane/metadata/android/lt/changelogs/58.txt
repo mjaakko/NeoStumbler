@@ -1,0 +1,6 @@
+* Pasyviojoje veiksenoje dabar galima rinkti duomenis ir apie „Bluetooth“ siųstuvus
+* „gplay“ variantas dabar gali paprašyti palikti apžvalgą „Play Store“ parduotuvėje, užbaigus skenavimą
+* Nedideli našumo patobulinimai
+* Pašalinta strigties ataskaitų sąraše problema
+* Atnaujinti vertimai
+* Atnaujintos priklausomybės
