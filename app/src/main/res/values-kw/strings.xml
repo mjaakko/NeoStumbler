@@ -20,7 +20,7 @@
     <string name="permissions_needed">Grontys res</string>
     <string name="permissions_not_granted">Grontys res na grontys</string>
     <string name="wifi_icon_description">Arwodhik Wi-fi</string>
-    <string name="cell_tower_icon_description">Arwodhik tour kellgowser</string>
+    <string name="cell_tower_icon_description">Arwodhik tour klapkodh</string>
     <string name="bluetooth_icon_description">Arwodhik Bluetooth</string>
     <string name="warning_icon_description">Arwodhik gwarnyans</string>
     <string name="scanner_status_notification_channel_name">Studh arhwilyans</string>
@@ -148,7 +148,7 @@
     <string name="pause_scanning_on_low_battery_title">Powes arhwilyansow dres batri gwag</string>
     <string name="pause_scanning_on_low_battery_description">Pan batri yw le avel %d%%</string>
     <string name="wifi_scan_frequency">Menowghedh dhe arhwilyansow Wi-fi</string>
-    <string name="cell_tower_scan_frequency">Menowghedh dhe arhwilyansow touryow kellgowser</string>
+    <string name="cell_tower_scan_frequency">Menowghedh dhe arhwilyansow touryow klapkodh</string>
     <string name="every_x_meters">Pub %d metrow</string>
     <string name="moving_device_filter_title">Sidhla devisyow gwayadow</string>
     <string name="moving_device_filter_description">Rosweyth ha beaconys gwayadow yw helerghys yn awtomatek ha sidhlys a derivasow</string>
@@ -177,7 +177,7 @@
     <string name="map_show_coverage_layer">Diskwedhes gwiskas efander</string>
     <string name="show_my_location">Diskwedhes ow tyller</string>
     <string name="permission_rationale_fine_location">Ow gul derivasow gans data tyller gwerek res gront dhe GPS a-dhevis</string>
-    <string name="permission_rationale_read_phone_state">Hedhas dhe studh devis yw res dhe owth arhwilas touryow kellgowser</string>
+    <string name="permission_rationale_read_phone_state">Hedhas dhe studh devis yw res dhe owth arhwilas touryow klapkodh</string>
     <string name="permission_rationale_bluetooth">Owth arhwilas beaconys Bluetooth res gront rag Bluetooth</string>
     <string name="permission_rationale_post_notifications">Ow diskwedhes messach studh res gront rag messajys</string>
     <string name="permission_rationale_background_location_quick_settings">Ow dalleth arhwilas a\'n settyansow uskis res hedhas dhe GPS yn kilva.\n\nAttendya a\'n fronnans ma yw beghya gans Android. Dha tyller yw na drehedhes yn kilva mar ty ny gallosegi arhwilyansow godhevek po awtomatek</string>

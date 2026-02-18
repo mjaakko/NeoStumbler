@@ -1,0 +1,6 @@
+* La collecte de données passive peut désormais détecter les balises Bluetooth
+* La version Google Play démande désormais de laisser un avis sur le Play Store à l'arrêt des mesures
+* Améliorations de performances mineures
+* Correction d'un crash sur la liste des rapports
+* Mise à jour des traductions
+* Mise à jour des dépendances
