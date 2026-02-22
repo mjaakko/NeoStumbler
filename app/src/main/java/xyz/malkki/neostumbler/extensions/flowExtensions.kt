@@ -10,44 +10,6 @@ import kotlinx.coroutines.flow.scan
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.launch
 
-inline fun <reified A, B> Collection<Flow<A>>.combineAny(
-    crossinline combiner: suspend (Array<A?>) -> B
-): Flow<B> = channelFlow {
-    val values = arrayOfNulls<A?>(size)
-
-    forEachIndexed { index, flow ->
-        launch {
-            flow.collect {
-                values[index] = it
-
-                send(combiner(values.copyOf()))
-            }
-        }
-    }
-}
-
-fun <T> Flow<T>.buffer(window: Duration): Flow<List<T>> = channelFlow {
-    val items: MutableList<T> = mutableListOf<T>()
-    var finished = false
-
-    launch {
-        collect { items.add(it) }
-
-        finished = true
-    }
-
-    while (true) {
-        delay(window)
-
-        send(items.toList())
-        items.clear()
-
-        if (finished) {
-            break
-        }
-    }
-}
-
 fun <A, B, C> Flow<A>.combineWithLatestFrom(other: Flow<B>, combiner: (A, B?) -> C): Flow<C> =
     channelFlow {
         var otherValue: B? = null

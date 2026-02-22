@@ -20,10 +20,10 @@ import org.koin.android.ext.android.inject
 import timber.log.Timber
 import xyz.malkki.neostumbler.MainActivity
 import xyz.malkki.neostumbler.R
+import xyz.malkki.neostumbler.activescan.ActiveScanManager
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.getQuantityString
 import xyz.malkki.neostumbler.extensions.getTextCompat
-import xyz.malkki.neostumbler.scanner.ScannerService
 import xyz.malkki.neostumbler.utils.OneTimeActionHelper
 import xyz.malkki.neostumbler.utils.PermissionHelper
 
@@ -41,6 +41,8 @@ class ScannerTileService : TileService() {
     private lateinit var coroutineScope: CoroutineScope
 
     private val oneTimeActionHelper: OneTimeActionHelper by inject()
+
+    private val activeScanManager: ActiveScanManager by inject()
 
     private var updaterJob: Job? = null
 
@@ -65,8 +67,8 @@ class ScannerTileService : TileService() {
 
     override fun onStartListening() {
         updaterJob = coroutineScope.launch {
-            ScannerService.serviceRunning
-                .combine(ScannerService.reportsCreated) { a, b -> a to b }
+            activeScanManager.scanningActive
+                .combine(activeScanManager.reportsCreated) { a, b -> a to b }
                 .collect { (scanningActive, reportsCreated) ->
                     Timber.d(
                         "Updating QS tile, scanning: $scanningActive, reports: $reportsCreated"
@@ -114,7 +116,7 @@ class ScannerTileService : TileService() {
                             .isEmpty())
             ) {
                 // If we already have required permissions, start scanning
-                startForegroundService(ScannerService.startIntent(this))
+                activeScanManager.startScanning()
             } else {
                 // Otherwise open main activity to request permissions before starting scanning
                 startMainActivity(
@@ -122,14 +124,13 @@ class ScannerTileService : TileService() {
                 )
             }
         } else {
-            startService(ScannerService.stopIntent(this))
+            activeScanManager.stopScanning()
         }
     }
 
     private fun backgroundLocationPermissionNeeded(): Boolean {
         // As of Android 14, background location permission is needed to start foreground services
-        // using
-        // location from quick settings tiles
+        // using location from quick settings tiles
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE &&
             checkMissingPermissions(Manifest.permission.ACCESS_BACKGROUND_LOCATION).isNotEmpty()
     }

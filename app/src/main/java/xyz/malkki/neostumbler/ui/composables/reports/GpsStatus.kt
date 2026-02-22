@@ -19,18 +19,17 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import java.text.DecimalFormat
-import kotlinx.coroutines.flow.StateFlow
+import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.data.location.GpsStatus
+import xyz.malkki.neostumbler.activescan.ActiveScanManager
 import xyz.malkki.neostumbler.extensions.toLtr
-import xyz.malkki.neostumbler.scanner.ScannerService
 import xyz.malkki.neostumbler.ui.composables.shared.Gauge
 
 @Composable
-fun GpsStatus(gpsStatsFlow: StateFlow<GpsStatus?> = ScannerService.gpsStats) {
+fun GpsStatus(activeScanManager: ActiveScanManager = koinInject()) {
     val decimalFormat = DecimalFormat("#")
 
-    val gpsStats by gpsStatsFlow.collectAsStateWithLifecycle()
+    val gpsStats by activeScanManager.gpsStatus.collectAsStateWithLifecycle(initialValue = null)
 
     val inUsePercentage =
         gpsStats?.let { it.satellitesUsedInFix / it.satellitesTotal.toFloat() } ?: 0f

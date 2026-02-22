@@ -1,5 +1,6 @@
 package xyz.malkki.neostumbler.scanner.passive
 
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -14,6 +15,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
+import xyz.malkki.neostumbler.activescan.ActiveScanManager
 import xyz.malkki.neostumbler.core.MacAddress
 import xyz.malkki.neostumbler.core.Position
 import xyz.malkki.neostumbler.core.emitter.CellTower
@@ -74,8 +76,11 @@ class PassiveScanReportCreatorTest {
                 passiveBluetoothBeaconSource = passiveBluetoothBeaconSource,
                 passiveScanStateManager = passiveScanStateManager,
                 reportSaver = reportSaver,
-                postProcessors = emptyList(),
-                activeScanningRunning = { false },
+                postProcessorProvider = { emptyList() },
+                activeScanManager =
+                    mock<ActiveScanManager> {
+                        on { scanningActive } doReturn MutableStateFlow(false)
+                    },
             )
     }
 

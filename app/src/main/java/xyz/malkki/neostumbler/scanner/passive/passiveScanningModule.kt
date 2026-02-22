@@ -20,7 +20,5 @@ val passiveScanningModule = module {
 
     single { PassiveScanStateManager(get(PASSIVE_SCAN_STATE)) }
 
-    single {
-        PassiveScanReportCreator(get(), get(), get(), get(), get(), postProcessors = getAll())
-    }
+    single { PassiveScanReportCreator(get(), get(), get(), get(), get(), get(), get()) }
 }

@@ -45,7 +45,7 @@ import timber.log.Timber
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.core.report.ReportWithLocation
-import xyz.malkki.neostumbler.data.location.LocationSource
+import xyz.malkki.neostumbler.data.location.LocationSourceProvider
 import xyz.malkki.neostumbler.data.reports.ReportProvider
 import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
@@ -71,7 +71,7 @@ class MapViewModel(
     settings: Settings,
     private val httpClientProvider: HttpCallFactoryProvider,
     private val reportProvider: ReportProvider,
-    private val locationSource: LocationSource,
+    private val locationSourceProvider: LocationSourceProvider,
 ) : AndroidViewModel(application) {
     val coverageTileJsonUrl: StateFlow<String?> =
         settings
@@ -169,7 +169,9 @@ class MapViewModel(
         showMyLocation
             .flatMapLatest {
                 if (it) {
-                    locationSource.getLocations(0.seconds, usePassiveProvider = false)
+                    locationSourceProvider
+                        .getLocationSource()
+                        .getLocations(0.seconds, usePassiveProvider = false)
                 } else {
                     emptyFlow()
                 }

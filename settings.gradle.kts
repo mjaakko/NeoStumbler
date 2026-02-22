@@ -24,6 +24,8 @@ include(":app:core:domain:mapper:android-location")
 
 include(":app:core:network")
 
+include(":app:core:scan-common")
+
 include(":app:data:airpressure:api")
 
 include(":app:data:airpressure:android")
@@ -58,6 +60,12 @@ include(":app:data:reports:api")
 
 include(":app:data:reports:room")
 
+include(":app:data:movement:api")
+
+include(":app:data:movement:android")
+
+include(":app:data:movement:location-based")
+
 include(":app:feature:export:service")
 
 include(":app:feature:export:infra:api")
@@ -69,6 +77,12 @@ include(":app:feature:ichnaea-upload:service")
 include(":app:feature:ichnaea-upload:infra:api")
 
 include(":app:feature:ichnaea-upload:infra:android")
+
+include(":app:feature:active-scan:service")
+
+include(":app:feature:active-scan:infra:api")
+
+include(":app:feature:active-scan:infra:android")
 
 include(":libs:beacon-parser")
 
@@ -85,3 +99,5 @@ include(":libs:executors")
 include(":libs:broadcast-receiver-flow")
 
 include(":libs:coroutine-broadcast-receiver")
+
+include(":libs:coroutine-service")

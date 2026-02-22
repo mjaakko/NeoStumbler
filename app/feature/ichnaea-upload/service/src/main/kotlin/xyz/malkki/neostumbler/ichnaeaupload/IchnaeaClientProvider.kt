@@ -34,10 +34,9 @@ class IchnaeaClientProvider(
             }
         }
 
-    val ichnaeaClient: Flow<IchnaeaClient?> =
-        ichnaeaParams.map { params ->
-            params?.let { IchnaeaClient(httpClientProvider.getHttpCallFactory(), it) }
-        }
+    val ichnaeaClient: Flow<IchnaeaClient?> = ichnaeaParams.map { params ->
+        params?.let { IchnaeaClient(httpClientProvider.getHttpCallFactory(), it) }
+    }
 
     suspend fun setIchnaeaParams(ichnaeaParams: IchnaeaParams) {
         settings.edit {

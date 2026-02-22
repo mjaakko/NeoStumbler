@@ -1,9 +1,11 @@
 package xyz.malkki.neostumbler.data.airpressure
 
+import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import androidx.core.content.getSystemService
 import kotlin.time.Duration
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
@@ -13,6 +15,10 @@ import xyz.malkki.neostumbler.core.airpressure.AirPressureObservation
 
 class PressureSensorAirPressureSource(private val sensorManager: SensorManager) :
     AirPressureSource {
+    constructor(
+        context: Context
+    ) : this(context.applicationContext.getSystemService<SensorManager>()!!)
+
     override fun getAirPressureFlow(interval: Duration): Flow<AirPressureObservation> =
         callbackFlow {
             val pressureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE)

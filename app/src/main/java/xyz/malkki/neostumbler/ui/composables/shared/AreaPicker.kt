@@ -45,7 +45,7 @@ import org.maplibre.android.style.sources.GeoJsonSource
 import org.maplibre.android.utils.ColorUtils
 import org.maplibre.geojson.Point
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.data.location.LocationSource
+import xyz.malkki.neostumbler.data.location.LocationSourceProvider
 import xyz.malkki.neostumbler.domain.asDomainLatLng
 import xyz.malkki.neostumbler.domain.asMapLibreLatLng
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
@@ -108,7 +108,7 @@ private const val DEFAULT_ZOOM = 12.0
 @Composable
 private fun getCurrentLocation(
     context: Context = LocalContext.current,
-    locationSource: LocationSource = koinInject(),
+    locationSourceProvider: LocationSourceProvider = koinInject(),
 ): State<LatLng?> =
     produceState(initialValue = null) {
         value =
@@ -116,7 +116,8 @@ private fun getCurrentLocation(
                 context.checkMissingPermissions(Manifest.permission.ACCESS_FINE_LOCATION).isEmpty()
             ) {
                 @SuppressLint("MissingPermission")
-                locationSource
+                locationSourceProvider
+                    .getLocationSource()
                     .getLocations(1.seconds, usePassiveProvider = false)
                     .first()
                     .position

@@ -7,37 +7,26 @@ object PreferenceKeys {
 
     const val PASSIVE_SCAN_ENABLED = "passive_scan_enabled"
 
-    const val IGNORE_SCAN_THROTTLING = "ignore_scan_throttling"
-
-    const val WIFI_SCAN_DISTANCE = "wifi_scan_distance"
-    const val CELL_SCAN_DISTANCE = "cell_scan_distance"
-
-    const val PAUSE_ON_BATTERY_LEVEL_THRESHOLD = "low_battery_threshold"
-
-    const val GEOSUBMIT_ENDPOINT = "geosubmit_endpoint"
-    const val GEOSUBMIT_PATH = "geosubmit_path"
-    const val GEOSUBMIT_API_KEY = "geosubmit_api_key"
-    const val GEOLOCATE_PATH = "geolocate_path"
-
-    const val COVERAGE_TILE_JSON_URL = "coverage_tile_json_url"
-    const val COVERAGE_LAYER_ENABLED = "coverage_layer_enabled"
-
     const val MOVEMENT_DETECTOR = "movement_detector"
-
-    const val FILTER_MOVING_DEVICES = "filter_moving_devices"
-
-    const val SCANNER_NOTIFICATION_STYLE = "scanner_notification_style"
-
-    const val DYNAMIC_COLOR_THEME = "dynamic_color_theme"
-
-    const val GEOCODER_TYPE = "geocoder_type"
 
     const val DB_PRUNE_DATA_MAX_AGE_DAYS = "db_prune_max_age_days"
 
+    // Map coverage layer
+    const val COVERAGE_TILE_JSON_URL = "coverage_tile_json_url"
+    const val COVERAGE_LAYER_ENABLED = "coverage_layer_enabled"
+
+    // Map tiles
     const val MAP_TILE_SOURCE = "map_tile_source"
     const val MAP_TILE_SOURCE_CUSTOM_URL = "custom_map_tile_source_url"
 
     // Privacy options
     const val WIFI_FILTER_LIST = "wifi_filter_list"
     const val REDUCED_METADATA = "reduced_metadata"
+
+    const val FILTER_MOVING_DEVICES = "filter_moving_devices"
+
+    // UI
+    const val DYNAMIC_COLOR_THEME = "dynamic_color_theme"
+
+    const val GEOCODER_TYPE = "geocoder_type"
 }

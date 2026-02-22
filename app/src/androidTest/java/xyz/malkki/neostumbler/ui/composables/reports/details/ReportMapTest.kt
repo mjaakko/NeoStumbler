@@ -8,8 +8,6 @@ import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
 import java.io.IOException
@@ -34,13 +32,15 @@ import org.koin.compose.KoinIsolatedContext
 import org.koin.dsl.koinApplication
 import org.koin.dsl.module
 import xyz.malkki.neostumbler.PREFERENCES
-import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.core.Position
 import xyz.malkki.neostumbler.core.emitter.CellTower
+import xyz.malkki.neostumbler.core.report.Report
 import xyz.malkki.neostumbler.core.report.ReportEmitter
 import xyz.malkki.neostumbler.core.report.ReportPosition
 import xyz.malkki.neostumbler.data.settings.DataStoreSettings
 import xyz.malkki.neostumbler.data.settings.Settings
+import xyz.malkki.neostumbler.ichnaea.IchnaeaParams
+import xyz.malkki.neostumbler.ichnaeaupload.IchnaeaClientProvider
 import xyz.malkki.neostumbler.network.HttpCallFactoryProvider
 
 class ReportMapTest {
@@ -113,12 +113,6 @@ class ReportMapTest {
                 produceFile = { testContext.preferencesDataStoreFile("prefs") },
             )
 
-        settingsStore.edit { prefs ->
-            prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_ENDPOINT)] = "http://example.com"
-            prefs[stringPreferencesKey(PreferenceKeys.GEOSUBMIT_PATH)] = "/test"
-            prefs[stringPreferencesKey(PreferenceKeys.GEOLOCATE_PATH)] = "/geolocate"
-        }
-
         val koin = koinApplication {
             modules(
                 module {
@@ -129,15 +123,28 @@ class ReportMapTest {
                     single<DataStore<Preferences>>(PREFERENCES) { settingsStore }
 
                     single<Settings> { DataStoreSettings(get(PREFERENCES)) }
+
+                    single<IchnaeaClientProvider> { IchnaeaClientProvider(get(), get()) }
                 }
             )
         }
+
+        koin.koin
+            .get<IchnaeaClientProvider>()
+            .setIchnaeaParams(
+                IchnaeaParams(
+                    baseUrl = "https://example.com",
+                    submissionPath = "/geosubmit",
+                    locatePath = "/geolocate",
+                    apiKey = null,
+                )
+            )
 
         composeTestRule.setContent {
             KoinIsolatedContext(koin) {
                 ReportMap(
                     report =
-                        xyz.malkki.neostumbler.core.report.Report(
+                        Report(
                             id = 1,
                             timestamp = Instant.now(),
                             uploaded = false,

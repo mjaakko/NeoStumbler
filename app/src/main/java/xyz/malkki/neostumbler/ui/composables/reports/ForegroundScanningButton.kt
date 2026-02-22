@@ -24,10 +24,10 @@ import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.MainActivity
 import xyz.malkki.neostumbler.R
+import xyz.malkki.neostumbler.activescan.ActiveScanManager
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.getActivity
 import xyz.malkki.neostumbler.extensions.showToast
-import xyz.malkki.neostumbler.scanner.ScannerService
 import xyz.malkki.neostumbler.scanner.quicksettings.ScannerTileService
 import xyz.malkki.neostumbler.ui.composables.BatteryOptimizationsDialog
 import xyz.malkki.neostumbler.ui.composables.shared.AddQSTileDialog
@@ -37,7 +37,6 @@ import xyz.malkki.neostumbler.utils.OneTimeActionHelper
 private val requiredPermissions =
     buildList {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-
                 add(Manifest.permission.POST_NOTIFICATIONS)
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -52,7 +51,10 @@ private val requiredPermissions =
         .toTypedArray()
 
 @Composable
-fun ForegroundScanningButton(afterStop: (() -> Unit)? = null) {
+fun ForegroundScanningButton(
+    activeScanManager: ActiveScanManager = koinInject(),
+    afterStop: (() -> Unit)? = null,
+) {
     val context = LocalContext.current
     val intent = context.getActivity()?.intent
 
@@ -79,10 +81,6 @@ fun ForegroundScanningButton(afterStop: (() -> Unit)? = null) {
         } else {
             showBatteryOptimizationsDialog.value = true
         }
-    }
-
-    fun stopScanning() {
-        context.startService(ScannerService.stopIntent(context))
     }
 
     fun startScanning() {
@@ -133,7 +131,7 @@ fun ForegroundScanningButton(afterStop: (() -> Unit)? = null) {
             onBatteryOptimizationsDisabled = {
                 showBatteryOptimizationsDialog.value = false
 
-                context.startForegroundService(ScannerService.startIntent(context))
+                activeScanManager.startScanning()
             }
         )
     }
@@ -153,7 +151,7 @@ fun ForegroundScanningButton(afterStop: (() -> Unit)? = null) {
     StartStopScanningButton(
         onStart = { startScanning() },
         onStop = {
-            stopScanning()
+            activeScanManager.stopScanning()
 
             afterStop?.invoke()
         },
@@ -162,7 +160,8 @@ fun ForegroundScanningButton(afterStop: (() -> Unit)? = null) {
 
 @Composable
 private fun StartStopScanningButton(
-    oneTimeActionHelper: OneTimeActionHelper = koinInject<OneTimeActionHelper>(),
+    oneTimeActionHelper: OneTimeActionHelper = koinInject(),
+    activeScanManager: ActiveScanManager = koinInject(),
     onStart: () -> Unit,
     onStop: () -> Unit,
 ) {
@@ -173,7 +172,7 @@ private fun StartStopScanningButton(
     val showQuickSettingsDialog = rememberSaveable { mutableStateOf(false) }
 
     val isScanning by
-        ScannerService.serviceRunning.collectAsStateWithLifecycle(initialValue = false)
+        activeScanManager.scanningActive.collectAsStateWithLifecycle(initialValue = false)
 
     if (showQuickSettingsDialog.value) {
         @SuppressLint("NewApi")
@@ -243,7 +242,7 @@ private fun ScanningPermissionsDialog(
     PermissionsDialog(
         missingPermissions = missingPermissions,
         permissionRationales =
-            mutableMapOf<String, String>().apply {
+            buildMap {
                 put(
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     stringResource(id = R.string.permission_rationale_fine_location),

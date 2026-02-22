@@ -17,12 +17,14 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.Task
 import java.time.Duration
 import kotlinx.coroutines.tasks.await
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import timber.log.Timber
+import xyz.malkki.neostumbler.activescan.ActiveScanManager
 import xyz.malkki.neostumbler.coroutinebroadcastreceiver.CoroutineBroadcastReceiver
-import xyz.malkki.neostumbler.scanner.ScannerService
 import xyz.malkki.neostumbler.scanner.autoscan.LocationReceiver.Companion.AUTOSCAN_GEOFENCE_REQUEST_ID
 
-class ActivityTransitionReceiver : CoroutineBroadcastReceiver() {
+class ActivityTransitionReceiver : CoroutineBroadcastReceiver(), KoinComponent {
     companion object {
         private const val PENDING_INTENT_REQUEST_CODE = 1111
 
@@ -95,6 +97,8 @@ class ActivityTransitionReceiver : CoroutineBroadcastReceiver() {
         }
     }
 
+    private val activeScanManager: ActiveScanManager by inject()
+
     @SuppressLint("MissingPermission")
     private fun handleActivityTransitionResult(
         context: Context,
@@ -111,7 +115,7 @@ class ActivityTransitionReceiver : CoroutineBroadcastReceiver() {
                 Timber.i("User entered STILL activity ${age.seconds}s ago")
 
                 // Stop scanning
-                context.startService(ScannerService.stopIntent(context, autostart = true))
+                activeScanManager.stopScanning(autostart = true)
 
                 // Also remove geofences here to make sure that geofencing events don't start the
                 // scanning
