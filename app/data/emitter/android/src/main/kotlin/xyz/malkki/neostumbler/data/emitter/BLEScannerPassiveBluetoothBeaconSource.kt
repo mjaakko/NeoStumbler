@@ -28,18 +28,20 @@ class BLEScannerPassiveBluetoothBeaconSource(context: Context) : PassiveBluetoot
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_SCAN)
     override fun enable() {
-        bluetoothManager.adapter.bluetoothLeScanner.startScan(
-            null,
-            PASSIVE_SCAN_SETTINGS,
-            PassiveBluetoothScanReceiver.getPendingIntent(appContext),
-        )
+        bluetoothManager.adapter
+            ?.bluetoothLeScanner
+            ?.startScan(
+                null,
+                PASSIVE_SCAN_SETTINGS,
+                PassiveBluetoothScanReceiver.getPendingIntent(appContext),
+            )
     }
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_SCAN)
     override fun disable() {
-        bluetoothManager.adapter.bluetoothLeScanner.stopScan(
-            PassiveBluetoothScanReceiver.getPendingIntent(appContext)
-        )
+        bluetoothManager.adapter
+            ?.bluetoothLeScanner
+            ?.stopScan(PassiveBluetoothScanReceiver.getPendingIntent(appContext))
     }
 
     override suspend fun getBluetoothBeacons():
