@@ -192,7 +192,7 @@
     <string name="troubleshooting_fix">Ewnhe</string>
     <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Da lowr</string>
     <string name="troubleshooting_not_ok" tools:ignore="Typos">Na da lowr</string>
-    <string name="geocoder_settings_title">Kalkor kenwyn tyller</string>
+    <string name="geocoder_settings_title">Kalkor henwyn tyller</string>
     <string name="geocoder_default_title">Defowt</string>
     <string name="geocoder_disabled_title">Ungallosegys</string>
     <string name="use_dynamic_color_ui">Gul devnydh a kolorys dynamek y\'n ynterfas</string>
