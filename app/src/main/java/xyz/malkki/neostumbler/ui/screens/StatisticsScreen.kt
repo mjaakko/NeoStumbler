@@ -18,33 +18,30 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.unit.dp
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
+import com.patrykandpatrick.vico.compose.cartesian.Scroll
+import com.patrykandpatrick.vico.compose.cartesian.Zoom
+import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
+import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
+import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.compose.cartesian.data.CartesianValueFormatter
+import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer.LineProvider.Companion.series
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLine
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
+import com.patrykandpatrick.vico.compose.common.Fill
 import com.patrykandpatrick.vico.compose.common.ProvideVicoTheme
-import com.patrykandpatrick.vico.compose.common.fill
-import com.patrykandpatrick.vico.compose.common.shader.verticalGradient
 import com.patrykandpatrick.vico.compose.common.vicoTheme
 import com.patrykandpatrick.vico.compose.m3.common.rememberM3VicoTheme
-import com.patrykandpatrick.vico.core.cartesian.Scroll
-import com.patrykandpatrick.vico.core.cartesian.Zoom
-import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
-import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
-import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
-import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
-import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
-import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer.LineProvider.Companion.series
-import com.patrykandpatrick.vico.core.common.shader.ShaderProvider
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DecimalStyle
@@ -88,16 +85,15 @@ private fun StationsByDayChart(entryModel: CartesianChartModelProducer) {
                                 areaFill =
                                     LineCartesianLayer.AreaFill.single(
                                         fill =
-                                            fill(
-                                                shaderProvider =
-                                                    ShaderProvider.verticalGradient(
-                                                        colors =
-                                                            arrayOf(
-                                                                vicoTheme.lineCartesianLayerColors
-                                                                    .first()
-                                                                    .copy(alpha = 0.4f),
-                                                                Color.Transparent,
-                                                            )
+                                            Fill(
+                                                brush =
+                                                    Brush.verticalGradient(
+                                                        listOf(
+                                                            vicoTheme.lineCartesianLayerColors
+                                                                .first()
+                                                                .copy(alpha = 0.4f),
+                                                            Color.Transparent,
+                                                        )
                                                     )
                                             )
                                     )
@@ -110,7 +106,7 @@ private fun StationsByDayChart(entryModel: CartesianChartModelProducer) {
                             remember {
                                 VerticalAxis.ItemPlacer.step(
                                     step = { extras ->
-                                        val max = extras[StatisticsViewModel.MAX_Y_VALUE_KEY]
+                                        val max: Long = extras[StatisticsViewModel.MAX_Y_VALUE_KEY]
 
                                         (10.0.pow(floor(log10(max.toDouble()))) / 10).coerceAtLeast(
                                             1.0
@@ -123,7 +119,7 @@ private fun StationsByDayChart(entryModel: CartesianChartModelProducer) {
                     HorizontalAxis.rememberBottom(
                         valueFormatter =
                             remember {
-                                CartesianValueFormatter { context, value, pos ->
+                                CartesianValueFormatter { _, value, _ ->
                                     LocalDate.ofEpochDay(value.toLong()).format(dateFormat)
                                 }
                             }
@@ -145,7 +141,7 @@ fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = koinViewModel())
 
     Column {
         PrimaryTabRow(selectedTabIndex = selectedDataType.value.ordinal) {
-            StatisticsViewModel.DataType.entries.map { dataType ->
+            StatisticsViewModel.DataType.entries.forEach { dataType ->
                 Tab(
                     selected = selectedDataType.value == dataType,
                     onClick = { statisticsViewModel.setDataType(dataType) },
