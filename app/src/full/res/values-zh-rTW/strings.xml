@@ -4,7 +4,8 @@
     <string name="prefer_fused_location_description">Fused location provider 可組合 GPS 之外來源以確定位置</string>
     <string name="autoscan_when_moving">自動在移動時掃描</string>
     <string name="autoscan_failed_to_enable_title">自動掃描啟動失敗</string>
-    <string name="permission_rationale_background_location_autoscan">自動啟動掃描需要背景定位權限</string>
+    <string name="permission_rationale_background_location_autoscan">應用程式未使用時自動啟動掃描需要背景定位權限</string>
     <string name="permission_rationale_activity_recognition">自動啟動掃描需要取得當前活動</string>
     <string name="autoscan_failed_to_enable_description">自動掃描功能會使用 Google Play 服務的活動辨識功能，但該功能在您的裝置上可能無法使用</string>
+    <string name="fused_location_no_gps_warning">此裝置沒有 GPS 接收器</string>
 </resources>
