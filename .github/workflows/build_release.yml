@@ -68,10 +68,11 @@ jobs:
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
         run: ./gradlew :app:buildApksFullDefaultRelease
       - name: Upload release APK set as build artifact
-        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v5
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: app-fullDefaultRelease.apks
           path: app/build/outputs/apkset/fullDefaultRelease/app-fullDefaultRelease.apks
+          archive: false
           retention-days: 7
       # Build app bundle for Google Play
       - name: Build app bundle for Google Play
@@ -81,9 +82,9 @@ jobs:
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
         run: ./gradlew :app:bundleFullGplayRelease
       - name: Upload app bundle as build artifact
-        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v5
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: app-full-gplay-release.aab
           path: app/build/outputs/bundle/fullGplayRelease/app-full-gplay-release.aab
-          compression-level: 0
+          archive: false
           retention-days: 7
