@@ -28,13 +28,13 @@ jobs:
       - name: Build debug APKs
         run: ./gradlew assembleAll
       - name: Upload debug froid APK as artifact
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v5
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v5
         with:
           name: app-fdroid-default-debug.apk
           path: app/build/outputs/apk/fdroidDefault/debug/app-fdroid-default-debug.apk
           retention-days: 1
       - name: Upload debug full APK as artifact
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v5
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v5
         with:
           name: app-full-default-debug.apk
           path: app/build/outputs/apk/fullDefault/debug/app-full-default-debug.apk
