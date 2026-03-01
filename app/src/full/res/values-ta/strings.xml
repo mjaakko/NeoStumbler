@@ -1,2 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="prefer_fused_location_title">இணைந்த இருப்பிட வழங்குநரை விரும்பு</string>
+    <string name="prefer_fused_location_description">இணைக்கப்பட்ட இருப்பிட வழங்குநர், இருப்பிடத்தைத் தீர்மானிக்க, சிபிஎச் அல்லாத பிற மூலங்களிலிருந்து தரவை இணைக்க முடியும்</string>
+    <string name="fused_location_no_gps_warning">சாதனத்தில் சிபிஎச் ரிசீவர் இல்லை</string>
+    <string name="autoscan_when_moving">நகரும் போது தானியங்கி ச்கேனிங்</string>
+    <string name="autoscan_failed_to_enable_title">தானியங்கி ச்கேனிங்கை இயக்குவதில் தோல்வி</string>
+    <string name="autoscan_failed_to_enable_description">தானியங்கு ச்கேனிங் Google Play சேவைகள் செயல்பாட்டு அங்கீகாரத்தைப் பயன்படுத்துகிறது, இது உங்கள் சாதனத்தில் கிடைக்காமல் போகலாம்</string>
+    <string name="permission_rationale_background_location_autoscan">ஆப்ச் செயலில் இல்லாதபோது தானாகவே வருடு செய்வதைத் தொடங்க பின்னணி இருப்பிடத்திற்கான இசைவு தேவை</string>
+    <string name="permission_rationale_activity_recognition">ச்கேனிங்கைத் தானாகத் தொடங்க, தற்போதைய செயல்பாட்டிற்கான அணுகல் தேவை</string>
+</resources>
