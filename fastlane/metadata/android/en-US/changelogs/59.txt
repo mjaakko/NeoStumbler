@@ -1,0 +1,3 @@
+* Fixed passive data collection causing a crash when Bluetooth is disabled
+* Updated dependencies
+* Updated translations
