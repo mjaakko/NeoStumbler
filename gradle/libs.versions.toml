@@ -105,7 +105,7 @@ okhttpCoroutines = { module = "com.squareup.okhttp3:okhttp-coroutines" }
 okhttpLoggingInterceptor = { module = "com.squareup.okhttp3:logging-interceptor" }
 okhttpMockWebServer = { module = "com.squareup.okhttp3:mockwebserver" }
 
-cronetOkhttp = { module = "com.google.net.cronet:cronet-okhttp", version = "0.1.0" }
+cronetOkhttp = { module = "com.google.net.cronet:cronet-okhttp", version = "0.1.1" }
 
 kotlinx-serializationJson = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.10.0" }
 
