@@ -105,7 +105,7 @@
     <string name="permission_rationale_read_phone_state">掃描訊號塔需要電話狀態權限</string>
     <string name="permission_rationale_bluetooth">掃描藍牙信標需要藍牙權限</string>
     <string name="permission_rationale_post_notifications">顯示狀態通知需要通知權限</string>
-    <string name="permission_rationale_background_location_quick_settings">從快速開關啟動掃描需要背景位置權限</string>
+    <string name="permission_rationale_background_location_quick_settings">從快速設定啟動掃描需要背景位置權限。\n\n請注意，這是 Android 作業系統施加的限制。若您未啟用被動或自動掃描功能，則不會在背景存取您的位置。</string>
     <string name="permission_rationale_location_map">顯示您的位置需要位置權限</string>
     <string name="troubleshooting_title">故障排除</string>
     <string name="troubleshooting_description">解決掃描中的常見問題</string>
@@ -184,7 +184,7 @@
     <string name="pause_scanning_on_low_battery_description">當電量低於 %d%% 時</string>
     <string name="passive_scanning_description">被動式資料蒐集會在背景中建立報告，藉由使用其他應用程式時所請求的資料，以盡量減少電池消耗。\n\n被動式資料蒐集的效果會依照你的裝置類型、正在使用的其他應用程式，以及是否有啟用融合式定位提供者（fused location provider）而有所不同。\n\n您是否要啟用被動式資料蒐集？</string>
     <string name="passive_scanning_title">被動式資料蒐集</string>
-    <string name="permission_rationale_background_location_passive_scan">在應用程式未啟動時接收定位更新，需啟用背景定位權限</string>
+    <string name="permission_rationale_background_location_passive_scan">被動資料收集需要背景位置權限，以在應用程式未使用時建立回報</string>
     <string name="delete_all">刪除全部</string>
     <string name="copy">複製</string>
     <string name="text_copied_to_clipboard">文字已複製至剪貼簿！</string>
@@ -196,4 +196,12 @@
     <string name="map_tile_source_custom_title">自定義</string>
     <string name="map_tile_source_custom_style_url">自定義地圖樣式 URL</string>
     <string name="map_show_coverage_layer">顯示覆蓋率地圖</string>
+    <string name="beacon_type_ibeacon">iBeacon</string>
+    <string name="beacon_type_altbeacon">AltBeacon</string>
+    <string name="map_data_sources">地圖資料來源</string>
+    <string name="geocoder_settings_title">地理編碼服務</string>
+    <string name="geocoder_default_title">預設</string>
+    <string name="geocoder_disabled_title">已停用</string>
+    <string name="third_party_licenses">第三方授權</string>
+    <string name="privacy_policy">隱私權政策</string>
 </resources>
