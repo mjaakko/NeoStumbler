@@ -1,0 +1,19 @@
+Interface do Usuário (UI) / Experiência do Usuário (UX)
+- Migração para a interface do usuário no estilo Material 3
+- Layout da interface do usuário aprimorado para telas maiores
+- Remoção da barra de título da tela do mapa
+- Adição de suporte para estilos de mapa escuros
+- Correção do problema que impedia a caixa de diálogo de atribuição do mapa de usar o tema selecionado
+- O status do GPS não é mais exibido quando o dispositivo não possui um receptor GPS
+
+Coleta passiva de dados
+- Torres de celular duplicadas inválidas são filtradas dos relatórios criados passivamente ao usar vários SIMs
+- A coleta passiva de dados agora cria mais relatórios verificando se o relatório anterior contém o mesmo tipo de dados
+
+Alterações Técnicas
+- Transmissões agora são tratadas de forma assíncrona
+- Adição de um manipulador de corrupção ao armazenamento de estado da varredura passiva
+- Dependências atualizadas
+
+Outros
+- Traduções atualizadas
