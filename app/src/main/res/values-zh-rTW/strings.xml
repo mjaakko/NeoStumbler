@@ -105,7 +105,7 @@
     <string name="permission_rationale_read_phone_state">掃描訊號塔需要電話狀態權限</string>
     <string name="permission_rationale_bluetooth">掃描藍牙信標需要藍牙權限</string>
     <string name="permission_rationale_post_notifications">顯示狀態通知需要通知權限</string>
-    <string name="permission_rationale_background_location_quick_settings">從快速設定啟動掃描需要背景位置權限。\n\n請注意，這是 Android 作業系統施加的限制。若您未啟用被動或自動掃描功能，則不會在背景存取您的位置。</string>
+    <string name="permission_rationale_background_location_quick_settings">從快速設定啟動掃描需要背景位置權限。\n\n請注意，這是 Android 作業系統施加的限制。若您未啟用被動或自動掃描功能，則不會在背景存取您的位置</string>
     <string name="permission_rationale_location_map">顯示您的位置需要位置權限</string>
     <string name="troubleshooting_title">故障排除</string>
     <string name="troubleshooting_description">解決掃描中的常見問題</string>

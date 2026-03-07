@@ -1,0 +1,3 @@
+* Corrigido o problema de coleta passiva de dados que causava travamento quando o Bluetooth estava desativado
+* Dependências atualizadas
+* Traduções atualizadas

@@ -5,4 +5,19 @@
     <string name="yes">نعم</string>
     <string name="no">لا</string>
     <string name="reset">صفّر</string>
+    <string name="save">احفظ</string>
+    <string name="cancel">ألغِ</string>
+    <string name="use">استخدم</string>
+    <string name="stop">أوقِف</string>
+    <string name="delete">احذف</string>
+    <string name="delete_all">احذف الكل</string>
+    <string name="no_data">لا بيانات</string>
+    <string name="copy">انسخ</string>
+    <string name="text_copied_to_clipboard">نُسخ النص إلى الحافظة!</string>
+    <string name="waiting_for_location">ينتظر الموقع</string>
+    <string name="failed_to_open_selected_file">فشل في فتح الملف المحدّد</string>
+    <string name="settings_tab_title">الإعدادات</string>
+    <string name="reports_last_uploaded_never">أبدًا</string>
+    <string name="start_scanning">أبدء المسح</string>
+    <string name="stop_scanning">أوقِف المسح</string>
 </resources>

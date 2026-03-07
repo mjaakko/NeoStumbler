@@ -1,0 +1,3 @@
+- Corrigido o problema em que o conteúdo era exibido sob as barras do sistema nas configurações em telas maiores
+- Corrigido o problema em que as etiquetas do mapa não carregavam com o VersaTiles
+- Traduções atualizadas

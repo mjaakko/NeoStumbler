@@ -1,0 +1,19 @@
+UI/UX
+- Migração para a interface do usuário no estilo Material 3
+- Ícones alterados para Símbolos Material
+- Interface do usuário aprimorada para telas maiores
+- Barra de título removida da tela do mapa
+- Suporte adicionado para estilos de mapa escuros
+- Correção no diálogo de atribuição do mapa que não utilizava o tema selecionado
+- O status do GPS não é mais exibido quando o dispositivo não possui um receptor GPS
+
+Coleta passiva de dados
+- Torres de celular duplicadas inválidas são filtradas dos relatórios criados passivamente ao usar vários SIMs
+- A coleta passiva de dados agora cria relatórios de forma mais agressiva, verificando se o relatório anterior contém o mesmo tipo de dados
+
+Técnico
+- As transmissões agora são tratadas de forma assíncrona para melhor desempenho
+- Adicionado manipulador de corrupção ao armazenamento de estado da varredura passiva
+
+Outros
+- Traduções atualizadas
