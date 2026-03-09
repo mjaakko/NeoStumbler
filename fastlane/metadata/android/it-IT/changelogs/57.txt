@@ -1,0 +1,5 @@
+* Modificata la scansione dei beacon BLE per utilizzare un'implementazione personalizzata del parser dei beacon
+* Aggiunto codice di scrambling primario/ID cella fisica per geolocalizzare le query
+* Aggiornate le dipendenze
+* Aggiornate le traduzioni
+* Aggiunta la traduzione in Cornico

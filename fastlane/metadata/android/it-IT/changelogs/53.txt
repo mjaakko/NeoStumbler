@@ -1,0 +1,3 @@
+- Corretto il problema del contenuto visualizzato sotto le barre di sistema nelle impostazioni sugli schermi più grandi
+- Corretto il problema del caricamento delle etichette delle mappe con VersaTiles
+- Traduzioni aggiornate

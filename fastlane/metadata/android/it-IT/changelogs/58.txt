@@ -1,0 +1,6 @@
+* La modalità passiva ora può raccogliere dati per i beacon Bluetooth
+* La variante gplay ora può chiedere di lasciare una recensione nel Play Store dopo aver interrotto la scansione
+* Piccoli miglioramenti delle prestazioni
+* Risolto un crash nell'elenco dei report
+* Traduzioni aggiornate
+* Dipendenze aggiornate
