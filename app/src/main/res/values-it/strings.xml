@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="failed_to_open_selected_file">Impossibile aprire il file selezionato</string>
     <string name="stop">Interrompi</string>
     <string name="map_tab_title">Mappa</string>
@@ -15,10 +15,10 @@
     <string name="delete">Elimina</string>
     <string name="permissions_not_granted">Le autorizzazioni necessarie non sono state concesse</string>
     <string name="wifi_icon_description">Icona Wi-Fi</string>
-    <string name="cell_tower_icon_description">Icona antenna cellulare</string>
+    <string name="cell_tower_icon_description">Icona della torre cellulare</string>
     <string name="bluetooth_icon_description">Icona Bluetooth</string>
     <string name="warning_icon_description">Icona di avviso</string>
-    <string name="wireless_scanning">Scansione wireless</string>
+    <string name="wireless_scanning">Scansione senza fili</string>
     <string name="statistics_tab_title">Statistiche</string>
     <string name="settings_tab_title">Impostazioni</string>
     <string name="send_reports">Invia rilevamenti</string>
@@ -104,7 +104,7 @@
     <string name="movement_detection_none_title">Nessuno</string>
     <string name="app_version">Versione: %s</string>
     <string name="reports_tab_title">Rilevamenti</string>
-    <string name="movement_detection_location_title">Basata sulla posizione</string>
+    <string name="movement_detection_location_title">Basato sulla posizione</string>
     <string name="movement_detection_location_description">Ferma la scansione quando la posizione non cambia. Tiene il GPS attivo</string>
     <string name="movement_detection_significant_motion_title">Sensore movimento</string>
     <string name="notification_style">Stile notifiche</string>
@@ -146,7 +146,7 @@
     <string name="no_endpoint_configured">Nessun endpoint configurato</string>
     <string name="every_x_meters">Ogni %d metri</string>
     <string name="map_tile_source">Fonte riquadri mappa</string>
-    <string name="mls_warning_text">Mozilla Location Service è stato chiuso e non accetta più invii di dati. Come alternative a MLS, è possibile inviare dati a beaconDB, che fornisce un servizio compatibile con MLS\n\nNotare che beaconDB è ancora in fase di sviluppo e questo può avere effetti sul modo in cui i dati forniti vengono gestiti. Leggere la \u0020<annotation link="privacy_policy">politica sulla privacy</annotation> per ulteriori informazioni\n\nImpostare beaconDB come endpoint? Sarà possibile modificare questa impostazione in futuro</string>
+    <string name="mls_warning_text">Mozilla Location Service è stato chiuso e non accetta più invii di dati. Come alternative a MLS, è possibile inviare dati a beaconDB, che fornisce un servizio compatibile con MLS\n\nNotare che beaconDB è ancora in fase di sviluppo e questo può avere effetti sul modo in cui i dati forniti vengono gestiti. Leggere la <annotation link="privacy_policy">politica sulla privacy</annotation> per ulteriori informazioni\n\nImpostare beaconDB come endpoint? Sarà possibile modificare questa impostazione in futuro</string>
     <string name="reports_last_uploaded_never">mai</string>
     <string name="reports_empty">Nessun rilevamento finora</string>
     <string name="wifi_scan_frequency">Frequenza scansione Wi-Fi</string>
@@ -167,13 +167,13 @@
     <string name="export_raw_database_compress">Comprimi il file del database</string>
     <string name="invalid_url">URL non valido</string>
     <string name="send_reports_automatically_never">Mai</string>
-    <string name="send_reports_automatically_on_any_network">Da qualsiasi rete</string>
+    <string name="send_reports_automatically_on_any_network">Su qualsiasi rete</string>
     <string name="send_reports_automatically_on_unmetered_network">Su reti a consumo</string>
-    <string name="locate_path">Percorso geolocalizzazione</string>
-    <string name="coverage_layer_no_configured">Nessun layer di copertura mappa configurato</string>
+    <string name="locate_path">Percorso per la geolocalizzazione</string>
+    <string name="coverage_layer_no_configured">Nessun livello di copertura della mappa configurato</string>
     <string name="system_default_language">Lingua di default del sistema</string>
-    <string name="coverage_layer">Layer di copertura mappa</string>
-    <string name="coverage_layer_tile_json_url">URL TileJSON per layer di copertura mappa</string>
+    <string name="coverage_layer">Livello di copertura della mappa</string>
+    <string name="coverage_layer_tile_json_url">URL TileJSON per il livello di copertura della mappa</string>
     <string name="waiting_for_location">In attesa della posizione</string>
     <string name="delete_reports_from_area">Elimina rilevamenti dall\'area</string>
     <string name="settings_ignore_wifi_scan_throttling_description">Se la scansione viene limitata, possono essere effettuate solo 4 scansioni in un periodo di 2 minuti</string>
@@ -202,4 +202,16 @@
     <string name="crash_log_entry_title">Errore #%d</string>
     <string name="delete_all">Cancella tutto</string>
     <string name="disabled">Disattivato</string>
+    <string name="beacon_type_ibeacon">iBeacon</string>
+    <string name="beacon_type_altbeacon">AltBeacon</string>
+    <string name="map_data_sources">Mappare le origini dati</string>
+    <string name="map_show_coverage_layer">Mostra il livello di copertura</string>
+    <string name="permission_rationale_background_location_passive_scan">La raccolta passiva dei dati richiede l\'accesso alla posizione in background per creare report quando l\'app non è attiva</string>
+    <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Ok</string>
+    <string name="troubleshooting_not_ok" tools:ignore="Typos">Non va bene</string>
+    <string name="geocoder_settings_title">Geocodificatore</string>
+    <string name="geocoder_default_title">Predefinito</string>
+    <string name="geocoder_disabled_title">Disabilitato</string>
+    <string name="third_party_licenses">Licenze di terze parti</string>
+    <string name="privacy_policy">Politica sulla riservatezza</string>
 </resources>
