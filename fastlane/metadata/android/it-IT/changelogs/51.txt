@@ -1,0 +1,6 @@
+Interfaccia utente
+- Colori modificati per un migliore contrasto
+- Corretto il problema dei contenuti visualizzati sotto le barre di navigazione di sistema sugli schermi di grandi dimensioni
+
+Altro
+- Traduzioni aggiornate

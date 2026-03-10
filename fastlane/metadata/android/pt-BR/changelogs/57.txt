@@ -1,0 +1,5 @@
+* Alterada a varredura de beacons BLE para usar uma implementação personalizada de analisador de beacons
+* Adicionado código de criptografia primária/ID da célula física para consultas de geolocalização
+* Dependências atualizadas
+* Traduções atualizadas
+* Adicionada tradução para córnico

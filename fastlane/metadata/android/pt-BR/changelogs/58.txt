@@ -1,0 +1,6 @@
+* O modo passivo agora pode coletar dados de beacons Bluetooth
+* A variante gplay agora pode solicitar que você deixe uma avaliação na Play Store após interromper a verificação
+* Pequenas melhorias de desempenho
+* Corrigido um erro que causava o fechamento inesperado do aplicativo na lista de relatórios
+* Traduções atualizadas
+* Dependências atualizadas

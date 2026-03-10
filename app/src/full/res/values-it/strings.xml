@@ -7,4 +7,5 @@
     <string name="permission_rationale_background_location_autoscan">L\'avvio automatico della scansione quando la app non è attiva richiede le autorizzazioni per la posizione in background</string>
     <string name="prefer_fused_location_description">Il provider di posizione fuso può combinare dati da fonti anche non GPS per determinare la posizione</string>
     <string name="autoscan_failed_to_enable_description">La scansione automatica usa il riconoscimento delle attività di Google Play Services, che potrebbe non essere disponibile sul tuo dispositivo</string>
+    <string name="fused_location_no_gps_warning">Il dispositivo non ha un ricevitore GPS</string>
 </resources>

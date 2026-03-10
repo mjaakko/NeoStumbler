@@ -1,0 +1,3 @@
+* Correction d'un crash dans la collecte de données passive quand le Bluetooth est désactivé
+* Mise à jour des dépendances
+* Mise à jour des traductions

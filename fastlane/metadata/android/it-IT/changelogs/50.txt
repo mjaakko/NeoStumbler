@@ -1,0 +1,19 @@
+UI/UX
+- Interfaccia utente migrata allo stile Material 3
+- Icone modificate in Simboli Material
+- Interfaccia utente migliorata per schermi più grandi
+- Barra del titolo rimossa dalla schermata della mappa
+- Aggiunto supporto per gli stili di mappa scuri
+- Corretta la finestra di dialogo di attribuzione della mappa che non utilizzava il tema selezionato
+- Lo stato GPS non viene più visualizzato quando il dispositivo non dispone di un ricevitore GPS
+
+Raccolta dati passiva
+- Le torri cellulari duplicate non valide vengono filtrate dai report creati passivamente quando si utilizzano più SIM
+- La raccolta dati passiva ora crea report in modo più aggressivo, controllando se il report precedente contiene lo stesso tipo di dati
+
+Tecnico
+- Le trasmissioni vengono ora gestite in modo asincrono per prestazioni migliori
+- Aggiunto gestore di corruzione all'archivio degli stati di scansione passiva
+
+Altro
+- Traduzioni aggiornate

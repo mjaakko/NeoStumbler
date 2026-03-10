@@ -1,0 +1,3 @@
+* Corretto il problema della raccolta dati passiva che causava un crash quando il Bluetooth era disattivato
+* Dipendenze aggiornate
+* Traduzioni aggiornate
