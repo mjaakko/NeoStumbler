@@ -196,7 +196,7 @@
     <string name="geocoder_default_title">Defowt</string>
     <string name="geocoder_disabled_title">Ungallosegys</string>
     <string name="use_dynamic_color_ui">Gul devnydh a kolorys dynamek y\'n ynterfas</string>
-    <string name="db_prune_title">Dilea derivasow danvonys</string>
+    <string name="db_prune_title">Dilea derivasow danvenys</string>
     <string name="db_prune_one_month">Wosa unn mis</string>
     <string name="db_prune_two_months">Wosa dew misyow</string>
     <string name="db_prune_six_months">Wosa hwegh misyow</string>
