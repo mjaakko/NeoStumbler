@@ -9,18 +9,24 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.sample
 import xyz.malkki.neostumbler.core.airpressure.AirPressureObservation
 
 class PressureSensorAirPressureSource(private val sensorManager: SensorManager) :
     AirPressureSource {
     override fun getAirPressureFlow(interval: Duration): Flow<AirPressureObservation> =
         callbackFlow {
-                val pressureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE)
+            val pressureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE)
 
-                val listener =
-                    object : SensorEventListener {
-                        override fun onSensorChanged(event: SensorEvent) {
+            val intervalNanos = interval.inWholeNanoseconds
+
+            val listener =
+                object : SensorEventListener {
+                    private var previous: Long = 0
+
+                    override fun onSensorChanged(event: SensorEvent) {
+                        if (event.timestamp - previous >= intervalNanos) {
+                            previous = event.timestamp
+
                             trySendBlocking(
                                 AirPressureObservation(
                                     airPressure = event.values[0],
@@ -28,18 +34,17 @@ class PressureSensorAirPressureSource(private val sensorManager: SensorManager) 
                                 )
                             )
                         }
-
-                        override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
                     }
 
-                sensorManager.registerListener(
-                    listener,
-                    pressureSensor,
-                    interval.inWholeMicroseconds.toInt(),
-                )
+                    override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
+                }
 
-                awaitClose { sensorManager.unregisterListener(listener) }
-            }
-            // SensorManager can send data more often than requested -> throttle the flow
-            .sample(interval)
+            sensorManager.registerListener(
+                listener,
+                pressureSensor,
+                interval.inWholeMicroseconds.toInt(),
+            )
+
+            awaitClose { sensorManager.unregisterListener(listener) }
+        }
 }

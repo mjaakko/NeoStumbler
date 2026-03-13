@@ -42,7 +42,10 @@ class PressureSensorAirPressureSourceTest {
                     { invocation ->
                         val sensorEventListener = invocation.arguments[0] as SensorEventListener
                         backgroundScope.launch {
+                            val start = testTimeSource.markNow()
+
                             while (true) {
+                                mockSensorEvent.timestamp = start.elapsedNow().inWholeNanoseconds
                                 sensorEventListener.onSensorChanged(mockSensorEvent)
 
                                 delay(100)
