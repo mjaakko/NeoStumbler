@@ -1,6 +1,6 @@
 Interfejs
 - Poprawiono kolory dla lepszego kontrastu
-- Stała zawartość jest teraz rysowana pod przyciskami nawigacji na dużych ekranach
+- Naprawiono błąd, który sprawiał że na większych ekranach treści pokazywały się pod paskiem nawigacji 
 
 Inne
-- Aktualizowano tłumaczenia
+- Zaktualizowano tłumaczenia

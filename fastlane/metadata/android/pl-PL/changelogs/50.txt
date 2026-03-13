@@ -12,8 +12,8 @@ Pasywne zbieranie danych
 - Pasywne zbieranie danych teraz tworzy raporty bardziej agresywnie, sprawdzając, czy poprzedni raport zawiera te same dane
 
 Techniczne
-- Broadcasts are now handled asynchronously for better performance
-- Added corruption handler to passive scan state store
+- Transmisje są teraz obsługiwane asynchronicznie, co zapewnia lepszą wydajność
+- Dodano obsługę uszkodzeń do magazynu stanów skanowania pasywnego
 
 Inne
-- Aktualizowano tłumaczenia
+- Zaktualizowano tłumaczenia
