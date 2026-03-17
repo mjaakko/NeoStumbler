@@ -19,7 +19,7 @@
     <string name="failed_to_open_selected_file">Fyllis dhe ygeri an restren dewisys</string>
     <string name="permissions_needed">Grontys res</string>
     <string name="permissions_not_granted">Grontys res na grontys</string>
-    <string name="wifi_icon_description">Arwodhik Wi-fi</string>
+    <string name="wifi_icon_description">Arwodhik DiWi</string>
     <string name="cell_tower_icon_description">Arwodhik tour klapkodh</string>
     <string name="bluetooth_icon_description">Arwodhik Bluetooth</string>
     <string name="warning_icon_description">Arwodhik gwarnyans</string>
@@ -105,7 +105,7 @@
         <item quantity="other">Ynperthys sel dherivadow gans %d derivasow</item>
     </plurals>
     <string name="reupload_data">Dasughkarga data</string>
-    <string name="wifis">Wi-fiys</string>
+    <string name="wifis">DiWi</string>
     <string name="cells">Touryow</string>
     <string name="beacons">Beaconys Bluetooth</string>
     <string name="add_quick_settings_tile">Addya prileghen settyansow dhe dalleth yn es arhwilyansow?</string>
@@ -125,15 +125,15 @@
     <string name="suggested_service_hosted_by">Ostyes gans:</string>
     <string name="suggested_service_website">Gwiasva</string>
     <string name="suggested_service_terms_of_use">Termys a devnydh</string>
-    <string name="settings_ignore_wifi_scan_throttling_title">Skonya aswon finyow arhwilyans Wi-fi</string>
+    <string name="settings_ignore_wifi_scan_throttling_title">Skonya aswon finyow arhwilyans DiWi</string>
     <string name="settings_ignore_wifi_scan_throttling_description">Mar arhwilyansow yw strothys, arhwilyansow peswar hepken gallos bos performys yn unn termyn a dew mynysennow</string>
-    <string name="wifi_scan_throttling">Finyow arhwilyans Wi-fi</string>
-    <string name="wifi_scan_throttling_explanation">Ty res ungallosegi finyow arhwilans Wi-fi y\'n settyansow a dha devis dhe gallosegi an nas ma. Dell yw usys, ma gallos bos gwrys y\'n settyansyow teknogel</string>
+    <string name="wifi_scan_throttling">Finyow arhwilyans DiWi</string>
+    <string name="wifi_scan_throttling_explanation">Ty res ungallosegi finyow arhwilans DiWi y\'n settyansow a dha devis dhe gallosegi an nas ma. Dell yw usys, ma gallos bos gwrys y\'n settyansyow teknogel</string>
     <string name="settings_group_reports">Derivasow</string>
     <string name="settings_group_scanning">Arhwilasow</string>
     <string name="settings_group_privacy">Privetter</string>
     <string name="settings_group_other">Aral</string>
-    <string name="wifi_filter_settings_title">Sidhla rosweythyow Wi-fi erbynn SSID</string>
+    <string name="wifi_filter_settings_title">Sidhla rosweythyow DiWi erbynn SSID</string>
     <plurals name="wifi_filter_settings_description">
         <item quantity="zero">%d SSIDys sidhlys</item>
         <item quantity="one">%d SSID sidhlys</item>
@@ -142,16 +142,16 @@
         <item quantity="many">%d SSIDys sidhlys</item>
         <item quantity="other">%d SSIDys sidhlys</item>
     </plurals>
-    <string name="wifi_filter_settings_hint">Rosweythyow Wi-fi gans neb an ger alhwedh ma yn aga SSID i yw na kuntelys</string>
+    <string name="wifi_filter_settings_hint">Rosweythyow DiWi gans neb an ger alhwedh ma yn aga SSID i yw na kuntelys</string>
     <string name="reduced_metadata_title">Danvon derivasow gans data le</string>
     <string name="reduced_metadata_description">Derivasow yw danvon yn unn aray chonsus gans termyn ha data aral removys</string>
     <string name="pause_scanning_on_low_battery_title">Powes arhwilyansow dres batri gwag</string>
     <string name="pause_scanning_on_low_battery_description">Pan batri yw le avel %d%%</string>
-    <string name="wifi_scan_frequency">Menowghedh dhe arhwilyansow Wi-fi</string>
+    <string name="wifi_scan_frequency">Menowghedh dhe arhwilyansow DiWi</string>
     <string name="cell_tower_scan_frequency">Menowghedh dhe arhwilyansow touryow klapkodh</string>
     <string name="every_x_meters">Pub %d metrow</string>
     <string name="moving_device_filter_title">Sidhla devisyow gwayadow</string>
-    <string name="moving_device_filter_description">Rosweyth ha beaconys gwayadow yw helerghys yn awtomatek ha sidhlys a derivasow</string>
+    <string name="moving_device_filter_description">Rosweythyow DiWi ha beaconys gwayadow yw helerghys yn awtomatek ha sidhlys a derivasow</string>
     <string name="movement_detection">Helerghyans gwayans</string>
     <string name="movement_detection_none_title">Vyth</string>
     <string name="movement_detection_none_description">Pesya arhwilyansow hogen pub na ow gwaya</string>
@@ -188,7 +188,7 @@
     <string name="troubleshooting_permissions_granted">Grontys grontys</string>
     <string name="troubleshooting_battery_optimizations_disabled">Erbysyon batri ungallosegi</string>
     <string name="troubleshooting_accurate_location_available">GPS a-dhevis kavadow</string>
-    <string name="troubleshooting_wifi_scan_always_available">Arhwilas Wi-fi kavadow pub prys</string>
+    <string name="troubleshooting_wifi_scan_always_available">Arhwilas DiWi kavadow pub prys</string>
     <string name="troubleshooting_fix">Ewnhe</string>
     <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Da lowr</string>
     <string name="troubleshooting_not_ok" tools:ignore="Typos">Na da lowr</string>
