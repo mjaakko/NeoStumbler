@@ -37,12 +37,19 @@ fun DbPruneSettings(settings: Settings = koinInject()) {
             )
             .collectAsState(initial = null)
 
+    val options = TITLES.keys
+    val selectedOption =
+        dbPruneMaxAgeDays.value
+            ?.takeIf { it in options }
+            ?: DbPruneWorker.DEFAULT_MAX_AGE_DAYS.takeIf { it in options }
+            ?: NEVER
+
     if (dbPruneMaxAgeDays.value != null) {
         MultiChoiceSettings(
             title = stringResource(id = R.string.db_prune_title),
-            options = TITLES.keys,
-            selectedOption = dbPruneMaxAgeDays.value!!,
-            titleProvider = { ContextCompat.getString(context, TITLES[it]!!) },
+            options = options,
+            selectedOption = selectedOption,
+            titleProvider = { value -> ContextCompat.getString(context, TITLES[value] ?: R.string.db_prune_never) },
             onValueSelected = { value ->
                 settings.edit { setInt(PreferenceKeys.DB_PRUNE_DATA_MAX_AGE_DAYS, value) }
             },
