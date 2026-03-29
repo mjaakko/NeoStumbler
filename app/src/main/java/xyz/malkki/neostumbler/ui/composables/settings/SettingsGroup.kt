@@ -19,7 +19,7 @@ fun SettingsGroup(title: String, content: @Composable () -> Unit) {
                 Text(
                     text = title,
                     style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.secondary,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer,
                 )
 
                 Column(
