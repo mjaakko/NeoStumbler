@@ -1,11 +1,13 @@
 package xyz.malkki.neostumbler.data.emitter
 
 import android.Manifest
+import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.ScanSettings
 import android.content.Context
 import androidx.annotation.RequiresPermission
 import androidx.core.content.getSystemService
+import timber.log.Timber
 import xyz.malkki.neostumbler.core.MacAddress
 import xyz.malkki.neostumbler.core.emitter.BluetoothBeacon
 import xyz.malkki.neostumbler.core.observation.EmitterObservation
@@ -28,13 +30,22 @@ class BLEScannerPassiveBluetoothBeaconSource(context: Context) : PassiveBluetoot
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_SCAN)
     override fun enable() {
-        bluetoothManager.adapter
-            ?.bluetoothLeScanner
-            ?.startScan(
-                null,
-                PASSIVE_SCAN_SETTINGS,
-                PassiveBluetoothScanReceiver.getPendingIntent(appContext),
-            )
+        val adapter: BluetoothAdapter = bluetoothManager.adapter
+
+        if (!adapter.isEnabled) {
+            /**
+             * Avoid crashing when Bluetooth is not enabled
+             * https://github.com/mjaakko/NeoStumbler/issues/1046
+             */
+            Timber.w("Passive Bluetooth data collection cannot be enabled when Bluetooth is off")
+            return
+        }
+
+        adapter.bluetoothLeScanner?.startScan(
+            null,
+            PASSIVE_SCAN_SETTINGS,
+            PassiveBluetoothScanReceiver.getPendingIntent(appContext),
+        )
     }
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_SCAN)
