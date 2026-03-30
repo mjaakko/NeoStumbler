@@ -1,4 +1,6 @@
 ---
+import { ClientRouter } from "astro:transitions";
+
 import PageList from '../components/PageList.astro'
 import '../styles/global.css'
 
@@ -41,3 +43,5 @@ const siteTitle = "NeoStumbler"
 		height: 100%;
 	}
 </style>
+
+<ClientRouter />
