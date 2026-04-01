@@ -109,7 +109,7 @@ cronetOkhttp = { module = "com.google.net.cronet:cronet-okhttp", version = "0.1.
 
 kotlinx-serializationJson = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.10.0" }
 
-mapLibre = { module = "org.maplibre.gl:android-sdk", version = "12.3.1" }
+mapLibre = { module = "org.maplibre.gl:android-sdk", version = "13.0.2" }
 
 geohex = { module = "org.geohex.geohex4j:geohex4j", version = "3.2.2" }
 
