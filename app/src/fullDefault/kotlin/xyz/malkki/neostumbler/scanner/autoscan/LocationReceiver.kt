@@ -102,15 +102,14 @@ class LocationReceiver : CoroutineBroadcastReceiver(), KoinComponent {
         Timber.d("Querying reports newer than $reportMinTimestamp")
         val reports = runBlocking { reportProvider.getReportsNewerThan(reportMinTimestamp) }
 
-        val reportsNearCurrentLocation =
-            reports.count { report ->
-                Location("manual")
-                    .apply {
-                        latitude = report.latitude
-                        longitude = report.longitude
-                    }
-                    .distanceTo(currentLocation) <= REPORT_RADIUS
-            }
+        val reportsNearCurrentLocation = reports.count { report ->
+            Location("manual")
+                .apply {
+                    latitude = report.latitude
+                    longitude = report.longitude
+                }
+                .distanceTo(currentLocation) <= REPORT_RADIUS
+        }
 
         val canStartScanningHere = reportsNearCurrentLocation < MAX_REPORTS_AUTOSTART
 

@@ -16,8 +16,7 @@ class HiddenWifiFilterer : ReportPostProcessor {
                     !ssid.isNullOrBlank() &&
                         !ssid.endsWith("_nomap")
                         // Some access points have a SSID with only null characters
-                        &&
-                        ssid.all { char -> char != '\u0000' }
+                        && ssid.all { char -> char != '\u0000' }
                 }
         )
     }

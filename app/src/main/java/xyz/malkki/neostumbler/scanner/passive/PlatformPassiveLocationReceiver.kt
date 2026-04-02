@@ -62,24 +62,23 @@ class PlatformPassiveLocationReceiver : CoroutineBroadcastReceiver(), KoinCompon
     override suspend fun handleIntent(context: Context, intent: Intent) {
         val locations: List<Location> = intent.getLocations()
 
-        val positions =
-            locations.map { location ->
-                val source =
-                    when (location.provider) {
-                        LocationManager.GPS_PROVIDER -> {
-                            Position.Source.GPS
-                        }
-                        LocationManager.NETWORK_PROVIDER -> {
-                            Position.Source.NETWORK
-                        }
-                        else -> {
-                            // Location source unknown, let's use FUSED as the best guess
-                            Position.Source.FUSED
-                        }
+        val positions = locations.map { location ->
+            val source =
+                when (location.provider) {
+                    LocationManager.GPS_PROVIDER -> {
+                        Position.Source.GPS
                     }
+                    LocationManager.NETWORK_PROVIDER -> {
+                        Position.Source.NETWORK
+                    }
+                    else -> {
+                        // Location source unknown, let's use FUSED as the best guess
+                        Position.Source.FUSED
+                    }
+                }
 
-                location.toPositionObservation(source = source)
-            }
+            location.toPositionObservation(source = source)
+        }
 
         @SuppressLint("MissingPermission")
         passiveScanReportCreator.createPassiveScanReport(positions)

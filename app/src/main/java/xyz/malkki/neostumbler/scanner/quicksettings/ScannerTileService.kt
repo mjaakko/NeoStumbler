@@ -64,42 +64,41 @@ class ScannerTileService : TileService() {
     }
 
     override fun onStartListening() {
-        updaterJob =
-            coroutineScope.launch {
-                ScannerService.serviceRunning
-                    .combine(ScannerService.reportsCreated) { a, b -> a to b }
-                    .collect { (scanningActive, reportsCreated) ->
-                        Timber.d(
-                            "Updating QS tile, scanning: $scanningActive, reports: $reportsCreated"
-                        )
+        updaterJob = coroutineScope.launch {
+            ScannerService.serviceRunning
+                .combine(ScannerService.reportsCreated) { a, b -> a to b }
+                .collect { (scanningActive, reportsCreated) ->
+                    Timber.d(
+                        "Updating QS tile, scanning: $scanningActive, reports: $reportsCreated"
+                    )
 
-                        qsTile
-                            .apply {
-                                // Label has to be updated here to support per-app locales even
-                                // though it's specified in the manifest
-                                label = getTextCompat(R.string.wireless_scanning)
+                    qsTile
+                        .apply {
+                            // Label has to be updated here to support per-app locales even
+                            // though it's specified in the manifest
+                            label = getTextCompat(R.string.wireless_scanning)
 
-                                subtitle =
-                                    if (scanningActive) {
-                                        applicationContext.getQuantityString(
-                                            R.plurals.reports_created,
-                                            reportsCreated,
-                                            reportsCreated,
-                                        )
-                                    } else {
-                                        null
-                                    }
+                            subtitle =
+                                if (scanningActive) {
+                                    applicationContext.getQuantityString(
+                                        R.plurals.reports_created,
+                                        reportsCreated,
+                                        reportsCreated,
+                                    )
+                                } else {
+                                    null
+                                }
 
-                                state =
-                                    if (scanningActive) {
-                                        Tile.STATE_ACTIVE
-                                    } else {
-                                        Tile.STATE_INACTIVE
-                                    }
-                            }
-                            .updateTile()
-                    }
-            }
+                            state =
+                                if (scanningActive) {
+                                    Tile.STATE_ACTIVE
+                                } else {
+                                    Tile.STATE_INACTIVE
+                                }
+                        }
+                        .updateTile()
+                }
+        }
     }
 
     override fun onStopListening() {
