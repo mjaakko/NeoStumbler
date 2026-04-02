@@ -1,0 +1,5 @@
+* Fixed another crash when enabling passive Bluetooth data collection
+* Minor optimizations
+* Updated dependencies
+  * Notably, MapLibre has been updated to 13.0.2 and the map now uses Vulkan for rendering
+* Updated translations
