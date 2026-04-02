@@ -151,8 +151,9 @@ fun AreaPickerMap(onCircleUpdated: (Pair<LatLng, Double>) -> Unit) {
         ComposableMap(
             modifier = Modifier.fillMaxSize(),
             onInit = { map, _ ->
-                val radius =
-                    density.run { (CIRCLE_SCALE_FACTOR * minOf(map.width, map.height)).toDp() / 2 }
+                val radius = density.run {
+                    (CIRCLE_SCALE_FACTOR * minOf(map.width, map.height)).toDp() / 2
+                }
 
                 map.addOnCameraMoveListener {
                     val newMapCenter = map.cameraPosition.target!!.asDomainLatLng()

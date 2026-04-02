@@ -9,6 +9,7 @@ class LocalDateConverters {
     fun fromLocalDate(value: LocalDate?): String? = value?.format(DateTimeFormatter.ISO_LOCAL_DATE)
 
     @TypeConverter
-    fun toLocalDate(value: String?): LocalDate? =
-        value?.let { LocalDate.parse(it, DateTimeFormatter.ISO_LOCAL_DATE) }
+    fun toLocalDate(value: String?): LocalDate? = value?.let {
+        LocalDate.parse(it, DateTimeFormatter.ISO_LOCAL_DATE)
+    }
 }

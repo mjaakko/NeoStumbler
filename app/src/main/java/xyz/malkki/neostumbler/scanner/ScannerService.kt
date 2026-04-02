@@ -259,36 +259,35 @@ class ScannerService : Service() {
         return null
     }
 
-    private fun startScanner() =
-        coroutineScope.launch {
-            if (scanning) {
-                return@launch
-            }
+    private fun startScanner() = coroutineScope.launch {
+        if (scanning) {
+            return@launch
+        }
 
-            scanning = true
+        scanning = true
 
-            settings.getIntFlow(PreferenceKeys.PAUSE_ON_BATTERY_LEVEL_THRESHOLD, 0).collectLatest {
-                lowBatteryThreshold ->
-                val batteryLevelOkFlow =
-                    if (lowBatteryThreshold == 0) {
-                        // Pause on low battery disabled -> just return true
-                        flowOf(true)
-                    } else {
-                        Timber.d(
-                            "Pause scanning on low battery enabled, threshold: %d",
-                            lowBatteryThreshold,
-                        )
+        settings.getIntFlow(PreferenceKeys.PAUSE_ON_BATTERY_LEVEL_THRESHOLD, 0).collectLatest {
+            lowBatteryThreshold ->
+            val batteryLevelOkFlow =
+                if (lowBatteryThreshold == 0) {
+                    // Pause on low battery disabled -> just return true
+                    flowOf(true)
+                } else {
+                    Timber.d(
+                        "Pause scanning on low battery enabled, threshold: %d",
+                        lowBatteryThreshold,
+                    )
 
-                        getBatteryLevelMonitorFlow(lowBatteryThreshold)
-                    }
+                    getBatteryLevelMonitorFlow(lowBatteryThreshold)
+                }
 
-                batteryLevelOkFlow.collectLatest { batteryLevelOk ->
-                    if (batteryLevelOk) {
-                        runScanner()
-                    }
+            batteryLevelOkFlow.collectLatest { batteryLevelOk ->
+                if (batteryLevelOk) {
+                    runScanner()
                 }
             }
         }
+    }
 
     private suspend fun runScanner() = coroutineScope {
         val wifiScanDistance =
@@ -339,15 +338,17 @@ class ScannerService : Service() {
             WirelessScanner(
                 locationSource = { locationFlow },
                 cellInfoSource = {
-                    val scanFrequencyFlow =
-                        speedFlow.map { speed -> (cellScanDistance.toDouble() / speed).seconds }
+                    val scanFrequencyFlow = speedFlow.map { speed ->
+                        (cellScanDistance.toDouble() / speed).seconds
+                    }
 
                     cellInfoSource.getCellInfoFlow(scanFrequencyFlow)
                 },
                 bluetoothBeaconSource = { bluetoothBeaconSource.getBluetoothBeaconFlow() },
                 wifiAccessPointSource = {
-                    val scanFrequencyFlow =
-                        speedFlow.map { speed -> (wifiScanDistance.toDouble() / speed).seconds }
+                    val scanFrequencyFlow = speedFlow.map { speed ->
+                        (wifiScanDistance.toDouble() / speed).seconds
+                    }
 
                     wifiAccessPointSource.getWifiAccessPointFlow(scanFrequencyFlow)
                 },
@@ -426,13 +427,12 @@ class ScannerService : Service() {
                 reportsCreated,
                 reportsCreated,
             )
-        val satellitesInUseText =
-            gpsStatus?.let {
-                applicationContext
-                    .getTextCompat(R.string.satellites_in_use)
-                    .toString()
-                    .format(it.satellitesUsedInFix, it.satellitesTotal)
-            }
+        val satellitesInUseText = gpsStatus?.let {
+            applicationContext
+                .getTextCompat(R.string.satellites_in_use)
+                .toString()
+                .format(it.satellitesUsedInFix, it.satellitesTotal)
+        }
 
         return NotificationCompat.Builder(
                 this@ScannerService,

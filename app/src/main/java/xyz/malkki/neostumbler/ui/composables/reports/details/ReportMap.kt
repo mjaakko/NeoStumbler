@@ -101,14 +101,13 @@ fun ReportMap(report: Report, modifier: Modifier = Modifier) {
                     "report-location",
                 )
 
-            val estimatedLocationFeature =
-                estimatedLocation?.let {
-                    Feature.fromGeometry(
-                        Point.fromLngLat(it.location.lng, it.location.lat),
-                        JsonObject().apply { addProperty("accuracy", it.accuracy) },
-                        "estimated-location",
-                    )
-                }
+            val estimatedLocationFeature = estimatedLocation?.let {
+                Feature.fromGeometry(
+                    Point.fromLngLat(it.location.lng, it.location.lat),
+                    JsonObject().apply { addProperty("accuracy", it.accuracy) },
+                    "estimated-location",
+                )
+            }
 
             listOfNotNull(reportLocationFeature, estimatedLocationFeature)
         }

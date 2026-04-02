@@ -23,8 +23,9 @@ import java.util.Locale
  *
  * @return List of missing permissions
  */
-fun Context.checkMissingPermissions(vararg permissions: String): List<String> =
-    permissions.filter { checkSelfPermission(it) == PackageManager.PERMISSION_DENIED }
+fun Context.checkMissingPermissions(vararg permissions: String): List<String> = permissions.filter {
+    checkSelfPermission(it) == PackageManager.PERMISSION_DENIED
+}
 
 /**
  * Returns activity of the context or null when the context is not an activity

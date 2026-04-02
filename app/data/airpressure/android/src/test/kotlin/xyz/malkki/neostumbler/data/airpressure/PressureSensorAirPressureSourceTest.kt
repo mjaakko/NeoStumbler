@@ -58,10 +58,9 @@ class PressureSensorAirPressureSourceTest {
 
         val airPressureSource = PressureSensorAirPressureSource(mockSensorManager)
 
-        val elapsedTime =
-            testTimeSource.measureTime {
-                airPressureSource.getAirPressureFlow(1.seconds).take(10).collect()
-            }
+        val elapsedTime = testTimeSource.measureTime {
+            airPressureSource.getAirPressureFlow(1.seconds).take(10).collect()
+        }
 
         assertFalse(elapsedTime < 10.seconds)
     }

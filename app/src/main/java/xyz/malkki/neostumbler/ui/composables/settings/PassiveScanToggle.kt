@@ -93,10 +93,9 @@ fun PassiveScanToggle(
             onPermissionsGranted = { permissions ->
                 showBasicPermissionsDialog = false
 
-                missingPermissionsBasic =
-                    missingPermissionsBasic.filter {
-                        it !in permissions || permissions[it] == false
-                    }
+                missingPermissionsBasic = missingPermissionsBasic.filter {
+                    it !in permissions || permissions[it] == false
+                }
 
                 if (missingPermissionsBasic.isNotMissingNecessaryPermissions()) {
                     enablePassiveScan()
@@ -115,10 +114,9 @@ fun PassiveScanToggle(
             onPermissionsGranted = { permissions ->
                 showAdditionalPermissionsDialog = false
 
-                missingPermissionsAdditional =
-                    missingPermissionsAdditional.filter {
-                        it !in permissions || permissions[it] == false
-                    }
+                missingPermissionsAdditional = missingPermissionsAdditional.filter {
+                    it !in permissions || permissions[it] == false
+                }
 
                 if (missingPermissionsAdditional.isEmpty()) {
                     enablePassiveScan()

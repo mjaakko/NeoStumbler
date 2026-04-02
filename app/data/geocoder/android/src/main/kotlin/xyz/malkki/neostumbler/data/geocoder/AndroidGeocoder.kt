@@ -88,17 +88,16 @@ class AndroidGeocoder(
 
         private var geocoder = geocoderFactory(context, locale)
 
-        suspend fun getGeocoder(locale: Locale): android.location.Geocoder =
-            mutex.withLock {
-                return if (locale == this.locale) {
-                    geocoder
-                } else {
-                    this.locale = locale
-                    this.geocoder = geocoderFactory(context, this.locale)
+        suspend fun getGeocoder(locale: Locale): android.location.Geocoder = mutex.withLock {
+            return if (locale == this.locale) {
+                geocoder
+            } else {
+                this.locale = locale
+                this.geocoder = geocoderFactory(context, this.locale)
 
-                    this.geocoder
-                }
+                this.geocoder
             }
+        }
     }
 }
 

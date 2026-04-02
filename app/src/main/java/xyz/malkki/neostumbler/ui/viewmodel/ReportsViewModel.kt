@@ -40,6 +40,7 @@ class ReportsViewModel(
             reportsTotal.map { it >= MIN_REPORTS_FOR_REVIEW }
         }
 
-    fun deleteReport(reportId: Long) =
-        viewModelScope.launch { reportRemover.deleteReport(reportId) }
+    fun deleteReport(reportId: Long) = viewModelScope.launch {
+        reportRemover.deleteReport(reportId)
+    }
 }

@@ -31,12 +31,11 @@ class FlowLocationEngine(
         callback: LocationEngineCallback<LocationEngineResult?>,
         looper: Looper?,
     ) {
-        callbackToJob[callback] =
-            coroutineScope.launch {
-                positionFlow.collect { position ->
-                    callback.onSuccess(LocationEngineResult.create(position.asPlatformLocation()))
-                }
+        callbackToJob[callback] = coroutineScope.launch {
+            positionFlow.collect { position ->
+                callback.onSuccess(LocationEngineResult.create(position.asPlatformLocation()))
             }
+        }
     }
 
     override fun removeLocationUpdates(callback: LocationEngineCallback<LocationEngineResult?>) {
