@@ -1,0 +1,6 @@
+Benutzeroberfläche
+- Farben für besseren Kontrast angepasst
+- Problem behoben, bei dem Inhalte auf großen Bildschirmen unter den System-Navigationsleisten angezeigt wurden
+
+Sonstiges
+- Übersetzungen aktualisiert

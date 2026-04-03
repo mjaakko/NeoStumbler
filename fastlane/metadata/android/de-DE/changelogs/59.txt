@@ -1,0 +1,3 @@
+* Es wurde ein Problem behoben, bei dem die passive Datenerfassung zu einem Absturz führte, wenn Bluetooth deaktiviert war
+* Abhängigkeiten wurden aktualisiert
+* Übersetzungen wurden aktualisiert

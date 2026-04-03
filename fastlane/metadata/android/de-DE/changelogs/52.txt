@@ -1,0 +1,19 @@
+UI / UX
+- Umstellung auf Material 3-Stil
+- Verbessertes UI-Layout für größere Bildschirme
+- Titelleiste vom Kartenbildschirm entfernt
+- Unterstützung für dunkle Kartenstile hinzugefügt
+- Fehler behoben, durch den der Dialog zur Kartenquellenangabe nicht das ausgewählte Design verwendete
+- Der GPS-Status wird nicht mehr angezeigt, wenn das Gerät keinen GPS-Empfänger hat
+
+Passive Datenerfassung
+- Ungültige doppelte Mobilfunkmasten werden bei Verwendung mehrerer SIM-Karten aus passiv erstellten Reports herausgefiltert
+- Die passive Datenerfassung erstellt nun mehr Reports, indem überprüft wird, ob der vorherige Report denselben Datentyp enthält
+
+Technisch
+- Broadcasts werden nun asynchron verarbeitet
+- Korruptionshandler zum Speicher für den passiven Scan-Zustand hinzugefügt
+- Abhängigkeiten aktualisiert
+
+Sonstiges
+- Übersetzungen aktualisiert
