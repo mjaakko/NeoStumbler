@@ -1,0 +1,3 @@
+- Es wurde ein Problem behoben, bei dem Inhalte in den Einstellungen auf größeren Bildschirmen unter den Systemleisten angezeigt wurden
+- Es wurde ein Problem behoben, bei dem Kartenbeschriftungen mit VersaTiles nicht geladen wurden
+- Es gab ein Update für die Übersetzungen
