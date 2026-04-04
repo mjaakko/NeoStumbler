@@ -1,0 +1,5 @@
+* Das Scannen von BLE-Beacons wurde so angepasst, dass nun eine benutzerdefinierte Beacon-Parser-Implementierung verwendet wird
+* Primärer Verschlüsselungscode / physikalische Zellen-ID wurden zu Geolokalisierungsabfragen hinzugefügt
+* Abhängigkeiten wurden aktualisiert
+* Übersetzungen wurden aktualisiert
+* Eine Übersetzung ins Kornische wurde hinzugefügt

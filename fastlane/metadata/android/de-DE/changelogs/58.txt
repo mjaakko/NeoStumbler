@@ -1,0 +1,6 @@
+* Im passiven Modus können nun Daten für Bluetooth-Beacons erfasst werden
+* Die gplay-Variante kann nun nach Beendigung des Scannens dazu auffordern, eine Bewertung im Play Store abzugeben
+* Kleinere Verbesserungen der Leistungsfähigkeit
+* Ein Absturz in der Berichtsliste wurde fest angebracht
+* Übersetzungen wurden aktualisiert
+* Abhängigkeiten wurden aktualisiert
