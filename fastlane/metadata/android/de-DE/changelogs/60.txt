@@ -1,0 +1,5 @@
+* Ein weiterer Absturz beim Aktivieren der passiven Bluetooth-Datenerfassung wurde behoben
+* Kleinere Optimierungen
+* Aktualisierte Abhängigkeiten
+  * Insbesondere wurde MapLibre auf Version 13.0.2 aktualisiert, und die Karte nutzt nun Vulkan für die Darstellung
+* Aktualisierte Übersetzungen

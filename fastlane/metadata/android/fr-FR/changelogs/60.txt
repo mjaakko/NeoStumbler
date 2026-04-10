@@ -1,0 +1,5 @@
+* Correction d'un autre crash lorsque la collecte passive de données Bluetooth est activée
+* Optimisations mineures
+* Mise à jour des dépendances
+  * Notamment, MapLibre a été mis à jour à la version 13.0.2 et la carte utilise désormais Vulkan pour l'affichage
+* Mise à jour des traductions
