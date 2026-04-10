@@ -40,6 +40,7 @@ import org.koin.compose.koinInject
 import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.style.layers.CircleLayer
 import org.maplibre.android.style.layers.PropertyFactory
+import org.maplibre.android.style.sources.GeoJsonOptions
 import org.maplibre.android.style.sources.GeoJsonSource
 import org.maplibre.android.utils.ColorUtils
 import org.maplibre.geojson.Point
@@ -146,7 +147,7 @@ fun AreaPickerMap(onCircleUpdated: (Pair<LatLng, Double>) -> Unit) {
             Text(text = stringResource(R.string.waiting_for_location))
         }
     } else {
-        var geoJsonSource by remember { mutableStateOf(GeoJsonSource("circle")) }
+        var geoJsonSource by remember { mutableStateOf(createGeoJsonSource()) }
 
         ComposableMap(
             modifier = Modifier.fillMaxSize(),
@@ -187,7 +188,7 @@ fun AreaPickerMap(onCircleUpdated: (Pair<LatLng, Double>) -> Unit) {
             },
             onStyleUpdated = { style ->
                 if (geoJsonSource.needsRecreation()) {
-                    geoJsonSource = GeoJsonSource("circle")
+                    geoJsonSource = createGeoJsonSource()
                 }
 
                 style.addSource(geoJsonSource)
@@ -209,4 +210,8 @@ fun AreaPickerMap(onCircleUpdated: (Pair<LatLng, Double>) -> Unit) {
             updateMap = { _ -> },
         )
     }
+}
+
+private fun createGeoJsonSource(): GeoJsonSource {
+    return GeoJsonSource("circle", GeoJsonOptions().withSynchronousUpdate(true))
 }
