@@ -35,7 +35,7 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.Starting"
-        android:usesCleartextTraffic="@bool/cleartext_traffic_allowed"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:enableOnBackInvokedCallback="true"
         tools:targetApi="33">
         <service
