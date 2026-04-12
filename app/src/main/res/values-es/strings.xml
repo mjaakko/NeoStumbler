@@ -161,6 +161,10 @@
     <string name="delete_data">Borrar datos</string>
     <string name="use_dynamic_color_ui">Usar colores dinámicos en la interfaz</string>
     <string name="db_prune_one_month">Tras un mes</string>
+    <plurals name="db_prune_custom_days">
+        <item quantity="one">Tras %d día</item>
+        <item quantity="many">Tras %d días</item>
+    </plurals>
     <string name="export_raw_database_compress">Comprimir el fichero de base de datos</string>
     <string name="wifi_filter_settings_title">Filtrar Wi-Fis por SSID</string>
     <string name="wifi_filter_settings_hint">Las redes Wi-Fi con estas palabras clave en su SSID no se recolectarán</string>

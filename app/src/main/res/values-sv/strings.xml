@@ -102,6 +102,10 @@
     <string name="db_prune_one_month">Efter en månad</string>
     <string name="db_prune_two_months">Efter två månader</string>
     <string name="db_prune_six_months">Efter sex månader</string>
+    <plurals name="db_prune_custom_days">
+        <item quantity="one">Efter %d dag</item>
+        <item quantity="other">Efter %d dagar</item>
+    </plurals>
     <string name="db_prune_never">Aldrig</string>
     <string name="manage_storage_title">Hantera lagring</string>
     <string name="db_size">Databasstorlek: %s</string>
