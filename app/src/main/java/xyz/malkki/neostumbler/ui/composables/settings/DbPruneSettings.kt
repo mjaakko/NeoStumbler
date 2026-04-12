@@ -1,10 +1,10 @@
 package xyz.malkki.neostumbler.ui.composables.settings
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.core.content.ContextCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
@@ -27,22 +27,27 @@ private val TITLES =
 
 @Composable
 fun DbPruneSettings(settings: Settings = koinInject()) {
-    val context = LocalContext.current
-
-    val dbPruneMaxAgeDays =
+    val dbPruneMaxAgeDays by
         settings
             .getIntFlow(
                 PreferenceKeys.DB_PRUNE_DATA_MAX_AGE_DAYS,
                 DbPruneWorker.DEFAULT_MAX_AGE_DAYS,
             )
-            .collectAsState(initial = null)
+            .collectAsStateWithLifecycle(initialValue = null)
 
-    if (dbPruneMaxAgeDays.value != null) {
+    if (dbPruneMaxAgeDays != null) {
         MultiChoiceSettings(
             title = stringResource(id = R.string.db_prune_title),
             options = TITLES.keys,
-            selectedOption = dbPruneMaxAgeDays.value!!,
-            titleProvider = { ContextCompat.getString(context, TITLES[it]!!) },
+            selectedOption = dbPruneMaxAgeDays!!,
+            titleProvider = { value ->
+                if (value in TITLES) {
+                    stringResource(TITLES[value]!!)
+                } else {
+                    // Fallback for unsupported values
+                    pluralStringResource(R.plurals.db_prune_custom_days, value, value)
+                }
+            },
             onValueSelected = { value ->
                 settings.edit { setInt(PreferenceKeys.DB_PRUNE_DATA_MAX_AGE_DAYS, value) }
             },

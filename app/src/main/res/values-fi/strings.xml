@@ -288,6 +288,10 @@
     <string name="db_prune_one_month">Kuukauden jälkeen</string>
     <string name="db_prune_two_months">Kahden kuukauden jälkeen</string>
     <string name="db_prune_six_months">Kuuden kuukauden jälkeen</string>
+    <plurals name="db_prune_custom_days">
+        <item quantity="one">%d päivän jälkeen</item>
+        <item quantity="other">%d päivän jälkeen</item>
+    </plurals>
     <string name="db_prune_never">Ei ikinä</string>
 
     <string name="manage_storage_title">Hallinnoi tilan käyttöä</string>
