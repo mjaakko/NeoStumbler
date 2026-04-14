@@ -209,4 +209,8 @@
     <string name="beacon_type_altbeacon">AltBeacon</string>
     <string name="map_data_sources">Kartendatenquellen</string>
     <string name="privacy_policy">Datenschutzerklärung</string>
+    <plurals name="db_prune_custom_days">
+        <item quantity="one">Nach %d einer</item>
+        <item quantity="other">Nach %d Tagen</item>
+    </plurals>
 </resources>
