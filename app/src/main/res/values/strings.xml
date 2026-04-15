@@ -233,7 +233,7 @@
     <string name="db_prune_two_months">After two months</string>
     <string name="db_prune_six_months">After six months</string>
     <plurals name="db_prune_custom_days">
-        <item quantity="one">After %d one</item>
+        <item quantity="one">After %d day</item>
         <item quantity="other">After %d days</item>
     </plurals>
     <string name="db_prune_never">Never</string>
