@@ -216,4 +216,9 @@
     <string name="beacon_type_ibeacon">iBeacon</string>
     <string name="beacon_type_altbeacon">AltBeacon</string>
     <string name="map_data_sources">Fontes de dados do mapa</string>
+    <plurals name="db_prune_custom_days">
+        <item quantity="one">Após %d dia</item>
+        <item quantity="many">Após %d de dias</item>
+        <item quantity="other">Após %d dias</item>
+    </plurals>
 </resources>
