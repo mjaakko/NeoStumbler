@@ -209,4 +209,8 @@
     <string name="beacon_type_ibeacon">iBeacon</string>
     <string name="beacon_type_altbeacon">AltBeacon</string>
     <string name="map_data_sources">Gegevens­bronnen van kaart</string>
+    <plurals name="db_prune_custom_days">
+        <item quantity="one">Na %d dag</item>
+        <item quantity="other">Na %d dagen</item>
+    </plurals>
 </resources>
