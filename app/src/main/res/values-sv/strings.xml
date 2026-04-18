@@ -137,7 +137,7 @@
     <string name="lac">LAC: %s</string>
     <string name="radio_type">Typ: %s</string>
     <string name="beacon_type">Sändartyp: %s</string>
-    <string name="beacon_id">ID%d: %s</string>
+    <string name="beacon_id">ID%1$d: %2$s</string>
     <string name="ignore_battery_optimizations_description">För bästa resultat så bör batterioptimering vara inaktiverat. Trådlös skanning och platsbehörighet begränsas avsevärt när batterioptimering är aktiv och skärmen är avstängd</string>
     <string name="battery_optimizations_not_disabled_warning">Batterioptimering var inte inaktiverat</string>
     <string name="send_reports_automatically_on_any_network">Alla nätverk</string>

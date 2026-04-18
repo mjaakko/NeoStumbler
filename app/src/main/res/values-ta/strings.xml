@@ -183,7 +183,7 @@
     <string name="altitude_metres">உயரம்: %s மீ</string>
     <string name="signal_strength_dbm">சமிக்ஞை வலிமை: %d டிபிஎம்</string>
     <string name="beacon_type">பெக்கான் வகை: %s</string>
-    <string name="beacon_id">அடையாளம் %d: %s</string>
+    <string name="beacon_id">அடையாளம் %1$d: %2$s</string>
     <string name="mls_warning_text">மொசில்லா இருப்பிட பணி மூடப்பட்டு தரவு சமர்ப்பிப்புகளை இனி ஏற்காது. எம்.எல்.எச் -க்கு மாற்றாக, நீங்கள் MLS உடன் இணக்கமான சேவையை வழங்கும் BEACONDB க்கு தரவை அனுப்பலாம் \n\nBEACONDB இன்னும் வளர்ச்சியில் உள்ளது என்பதை நினைவில் கொள்க, இது உங்கள் தரவு எவ்வாறு கையாளப்படுகிறது என்பதை பாதிக்கிறது. மேலும் தகவலுக்கு நீங்கள் <annotation link="privacy_policy">தனியுரிமைக் கொள்கை</annotation> ஐப் படிக்கலாம் \n\nநீங்கள் பீக்காண்ட்பை இறுதிப் புள்ளியாக அமைக்க விரும்புகிறீர்களா? இது பின்னர் அமைப்புகளில் கட்டமைக்கப்படலாம்</string>
     <string name="coverage_layer_tile_json_url">வரைபட கவரேச் லேயருக்கான டைல்ச்சன் முகவரி</string>
     <string name="reduced_metadata_description">அறிக்கைகள் நேர முத்திரைகள் மற்றும் பிற மெட்டாடேட்டாவுடன் சீரற்ற வரிசையில் அனுப்பப்படுகின்றன</string>

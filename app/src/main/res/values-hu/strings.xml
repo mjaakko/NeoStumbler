@@ -164,7 +164,7 @@
     <string name="lac">LAC: %s</string>
     <string name="radio_type">Típus: %s</string>
     <string name="beacon_type">Beacon típus: %s</string>
-    <string name="beacon_id">ID%d: %s</string>
+    <string name="beacon_id">ID%1$d: %2$s</string>
     <string name="send_reports_automatically_never">Soha</string>
     <string name="send_reports_automatically_on_any_network">Minden hálózaton</string>
     <string name="send_reports_automatically_on_unmetered_network">Nem mért hálózaton</string>

@@ -204,7 +204,7 @@
     <string name="mcc">MCC : %s</string>
     <string name="mnc">MNC : %s</string>
     <string name="lac">LAC : %s</string>
-    <string name="beacon_id">ID%d : %s</string>
+    <string name="beacon_id">ID%1$d : %2$s</string>
     <string name="pause_scanning_on_low_battery_title">Pause du scanning en cas de batterie faible</string>
     <string name="pause_scanning_on_low_battery_description">Lorsque le niveau de la batterie est inférieur à %d%%</string>
     <string name="permission_rationale_background_location_passive_scan">La collecte passive de données nécessite l\'accès à la localisation en arrière-plan pour créer des rapports quand l\'application n\'est pas active</string>

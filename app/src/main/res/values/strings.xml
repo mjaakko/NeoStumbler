@@ -62,7 +62,7 @@
     <string name="lac">LAC: %s</string>
     <string name="radio_type">Type: %s</string>
     <string name="beacon_type">Beacon type: %s</string>
-    <string name="beacon_id">ID%d: %s</string>
+    <string name="beacon_id">ID%1$d: %2$s</string>
     <string name="beacon_type_ibeacon">iBeacon</string>
     <string name="beacon_type_altbeacon">AltBeacon</string>
     <string name="report_upload_notification_channel_name">Report uploads</string>

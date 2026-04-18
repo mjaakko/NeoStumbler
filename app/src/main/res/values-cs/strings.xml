@@ -185,7 +185,7 @@
     <string name="lac">LAC: %s</string>
     <string name="radio_type">Typ: %s</string>
     <string name="beacon_type">Typ majáku: %s</string>
-    <string name="beacon_id">ID%d: %s</string>
+    <string name="beacon_id">ID%1$d: %2$s</string>
     <string name="locate_path">Cesta pro geolokaci</string>
     <string name="settings_group_privacy">Soukromí</string>
     <string name="wifi_filter_settings_title">Filtrovat Wi-Fi sítě podle SSID</string>

@@ -187,7 +187,7 @@
     <string name="lac">LAC: %s</string>
     <string name="radio_type">Tipo: %s</string>
     <string name="beacon_type">Tipo de baliza: %s</string>
-    <string name="beacon_id">ID%d: %s</string>
+    <string name="beacon_id">ID%1$d: %2$s</string>
     <string name="locate_path">Ruta para geolocalización</string>
     <string name="send_reports_automatically_never">Nunca</string>
     <string name="send_reports_automatically_on_any_network">En cualquier red</string>

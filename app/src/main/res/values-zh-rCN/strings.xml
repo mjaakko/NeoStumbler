@@ -172,7 +172,7 @@
     <string name="lac">LAC：%s</string>
     <string name="radio_type">类型：%s</string>
     <string name="beacon_type">信标类型：%s</string>
-    <string name="beacon_id">ID%d：%s</string>
+    <string name="beacon_id">ID%1$d: %2$s</string>
     <string name="send_reports_automatically_never">从不自动上传</string>
     <string name="send_reports_automatically_on_any_network">通过任意网络自动上传</string>
     <string name="send_reports_automatically_on_unmetered_network">仅通过不计费网络自动上传</string>
