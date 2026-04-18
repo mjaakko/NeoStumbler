@@ -6,6 +6,8 @@ import com.google.android.play.core.ktx.launchReview
 import com.google.android.play.core.ktx.requestReview
 import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class GooglePlayReviewRequester(private val reviewManager: ReviewManager) : ReviewRequester {
     constructor(context: Context) : this(ReviewManagerFactory.create(context.applicationContext))
@@ -13,6 +15,8 @@ class GooglePlayReviewRequester(private val reviewManager: ReviewManager) : Revi
     override val isReviewSupported: Boolean = true
 
     override suspend fun requestReview(activity: Activity) {
-        reviewManager.launchReview(activity, reviewManager.requestReview())
+        val reviewInfo = withContext(Dispatchers.IO) { reviewManager.requestReview() }
+
+        withContext(Dispatchers.Main) { reviewManager.launchReview(activity, reviewInfo) }
     }
 }
