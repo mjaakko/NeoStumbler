@@ -4,6 +4,7 @@ import android.content.Context
 import com.google.android.gms.net.CronetProviderInstaller
 import com.google.net.cronet.okhttptransport.CronetCallFactory
 import kotlin.io.path.createDirectories
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +22,7 @@ class CronetWithOkHttpFallbackCallFactoryProvider(context: Context) : HttpCallFa
 
     @OptIn(DelicateCoroutinesApi::class)
     private val deferredCallFactory: Deferred<Call.Factory> =
-        GlobalScope.async(Dispatchers.IO) {
+        GlobalScope.async(Dispatchers.IO, start = CoroutineStart.LAZY) {
             try {
                 CronetProviderInstaller.installProvider(appContext).await()
             } catch (ex: Exception) {
