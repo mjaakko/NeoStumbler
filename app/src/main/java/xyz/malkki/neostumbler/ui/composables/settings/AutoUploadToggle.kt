@@ -2,9 +2,7 @@ package xyz.malkki.neostumbler.ui.composables.settings
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlin.enums.enumEntries
 import org.koin.compose.koinInject
@@ -21,8 +19,6 @@ private val AUTO_UPLOAD_LABELS: Map<AutoUploadMode, Int> =
 
 @Composable
 fun AutoUploadToggle(ichnaeaAutoUploadToggler: IchnaeaAutoUploadToggler = koinInject()) {
-    val context = LocalContext.current
-
     val autoUploadMode by
         ichnaeaAutoUploadToggler
             .getAutoUploadMode()
@@ -32,8 +28,8 @@ fun AutoUploadToggle(ichnaeaAutoUploadToggler: IchnaeaAutoUploadToggler = koinIn
         title = stringResource(R.string.send_reports_automatically_title),
         options = enumEntries<AutoUploadMode>(),
         selectedOption = autoUploadMode,
-        titleProvider = {
-            AUTO_UPLOAD_LABELS[autoUploadMode]?.let { ContextCompat.getString(context, it) } ?: ""
+        titleProvider = { autoUploadMode ->
+            AUTO_UPLOAD_LABELS[autoUploadMode]?.let { stringResource(it) } ?: ""
         },
         onValueSelected = { autoUploadMode ->
             if (autoUploadMode != null) {
