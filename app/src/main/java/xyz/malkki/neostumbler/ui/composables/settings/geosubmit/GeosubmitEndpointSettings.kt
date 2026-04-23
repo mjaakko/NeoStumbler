@@ -13,7 +13,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -21,22 +20,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.constants.PreferenceKeys
-import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.ichnaea.IchnaeaParams
-import xyz.malkki.neostumbler.ichnaea.mapper.getIchnaeaParamsFlow
+import xyz.malkki.neostumbler.ichnaeaupload.IchnaeaClientProvider
 import xyz.malkki.neostumbler.ui.composables.settings.ParamField
 import xyz.malkki.neostumbler.ui.composables.settings.SettingsItem
 import xyz.malkki.neostumbler.ui.composables.settings.UrlField
 
 @Composable
-fun GeosubmitEndpointSettings(settings: Settings = koinInject()) {
+fun GeosubmitEndpointSettings(ichnaeaClientProvider: IchnaeaClientProvider = koinInject()) {
     val coroutineScope = rememberCoroutineScope()
 
-    val params = settings.getIchnaeaParamsFlow().collectAsState(initial = null)
+    val params =
+        ichnaeaClientProvider.ichnaeaParams.collectAsStateWithLifecycle(initialValue = null)
 
     val dialogOpen = rememberSaveable { mutableStateOf(false) }
 
@@ -46,23 +45,7 @@ fun GeosubmitEndpointSettings(settings: Settings = koinInject()) {
             onDialogClose = { newParams ->
                 if (newParams != null) {
                     coroutineScope.launch {
-                        settings.edit {
-                            setString(PreferenceKeys.GEOSUBMIT_ENDPOINT, newParams.baseUrl)
-
-                            setString(PreferenceKeys.GEOSUBMIT_PATH, newParams.submissionPath)
-
-                            if (newParams.locatePath != null) {
-                                setString(PreferenceKeys.GEOLOCATE_PATH, newParams.locatePath!!)
-                            } else {
-                                removeString(PreferenceKeys.GEOLOCATE_PATH)
-                            }
-
-                            if (newParams.apiKey != null) {
-                                setString(PreferenceKeys.GEOSUBMIT_API_KEY, newParams.apiKey!!)
-                            } else {
-                                removeString(PreferenceKeys.GEOSUBMIT_API_KEY)
-                            }
-                        }
+                        ichnaeaClientProvider.setIchnaeaParams(newParams)
 
                         dialogOpen.value = false
                     }

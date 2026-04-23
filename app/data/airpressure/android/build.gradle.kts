@@ -5,6 +5,8 @@ android { namespace = "xyz.malkki.neostumbler.airpressure.android" }
 dependencies {
     api(project(":app:data:airpressure:api"))
 
+    implementation(libs.androidx.core)
+
     testImplementation(libs.junit)
     testImplementation(libs.mockitoKotlin)
 

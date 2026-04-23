@@ -23,9 +23,9 @@ import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import timber.log.Timber
+import xyz.malkki.neostumbler.activescan.ActiveScanManager
 import xyz.malkki.neostumbler.coroutinebroadcastreceiver.CoroutineBroadcastReceiver
 import xyz.malkki.neostumbler.data.reports.ReportProvider
-import xyz.malkki.neostumbler.scanner.ScannerService
 
 class LocationReceiver : CoroutineBroadcastReceiver(), KoinComponent {
     companion object {
@@ -74,6 +74,8 @@ class LocationReceiver : CoroutineBroadcastReceiver(), KoinComponent {
     }
 
     private val reportProvider: ReportProvider by inject()
+
+    private val activeScanManager: ActiveScanManager by inject()
 
     override suspend fun handleIntent(context: Context, intent: Intent) {
         if (LocationAvailability.hasLocationAvailability(intent)) {
@@ -125,7 +127,7 @@ class LocationReceiver : CoroutineBroadcastReceiver(), KoinComponent {
         // start
         // scanning
         if (canStartScanningHere) {
-            context.startForegroundService(ScannerService.startIntent(context, autostart = true))
+            activeScanManager.startScanning(autostart = true)
 
             // Remove geofences because scanning was started and we don't need them anymore
             geofencingClient

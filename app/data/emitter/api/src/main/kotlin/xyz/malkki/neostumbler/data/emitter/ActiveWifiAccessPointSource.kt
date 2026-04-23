@@ -8,7 +8,12 @@ import xyz.malkki.neostumbler.core.observation.EmitterObservation
 
 /** API for actively scanning Wi-Fi access points */
 fun interface ActiveWifiAccessPointSource {
+    /**
+     * @param scanThrottled Whether the scanning is throttled either due to user preferences or
+     *   system settings
+     */
     fun getWifiAccessPointFlow(
-        scanInterval: Flow<Duration>
+        scanThrottled: Boolean,
+        scanInterval: Flow<Duration>,
     ): Flow<List<EmitterObservation<WifiAccessPoint, MacAddress>>>
 }

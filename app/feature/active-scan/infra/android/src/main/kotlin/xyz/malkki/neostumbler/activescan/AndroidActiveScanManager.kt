@@ -1,0 +1,33 @@
+package xyz.malkki.neostumbler.activescan
+
+import android.content.Context
+import androidx.core.content.ContextCompat
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
+import xyz.malkki.neostumbler.data.location.GpsStatus
+
+class AndroidActiveScanManager(context: Context) : ActiveScanManager {
+    private val appContext: Context = context.applicationContext
+
+    override val scanningActive: StateFlow<Boolean>
+        get() = ActiveScanService.serviceRunning
+
+    override val reportsCreated: Flow<Int>
+        get() = ActiveScanService.reportsCreated
+
+    override val gpsStatus: Flow<GpsStatus?>
+        get() = ActiveScanService.gpsStatus
+
+    override fun startScanning(autostart: Boolean) {
+        ContextCompat.startForegroundService(
+            appContext,
+            ActiveScanService.startIntent(appContext, autostart),
+        )
+    }
+
+    override fun stopScanning(autostart: Boolean) {
+        if (scanningActive.value) {
+            appContext.startService(ActiveScanService.stopIntent(appContext, autostart))
+        }
+    }
+}

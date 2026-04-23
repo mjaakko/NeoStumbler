@@ -7,29 +7,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.activescan.ActiveScanPreferenceKeys
+import xyz.malkki.neostumbler.activescan.adapter.NotificationStyle
 import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.data.settings.getEnumFlow
 import xyz.malkki.neostumbler.data.settings.setEnum
-import xyz.malkki.neostumbler.scanner.ScannerService
 
 private val TITLES =
     mapOf(
-        ScannerService.Companion.NotificationStyle.MINIMAL to
-            R.string.notification_style_minimal_title,
-        ScannerService.Companion.NotificationStyle.BASIC to R.string.notification_style_basic_title,
-        ScannerService.Companion.NotificationStyle.DETAILED to
-            R.string.notification_style_detailed_title,
+        NotificationStyle.MINIMAL to R.string.notification_style_minimal_title,
+        NotificationStyle.BASIC to R.string.notification_style_basic_title,
+        NotificationStyle.DETAILED to R.string.notification_style_detailed_title,
     )
 
 private val DESCRIPTIONS =
     mapOf(
-        ScannerService.Companion.NotificationStyle.MINIMAL to
-            R.string.notification_style_minimal_description,
-        ScannerService.Companion.NotificationStyle.BASIC to
-            R.string.notification_style_basic_description,
-        ScannerService.Companion.NotificationStyle.DETAILED to
-            R.string.notification_style_detailed_description,
+        NotificationStyle.MINIMAL to R.string.notification_style_minimal_description,
+        NotificationStyle.BASIC to R.string.notification_style_basic_description,
+        NotificationStyle.DETAILED to R.string.notification_style_detailed_description,
     )
 
 @Composable
@@ -39,21 +34,24 @@ fun ScannerNotificationStyleSettings(settings: Settings = koinInject()) {
     val notificationStyle =
         settings
             .getEnumFlow(
-                PreferenceKeys.SCANNER_NOTIFICATION_STYLE,
-                ScannerService.Companion.NotificationStyle.BASIC,
+                ActiveScanPreferenceKeys.SCANNER_NOTIFICATION_STYLE,
+                NotificationStyle.BASIC,
             )
             .collectAsState(initial = null)
 
     if (notificationStyle.value != null) {
         MultiChoiceSettings(
             title = stringResource(id = R.string.notification_style),
-            options = ScannerService.Companion.NotificationStyle.entries,
+            options = NotificationStyle.entries,
             selectedOption = notificationStyle.value!!,
             titleProvider = { ContextCompat.getString(context, TITLES[it]!!) },
             descriptionProvider = { ContextCompat.getString(context, DESCRIPTIONS[it]!!) },
             onValueSelected = { newNotificationStyle ->
                 settings.edit {
-                    setEnum(PreferenceKeys.SCANNER_NOTIFICATION_STYLE, newNotificationStyle)
+                    setEnum(
+                        ActiveScanPreferenceKeys.SCANNER_NOTIFICATION_STYLE,
+                        newNotificationStyle,
+                    )
                 }
             },
         )

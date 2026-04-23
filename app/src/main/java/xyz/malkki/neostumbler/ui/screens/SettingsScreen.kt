@@ -34,8 +34,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import xyz.malkki.neostumbler.R
+import xyz.malkki.neostumbler.activescan.ActiveScanDefaults
+import xyz.malkki.neostumbler.activescan.ActiveScanPreferenceKeys
 import xyz.malkki.neostumbler.constants.PreferenceKeys
-import xyz.malkki.neostumbler.scanner.ScannerService
 import xyz.malkki.neostumbler.ui.composables.AboutNeoStumbler
 import xyz.malkki.neostumbler.ui.composables.ReportReuploadButton
 import xyz.malkki.neostumbler.ui.composables.settings.AutoScanToggle
@@ -78,7 +79,7 @@ private fun ScanningSettings() {
 
         SliderSetting(
             title = stringResource(R.string.pause_scanning_on_low_battery_title),
-            preferenceKey = PreferenceKeys.PAUSE_ON_BATTERY_LEVEL_THRESHOLD,
+            preferenceKey = ActiveScanPreferenceKeys.PAUSE_ON_BATTERY_LEVEL_THRESHOLD,
             range = 0..50,
             step = 5,
             valueFormatter = {
@@ -92,22 +93,22 @@ private fun ScanningSettings() {
         )
         SliderSetting(
             title = stringResource(R.string.wifi_scan_frequency),
-            preferenceKey = PreferenceKeys.WIFI_SCAN_DISTANCE,
+            preferenceKey = ActiveScanPreferenceKeys.WIFI_SCAN_DISTANCE,
             // Some translations assume this will always be a multiple of ten
             range = 10..250,
             step = 10,
             valueFormatter = { stringResource(R.string.every_x_meters, it) },
-            default = ScannerService.DEFAULT_WIFI_SCAN_DISTANCE,
+            default = ActiveScanDefaults.WIFI_SCAN_DISTANCE,
         )
 
         SliderSetting(
             title = stringResource(R.string.cell_tower_scan_frequency),
-            preferenceKey = PreferenceKeys.CELL_SCAN_DISTANCE,
+            preferenceKey = ActiveScanPreferenceKeys.CELL_SCAN_DISTANCE,
             // Some translations assume this will always be a multiple of ten
             range = 20..500,
             step = 20,
             valueFormatter = { stringResource(R.string.every_x_meters, it) },
-            default = ScannerService.DEFAULT_CELL_SCAN_DISTANCE,
+            default = ActiveScanDefaults.CELL_SCAN_DISTANCE,
         )
 
         SettingsToggle(

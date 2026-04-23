@@ -1,12 +1,13 @@
 package xyz.malkki.neostumbler.ui.composables
 
+import android.text.Annotation
 import android.text.SpannedString
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
@@ -16,6 +17,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.text.getSpans
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -24,6 +26,8 @@ import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.extensions.getTextCompat
+import xyz.malkki.neostumbler.ichnaea.IchnaeaParams
+import xyz.malkki.neostumbler.ichnaeaupload.IchnaeaClientProvider
 import xyz.malkki.neostumbler.utils.CustomTabsLinkInteractionListener
 import xyz.malkki.neostumbler.utils.OneTimeActionHelper
 import xyz.malkki.neostumbler.utils.SuggestedService
@@ -34,15 +38,20 @@ private const val MLS_WARNING = "mls_warning"
 private const val DEFAULT_SERVICE_ID = "beacondb"
 
 @Composable
-fun MLSWarningDialog(settings: Settings = koinInject()) {
+fun MLSWarningDialog(
+    settings: Settings = koinInject(),
+    ichnaeaClientProvider: IchnaeaClientProvider = koinInject(),
+) {
     val context = LocalContext.current
 
     val coroutineScope = rememberCoroutineScope()
 
     val oneTimeActionHelper = koinInject<OneTimeActionHelper>()
 
-    val warningShown =
-        oneTimeActionHelper.hasActionBeenShownFlow(MLS_WARNING).collectAsState(initial = true)
+    val warningShown by
+        oneTimeActionHelper
+            .hasActionBeenShownFlow(MLS_WARNING)
+            .collectAsStateWithLifecycle(initialValue = true)
 
     val defaultServiceParams =
         produceState<SuggestedService?>(null) {
@@ -56,7 +65,7 @@ fun MLSWarningDialog(settings: Settings = koinInject()) {
 
     val mlsWarningText =
         (context.getTextCompat(R.string.mls_warning_text) as SpannedString).let { spannedString ->
-            val privacyPolicyLink = spannedString.getSpans<android.text.Annotation>().first()
+            val privacyPolicyLink = spannedString.getSpans<Annotation>().first()
 
             buildAnnotatedString {
                 append(spannedString)
@@ -78,7 +87,7 @@ fun MLSWarningDialog(settings: Settings = koinInject()) {
             }
         }
 
-    if (!warningShown.value) {
+    if (!warningShown) {
         AlertDialog(
             onDismissRequest = {},
             title = { Text(text = stringResource(id = R.string.mls_warning_title)) },
@@ -88,12 +97,19 @@ fun MLSWarningDialog(settings: Settings = koinInject()) {
                     enabled = defaultServiceParams.value != null,
                     onClick = {
                         coroutineScope.launch {
-                            settings.edit {
-                                val (baseUrl, path) = defaultServiceParams.value!!.endpoint
+                            val (baseUrl, submitPath, locatePath) =
+                                defaultServiceParams.value!!.endpoint
 
-                                setString(PreferenceKeys.GEOSUBMIT_ENDPOINT, baseUrl)
-                                setString(PreferenceKeys.GEOSUBMIT_PATH, path)
-                                removeString(PreferenceKeys.GEOSUBMIT_API_KEY)
+                            ichnaeaClientProvider.setIchnaeaParams(
+                                IchnaeaParams(
+                                    baseUrl = baseUrl,
+                                    submissionPath = submitPath,
+                                    locatePath = locatePath,
+                                    apiKey = null,
+                                )
+                            )
+
+                            settings.edit {
                                 setString(
                                     PreferenceKeys.COVERAGE_TILE_JSON_URL,
                                     defaultServiceParams.value!!.coverageTileJsonUrl,

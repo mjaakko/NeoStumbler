@@ -1,12 +1,17 @@
 package xyz.malkki.neostumbler.data.emitter
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import androidx.annotation.RequiresPermission
+import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.TimeoutCancellationException
@@ -43,7 +48,6 @@ private const val SCAN_RESULT_BUFFER_SIZE = 10
 
 class BLEScannerBluetoothBeaconSource(context: Context) : ActiveBluetoothBeaconSource {
     companion object {
-
         private val SCAN_SETTINGS =
             ScanSettings.Builder()
                 .setMatchMode(ScanSettings.MATCH_MODE_AGGRESSIVE)
@@ -55,9 +59,15 @@ class BLEScannerBluetoothBeaconSource(context: Context) : ActiveBluetoothBeaconS
 
     private val bluetoothManager = appContext.getSystemService<BluetoothManager>()!!
 
-    @RequiresPermission(android.Manifest.permission.BLUETOOTH_SCAN)
     override fun getBluetoothBeaconFlow():
         Flow<List<EmitterObservation<BluetoothBeacon, MacAddress>>> {
+        if (!appContext.hasBluetoothScanPermission()) {
+            Timber.w("No Bluetooth scan permission, not scanning for Bluetooth beacons")
+
+            return emptyFlow()
+        }
+
+        @SuppressLint("MissingPermission")
         return appContext
             .getDeviceInteractiveFlow()
             .flatMapLatest { isInteractive ->
@@ -174,4 +184,16 @@ class BLEScannerBluetoothBeaconSource(context: Context) : ActiveBluetoothBeaconS
     }
 
     private class BluetoothScanException(val errorCode: Int) : Exception()
+
+    private fun Context.hasBluetoothScanPermission(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) ==
+                PackageManager.PERMISSION_GRANTED
+        } else {
+            ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) ==
+                PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADMIN) ==
+                    PackageManager.PERMISSION_GRANTED
+        }
+    }
 }

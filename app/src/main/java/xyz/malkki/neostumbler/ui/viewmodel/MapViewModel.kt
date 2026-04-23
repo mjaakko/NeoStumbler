@@ -13,7 +13,6 @@ import java.io.IOException
 import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.time.Duration.Companion.seconds
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.trySendBlocking
@@ -38,7 +37,6 @@ import kotlinx.coroutines.flow.retryWhen
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import okhttp3.Call
 import org.geohex.geohex4j.GeoHex
 import org.maplibre.geojson.Feature
 import org.maplibre.geojson.Point
@@ -47,11 +45,12 @@ import timber.log.Timber
 import xyz.malkki.neostumbler.StumblerApplication
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.core.report.ReportWithLocation
-import xyz.malkki.neostumbler.data.location.LocationSource
+import xyz.malkki.neostumbler.data.location.LocationSourceProvider
 import xyz.malkki.neostumbler.data.reports.ReportProvider
 import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.geography.LatLng
+import xyz.malkki.neostumbler.network.HttpCallFactoryProvider
 import xyz.malkki.neostumbler.utils.getTileJsonLayerIds
 
 // The "size" of one report relative to the geohex size. The idea is that hexes with lower
@@ -70,9 +69,9 @@ private const val LOCATION_FLOW_TIMEOUT_MILLIS = 1000L
 class MapViewModel(
     application: Application,
     settings: Settings,
-    private val httpClientProvider: Deferred<Call.Factory>,
+    private val httpClientProvider: HttpCallFactoryProvider,
     private val reportProvider: ReportProvider,
-    private val locationSource: LocationSource,
+    private val locationSourceProvider: LocationSourceProvider,
 ) : AndroidViewModel(application) {
     val coverageTileJsonUrl: StateFlow<String?> =
         settings
@@ -91,8 +90,9 @@ class MapViewModel(
     val coverageTileJsonLayerIds: StateFlow<List<String>> =
         coverageTileJsonUrl
             .mapLatest { coverageTileJsonUrl ->
-                coverageTileJsonUrl?.let { getTileJsonLayerIds(it, httpClientProvider.await()) }
-                    ?: emptyList()
+                coverageTileJsonUrl?.let {
+                    getTileJsonLayerIds(it, httpClientProvider.getHttpCallFactory())
+                } ?: emptyList()
             }
             .retryWhen { cause, _ ->
                 if (cause is IOException) {
@@ -169,7 +169,9 @@ class MapViewModel(
         showMyLocation
             .flatMapLatest {
                 if (it) {
-                    locationSource.getLocations(0.seconds, usePassiveProvider = false)
+                    locationSourceProvider
+                        .getLocationSource()
+                        .getLocations(0.seconds, usePassiveProvider = false)
                 } else {
                     emptyFlow()
                 }

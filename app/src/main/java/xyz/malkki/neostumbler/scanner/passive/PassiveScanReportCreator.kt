@@ -2,6 +2,7 @@ package xyz.malkki.neostumbler.scanner.passive
 
 import android.Manifest
 import androidx.annotation.RequiresPermission
+import xyz.malkki.neostumbler.activescan.ActiveScanManager
 import xyz.malkki.neostumbler.core.emitter.Emitter
 import xyz.malkki.neostumbler.core.observation.EmitterObservation
 import xyz.malkki.neostumbler.core.observation.PositionObservation
@@ -11,10 +12,9 @@ import xyz.malkki.neostumbler.data.emitter.PassiveCellTowerSource
 import xyz.malkki.neostumbler.data.emitter.PassiveWifiAccessPointSource
 import xyz.malkki.neostumbler.data.reports.ReportSaver
 import xyz.malkki.neostumbler.geography.LatLng
-import xyz.malkki.neostumbler.scanner.ScannerService
+import xyz.malkki.neostumbler.report.postprocessor.ReportPostProcessorProvider
 import xyz.malkki.neostumbler.scanner.ScanningConstants
 import xyz.malkki.neostumbler.scanner.createReports
-import xyz.malkki.neostumbler.scanner.postprocess.ReportPostProcessor
 
 /**
  * Minimum distance from the location where the last passive report was made. This is used to avoid
@@ -28,8 +28,8 @@ class PassiveScanReportCreator(
     private val passiveBluetoothBeaconSource: PassiveBluetoothBeaconSource,
     private val passiveScanStateManager: PassiveScanStateManager,
     private val reportSaver: ReportSaver,
-    private val postProcessors: List<ReportPostProcessor>,
-    private val activeScanningRunning: () -> Boolean = { ScannerService.serviceRunning.value },
+    private val postProcessorProvider: ReportPostProcessorProvider,
+    private val activeScanManager: ActiveScanManager,
 ) {
     @RequiresPermission(
         allOf =
@@ -40,7 +40,7 @@ class PassiveScanReportCreator(
             ]
     )
     suspend fun createPassiveScanReport(positions: List<PositionObservation>) {
-        if (activeScanningRunning()) {
+        if (activeScanManager.scanningActive.value) {
             // If the active scanning service is running, we don't need to create passive reports
             return
         }
@@ -118,7 +118,7 @@ class PassiveScanReportCreator(
                 cellTowers = cellTowers,
                 wifiAccessPoints = wifiAccessPoints,
                 bluetoothBeacons = bluetoothBeacons,
-                postProcessors = postProcessors,
+                postProcessors = postProcessorProvider.getReportPostProcessors(),
             )
 
         reports.updateLastUsedPosition(PassiveScanStateManager.DataType.CELL) { it.cellTowers }

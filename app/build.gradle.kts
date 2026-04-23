@@ -255,8 +255,10 @@ dependencies {
     implementation(project(":libs:executors"))
     implementation(project(":libs:coroutine-broadcast-receiver"))
 
-    implementation(project(":app:core"))
-    implementation(project(":app:core:mapper:android-location"))
+    implementation(project(":app:core:domain"))
+    implementation(project(":app:core:domain:mapper:android-location"))
+    implementation(project(":app:core:network"))
+    implementation(project(":app:core:scan-common"))
 
     implementation(project(":app:data:crashlog:android"))
 
@@ -273,6 +275,13 @@ dependencies {
     implementation(project(":app:data:settings:android-datastore"))
 
     implementation(project(":app:data:reports:room"))
+
+    implementation(project(":app:data:movement:android"))
+    implementation(project(":app:data:movement:location-based"))
+
+    implementation(project(":app:feature:export:infra:android"))
+    implementation(project(":app:feature:ichnaea-upload:infra:android"))
+    implementation(project(":app:feature:active-scan:infra:android"))
 
     implementation(platform(libs.koinBom))
     implementation(libs.koinCore)

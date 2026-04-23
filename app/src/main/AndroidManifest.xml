@@ -39,11 +39,6 @@
         android:enableOnBackInvokedCallback="true"
         tools:targetApi="33">
         <service
-            android:name=".scanner.ScannerService"
-            android:enabled="true"
-            android:exported="false"
-            android:foregroundServiceType="location" />
-        <service
             android:name=".scanner.quicksettings.ScannerTileService"
             android:enabled="true"
             android:exported="true"

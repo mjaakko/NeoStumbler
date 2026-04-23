@@ -9,16 +9,18 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.DialogProperties
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.activescan.ActiveScanPreferenceKeys
 import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.data.settings.getBooleanFlow
 import xyz.malkki.neostumbler.extensions.isWifiScanThrottled
@@ -32,16 +34,18 @@ fun IgnoreScanThrottlingToggle(settings: Settings = koinInject()) {
 
     val enabled =
         settings
-            .getBooleanFlow(PreferenceKeys.IGNORE_SCAN_THROTTLING, false)
+            .getBooleanFlow(ActiveScanPreferenceKeys.IGNORE_SCAN_THROTTLING, false)
             .collectAsState(initial = false)
 
-    val showExplanationDialog = rememberSaveable { mutableStateOf(false) }
+    var showExplanationDialog by rememberSaveable { mutableStateOf(false) }
 
     val developerSettingsLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (context.isWifiScanThrottled() == false) {
                 coroutineScope.launch {
-                    settings.edit { setBoolean(PreferenceKeys.IGNORE_SCAN_THROTTLING, true) }
+                    settings.edit {
+                        setBoolean(ActiveScanPreferenceKeys.IGNORE_SCAN_THROTTLING, true)
+                    }
                 }
             }
         }
@@ -56,17 +60,17 @@ fun IgnoreScanThrottlingToggle(settings: Settings = koinInject()) {
          * is throttled before starting scanning
          */
         if (context.isWifiScanThrottled() == true && enabled.value) {
-            settings.edit { setBoolean(PreferenceKeys.IGNORE_SCAN_THROTTLING, false) }
+            settings.edit { setBoolean(ActiveScanPreferenceKeys.IGNORE_SCAN_THROTTLING, false) }
         }
     }
 
-    if (showExplanationDialog.value) {
+    if (showExplanationDialog) {
         AlertDialog(
-            onDismissRequest = { showExplanationDialog.value = false },
+            onDismissRequest = { showExplanationDialog = false },
             title = { Text(stringResource(id = R.string.wifi_scan_throttling)) },
             text = { Text(stringResource(id = R.string.wifi_scan_throttling_explanation)) },
             dismissButton = {
-                TextButton(onClick = { showExplanationDialog.value = false }) {
+                TextButton(onClick = { showExplanationDialog = false }) {
                     Text(stringResource(id = R.string.no_thanks))
                 }
             },
@@ -84,7 +88,7 @@ fun IgnoreScanThrottlingToggle(settings: Settings = koinInject()) {
                             developerSettingsLauncher.launch(developerSettingsIntent)
                         }
 
-                        showExplanationDialog.value = false
+                        showExplanationDialog = false
                     }
                 ) {
                     Text(stringResource(id = R.string.ok))
@@ -102,9 +106,11 @@ fun IgnoreScanThrottlingToggle(settings: Settings = koinInject()) {
         checked = enabled.value,
         action = { checked ->
             if (checked && context.isWifiScanThrottled() != false) {
-                showExplanationDialog.value = true
+                showExplanationDialog = true
             } else {
-                settings.edit { setBoolean(PreferenceKeys.IGNORE_SCAN_THROTTLING, checked) }
+                settings.edit {
+                    setBoolean(ActiveScanPreferenceKeys.IGNORE_SCAN_THROTTLING, checked)
+                }
             }
         },
     )

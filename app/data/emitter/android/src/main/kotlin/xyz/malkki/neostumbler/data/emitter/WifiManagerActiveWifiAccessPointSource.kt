@@ -54,51 +54,51 @@ private val MIN_INTERVAL_THROTTLED: Duration =
     (ANDROID_WIFI_SCAN_THROTTLE_PERIOD / ANDROID_WIFI_SCAN_THROTTLE_COUNT) *
         (1 - THROTTLED_SCAN_BURST_FACTOR)
 
-// Minimum scan interval when WI-Fi scanning is not throttled
+// Minimum scan interval when Wi-Fi scanning is not throttled
 private val MIN_INTERVAL_UNTHROTTLED = 1.5.seconds
 
 class WifiManagerActiveWifiAccessPointSource(
     context: Context,
-    wifiScanThrottled: Boolean,
     private val timeSource: () -> Long = SystemClock::elapsedRealtime,
 ) : ActiveWifiAccessPointSource {
     private val appContext = context.applicationContext
     private val wifiManager = appContext.getSystemService<WifiManager>()!!
 
-    private val rateLimiter =
-        if (wifiScanThrottled) {
-            RateLimiter(
-                ANDROID_WIFI_SCAN_THROTTLE_COUNT,
-                ANDROID_WIFI_SCAN_THROTTLE_PERIOD,
-                timeSource,
-            )
-        } else {
-            null
-        }
-
-    private val minScanInterval =
-        if (wifiScanThrottled) {
-            MIN_INTERVAL_THROTTLED
-        } else {
-            MIN_INTERVAL_UNTHROTTLED
-        }
-
-    private suspend fun doWifiScan() {
-        Timber.d("Starting Wi-Fi scan")
-
-        if (rateLimiter != null) {
-            rateLimiter.doRateLimited { @Suppress("DEPRECATION") wifiManager.startScan() }
-        } else {
-            @Suppress("DEPRECATION") wifiManager.startScan()
-        }
-    }
-
     @RequiresPermission(
         allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_WIFI_STATE]
     )
     override fun getWifiAccessPointFlow(
-        scanInterval: Flow<Duration>
+        scanThrottled: Boolean,
+        scanInterval: Flow<Duration>,
     ): Flow<List<EmitterObservation<WifiAccessPoint, MacAddress>>> = channelFlow {
+        val rateLimiter =
+            if (scanThrottled) {
+                RateLimiter(
+                    ANDROID_WIFI_SCAN_THROTTLE_COUNT,
+                    ANDROID_WIFI_SCAN_THROTTLE_PERIOD,
+                    timeSource,
+                )
+            } else {
+                null
+            }
+
+        val minScanInterval =
+            if (scanThrottled) {
+                MIN_INTERVAL_THROTTLED
+            } else {
+                MIN_INTERVAL_UNTHROTTLED
+            }
+
+        suspend fun doWifiScan() {
+            Timber.d("Starting Wi-Fi scan")
+
+            if (rateLimiter != null) {
+                rateLimiter.doRateLimited { @Suppress("DEPRECATION") wifiManager.startScan() }
+            } else {
+                @Suppress("DEPRECATION") wifiManager.startScan()
+            }
+        }
+
         launch(Dispatchers.Default) {
             val scanInterval =
                 scanInterval

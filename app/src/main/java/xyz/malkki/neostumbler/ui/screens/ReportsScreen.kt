@@ -63,11 +63,11 @@ import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import java.text.DecimalFormat
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
+import xyz.malkki.neostumbler.activescan.ActiveScanManager
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.core.report.ReportWithStats
 import xyz.malkki.neostumbler.data.geocoder.Geocoder
@@ -78,7 +78,6 @@ import xyz.malkki.neostumbler.extensions.defaultLocale
 import xyz.malkki.neostumbler.extensions.getActivity
 import xyz.malkki.neostumbler.extensions.getQuantityString
 import xyz.malkki.neostumbler.geography.LatLng
-import xyz.malkki.neostumbler.scanner.ScannerService
 import xyz.malkki.neostumbler.ui.composables.MLSWarningDialog
 import xyz.malkki.neostumbler.ui.composables.ReportUploadButton
 import xyz.malkki.neostumbler.ui.composables.reports.ForegroundScanningButton
@@ -135,8 +134,7 @@ fun ReportsScreen(viewModel: ReportsViewModel = koinViewModel()) {
 private fun ScanningControllerCard(
     modifier: Modifier = Modifier,
     canReviewFlow: Flow<Boolean>,
-    scanningActiveFlow: StateFlow<Boolean> = ScannerService.serviceRunning,
-    reporsCreatedFlow: StateFlow<Int> = ScannerService.reportsCreated,
+    activeScanManager: ActiveScanManager = koinInject(),
     gpsStatusSource: GpsStatusSource = koinInject(),
     reviewRequester: ReviewRequester = koinInject(),
 ) {
@@ -144,8 +142,10 @@ private fun ScanningControllerCard(
 
     val coroutineScope = rememberCoroutineScope()
 
-    val scanningActive by scanningActiveFlow.collectAsStateWithLifecycle()
-    val reportsCreated by reporsCreatedFlow.collectAsStateWithLifecycle()
+    val scanningActive by
+        activeScanManager.scanningActive.collectAsStateWithLifecycle(initialValue = false)
+    val reportsCreated by
+        activeScanManager.reportsCreated.collectAsStateWithLifecycle(initialValue = 0)
 
     val gpsAvailable by
         gpsStatusSource.isGpsAvailable().collectAsStateWithLifecycle(initialValue = false)

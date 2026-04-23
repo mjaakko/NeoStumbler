@@ -7,6 +7,9 @@ import org.koin.dsl.module
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.data.settings.getStringSetFlow
+import xyz.malkki.neostumbler.report.postprocessor.HiddenWifiFilterer
+import xyz.malkki.neostumbler.report.postprocessor.ReportPostProcessorProvider
+import xyz.malkki.neostumbler.report.postprocessor.SsidBasedWifiFilterer
 
 val postProcessorsModule = module {
     factory {
@@ -17,7 +20,10 @@ val postProcessorsModule = module {
         }
 
         SsidBasedWifiFilterer(wifiFilterList)
-    } bind ReportPostProcessor::class
+    } bind xyz.malkki.neostumbler.report.postprocessor.ReportPostProcessor::class
 
-    factory { HiddenWifiFilterer() } bind ReportPostProcessor::class
+    factory { HiddenWifiFilterer() } bind
+        xyz.malkki.neostumbler.report.postprocessor.ReportPostProcessor::class
+
+    single<ReportPostProcessorProvider> { SettingsAwareReportPostProcessorProvider(get()) }
 }
