@@ -4,8 +4,6 @@ import kotlin.math.abs
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,17 +20,8 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.scan
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import xyz.malkki.neostumbler.activescan.internal.combineWithLatestFrom
 import xyz.malkki.neostumbler.activescan.internal.toSmoothenedSpeedFlow
-import xyz.malkki.neostumbler.core.MacAddress
-import xyz.malkki.neostumbler.core.emitter.BluetoothBeacon
-import xyz.malkki.neostumbler.core.emitter.CellTower
-import xyz.malkki.neostumbler.core.emitter.Emitter
-import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
-import xyz.malkki.neostumbler.core.observation.EmitterObservation
 import xyz.malkki.neostumbler.core.observation.PositionObservation
 import xyz.malkki.neostumbler.core.report.ReportData
 import xyz.malkki.neostumbler.data.airpressure.AirPressureSource
@@ -99,27 +88,6 @@ class ActiveScanner(
         }
     }
 
-    private fun <E : Emitter<K>, K> CoroutineScope.startCollectingData(
-        isMovingFlow: Flow<Boolean>,
-        dataSource: () -> Flow<List<EmitterObservation<E, K>>>,
-        mapMutex: Mutex,
-        setter: (K, EmitterObservation<E, K>) -> Unit,
-    ) {
-        launch(Dispatchers.Default) {
-            isMovingFlow
-                .flatMapLatest { isMoving ->
-                    if (isMoving) {
-                        dataSource()
-                    } else {
-                        emptyFlow()
-                    }
-                }
-                .collect { data ->
-                    mapMutex.withLock { data.forEach { setter(it.emitter.uniqueKey, it) } }
-                }
-        }
-    }
-
     private fun Flow<PositionObservation>.filterInaccurateLocations(): Flow<PositionObservation> =
         filter { positionObservation ->
             positionObservation.position.accuracy != null &&
@@ -160,14 +128,6 @@ class ActiveScanner(
         scanSettings: ActiveScanSettings,
         onGpsActive: (Boolean) -> Unit,
     ): Flow<ReportData> = channelFlow {
-        val mutex = Mutex()
-
-        val wifiAccessPointByMacAddr =
-            mutableMapOf<MacAddress, EmitterObservation<WifiAccessPoint, MacAddress>>()
-        val bluetoothBeaconsByMacAddr =
-            mutableMapOf<MacAddress, EmitterObservation<BluetoothBeacon, MacAddress>>()
-        val cellTowersByKey = mutableMapOf<String, EmitterObservation<CellTower, String>>()
-
         val isMovingFlow =
             movementDetectorProvider
                 .getMovementDetector()
@@ -187,37 +147,16 @@ class ActiveScanner(
                 .toSmoothenedSpeedFlow()
                 .shareIn(this, started = SharingStarted.WhileSubscribed())
 
-        startCollectingData(
-            isMovingFlow,
-            {
-                wifiAccessPointSource.getWifiAccessPointFlow(
-                    scanThrottled = !scanSettings.ignoreWifiScanThrottling,
-                    scanInterval =
-                        speedFlow.map { speed -> (speed / scanSettings.wifiScanDistance).seconds },
-                )
-            },
-            mutex,
-            wifiAccessPointByMacAddr::set,
-        )
-
-        startCollectingData(
-            isMovingFlow,
-            bluetoothBeaconSource::getBluetoothBeaconFlow,
-            mutex,
-            bluetoothBeaconsByMacAddr::set,
-        )
-
-        startCollectingData(
-            isMovingFlow,
-            {
-                cellInfoSource.getCellInfoFlow(
-                    interval =
-                        speedFlow.map { speed -> (speed / scanSettings.cellScanDistance).seconds }
-                )
-            },
-            mutex,
-            cellTowersByKey::set,
-        )
+        val scanDataCollector =
+            ScanDataCollector(
+                isMovingFlow = isMovingFlow,
+                speedFlow = speedFlow,
+                wifiSource = wifiAccessPointSource,
+                cellSource = cellInfoSource,
+                bluetoothBeaconSource = bluetoothBeaconSource,
+                scanSettings = scanSettings,
+                coroutineScope = this,
+            )
 
         val postProcessors = postProcessorProvider.getReportPostProcessors()
 
@@ -240,19 +179,7 @@ class ActiveScanner(
              */
             .onEach { delay(3.seconds) }
             .map { locations ->
-                val (cells, wifis, bluetooths) =
-                    mutex.withLock {
-                        val cells = cellTowersByKey.values.toList()
-                        cellTowersByKey.clear()
-
-                        val wifis = wifiAccessPointByMacAddr.values.toList()
-                        wifiAccessPointByMacAddr.clear()
-
-                        val bluetooths = bluetoothBeaconsByMacAddr.values.toList()
-                        bluetoothBeaconsByMacAddr.clear()
-
-                        Triple(cells, wifis, bluetooths)
-                    }
+                val (wifis, bluetooths, cells) = scanDataCollector.getCollectedData()
 
                 xyz.malkki.neostumbler.scanner.createReports(
                     locations,
