@@ -29,7 +29,7 @@ import xyz.malkki.neostumbler.ui.composables.shared.Gauge
 fun GpsStatus(activeScanManager: ActiveScanManager = koinInject()) {
     val decimalFormat = DecimalFormat("#")
 
-    val gpsStats by activeScanManager.gpsStatus.collectAsStateWithLifecycle(initialValue = null)
+    val gpsStats by activeScanManager.gpsStatus.collectAsStateWithLifecycle()
 
     val inUsePercentage =
         gpsStats?.let { it.satellitesUsedInFix / it.satellitesTotal.toFloat() } ?: 0f

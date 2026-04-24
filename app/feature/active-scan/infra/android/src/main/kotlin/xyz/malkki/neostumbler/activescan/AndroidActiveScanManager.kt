@@ -2,20 +2,19 @@ package xyz.malkki.neostumbler.activescan
 
 import android.content.Context
 import androidx.core.content.ContextCompat
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import xyz.malkki.neostumbler.data.location.GpsStatus
 
 class AndroidActiveScanManager(context: Context) : ActiveScanManager {
     private val appContext: Context = context.applicationContext
 
-    override val scanningActive: StateFlow<Boolean>
+    override val serviceRunning: StateFlow<Boolean>
         get() = ActiveScanService.serviceRunning
 
-    override val reportsCreated: Flow<Int>
+    override val reportsCreated: StateFlow<Int>
         get() = ActiveScanService.reportsCreated
 
-    override val gpsStatus: Flow<GpsStatus?>
+    override val gpsStatus: StateFlow<GpsStatus?>
         get() = ActiveScanService.gpsStatus
 
     override fun startScanning(autostart: Boolean) {
@@ -26,7 +25,7 @@ class AndroidActiveScanManager(context: Context) : ActiveScanManager {
     }
 
     override fun stopScanning(autostart: Boolean) {
-        if (scanningActive.value) {
+        if (serviceRunning.value) {
             appContext.startService(ActiveScanService.stopIntent(appContext, autostart))
         }
     }

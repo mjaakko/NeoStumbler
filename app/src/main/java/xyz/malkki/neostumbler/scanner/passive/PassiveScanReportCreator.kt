@@ -40,7 +40,7 @@ class PassiveScanReportCreator(
             ]
     )
     suspend fun createPassiveScanReport(positions: List<PositionObservation>) {
-        if (activeScanManager.scanningActive.value) {
+        if (activeScanManager.serviceRunning.value) {
             // If the active scanning service is running, we don't need to create passive reports
             return
         }

@@ -67,7 +67,7 @@ class ScannerTileService : TileService() {
 
     override fun onStartListening() {
         updaterJob = coroutineScope.launch {
-            activeScanManager.scanningActive
+            activeScanManager.serviceRunning
                 .combine(activeScanManager.reportsCreated) { a, b -> a to b }
                 .collect { (scanningActive, reportsCreated) ->
                     Timber.d(

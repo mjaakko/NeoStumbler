@@ -172,7 +172,7 @@ private fun StartStopScanningButton(
     val showQuickSettingsDialog = rememberSaveable { mutableStateOf(false) }
 
     val isScanning by
-        activeScanManager.scanningActive.collectAsStateWithLifecycle(initialValue = false)
+        activeScanManager.serviceRunning.collectAsStateWithLifecycle(initialValue = false)
 
     if (showQuickSettingsDialog.value) {
         @SuppressLint("NewApi")

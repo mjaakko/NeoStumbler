@@ -142,10 +142,8 @@ private fun ScanningControllerCard(
 
     val coroutineScope = rememberCoroutineScope()
 
-    val scanningActive by
-        activeScanManager.scanningActive.collectAsStateWithLifecycle(initialValue = false)
-    val reportsCreated by
-        activeScanManager.reportsCreated.collectAsStateWithLifecycle(initialValue = 0)
+    val scanningActive by activeScanManager.serviceRunning.collectAsStateWithLifecycle()
+    val reportsCreated by activeScanManager.reportsCreated.collectAsStateWithLifecycle()
 
     val gpsAvailable by
         gpsStatusSource.isGpsAvailable().collectAsStateWithLifecycle(initialValue = false)

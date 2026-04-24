@@ -79,7 +79,7 @@ class PassiveScanReportCreatorTest {
                 postProcessorProvider = { emptyList() },
                 activeScanManager =
                     mock<ActiveScanManager> {
-                        on { scanningActive } doReturn MutableStateFlow(false)
+                        on { serviceRunning } doReturn MutableStateFlow(false)
                     },
             )
     }
