@@ -151,7 +151,7 @@
     <string name="reports_empty">Nessun rilevamento finora</string>
     <string name="wifi_scan_frequency">Frequenza scansione Wi-Fi</string>
     <string name="cell_tower_scan_frequency">Frequenza scansione celle</string>
-    <string name="beacon_id">ID%d: %s</string>
+    <string name="beacon_id">ID%1$d: %2$s</string>
     <string name="beacon_type">Tipo trasmittente: %s</string>
     <string name="scanning_status_active">Scansione <annotation style="status">attiva</annotation></string>
     <string name="scanning_status_not_active">Scansione <annotation style="status">non attiva</annotation></string>

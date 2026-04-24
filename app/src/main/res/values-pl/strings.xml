@@ -172,7 +172,7 @@
     <string name="lac">LAC: %s</string>
     <string name="radio_type">Typ: %s</string>
     <string name="beacon_type">Typ beacona: %s</string>
-    <string name="beacon_id">ID%d: %s</string>
+    <string name="beacon_id">ID%1$d: %2$s</string>
     <string name="send_reports_automatically_never">Nigdy</string>
     <string name="send_reports_automatically_on_any_network">W każdej sieci</string>
     <string name="send_reports_automatically_on_unmetered_network">W sieci bez pomiaru danych</string>

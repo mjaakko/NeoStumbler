@@ -61,7 +61,7 @@
     <string name="lac">LAC: %s</string>
     <string name="radio_type">Tip: %s</string>
     <string name="beacon_type">Tip bejkona: %s</string>
-    <string name="beacon_id">ID%d: %s</string>
+    <string name="beacon_id">ID%1$d: %2$s</string>
     <string name="report_upload_notification_channel_name">Izveštaji otpremljeni</string>
     <string name="notification_sending_reports">Slanje izveštaja</string>
     <string name="notification_wireless_scanning_title">Mrežno skeniranje je aktivno</string>

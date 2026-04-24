@@ -163,7 +163,7 @@
     <string name="db_schema_version">資料庫結構版本：%d</string>
     <string name="unknown_cell_id">未知的基地台編號（Cell ID）</string>
     <string name="signal_strength_dbm">訊號強度：%d dbm</string>
-    <string name="beacon_id">ID%d: %s</string>
+    <string name="beacon_id">ID%1$d: %2$s</string>
     <string name="beacon_type">信標類型：%s</string>
     <string name="send_reports_automatically_never">從不</string>
     <string name="send_reports_automatically_on_any_network">在任何網路</string>

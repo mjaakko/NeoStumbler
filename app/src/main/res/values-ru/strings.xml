@@ -176,7 +176,7 @@
     <string name="lac">LAC: %s</string>
     <string name="radio_type">Тип: %s</string>
     <string name="beacon_type">Тип маячка: %s</string>
-    <string name="beacon_id">ID%d: %s</string>
+    <string name="beacon_id">ID%1$d: %2$s</string>
     <string name="locate_path">Путь для геолокации</string>
     <string name="signal_strength_dbm">Сила сигнала: %d дБм</string>
     <string name="send_reports_automatically_never">Никогда</string>

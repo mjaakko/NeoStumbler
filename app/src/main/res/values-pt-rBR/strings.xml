@@ -171,7 +171,7 @@
     <string name="signal_strength_dbm">Força do sinal: %d dBm</string>
     <string name="unknown_cell_id">ID da rede móvel desconhecido</string>
     <string name="mcc">MCC: %s</string>
-    <string name="beacon_id">ID%d: %s</string>
+    <string name="beacon_id">ID%1$d: %2$s</string>
     <string name="locate_path">Caminho para a geolocalização</string>
     <string name="send_reports_automatically_never">Nunca</string>
     <string name="send_reports_automatically_on_any_network">Em qualquer rede</string>

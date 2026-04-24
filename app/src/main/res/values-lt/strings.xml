@@ -175,7 +175,7 @@
     <string name="lac">LAC: %s</string>
     <string name="radio_type">Tipas: %s</string>
     <string name="beacon_type">Siųstuvo tipas: %s</string>
-    <string name="beacon_id">ID%d: %s</string>
+    <string name="beacon_id">ID%1$d: %2$s</string>
     <string name="send_reports_automatically_never">Niekada</string>
     <string name="send_reports_automatically_on_any_network">Bet kuriame tinkle</string>
     <string name="send_reports_automatically_on_unmetered_network">Tik neapskaitomuose tinkluose</string>
