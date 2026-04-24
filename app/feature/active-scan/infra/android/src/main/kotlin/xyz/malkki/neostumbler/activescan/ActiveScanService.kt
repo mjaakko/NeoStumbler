@@ -12,6 +12,7 @@ import android.os.PowerManager.WakeLock
 import androidx.core.app.ServiceCompat
 import androidx.core.content.getSystemService
 import java.time.Instant
+import java.util.EnumSet
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -48,8 +49,8 @@ class ActiveScanService : CoroutineService() {
         private val _reportsCreated = MutableStateFlow(0)
         internal val reportsCreated = _reportsCreated.asStateFlow()
 
-        private val _serviceRunning = MutableStateFlow(false)
-        internal val serviceRunning = _serviceRunning.asStateFlow()
+        private val _scanState = MutableStateFlow<ScanState>(ScanState.Stopped)
+        internal val scanState = _scanState.asStateFlow()
 
         /** @param autostart Whether the service is started without user interaction */
         fun startIntent(context: Context, autostart: Boolean = false): Intent {
@@ -163,11 +164,11 @@ class ActiveScanService : CoroutineService() {
             serviceAutostarted = autostart
         }
 
-        if (serviceRunning.value) {
+        if (_scanState.value !is ScanState.Stopped) {
             return START_REDELIVER_INTENT
         }
 
-        _serviceRunning.value = true
+        _scanState.value = ScanState.Active
 
         scannerQSTileAdapter.updateQuickSettingsTile()
 
@@ -197,6 +198,21 @@ class ActiveScanService : CoroutineService() {
                     scannerQSTileAdapter.updateQuickSettingsTile()
                 },
                 onGpsActive = { gpsActive -> this@ActiveScanService.gpsActive.value = gpsActive },
+                onScanStateChange = { state ->
+                    if (state is ActiveScanner.ScanState.Active) {
+                        _scanState.value = ScanState.Active
+                    } else if (state is ActiveScanner.ScanState.Paused) {
+                        val reasons = EnumSet.noneOf(ScanState.Paused.PauseReason::class.java)
+                        if (state.notMoving) {
+                            reasons.add(ScanState.Paused.PauseReason.NOT_MOVING)
+                        }
+                        if (state.lowBattery) {
+                            reasons.add(ScanState.Paused.PauseReason.LOW_BATTERY)
+                        }
+
+                        _scanState.value = ScanState.Paused(reasons)
+                    }
+                },
             )
         }
 
@@ -210,7 +226,7 @@ class ActiveScanService : CoroutineService() {
 
         _gpsStatus.value = null
         _reportsCreated.value = 0
-        _serviceRunning.value = false
+        _scanState.value = ScanState.Stopped
 
         notificationManager.cancel(NOTIFICATION_ID)
         scannerQSTileAdapter.updateQuickSettingsTile()

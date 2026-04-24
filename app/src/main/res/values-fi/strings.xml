@@ -40,6 +40,7 @@
     <string name="start_scanning">Aloita skannaus</string>
     <string name="stop_scanning">Lopeta skannaus</string>
     <string name="scanning_status_active">Skannaus <annotation style="status">päällä</annotation></string>
+    <string name="scanning_status_paused">Skannaus <annotation style="status">keskeytetty</annotation></string>
     <string name="scanning_status_not_active">Skannaus <annotation style="status">ei päällä</annotation></string>
     <string name="delete_report">Poista raportti</string>
     <string name="delete_report_confirmation">Oletko varma, että haluat poistaa raportin?</string>

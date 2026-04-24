@@ -3,6 +3,7 @@ package xyz.malkki.neostumbler.scanner.passive
 import android.Manifest
 import androidx.annotation.RequiresPermission
 import xyz.malkki.neostumbler.activescan.ActiveScanManager
+import xyz.malkki.neostumbler.activescan.ScanState
 import xyz.malkki.neostumbler.core.emitter.Emitter
 import xyz.malkki.neostumbler.core.observation.EmitterObservation
 import xyz.malkki.neostumbler.core.observation.PositionObservation
@@ -40,7 +41,7 @@ class PassiveScanReportCreator(
             ]
     )
     suspend fun createPassiveScanReport(positions: List<PositionObservation>) {
-        if (activeScanManager.serviceRunning.value) {
+        if (activeScanManager.state.value !is ScanState.Stopped) {
             // If the active scanning service is running, we don't need to create passive reports
             return
         }

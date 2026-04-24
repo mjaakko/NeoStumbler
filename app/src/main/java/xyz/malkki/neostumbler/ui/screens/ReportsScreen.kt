@@ -68,6 +68,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.activescan.ActiveScanManager
+import xyz.malkki.neostumbler.activescan.ScanState
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.core.report.ReportWithStats
 import xyz.malkki.neostumbler.data.geocoder.Geocoder
@@ -142,7 +143,7 @@ private fun ScanningControllerCard(
 
     val coroutineScope = rememberCoroutineScope()
 
-    val scanningActive by activeScanManager.serviceRunning.collectAsStateWithLifecycle()
+    val scanState by activeScanManager.state.collectAsStateWithLifecycle()
     val reportsCreated by activeScanManager.reportsCreated.collectAsStateWithLifecycle()
 
     val gpsAvailable by
@@ -176,10 +177,10 @@ private fun ScanningControllerCard(
             Column(modifier = Modifier.align(Alignment.CenterVertically).weight(1.0f)) {
                 Text(
                     text =
-                        if (scanningActive) {
-                            stringResource(R.string.scanning_status_active)
-                        } else {
-                            stringResource(R.string.scanning_status_not_active)
+                        when (scanState) {
+                            ScanState.Active -> stringResource(R.string.scanning_status_active)
+                            is ScanState.Paused -> stringResource(R.string.scanning_status_paused)
+                            ScanState.Stopped -> stringResource(R.string.scanning_status_not_active)
                         },
                     maxLines = 1,
                     style = MaterialTheme.typography.titleMedium,

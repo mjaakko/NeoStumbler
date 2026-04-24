@@ -25,6 +25,7 @@ import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.MainActivity
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.activescan.ActiveScanManager
+import xyz.malkki.neostumbler.activescan.ScanState
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.getActivity
 import xyz.malkki.neostumbler.extensions.showToast
@@ -171,8 +172,8 @@ private fun StartStopScanningButton(
 
     val showQuickSettingsDialog = rememberSaveable { mutableStateOf(false) }
 
-    val isScanning by
-        activeScanManager.serviceRunning.collectAsStateWithLifecycle(initialValue = false)
+    val scanState by activeScanManager.state.collectAsStateWithLifecycle()
+    val isScanning = scanState !is ScanState.Stopped
 
     if (showQuickSettingsDialog.value) {
         @SuppressLint("NewApi")

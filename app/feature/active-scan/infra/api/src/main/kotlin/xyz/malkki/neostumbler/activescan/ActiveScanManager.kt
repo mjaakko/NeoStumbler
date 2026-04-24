@@ -4,8 +4,8 @@ import kotlinx.coroutines.flow.StateFlow
 import xyz.malkki.neostumbler.data.location.GpsStatus
 
 interface ActiveScanManager {
-    /** Whether the scanner service is running */
-    val serviceRunning: StateFlow<Boolean>
+    /** State of the scanner service */
+    val state: StateFlow<ScanState>
 
     /**
      * Number of reports created during the current scanning session. 0 if the service is not
@@ -27,4 +27,28 @@ interface ActiveScanManager {
      *   interaction
      */
     fun stopScanning(autostart: Boolean = false)
+}
+
+sealed interface ScanState {
+    /** Whether the scanner service is running */
+    val serviceActive: Boolean
+
+    object Stopped : ScanState {
+        override val serviceActive = false
+    }
+
+    /** Scanner service is running and collecting data */
+    object Active : ScanState {
+        override val serviceActive = true
+    }
+
+    /** Scanner service is running, but not collecting data */
+    data class Paused(val reasons: Set<PauseReason>) : ScanState {
+        override val serviceActive = true
+
+        enum class PauseReason {
+            NOT_MOVING,
+            LOW_BATTERY,
+        }
+    }
 }

@@ -13,11 +13,19 @@ class SettingsAwareActiveReportCreator(
     private val activeScanner: ActiveScanner,
     private val reportSaver: ReportSaver,
 ) {
-    suspend fun scanAndCreateReports(onReportCreated: () -> Unit, onGpsActive: (Boolean) -> Unit) {
+    suspend fun scanAndCreateReports(
+        onReportCreated: () -> Unit,
+        onGpsActive: (Boolean) -> Unit,
+        onScanStateChange: (ActiveScanner.ScanState) -> Unit,
+    ) {
         settings
             .getSnapshotFlow()
             .flatMapLatest { settingsSnapshot ->
-                activeScanner.getReportsFlow(settingsSnapshot.toActiveScanSettings(), onGpsActive)
+                activeScanner.getReportsFlow(
+                    scanSettings = settingsSnapshot.toActiveScanSettings(),
+                    onGpsActive = onGpsActive,
+                    onScanStateChange = onScanStateChange,
+                )
             }
             .collect { reportData ->
                 reportSaver.createReport(reportData)
