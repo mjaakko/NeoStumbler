@@ -266,6 +266,7 @@ dependencies {
 
     implementation(project(":app:data:airpressure:android"))
     implementation(project(":app:data:battery:android"))
+    implementation(project(":app:data:thermal:android"))
 
     implementation(project(":app:data:geocoder:android"))
 

@@ -9,4 +9,6 @@ object ActiveScanPreferenceKeys {
     const val PAUSE_ON_BATTERY_LEVEL_THRESHOLD = "low_battery_threshold"
 
     const val SCANNER_NOTIFICATION_STYLE = "scanner_notification_style"
+
+    const val PAUSE_WHEN_OVERHEATING = "pause_when_overheating"
 }

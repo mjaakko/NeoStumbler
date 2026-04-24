@@ -7,6 +7,7 @@ dependencies {
     api(project(":app:data:reports:api"))
     api(project(":app:data:airpressure:api"))
     api(project(":app:data:battery:api"))
+    api(project(":app:data:thermal:api"))
     api(project(":app:data:emitter:api"))
     api(project(":app:data:location:api"))
     api(project(":app:data:movement:api"))
@@ -18,4 +19,6 @@ dependencies {
     testImplementation(libs.kotlinx.coroutinesTest)
 
     testImplementation(libs.junit)
+
+    testImplementation(libs.mockitoKotlin)
 }

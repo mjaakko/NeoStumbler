@@ -44,6 +44,7 @@ import xyz.malkki.neostumbler.di.movementDetectorModule
 import xyz.malkki.neostumbler.di.reportDatabaseModule
 import xyz.malkki.neostumbler.di.reviewModule
 import xyz.malkki.neostumbler.di.scanDataSources
+import xyz.malkki.neostumbler.di.thermalStatusModule
 import xyz.malkki.neostumbler.di.uploadModule
 import xyz.malkki.neostumbler.extensions.getTextCompat
 import xyz.malkki.neostumbler.network.networkModule
@@ -114,9 +115,9 @@ class StumblerApplication : Application() {
                 }
             )
 
-            modules(reportDatabaseModule)
-
             modules(
+                reportDatabaseModule,
+                thermalStatusModule,
                 geocoderModule,
                 networkModule,
                 exportModule,

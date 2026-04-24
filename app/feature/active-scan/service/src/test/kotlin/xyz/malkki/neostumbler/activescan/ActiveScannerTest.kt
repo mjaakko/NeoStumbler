@@ -13,6 +13,8 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import org.mockito.kotlin.spy
+import org.mockito.kotlin.verifyNoInteractions
 import xyz.malkki.neostumbler.core.MacAddress
 import xyz.malkki.neostumbler.core.Position
 import xyz.malkki.neostumbler.core.Position.Source
@@ -31,6 +33,7 @@ private val settings =
         cellScanDistance = 100,
         ignoreWifiScanThrottling = true,
         lowBatteryThreshold = null,
+        pauseWhenOverheating = false,
     )
 
 private val movementDetectorProvider = {
@@ -70,6 +73,7 @@ class ActiveScannerTest {
                 bluetoothBeaconSource = { emptyFlow() },
                 movementDetectorProvider = movementDetectorProvider,
                 batteryLevelMonitor = { flowOf(1.0f) },
+                thermalStatusProvider = { flowOf(false) },
                 postProcessorProvider = { emptyList() },
             )
 
@@ -137,6 +141,7 @@ class ActiveScannerTest {
                 },
                 movementDetectorProvider = movementDetectorProvider,
                 batteryLevelMonitor = { flowOf(1.0f) },
+                thermalStatusProvider = { flowOf(false) },
                 postProcessorProvider = { emptyList() },
             )
 
@@ -216,6 +221,7 @@ class ActiveScannerTest {
                 bluetoothBeaconSource = { emptyFlow() },
                 movementDetectorProvider = movementDetectorProvider,
                 batteryLevelMonitor = { flowOf(1.0f) },
+                thermalStatusProvider = { flowOf(false) },
                 postProcessorProvider = { listOf(HiddenWifiFilterer()) },
             )
 
@@ -302,6 +308,7 @@ class ActiveScannerTest {
                 },
                 movementDetectorProvider = movementDetectorProvider,
                 batteryLevelMonitor = { flowOf(1.0f) },
+                thermalStatusProvider = { flowOf(false) },
                 postProcessorProvider = { listOf(HiddenWifiFilterer()) },
             )
 
@@ -333,5 +340,80 @@ class ActiveScannerTest {
 
         assertNotNull(report?.position?.position?.pressure)
         assertEquals(1013.25, report?.position?.position?.pressure!!, 0.01)
+    }
+
+    @Test
+    fun `Location source is not activated when the device overheats`() = runTest {
+        val locationSource =
+            spy(
+                LocationSource { _, _ ->
+                    flowOf(
+                        PositionObservation(
+                            position =
+                                Position(
+                                    latitude = 50.0,
+                                    longitude = 10.0,
+                                    accuracy = 15.0,
+                                    source = Source.GPS,
+                                ),
+                            timestamp = 0,
+                        )
+                    )
+                }
+            )
+
+        val activeScanner =
+            ActiveScanner(
+                locationSourceProvider = { locationSource },
+                airPressureSource = {
+                    flowOf(AirPressureObservation(airPressure = 1013.25f, timestamp = 0L))
+                },
+                cellInfoSource = { emptyFlow() },
+                wifiAccessPointSource = { _, _ ->
+                    flowOf(
+                        listOf(
+                            EmitterObservation(
+                                emitter =
+                                    WifiAccessPoint(
+                                        macAddress = MacAddress("02:02:02:02:02:02"),
+                                        radioType = WifiAccessPoint.RadioType.AC,
+                                        channel = null,
+                                        frequency = null,
+                                        signalStrength = null,
+                                        ssid = "",
+                                    ),
+                                timestamp = 0,
+                            )
+                        )
+                    )
+                },
+                bluetoothBeaconSource = { emptyFlow() },
+                movementDetectorProvider = movementDetectorProvider,
+                batteryLevelMonitor = { flowOf(1.0f) },
+                thermalStatusProvider = { flowOf(true) },
+                postProcessorProvider = { listOf(HiddenWifiFilterer()) },
+            )
+
+        val reportsFlow =
+            activeScanner.getReportsFlow(
+                scanSettings = settings.copy(pauseWhenOverheating = true),
+                onGpsActive = {},
+                onScanStateChange = {},
+            )
+
+        val reports = buildList {
+            reportsFlow
+                .timeout(5.seconds)
+                .catch {
+                    if (it !is TimeoutCancellationException) {
+                        throw it
+                    }
+                }
+                .collect(::add)
+        }
+
+        assertEquals(0, reports.size)
+
+        verifyNoInteractions(locationSource)
     }
 }

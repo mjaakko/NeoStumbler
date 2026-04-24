@@ -209,6 +209,9 @@ class ActiveScanService : CoroutineService() {
                         if (state.lowBattery) {
                             reasons.add(ScanState.Paused.PauseReason.LOW_BATTERY)
                         }
+                        if (state.overheating) {
+                            reasons.add(ScanState.Paused.PauseReason.OVERHEAT)
+                        }
 
                         _scanState.value = ScanState.Paused(reasons)
                     }

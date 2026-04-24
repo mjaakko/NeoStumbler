@@ -143,6 +143,7 @@
     </string>
     <string name="pause_scanning_on_low_battery_title">Keskeytä skanaaminen akun ollessa vähissä</string>
     <string name="pause_scanning_on_low_battery_description">Kun akun varaustila alle %d%%</string>
+    <string name="pause_scanning_when_overheating">Keskeytä skannaaminen laitteen ylikuumentuessa</string>
     <string name="wifi_scan_frequency">Wi-Fi -skannausten tiheys</string>
     <string name="cell_tower_scan_frequency">Puhelinmastojen skannausten tiheys</string>
     <string name="every_x_meters">Joka %d. metri</string>

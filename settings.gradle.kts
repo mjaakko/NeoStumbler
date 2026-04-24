@@ -56,6 +56,10 @@ include(":app:data:settings:api")
 
 include(":app:data:settings:android-datastore")
 
+include(":app:data:thermal:api")
+
+include(":app:data:thermal:android")
+
 include(":app:data:reports:api")
 
 include(":app:data:reports:room")
