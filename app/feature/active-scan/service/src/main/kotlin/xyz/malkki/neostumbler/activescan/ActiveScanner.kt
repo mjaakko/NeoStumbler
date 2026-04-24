@@ -4,8 +4,6 @@ import kotlin.math.abs
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,17 +20,8 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.scan
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import xyz.malkki.neostumbler.activescan.internal.combineWithLatestFrom
 import xyz.malkki.neostumbler.activescan.internal.toSmoothenedSpeedFlow
-import xyz.malkki.neostumbler.core.MacAddress
-import xyz.malkki.neostumbler.core.emitter.BluetoothBeacon
-import xyz.malkki.neostumbler.core.emitter.CellTower
-import xyz.malkki.neostumbler.core.emitter.Emitter
-import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
-import xyz.malkki.neostumbler.core.observation.EmitterObservation
 import xyz.malkki.neostumbler.core.observation.PositionObservation
 import xyz.malkki.neostumbler.core.report.ReportData
 import xyz.malkki.neostumbler.data.airpressure.AirPressureSource
@@ -99,45 +88,11 @@ class ActiveScanner(
         }
     }
 
-    private fun <E : Emitter<K>, K> CoroutineScope.startCollectingData(
-        isMovingFlow: Flow<Boolean>,
-        dataSource: () -> Flow<List<EmitterObservation<E, K>>>,
-        mapMutex: Mutex,
-        setter: (K, EmitterObservation<E, K>) -> Unit,
-    ) {
-        launch(Dispatchers.Default) {
-            isMovingFlow
-                .flatMapLatest { isMoving ->
-                    if (isMoving) {
-                        dataSource()
-                    } else {
-                        emptyFlow()
-                    }
-                }
-                .collect { data ->
-                    mapMutex.withLock { data.forEach { setter(it.emitter.uniqueKey, it) } }
-                }
-        }
-    }
-
-    private fun Flow<PositionObservation>.filterInaccurateLocations(): Flow<PositionObservation> =
-        filter { positionObservation ->
-            positionObservation.position.accuracy != null &&
-                positionObservation.position.accuracy!! <=
-                    ScanningConstants.LOCATION_MAX_ACCURACY_METERS
-        }
-
-    private fun Flow<PositionObservation>.distinctUntilChangedSignificantly():
-        Flow<PositionObservation> = distinctUntilChanged { a, b ->
-        abs(a.timestamp - b.timestamp).milliseconds <= LOCATION_MAX_AGE_UNTIL_CHANGED &&
-            a.position.latLng.distanceTo(b.position.latLng) <=
-                LOCATION_MAX_DISTANCE_DIFF_UNTIL_CHANGED
-    }
-
     fun getReportsFlow(
         scanSettings: ActiveScanSettings,
         onGpsActive: (Boolean) -> Unit,
-    ): Flow<ReportData> {
+        onScanStateChange: (ScanState) -> Unit,
+    ): Flow<ReportData> = channelFlow {
         val batteryLevelOkFlow =
             if (scanSettings.lowBatteryThreshold == null) {
                 flowOf(true)
@@ -147,33 +102,44 @@ class ActiveScanner(
                 }
             }
 
-        return batteryLevelOkFlow.flatMapLatest { batteryLevelOk ->
-            if (batteryLevelOk) {
-                createReports(scanSettings, onGpsActive)
-            } else {
-                emptyFlow()
-            }
-        }
-    }
-
-    private fun createReports(
-        scanSettings: ActiveScanSettings,
-        onGpsActive: (Boolean) -> Unit,
-    ): Flow<ReportData> = channelFlow {
-        val mutex = Mutex()
-
-        val wifiAccessPointByMacAddr =
-            mutableMapOf<MacAddress, EmitterObservation<WifiAccessPoint, MacAddress>>()
-        val bluetoothBeaconsByMacAddr =
-            mutableMapOf<MacAddress, EmitterObservation<BluetoothBeacon, MacAddress>>()
-        val cellTowersByKey = mutableMapOf<String, EmitterObservation<CellTower, String>>()
-
         val isMovingFlow =
             movementDetectorProvider
                 .getMovementDetector()
                 .getIsMovingFlow()
                 .stateIn(this, started = SharingStarted.WhileSubscribed(), initialValue = true)
 
+        batteryLevelOkFlow
+            .flatMapLatest { batteryOk ->
+                // Only listen to movement detector if battery level is ok to avoid activating GPS
+                if (batteryOk) {
+                    isMovingFlow.map { it to true }
+                } else {
+                    flowOf(true to false)
+                }
+            }
+            .map { (isMoving, batteryOk) ->
+                if (isMoving && batteryOk) {
+                    ScanState.Active
+                } else {
+                    ScanState.Paused(lowBattery = !batteryOk, notMoving = !isMoving)
+                }
+            }
+            .onEach { scanState -> onScanStateChange(scanState) }
+            .flatMapLatest { scanState ->
+                if (scanState == ScanState.Active) {
+                    createReports(scanSettings, isMovingFlow, onGpsActive)
+                } else {
+                    emptyFlow()
+                }
+            }
+            .collect(::send)
+    }
+
+    private fun createReports(
+        scanSettings: ActiveScanSettings,
+        isMovingFlow: Flow<Boolean>,
+        onGpsActive: (Boolean) -> Unit,
+    ): Flow<ReportData> = channelFlow {
         val locationFlow =
             locationSourceProvider
                 .getLocationSource()
@@ -187,48 +153,21 @@ class ActiveScanner(
                 .toSmoothenedSpeedFlow()
                 .shareIn(this, started = SharingStarted.WhileSubscribed())
 
-        startCollectingData(
-            isMovingFlow,
-            {
-                wifiAccessPointSource.getWifiAccessPointFlow(
-                    scanThrottled = !scanSettings.ignoreWifiScanThrottling,
-                    scanInterval =
-                        speedFlow.map { speed -> (speed / scanSettings.wifiScanDistance).seconds },
-                )
-            },
-            mutex,
-            wifiAccessPointByMacAddr::set,
-        )
-
-        startCollectingData(
-            isMovingFlow,
-            bluetoothBeaconSource::getBluetoothBeaconFlow,
-            mutex,
-            bluetoothBeaconsByMacAddr::set,
-        )
-
-        startCollectingData(
-            isMovingFlow,
-            {
-                cellInfoSource.getCellInfoFlow(
-                    interval =
-                        speedFlow.map { speed -> (speed / scanSettings.cellScanDistance).seconds }
-                )
-            },
-            mutex,
-            cellTowersByKey::set,
-        )
+        val scanDataCollector =
+            ScanDataCollector(
+                isMovingFlow = isMovingFlow,
+                speedFlow = speedFlow,
+                wifiSource = wifiAccessPointSource,
+                cellSource = cellInfoSource,
+                bluetoothBeaconSource = bluetoothBeaconSource,
+                scanSettings = scanSettings,
+                coroutineScope = this,
+            )
 
         val postProcessors = postProcessorProvider.getReportPostProcessors()
 
-        isMovingFlow
-            .flatMapLatest { isMoving ->
-                if (isMoving) {
-                    locationFlow.combineLocationsWithAirPressure()
-                } else {
-                    emptyFlow()
-                }
-            }
+        locationFlow
+            .combineLocationsWithAirPressure()
             .filterInaccurateLocations()
             .distinctUntilChangedSignificantly()
             // Collect locations to a list so that we can choose the best based on timestamp
@@ -240,19 +179,7 @@ class ActiveScanner(
              */
             .onEach { delay(3.seconds) }
             .map { locations ->
-                val (cells, wifis, bluetooths) =
-                    mutex.withLock {
-                        val cells = cellTowersByKey.values.toList()
-                        cellTowersByKey.clear()
-
-                        val wifis = wifiAccessPointByMacAddr.values.toList()
-                        wifiAccessPointByMacAddr.clear()
-
-                        val bluetooths = bluetoothBeaconsByMacAddr.values.toList()
-                        bluetoothBeaconsByMacAddr.clear()
-
-                        Triple(cells, wifis, bluetooths)
-                    }
+                val (wifis, bluetooths, cells) = scanDataCollector.getCollectedData()
 
                 xyz.malkki.neostumbler.scanner.createReports(
                     locations,
@@ -265,20 +192,39 @@ class ActiveScanner(
             .collect { reports -> reports.forEach { report -> send(report) } }
     }
 
-    private fun Flow<PositionObservation>.bufferWithMaxAge(
-        maxAge: Duration
-    ): Flow<List<PositionObservation>> {
-        return scan(mutableListOf()) { list, observation ->
-            list.add(observation)
+    sealed interface ScanState {
+        object Active : ScanState
 
-            list.removeIf { abs(it.timestamp - observation.timestamp).milliseconds >= maxAge }
+        data class Paused(val lowBattery: Boolean, val notMoving: Boolean) : ScanState
+    }
+}
 
-            list
-        }
+private fun Flow<PositionObservation>.bufferWithMaxAge(
+    maxAge: Duration
+): Flow<List<PositionObservation>> {
+    return scan(mutableListOf()) { list, observation ->
+        list.add(observation)
+
+        list.removeIf { abs(it.timestamp - observation.timestamp).milliseconds >= maxAge }
+
+        list
+    }
+}
+
+private fun Flow<PositionObservation>.filterInaccurateLocations(): Flow<PositionObservation> =
+    filter { positionObservation ->
+        positionObservation.position.accuracy != null &&
+            positionObservation.position.accuracy!! <=
+                ScanningConstants.LOCATION_MAX_ACCURACY_METERS
     }
 
-    private fun Float.toPct(): Int {
-        @Suppress("MagicNumber")
-        return (this * 100).toInt()
-    }
+private fun Flow<PositionObservation>.distinctUntilChangedSignificantly():
+    Flow<PositionObservation> = distinctUntilChanged { a, b ->
+    abs(a.timestamp - b.timestamp).milliseconds <= LOCATION_MAX_AGE_UNTIL_CHANGED &&
+        a.position.latLng.distanceTo(b.position.latLng) <= LOCATION_MAX_DISTANCE_DIFF_UNTIL_CHANGED
+}
+
+private fun Float.toPct(): Int {
+    @Suppress("MagicNumber")
+    return (this * 100).toInt()
 }

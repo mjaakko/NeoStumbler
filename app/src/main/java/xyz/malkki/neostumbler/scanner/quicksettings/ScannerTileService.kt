@@ -15,12 +15,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 import xyz.malkki.neostumbler.MainActivity
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.activescan.ActiveScanManager
+import xyz.malkki.neostumbler.activescan.ScanState
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.extensions.getQuantityString
 import xyz.malkki.neostumbler.extensions.getTextCompat
@@ -67,7 +69,8 @@ class ScannerTileService : TileService() {
 
     override fun onStartListening() {
         updaterJob = coroutineScope.launch {
-            activeScanManager.scanningActive
+            activeScanManager.state
+                .map { it !is ScanState.Stopped }
                 .combine(activeScanManager.reportsCreated) { a, b -> a to b }
                 .collect { (scanningActive, reportsCreated) ->
                     Timber.d(

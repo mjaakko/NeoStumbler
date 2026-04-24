@@ -73,7 +73,12 @@ class ActiveScannerTest {
                 postProcessorProvider = { emptyList() },
             )
 
-        val reportsFlow = activeScanner.getReportsFlow(scanSettings = settings, onGpsActive = {})
+        val reportsFlow =
+            activeScanner.getReportsFlow(
+                scanSettings = settings,
+                onGpsActive = {},
+                onScanStateChange = {},
+            )
 
         val reports = buildList {
             reportsFlow
@@ -135,7 +140,12 @@ class ActiveScannerTest {
                 postProcessorProvider = { emptyList() },
             )
 
-        val reportsFlow = activeScanner.getReportsFlow(scanSettings = settings, onGpsActive = {})
+        val reportsFlow =
+            activeScanner.getReportsFlow(
+                scanSettings = settings,
+                onGpsActive = {},
+                onScanStateChange = {},
+            )
 
         val reports = buildList {
             reportsFlow
@@ -209,7 +219,12 @@ class ActiveScannerTest {
                 postProcessorProvider = { listOf(HiddenWifiFilterer()) },
             )
 
-        val reportsFlow = activeScanner.getReportsFlow(scanSettings = settings, onGpsActive = {})
+        val reportsFlow =
+            activeScanner.getReportsFlow(
+                scanSettings = settings,
+                onGpsActive = {},
+                onScanStateChange = {},
+            )
 
         val reports = buildList {
             reportsFlow
@@ -290,7 +305,12 @@ class ActiveScannerTest {
                 postProcessorProvider = { listOf(HiddenWifiFilterer()) },
             )
 
-        val reportsFlow = activeScanner.getReportsFlow(scanSettings = settings, onGpsActive = {})
+        val reportsFlow =
+            activeScanner.getReportsFlow(
+                scanSettings = settings,
+                onGpsActive = {},
+                onScanStateChange = {},
+            )
 
         val reports = buildList {
             reportsFlow

@@ -16,6 +16,7 @@ import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import xyz.malkki.neostumbler.activescan.ActiveScanManager
+import xyz.malkki.neostumbler.activescan.ScanState
 import xyz.malkki.neostumbler.core.MacAddress
 import xyz.malkki.neostumbler.core.Position
 import xyz.malkki.neostumbler.core.emitter.CellTower
@@ -79,7 +80,7 @@ class PassiveScanReportCreatorTest {
                 postProcessorProvider = { emptyList() },
                 activeScanManager =
                     mock<ActiveScanManager> {
-                        on { scanningActive } doReturn MutableStateFlow(false)
+                        on { state } doReturn MutableStateFlow(ScanState.Stopped)
                     },
             )
     }

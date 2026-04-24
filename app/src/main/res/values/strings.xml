@@ -43,6 +43,7 @@
     <string name="start_scanning">Start scanning</string>
     <string name="stop_scanning">Stop scanning</string>
     <string name="scanning_status_active">Scanning <annotation style="status">active</annotation></string>
+    <string name="scanning_status_paused">Scanning <annotation style="status">paused</annotation></string>
     <string name="scanning_status_not_active">Scanning <annotation style="status">not active</annotation></string>
     <string name="delete_report">Delete report</string>
     <string name="delete_report_confirmation">Are you sure you want to delete the report?</string>
