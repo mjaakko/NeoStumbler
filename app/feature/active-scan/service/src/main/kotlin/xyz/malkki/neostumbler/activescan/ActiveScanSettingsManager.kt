@@ -50,5 +50,6 @@ internal fun SettingsSnapshot.toActiveScanSettings(): ActiveScanSettings {
         lowBatteryThreshold = getInt(ActiveScanPreferenceKeys.PAUSE_ON_BATTERY_LEVEL_THRESHOLD),
         ignoreWifiScanThrottling =
             getBoolean(ActiveScanPreferenceKeys.IGNORE_SCAN_THROTTLING) == true,
+        pauseWhenOverheating = getBoolean(ActiveScanPreferenceKeys.PAUSE_WHEN_OVERHEATING) == true,
     )
 }

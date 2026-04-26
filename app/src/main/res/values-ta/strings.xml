@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="notification_sending_reports">அறிக்கைகளை அனுப்புகிறது</string>
-    <string name="notification_wireless_scanning_title">வயர்லெச் ச்கேனிங் செயலில்</string>
     <plurals name="reports_created">
         <item quantity="one">%d அறிக்கை உருவாக்கப்பட்டது</item>
         <item quantity="other">%d அறிக்கைகள் உருவாக்கப்பட்டன</item>

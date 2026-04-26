@@ -32,7 +32,6 @@
     <string name="toast_reports_upload_failed">Chyba při odesílání reportů</string>
     <string name="notification_sending_reports">Odesílání reportů</string>
     <string name="scanner_status_notification_channel_name">Stav skenování</string>
-    <string name="notification_wireless_scanning_title">Skenování aktivní</string>
     <plurals name="reports_created">
         <item quantity="one">%d report vytvořen</item>
         <item quantity="few">%d reporty vytvořeny</item>

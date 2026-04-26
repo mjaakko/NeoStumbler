@@ -54,7 +54,6 @@
     <string name="radio_type">종류: %s</string>
     <string name="beacon_type">비콘 종류: %s</string>
     <string name="notification_sending_reports">보고 전송중</string>
-    <string name="notification_wireless_scanning_title">무선 탐색 활성</string>
     <plurals name="reports_created">
         <item quantity="other">보고 %d건 생성됨</item>
     </plurals>

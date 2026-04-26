@@ -35,7 +35,6 @@
     <string name="toast_reports_upload_failed">Falha ao enviar relatórios</string>
     <string name="report_upload_notification_channel_name">Envio de relatórios</string>
     <string name="notification_sending_reports">Enviando relatórios</string>
-    <string name="notification_wireless_scanning_title">Coleta de redes sem-fio ativa</string>
     <plurals name="reports_created">
         <item quantity="one">%d relatório criado</item>
         <item quantity="many">%d de relatórios criados</item>

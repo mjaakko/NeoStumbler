@@ -67,7 +67,6 @@
     <string name="beacon_type_altbeacon">AltBeacon</string>
     <string name="report_upload_notification_channel_name">Ughkargow derivas</string>
     <string name="notification_sending_reports">Ow danvon derivasow</string>
-    <string name="notification_wireless_scanning_title">Arhwilyansow diwiver byw</string>
     <plurals name="reports_created">
         <item quantity="zero">%d derivasow gwrys</item>
         <item quantity="one">%d derivas gwrys</item>

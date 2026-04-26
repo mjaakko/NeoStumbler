@@ -8,6 +8,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filter
@@ -31,6 +32,7 @@ import xyz.malkki.neostumbler.data.emitter.ActiveCellInfoSource
 import xyz.malkki.neostumbler.data.emitter.ActiveWifiAccessPointSource
 import xyz.malkki.neostumbler.data.location.LocationSourceProvider
 import xyz.malkki.neostumbler.data.movement.MovementDetectorProvider
+import xyz.malkki.neostumbler.data.thermal.ThermalStatusProvider
 import xyz.malkki.neostumbler.report.postprocessor.ReportPostProcessorProvider
 import xyz.malkki.neostumbler.scanner.ScanningConstants
 
@@ -59,6 +61,7 @@ private val AIR_PRESSURE_MAX_AGE = 2.seconds
 // Retain locations in the last 30 seconds
 private val LOCATION_BUFFER_DURATION = 30.seconds
 
+@Suppress("LongParameterList")
 class ActiveScanner(
     private val locationSourceProvider: LocationSourceProvider,
     private val airPressureSource: AirPressureSource,
@@ -67,6 +70,7 @@ class ActiveScanner(
     private val bluetoothBeaconSource: ActiveBluetoothBeaconSource,
     private val movementDetectorProvider: MovementDetectorProvider,
     private val batteryLevelMonitor: BatteryLevelMonitor,
+    private val thermalStatusProvider: ThermalStatusProvider,
     private val postProcessorProvider: ReportPostProcessorProvider,
 ) {
     private fun Flow<PositionObservation>.combineLocationsWithAirPressure():
@@ -102,6 +106,13 @@ class ActiveScanner(
                 }
             }
 
+        val thermalStatusFlow =
+            if (scanSettings.pauseWhenOverheating) {
+                thermalStatusProvider.getIsDeviceOverheatingFlow()
+            } else {
+                flowOf(false)
+            }
+
         val isMovingFlow =
             movementDetectorProvider
                 .getMovementDetector()
@@ -109,19 +120,29 @@ class ActiveScanner(
                 .stateIn(this, started = SharingStarted.WhileSubscribed(), initialValue = true)
 
         batteryLevelOkFlow
-            .flatMapLatest { batteryOk ->
+            .combine(thermalStatusFlow) { batteryOk, overheat -> batteryOk to overheat }
+            .flatMapLatest { (batteryOk, overheat) ->
                 // Only listen to movement detector if battery level is ok to avoid activating GPS
-                if (batteryOk) {
-                    isMovingFlow.map { it to true }
+                if (batteryOk && !overheat) {
+                    isMovingFlow.map { moving ->
+                        if (moving) {
+                            ScanState.Active
+                        } else {
+                            ScanState.Paused(
+                                notMoving = true,
+                                lowBattery = false,
+                                overheating = false,
+                            )
+                        }
+                    }
                 } else {
-                    flowOf(true to false)
-                }
-            }
-            .map { (isMoving, batteryOk) ->
-                if (isMoving && batteryOk) {
-                    ScanState.Active
-                } else {
-                    ScanState.Paused(lowBattery = !batteryOk, notMoving = !isMoving)
+                    flowOf(
+                        ScanState.Paused(
+                            notMoving = false,
+                            lowBattery = !batteryOk,
+                            overheating = overheat,
+                        )
+                    )
                 }
             }
             .onEach { scanState -> onScanStateChange(scanState) }
@@ -195,7 +216,11 @@ class ActiveScanner(
     sealed interface ScanState {
         object Active : ScanState
 
-        data class Paused(val lowBattery: Boolean, val notMoving: Boolean) : ScanState
+        data class Paused(
+            val lowBattery: Boolean,
+            val notMoving: Boolean,
+            val overheating: Boolean,
+        ) : ScanState
     }
 }
 

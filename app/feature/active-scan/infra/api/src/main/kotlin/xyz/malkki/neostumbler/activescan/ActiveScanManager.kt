@@ -49,6 +49,7 @@ sealed interface ScanState {
         enum class PauseReason {
             NOT_MOVING,
             LOW_BATTERY,
+            OVERHEAT,
         }
     }
 }

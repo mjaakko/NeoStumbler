@@ -16,7 +16,19 @@ val activeScanModule = module {
 
     single<ActiveScanManager> { AndroidActiveScanManager(get()) }
 
-    single<ActiveScanner> { ActiveScanner(get(), get(), get(), get(), get(), get(), get(), get()) }
+    single<ActiveScanner> {
+        ActiveScanner(
+            locationSourceProvider = get(),
+            airPressureSource = get(),
+            cellInfoSource = get(),
+            wifiAccessPointSource = get(),
+            bluetoothBeaconSource = get(),
+            movementDetectorProvider = get(),
+            batteryLevelMonitor = get(),
+            thermalStatusProvider = get(),
+            postProcessorProvider = get(),
+        )
+    }
 
     single<SettingsAwareActiveReportCreator> {
         SettingsAwareActiveReportCreator(get(), get(), get())

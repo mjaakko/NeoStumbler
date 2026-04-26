@@ -36,7 +36,6 @@
     <string name="toast_reports_upload_failed">Impossibile inviare rilevamenti</string>
     <string name="report_upload_notification_channel_name">Invio rilevamenti</string>
     <string name="notification_sending_reports">Invio rilevamenti in corso</string>
-    <string name="notification_wireless_scanning_title">Scansione wireless attiva</string>
     <plurals name="reports_created">
         <item quantity="one">%d rilevamento creato</item>
         <item quantity="many">%d di rilevamenti creati</item>

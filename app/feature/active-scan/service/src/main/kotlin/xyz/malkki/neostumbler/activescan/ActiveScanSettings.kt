@@ -13,4 +13,6 @@ data class ActiveScanSettings(
      * [0-100], `ǹull` if disabled
      */
     val lowBatteryThreshold: Int?,
+    /** Whether to pause scanning when the device is overheating */
+    val pauseWhenOverheating: Boolean,
 )

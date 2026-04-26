@@ -68,7 +68,6 @@
     <string name="beacon_type_altbeacon">AltBeacon</string>
     <string name="report_upload_notification_channel_name">Report uploads</string>
     <string name="notification_sending_reports">Sending reports</string>
-    <string name="notification_wireless_scanning_title">Wireless scanning active</string>
     <plurals name="reports_created">
         <item quantity="one">%d report created</item>
         <item quantity="other">%d reports created</item>
@@ -146,8 +145,9 @@
     <string name="reduced_metadata_description">
         Reports are sent in a randomized order with timestamps and other metadata truncated
     </string>
-    <string name="pause_scanning_on_low_battery_title">Pause scanning on low battery</string>
+    <string name="pause_scanning_on_low_battery_title">Pause on low battery</string>
     <string name="pause_scanning_on_low_battery_description">When battery level less than %d%%</string>
+    <string name="pause_scanning_when_overheating">Pause when device is overheating</string>
     <string name="wifi_scan_frequency">Wi-Fi scan frequency</string>
     <string name="cell_tower_scan_frequency">Cell tower scan frequency</string>
     <string name="every_x_meters">Every %d meters</string>

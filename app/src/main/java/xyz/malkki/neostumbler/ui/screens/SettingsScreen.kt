@@ -91,6 +91,13 @@ private fun ScanningSettings() {
             },
             default = 0,
         )
+
+        SettingsToggle(
+            title = stringResource(id = R.string.pause_scanning_when_overheating),
+            preferenceKey = ActiveScanPreferenceKeys.PAUSE_WHEN_OVERHEATING,
+            default = false,
+        )
+
         SliderSetting(
             title = stringResource(R.string.wifi_scan_frequency),
             preferenceKey = ActiveScanPreferenceKeys.WIFI_SCAN_DISTANCE,

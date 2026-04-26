@@ -11,6 +11,7 @@ import androidx.core.app.PendingIntentCompat
 import xyz.malkki.neostumbler.MainActivity
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.StumblerApplication
+import xyz.malkki.neostumbler.activescan.ScanState
 import xyz.malkki.neostumbler.activescan.adapter.NotificationParams
 import xyz.malkki.neostumbler.activescan.adapter.NotificationStyle
 import xyz.malkki.neostumbler.activescan.adapter.ScanNotificationAdapter
@@ -21,6 +22,7 @@ private const val MAIN_ACTIVITY_PENDING_INTENT_REQUEST_CODE = 4321
 private const val STOP_SCANNER_SERVICE_PENDING_INTENT_REQUEST_CODE = 15415
 
 class ScanNotificationCreator : ScanNotificationAdapter {
+    @Suppress("LongMethod")
     override fun createNotification(context: Context, params: NotificationParams): Notification {
         val reportsCreatedText =
             context.applicationContext.getQuantityString(
@@ -45,7 +47,11 @@ class ScanNotificationCreator : ScanNotificationAdapter {
 
                 setContentTitle(
                     context.applicationContext.getTextCompat(
-                        R.string.notification_wireless_scanning_title
+                        if (params.state is ScanState.Paused) {
+                            R.string.scanning_status_paused
+                        } else {
+                            R.string.scanning_status_active
+                        }
                     )
                 )
 
