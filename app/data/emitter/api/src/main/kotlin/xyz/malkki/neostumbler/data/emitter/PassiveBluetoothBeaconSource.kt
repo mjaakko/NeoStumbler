@@ -11,6 +11,8 @@ interface PassiveBluetoothBeaconSource {
     /** Disables opportunistic Bluetooth scanner */
     fun disable()
 
+    fun isEnabled(): Boolean
+
     /**
      * Returns Bluetooth beacons collected by the opportunistic Bluetooth scanner
      *
