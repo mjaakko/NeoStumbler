@@ -7,7 +7,7 @@ import xyz.malkki.neostumbler.core.report.ReportData
  * empty SSID or those with SSID ending in "_nomap"
  */
 class HiddenWifiFilterer : ReportPostProcessor {
-    override fun postProcessReport(reportData: ReportData): ReportData? {
+    override suspend fun postProcessReport(reportData: ReportData): ReportData {
         return reportData.copy(
             wifiAccessPoints =
                 reportData.wifiAccessPoints.filter { wifiAccessPoint ->

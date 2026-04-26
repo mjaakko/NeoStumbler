@@ -1,5 +1,6 @@
 package xyz.malkki.neostumbler.report.postprocessor
 
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import xyz.malkki.neostumbler.core.MacAddress
@@ -12,7 +13,7 @@ import xyz.malkki.neostumbler.core.report.ReportData
 
 class HiddenWifiFiltererTest {
     @Test
-    fun `Hidden Wi-Fi access points are filtered`() {
+    fun `Hidden Wi-Fi access points are filtered`() = runTest {
         val hiddenWifiFilterer = HiddenWifiFilterer()
 
         val report =
@@ -64,7 +65,7 @@ class HiddenWifiFiltererTest {
 
         val filteredReport = hiddenWifiFilterer.postProcessReport(report)
 
-        assertEquals(1, filteredReport?.wifiAccessPoints?.size)
-        assertEquals("free wifi", filteredReport?.wifiAccessPoints?.first()?.emitter?.ssid)
+        assertEquals(1, filteredReport.wifiAccessPoints.size)
+        assertEquals("free wifi", filteredReport.wifiAccessPoints.first().emitter.ssid)
     }
 }

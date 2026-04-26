@@ -8,6 +8,7 @@ import xyz.malkki.neostumbler.data.emitter.PassiveBluetoothBeaconSource
 import xyz.malkki.neostumbler.data.emitter.PassiveCellTowerSource
 import xyz.malkki.neostumbler.data.emitter.PassiveWifiAccessPointSource
 import xyz.malkki.neostumbler.data.emitter.WifiManagerPassiveWifiAccessPointSource
+import xyz.malkki.neostumbler.report.postprocessor.ReportPostProcessor
 
 val passiveScanningModule = module {
     single<PassiveCellTowerSource> { MultiSubscriptionPassiveCellInfoSource(get()) }
@@ -20,5 +21,15 @@ val passiveScanningModule = module {
 
     single { PassiveScanStateManager(get(PASSIVE_SCAN_STATE)) }
 
-    single { PassiveScanReportCreator(get(), get(), get(), get(), get(), get(), get()) }
+    single {
+        PassiveScanReportCreator(
+            passiveWifiAccessPointSource = get(),
+            passiveCellTowerSource = get(),
+            passiveBluetoothBeaconSource = get(),
+            passiveScanStateManager = get(),
+            reportSaver = get(),
+            postProcessors = getAll<ReportPostProcessor>(),
+            activeScanManager = get(),
+        )
+    }
 }

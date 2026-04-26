@@ -77,7 +77,7 @@ class PassiveScanReportCreatorTest {
                 passiveBluetoothBeaconSource = passiveBluetoothBeaconSource,
                 passiveScanStateManager = passiveScanStateManager,
                 reportSaver = reportSaver,
-                postProcessorProvider = { emptyList() },
+                postProcessors = emptyList(),
                 activeScanManager =
                     mock<ActiveScanManager> {
                         on { state } doReturn MutableStateFlow(ScanState.Stopped)

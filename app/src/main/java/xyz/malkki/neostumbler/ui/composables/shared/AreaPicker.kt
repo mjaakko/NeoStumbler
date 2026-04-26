@@ -49,6 +49,7 @@ import xyz.malkki.neostumbler.data.location.LocationSourceProvider
 import xyz.malkki.neostumbler.domain.asDomainLatLng
 import xyz.malkki.neostumbler.domain.asMapLibreLatLng
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
+import xyz.malkki.neostumbler.geography.Circle
 import xyz.malkki.neostumbler.geography.LatLng
 import xyz.malkki.neostumbler.utils.maplibre.needsRecreation
 
@@ -57,9 +58,9 @@ fun AreaPickerDialog(
     title: String,
     positiveButtonText: String,
     negativeButtonText: String = stringResource(R.string.cancel),
-    onAreaSelected: (Pair<LatLng, Double>?) -> Unit,
+    onAreaSelected: (Circle?) -> Unit,
 ) {
-    val circle = remember { mutableStateOf(LatLng(0.0, 0.0) to 0.0) }
+    var circle by remember { mutableStateOf(Circle(center = LatLng(0.0, 0.0), radius = 0.0)) }
 
     BasicAlertDialog(onDismissRequest = { onAreaSelected.invoke(null) }) {
         Surface(
@@ -73,7 +74,7 @@ fun AreaPickerDialog(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Box(modifier = Modifier.weight(1.0f)) {
-                    AreaPickerMap(onCircleUpdated = { circle.value = it })
+                    AreaPickerMap(onCircleUpdated = { circle = it })
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -84,10 +85,8 @@ fun AreaPickerDialog(
                     }
 
                     TextButton(
-                        onClick = { onAreaSelected.invoke(circle.value) },
-                        enabled =
-                            circle.value.first.latitude != 0.0 ||
-                                circle.value.first.longitude != 0.0,
+                        onClick = { onAreaSelected.invoke(circle) },
+                        enabled = circle.center.latitude != 0.0 || circle.center.longitude != 0.0,
                     ) {
                         Text(text = positiveButtonText)
                     }
@@ -101,7 +100,7 @@ fun AreaPickerDialog(
 private const val CIRCLE_SCALE_FACTOR = 0.9f
 
 private const val MIN_ZOOM = 6.0
-private const val MAX_ZOOM = 15.0
+private const val MAX_ZOOM = 16.0
 
 private const val DEFAULT_ZOOM = 12.0
 
@@ -133,7 +132,7 @@ private const val CIRCLE_STROKE_OPACITY = 0.9f
 private const val CIRCLE_STROKE_WIDTH = 2f
 
 @Composable
-fun AreaPickerMap(onCircleUpdated: (Pair<LatLng, Double>) -> Unit) {
+fun AreaPickerMap(onCircleUpdated: (Circle) -> Unit) {
     val density = LocalDensity.current
 
     val currentLocation by getCurrentLocation()
@@ -163,7 +162,7 @@ fun AreaPickerMap(onCircleUpdated: (Pair<LatLng, Double>) -> Unit) {
                             radius.value *
                                 map.projection.getMetersPerPixelAtLatitude(newMapCenter.latitude)
 
-                        onCircleUpdated(newMapCenter to radiusMeters)
+                        onCircleUpdated(Circle(center = newMapCenter, radius = radiusMeters))
 
                         geoJsonSource.setGeoJson(
                             Point.fromLngLat(newMapCenter.longitude, newMapCenter.latitude)

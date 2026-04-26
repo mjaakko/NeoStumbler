@@ -275,6 +275,8 @@ dependencies {
 
     implementation(project(":app:data:settings:android-datastore"))
 
+    implementation(project(":app:data:restricted-areas:android-datastore"))
+
     implementation(project(":app:data:reports:room"))
 
     implementation(project(":app:data:movement:android"))

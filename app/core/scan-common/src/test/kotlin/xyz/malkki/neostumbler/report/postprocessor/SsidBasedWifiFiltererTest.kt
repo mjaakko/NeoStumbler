@@ -1,5 +1,6 @@
 package xyz.malkki.neostumbler.report.postprocessor
 
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import xyz.malkki.neostumbler.core.MacAddress
@@ -12,8 +13,8 @@ import xyz.malkki.neostumbler.core.report.ReportData
 
 class SsidBasedWifiFiltererTest {
     @Test
-    fun `No access points are filtered without a filter`() {
-        val ssidBasedWifiFilterer = SsidBasedWifiFilterer(emptyList())
+    fun `No access points are filtered without a filter`() = runTest {
+        val ssidBasedWifiFilterer = SsidBasedWifiFilterer({ emptyList() })
 
         val report =
             ReportData(
@@ -50,12 +51,12 @@ class SsidBasedWifiFiltererTest {
 
         val filteredReport = ssidBasedWifiFilterer.postProcessReport(report)
 
-        assertEquals(2, filteredReport?.wifiAccessPoints?.size)
+        assertEquals(2, filteredReport.wifiAccessPoints.size)
     }
 
     @Test
-    fun `Access points with SSID on the filter list get filtered`() {
-        val ssidBasedWifiFilterer = SsidBasedWifiFilterer(listOf("test_ssid"))
+    fun `Access points with SSID on the filter list get filtered`() = runTest {
+        val ssidBasedWifiFilterer = SsidBasedWifiFilterer({ listOf("test_ssid") })
 
         val report =
             ReportData(
@@ -92,6 +93,6 @@ class SsidBasedWifiFiltererTest {
 
         val filteredReport = ssidBasedWifiFilterer.postProcessReport(report)
 
-        assertEquals(0, filteredReport?.wifiAccessPoints?.size)
+        assertEquals(0, filteredReport.wifiAccessPoints.size)
     }
 }

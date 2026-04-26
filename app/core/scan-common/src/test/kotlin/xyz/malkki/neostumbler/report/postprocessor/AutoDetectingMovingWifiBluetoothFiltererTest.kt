@@ -1,5 +1,6 @@
 package xyz.malkki.neostumbler.report.postprocessor
 
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -13,8 +14,12 @@ import xyz.malkki.neostumbler.core.report.ReportData
 
 class AutoDetectingMovingWifiBluetoothFiltererTest {
     @Test
-    fun `Test moving Wi-Fi and Bluetooth are filtered`() {
-        val filterer = AutoDetectingMovingWifiBluetoothFilterer(maxDistanceFromExisting = 500.0)
+    fun `Test moving Wi-Fi and Bluetooth are filtered`() = runTest {
+        val filterer =
+            AutoDetectingMovingWifiBluetoothFilterer(
+                enabled = { true },
+                maxDistanceFromExisting = 500.0,
+            )
 
         val position1 =
             PositionObservation(
@@ -72,19 +77,23 @@ class AutoDetectingMovingWifiBluetoothFiltererTest {
 
         val filteredReport2 = filterer.postProcessReport(report2)
 
-        assertEquals(0, filteredReport2?.wifiAccessPoints?.size)
-        assertEquals(0, filteredReport2?.bluetoothBeacons?.size)
+        assertEquals(0, filteredReport2.wifiAccessPoints.size)
+        assertEquals(0, filteredReport2.bluetoothBeacons.size)
 
         // Test processing the first report again -> content should get filtered
         val filteredReport1 = filterer.postProcessReport(report1)
 
-        assertEquals(0, filteredReport1?.wifiAccessPoints?.size)
-        assertEquals(0, filteredReport1?.bluetoothBeacons?.size)
+        assertEquals(0, filteredReport1.wifiAccessPoints.size)
+        assertEquals(0, filteredReport1.bluetoothBeacons.size)
     }
 
     @Test
-    fun `Test stationary Wi-Fi is not filtered`() {
-        val filterer = AutoDetectingMovingWifiBluetoothFilterer(maxDistanceFromExisting = 500.0)
+    fun `Test stationary Wi-Fi is not filtered`() = runTest {
+        val filterer =
+            AutoDetectingMovingWifiBluetoothFilterer(
+                enabled = { true },
+                maxDistanceFromExisting = 500.0,
+            )
 
         val position1 =
             PositionObservation(
@@ -150,18 +159,19 @@ class AutoDetectingMovingWifiBluetoothFiltererTest {
 
         val filteredReport = filterer.postProcessReport(report2)
 
-        assertEquals(2, filteredReport?.wifiAccessPoints?.size)
+        assertEquals(2, filteredReport.wifiAccessPoints.size)
         assertTrue(
-            filteredReport?.wifiAccessPoints?.any {
+            filteredReport.wifiAccessPoints.any {
                 it.emitter.macAddress.value == "03:03:03:03:03:03"
-            } == true
+            }
         )
     }
 
     @Test
-    fun `Test moving device can be included in a report in non-deterministic mode`() {
+    fun `Test moving device can be included in a report in non-deterministic mode`() = runTest {
         val filterer =
             AutoDetectingMovingWifiBluetoothFilterer(
+                enabled = { true },
                 maxDistanceFromExisting = 500.0,
                 deterministic = false,
             )
@@ -211,7 +221,7 @@ class AutoDetectingMovingWifiBluetoothFiltererTest {
 
         @Suppress("UnusedPrivateProperty")
         for (i in 1..1000) {
-            if (filterer.postProcessReport(report2)!!.wifiAccessPoints.isNotEmpty()) {
+            if (filterer.postProcessReport(report2).wifiAccessPoints.isNotEmpty()) {
                 notFiltered = true
                 break
             }

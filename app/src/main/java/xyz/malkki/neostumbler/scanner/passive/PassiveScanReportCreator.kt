@@ -14,7 +14,7 @@ import xyz.malkki.neostumbler.data.emitter.PassiveCellTowerSource
 import xyz.malkki.neostumbler.data.emitter.PassiveWifiAccessPointSource
 import xyz.malkki.neostumbler.data.reports.ReportSaver
 import xyz.malkki.neostumbler.geography.LatLng
-import xyz.malkki.neostumbler.report.postprocessor.ReportPostProcessorProvider
+import xyz.malkki.neostumbler.report.postprocessor.ReportPostProcessor
 import xyz.malkki.neostumbler.scanner.ScanningConstants
 import xyz.malkki.neostumbler.scanner.createReports
 
@@ -30,7 +30,7 @@ class PassiveScanReportCreator(
     private val passiveBluetoothBeaconSource: PassiveBluetoothBeaconSource,
     private val passiveScanStateManager: PassiveScanStateManager,
     private val reportSaver: ReportSaver,
-    private val postProcessorProvider: ReportPostProcessorProvider,
+    private val postProcessors: List<ReportPostProcessor>,
     private val activeScanManager: ActiveScanManager,
 ) {
     @RequiresPermission(
@@ -128,7 +128,7 @@ class PassiveScanReportCreator(
                 cellTowers = cellTowers,
                 wifiAccessPoints = wifiAccessPoints,
                 bluetoothBeacons = bluetoothBeacons,
-                postProcessors = postProcessorProvider.getReportPostProcessors(),
+                postProcessors = postProcessors,
             )
 
         reports.updateLastUsedPosition(PassiveScanStateManager.DataType.CELL) { it.cellTowers }

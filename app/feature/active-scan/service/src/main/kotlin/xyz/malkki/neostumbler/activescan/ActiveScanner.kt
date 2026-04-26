@@ -33,7 +33,7 @@ import xyz.malkki.neostumbler.data.emitter.ActiveWifiAccessPointSource
 import xyz.malkki.neostumbler.data.location.LocationSourceProvider
 import xyz.malkki.neostumbler.data.movement.MovementDetectorProvider
 import xyz.malkki.neostumbler.data.thermal.ThermalStatusProvider
-import xyz.malkki.neostumbler.report.postprocessor.ReportPostProcessorProvider
+import xyz.malkki.neostumbler.report.postprocessor.ReportPostProcessor
 import xyz.malkki.neostumbler.scanner.ScanningConstants
 
 /**
@@ -71,7 +71,7 @@ class ActiveScanner(
     private val movementDetectorProvider: MovementDetectorProvider,
     private val batteryLevelMonitor: BatteryLevelMonitor,
     private val thermalStatusProvider: ThermalStatusProvider,
-    private val postProcessorProvider: ReportPostProcessorProvider,
+    private val postProcessors: List<ReportPostProcessor>,
 ) {
     private fun Flow<PositionObservation>.combineLocationsWithAirPressure():
         Flow<PositionObservation> {
@@ -184,8 +184,6 @@ class ActiveScanner(
                 scanSettings = scanSettings,
                 coroutineScope = this,
             )
-
-        val postProcessors = postProcessorProvider.getReportPostProcessors()
 
         locationFlow
             .combineLocationsWithAirPressure()

@@ -30,10 +30,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.compose.rememberLifecycleOwner
-import kotlin.math.abs
 import org.koin.androidx.compose.koinViewModel
 import org.maplibre.android.camera.CameraPosition
-import org.maplibre.android.geometry.LatLng
 import org.maplibre.android.location.LocationComponentActivationOptions
 import org.maplibre.android.location.LocationComponentConstants
 import org.maplibre.android.location.OnCameraTrackingChangedListener
@@ -57,6 +55,7 @@ import xyz.malkki.neostumbler.ui.composables.map.MapSettingsButton
 import xyz.malkki.neostumbler.ui.composables.shared.ComposableMap
 import xyz.malkki.neostumbler.ui.composables.shared.KeepScreenOn
 import xyz.malkki.neostumbler.ui.composables.shared.PermissionsDialog
+import xyz.malkki.neostumbler.ui.map.isCloseToOrigin
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
 import xyz.malkki.neostumbler.utils.maplibre.FlowLocationEngine
 import xyz.malkki.neostumbler.utils.maplibre.needsRecreation
@@ -301,12 +300,6 @@ private fun getHeatMapFillColor(darkMode: Boolean): PropertyValue<Expression> {
             ),
         )
     )
-}
-
-private const val MAX_COORDINATE_DIFF = 0.00001
-
-private fun LatLng.isCloseToOrigin(): Boolean {
-    return abs(latitude) < MAX_COORDINATE_DIFF && abs(longitude) < MAX_COORDINATE_DIFF
 }
 
 private fun addCoverageLayer(style: Style, layerIds: List<String>, color: String, opacity: Float) {
