@@ -2,6 +2,7 @@ package xyz.malkki.neostumbler.scanner.passive
 
 import android.Manifest
 import androidx.annotation.RequiresPermission
+import timber.log.Timber
 import xyz.malkki.neostumbler.activescan.ActiveScanManager
 import xyz.malkki.neostumbler.activescan.ScanState
 import xyz.malkki.neostumbler.core.emitter.Emitter
@@ -41,6 +42,12 @@ class PassiveScanReportCreator(
             ]
     )
     suspend fun createPassiveScanReport(positions: List<PositionObservation>) {
+        if (!passiveBluetoothBeaconSource.isEnabled()) {
+            Timber.w("Passive Bluetooth data source wasn't enabled, trying to enable..")
+
+            passiveBluetoothBeaconSource.enable()
+        }
+
         if (activeScanManager.state.value is ScanState.Active) {
             // If the active scanning service is collecting data,
             // we don't need to create passive reports

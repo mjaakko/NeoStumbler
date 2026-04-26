@@ -15,7 +15,10 @@ internal class PassiveBluetoothScanReceiver : CoroutineBroadcastReceiver() {
     companion object {
         private const val REQUEST_CODE = 700000
 
-        fun getPendingIntent(context: Context): PendingIntent {
+        private fun getPendingIntent(
+            context: Context,
+            @PendingIntentCompat.Flags flags: Int,
+        ): PendingIntent? {
             val intent =
                 Intent(context.applicationContext, PassiveBluetoothScanReceiver::class.java)
 
@@ -23,9 +26,17 @@ internal class PassiveBluetoothScanReceiver : CoroutineBroadcastReceiver() {
                 context.applicationContext,
                 REQUEST_CODE,
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT,
+                flags,
                 true,
-            )!!
+            )
+        }
+
+        fun getPendingIntent(context: Context): PendingIntent {
+            return getPendingIntent(context, PendingIntent.FLAG_UPDATE_CURRENT)!!
+        }
+
+        fun isEnabled(context: Context): Boolean {
+            return getPendingIntent(context, PendingIntent.FLAG_NO_CREATE) != null
         }
     }
 
