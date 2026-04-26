@@ -110,7 +110,7 @@
     <string name="reduced_metadata_description">דיווחים נשלחים בסדר אקראי תוך כדי שחותמות הזמן ועוד מטא-נתונים נחתכים</string>
     <string name="pause_scanning_on_low_battery_description">כשרמת הסוללה נמצאת מתחת ל%d%%</string>
     <string name="wifi_scan_frequency">תדירות סריקת Wi-Fi</string>
-    <string name="pause_scanning_on_low_battery_title">השהיית הסריקה כשהסוללה חלשה</string>
+    <string name="pause_scanning_on_low_battery_title">השהיה כשהסוללה חלשה</string>
     <string name="every_x_meters">כל %d מטרים</string>
     <string name="movement_detection">זיהוי תנועה</string>
     <string name="movement_detection_none_title">ללא</string>
@@ -165,7 +165,7 @@
     <string name="ok">בסדר</string>
     <string name="no_thanks">לא תודה</string>
     <string name="reset">איפוס</string>
-    <string name="beacon_id">מזהה %d‏: %s</string>
+    <string name="beacon_id">מזהה%1$d:‏ %2$s</string>
     <plurals name="reports_created">
         <item quantity="one">נוצר דיווח</item>
         <item quantity="two">נוצרו שני דיווחים</item>
@@ -210,4 +210,14 @@
     <string name="third_party_licenses">רישיונות צד־שלישי</string>
     <string name="privacy_policy">מדיניות פרטיות</string>
     <string name="geocoder_settings_title">Geocoder</string>
+    <string name="scanning_status_paused">הסריקה <annotation style="status">נעצרה</annotation></string>
+    <string name="beacon_type_ibeacon">iBeacon</string>
+    <string name="beacon_type_altbeacon">AltBeacon</string>
+    <string name="pause_scanning_when_overheating">להשהות כאשר המכשיר מתחמם מדי</string>
+    <string name="map_data_sources">מקורות נתוני מפה</string>
+    <plurals name="db_prune_custom_days">
+        <item quantity="one">לאחר יום</item>
+        <item quantity="two">לאחר יומיים</item>
+        <item quantity="other">לאחר %d ימים</item>
+    </plurals>
 </resources>
