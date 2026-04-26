@@ -62,7 +62,6 @@
     <string name="beacon_type">Majakan tyyppi: %s</string>
     <string name="report_upload_notification_channel_name">Raporttien lähetys</string>
     <string name="notification_sending_reports">Lähetetään raportteja</string>
-    <string name="notification_wireless_scanning_title">Langaton skannaus päällä</string>
     <plurals name="reports_created">
         <item quantity="one">%d raportti luotu</item>
         <item quantity="other">%d raporttia luotu</item>

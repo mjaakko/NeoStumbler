@@ -28,7 +28,6 @@
     <string name="delete_report">Видалити звіт</string>
     <string name="report_upload_notification_channel_name">Завантаження звітів</string>
     <string name="notification_sending_reports">Відправка звітів</string>
-    <string name="notification_wireless_scanning_title">Активне бездротове сканування</string>
     <string name="ignore_battery_optimizations_title">Ігнорувати оптимізацію батареї</string>
     <string name="export_notification_channel_name">Експорт даних</string>
     <string name="notification_exporting_data">Експортування даних…</string>

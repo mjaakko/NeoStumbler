@@ -32,7 +32,6 @@
     <string name="delete_report">Borrar informe</string>
     <string name="toast_reports_upload_failed">Error al enviar informes</string>
     <string name="toast_reports_upload_failed_no_endpoint">Error al enviar informes, porque no hay un destino configurado</string>
-    <string name="notification_wireless_scanning_title">Escaneo inalámbrico activo</string>
     <plurals name="reports_created">
         <item quantity="one">%d informe creado</item>
         <item quantity="many">%d informes creados</item>

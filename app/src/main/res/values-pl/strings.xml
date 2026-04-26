@@ -26,7 +26,6 @@
         <item quantity="other">Wysłano %d raportów</item>
     </plurals>
     <string name="notification_sending_reports">Wysyłanie raportów</string>
-    <string name="notification_wireless_scanning_title">Skanowanie aktywne</string>
     <plurals name="reports_created">
         <item quantity="one">Stworzono %d raport</item>
         <item quantity="few">Stworzono %d raporty</item>

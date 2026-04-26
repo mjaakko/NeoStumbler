@@ -68,7 +68,6 @@
     <string name="beacon_type_altbeacon">AltBeacon</string>
     <string name="report_upload_notification_channel_name">Report uploads</string>
     <string name="notification_sending_reports">Sending reports</string>
-    <string name="notification_wireless_scanning_title">Wireless scanning active</string>
     <plurals name="reports_created">
         <item quantity="one">%d report created</item>
         <item quantity="other">%d reports created</item>

@@ -45,7 +45,6 @@
     </plurals>
     <string name="toast_reports_upload_failed">Не удалось отправить отчёты</string>
     <string name="report_upload_notification_channel_name">Отправки отчётов</string>
-    <string name="notification_wireless_scanning_title">Беспроводное сканирование активно</string>
     <string name="ignore_battery_optimizations_description">Для наилучших результатов необходимо отключить оптимизацию батареи. Беспроводное сканирование и доступ к геолокации будут заметно хуже, когда включена оптимизация батареи и выключен экран</string>
     <string name="battery_optimizations_not_disabled_warning">Оптимизации батареи не были отключены</string>
     <string name="export_data">Экспортировать данные</string>

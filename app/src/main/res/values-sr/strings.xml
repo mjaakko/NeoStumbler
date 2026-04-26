@@ -64,7 +64,6 @@
     <string name="beacon_id">ID%1$d: %2$s</string>
     <string name="report_upload_notification_channel_name">Izveštaji otpremljeni</string>
     <string name="notification_sending_reports">Slanje izveštaja</string>
-    <string name="notification_wireless_scanning_title">Mrežno skeniranje je aktivno</string>
     <plurals name="reports_created">
         <item quantity="one">%d izveštaj sačinjen</item>
         <item quantity="few">%d izveštaja sačinjeno</item>

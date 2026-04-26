@@ -129,22 +129,23 @@ class ActiveScanService : CoroutineService() {
         }
 
         serviceScope.launch {
-            reportsCreated
-                .combine(gpsStatus) { a, b -> a to b }
-                .collect { (reportsCreated, gpsStatus) ->
+            combine(reportsCreated, gpsStatus, scanState) { reportsCreated, gpsStatus, scanState ->
+                    NotificationParams(
+                        notificationStyle = notificationStyle.value,
+                        startedAt = startedAt,
+                        state = scanState,
+                        autostarted = serviceAutostarted,
+                        reportsCreated = reportsCreated,
+                        gpsStatus = gpsStatus,
+                        stopIntent = stopIntent(this@ActiveScanService),
+                    )
+                }
+                .collect { notificationParams ->
                     notificationManager.notify(
                         NOTIFICATION_ID,
                         scanNotificationAdapter.createNotification(
                             context = this@ActiveScanService,
-                            params =
-                                NotificationParams(
-                                    notificationStyle = notificationStyle.value,
-                                    startedAt = startedAt,
-                                    autostarted = serviceAutostarted,
-                                    reportsCreated = reportsCreated,
-                                    gpsStatus = gpsStatus,
-                                    stopIntent = stopIntent(this@ActiveScanService),
-                                ),
+                            params = notificationParams,
                         ),
                     )
                 }
@@ -181,6 +182,7 @@ class ActiveScanService : CoroutineService() {
                     NotificationParams(
                         notificationStyle = notificationStyle.value,
                         startedAt = startedAt,
+                        state = ScanState.Active,
                         autostarted = serviceAutostarted,
                         reportsCreated = reportsCreated.value,
                         gpsStatus = gpsStatus.value,

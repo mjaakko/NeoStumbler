@@ -41,7 +41,6 @@
     <string name="toast_reports_upload_failed">Échec de l\'envoi des rapports</string>
     <string name="report_upload_notification_channel_name">Envoi des rapports</string>
     <string name="notification_sending_reports">Téléversement des rapports</string>
-    <string name="notification_wireless_scanning_title">Mesure sans fil active</string>
     <plurals name="reports_created">
         <item quantity="one">%d rapport créé</item>
         <item quantity="many">%d rapports créés</item>

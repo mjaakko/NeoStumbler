@@ -60,7 +60,6 @@
     <string name="speed_metres_per_second">Hastighet: %s m/s</string>
     <string name="altitude_metres">Höjd: %s m</string>
     <string name="signal_strength_dbm">Signalstyrka: %d dBm</string>
-    <string name="notification_wireless_scanning_title">Trådlös skanning aktiverad</string>
     <string name="satellites_in_use">%1$d⁄%2$d satelliter används</string>
     <string name="ignore_battery_optimizations_title">Ignorera batterioptimering</string>
     <string name="send_reports_automatically_title">Skicka rapporter automatiskt</string>

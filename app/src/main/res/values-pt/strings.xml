@@ -18,7 +18,6 @@
     <string name="delete_report">Apagar relatório</string>
     <string name="delete_report_confirmation">Tem a certeza que quer apagar o relatório?</string>
     <string name="notification_sending_reports">Enviando relatórios</string>
-    <string name="notification_wireless_scanning_title">Scan wireless ativo</string>
     <plurals name="reports_created">
         <item quantity="one">%d relatório criado</item>
         <item quantity="many">%d de relatórios criados</item>

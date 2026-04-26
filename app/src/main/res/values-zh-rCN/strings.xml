@@ -37,7 +37,6 @@
     <string name="toast_reports_upload_failed">报告上传失败</string>
     <string name="report_upload_notification_channel_name">上传报告</string>
     <string name="notification_sending_reports">正在上传报告</string>
-    <string name="notification_wireless_scanning_title">正在进行无线扫描</string>
     <plurals name="reports_created">
         <item quantity="other">已创建 %d 条报告</item>
     </plurals>

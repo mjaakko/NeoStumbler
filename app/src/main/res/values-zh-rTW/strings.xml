@@ -140,7 +140,6 @@
     <string name="bug_report_button">報告軟體 Bug</string>
     <string name="update_translations_button">更新翻譯</string>
     <string name="scanner_status_notification_channel_name">掃描狀態</string>
-    <string name="notification_wireless_scanning_title">無線掃描啟用中</string>
     <plurals name="reports_created">
         <item quantity="other">%d 個報告已建立</item>
     </plurals>

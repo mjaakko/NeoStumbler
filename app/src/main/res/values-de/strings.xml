@@ -35,7 +35,6 @@
     <string name="toast_reports_upload_failed">Hochladen der Berichte fehlgeschlagen</string>
     <string name="report_upload_notification_channel_name">Berichtuploads</string>
     <string name="notification_sending_reports">Berichte werden hochgeladen</string>
-    <string name="notification_wireless_scanning_title">Scan aktiv</string>
     <plurals name="reports_created">
         <item quantity="one">%d Bericht erstellt</item>
         <item quantity="other">%d Berichte erstellt</item>
