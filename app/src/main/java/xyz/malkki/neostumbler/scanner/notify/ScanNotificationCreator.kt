@@ -22,6 +22,7 @@ private const val MAIN_ACTIVITY_PENDING_INTENT_REQUEST_CODE = 4321
 private const val STOP_SCANNER_SERVICE_PENDING_INTENT_REQUEST_CODE = 15415
 
 class ScanNotificationCreator : ScanNotificationAdapter {
+    @Suppress("LongMethod")
     override fun createNotification(context: Context, params: NotificationParams): Notification {
         val reportsCreatedText =
             context.applicationContext.getQuantityString(
