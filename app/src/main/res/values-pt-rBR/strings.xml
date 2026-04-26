@@ -220,4 +220,5 @@
         <item quantity="many">Após %d de dias</item>
         <item quantity="other">Após %d dias</item>
     </plurals>
+    <string name="scanning_status_paused">Coleta <annotation style="status">em pausa</annotation></string>
 </resources>
