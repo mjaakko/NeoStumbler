@@ -63,8 +63,8 @@ import xyz.malkki.neostumbler.utils.maplibre.needsRecreation
 @ColorInt private const val HEAT_LOW: Int = 0x78d278ff
 @ColorInt private const val HEAT_HIGH: Int = 0x78aa00ff
 
-@ColorInt private const val HEAT_LOW_DARK: Int = 0x65de9cff
-@ColorInt private const val HEAT_HIGH_DARK: Int = 0x65bb45ff
+@ColorInt private const val HEAT_LOW_DARK: Int = 0x45de9cff
+@ColorInt private const val HEAT_HIGH_DARK: Int = 0x45bb45ff
 
 private const val COVERAGE_SOURCE_ID = "coverage-source"
 private const val COVERAGE_LAYER_PREFIX = "coverage-layer-"
@@ -72,7 +72,7 @@ private const val COVERAGE_LAYER_PREFIX = "coverage-layer-"
 private const val COVERAGE_COLOR = "#ff8000"
 private const val COVERAGE_COLOR_DARK = "#ffbb00"
 private const val COVERAGE_OPACITY = 0.4f
-private const val COVERAGE_OPACITY_DARK = 0.25f
+private const val COVERAGE_OPACITY_DARK = 0.18f
 
 private const val MIN_ZOOM = 3.0
 private const val MAX_ZOOM = 15.0
