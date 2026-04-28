@@ -180,7 +180,7 @@
     <string name="wifi_filter_settings_hint">WLANs mit einem dieser Schlagwörter im Namen werden nicht aufgezeichnet</string>
     <string name="reduced_metadata_title">Berichte mit weniger Metadaten senden</string>
     <string name="reduced_metadata_description">Berichte werden in zufälliger Reihenfolge mit eingeschränkten Zeitstempel und Metadaten gesendet</string>
-    <string name="pause_scanning_on_low_battery_title">Scannen bei niedrigem Akku pausieren</string>
+    <string name="pause_scanning_on_low_battery_title">Bei niedrigem Akkustand pausieren</string>
     <string name="pause_scanning_on_low_battery_description">Wenn der Akkustand weniger als %d%% ist</string>
     <plurals name="wifi_filter_settings_description">
         <item quantity="one">%d SSID gefiltert</item>
@@ -212,4 +212,6 @@
         <item quantity="one">Nach %d Tag</item>
         <item quantity="other">Nach %d Tagen</item>
     </plurals>
+    <string name="scanning_status_paused">Scannen <annotation style="status">angehalten</annotation></string>
+    <string name="pause_scanning_when_overheating">Bei Überhitzung des Geräts pausieren</string>
 </resources>
