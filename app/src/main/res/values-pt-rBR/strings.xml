@@ -191,7 +191,7 @@
         <item quantity="other">%d SSIDs filtrados</item>
     </plurals>
     <string name="disabled">Desativado</string>
-    <string name="pause_scanning_on_low_battery_title">Pausar a coleta quando a bateria estiver fraca</string>
+    <string name="pause_scanning_on_low_battery_title">Pausar quando a bateria estiver fraca</string>
     <string name="pause_scanning_on_low_battery_description">Quando o nível da bateria está abaixo de %d%%</string>
     <string name="permission_rationale_background_location_passive_scan">A coleta passiva de dados requer acesso à localização em segundo plano para criar relatórios enquanto o app não está ativo</string>
     <string name="passive_scanning_title">Coleta passiva de dados</string>
@@ -221,4 +221,5 @@
         <item quantity="other">Após %d dias</item>
     </plurals>
     <string name="scanning_status_paused">Coleta <annotation style="status">em pausa</annotation></string>
+    <string name="pause_scanning_when_overheating">Pausar ao superaquecer</string>
 </resources>
