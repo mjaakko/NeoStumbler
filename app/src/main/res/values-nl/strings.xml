@@ -186,7 +186,7 @@
     <string name="passive_scanning_description">Passieve gegevens­verzameling genereert rapporten op de achtergrond met minimale accu­belasting door gebruik te maken van gegevens die door andere apps worden opgevraagd.\n\nDe effectiviteit van passieve gegevens­verzameling hangt af van uw apparaat­type, de andere apps die u gebruikt en of u een gecombineerde locatie­provider gebruikt.\n\nWilt u passieve gegevens­verzameling inschakelen?</string>
     <string name="db_schema_version">Versie van database­schema: %d</string>
     <string name="reduced_metadata_description">Rapporten in willekeurige volgorde verzenden, zonder tĳd­stempels en andere meta­gegevens</string>
-    <string name="pause_scanning_on_low_battery_title">Scannen pauzeren bĳ laag accu­percentage</string>
+    <string name="pause_scanning_on_low_battery_title">Pauzeren bĳ laag accu­percentage</string>
     <string name="pause_scanning_on_low_battery_description">Wanneer het accu­percentage lager is dan %d%%</string>
     <string name="permission_rationale_background_location_passive_scan">Voor passieve gegevens­verzameling is toegang tot de locatie op de achtergrond nodig om rapporten te kunnen maken wanneer de app niet actief is</string>
     <string name="copy">Kopiëren</string>
@@ -212,4 +212,6 @@
         <item quantity="one">Na %d dag</item>
         <item quantity="other">Na %d dagen</item>
     </plurals>
+    <string name="pause_scanning_when_overheating">Pauzeren wanneer het apparaat oververhit raakt</string>
+    <string name="scanning_status_paused">Scannen <annotation style="status">onderbroken</annotation></string>
 </resources>
