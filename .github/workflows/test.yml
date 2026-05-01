@@ -64,7 +64,7 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
       - name: Cache AVD image
-        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v4
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v4
         id: avd-cache
         with:
           path: |
