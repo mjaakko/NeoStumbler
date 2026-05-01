@@ -6,6 +6,12 @@ updates:
       interval: "monthly"
     target-branch: "master"
     open-pull-requests-limit: 15
+    cooldown:
+      default-days: 7
+      exclude:
+        - 'org.jetbrains*'
+        - 'com.google*'
+        - 'androidx*'
     groups:
       kotlinx:
         patterns:
@@ -26,12 +32,16 @@ updates:
       interval: "monthly"
     target-branch: "master"
     open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7
   - package-ecosystem: "npm"
     directory: "website/"
     schedule:
       interval: "quarterly"
     target-branch: "master"
     open-pull-requests-limit: 10
+    cooldown:
+      default-days: 7
     groups:
       tailwindcss:
         patterns:
