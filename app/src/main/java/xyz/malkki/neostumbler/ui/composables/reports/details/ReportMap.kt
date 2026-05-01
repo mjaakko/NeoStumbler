@@ -28,6 +28,7 @@ import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.retryWhen
+import kotlinx.serialization.SerializationException
 import org.koin.compose.koinInject
 import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.camera.CameraUpdateFactory
@@ -304,42 +305,49 @@ private fun getEstimatedReportLocation(
     return produceState(null, report, geolocate.value) {
         val flow = flow {
             val locateResponse =
-                geolocate.value?.getLocation(
-                    GeolocateRequestDto(
-                        considerIp = false,
-                        bluetoothBeacons =
-                            report.bluetoothBeacons.map {
-                                BluetoothBeaconDto(
-                                    macAddress = it.emitter.macAddress.value,
-                                    signalStrength = it.emitter.signalStrength,
-                                )
-                            },
-                        wifiAccessPoints =
-                            report.wifiAccessPoints.map {
-                                WifiAccessPointDto(
-                                    macAddress = it.emitter.macAddress.value,
-                                    signalStrength = it.emitter.signalStrength,
-                                )
-                            },
-                        cellTowers =
-                            report.cellTowers
-                                .filter { it.emitter.cellId != null }
-                                .map {
-                                    GeolocateRequestDto.CellTowerDto(
-                                        radioType = it.emitter.radioType.name.lowercase(),
-                                        mobileCountryCode =
-                                            it.emitter.mobileCountryCode!!.toIntOrNull()!!,
-                                        mobileNetworkCode =
-                                            it.emitter.mobileNetworkCode!!.toIntOrNull()!!,
-                                        locationAreaCode = it.emitter.locationAreaCode,
-                                        cellId = it.emitter.cellId,
+                try {
+                    geolocate.value?.getLocation(
+                        GeolocateRequestDto(
+                            considerIp = false,
+                            bluetoothBeacons =
+                                report.bluetoothBeacons.map {
+                                    BluetoothBeaconDto(
+                                        macAddress = it.emitter.macAddress.value,
                                         signalStrength = it.emitter.signalStrength,
-                                        psc = it.emitter.primaryScramblingCode,
-                                        timingAdvance = it.emitter.timingAdvance,
                                     )
                                 },
+                            wifiAccessPoints =
+                                report.wifiAccessPoints.map {
+                                    WifiAccessPointDto(
+                                        macAddress = it.emitter.macAddress.value,
+                                        signalStrength = it.emitter.signalStrength,
+                                    )
+                                },
+                            cellTowers =
+                                report.cellTowers
+                                    .filter { it.emitter.cellId != null }
+                                    .map {
+                                        GeolocateRequestDto.CellTowerDto(
+                                            radioType = it.emitter.radioType.name.lowercase(),
+                                            mobileCountryCode =
+                                                it.emitter.mobileCountryCode!!.toIntOrNull()!!,
+                                            mobileNetworkCode =
+                                                it.emitter.mobileNetworkCode!!.toIntOrNull()!!,
+                                            locationAreaCode = it.emitter.locationAreaCode,
+                                            cellId = it.emitter.cellId,
+                                            signalStrength = it.emitter.signalStrength,
+                                            psc = it.emitter.primaryScramblingCode,
+                                            timingAdvance = it.emitter.timingAdvance,
+                                        )
+                                    },
+                        )
                     )
-                )
+                } catch (se: SerializationException) {
+                    // The server can return an invalid response -> catch SerializationException
+                    Timber.w(se, "Failed to parse geolocation response")
+
+                    null
+                }
 
             emit(locateResponse)
         }
