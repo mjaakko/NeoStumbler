@@ -198,7 +198,7 @@
     <string name="copy">Copiar</string>
     <string name="text_copied_to_clipboard">Texto copiado para o clipboard!</string>
     <string name="crash_log_title">Registo de falha</string>
-    <string name="crash_log_entry_title">Falha #%d</string>
+    <string name="crash_log_entry_title">Falha %s</string>
     <string name="moving_device_filter_title">Filtrar dispositivos móveis</string>
     <string name="moving_device_filter_description">Redes Wi-Fi e Bluetooth beacons móveis são automaticamente detetados e filtrados dos relatórios</string>
     <string name="map_show_coverage_layer">Exibir mapa de cobertura</string>

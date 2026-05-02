@@ -205,7 +205,7 @@
     <string name="db_schema_version">Wersja schematu bazy danych: %d</string>
     <string name="delete_reports_from_area">Usuń raporty z obszaru</string>
     <string name="crash_log_title">Dziennik błędów</string>
-    <string name="crash_log_entry_title">Awaria #%d</string>
+    <string name="crash_log_entry_title">Awaria %s</string>
     <string name="distance_to_estimated_location">Dystans do szacunkowej lokalizacji: %d m</string>
     <string name="map_tile_source_custom_title">Niestandardowy</string>
     <string name="map_tile_source_custom_style_url">Niestandardowy styl mapy URL</string>

@@ -157,7 +157,7 @@
     <string name="text_copied_to_clipboard">文本已复制至剪贴板！</string>
     <string name="disabled">已禁用</string>
     <string name="crash_log_title">崩溃日志</string>
-    <string name="crash_log_entry_title">崩溃 #%d</string>
+    <string name="crash_log_entry_title">崩溃 %s</string>
     <string name="db_schema_version">数据库模式（Schema）版本：%d</string>
     <string name="scanning_status_active">扫描<annotation style="status">已开始</annotation></string>
     <string name="scanning_status_not_active">扫描<annotation style="status">已停止</annotation></string>

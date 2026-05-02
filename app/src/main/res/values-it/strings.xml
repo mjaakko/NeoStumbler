@@ -198,7 +198,7 @@
     <string name="map_tile_source_custom_title">Personalizzato</string>
     <string name="map_tile_source_custom_style_url">URL stile mappa personalizzato</string>
     <string name="crash_log_title">Registro errori</string>
-    <string name="crash_log_entry_title">Errore #%d</string>
+    <string name="crash_log_entry_title">Errore %s</string>
     <string name="delete_all">Cancella tutto</string>
     <string name="disabled">Disattivato</string>
     <string name="beacon_type_ibeacon">iBeacon</string>

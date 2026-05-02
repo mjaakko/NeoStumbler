@@ -196,7 +196,7 @@
     <string name="permission_rationale_background_location_passive_scan">איסוף נתונים סביל דורש גישה למיקום ברקע כדי ליצור דוחות כשהיישומון לא פעיל</string>
     <string name="delete_all">מחק הכל</string>
     <string name="copy">העתקה</string>
-    <string name="crash_log_entry_title">קריסה #%d</string>
+    <string name="crash_log_entry_title">קריסה %s</string>
     <string name="moving_device_filter_description">רשתות Wi-Fi ומשאואות Bluetooth שנמצאות בתנועה מאותרות ומסוננות באופן אוטומטי מהדיווחים</string>
     <string name="moving_device_filter_title">סינון מכשירים בתנועה</string>
     <string name="text_copied_to_clipboard">הטקסט הועתק ללוח!</string>
