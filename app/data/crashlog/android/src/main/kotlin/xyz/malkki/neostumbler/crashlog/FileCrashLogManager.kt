@@ -3,6 +3,7 @@ package xyz.malkki.neostumbler.crashlog
 import java.nio.file.Path
 import kotlin.io.path.bufferedReader
 import kotlin.io.path.deleteIfExists
+import kotlin.io.path.getLastModifiedTime
 import kotlin.io.path.listDirectoryEntries
 import kotlin.io.path.name
 import kotlin.io.path.relativeTo
@@ -24,7 +25,7 @@ class FileCrashLogManager(private val crashLogDirectory: Path) : CrashLogManager
             crashLogDirectory.listDirectoryEntries().forEach { it.deleteIfExists() }
         }
 
-    override fun getEntries(): Flow<List<String>> =
+    override fun getEntries(): Flow<List<CrashLogEntry>> =
         watchDirectory(crashLogDirectory)
             .onStart { emit(Unit) }
             .onEach {
@@ -36,31 +37,48 @@ class FileCrashLogManager(private val crashLogDirectory: Path) : CrashLogManager
                     return@withContext crashLogDirectory
                         .listDirectoryEntries()
                         .sortedByDescending { it.name }
-                        .map { it.relativeTo(crashLogDirectory).toString() }
+                        .map { path ->
+                            CrashLogEntry(
+                                id = path.relativeTo(crashLogDirectory).toString(),
+                                timestamp = path.getLastModifiedTime().toInstant(),
+                            )
+                        }
                 }
             }
 
-    override suspend fun deleteEntry(entry: String): Unit =
-        withContext(Dispatchers.IO) { crashLogDirectory.resolve(entry).deleteIfExists() }
+    override suspend fun deleteEntry(entryId: String): Unit =
+        withContext(Dispatchers.IO) { crashLogDirectory.resolve(entryId).deleteIfExists() }
 
-    override suspend fun getLogsForEntry(entry: String): String? =
+    override suspend fun getEntryContent(entryId: String): CrashLogEntryContent? =
         withContext(Dispatchers.IO) {
-            val path = crashLogDirectory.resolve(entry)
+            val path: Path? = crashLogDirectory.resolve(entryId)
 
-            return@withContext buildString {
-                path.bufferedReader().use { reader ->
-                    while (true) {
-                        ensureActive()
+            if (path == null) {
+                null
+            } else {
+                CrashLogEntryContent(
+                    entry =
+                        CrashLogEntry(
+                            id = path.relativeTo(crashLogDirectory).toString(),
+                            timestamp = path.getLastModifiedTime().toInstant(),
+                        ),
+                    content =
+                        buildString {
+                            path.bufferedReader().use { reader ->
+                                while (true) {
+                                    ensureActive()
 
-                        val line = reader.readLine() ?: break
+                                    val line = reader.readLine() ?: break
 
-                        if (!isEmpty()) {
-                            append("\n")
-                        }
+                                    if (!isEmpty()) {
+                                        append("\n")
+                                    }
 
-                        append(line)
-                    }
-                }
+                                    append(line)
+                                }
+                            }
+                        },
+                )
             }
         }
 }

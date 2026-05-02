@@ -218,7 +218,7 @@
     </plurals>
     <string name="toast_deleted_all_reports">Dileys oll derivasow</string>
     <string name="crash_log_title">Kovskrif a droglammow</string>
-    <string name="crash_log_entry_title">Droglam #%d</string>
+    <string name="crash_log_entry_title">Droglam %s</string>
     <string name="about_app">A-dro NeoStumbler</string>
     <string name="app_version">Versyon: %s</string>
     <string name="app_variant">Varien: %s</string>

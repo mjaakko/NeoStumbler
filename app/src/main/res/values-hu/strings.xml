@@ -167,7 +167,7 @@
     <string name="send_reports_automatically_never">Soha</string>
     <string name="send_reports_automatically_on_any_network">Minden hálózaton</string>
     <string name="send_reports_automatically_on_unmetered_network">Nem mért hálózaton</string>
-    <string name="crash_log_entry_title">Hiba #%d</string>
+    <string name="crash_log_entry_title">Hiba %s</string>
     <string name="settings_group_privacy">Adatvédelem</string>
     <string name="wifi_filter_settings_title">Wi-Fi-k szűrése SSID alapján</string>
     <plurals name="wifi_filter_settings_description">

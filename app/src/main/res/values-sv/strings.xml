@@ -117,7 +117,7 @@
     </plurals>
     <string name="toast_deleted_all_reports">Raderade alla rapporter</string>
     <string name="crash_log_title">Krashlogg</string>
-    <string name="crash_log_entry_title">Krash #%d</string>
+    <string name="crash_log_entry_title">Krash %s</string>
     <string name="about_app">Om NeoStumbler</string>
     <string name="app_version">Version: %s</string>
     <string name="bug_report_button">Rapportera bugg</string>

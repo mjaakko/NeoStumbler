@@ -199,7 +199,7 @@
     <string name="copy">Copiar</string>
     <string name="text_copied_to_clipboard">Texto copiado para a área de transferência!</string>
     <string name="delete_all">Apagar tudo</string>
-    <string name="crash_log_entry_title">Falha #%d</string>
+    <string name="crash_log_entry_title">Falha %s</string>
     <string name="crash_log_title">Registros de falha</string>
     <string name="moving_device_filter_title">Filtrar dispositivos móveis</string>
     <string name="moving_device_filter_description">Redes Wi-Fi e sinalizadores Bluetooth que se movem são detectados automaticamente e filtrados dos relatórios</string>

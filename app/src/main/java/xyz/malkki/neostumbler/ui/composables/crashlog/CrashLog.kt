@@ -2,6 +2,7 @@ package xyz.malkki.neostumbler.ui.composables.crashlog
 
 import android.content.ClipData
 import android.content.Intent
+import android.text.format.DateFormat
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -15,10 +16,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -33,9 +34,12 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import java.time.Instant
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
+import xyz.malkki.neostumbler.crashlog.CrashLogEntry
+import xyz.malkki.neostumbler.crashlog.CrashLogEntryContent
 import xyz.malkki.neostumbler.crashlog.CrashLogManager
 import xyz.malkki.neostumbler.extensions.showToast
 import xyz.malkki.neostumbler.ui.composables.shared.CenteredCircularProgressIndicator
@@ -81,10 +85,10 @@ private fun CrashLog(
     crashLogManager: CrashLogManager = koinInject(),
     onOpenEntry: (String) -> Unit,
 ) {
-    val crashLogEntries: State<List<String>?> =
+    val crashLogEntries: List<CrashLogEntry>? by
         crashLogManager.getEntries().collectAsStateWithLifecycle(null)
 
-    if (crashLogEntries.value == null) {
+    if (crashLogEntries == null) {
         CenteredCircularProgressIndicator()
     } else {
         val scrollState = rememberScrollState()
@@ -93,15 +97,23 @@ private fun CrashLog(
             modifier = Modifier.padding(bottom = 8.dp).verticalScroll(state = scrollState),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            crashLogEntries.value!!.forEachIndexed { idx, entry ->
+            val context = LocalContext.current
+
+            val dateFormat = remember(context) { DateFormat.getDateFormat(context) }
+
+            val timeFormat = remember(context) { DateFormat.getTimeFormat(context) }
+
+            crashLogEntries!!.forEach { entry ->
                 Row(
                     modifier =
                         Modifier.fillMaxWidth()
                             .wrapContentHeight()
-                            .clickable(onClick = { onOpenEntry(entry) })
+                            .clickable(onClick = { onOpenEntry(entry.id) })
                             .padding(vertical = 8.dp)
                 ) {
-                    Text(text = stringResource(R.string.crash_log_entry_title, idx + 1))
+                    val formattedTimestamp = entry.timestamp.formatted(dateFormat, timeFormat)
+
+                    Text(text = stringResource(R.string.crash_log_entry_title, formattedTimestamp))
                 }
             }
         }
@@ -119,18 +131,33 @@ private fun CrashLogFileDialog(
 
     val coroutineScope = rememberCoroutineScope()
 
-    val logs = produceState<String?>(null, entry) { value = crashLogManager.getLogsForEntry(entry) }
+    val crashLogEntryContent by
+        produceState<CrashLogEntryContent?>(null, entry) {
+            value = crashLogManager.getEntryContent(entry)
+        }
+
+    val dateFormat = remember(context) { DateFormat.getDateFormat(context) }
+
+    val timeFormat = remember(context) { DateFormat.getTimeFormat(context) }
 
     Dialog(
-        title = stringResource(R.string.crash_log_title),
+        title =
+            crashLogEntryContent?.entry?.let {
+                val formattedTimestamp = it.timestamp.formatted(dateFormat, timeFormat)
+
+                stringResource(R.string.crash_log_entry_title, formattedTimestamp)
+            } ?: "",
         onDismissRequest = { onCloseDialog() },
         secondaryActions = {
             TextButton(
-                enabled = logs.value != null,
+                enabled = crashLogEntryContent != null,
                 onClick = {
                     coroutineScope.launch {
                         clipboard.setClipEntry(
-                            ClipData.newPlainText("NeoStumbler crash log", logs.value!!)
+                            ClipData.newPlainText(
+                                    "NeoStumbler crash log",
+                                    crashLogEntryContent!!.content,
+                                )
                                 .toClipEntry()
                         )
 
@@ -144,10 +171,13 @@ private fun CrashLogFileDialog(
             }
 
             TextButton(
-                enabled = logs.value != null,
+                enabled = crashLogEntryContent != null,
                 onClick = {
                     context.startActivity(
-                        Intent(Intent.ACTION_VIEW, getBugReportUrl(logs = logs.value!!).toUri())
+                        Intent(
+                            Intent.ACTION_VIEW,
+                            getBugReportUrl(logs = crashLogEntryContent?.content).toUri(),
+                        )
                     )
                 },
             ) {
@@ -160,18 +190,25 @@ private fun CrashLogFileDialog(
             }
         },
     ) {
-        if (logs.value == null) {
+        if (crashLogEntryContent == null) {
             CenteredCircularProgressIndicator()
         } else {
             Text(
                 modifier =
                     Modifier.verticalScroll(rememberScrollState())
                         .horizontalScroll(rememberScrollState()),
-                text = logs.value!!,
+                text = crashLogEntryContent!!.content,
                 fontSize = 12.sp,
                 fontFamily = FontFamily.Monospace,
                 softWrap = false,
             )
         }
     }
+}
+
+private fun Instant.formatted(
+    dateFormat: java.text.DateFormat,
+    timeFormat: java.text.DateFormat,
+): String {
+    return "${dateFormat.format(toEpochMilli())} ${timeFormat.format(toEpochMilli())}"
 }

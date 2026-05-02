@@ -197,7 +197,7 @@
     <string name="delete_all">Šalinti visas</string>
     <string name="copy">Kopijuoti</string>
     <string name="crash_log_title">Strigčių žurnalas</string>
-    <string name="crash_log_entry_title">Strigtis Nr. %d</string>
+    <string name="crash_log_entry_title">Strigtis %s</string>
     <string name="moving_device_filter_description">Mobilieji belaidžiai tinklai ir „Bluetooth“ siųstuvai automatiškai aptinkami ir neįtraukiami į ataskaitas</string>
     <string name="moving_device_filter_title">Neįtraukti mobiliųjų įrenginių</string>
     <string name="text_copied_to_clipboard">Tekstas nukopijuotas į iškarpinę!</string>

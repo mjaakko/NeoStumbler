@@ -29,9 +29,9 @@ class FileCrashLogManagerTest {
 
         assertEquals(2, entries?.size)
 
-        assertEquals("crash!!!", crashLogManager.getLogsForEntry(entries!!.first()))
+        assertEquals("crash!!!", crashLogManager.getEntryContent(entries!!.first().id)?.content)
 
-        crashLogManager.deleteEntry(entries.first())
+        crashLogManager.deleteEntry(entries.first().id)
 
         assertEquals(1, crashLogManager.getEntries().firstOrNull()?.size)
 

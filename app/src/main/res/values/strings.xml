@@ -252,7 +252,7 @@
     </plurals>
     <string name="toast_deleted_all_reports">Deleted all reports</string>
     <string name="crash_log_title">Crash log</string>
-    <string name="crash_log_entry_title">Crash #%d</string>
+    <string name="crash_log_entry_title">Crash %s</string>
     <string name="about_app">About NeoStumbler</string>
     <string name="app_version">Version: %s</string>
     <string name="app_variant">Variant: %s</string>

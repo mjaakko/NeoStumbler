@@ -254,7 +254,7 @@
     </plurals>
     <string name="toast_deleted_all_reports">Kaikki raportit poistettu</string>
     <string name="crash_log_title">Virheloki</string>
-    <string name="crash_log_entry_title">Virhe #%d</string>
+    <string name="crash_log_entry_title">Virhe %s</string>
     <string name="about_app">Tietoja NeoStumblerista</string>
     <string name="app_version">Versio: %s</string>
     <string name="app_variant">Variantti: %s</string>
