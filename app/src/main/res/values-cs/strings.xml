@@ -188,7 +188,7 @@
     <string name="locate_path">Cesta pro geolokaci</string>
     <string name="settings_group_privacy">Soukromí</string>
     <string name="wifi_filter_settings_title">Filtrovat Wi-Fi sítě podle SSID</string>
-    <string name="pause_scanning_on_low_battery_title">Pozastavit skenování při slabé baterii</string>
+    <string name="pause_scanning_on_low_battery_title">Pozastavit při slabé baterii</string>
     <string name="pause_scanning_on_low_battery_description">Když je úroveň baterie nižší než %d%%</string>
     <string name="passive_scanning_title">Pasivní sběr dat</string>
     <string name="passive_scanning_description">Pasivní sběr dat vytváří reporty v pozadí s minimálním dopadem na baterii využíváním dat vyžadovaných jinými aplikacemi.\n\nÚčinnost pasivního sběru dat bude záviset na typu vašeho zařízení, aplikacích které používáte, a na tom, zda máte k dispozici spojenou polohu..\n\nChcete spustit pasivní sběr dat?</string>
@@ -213,4 +213,12 @@
     <string name="beacon_type_ibeacon">iBeacon</string>
     <string name="beacon_type_altbeacon">AltBeacon</string>
     <string name="map_data_sources">Zdroje map</string>
+    <string name="scanning_status_paused">Skenování <annotation style="status">pozastaveno</annotation></string>
+    <string name="pause_scanning_when_overheating">Pozastavit když se zařízení přehřívá</string>
+    <plurals name="db_prune_custom_days">
+        <item quantity="one">Po %d dni</item>
+        <item quantity="few">Po %d dnech</item>
+        <item quantity="many">Po %d dnech</item>
+        <item quantity="other">Po %d dnech</item>
+    </plurals>
 </resources>
