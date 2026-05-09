@@ -7,8 +7,6 @@ import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.os.IBinder
 import android.os.PowerManager
-import android.os.PowerManager.PARTIAL_WAKE_LOCK
-import android.os.PowerManager.WakeLock
 import androidx.core.app.ServiceCompat
 import androidx.core.content.getSystemService
 import java.time.Instant
@@ -28,13 +26,12 @@ import xyz.malkki.neostumbler.activescan.adapter.NotificationParams
 import xyz.malkki.neostumbler.activescan.adapter.NotificationStyle
 import xyz.malkki.neostumbler.activescan.adapter.ScanNotificationAdapter
 import xyz.malkki.neostumbler.activescan.adapter.ScannerQSTileAdapter
+import xyz.malkki.neostumbler.activescan.internal.WakeLockHelper
 import xyz.malkki.neostumbler.coroutineservice.CoroutineService
 import xyz.malkki.neostumbler.data.location.GpsStatus
 import xyz.malkki.neostumbler.data.location.GpsStatusSource
 import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.data.settings.getEnumFlow
-
-private const val WAKE_LOCK_TAG = "xyz.malkki.neostumbler:ActiveScanService"
 
 private const val NOTIFICATION_ID = 55555
 
@@ -80,11 +77,11 @@ class ActiveScanService : CoroutineService() {
 
     private lateinit var notificationManager: NotificationManager
 
-    private lateinit var wakeLock: WakeLock
-
     private lateinit var startedAt: Instant
 
     private lateinit var notificationStyle: StateFlow<NotificationStyle>
+
+    private lateinit var wakeLockHelper: WakeLockHelper
 
     /** Whether the service was started without explicit user input */
     private var serviceAutostarted = true
@@ -99,10 +96,7 @@ class ActiveScanService : CoroutineService() {
 
         notificationManager = getSystemService<NotificationManager>()!!
 
-        wakeLock =
-            getSystemService<PowerManager>()!!.newWakeLock(PARTIAL_WAKE_LOCK, WAKE_LOCK_TAG).apply {
-                acquire()
-            }
+        wakeLockHelper = WakeLockHelper(getSystemService<PowerManager>()!!)
 
         notificationStyle =
             settings
@@ -202,8 +196,12 @@ class ActiveScanService : CoroutineService() {
                 onGpsActive = { gpsActive -> this@ActiveScanService.gpsActive.value = gpsActive },
                 onScanStateChange = { state ->
                     if (state is ActiveScanner.ScanState.Active) {
+                        wakeLockHelper.acquireWakeLock()
+
                         _scanState.value = ScanState.Active
                     } else if (state is ActiveScanner.ScanState.Paused) {
+                        wakeLockHelper.releaseWakeLock()
+
                         val reasons = EnumSet.noneOf(ScanState.Paused.PauseReason::class.java)
                         if (state.notMoving) {
                             reasons.add(ScanState.Paused.PauseReason.NOT_MOVING)
@@ -225,7 +223,7 @@ class ActiveScanService : CoroutineService() {
     }
 
     override fun onDestroy() {
-        wakeLock.release()
+        wakeLockHelper.releaseWakeLock()
 
         super.onDestroy()
 
