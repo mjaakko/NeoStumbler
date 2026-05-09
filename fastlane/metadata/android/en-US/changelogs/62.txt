@@ -1,0 +1,11 @@
+* Scanning can now be paused when the device is overheating
+* Scanning status is shown as "paused" when the active scanner is not collecting data
+* Wake locks are released when scanning is paused to reduce battery consumption
+* Passive mode now collects data when the active scanner is paused
+* Slightly increased transparency for map coverage hexagons in the dark mode
+* Added timestamps to the crash log
+* Migrated to network security configuration for Android 17 compatibility
+* Minor optimizations
+* Fixed a crash when the geolocate endpoint returns invalid data
+* Updated dependencies
+* Updated translations
