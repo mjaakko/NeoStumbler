@@ -1,0 +1,5 @@
+* Het scannen van BLE-bakens is aangepast om gebruik te maken van een aangepaste implementatie van de baken­parser
+* Primaire versleutelings­code / fysieke cel-ID toegevoegd aan geolocatie­verzoeken
+* Afhankelijkheden bijgewerkt
+* Vertalingen bijgewerkt
+* Vertaling in het Cornish toegevoegd

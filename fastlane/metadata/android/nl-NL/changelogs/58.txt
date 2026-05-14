@@ -1,0 +1,6 @@
+* In de passieve modus kunnen nu gegevens voor Bluetooth-bakens worden verzameld
+* De Google Play-variant kan nu vragen om een recensie achter te laten in de Play Store nadat het scannen is gestopt
+* Kleine prestatie­verbeteringen
+* Een crash in de rapporten­lijst is verholpen
+* Vertalingen zijn bijgewerkt
+* Afhankelijkheden zijn bijgewerkt

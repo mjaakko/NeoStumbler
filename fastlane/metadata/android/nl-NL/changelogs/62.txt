@@ -1,0 +1,11 @@
+* Het scannen kan nu worden gepauzeerd wanneer het apparaat oververhit raakt
+* De scan­status wordt weer­gegeven als ‘gepauzeerd’ wanneer de actieve scanner geen gegevens verzamelt
+* Wake-locks worden opgeheven wanneer het scannen is gepauzeerd om het accu­verbruik te verminderen
+* De passieve modus verzamelt nu gegevens wanneer de actieve scanner is gepauzeerd
+* De transparantie van de zeshoeken voor kaart­dekking is in de donkere modus iets verhoogd
+* Tijd­stempels toegevoegd aan het crashlogboek
+* Over­gestapt op netwerkbeveiligings­configuratie voor compatibiliteit met Android 17
+* Kleine optimalisaties
+* Een crash verholpen wanneer het geolocatie-eindpunt ongeldige gegevens retourneert
+* Afhankelijkheden bijgewerkt
+* Vertalingen bijgewerkt
