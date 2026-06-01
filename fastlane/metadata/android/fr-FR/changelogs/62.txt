@@ -1,0 +1,11 @@
+* Le scan peut désormais être mise en pause quand l'appareil surchauffe
+* L'état des mesures est affiché "en pause" quand la collecte active ne fonctionne pas
+* Les wake-locks sont relâchés quand les mesures sont en pause pour réduire l'utilisation de batterie
+* La collecte passive collecte désormais des données quand la collecte passive est en pause
+* Légère augmentation de la transparence sur les hexagones de couvertures sur la carte en thème sombre
+* Ajout des horodatages aux journaux d'erreur
+* Migration aux configurations de sécurité réseau pour la compatibilité avec Android 17
+* Optimisations mineures
+* Correction d'un crash quand le serveur renvoie des données invalides aux requêtes de localisation (geolocate endpoint)
+* Mise à jour des dépendances
+* Mise à jour des traductions
