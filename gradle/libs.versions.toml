@@ -3,7 +3,7 @@ koin = "4.2.1"
 
 kotlin = "2.3.21"
 
-kotlinxCoroutines = "1.10.2"
+kotlinxCoroutines = "1.11.0"
 
 androidGradlePlugin = "8.13.2"
 
