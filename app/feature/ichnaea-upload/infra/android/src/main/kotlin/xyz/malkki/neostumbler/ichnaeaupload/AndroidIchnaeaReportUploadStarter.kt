@@ -95,6 +95,7 @@ class AndroidIchnaeaReportUploadStarter(
                             requiresBatteryNotLow = false,
                         )
                     )
+                    .setInputData(Data.Builder().addNotificationData().build())
                     .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                     .build(),
             )
@@ -115,12 +116,7 @@ class AndroidIchnaeaReportUploadStarter(
                         Data.Builder()
                             .putLong(ReportSendWorker.INPUT_REUPLOAD_FROM, from.toEpochMilli())
                             .putLong(ReportSendWorker.INPUT_REUPLOAD_TO, to.toEpochMilli())
-                            .putInt(ReportSendWorker.INPUT_NOTIFICATION_TITLE, notificationTitle)
-                            .putInt(ReportSendWorker.INPUT_NOTIFICATION_ICON, notificationIcon)
-                            .putString(
-                                ReportSendWorker.INPUT_NOTIFICATION_CHANNEL_ID,
-                                notificationChannelId,
-                            )
+                            .addNotificationData()
                             .build()
                     )
                     .setConstraints(Constraints.NONE)
@@ -131,4 +127,9 @@ class AndroidIchnaeaReportUploadStarter(
 
         return workId
     }
+
+    private fun Data.Builder.addNotificationData(): Data.Builder =
+        putInt(ReportSendWorker.INPUT_NOTIFICATION_TITLE, notificationTitle)
+            .putInt(ReportSendWorker.INPUT_NOTIFICATION_ICON, notificationIcon)
+            .putString(ReportSendWorker.INPUT_NOTIFICATION_CHANNEL_ID, notificationChannelId)
 }
