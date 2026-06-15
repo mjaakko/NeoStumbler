@@ -1,0 +1,3 @@
+* Probleem opgelost waarbij het passief verzamelen van gegevens een crash veroorzaakte wanneer Bluetooth was uitgeschakeld
+* Afhankelijkheden bijgewerkt
+* Vertalingen bijgewerkt

@@ -183,7 +183,7 @@
         <item quantity="other">已过滤 %d 个 SSID</item>
     </plurals>
     <string name="wifi_filter_settings_hint">不会收集 SSID 中带有以上任意关键词的 Wi-Fi 网络</string>
-    <string name="pause_scanning_on_low_battery_title">低电量时暂停扫描</string>
+    <string name="pause_scanning_on_low_battery_title">电量低时暂停</string>
     <string name="pause_scanning_on_low_battery_description">当电量低于 %d%% 时暂停扫描</string>
     <string name="moving_device_filter_title">排除移动的设备</string>
     <string name="moving_device_filter_description">自动检测并排除移动的 Wi-Fi 网络和蓝牙信标</string>
@@ -203,4 +203,9 @@
     <string name="beacon_type_ibeacon">iBeacon</string>
     <string name="beacon_type_altbeacon">AltBeacon</string>
     <string name="map_data_sources">地图数据来源</string>
+    <plurals name="db_prune_custom_days">
+        <item quantity="other">%d 天后</item>
+    </plurals>
+    <string name="pause_scanning_when_overheating">设备温度过高时暂停</string>
+    <string name="scanning_status_paused">扫描<annotation style="status">已暂停</annotation></string>
 </resources>

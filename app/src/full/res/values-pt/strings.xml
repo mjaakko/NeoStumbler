@@ -7,4 +7,5 @@
     <string name="permission_rationale_activity_recognition">Os scans automáticos precisam de acesso à atividade corrente</string>
     <string name="prefer_fused_location_description">O provedor de localização combinada combina dados de outras fontes além do GPS para determinar a localização</string>
     <string name="autoscan_failed_to_enable_description">O scan automático utiliza o reconhecimento de atividades do Google Play Services, que pode não estar disponível no seu dispositivo</string>
+    <string name="fused_location_no_gps_warning">O dispositivo não tem um receptor de GPS</string>
 </resources>

@@ -204,7 +204,7 @@
     <string name="mnc">MNC : %s</string>
     <string name="lac">LAC : %s</string>
     <string name="beacon_id">ID%1$d : %2$s</string>
-    <string name="pause_scanning_on_low_battery_title">Pause du scanning en cas de batterie faible</string>
+    <string name="pause_scanning_on_low_battery_title">Pause du scan si la batterie est faible</string>
     <string name="pause_scanning_on_low_battery_description">Lorsque le niveau de la batterie est inférieur à %d%%</string>
     <string name="permission_rationale_background_location_passive_scan">La collecte passive de données nécessite l\'accès à la localisation en arrière-plan pour créer des rapports quand l\'application n\'est pas active</string>
     <string name="delete_reports_from_area">Supprimer les rapports de la zone</string>
@@ -226,4 +226,12 @@
     <string name="privacy_policy">Politique de confidentialité</string>
     <string name="beacon_type_ibeacon">iBeacon</string>
     <string name="map_data_sources">Sources de données de la carte</string>
+    <string name="scanning_status_paused">Mesures <annotation style="status">en pause</annotation></string>
+    <string name="beacon_type_altbeacon">AltBeacon</string>
+    <string name="pause_scanning_when_overheating">Mettre en pause quand l\'appareil surchauffe</string>
+    <plurals name="db_prune_custom_days">
+        <item quantity="one">Après %d jour</item>
+        <item quantity="many">Après %d jours</item>
+        <item quantity="other">Après %d jours</item>
+    </plurals>
 </resources>

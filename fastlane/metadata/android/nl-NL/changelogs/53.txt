@@ -1,0 +1,3 @@
+- Probleem opgelost waarbij inhoud onder de systeem­balken in de instellingen werd weer­gegeven op grotere schermen
+- Probleem opgelost waarbij kaart­labels niet werden geladen met VersaTiles
+- Vertalingen bijgewerkt

@@ -1,0 +1,11 @@
+* Der Scanvorgang kann nun angehalten werden, wenn das Gerät überhitzt ist
+* Der Scanstatus wird als „angehalten“ angezeigt, wenn der aktive Scanner keine Daten erfasst
+* Wake-Locks werden freigegeben, wenn der Scanvorgang angehalten wird, um den Akkuverbrauch zu senken
+* Der passive Modus erfasst nun Daten, wenn der aktive Scanner angehalten ist
+* Die Transparenz der Hexagone zur Kartenabdeckung wurde im Dunkelmodus leicht erhöht
+* Zeitstempel wurden zum Absturzprotokoll hinzugefügt
+* Umstellung auf Netzwerksicherheitskonfiguration für Kompatibilität mit Android 17
+* Kleinere Optimierungen
+* Ein Absturz wurde behoben, der auftrat, wenn der Geolokalisierungs-Endpunkt ungültige Daten zurückgab
+* Aktualisierte Abhängigkeiten
+* Aktualisierte Übersetzungen

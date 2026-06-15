@@ -1,0 +1,19 @@
+UI / UX
+- Overgestapt op Material 3-stijl UI
+- Verbeterde UI-indeling voor grotere schermen
+- De titelbalk is verwijderd uit het kaartscherm
+- Ondersteuning toegevoegd voor donkere kaartstijlen
+- Probleem opgelost waarbij het dialoogvenster voor kaartvermeldingen niet het geselecteerde thema gebruikte
+- De GPS-status wordt niet langer weergegeven wanneer het apparaat geen GPS-ontvanger heeft
+
+Passieve gegevensverzameling
+- Ongeldige dubbele zendmasten worden uit passief gegenereerde rapporten gefilterd bij gebruik van meerdere simkaarten
+- Passieve gegevensverzameling genereert nu meer rapporten door te controleren of het vorige rapport hetzelfde type gegevens bevat
+
+Technisch
+- Uitzendingen worden nu asynchroon verwerkt
+- Corruptiehandler toegevoegd aan opslag voor passieve scanstatus
+- Afhankelijkheden bijgewerkt
+
+Overig
+- Vertalingen bijgewerkt

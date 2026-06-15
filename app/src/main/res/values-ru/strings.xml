@@ -195,7 +195,7 @@
     <string name="reduced_metadata_title">Отправить отчёты с меньшим количеством метаданных</string>
     <string name="passive_scanning_description">Пассивный сбор данных собирает отчёты в фоновом режиме с минимальным воздействием на батарею используя данные запрошенные другими приложениями. \n\nЭффективность сбора данных зависит от типа устройства, других приложений, которые вы используете и используете ли вы объединённого поставщика геолокации. \n\nВы хотите включить пассивный сбор данных?</string>
     <string name="disabled">Выключено</string>
-    <string name="pause_scanning_on_low_battery_title">Приостанавливать сканирование при низком заряде</string>
+    <string name="pause_scanning_on_low_battery_title">Приостанавливать при низком заряде</string>
     <string name="pause_scanning_on_low_battery_description">Когда заряд меньше чем %d%%</string>
     <string name="passive_scanning_title">Пассивный сбор данных</string>
     <string name="permission_rationale_background_location_passive_scan">Пассивный сбор данных требует доступ к геолокации в фоне для создания отчётов, когда приложение не активно</string>
@@ -218,4 +218,12 @@
     <string name="geocoder_default_title">По умолчанию</string>
     <string name="geocoder_disabled_title">Выключен</string>
     <string name="privacy_policy">Политика конфиденциальности</string>
+    <string name="scanning_status_paused">Сканирование <annotation style="status">приостановлено</annotation></string>
+    <string name="pause_scanning_when_overheating">Приостанавливать когда устройство перегревается</string>
+    <plurals name="db_prune_custom_days">
+        <item quantity="one">После %d дня</item>
+        <item quantity="few">После %d дней</item>
+        <item quantity="many">После %d дней</item>
+        <item quantity="other">После %d дней</item>
+    </plurals>
 </resources>

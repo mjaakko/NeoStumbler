@@ -14,11 +14,11 @@
     <string name="no_data">Nyns eus data</string>
     <string name="copy">Kopia</string>
     <string name="text_copied_to_clipboard">Tekst kopys dhe astel glypp!</string>
-    <string name="disabled">Marowhes</string>
-    <string name="waiting_for_location">Ow gortos rag tyller</string>
+    <string name="disabled">Marow</string>
+    <string name="waiting_for_location">Ow kortos rag tyller</string>
     <string name="failed_to_open_selected_file">Ny yllir ygeri an restren dhewisys</string>
     <string name="permissions_needed">Kumyasow a res</string>
-    <string name="permissions_not_granted">Kumyasow res nyns o grontys</string>
+    <string name="permissions_not_granted">Kumyasow res nag o grontys</string>
     <string name="wifi_icon_description">Arwodhik DiWi</string>
     <string name="cell_tower_icon_description">Arwodhik tour klapkodh</string>
     <string name="bluetooth_icon_description">Arwodhik Bluetooth</string>
@@ -35,13 +35,13 @@
     <string name="reports_not_uploaded">Derivasow anughkargys: %d</string>
     <string name="reports_last_uploaded">Derivasow ughkargys diwettha: %s</string>
     <string name="reports_last_uploaded_never">bynner</string>
-    <string name="reports_empty">Nyns eus derivasow hwath</string>
+    <string name="reports_empty">Nyns eus derivasow na hwath</string>
     <string name="start_scanning">Dalleth owth arhwilas</string>
     <string name="stop_scanning">Astel owth arhwilas</string>
-    <string name="scanning_status_active">Arhwilyansow <annotation style="status">byw</annotation></string>
-    <string name="scanning_status_not_active">Arhwilyansow <annotation style="status">marow</annotation></string>
+    <string name="scanning_status_active">Arhwilyansow yw <annotation style="status">byw</annotation></string>
+    <string name="scanning_status_not_active">Arhwilyansow yw <annotation style="status">marow</annotation></string>
     <string name="delete_report">Dilea derivas</string>
-    <string name="delete_report_confirmation">Owgh hwi sur mynnowgh dilea an derivas?</string>
+    <string name="delete_report_confirmation">Owgh hwi sur hwi a vynn dilea an derivas?</string>
     <plurals name="toast_reports_uploaded">
         <item quantity="zero">Ughkargys %d derivasow</item>
         <item quantity="one">Ughkargys %d derivas</item>
@@ -65,7 +65,7 @@
     <string name="beacon_id">ID%1$d: %2$s</string>
     <string name="beacon_type_ibeacon">iBeacon</string>
     <string name="beacon_type_altbeacon">AltBeacon</string>
-    <string name="report_upload_notification_channel_name">Ughkargow dherivas</string>
+    <string name="report_upload_notification_channel_name">Ughkargow derivas</string>
     <string name="notification_sending_reports">Ow tanvon derivasow</string>
     <plurals name="reports_created">
         <item quantity="zero">%d derivasow gwrys</item>
@@ -78,7 +78,7 @@
     <string name="satellites_in_use">%1$d/%2$d lorellow yn devnydh</string>
     <string name="ignore_battery_optimizations_title">Skonya aswon erbysyon batri</string>
     <string name="ignore_battery_optimizations_description">Rag an gwella sewyansow, erbysyon batri kodh bos marowhes. Arhwilyansow dhiwiver ha hedhas tyller yw strothys yn arwedhek pan erbysyon batri yw byw ha\'n skrin yw marow</string>
-    <string name="battery_optimizations_not_disabled_warning">Erbysyon batri nyns o marowhys</string>
+    <string name="battery_optimizations_not_disabled_warning">Erbysyon batri nag o marowhys</string>
     <string name="send_reports_automatically_title">Danvon derivasow yn awtomatek</string>
     <string name="send_reports_automatically_never">Bynner</string>
     <string name="send_reports_automatically_on_any_network">War neb rosweyth</string>
@@ -94,7 +94,7 @@
     <string name="import_data">Ynperthi data</string>
     <string name="import_raw_database">Ynperthi sel dherivadow griv</string>
     <string name="import_raw_database_description">Owth ynperthi sel dherivadow kriv a wra aslea an sel dherivadow gyns</string>
-    <string name="import_database_not_valid">An restren dhewisys nyns o synsi sel dherivadow ewn</string>
+    <string name="import_database_not_valid">An restren dhewisys nag a syns sel dherivadow ewn</string>
     <plurals name="import_database_successful">
         <item quantity="zero">Ynperthys sel dherivadow gans %d derivasow</item>
         <item quantity="one">Ynperthys sel dherivadow gans %d derivas</item>
@@ -108,8 +108,8 @@
     <string name="cells">Touryow</string>
     <string name="beacons">Beaconys Bluetooth</string>
     <string name="add_quick_settings_tile">Keworra prileghen settyansow dhe dhalleth arhwilyansow yn es?</string>
-    <string name="mls_warning_title">MLS re merwys</string>
-    <string name="mls_warning_text">Gonis Mozilla GPS re merwys hag a receva data na fella. Byttegyns, hwi a yll danvon data dhe beaconDB, may provia gonis kesplegadow gans GMG\n\nNotyewgh mar pleg, beaconDB yw yn displegyans hwath hag hemma a venn fatel agas data yw handlys. Hwi a yll redya an <annotation link="privacy_policy">polici privetter</annotation> rag kedhlow pella\n\n\nA vynnowgh settya beaconDB avel an dhiwedhva? Hemm a yll bos chanjys wosa henna y\'n settyansow</string>
+    <string name="mls_warning_title">MLS re varwsa</string>
+    <string name="mls_warning_text">Gonis Mozilla GPS re varwsa hag a receva data na fella. Byttegyns, hwi a yll danvon data dhe beaconDB, may provia gonis kesplegadow gans GMG\n\nNotyewgh mar pleg, beaconDB yw yn displegyans hwath hag hemma a venn fatel agas data yw handlys. Hwi a yll redya an <annotation link="privacy_policy">polici privetter</annotation> rag kedhlow pella\n\n\nA vynnowgh settya beaconDB avel an dhiwedhva? Hemm a yll bos chanjys wosa henna y\'n settyansow</string>
     <string name="endpoint">Diwedhva</string>
     <string name="submission_path">Tyller rag derivasow</string>
     <string name="locate_path">Tyller rag GPS</string>
@@ -141,9 +141,9 @@
         <item quantity="many">%d SSIDys sidhlys</item>
         <item quantity="other">%d SSIDys sidhlys</item>
     </plurals>
-    <string name="wifi_filter_settings_hint">Rosweythyow DiWi gans neb an eryow alhwedh ma yn aga SSID nyns yw kuntelys</string>
-    <string name="reduced_metadata_title">Danvon derivasow gans le data</string>
-    <string name="reduced_metadata_description">Derivasow yw danvenys yn aray chonsus gans termyn ha data aral removys</string>
+    <string name="wifi_filter_settings_hint">Rosweythyow DiWi gans neb an geryow alhwedh ma y\'ga SSID nag yw kuntelys</string>
+    <string name="reduced_metadata_title">Danvon derivasow gans data le</string>
+    <string name="reduced_metadata_description">Derivasow yw danvenys yn aray chonsus gans termyn ha data erel removys</string>
     <string name="pause_scanning_on_low_battery_title">Powes war vatri gwag</string>
     <string name="pause_scanning_on_low_battery_description">Mar batri yw le es %d%%</string>
     <string name="wifi_scan_frequency">Menowghter arhwilyansow DiWi</string>
@@ -155,12 +155,12 @@
     <string name="movement_detection_none_title">Vyth</string>
     <string name="movement_detection_none_description">Pesya arhwilyansow mar nyns owgh gwaya</string>
     <string name="movement_detection_location_title">Selys war dyller</string>
-    <string name="movement_detection_location_description">Powes arhwilyansow mar tyller nyns yw ow chanjya. GPS yw byw hwath</string>
+    <string name="movement_detection_location_description">Powes arhwilyansow mar tyller nag yw ow chanjya. GPS yw byw hwath</string>
     <string name="passive_scanning_title">Kuntel data godhevek</string>
-    <string name="passive_scanning_description">Kuntel data godhevek a wruthyl derivasow yn kilva gans effeyth ispoyntel war vatri gans ow tevnydhya data govynys gans appys aral.\n\nAn effeythuster a guntel data godhevek a wra kregi war\'n eghen a\'gas devis, an appys aral ow tevnydhyowgh, ha mars yma provier tyller kesunys kavadow.\n\nA vynnowgh bywhe kuntel data godhevek?</string>
-    <string name="movement_detection_significant_motion_title">Helerghell wayans</string>
+    <string name="passive_scanning_description">Kuntel data godhevek a wra derivasow yn kilva gans effeyth ispoyntel war vatri gans ow tevnydhya data govynys gans appys erel.\n\nAn effeythuster a guntel data godhevek a wra kregi war\'n eghen a\'gas devis, an appys erel hwi ow tevnydhya, ha mars eus provier tyller kesunys kavadow.\n\nA vynnowgh bywhe kuntel data godhevek?</string>
+    <string name="movement_detection_significant_motion_title">Helerghell gwayans</string>
     <string name="movement_detection_significant_motion_description">Powes arhwilyansow ha GPS mar nyns eus gwayans a vri helerghys. Sawya batri, mar nyns yw fydhyadow war nebes devisyow</string>
-    <string name="notification_style">Eghen warnyans</string>
+    <string name="notification_style">Eghen a warnyans</string>
     <string name="notification_style_minimal_title">Ispoyntel</string>
     <string name="notification_style_minimal_description">Diskwedhes an messach gans manylyon vyth</string>
     <string name="notification_style_basic_title">Selyek</string>
@@ -170,17 +170,17 @@
     <string name="app_language">Yeth</string>
     <string name="system_default_language">Yeth dhefowt system</string>
     <string name="map_data_sources">Devedhyansow data mappa</string>
-    <string name="map_tile_source">Devedhyans prileghen vappa</string>
+    <string name="map_tile_source">Devedhyans prileghen mappa</string>
     <string name="map_tile_source_custom_title">A-vusur</string>
-    <string name="map_tile_source_custom_style_url">Gorgevren is mappa a-vusur</string>
+    <string name="map_tile_source_custom_style_url">Gorgevren gis mappa a-vusur</string>
     <string name="map_show_coverage_layer">Diskwedhes gwiskas efander</string>
     <string name="show_my_location">Diskwedhes ow thyller</string>
     <string name="permission_rationale_fine_location">Rag gwruthyl derivasow gans data tyller dhe les, res yw dhywgh ri kummyas rag tyller kewar</string>
-    <string name="permission_rationale_read_phone_state">Hedhas dhe studh devis yw res rag owth arhwilas touryow glapkodh</string>
+    <string name="permission_rationale_read_phone_state">Hedhas dhe studh devis yw res rag owth arhwilas touryow klapkodh</string>
     <string name="permission_rationale_bluetooth">Rag arhwilas beaconys Bluetooth, res yw dhywgh ri kummyas Bluetooth</string>
     <string name="permission_rationale_post_notifications">Rag diskwedhes gwarnyans studh, res yw dhywgh ri kummyas gwarnyansow</string>
-    <string name="permission_rationale_background_location_quick_settings">"Rag dalleth arhwilyansow dhyworth an settyansow uskis,  res yw dhywgh ri kummyas dhe\'n tyller yn kilva.\n\nNotyewgh, hemm yw fronnans beghys dhywgh gans an system oberyans Android. Agas tyller nyns yw drehedhys yn kilva mar ny vywhowgh arhwilyansow wodhevek po awtomatek"</string>
-    <string name="permission_rationale_background_location_passive_scan">Rag gwruthyl derivasow mars an app nyns yw byw, res yw dhywgh ri kummyas tyller yn kilva</string>
+    <string name="permission_rationale_background_location_quick_settings">Rag dalleth arhwilyansow dhyworth an settyansow uskis, res yw dhywgh ri kummyas dhe\'n tyller yn kilva.\n\nNotyewgh, hemm yw fronnans beghys dhywgh gans an system oberyans Android. Agas tyller nag yw drehedhys yn kilva mar ny vywhowgh arhwilyansow wodhevek po awtomatek</string>
+    <string name="permission_rationale_background_location_passive_scan">Rag gwruthyl derivasow mars an app nag yw byw, res yw dhywgh ri kummyas tyller yn kilva</string>
     <string name="permission_rationale_location_map">Rag diskwedhes agas tyller war\'n mappa, res yw dhywgh ri kummyas tyller</string>
     <string name="troubleshooting_title">Digolmow Gemmyn</string>
     <string name="troubleshooting_description">Ewnhe kudynnow gemmyn gans arhwilyansow</string>
@@ -207,7 +207,7 @@
     <string name="delete_reports_by_date">Dilea derivasow erbynn dydh</string>
     <string name="delete_reports_from_area">Dilea derivasow erbynn tyller</string>
     <string name="delete_all_reports">Dilea oll derivasow</string>
-    <string name="delete_all_reports_confirmation">Owgh hwi sur mynnowgh dilea oll derivasow?</string>
+    <string name="delete_all_reports_confirmation">Owgh hwi sur hwi a vynn dilea oll derivasow?</string>
     <plurals name="toast_deleted_reports">
         <item quantity="zero">Dileys %d derivasow</item>
         <item quantity="one">Dileys %d derivas</item>
@@ -226,10 +226,10 @@
     <string name="contributors">kevriysi</string>
     <string name="bug_report_button">Derivas kudyn</string>
     <string name="update_translations_button">Nowedhi treylyansow</string>
-    <string name="third_party_licenses">Kumyasow barti-tressa</string>
+    <string name="third_party_licenses">Kumyasow parti-tressa</string>
     <string name="privacy_policy">Polici privetter</string>
-    <string name="scanning_status_paused">Arhwilyansow <annotation style="status">powesys</annotation></string>
-    <string name="pause_scanning_when_overheating">Powes mar devis yw re booth</string>
+    <string name="scanning_status_paused">Arhwilyansow yw <annotation style="status">powesys</annotation></string>
+    <string name="pause_scanning_when_overheating">Powes mar tevis yw re booth</string>
     <plurals name="db_prune_custom_days">
         <item quantity="zero">Wosa %d dedhyow</item>
         <item quantity="one">Wosa %d dydh</item>

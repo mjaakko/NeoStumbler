@@ -43,7 +43,7 @@
     </plurals>
     <string name="toast_reports_upload_failed">レポートのアップロードに失敗しました</string>
     <string name="toast_reports_upload_failed_no_endpoint">エンドポイントが設定されていないため、レポートのアップロードに失敗しました</string>
-    <string name="report_upload_notification_channel_name">レポートの送信</string>
+    <string name="report_upload_notification_channel_name">アップロードレポートの送信</string>
     <string name="notification_sending_reports">レポートを送信中</string>
     <plurals name="reports_created">
         <item quantity="other">%d件のレポートを作成しました</item>
@@ -142,7 +142,7 @@
     <string name="permission_rationale_post_notifications">
         ステータス通知を表示するためには通知へのアクセス権が必要です
     </string>
-    <string name="permission_rationale_background_location_quick_settings">クイック設定からスキャンを開始するには、バックグラウンドで位置情報にアクセスする必要があります</string>
+    <string name="permission_rationale_background_location_quick_settings">クイック設定からスキャンを開始するには、バックグラウンドで位置情報にアクセスする必要があります\n\nこれはAndroidオペレーティングシステムによる制限です。パッシブスキャンまたは自動スキャンを有効にしない限り、バックグラウンドで位置情報にアクセスされることはありません。</string>
     <string name="permission_rationale_location_map">
         地図上に現在地を表示するには、位置情報へのアクセス権が必要です
     </string>
@@ -179,4 +179,60 @@
     <string name="contributors">貢献者</string>
     <string name="bug_report_button">バグを報告</string>
     <string name="update_translations_button">翻訳を更新</string>
+    <string name="delete_all">すべて削除</string>
+    <string name="copy">コピー</string>
+    <string name="text_copied_to_clipboard">クリップボードにテキストをコピーしました!</string>
+    <string name="disabled">無効化</string>
+    <string name="scanning_status_active">スキャン中<annotation style="status">有効な</annotation></string>
+    <string name="scanning_status_paused">スキャン中 <annotation style="status">一時停止</annotation></string>
+    <string name="scanning_status_not_active">スキャン中 <annotation style="status">無効な</annotation></string>
+    <string name="distance_to_estimated_location">推定位置までの距離:%dm</string>
+    <string name="speed_metres_per_second">スピード:%s m/s</string>
+    <string name="altitude_metres">高度:%sm</string>
+    <string name="signal_strength_dbm">信号の強さ:%ddBm</string>
+    <string name="unknown_cell_id">不明なcell ID</string>
+    <string name="mcc">MCC(国識別コード):%s</string>
+    <string name="mnc">MNC(通信事業者識別コード):%s</string>
+    <string name="lac">LAC(市区町村識別コード):%s</string>
+    <string name="radio_type">タイプ:%s</string>
+    <string name="beacon_type">ビーコンタイプ:%s</string>
+    <string name="beacon_id">ID%1$d:%2$s</string>
+    <string name="beacon_type_ibeacon">iBeacon</string>
+    <string name="send_reports_automatically_never">しない</string>
+    <string name="send_reports_automatically_on_any_network">どんなネットワークでも</string>
+    <string name="send_reports_automatically_on_unmetered_network">非従量制課金接続で</string>
+    <string name="reduced_metadata_title">メタデータがないレポートを送信する</string>
+    <string name="reduced_metadata_description">レポートはランダムに送信され、タイムスタンプや他のメタデータは切り捨てられます</string>
+    <string name="pause_scanning_on_low_battery_title">低残量バッテリーでは停止する</string>
+    <string name="pause_scanning_on_low_battery_description">バッテリーが%d%%になったら</string>
+    <string name="pause_scanning_when_overheating">デバイスが過熱状態になったら停止する</string>
+    <string name="crash_log_entry_title">クラッシュ %s</string>
+    <string name="crash_log_title">クラッシュログ</string>
+    <string name="db_schema_version">データベースのスキーマバージョン: %d</string>
+    <plurals name="db_prune_custom_days">
+        <item quantity="other">%d日後</item>
+    </plurals>
+    <string name="beacon_type_altbeacon">AltBeacon(オープンソースによる)</string>
+    <string name="export_raw_database_compress">データベースファイルを圧縮する</string>
+    <string name="locate_path">位置のためのパス</string>
+    <string name="settings_group_privacy">プライバシー</string>
+    <string name="wifi_filter_settings_title">SSIDによってWi-Fiをフィルター</string>
+    <plurals name="wifi_filter_settings_description">
+        <item quantity="other">%dつのSSIDをフィルター済み</item>
+    </plurals>
+    <string name="wifi_filter_settings_hint">これらのキーワードがSSIDに含まれるWi-Fiは収集されません</string>
+    <string name="moving_device_filter_title">動的なデバイスをフィルターする</string>
+    <string name="moving_device_filter_description">動的なWi-FiとBluetoothビーコンは自動的に検出され、レポートから除外されます</string>
+    <string name="passive_scanning_title">パッシブデータ収集</string>
+    <string name="passive_scanning_description">パッシブデータ収集は、他のアプリケーションから要求されたデータを利用して、バッテリーへの影響を最小限に抑えながらバックグラウンドでレポートを作成します。\n\nパッシブデータ収集の効果は、デバイスの種類、使用している他のアプリ、および統合位置情報プロバイダーが利用可能かどうかによって異なります。\n\nパッシブデータ収集を有効にしますか？</string>
+    <string name="map_data_sources">マップのデータソース</string>
+    <string name="map_tile_source_custom_title">カスタム</string>
+    <string name="map_tile_source_custom_style_url">カスタムマップのURL</string>
+    <string name="map_show_coverage_layer">カバレッジレイヤーを表示</string>
+    <string name="permission_rationale_background_location_passive_scan">パッシブデータ収集では、アプリがアクティブでないときにレポートを作成するために、バックグラウンドで位置情報へのアクセスが必要です</string>
+    <string name="geocoder_settings_title">ジオコーダー</string>
+    <string name="geocoder_default_title">デフォルト</string>
+    <string name="geocoder_disabled_title">無効化</string>
+    <string name="third_party_licenses">サードパーティライセンス</string>
+    <string name="privacy_policy">プライバシーポリシー</string>
 </resources>
