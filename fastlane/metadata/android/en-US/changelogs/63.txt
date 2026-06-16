@@ -1,0 +1,4 @@
+* Fixed not being able to send reports on older Android versions
+* Optimized storage for passive Bluetooth scan results
+* Updated dependencies
+* Updated translations
