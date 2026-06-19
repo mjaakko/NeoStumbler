@@ -1,6 +1,6 @@
 package convention
 
-import io.gitlab.arturbosch.detekt.Detekt
+import dev.detekt.gradle.Detekt
 import kotlin.math.roundToInt
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -8,7 +8,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
     id("com.ncorti.ktfmt.gradle")
-    id("io.gitlab.arturbosch.detekt")
+    id("dev.detekt")
 }
 
 /**
@@ -57,6 +57,19 @@ configurations.configureEach {
     }
 }
 
-tasks.withType<Detekt>().configureEach { jvmTarget = jvmTargetVersion }
+detekt {
+    config.setFrom(rootProject.layout.projectDirectory.file("config/detekt/detekt.yml"))
+}
+
+tasks.withType<Detekt>().configureEach {
+    jvmTarget = jvmTargetVersion
+
+    reports {
+        checkstyle.required.set(false)
+        html.required.set(false)
+        sarif.required.set(false)
+        markdown.required.set(false)
+    }
+}
 
 ktfmt { kotlinLangStyle() }

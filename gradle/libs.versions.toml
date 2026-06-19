@@ -148,7 +148,7 @@ bundletool = { id = "app.accrescent.tools.bundletool", version = "0.2.4" }
 
 ktfmt = { id = "com.ncorti.ktfmt.gradle", version = "0.26.0" }
 
-detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.8" }
+detekt = { id = "dev.detekt", version = "2.0.0-alpha.5" }
 
 aboutLibraries = { id = "com.mikepenz.aboutlibraries.plugin.android", version.ref = "aboutLibraries" }
 
