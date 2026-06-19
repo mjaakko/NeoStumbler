@@ -59,6 +59,8 @@ configurations.configureEach {
 
 detekt {
     config.setFrom(rootProject.layout.projectDirectory.file("config/detekt/detekt.yml"))
+
+    ignoredBuildTypes.add("release")
 }
 
 tasks.withType<Detekt>().configureEach {
@@ -70,6 +72,12 @@ tasks.withType<Detekt>().configureEach {
         sarif.required.set(false)
         markdown.required.set(false)
     }
+}
+
+tasks.register("detektAll") {
+    description = "Runs Detekt for all sources"
+
+    dependsOn(tasks.named("detektMain"), tasks.named("detektTest"))
 }
 
 ktfmt { kotlinLangStyle() }
