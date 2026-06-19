@@ -58,8 +58,7 @@ private fun PositionObservation.asPlatformLocation(): Location {
     return Location("manual").apply {
         this.latitude = position.latitude
         this.longitude = position.longitude
-        if (position.accuracy != null) {
-            this.accuracy = position.accuracy!!.toFloat()
-        }
+
+        position.accuracy?.let { accuracy -> this.accuracy = accuracy.toFloat() }
     }
 }

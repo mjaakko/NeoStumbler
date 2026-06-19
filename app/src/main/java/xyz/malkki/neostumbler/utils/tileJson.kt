@@ -22,23 +22,23 @@ suspend fun getTileJsonLayerIds(tileJsonUrl: String, httpClient: Call.Factory): 
 
                 emptyList()
             } else {
-                it.body.string()?.let { jsonString ->
+                it.body.string().let { jsonString ->
                     try {
                         val vectorLayers = JSONObject(jsonString).optJSONArray("vector_layers")
 
-                        buildList<String> {
-                            vectorLayers?.let {
-                                for (i in 0 until it.length()) {
-                                    add(it.getJSONObject(i).getString("id"))
+                        buildList {
+                            vectorLayers?.let { vectorLayer ->
+                                for (i in 0 until vectorLayer.length()) {
+                                    add(vectorLayer.getJSONObject(i).getString("id"))
                                 }
                             }
                         }
                     } catch (ex: JSONException) {
                         Timber.e(ex, "TileJSON parser failed")
 
-                        emptyList<String>()
+                        emptyList()
                     }
-                } ?: emptyList<String>()
+                }
             }
         }
     }

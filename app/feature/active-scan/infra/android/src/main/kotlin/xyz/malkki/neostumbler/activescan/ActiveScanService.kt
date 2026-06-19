@@ -147,7 +147,7 @@ class ActiveScanService : CoroutineService() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        require(intent != null) { "Intent should not be null" }
+        requireNotNull(intent) { "Intent should not be null" }
 
         val autostart = intent.getBooleanExtra(EXTRA_AUTOSTART, false)
         if (!intent.getBooleanExtra(EXTRA_START, true) && (!serviceAutostarted || !autostart)) {

@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
                 .getBooleanFlow(PreferenceKeys.DYNAMIC_COLOR_THEME, false)
                 .stateIn(lifecycleScope, started = SharingStarted.Eagerly, initialValue = null)
 
-        installSplashScreen().apply { setKeepOnScreenCondition { dynamicColorFlow.value == null } }
+        installSplashScreen().setKeepOnScreenCondition { dynamicColorFlow.value == null }
 
         enableEdgeToEdge()
 

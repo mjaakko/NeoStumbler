@@ -56,7 +56,11 @@ class StatisticsViewModel(reportStatisticsProvider: ReportStatisticsProvider) : 
                         DataType.BEACONS -> reportStatisticsProvider.getNewBluetoothsPerDay()
                     }
                 }
-                .map { cumulativeSum(it.toSortedMap()).map { it.key.toEpochDay() to it.value } }
+                .map {
+                    cumulativeSum(it.toSortedMap()).map { (date, count) ->
+                        date.toEpochDay() to count
+                    }
+                }
                 .onEach {
                     _loading.value =
                         if (it.isEmpty()) {

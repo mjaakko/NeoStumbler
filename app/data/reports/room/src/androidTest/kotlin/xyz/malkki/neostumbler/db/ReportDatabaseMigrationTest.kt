@@ -7,9 +7,10 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+private const val TEST_DB = "report-db-migration-test"
+
 @RunWith(AndroidJUnit4::class)
 class ReportDatabaseMigrationTest {
-    private val TEST_DB = "report-db-migration-test"
 
     @get:Rule
     val helper: MigrationTestHelper =
@@ -20,7 +21,7 @@ class ReportDatabaseMigrationTest {
 
     @Test
     fun testRunningAllMigrations() {
-        helper.createDatabase(TEST_DB, 1).apply { close() }
+        helper.createDatabase(TEST_DB, 1).close()
 
         helper.runMigrationsAndValidate(TEST_DB, REPORT_DB_VERSION, true)
     }
