@@ -50,58 +50,55 @@ class AreaPickerTest {
     val permissionRule: GrantPermissionRule =
         GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION)
 
-    private val mockHttpClient: Call.Factory =
-        object : Call.Factory {
-            override fun newCall(request: Request): Call {
-                return object : Call {
-                    override fun cancel() {}
+    private val mockHttpClient: Call.Factory = Call.Factory { request ->
+        object : Call {
+            override fun cancel() {}
 
-                    override fun clone(): Call {
-                        return this
-                    }
+            override fun clone(): Call {
+                return this
+            }
 
-                    override fun enqueue(responseCallback: Callback) {
-                        responseCallback.onFailure(this, IOException("Failed"))
-                    }
+            override fun enqueue(responseCallback: Callback) {
+                responseCallback.onFailure(this, IOException("Failed"))
+            }
 
-                    override fun execute(): Response {
-                        throw IOException("Failed")
-                    }
+            override fun execute(): Response {
+                throw IOException("Failed")
+            }
 
-                    override fun isCanceled(): Boolean {
-                        return false
-                    }
+            override fun isCanceled(): Boolean {
+                return false
+            }
 
-                    override fun isExecuted(): Boolean {
-                        return false
-                    }
+            override fun isExecuted(): Boolean {
+                return false
+            }
 
-                    override fun request(): Request {
-                        return request
-                    }
+            override fun request(): Request {
+                return request
+            }
 
-                    override fun timeout(): Timeout {
-                        return timeout()
-                    }
+            override fun timeout(): Timeout {
+                return timeout()
+            }
 
-                    override fun <T : Any> tag(type: KClass<T>): T? {
-                        return null
-                    }
+            override fun <T : Any> tag(type: KClass<T>): T? {
+                return null
+            }
 
-                    override fun <T> tag(type: Class<out T>): T? {
-                        return null
-                    }
+            override fun <T> tag(type: Class<out T>): T? {
+                return null
+            }
 
-                    override fun <T : Any> tag(type: KClass<T>, computeIfAbsent: () -> T): T {
-                        return computeIfAbsent()
-                    }
+            override fun <T : Any> tag(type: KClass<T>, computeIfAbsent: () -> T): T {
+                return computeIfAbsent()
+            }
 
-                    override fun <T : Any> tag(type: Class<T>, computeIfAbsent: () -> T): T {
-                        return computeIfAbsent()
-                    }
-                }
+            override fun <T : Any> tag(type: Class<T>, computeIfAbsent: () -> T): T {
+                return computeIfAbsent()
             }
         }
+    }
 
     private val testContext: Context = ApplicationProvider.getApplicationContext()
 

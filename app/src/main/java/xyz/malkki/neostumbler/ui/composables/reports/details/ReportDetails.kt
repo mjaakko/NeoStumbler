@@ -55,6 +55,8 @@ private const val WIFIS = 0
 private const val CELLS = 1
 private const val BLUETOOTHS = 2
 
+private val DATA_TYPES = listOf(WIFIS, CELLS, BLUETOOTHS)
+
 @Composable
 fun ReportDetailsDialog(reportId: Long, onDismiss: () -> Unit) {
     BasicAlertDialog(onDismissRequest = onDismiss) {
@@ -142,7 +144,7 @@ private fun ReportDataLists(report: Report) {
     val selectedTabIndex = rememberSaveable { mutableIntStateOf(WIFIS) }
 
     PrimaryTabRow(selectedTabIndex = selectedTabIndex.intValue) {
-        arrayOf(WIFIS, CELLS, BLUETOOTHS).forEach { index ->
+        DATA_TYPES.forEach { index ->
             Tab(
                 selected = selectedTabIndex.intValue == index,
                 onClick = { selectedTabIndex.intValue = index },
