@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    compileSdk = 36
+    compileSdk = 37
 
     compileOptions {
         sourceCompatibility = JavaVersion.toVersion(project.extra["jvmTarget"]!!)
