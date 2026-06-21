@@ -20,7 +20,7 @@ bundletool {
 
 android {
     namespace = "xyz.malkki.neostumbler"
-    compileSdk = 36
+    compileSdk = 37
 
     signingConfigs {
         create("release") {
