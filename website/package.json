@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@tailwindcss/typography": "0.5.19",
-    "@tailwindcss/vite": "4.2.2",
+    "@tailwindcss/vite": "4.2.4",
     "astro": "6.1.9",
-    "tailwindcss": "4.2.2"
+    "tailwindcss": "4.2.4"
   }
 }
