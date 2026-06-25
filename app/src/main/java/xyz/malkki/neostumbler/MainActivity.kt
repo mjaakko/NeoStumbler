@@ -3,8 +3,10 @@ package xyz.malkki.neostumbler
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -23,18 +25,24 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteItem
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.movableContentOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.scene.Scene
+import androidx.navigation3.scene.SceneDecoratorStrategy
+import androidx.navigation3.scene.SceneDecoratorStrategyScope
+import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import androidx.navigation3.ui.NavDisplay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
@@ -72,88 +80,88 @@ class MainActivity : AppCompatActivity() {
         setContent {
             val dynamicColorState = dynamicColorFlow.collectAsState()
 
-            val navigationBackstack = rememberNavBackStack(ReportsNavKey)
-
             NeoStumblerTheme(dynamicColor = dynamicColorState.value == true) {
-                Surface(modifier = Modifier.fillMaxSize()) {
-                    val tabs = getTabs()
+                val navigationBackstack = rememberNavBackStack(ReportsNavKey)
 
-                    NavigationSuiteScaffold(
-                        navigationItemVerticalArrangement = Arrangement.Center,
-                        navigationItems = {
-                            tabs.forEach { (icon, navKey) ->
-                                NavigationSuiteItem(
-                                    icon = {
-                                        Icon(
-                                            icon,
-                                            contentDescription = stringResource(navKey.title),
-                                        )
-                                    },
-                                    label = { Text(text = stringResource(navKey.title)) },
-                                    selected = navigationBackstack.last() == navKey,
-                                    onClick = {
-                                        navigationBackstack[navigationBackstack.lastIndex] = navKey
-                                    },
-                                )
-                            }
-                        },
-                    ) {
-                        Scaffold(
-                            topBar = {
-                                val navEntry = navigationBackstack.last()
-                                if (navEntry is MainNavKey && navEntry.appBar) {
-                                    CenterAlignedTopAppBar(
-                                        title = { Text(text = stringResource(navEntry.title)) }
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    SharedTransitionLayout {
+                        NavDisplay(
+                            entryDecorators =
+                                listOf(
+                                    rememberSaveableStateHolderNavEntryDecorator(),
+                                    rememberViewModelStoreNavEntryDecorator(),
+                                ),
+                            sceneDecoratorStrategies =
+                                listOf(
+                                    rememberMainNavigationSceneDecorator(
+                                        navigationItems = {
+                                            MAIN_NAVIGATION_TABS.forEach { (icon, navKey) ->
+                                                NavigationSuiteItem(
+                                                    modifier =
+                                                        Modifier.sharedElement(
+                                                            rememberSharedContentState(navKey),
+                                                            LocalNavAnimatedContentScope.current,
+                                                        ),
+                                                    icon = {
+                                                        Icon(
+                                                            painter = painterResource(icon),
+                                                            contentDescription =
+                                                                stringResource(navKey.title),
+                                                        )
+                                                    },
+                                                    label = {
+                                                        Text(text = stringResource(navKey.title))
+                                                    },
+                                                    selected = navigationBackstack.last() == navKey,
+                                                    onClick = {
+                                                        navigationBackstack[
+                                                            navigationBackstack.lastIndex] = navKey
+                                                    },
+                                                )
+                                            }
+                                        },
+                                        topBar = {
+                                            val navEntry = navigationBackstack.last()
+                                            if (navEntry is MainNavKey && navEntry.appBar) {
+                                                CenterAlignedTopAppBar(
+                                                    modifier =
+                                                        Modifier.sharedElement(
+                                                            rememberSharedContentState("app-bar"),
+                                                            LocalNavAnimatedContentScope.current,
+                                                        ),
+                                                    title = {
+                                                        Text(text = stringResource(navEntry.title))
+                                                    },
+                                                )
+                                            }
+                                        },
                                     )
-                                }
-                            },
-                            contentWindowInsets =
-                                ScaffoldDefaults.contentWindowInsets
-                                    .exclude(WindowInsets.systemBars)
-                                    .exclude(WindowInsets.displayCutout),
-                            content = { paddingValues ->
-                                Column(
-                                    modifier =
-                                        Modifier.fillMaxSize()
-                                            .padding(paddingValues = paddingValues),
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                ) {
-                                    NavDisplay(
-                                        entryDecorators =
-                                            listOf(
-                                                rememberSaveableStateHolderNavEntryDecorator(),
-                                                rememberViewModelStoreNavEntryDecorator(),
-                                            ),
-                                        backStack = navigationBackstack,
-                                        entryProvider =
-                                            entryProvider {
-                                                entry<MapNavKey> { MapScreen() }
-                                                entry<ReportsNavKey> { ReportsScreen() }
-                                                entry<StatisticsNavKey> { StatisticsScreen() }
-                                                entry<SettingsNavKey> { SettingsScreen() }
-                                            },
-                                    )
-                                }
-                            },
+                                ),
+                            backStack = navigationBackstack,
+                            entryProvider =
+                                entryProvider {
+                                    entry<MapNavKey> { MapScreen() }
+                                    entry<ReportsNavKey> { ReportsScreen() }
+                                    entry<StatisticsNavKey> { StatisticsScreen() }
+                                    entry<SettingsNavKey> { SettingsScreen() }
+                                },
                         )
                     }
                 }
             }
         }
     }
-
-    @Composable
-    private fun getTabs(): List<Tab> {
-        return listOf(
-            Tab(icon = painterResource(id = R.drawable.map_24px), navKey = MapNavKey),
-            Tab(icon = painterResource(id = R.drawable.list_24px), navKey = ReportsNavKey),
-            Tab(icon = painterResource(id = R.drawable.monitoring_24px), navKey = StatisticsNavKey),
-            Tab(icon = painterResource(id = R.drawable.settings_24px), navKey = SettingsNavKey),
-        )
-    }
-
-    private data class Tab(val icon: Painter, val navKey: MainNavKey)
 }
+
+private val MAIN_NAVIGATION_TABS =
+    listOf(
+        Tab(icon = R.drawable.map_24px, navKey = MapNavKey),
+        Tab(icon = R.drawable.list_24px, navKey = ReportsNavKey),
+        Tab(icon = R.drawable.monitoring_24px, navKey = StatisticsNavKey),
+        Tab(icon = R.drawable.settings_24px, navKey = SettingsNavKey),
+    )
+
+private data class Tab(@get:DrawableRes val icon: Int, val navKey: MainNavKey)
 
 private sealed interface MainNavKey : NavKey {
     @get:StringRes val title: Int
@@ -162,36 +170,99 @@ private sealed interface MainNavKey : NavKey {
 
 @Serializable
 private object MapNavKey : MainNavKey {
-    override val title: Int
-        get() = R.string.map_tab_title
+    override val title = R.string.map_tab_title
 
-    override val appBar: Boolean
-        get() = false
+    override val appBar = false
 }
 
 @Serializable
 private object ReportsNavKey : MainNavKey {
-    override val title: Int
-        get() = R.string.reports_tab_title
+    override val title = R.string.reports_tab_title
 
-    override val appBar: Boolean
-        get() = true
+    override val appBar = true
 }
 
 @Serializable
 private object StatisticsNavKey : MainNavKey {
-    override val title: Int
-        get() = R.string.statistics_tab_title
+    override val title = R.string.statistics_tab_title
 
-    override val appBar: Boolean
-        get() = true
+    override val appBar = true
 }
 
 @Serializable
 private object SettingsNavKey : MainNavKey {
-    override val title: Int
-        get() = R.string.settings_tab_title
+    override val title = R.string.settings_tab_title
 
-    override val appBar: Boolean
-        get() = true
+    override val appBar = true
+}
+
+private class MainNavigationSceneDecoratorStrategy<T : Any>(
+    private val navigationItems: @Composable () -> Unit,
+    private val topBar: @Composable () -> Unit,
+) : SceneDecoratorStrategy<T> {
+    override fun SceneDecoratorStrategyScope<T>.decorateScene(scene: Scene<T>): Scene<T> {
+        return MainNavigationScene(
+            navigationItems = navigationItems,
+            topBar = topBar,
+            scene = scene,
+        )
+    }
+}
+
+@Composable
+private fun <T : Any> rememberMainNavigationSceneDecorator(
+    navigationItems: @Composable () -> Unit,
+    topBar: @Composable () -> Unit,
+): MainNavigationSceneDecoratorStrategy<T> {
+    val movableNavigationItems = remember { movableContentOf { navigationItems() } }
+
+    val movableTopBar = remember { movableContentOf { topBar() } }
+
+    return remember(movableNavigationItems, movableTopBar) {
+        MainNavigationSceneDecoratorStrategy(
+            navigationItems = movableNavigationItems,
+            topBar = movableTopBar,
+        )
+    }
+}
+
+private class MainNavigationScene<T : Any>(
+    private val scene: Scene<T>,
+    private val topBar: @Composable () -> Unit,
+    /** List of [NavigationSuiteItem]s */
+    private val navigationItems: @Composable () -> Unit,
+) : Scene<T> {
+    override val key: Any
+        get() = scene.key
+
+    override val entries: List<NavEntry<T>>
+        get() = scene.entries
+
+    override val previousEntries: List<NavEntry<T>>
+        get() = scene.previousEntries
+
+    override val content: @Composable (() -> Unit)
+        get() = {
+            NavigationSuiteScaffold(
+                navigationItemVerticalArrangement = Arrangement.Center,
+                navigationItems = { navigationItems() },
+            ) {
+                Scaffold(
+                    topBar = { topBar() },
+                    contentWindowInsets =
+                        ScaffoldDefaults.contentWindowInsets
+                            .exclude(WindowInsets.systemBars)
+                            .exclude(WindowInsets.displayCutout),
+                    content = { paddingValues ->
+                        Column(
+                            modifier =
+                                Modifier.fillMaxSize().padding(paddingValues = paddingValues),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
+                            scene.content()
+                        }
+                    },
+                )
+            }
+        }
 }
