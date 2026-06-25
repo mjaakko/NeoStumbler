@@ -1,0 +1,4 @@
+* Correction d'un problème empêchant l'envoi des rapports sur des anciennes versions d'Android
+* Optimisation du stockage des résultats du scan Bluetooth passif
+* Mise à jour des dépendances
+* Mise à jour des traductions
