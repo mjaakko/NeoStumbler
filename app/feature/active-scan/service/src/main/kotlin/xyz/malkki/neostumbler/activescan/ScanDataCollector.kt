@@ -47,7 +47,7 @@ internal class ScanDataCollector(
                             scanThrottled = !scanSettings.ignoreWifiScanThrottling,
                             scanInterval =
                                 speedFlow.map { speed ->
-                                    (speed / scanSettings.wifiScanDistance).seconds
+                                    (scanSettings.wifiScanDistance / speed).seconds
                                 },
                         )
                     } else {
@@ -88,7 +88,7 @@ internal class ScanDataCollector(
                         cellSource.getCellInfoFlow(
                             interval =
                                 speedFlow.map { speed ->
-                                    (speed / scanSettings.cellScanDistance).seconds
+                                    (scanSettings.cellScanDistance / speed).seconds
                                 }
                         )
                     } else {
