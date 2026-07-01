@@ -5,7 +5,7 @@ kotlin = "2.3.21"
 
 kotlinxCoroutines = "1.11.0"
 
-androidGradlePlugin = "8.13.2"
+androidGradlePlugin = "9.2.1"
 
 androidxLifecycle = "2.10.0"
 androidxPaging = "3.5.0"
