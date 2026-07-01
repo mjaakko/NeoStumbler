@@ -12,6 +12,7 @@ updates:
         - 'org.jetbrains*'
         - 'com.google*'
         - 'androidx*'
+        - 'gradle-wrapper'
     groups:
       kotlinx:
         patterns:
