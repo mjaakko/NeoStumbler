@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
 import xyz.malkki.neostumbler.core.Position
 import xyz.malkki.neostumbler.core.observation.PositionObservation
 import xyz.malkki.neostumbler.core.report.ReportPosition
+import xyz.malkki.neostumbler.core.values.Speed
 
 @Entity(
     foreignKeys =
@@ -53,7 +54,7 @@ internal data class PositionEntity(
                 altitudeAccuracy = positionObservation.position.altitudeAccuracy,
                 heading = positionObservation.position.heading,
                 pressure = positionObservation.position.pressure,
-                speed = positionObservation.position.speed,
+                speed = positionObservation.position.speed?.metersPerSecond,
                 reportId = reportId,
                 source = positionObservation.position.source.name.lowercase(),
             )
@@ -71,7 +72,7 @@ internal fun PositionEntity.toReportPosition(): ReportPosition {
                 altitude = altitude,
                 altitudeAccuracy = altitudeAccuracy,
                 heading = heading,
-                speed = speed,
+                speed = speed?.let { Speed(it) },
                 pressure = pressure,
                 source = Position.Source.valueOf(source.uppercase()),
             ),

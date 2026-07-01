@@ -2,14 +2,15 @@ package xyz.malkki.neostumbler.activescan
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import xyz.malkki.neostumbler.core.values.Distance
 import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.data.settings.SettingsSnapshot
 
 // By default, try to scan Wi-Fis every 50 meters
-private const val DEFAULT_WIFI_SCAN_DISTANCE: Int = 50
+private const val DEFAULT_WIFI_SCAN_DISTANCE = 50.0
 
 // By default, try to scan cells every 120 meters
-private const val DEFAULT_CELL_SCAN_DISTANCE: Int = 120
+private const val DEFAULT_CELL_SCAN_DISTANCE = 120.0
 
 class ActiveScanSettingsManager(private val settings: Settings) {
     val activeScanSettings: Flow<ActiveScanSettings> =
@@ -44,9 +45,15 @@ class ActiveScanSettingsManager(private val settings: Settings) {
 internal fun SettingsSnapshot.toActiveScanSettings(): ActiveScanSettings {
     return ActiveScanSettings(
         wifiScanDistance =
-            getInt(ActiveScanPreferenceKeys.WIFI_SCAN_DISTANCE) ?: DEFAULT_WIFI_SCAN_DISTANCE,
+            Distance(
+                getInt(ActiveScanPreferenceKeys.WIFI_SCAN_DISTANCE)?.toDouble()
+                    ?: DEFAULT_WIFI_SCAN_DISTANCE
+            ),
         cellScanDistance =
-            getInt(ActiveScanPreferenceKeys.CELL_SCAN_DISTANCE) ?: DEFAULT_CELL_SCAN_DISTANCE,
+            Distance(
+                getInt(ActiveScanPreferenceKeys.CELL_SCAN_DISTANCE)?.toDouble()
+                    ?: DEFAULT_CELL_SCAN_DISTANCE
+            ),
         lowBatteryThreshold = getInt(ActiveScanPreferenceKeys.PAUSE_ON_BATTERY_LEVEL_THRESHOLD),
         ignoreWifiScanThrottling =
             getBoolean(ActiveScanPreferenceKeys.IGNORE_SCAN_THROTTLING) == true,

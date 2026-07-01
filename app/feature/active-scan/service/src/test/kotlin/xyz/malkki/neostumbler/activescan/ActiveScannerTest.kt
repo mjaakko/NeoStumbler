@@ -23,14 +23,15 @@ import xyz.malkki.neostumbler.core.emitter.BluetoothBeacon
 import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
 import xyz.malkki.neostumbler.core.observation.EmitterObservation
 import xyz.malkki.neostumbler.core.observation.PositionObservation
+import xyz.malkki.neostumbler.core.values.Distance
 import xyz.malkki.neostumbler.data.location.LocationSource
 import xyz.malkki.neostumbler.data.movement.MovementDetector
 import xyz.malkki.neostumbler.report.postprocessor.HiddenWifiFilterer
 
 private val settings =
     ActiveScanSettings(
-        wifiScanDistance = 100,
-        cellScanDistance = 100,
+        wifiScanDistance = Distance(100.0),
+        cellScanDistance = Distance(100.0),
         ignoreWifiScanThrottling = true,
         lowBatteryThreshold = null,
         pauseWhenOverheating = false,

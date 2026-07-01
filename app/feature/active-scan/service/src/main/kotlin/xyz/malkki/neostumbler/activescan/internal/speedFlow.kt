@@ -6,6 +6,7 @@ import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import xyz.malkki.neostumbler.core.observation.PositionObservation
+import xyz.malkki.neostumbler.core.values.Speed
 
 // Maximum age difference between two consecutive locations
 private val LOCATION_MAX_AGE_DIFF = 5.seconds
@@ -14,7 +15,7 @@ private val LOCATION_MAX_AGE_DIFF = 5.seconds
 private const val A = 0.15
 private const val B = 1 - A
 
-internal fun Flow<PositionObservation>.toSmoothenedSpeedFlow(): Flow<Double> {
+internal fun Flow<PositionObservation>.toSmoothenedSpeedFlow(): Flow<Speed> {
     return pairwise().map { (prevLocation, currentLocation) ->
         if (currentLocation.position.speed != null) {
             // Smoothen the speed value by using data from two consecutive locations
@@ -28,7 +29,7 @@ internal fun Flow<PositionObservation>.toSmoothenedSpeedFlow(): Flow<Double> {
                 currentLocation.position.speed!!
             }
         } else {
-            0.0
+            Speed(0.0)
         }
     }
 }

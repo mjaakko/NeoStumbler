@@ -20,6 +20,7 @@ import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
 import xyz.malkki.neostumbler.core.report.Report
 import xyz.malkki.neostumbler.core.report.ReportEmitter
 import xyz.malkki.neostumbler.core.report.ReportPosition
+import xyz.malkki.neostumbler.core.values.Speed
 import xyz.malkki.neostumbler.data.reports.ReportProvider
 import xyz.malkki.neostumbler.data.reports.ReportSaver
 import xyz.malkki.neostumbler.data.settings.Settings
@@ -55,7 +56,7 @@ class ReportSenderTest {
                                     altitudeAccuracy = null,
                                     heading = 14.516,
                                     pressure = null,
-                                    speed = 5.6378,
+                                    speed = Speed(5.6378),
                                     source = Position.Source.GPS,
                                 ),
                             age = 1000,
