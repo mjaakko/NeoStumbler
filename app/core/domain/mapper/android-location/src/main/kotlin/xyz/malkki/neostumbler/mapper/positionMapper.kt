@@ -8,6 +8,7 @@ import kotlin.time.Duration.Companion.seconds
 import xyz.malkki.neostumbler.core.Position
 import xyz.malkki.neostumbler.core.Position.Source
 import xyz.malkki.neostumbler.core.observation.PositionObservation
+import xyz.malkki.neostumbler.core.values.Speed
 import xyz.malkki.neostumbler.mapper.internal.elapsedRealtimeMillisCompat
 
 /*
@@ -43,7 +44,7 @@ fun Location.toPositionObservation(
                         .takeIf { hasVerticalAccuracy() && it.isFinite() }
                         ?.toDouble(),
                 heading = bearing.takeIf { hasBearing() && it.isFinite() }?.toDouble(),
-                speed = speed.takeIf { hasSpeed() && it.isFinite() }?.toDouble(),
+                speed = speed.takeIf { hasSpeed() && it.isFinite() }?.toDouble()?.let { Speed(it) },
                 pressure = airPressure,
                 source = source,
             ),

@@ -1,10 +1,12 @@
 package xyz.malkki.neostumbler.activescan
 
+import xyz.malkki.neostumbler.core.values.Distance
+
 data class ActiveScanSettings(
     /** Wi-Fi scan interval (meters) */
-    val wifiScanDistance: Int,
+    val wifiScanDistance: Distance,
     /** Cell tower scan interval (meters) */
-    val cellScanDistance: Int,
+    val cellScanDistance: Distance,
     /** Whether to ignore Android Wi-Fi scan throttling */
     val ignoreWifiScanThrottling: Boolean,
     /**

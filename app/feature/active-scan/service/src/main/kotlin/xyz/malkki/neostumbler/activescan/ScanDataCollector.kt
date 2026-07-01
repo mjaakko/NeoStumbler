@@ -2,7 +2,6 @@ package xyz.malkki.neostumbler.activescan
 
 import androidx.collection.mutableLongObjectMapOf
 import androidx.collection.mutableScatterMapOf
-import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -16,13 +15,14 @@ import xyz.malkki.neostumbler.core.emitter.BluetoothBeacon
 import xyz.malkki.neostumbler.core.emitter.CellTower
 import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
 import xyz.malkki.neostumbler.core.observation.EmitterObservation
+import xyz.malkki.neostumbler.core.values.Speed
 import xyz.malkki.neostumbler.data.emitter.ActiveBluetoothBeaconSource
 import xyz.malkki.neostumbler.data.emitter.ActiveCellInfoSource
 import xyz.malkki.neostumbler.data.emitter.ActiveWifiAccessPointSource
 
 internal class ScanDataCollector(
     private val isMovingFlow: Flow<Boolean>,
-    private val speedFlow: Flow<Double>,
+    private val speedFlow: Flow<Speed>,
     private val wifiSource: ActiveWifiAccessPointSource,
     private val cellSource: ActiveCellInfoSource,
     private val bluetoothBeaconSource: ActiveBluetoothBeaconSource,
@@ -46,9 +46,7 @@ internal class ScanDataCollector(
                         wifiSource.getWifiAccessPointFlow(
                             scanThrottled = !scanSettings.ignoreWifiScanThrottling,
                             scanInterval =
-                                speedFlow.map { speed ->
-                                    (scanSettings.wifiScanDistance / speed).seconds
-                                },
+                                speedFlow.map { speed -> scanSettings.wifiScanDistance / speed },
                         )
                     } else {
                         emptyFlow()
@@ -87,9 +85,7 @@ internal class ScanDataCollector(
                     if (isMoving) {
                         cellSource.getCellInfoFlow(
                             interval =
-                                speedFlow.map { speed ->
-                                    (scanSettings.cellScanDistance / speed).seconds
-                                }
+                                speedFlow.map { speed -> scanSettings.cellScanDistance / speed }
                         )
                     } else {
                         emptyFlow()

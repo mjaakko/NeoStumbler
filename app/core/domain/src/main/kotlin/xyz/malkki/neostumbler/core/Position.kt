@@ -1,5 +1,6 @@
 package xyz.malkki.neostumbler.core
 
+import xyz.malkki.neostumbler.core.values.Speed
 import xyz.malkki.neostumbler.geography.LatLng
 
 data class Position(
@@ -9,7 +10,7 @@ data class Position(
     val altitude: Double? = null,
     val altitudeAccuracy: Double? = null,
     val heading: Double? = null,
-    val speed: Double? = null,
+    val speed: Speed? = null,
     val pressure: Double? = null,
     val source: Source,
 ) {

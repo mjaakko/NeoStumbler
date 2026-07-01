@@ -209,7 +209,7 @@ private fun ReportPosition.toDto(): PositionDto {
         altitudeAccuracy = position.altitudeAccuracy?.takeUnless { it.isNaN() },
         heading = position.heading?.takeUnless { it.isNaN() },
         pressure = position.pressure?.takeUnless { it.isNaN() },
-        speed = position.speed?.takeUnless { it.isNaN() },
+        speed = position.speed?.metersPerSecond?.takeUnless { it.isNaN() },
         // Ichnaea Geosubmit officially only supports these sources
         // https://ichnaea.readthedocs.io/en/latest/api/geosubmit2.html#position-fields
         source =
