@@ -90,7 +90,7 @@ kotlinx-coroutinesAndroid = { module = "org.jetbrains.kotlinx:kotlinx-coroutines
 kotlinx-coroutinesPlayServices = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services" }
 kotlinx-coroutinesTest = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test" }
 
-playservices-location = { module = "com.google.android.gms:play-services-location", version = "21.3.0" }
+playservices-location = { module = "com.google.android.gms:play-services-location", version = "21.4.0" }
 playservices-cronet = { module = "com.google.android.gms:play-services-cronet", version = "18.1.1" }
 
 play-review = { module = "com.google.android.play:review", version.ref = "playReview" }
