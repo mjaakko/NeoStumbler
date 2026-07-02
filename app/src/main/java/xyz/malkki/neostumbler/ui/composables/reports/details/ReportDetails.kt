@@ -121,7 +121,9 @@ private fun ReportDetails(reportId: Long, reportProvider: ReportProvider = koinI
             text =
                 stringResource(
                     R.string.speed_metres_per_second,
-                    decimalFormat.format(report.value!!.position.position.speed ?: 0.0),
+                    decimalFormat.format(
+                        report.value!!.position.position.speed?.metersPerSecond ?: 0.0
+                    ),
                 ),
             style = MaterialTheme.typography.bodySmall,
         )
