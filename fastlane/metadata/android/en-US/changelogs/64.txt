@@ -1,0 +1,5 @@
+* Updated target SDK to 37 (Android 17)
+* Fixed scan intervals being inverted
+* Minor refactoring
+* Updated dependencies
+
