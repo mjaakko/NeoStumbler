@@ -98,7 +98,7 @@ play-reviewKtx = { module = "com.google.android.play:review-ktx", version.ref = 
 
 timber = { module = "com.jakewharton.timber:timber", version = "5.0.1" }
 
-okhttpBom = { module = "com.squareup.okhttp3:okhttp-bom", version = "5.3.2" }
+okhttpBom = { module = "com.squareup.okhttp3:okhttp-bom", version = "5.4.0" }
 # No version for these, included in OkHTTP BOM
 okhttp = { module = "com.squareup.okhttp3:okhttp" }
 okhttpCoroutines = { module = "com.squareup.okhttp3:okhttp-coroutines" }
