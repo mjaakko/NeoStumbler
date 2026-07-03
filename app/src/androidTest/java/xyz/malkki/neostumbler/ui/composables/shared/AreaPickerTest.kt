@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import okhttp3.Call
 import okhttp3.Callback
+import okhttp3.EventListener
 import okhttp3.Request
 import okhttp3.Response
 import okio.Timeout
@@ -81,6 +82,8 @@ class AreaPickerTest {
             override fun timeout(): Timeout {
                 return timeout()
             }
+
+            override fun addEventListener(eventListener: EventListener) {}
 
             override fun <T : Any> tag(type: KClass<T>): T? {
                 return null
