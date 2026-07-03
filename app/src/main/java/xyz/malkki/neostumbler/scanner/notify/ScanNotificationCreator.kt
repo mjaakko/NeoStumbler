@@ -98,6 +98,8 @@ class ScanNotificationCreator : ScanNotificationAdapter {
                 setShowWhen(true)
                 setWhen(params.startedAt.toEpochMilli())
 
+                // PendingIntent can only be null with FLAG_NO_CREATE
+                @Suppress("UnsafeCallOnNullableType")
                 val mainActivityIntent =
                     PendingIntentCompat.getActivity(
                         context,
@@ -107,6 +109,8 @@ class ScanNotificationCreator : ScanNotificationAdapter {
                         false,
                     )!!
 
+                // PendingIntent can only be null with FLAG_NO_CREATE
+                @Suppress("UnsafeCallOnNullableType")
                 val stopScanningIntent =
                     PendingIntentCompat.getService(
                         context,

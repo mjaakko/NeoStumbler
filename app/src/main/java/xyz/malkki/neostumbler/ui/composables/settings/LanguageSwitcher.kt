@@ -40,12 +40,13 @@ private val SUPPORTED_LOCALES_BCP47 =
         .toTypedArray()
 
 private fun getCurrentLocale(): Locale? {
-    if (AppCompatDelegate.getApplicationLocales().isEmpty) {
+    val applicationLocales = AppCompatDelegate.getApplicationLocales()
+    if (applicationLocales.isEmpty) {
         // Per-app language was not set, use system default language
         return null
     }
 
-    return AppCompatDelegate.getApplicationLocales()[0]!!
+    return applicationLocales[0]
 }
 
 @Composable

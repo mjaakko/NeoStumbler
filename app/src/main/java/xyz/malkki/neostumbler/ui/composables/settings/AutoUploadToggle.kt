@@ -29,7 +29,7 @@ fun AutoUploadToggle(ichnaeaAutoUploadToggler: IchnaeaAutoUploadToggler = koinIn
         options = enumEntries<AutoUploadMode>(),
         selectedOption = autoUploadMode,
         titleProvider = { autoUploadMode ->
-            AUTO_UPLOAD_LABELS[autoUploadMode]?.let { stringResource(it) } ?: ""
+            AUTO_UPLOAD_LABELS[autoUploadMode]?.let { stringResource(it) }.orEmpty()
         },
         onValueSelected = { autoUploadMode ->
             if (autoUploadMode != null) {

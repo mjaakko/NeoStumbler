@@ -23,6 +23,8 @@ class PlatformPassiveLocationReceiver : CoroutineBroadcastReceiver(), KoinCompon
             val intent =
                 Intent(context.applicationContext, PlatformPassiveLocationReceiver::class.java)
 
+            // PendingIntent can only be null with FLAG_NO_CREATE
+            @Suppress("UnsafeCallOnNullableType")
             return PendingIntentCompat.getBroadcast(
                 context.applicationContext,
                 REQUEST_CODE,
@@ -45,7 +47,8 @@ class PlatformPassiveLocationReceiver : CoroutineBroadcastReceiver(), KoinCompon
                     LocationManager.KEY_LOCATIONS,
                     Location::class.java,
                 )
-                ?.filterIsInstance<Location>() ?: emptyList()
+                ?.filterIsInstance<Location>()
+                .orEmpty()
         } else if (hasExtra(LocationManager.KEY_LOCATION_CHANGED)) {
             listOfNotNull(
                 IntentCompat.getParcelableExtra(

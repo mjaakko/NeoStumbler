@@ -90,9 +90,9 @@ class MapViewModel(
     val coverageTileJsonLayerIds: StateFlow<List<String>> =
         coverageTileJsonUrl
             .mapLatest { coverageTileJsonUrl ->
-                coverageTileJsonUrl?.let {
-                    getTileJsonLayerIds(it, httpClientProvider.getHttpCallFactory())
-                } ?: emptyList()
+                coverageTileJsonUrl
+                    ?.let { getTileJsonLayerIds(it, httpClientProvider.getHttpCallFactory()) }
+                    .orEmpty()
             }
             .retryWhen { cause, _ ->
                 if (cause is IOException) {

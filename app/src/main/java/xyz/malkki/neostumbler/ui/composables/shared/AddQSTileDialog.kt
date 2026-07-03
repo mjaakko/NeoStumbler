@@ -32,7 +32,7 @@ fun AddQSTileDialog(
     val context = LocalContext.current
 
     val packageManager = context.packageManager
-    val statusBarManager = context.getSystemService<StatusBarManager>()!!
+    val statusBarManager: StatusBarManager? = context.getSystemService<StatusBarManager>()
 
     val serviceInfo = packageManager.getServiceInfo(componentName, 0)
 
@@ -41,7 +41,7 @@ fun AddQSTileDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    statusBarManager.requestAddTileService(
+                    statusBarManager?.requestAddTileService(
                         componentName,
                         serviceInfo.loadLabel(packageManager),
                         Icon.createWithResource(context, serviceInfo.icon),

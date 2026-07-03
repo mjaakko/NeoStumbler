@@ -26,7 +26,7 @@ private const val ACTION_NAME = "request_ignore_battery_optimizations"
 fun BatteryOptimizationsDialog(onBatteryOptimizationsDisabled: (Boolean) -> Unit) {
     val context = LocalContext.current
 
-    val powerManager = context.getSystemService<PowerManager>()!!
+    val powerManager: PowerManager? = context.getSystemService()
 
     val oneTimeActionHelper = koinInject<OneTimeActionHelper>()
 
@@ -41,7 +41,7 @@ fun BatteryOptimizationsDialog(onBatteryOptimizationsDisabled: (Boolean) -> Unit
                 // Check from PowerManager whether battery optimizations were disabled -> activity
                 // result code seems to be unreliable here
                 val batteryOptimizationsDisabled =
-                    powerManager.isIgnoringBatteryOptimizations(context.packageName)
+                    powerManager?.isIgnoringBatteryOptimizations(context.packageName) == true
 
                 onBatteryOptimizationsDisabled(batteryOptimizationsDisabled)
                 if (!batteryOptimizationsDisabled) {
@@ -55,7 +55,7 @@ fun BatteryOptimizationsDialog(onBatteryOptimizationsDisabled: (Boolean) -> Unit
             },
         )
 
-    if (powerManager.isIgnoringBatteryOptimizations(context.packageName)) {
+    if (powerManager?.isIgnoringBatteryOptimizations(context.packageName) == true) {
         // Already ignoring battery optimizations, no need to show dialog
         onBatteryOptimizationsDisabled(true)
         return

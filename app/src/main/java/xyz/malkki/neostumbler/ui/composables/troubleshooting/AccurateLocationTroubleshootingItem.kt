@@ -21,14 +21,14 @@ import xyz.malkki.neostumbler.R
 fun AccurateLocationTroubleshootingItem() {
     val context = LocalContext.current
 
-    val locationManager = context.getSystemService<LocationManager>()!!
+    val locationManager: LocationManager? = context.getSystemService()
 
     val accurateLocationAvailableState = callbackFlow {
         val receiver =
             object : BroadcastReceiver() {
                 override fun onReceive(context: Context, intent: Intent) {
                     trySendBlocking(
-                        locationManager.isLocationEnabled &&
+                        locationManager?.isLocationEnabled == true &&
                             locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                     )
                 }
@@ -43,7 +43,7 @@ fun AccurateLocationTroubleshootingItem() {
         )
 
         send(
-            locationManager.isLocationEnabled &&
+            locationManager?.isLocationEnabled == true &&
                 locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         )
 

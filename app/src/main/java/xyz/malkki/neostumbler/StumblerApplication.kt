@@ -190,7 +190,7 @@ class StumblerApplication : Application() {
     }
 
     private fun setupNotificationChannels() {
-        val notificationManager = getSystemService<NotificationManager>()!!
+        val notificationManager = getSystemService<NotificationManager>()
 
         val scannerNotificationChannel =
             NotificationChannel(
@@ -202,7 +202,7 @@ class StumblerApplication : Application() {
                     setShowBadge(false)
                     setBypassDnd(false)
                 }
-        notificationManager.createNotificationChannel(scannerNotificationChannel)
+        notificationManager?.createNotificationChannel(scannerNotificationChannel)
 
         val reportUploadNotificationChannel =
             NotificationChannel(
@@ -214,7 +214,7 @@ class StumblerApplication : Application() {
                     setShowBadge(false)
                     setBypassDnd(false)
                 }
-        notificationManager.createNotificationChannel(reportUploadNotificationChannel)
+        notificationManager?.createNotificationChannel(reportUploadNotificationChannel)
 
         val exportNotificationChannel =
             NotificationChannel(
@@ -226,7 +226,7 @@ class StumblerApplication : Application() {
                     setShowBadge(false)
                     setBypassDnd(false)
                 }
-        notificationManager.createNotificationChannel(exportNotificationChannel)
+        notificationManager?.createNotificationChannel(exportNotificationChannel)
     }
 
     /** Deletes files used by Osmdroid library (no longer used by NeoStumbler) */

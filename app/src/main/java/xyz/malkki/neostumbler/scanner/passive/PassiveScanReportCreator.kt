@@ -55,8 +55,9 @@ class PassiveScanReportCreator(
         }
 
         val filteredPositions = positions.filter {
-            it.position.accuracy != null &&
-                it.position.accuracy!! <= ScanningConstants.LOCATION_MAX_ACCURACY_METERS
+            it.position.accuracy?.let { accuracy ->
+                accuracy <= ScanningConstants.LOCATION_MAX_ACCURACY_METERS
+            } == true
         }
 
         if (filteredPositions.isEmpty()) {

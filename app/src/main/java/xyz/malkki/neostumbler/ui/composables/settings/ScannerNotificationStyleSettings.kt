@@ -1,10 +1,9 @@
 package xyz.malkki.neostumbler.ui.composables.settings
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
-import androidx.core.content.ContextCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.activescan.ActiveScanPreferenceKeys
@@ -29,23 +28,25 @@ private val DESCRIPTIONS =
 
 @Composable
 fun ScannerNotificationStyleSettings(settings: Settings = koinInject()) {
-    val context = LocalContext.current
-
-    val notificationStyle =
+    val notificationStyle by
         settings
             .getEnumFlow(
                 ActiveScanPreferenceKeys.SCANNER_NOTIFICATION_STYLE,
                 NotificationStyle.BASIC,
             )
-            .collectAsState(initial = null)
+            .collectAsStateWithLifecycle(initialValue = null)
 
-    if (notificationStyle.value != null) {
+    notificationStyle?.let {
         MultiChoiceSettings(
             title = stringResource(id = R.string.notification_style),
             options = NotificationStyle.entries,
-            selectedOption = notificationStyle.value!!,
-            titleProvider = { ContextCompat.getString(context, TITLES[it]!!) },
-            descriptionProvider = { ContextCompat.getString(context, DESCRIPTIONS[it]!!) },
+            selectedOption = it,
+            titleProvider = { option ->
+                TITLES[option]?.let { resourceId -> stringResource(resourceId) }.orEmpty()
+            },
+            descriptionProvider = { option ->
+                DESCRIPTIONS[option]?.let { resourceId -> stringResource(resourceId) }
+            },
             onValueSelected = { newNotificationStyle ->
                 settings.edit {
                     setEnum(

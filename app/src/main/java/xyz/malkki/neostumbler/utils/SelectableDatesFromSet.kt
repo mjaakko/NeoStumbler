@@ -12,7 +12,7 @@ import java.time.ZoneOffset
  */
 class SelectableDatesFromSet(private val dateSetProvider: () -> Set<LocalDate>?) : SelectableDates {
     override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-        val dates = dateSetProvider.invoke() ?: emptySet()
+        val dates = dateSetProvider.invoke().orEmpty()
 
         return Instant.ofEpochMilli(utcTimeMillis).atOffset(ZoneOffset.UTC).toLocalDate() in dates
     }
