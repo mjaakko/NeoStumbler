@@ -42,16 +42,22 @@ import xyz.malkki.neostumbler.data.settings.setEnum
 import xyz.malkki.neostumbler.ui.composables.settings.SettingsToggle
 import xyz.malkki.neostumbler.ui.composables.settings.UrlField
 import xyz.malkki.neostumbler.ui.composables.shared.Dialog
+import xyz.malkki.neostumbler.ui.map.MapThemeOverride
 import xyz.malkki.neostumbler.ui.map.MapTileSource
 
-private typealias TileSourceAndStyleUrl = Pair<MapTileSource, String>
+private data class MapDialogSettings(
+    val tileSource: MapTileSource,
+    val styleUrl: String,
+    val themeOverride: MapThemeOverride,
+)
 
-private fun Settings.selectedMapTileSourceAndStyleUrl(): Flow<TileSourceAndStyleUrl> =
+private fun Settings.mapDialogSettings(): Flow<MapDialogSettings> =
     getSnapshotFlow().map { prefs ->
         val tileSource = prefs.getEnum(PreferenceKeys.MAP_TILE_SOURCE) ?: MapTileSource.DEFAULT
         val styleUrl = prefs.getString(PreferenceKeys.MAP_TILE_SOURCE_CUSTOM_URL) ?: ""
+        val themeOverride = prefs.getEnum(PreferenceKeys.MAP_THEME_OVERRIDE) ?: MapThemeOverride.SYSTEM
 
-        tileSource to styleUrl
+        MapDialogSettings(tileSource, styleUrl, themeOverride)
     }
 
 @Composable
@@ -60,35 +66,39 @@ fun MapSettingsButton(modifier: Modifier, settings: Settings = koinInject()) {
 
     var dialogOpen by rememberSaveable { mutableStateOf(false) }
 
-    val selectedMapTileSourceAndStyleUrl by
-        settings.selectedMapTileSourceAndStyleUrl().collectAsStateWithLifecycle(initialValue = null)
+    val currentDialogSettings by
+        settings.mapDialogSettings().collectAsStateWithLifecycle(initialValue = null)
 
     if (dialogOpen) {
-        val selectedMapTileSource = selectedMapTileSourceAndStyleUrl?.first
-        val styleUrl = selectedMapTileSourceAndStyleUrl?.second
+        val dialogSettings = currentDialogSettings
 
-        MapSettingsDialog(
-            currentSettings = selectedMapTileSource!! to styleUrl!!,
-            onCloseDialog = { newSettings ->
-                if (newSettings != null) {
-                    coroutineScope.launch {
-                        settings.edit {
-                            setEnum(PreferenceKeys.MAP_TILE_SOURCE, newSettings.first)
-
-                            setString(PreferenceKeys.MAP_TILE_SOURCE_CUSTOM_URL, newSettings.second)
+        if (dialogSettings != null) {
+            MapSettingsDialog(
+                currentSettings = dialogSettings,
+                onCloseDialog = { newSettings ->
+                    if (newSettings != null) {
+                        coroutineScope.launch {
+                            settings.edit {
+                                setEnum(PreferenceKeys.MAP_TILE_SOURCE, newSettings.tileSource)
+                                setString(
+                                    PreferenceKeys.MAP_TILE_SOURCE_CUSTOM_URL,
+                                    newSettings.styleUrl,
+                                )
+                                setEnum(PreferenceKeys.MAP_THEME_OVERRIDE, newSettings.themeOverride)
+                            }
                         }
                     }
-                }
 
-                dialogOpen = false
-            },
-        )
+                    dialogOpen = false
+                },
+            )
+        }
     }
 
     FilledTonalIconButton(
         modifier = modifier,
         onClick = { dialogOpen = true },
-        enabled = selectedMapTileSourceAndStyleUrl != null,
+        enabled = currentDialogSettings != null,
         colors = IconButtonDefaults.filledTonalIconButtonColors(),
     ) {
         Icon(
@@ -101,15 +111,26 @@ fun MapSettingsButton(modifier: Modifier, settings: Settings = koinInject()) {
 
 @Composable
 private fun MapSettingsDialog(
-    currentSettings: TileSourceAndStyleUrl,
-    onCloseDialog: (TileSourceAndStyleUrl?) -> Unit,
+    currentSettings: MapDialogSettings,
+    onCloseDialog: (MapDialogSettings?) -> Unit,
 ) {
-    val selectedTileSource = rememberSaveable { mutableStateOf(currentSettings.first) }
-    val selectedStyleUrl = rememberSaveable { mutableStateOf<String?>(currentSettings.second) }
+    val selectedTileSource = rememberSaveable { mutableStateOf(currentSettings.tileSource) }
+    val selectedStyleUrl = rememberSaveable { mutableStateOf<String?>(currentSettings.styleUrl) }
+    val selectedThemeOverride = rememberSaveable { mutableStateOf(currentSettings.themeOverride) }
+
+    val hasDarkVariant = selectedTileSource.value.sourceUrlDark != null
 
     Dialog(
         title = stringResource(id = R.string.map_tile_source),
-        onDismissRequest = { onCloseDialog(selectedTileSource.value to selectedStyleUrl.value!!) },
+        onDismissRequest = {
+            onCloseDialog(
+                MapDialogSettings(
+                    tileSource = selectedTileSource.value,
+                    styleUrl = selectedStyleUrl.value!!,
+                    themeOverride = selectedThemeOverride.value,
+                )
+            )
+        },
     ) {
         Column {
             Column(
@@ -157,6 +178,61 @@ private fun MapSettingsDialog(
                     label = stringResource(R.string.map_tile_source_custom_style_url),
                     state = selectedStyleUrl,
                 )
+            }
+
+            if (hasDarkVariant) {
+                HorizontalDivider()
+
+                Text(
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                    text = stringResource(R.string.map_theme_override_title),
+                    style = MaterialTheme.typography.titleSmall,
+                )
+
+                Column(
+                    modifier = Modifier.selectableGroup().padding(bottom = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
+                    MapThemeOverride.entries.forEach { override ->
+                        Row(
+                            Modifier.fillMaxWidth()
+                                .wrapContentHeight()
+                                .defaultMinSize(minHeight = 36.dp)
+                                .selectable(
+                                    selected = override == selectedThemeOverride.value,
+                                    onClick = { selectedThemeOverride.value = override },
+                                    role = Role.RadioButton,
+                                )
+                                .padding(horizontal = 16.dp, vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            RadioButton(
+                                modifier =
+                                    Modifier.align(Alignment.CenterVertically).padding(top = 4.dp),
+                                selected = override == selectedThemeOverride.value,
+                                onClick = null,
+                            )
+
+                            Text(
+                                modifier =
+                                    Modifier.align(Alignment.CenterVertically)
+                                        .padding(start = 16.dp),
+                                text =
+                                    stringResource(
+                                        when (override) {
+                                            MapThemeOverride.SYSTEM ->
+                                                R.string.map_theme_override_system
+                                            MapThemeOverride.LIGHT ->
+                                                R.string.map_theme_override_light
+                                            MapThemeOverride.DARK ->
+                                                R.string.map_theme_override_dark
+                                        }
+                                    ),
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                        }
+                    }
+                }
             }
 
             HorizontalDivider()

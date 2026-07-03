@@ -28,5 +28,8 @@ object PreferenceKeys {
     // UI
     const val DYNAMIC_COLOR_THEME = "dynamic_color_theme"
 
+    // Map theme
+    const val MAP_THEME_OVERRIDE = "map_theme_override"
+
     const val GEOCODER_TYPE = "geocoder_type"
 }

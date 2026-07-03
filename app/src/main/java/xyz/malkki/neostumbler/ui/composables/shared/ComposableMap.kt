@@ -46,6 +46,7 @@ import xyz.malkki.neostumbler.data.settings.getEnumFlow
 import xyz.malkki.neostumbler.data.settings.getStringFlow
 import xyz.malkki.neostumbler.network.HttpCallFactoryProvider
 import xyz.malkki.neostumbler.ui.map.LifecycleAwareMapView
+import xyz.malkki.neostumbler.ui.map.MapThemeOverride
 import xyz.malkki.neostumbler.ui.map.MapTileSource
 
 @Composable
@@ -85,10 +86,22 @@ fun ComposableMap(
             .getStringFlow(PreferenceKeys.MAP_TILE_SOURCE_CUSTOM_URL, "")
             .collectAsStateWithLifecycle(initialValue = "")
 
+    val mapThemeOverride by
+        settings
+            .getEnumFlow(PreferenceKeys.MAP_THEME_OVERRIDE, MapThemeOverride.SYSTEM)
+            .collectAsStateWithLifecycle(initialValue = MapThemeOverride.SYSTEM)
+
+    val useDarkTheme =
+        when (mapThemeOverride) {
+            MapThemeOverride.LIGHT -> false
+            MapThemeOverride.DARK -> true
+            MapThemeOverride.SYSTEM -> isSystemInDarkTheme()
+        }
+
     val mapTileSourceUrl =
         if (mapTileSource == MapTileSource.CUSTOM) {
             customMapStyleUrl
-        } else if (isSystemInDarkTheme() && mapTileSource.sourceUrlDark != null) {
+        } else if (useDarkTheme && mapTileSource.sourceUrlDark != null) {
             mapTileSource.sourceUrlDark!!
         } else {
             mapTileSource.sourceUrl!!

@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlin.math.abs
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.geometry.LatLng
 import org.maplibre.android.location.LocationComponentActivationOptions
@@ -52,10 +53,14 @@ import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.domain.asDomainLatLng
 import xyz.malkki.neostumbler.domain.asMapLibreLatLng
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
+import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.data.settings.Settings
+import xyz.malkki.neostumbler.data.settings.getEnumFlow
 import xyz.malkki.neostumbler.ui.composables.map.MapSettingsButton
 import xyz.malkki.neostumbler.ui.composables.shared.ComposableMap
 import xyz.malkki.neostumbler.ui.composables.shared.KeepScreenOn
 import xyz.malkki.neostumbler.ui.composables.shared.PermissionsDialog
+import xyz.malkki.neostumbler.ui.map.MapThemeOverride
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
 import xyz.malkki.neostumbler.utils.maplibre.FlowLocationEngine
 import xyz.malkki.neostumbler.utils.maplibre.needsRecreation
@@ -84,7 +89,10 @@ private const val HEATMAP_LAYER_ID = "neostumbler-heat-map"
 // FIXME: try to break this into smaller pieces and then remove these suppressions
 @Suppress("LongMethod")
 @Composable
-fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
+fun MapScreen(
+    mapViewModel: MapViewModel = koinViewModel<MapViewModel>(),
+    settings: Settings = koinInject(),
+) {
     val context = LocalContext.current
 
     val coroutineScope = rememberCoroutineScope()
@@ -98,7 +106,17 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
     val coverageTileJsonLayerIds by
         mapViewModel.coverageTileJsonLayerIds.collectAsStateWithLifecycle()
 
-    val darkMode = isSystemInDarkTheme()
+    val mapThemeOverride by
+        settings
+            .getEnumFlow(PreferenceKeys.MAP_THEME_OVERRIDE, MapThemeOverride.SYSTEM)
+            .collectAsStateWithLifecycle(initialValue = MapThemeOverride.SYSTEM)
+
+    val darkMode =
+        when (mapThemeOverride) {
+            MapThemeOverride.LIGHT -> false
+            MapThemeOverride.DARK -> true
+            MapThemeOverride.SYSTEM -> isSystemInDarkTheme()
+        }
 
     var geoJsonSource by remember { mutableStateOf(GeoJsonSource(HEATMAP_SOURCE_ID)) }
 
