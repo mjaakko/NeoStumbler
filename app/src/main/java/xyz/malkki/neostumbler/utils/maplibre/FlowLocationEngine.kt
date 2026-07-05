@@ -3,6 +3,9 @@ package xyz.malkki.neostumbler.utils.maplibre
 import android.app.PendingIntent
 import android.location.Location
 import android.os.Looper
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import java.util.concurrent.ConcurrentHashMap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -17,6 +20,7 @@ import xyz.malkki.neostumbler.core.observation.PositionObservation
 class FlowLocationEngine(
     private val positionFlow: SharedFlow<PositionObservation>,
     private val coroutineScope: CoroutineScope,
+    private val lifecycleOwner: LifecycleOwner? = null,
 ) : LocationEngine {
     override fun getLastLocation(callback: LocationEngineCallback<LocationEngineResult?>) {
         positionFlow.replayCache.lastOrNull()?.let { position ->
@@ -32,9 +36,21 @@ class FlowLocationEngine(
         looper: Looper?,
     ) {
         callbackToJob[callback] = coroutineScope.launch {
-            positionFlow.collect { position ->
-                callback.onSuccess(LocationEngineResult.create(position.asPlatformLocation()))
+            if (lifecycleOwner != null) {
+                lifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                    startLocationListener(callback)
+                }
+            } else {
+                startLocationListener(callback)
             }
+        }
+    }
+
+    private suspend fun startLocationListener(
+        callback: LocationEngineCallback<LocationEngineResult?>
+    ): Nothing {
+        positionFlow.collect { position ->
+            callback.onSuccess(LocationEngineResult.create(position.asPlatformLocation()))
         }
     }
 

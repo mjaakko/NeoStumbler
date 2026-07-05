@@ -29,6 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.compose.rememberLifecycleOwner
 import kotlin.math.abs
 import org.koin.androidx.compose.koinViewModel
 import org.maplibre.android.camera.CameraPosition
@@ -88,6 +89,7 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
     val context = LocalContext.current
 
     val coroutineScope = rememberCoroutineScope()
+    val lifecycleOwner = rememberLifecycleOwner()
 
     var showPermissionDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -148,7 +150,7 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
 
                 map.uiSettings.isRotateGesturesEnabled = false
 
-                map.getStyle { style ->
+                map.getStyle { _ ->
                     map.setupLocationComponent(
                         context,
                         trackMyLocation = trackMyLocation,
@@ -156,6 +158,7 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                             FlowLocationEngine(
                                 positionFlow = mapViewModel.myLocation,
                                 coroutineScope = coroutineScope,
+                                lifecycleOwner = lifecycleOwner,
                             ),
                         onCameraTrackingDismissed = { trackMyLocation = false },
                     )
