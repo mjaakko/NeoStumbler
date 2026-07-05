@@ -26,6 +26,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -94,9 +95,10 @@ private fun Coordinates(latLng: LatLng) {
 
 @Composable
 private fun ReportDetails(reportId: Long, reportProvider: ReportProvider = koinInject()) {
-    val report = reportProvider.getReport(reportId).collectAsStateWithLifecycle(initialValue = null)
+    val report by
+        reportProvider.getReport(reportId).collectAsStateWithLifecycle(initialValue = null)
 
-    if (report.value == null) {
+    if (report == null) {
         Box(
             modifier = Modifier.height(400.dp).fillMaxWidth(),
             contentAlignment = Alignment.Center,
@@ -104,16 +106,14 @@ private fun ReportDetails(reportId: Long, reportProvider: ReportProvider = koinI
             CircularProgressIndicator()
         }
     } else {
-        Text(
-            text = formattedDate(report.value!!.timestamp),
-            style = MaterialTheme.typography.titleLarge,
-        )
 
-        ReportMap(modifier = Modifier.padding(top = 8.dp), report = report.value!!)
+        Text(text = formattedDate(report!!.timestamp), style = MaterialTheme.typography.titleLarge)
+
+        ReportMap(modifier = Modifier.padding(top = 8.dp), report = report!!)
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Coordinates(latLng = report.value!!.position.position.latLng)
+        Coordinates(latLng = report!!.position.position.latLng)
 
         val decimalFormat = DecimalFormat("#.#")
 
@@ -121,9 +121,7 @@ private fun ReportDetails(reportId: Long, reportProvider: ReportProvider = koinI
             text =
                 stringResource(
                     R.string.speed_metres_per_second,
-                    decimalFormat.format(
-                        report.value!!.position.position.speed?.metersPerSecond ?: 0.0
-                    ),
+                    decimalFormat.format(report!!.position.position.speed?.metersPerSecond ?: 0.0),
                 ),
             style = MaterialTheme.typography.bodySmall,
         )
@@ -132,12 +130,12 @@ private fun ReportDetails(reportId: Long, reportProvider: ReportProvider = koinI
             text =
                 stringResource(
                     R.string.altitude_metres,
-                    decimalFormat.format(report.value!!.position.position.altitude ?: 0.0),
+                    decimalFormat.format(report!!.position.position.altitude ?: 0.0),
                 ),
             style = MaterialTheme.typography.bodySmall,
         )
 
-        ReportDataLists(report = report.value!!)
+        ReportDataLists(report = report!!)
     }
 }
 
@@ -217,7 +215,7 @@ private fun ReportWifisList(wifiAccessPoints: List<ReportEmitter<WifiAccessPoint
         items(items = sortedWifiAccessPoints, key = { it.id }) { wifiAccessPoint ->
             Column(modifier = Modifier.wrapContentHeight().fillMaxWidth()) {
                 Text(
-                    text = wifiAccessPoint.emitter.ssid ?: "",
+                    text = wifiAccessPoint.emitter.ssid.orEmpty(),
                     style = MaterialTheme.typography.titleSmall,
                 )
 
@@ -300,9 +298,9 @@ private fun ReportCellsList(cellTowers: List<ReportEmitter<CellTower, String>>) 
 
                 Text(
                     text =
-                        cellTower.emitter.signalStrength?.let {
-                            stringResource(R.string.signal_strength_dbm, it)
-                        } ?: "",
+                        cellTower.emitter.signalStrength
+                            ?.let { stringResource(R.string.signal_strength_dbm, it) }
+                            .orEmpty(),
                     style = MaterialTheme.typography.bodySmall,
                 )
             }

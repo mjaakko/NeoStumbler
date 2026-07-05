@@ -278,29 +278,24 @@ private fun Reports(
     val listAtTop by remember { derivedStateOf { listState.firstVisibleItemIndex == 0 } }
     var listWasAtTop by remember { mutableStateOf(listAtTop) }
 
-    val reportToShow = rememberSaveable { mutableStateOf<Long?>(null) }
+    var reportToShow by rememberSaveable { mutableStateOf<Long?>(null) }
 
-    val reportToDelete = rememberSaveable { mutableStateOf<Long?>(null) }
+    var reportToDelete by rememberSaveable { mutableStateOf<Long?>(null) }
 
-    if (reportToShow.value != null) {
-        ReportDetailsDialog(
-            reportId = reportToShow.value!!,
-            onDismiss = { reportToShow.value = null },
-        )
-    }
+    reportToShow?.let { ReportDetailsDialog(reportId = it, onDismiss = { reportToShow = null }) }
 
-    if (reportToDelete.value != null) {
+    reportToDelete?.let {
         ConfirmationDialog(
             title = stringResource(id = R.string.delete_report),
             description = stringResource(id = R.string.delete_report_confirmation),
             positiveButtonText = stringResource(id = R.string.yes),
             negativeButtonText = stringResource(id = R.string.no),
             onPositiveAction = {
-                reportsViewModel.deleteReport(reportToDelete.value!!)
+                reportsViewModel.deleteReport(it)
 
-                reportToDelete.value = null
+                reportToDelete = null
             },
-            onNegativeAction = { reportToDelete.value = null },
+            onNegativeAction = { reportToDelete = null },
         )
     }
 
@@ -343,8 +338,8 @@ private fun Reports(
                         if (report != null) {
                             Report(
                                 report = report,
-                                onShowReportDetails = { reportId -> reportToShow.value = reportId },
-                                onDeleteReport = { reportId -> reportToDelete.value = reportId },
+                                onShowReportDetails = { reportId -> reportToShow = reportId },
+                                onDeleteReport = { reportId -> reportToDelete = reportId },
                                 geocoder = cachedGeocoder,
                             )
                         } else {
@@ -453,7 +448,7 @@ private fun Report(
             )
         }
 
-        Text(text = address.value ?: "", style = MaterialTheme.typography.bodySmall)
+        Text(text = address.value.orEmpty(), style = MaterialTheme.typography.bodySmall)
     }
 }
 

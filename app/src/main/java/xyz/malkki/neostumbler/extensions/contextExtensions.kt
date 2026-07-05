@@ -43,7 +43,9 @@ val Context.localeList: LocaleListCompat
     get() = LocaleListCompat.wrap(resources.configuration.locales)
 
 val Context.defaultLocale: Locale
-    get() = localeList[0]!!
+    get() =
+        // Default locale is always available in the locale list provided by the OS
+        @Suppress("UnsafeCallOnNullableType") localeList[0]!!
 
 /**
  * Checks if Wi-Fi scan throttling is enabled
@@ -52,7 +54,7 @@ val Context.defaultLocale: Locale
  */
 fun Context.isWifiScanThrottled(): Boolean? {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        getSystemService<WifiManager>()!!.isScanThrottleEnabled
+        getSystemService<WifiManager>()?.isScanThrottleEnabled
     } else {
         when (Settings.Global.getInt(contentResolver, "wifi_scan_throttle_enabled", -1)) {
             1 -> true

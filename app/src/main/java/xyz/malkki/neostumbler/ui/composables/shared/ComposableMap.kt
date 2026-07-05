@@ -88,10 +88,8 @@ fun ComposableMap(
     val mapTileSourceUrl =
         if (mapTileSource == MapTileSource.CUSTOM) {
             customMapStyleUrl
-        } else if (isSystemInDarkTheme() && mapTileSource.sourceUrlDark != null) {
-            mapTileSource.sourceUrlDark!!
         } else {
-            mapTileSource.sourceUrl!!
+            mapTileSource.sourceUrlDark?.takeIf { isSystemInDarkTheme() } ?: mapTileSource.sourceUrl
         }
 
     if (attributionDialogOpen) {
@@ -130,7 +128,7 @@ fun ComposableMap(
                     }
 
                     mapView.getMapAsync { map ->
-                        mapTileSourceUrl.let { map.updateMapStyleIfNeeded(it, onStyleUpdated) }
+                        mapTileSourceUrl?.let { map.updateMapStyleIfNeeded(it, onStyleUpdated) }
 
                         map.uiSettings.isAttributionEnabled = false
                         map.uiSettings.isLogoEnabled = false
@@ -146,7 +144,7 @@ fun ComposableMap(
                     mapView.lifecycle = lifecycle
 
                     mapView.getMapAsync { map ->
-                        mapTileSourceUrl.let { map.updateMapStyleIfNeeded(it, onStyleUpdated) }
+                        mapTileSourceUrl?.let { map.updateMapStyleIfNeeded(it, onStyleUpdated) }
 
                         mapInstance = map
                     }
@@ -186,7 +184,7 @@ private fun Source.getAttribution(context: Context): Collection<Attribution> {
 }
 
 private fun MapLibreMap.updateMapStyleIfNeeded(styleUrl: String, callback: (Style) -> Unit) {
-    if (style == null || style!!.uri != styleUrl) {
+    if (style == null || style?.uri != styleUrl) {
         setStyle(Style.Builder().fromUri(styleUrl)) { style -> callback(style) }
     }
 }

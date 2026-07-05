@@ -174,10 +174,10 @@ fun ReportMap(report: Report, modifier: Modifier = Modifier) {
             },
         )
 
-        if (estimatedLocation != null) {
+        estimatedLocation?.let {
             EstimatedDistance(
                 reportLocation = report.position.position.latLng,
-                estimatedLocation = estimatedLocation!!.location.latLng,
+                estimatedLocation = it.location.latLng,
             )
         }
     }
@@ -265,18 +265,18 @@ private fun MapLibreMap.setCameraPositionToContain(circles: List<Pair<LatLng, Do
     val bounds = circles.flatMap { getBoundingBoxLatLngs(it.first, it.second) }
 
     // Fit both locations on the map
-    val cameraPosition =
-        CameraUpdateFactory.newLatLngBounds(
-                bounds = LatLngBounds.fromLatLngs(bounds.map { it.asMapLibreLatLng() }),
-                padding = MAP_PADDING,
-            )
-            .getCameraPosition(this)!!
-
-    this.cameraPosition =
-        if (cameraPosition.zoom > MAP_ZOOM_LEVEL) {
-            CameraPosition.Builder(cameraPosition).zoom(MAP_ZOOM_LEVEL).build()
-        } else {
-            cameraPosition
+    CameraUpdateFactory.newLatLngBounds(
+            bounds = LatLngBounds.fromLatLngs(bounds.map { it.asMapLibreLatLng() }),
+            padding = MAP_PADDING,
+        )
+        .getCameraPosition(this)
+        ?.let { cameraPosition ->
+            this.cameraPosition =
+                if (cameraPosition.zoom > MAP_ZOOM_LEVEL) {
+                    CameraPosition.Builder(cameraPosition).zoom(MAP_ZOOM_LEVEL).build()
+                } else {
+                    cameraPosition
+                }
         }
 }
 
@@ -325,14 +325,18 @@ private fun getEstimatedReportLocation(
                                 },
                             cellTowers =
                                 report.cellTowers
-                                    .filter { it.emitter.cellId != null }
+                                    .filter {
+                                        it.emitter.cellId != null &&
+                                            it.emitter.mobileCountryCode != null &&
+                                            it.emitter.mobileNetworkCode != null
+                                    }
                                     .map {
                                         GeolocateRequestDto.CellTowerDto(
                                             radioType = it.emitter.radioType.name.lowercase(),
                                             mobileCountryCode =
-                                                it.emitter.mobileCountryCode!!.toIntOrNull()!!,
+                                                it.emitter.mobileCountryCode?.toIntOrNull(),
                                             mobileNetworkCode =
-                                                it.emitter.mobileNetworkCode!!.toIntOrNull()!!,
+                                                it.emitter.mobileNetworkCode?.toIntOrNull(),
                                             locationAreaCode = it.emitter.locationAreaCode,
                                             cellId = it.emitter.cellId,
                                             signalStrength = it.emitter.signalStrength,

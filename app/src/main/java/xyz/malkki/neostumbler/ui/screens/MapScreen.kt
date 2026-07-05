@@ -128,10 +128,12 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
             modifier = Modifier.fillMaxSize(),
             onInit = { map, _ ->
                 map.addOnCameraMoveListener {
-                    mapViewModel.setMapViewport(
-                        center = map.cameraPosition.target!!.asDomainLatLng(),
-                        zoom = map.cameraPosition.zoom,
-                    )
+                    map.cameraPosition.target?.let { latLng ->
+                        mapViewModel.setMapViewport(
+                            center = latLng.asDomainLatLng(),
+                            zoom = map.cameraPosition.zoom,
+                        )
+                    }
 
                     mapViewModel.setMapBounds(
                         minLatitude = map.projection.visibleRegion.latLngBounds.latitudeSouth,
@@ -368,6 +370,7 @@ private fun MapLibreMap.setupLocationComponent(
     onCameraTrackingDismissed: () -> Unit,
 ) {
     locationComponent.activateLocationComponent(
+        @Suppress("UnsafeCallOnNullableType") // style can be assumed to be non-null here
         LocationComponentActivationOptions.builder(context, style!!)
             .locationEngine(locationEngine)
             .useDefaultLocationEngine(false)

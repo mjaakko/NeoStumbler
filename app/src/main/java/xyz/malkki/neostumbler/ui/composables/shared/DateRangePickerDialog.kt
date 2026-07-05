@@ -136,9 +136,16 @@ private fun DateRangePickerState.selectedDateRange(): ClosedRange<LocalDate>? {
         return null
     }
 
-    val from =
-        Instant.ofEpochMilli(selectedStartDateMillis!!).atOffset(ZoneOffset.UTC).toLocalDate()
-    val to = Instant.ofEpochMilli(selectedEndDateMillis!!).atOffset(ZoneOffset.UTC).toLocalDate()
+    val from = selectedStartDateMillis?.let {
+        Instant.ofEpochMilli(it).atOffset(ZoneOffset.UTC).toLocalDate()
+    }
+    val to = selectedEndDateMillis?.let {
+        Instant.ofEpochMilli(selectedEndDateMillis!!).atOffset(ZoneOffset.UTC).toLocalDate()
+    }
 
-    return from..to
+    return if (from != null && to != null) {
+        from..to
+    } else {
+        null
+    }
 }

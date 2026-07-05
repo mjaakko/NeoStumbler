@@ -54,8 +54,8 @@ class PassiveScanManager(
         LocationServices.getFusedLocationProviderClient(context)
             .removeLocationUpdates(FusedPassiveLocationReceiver.getPendingIntent(context))
 
-        val locationManager = context.getSystemService<LocationManager>()!!
-        locationManager.removeUpdates(PlatformPassiveLocationReceiver.getPendingIntent(context))
+        val locationManager = context.getSystemService<LocationManager>()
+        locationManager?.removeUpdates(PlatformPassiveLocationReceiver.getPendingIntent(context))
 
         if (PermissionHelper.hasBluetoothScanPermission(context)) {
             passiveBluetoothBeaconSource.disable()

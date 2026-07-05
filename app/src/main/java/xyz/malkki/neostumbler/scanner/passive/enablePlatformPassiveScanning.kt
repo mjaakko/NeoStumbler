@@ -18,7 +18,7 @@ import timber.log.Timber
 fun enablePlatformPassiveScanning(context: Context) {
     val appContext = context.applicationContext
 
-    val locationManager = appContext.getSystemService<LocationManager>()!!
+    val locationManager: LocationManager? = appContext.getSystemService()
 
     val pendingIntent: PendingIntent = PlatformPassiveLocationReceiver.getPendingIntent(appContext)
 
@@ -36,13 +36,13 @@ fun enablePlatformPassiveScanning(context: Context) {
                 .setDurationMillis(Long.MAX_VALUE)
                 .build()
 
-        locationManager.requestLocationUpdates(
+        locationManager?.requestLocationUpdates(
             LocationManager.PASSIVE_PROVIDER,
             locationRequest,
             pendingIntent,
         )
     } else {
-        locationManager.requestLocationUpdates(
+        locationManager?.requestLocationUpdates(
             LocationManager.PASSIVE_PROVIDER,
             PassiveScanConstants.PASSIVE_LOCATION_INTERVAL.inWholeMilliseconds,
             0.0f,

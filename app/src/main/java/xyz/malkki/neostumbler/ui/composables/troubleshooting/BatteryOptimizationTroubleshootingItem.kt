@@ -15,14 +15,14 @@ import xyz.malkki.neostumbler.utils.requestIgnoreBatteryOptimizations
 fun BatteryOptimizationTroubleshootingItem() {
     val context = LocalContext.current
 
-    val powerManager = context.getSystemService<PowerManager>()!!
+    val powerManager: PowerManager? = context.getSystemService()
 
     val batteryOptimizationsDisabled =
-        MutableStateFlow(powerManager.isIgnoringBatteryOptimizations(context.packageName))
+        MutableStateFlow(powerManager?.isIgnoringBatteryOptimizations(context.packageName) == true)
     val batteryOptimizationsLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { _ ->
             batteryOptimizationsDisabled.tryEmit(
-                powerManager.isIgnoringBatteryOptimizations(context.packageName)
+                powerManager?.isIgnoringBatteryOptimizations(context.packageName) == true
             )
         }
 

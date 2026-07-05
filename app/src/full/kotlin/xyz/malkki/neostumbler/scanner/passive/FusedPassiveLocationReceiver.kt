@@ -20,6 +20,8 @@ class FusedPassiveLocationReceiver : CoroutineBroadcastReceiver(), KoinComponent
             val intent =
                 Intent(context.applicationContext, FusedPassiveLocationReceiver::class.java)
 
+            // PendingIntent can only be null with FLAG_NO_CREATE
+            @Suppress("UnsafeCallOnNullableType")
             return PendingIntentCompat.getBroadcast(
                 context.applicationContext,
                 REQUEST_CODE,

@@ -26,7 +26,7 @@ fun ParamField(
 ) {
     TextField(
         modifier = modifier,
-        value = state.value ?: "",
+        value = state.value.orEmpty(),
         onValueChange = { newValue -> state.value = newValue },
         keyboardActions = onDone?.let { KeyboardActions { onDone() } } ?: KeyboardActions.Default,
         keyboardOptions =
@@ -65,7 +65,7 @@ fun UrlField(
 }
 
 private val String?.isValidUrl: Boolean
-    get() = Patterns.WEB_URL.matcher(this ?: "").matches()
+    get() = Patterns.WEB_URL.matcher(this.orEmpty()).matches()
 
 private val String?.isUnencryptedUrl: Boolean
     get() = this?.startsWith("http:") == true

@@ -40,11 +40,14 @@ fun PermissionsDialog(
 
     val permissionRationaleText =
         missingPermissions
-            .mapNotNull {
-                if (
-                    ActivityCompat.shouldShowRequestPermissionRationale(context.getActivity()!!, it)
-                ) {
-                    permissionRationales[it]
+            .mapNotNull { permission ->
+                val showRationale =
+                    context.getActivity()?.let { activity ->
+                        ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)
+                    } == true
+
+                if (showRationale) {
+                    permissionRationales[permission]
                 } else {
                     null
                 }

@@ -16,12 +16,12 @@ import xyz.malkki.neostumbler.R
 fun WifiScanAlwaysAvailableTroubleshootingItem() {
     val context = LocalContext.current
 
-    val wifiManager = context.getSystemService<WifiManager>()!!
+    val wifiManager: WifiManager? = context.getSystemService()
 
-    val wifiScanAlwaysAvailable = MutableStateFlow(wifiManager.isScanAlwaysAvailable)
+    val wifiScanAlwaysAvailable = MutableStateFlow(wifiManager?.isScanAlwaysAvailable == true)
     val wifiScanAlwaysAvailableLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { _ ->
-            wifiScanAlwaysAvailable.tryEmit(wifiManager.isScanAlwaysAvailable)
+            wifiScanAlwaysAvailable.tryEmit(wifiManager?.isScanAlwaysAvailable == true)
         }
 
     TroubleshootingItem(

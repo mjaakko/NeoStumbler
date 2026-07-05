@@ -52,9 +52,7 @@ fun CrashLogDialog(crashLogManager: CrashLogManager = koinInject(), onClose: () 
 
     var selectedEntry by rememberSaveable { mutableStateOf<String?>(null) }
 
-    if (selectedEntry != null) {
-        CrashLogFileDialog(entry = selectedEntry!!, onCloseDialog = { selectedEntry = null })
-    }
+    selectedEntry?.let { CrashLogFileDialog(entry = it, onCloseDialog = { selectedEntry = null }) }
 
     Dialog(
         title = stringResource(R.string.crash_log_title),
@@ -103,7 +101,7 @@ private fun CrashLog(
 
             val timeFormat = remember(context) { DateFormat.getTimeFormat(context) }
 
-            crashLogEntries!!.forEach { entry ->
+            crashLogEntries?.forEach { entry ->
                 Row(
                     modifier =
                         Modifier.fillMaxWidth()
@@ -142,28 +140,30 @@ private fun CrashLogFileDialog(
 
     Dialog(
         title =
-            crashLogEntryContent?.entry?.let {
-                val formattedTimestamp = it.timestamp.formatted(dateFormat, timeFormat)
+            crashLogEntryContent
+                ?.entry
+                ?.let {
+                    val formattedTimestamp = it.timestamp.formatted(dateFormat, timeFormat)
 
-                stringResource(R.string.crash_log_entry_title, formattedTimestamp)
-            } ?: "",
+                    stringResource(R.string.crash_log_entry_title, formattedTimestamp)
+                }
+                .orEmpty(),
         onDismissRequest = { onCloseDialog() },
         secondaryActions = {
             TextButton(
                 enabled = crashLogEntryContent != null,
                 onClick = {
-                    coroutineScope.launch {
-                        clipboard.setClipEntry(
-                            ClipData.newPlainText(
-                                    "NeoStumbler crash log",
-                                    crashLogEntryContent!!.content,
-                                )
-                                .toClipEntry()
-                        )
+                    crashLogEntryContent?.let {
+                        coroutineScope.launch {
+                            clipboard.setClipEntry(
+                                ClipData.newPlainText("NeoStumbler crash log", it.content)
+                                    .toClipEntry()
+                            )
 
-                        context.showToast(
-                            ContextCompat.getString(context, R.string.text_copied_to_clipboard)
-                        )
+                            context.showToast(
+                                ContextCompat.getString(context, R.string.text_copied_to_clipboard)
+                            )
+                        }
                     }
                 },
             ) {
@@ -193,15 +193,17 @@ private fun CrashLogFileDialog(
         if (crashLogEntryContent == null) {
             CenteredCircularProgressIndicator()
         } else {
-            Text(
-                modifier =
-                    Modifier.verticalScroll(rememberScrollState())
-                        .horizontalScroll(rememberScrollState()),
-                text = crashLogEntryContent!!.content,
-                fontSize = 12.sp,
-                fontFamily = FontFamily.Monospace,
-                softWrap = false,
-            )
+            crashLogEntryContent?.content?.let {
+                Text(
+                    modifier =
+                        Modifier.verticalScroll(rememberScrollState())
+                            .horizontalScroll(rememberScrollState()),
+                    text = it,
+                    fontSize = 12.sp,
+                    fontFamily = FontFamily.Monospace,
+                    softWrap = false,
+                )
+            }
         }
     }
 }

@@ -13,9 +13,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -37,9 +39,9 @@ fun GeosubmitEndpointSettings(ichnaeaClientProvider: IchnaeaClientProvider = koi
     val params =
         ichnaeaClientProvider.ichnaeaParams.collectAsStateWithLifecycle(initialValue = null)
 
-    val dialogOpen = rememberSaveable { mutableStateOf(false) }
+    var dialogOpen by rememberSaveable { mutableStateOf(false) }
 
-    if (dialogOpen.value) {
+    if (dialogOpen) {
         GeosubmitEndpointDialog(
             currentParams = params.value,
             onDialogClose = { newParams ->
@@ -47,10 +49,10 @@ fun GeosubmitEndpointSettings(ichnaeaClientProvider: IchnaeaClientProvider = koi
                     coroutineScope.launch {
                         ichnaeaClientProvider.setIchnaeaParams(newParams)
 
-                        dialogOpen.value = false
+                        dialogOpen = false
                     }
                 } else {
-                    dialogOpen.value = false
+                    dialogOpen = false
                 }
             },
         )
@@ -59,7 +61,7 @@ fun GeosubmitEndpointSettings(ichnaeaClientProvider: IchnaeaClientProvider = koi
     SettingsItem(
         title = stringResource(R.string.endpoint),
         description = params.value?.baseUrl ?: stringResource(R.string.no_endpoint_configured),
-        onClick = { dialogOpen.value = true },
+        onClick = { dialogOpen = true },
     )
 }
 
@@ -137,6 +139,8 @@ private fun GeosubmitEndpointDialog(
                     modifier = Modifier.align(Alignment.End),
                     onClick = {
                         onDialogClose(
+                            // button is only enabled when all values are available
+                            @Suppress("UnsafeCallOnNullableType")
                             IchnaeaParams(
                                 baseUrl = endpoint.value!!,
                                 submissionPath = geosubmitPath.value!!,

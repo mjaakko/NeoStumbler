@@ -16,14 +16,14 @@ import xyz.malkki.neostumbler.ichnaeaupload.UploadResult
 
 @Composable
 fun ToastOnReportUpload(
-    workId: MutableState<UUID?>,
+    workIdState: MutableState<UUID?>,
     ichnaeaReportUploadStarter: IchnaeaReportUploadStarter = koinInject(),
 ) {
     val context = LocalContext.current
 
-    LaunchedEffect(workId.value) {
-        if (workId.value != null) {
-            val result = ichnaeaReportUploadStarter.awaitUntilUploaded(workId.value!!)
+    LaunchedEffect(workIdState.value) {
+        workIdState.value?.let { workId ->
+            val result = ichnaeaReportUploadStarter.awaitUntilUploaded(workId)
 
             if (result is UploadResult.Success) {
                 context.showToast(
@@ -62,7 +62,7 @@ fun ToastOnReportUpload(
                 }
             }
 
-            workId.value = null
+            workIdState.value = null
         }
     }
 }

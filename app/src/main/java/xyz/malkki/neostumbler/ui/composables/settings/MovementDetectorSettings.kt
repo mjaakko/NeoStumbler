@@ -4,12 +4,12 @@ import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorManager
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
@@ -47,19 +47,23 @@ fun MovementDetectorSettings(settings: Settings = koinInject()) {
             }
         }
 
-    val movementDetectorType =
+    val movementDetectorType by
         settings
             .getEnumFlow(PreferenceKeys.MOVEMENT_DETECTOR, MovementDetectorType.LOCATION)
-            .collectAsState(initial = null)
+            .collectAsStateWithLifecycle(initialValue = null)
 
-    if (movementDetectorType.value != null) {
+    movementDetectorType?.let {
         MultiChoiceSettings(
             title = stringResource(id = R.string.movement_detection),
             options = MovementDetectorType.entries,
-            selectedOption = movementDetectorType.value!!,
+            selectedOption = it,
             disabledOptions = disabledOptions,
-            titleProvider = { ContextCompat.getString(context, TITLES[it]!!) },
-            descriptionProvider = { ContextCompat.getString(context, DESCRIPTIONS[it]!!) },
+            titleProvider = { option ->
+                TITLES[option]?.let { resourceId -> stringResource(resourceId) }.orEmpty()
+            },
+            descriptionProvider = { option ->
+                DESCRIPTIONS[option]?.let { resourceId -> stringResource(resourceId) }.orEmpty()
+            },
             onValueSelected = { newMovementDetectorType ->
                 settings.edit { setEnum(PreferenceKeys.MOVEMENT_DETECTOR, newMovementDetectorType) }
             },
@@ -68,6 +72,6 @@ fun MovementDetectorSettings(settings: Settings = koinInject()) {
 }
 
 private fun Context.significantMotionSensorAvailable(): Boolean {
-    return getSystemService<SensorManager>()!!.getDefaultSensor(Sensor.TYPE_SIGNIFICANT_MOTION) !=
+    return getSystemService<SensorManager>()?.getDefaultSensor(Sensor.TYPE_SIGNIFICANT_MOTION) !=
         null
 }

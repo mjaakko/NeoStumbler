@@ -31,8 +31,8 @@ private fun LicensesDialog(onClose: () -> Unit) {
 
                 if (licenseUrl != null) {
                     context.startActivity(openUrl(licenseUrl))
-                } else if (library.website != null) {
-                    context.startActivity(openUrl(library.website!!))
+                } else {
+                    library.website?.let { context.startActivity(openUrl(it)) }
                 }
             },
             textStyles =

@@ -136,9 +136,9 @@ private const val CIRCLE_STROKE_WIDTH = 2f
 fun AreaPickerMap(onCircleUpdated: (Pair<LatLng, Double>) -> Unit) {
     val density = LocalDensity.current
 
-    val currentLocation = getCurrentLocation()
+    val currentLocation by getCurrentLocation()
 
-    if (currentLocation.value == null) {
+    if (currentLocation == null) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
@@ -158,17 +158,17 @@ fun AreaPickerMap(onCircleUpdated: (Pair<LatLng, Double>) -> Unit) {
                 }
 
                 map.addOnCameraMoveListener {
-                    val newMapCenter = map.cameraPosition.target!!.asDomainLatLng()
+                    map.cameraPosition.target?.asDomainLatLng()?.let { newMapCenter ->
+                        val radiusMeters =
+                            radius.value *
+                                map.projection.getMetersPerPixelAtLatitude(newMapCenter.latitude)
 
-                    val radiusMeters =
-                        radius.value *
-                            map.projection.getMetersPerPixelAtLatitude(newMapCenter.latitude)
+                        onCircleUpdated(newMapCenter to radiusMeters)
 
-                    onCircleUpdated(newMapCenter to radiusMeters)
-
-                    geoJsonSource.setGeoJson(
-                        Point.fromLngLat(newMapCenter.longitude, newMapCenter.latitude)
-                    )
+                        geoJsonSource.setGeoJson(
+                            Point.fromLngLat(newMapCenter.longitude, newMapCenter.latitude)
+                        )
+                    }
 
                     map.getStyle { style ->
                         style.layers
@@ -177,10 +177,10 @@ fun AreaPickerMap(onCircleUpdated: (Pair<LatLng, Double>) -> Unit) {
                     }
                 }
 
-                val cameraPos = currentLocation.value!!.asMapLibreLatLng()
-
-                map.cameraPosition =
-                    CameraPosition.Builder().target(cameraPos).zoom(DEFAULT_ZOOM).build()
+                currentLocation?.asMapLibreLatLng()?.let { cameraPos ->
+                    map.cameraPosition =
+                        CameraPosition.Builder().target(cameraPos).zoom(DEFAULT_ZOOM).build()
+                }
 
                 map.setMinZoomPreference(MIN_ZOOM)
                 map.setMaxZoomPreference(MAX_ZOOM)

@@ -19,11 +19,11 @@ fun GeocoderSettings(settings: Settings = koinInject()) {
             .getEnumFlow(PreferenceKeys.GEOCODER_TYPE, GeocoderType.DEFAULT)
             .collectAsStateWithLifecycle(initialValue = null)
 
-    if (selectedGeocoder != null) {
+    selectedGeocoder?.let {
         MultiChoiceSettings(
             title = stringResource(id = R.string.geocoder_settings_title),
             options = GeocoderType.entries,
-            selectedOption = selectedGeocoder!!,
+            selectedOption = it,
             titleProvider = { geocoderType -> stringResource(geocoderType.titleResId) },
             onValueSelected = { newGeocoderType ->
                 settings.edit { setEnum(PreferenceKeys.GEOCODER_TYPE, newGeocoderType) }

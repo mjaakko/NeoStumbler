@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
@@ -46,7 +47,7 @@ import xyz.malkki.neostumbler.utils.SuggestedService
 fun SuggestedServicesDialog(onServiceSelected: (SuggestedService?) -> Unit) {
     val context = LocalContext.current
 
-    val suggestedServices =
+    val suggestedServices by
         produceState<List<SuggestedService>?>(null) {
             value = withContext(Dispatchers.IO) { SuggestedService.getSuggestedServices(context) }
         }
@@ -69,16 +70,18 @@ fun SuggestedServicesDialog(onServiceSelected: (SuggestedService?) -> Unit) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                if (suggestedServices.value == null) {
+                if (suggestedServices == null) {
                     LoadingIndicator()
-                } else {
+                }
+
+                suggestedServices?.let {
                     Column(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
                         ExposedDropdownMenuBox(
                             expanded = expanded.value,
                             onExpandedChange = { expanded.value = it },
                         ) {
                             TextField(
-                                value = suggestedServices.value!![selectedService.intValue].name,
+                                value = it[selectedService.intValue].name,
                                 onValueChange = {},
                                 readOnly = true,
                                 trailingIcon = {
@@ -96,8 +99,7 @@ fun SuggestedServicesDialog(onServiceSelected: (SuggestedService?) -> Unit) {
                                 expanded = expanded.value,
                                 onDismissRequest = { expanded.value = false },
                             ) {
-                                suggestedServices.value!!.forEachIndexed { index, suggestedService
-                                    ->
+                                it.forEachIndexed { index, suggestedService ->
                                     DropdownMenuItem(
                                         text = { Text(text = suggestedService.name) },
                                         onClick = {
@@ -111,9 +113,7 @@ fun SuggestedServicesDialog(onServiceSelected: (SuggestedService?) -> Unit) {
 
                         Spacer(modifier = Modifier.height(12.dp))
 
-                        SuggestedServiceDetails(
-                            service = suggestedServices.value!![selectedService.intValue]
-                        )
+                        SuggestedServiceDetails(service = it[selectedService.intValue])
                     }
                 }
 
@@ -128,7 +128,7 @@ fun SuggestedServicesDialog(onServiceSelected: (SuggestedService?) -> Unit) {
 
                     TextButton(
                         onClick = {
-                            onServiceSelected(suggestedServices.value!![selectedService.intValue])
+                            onServiceSelected(suggestedServices!![selectedService.intValue])
                         }
                     ) {
                         Text(text = stringResource(id = R.string.use))

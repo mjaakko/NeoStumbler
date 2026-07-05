@@ -6,8 +6,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
@@ -32,9 +34,9 @@ fun ExportCsvButton(
 
     val selectableDates = reportProvider.getReportDates().collectAsStateWithLifecycle(null)
 
-    val dialogOpen = rememberSaveable { mutableStateOf(false) }
+    var dialogOpen by rememberSaveable { mutableStateOf(false) }
 
-    val selectedDates = rememberSaveable { mutableStateOf<Pair<LocalDate, LocalDate>?>(null) }
+    var selectedDates by rememberSaveable { mutableStateOf<Pair<LocalDate, LocalDate>?>(null) }
 
     val activityLauncher =
         rememberLauncherForActivityResult(
@@ -49,8 +51,8 @@ fun ExportCsvButton(
 
                     val localTimeZone = ZoneId.systemDefault()
 
-                    val fromDate = selectedDates.value!!.first
-                    val toDate = selectedDates.value!!.second
+                    val fromDate = selectedDates!!.first
+                    val toDate = selectedDates!!.second
 
                     val fromFormatted =
                         dateFormat.format(
@@ -79,35 +81,37 @@ fun ExportCsvButton(
                         outputFile = uri.toString(),
                     )
 
-                    selectedDates.value = null
-                    dialogOpen.value = false
+                    selectedDates = null
+                    dialogOpen = false
                 }
             },
         )
 
-    if (dialogOpen.value) {
+    if (dialogOpen) {
         DateRangePickerDialog(
             title = stringResource(id = R.string.export_data),
             selectButtonText = stringResource(id = R.string.export_data),
             selectableDates = selectableDates,
             onDatesSelected = { dateRange ->
-                selectedDates.value = dateRange?.let { it.start to it.endInclusive }
+                selectedDates = dateRange?.let { it.start to it.endInclusive }
 
-                if (selectedDates.value != null) {
-                    val fromFormatted =
-                        selectedDates.value!!.first.format(DateTimeFormatter.BASIC_ISO_DATE)
-                    val toFormatted =
-                        selectedDates.value!!.second.format(DateTimeFormatter.BASIC_ISO_DATE)
+                val fileName = selectedDates?.let { (from, to) ->
+                    val fromFormatted = from.format(DateTimeFormatter.BASIC_ISO_DATE)
+                    val toFormatted = to.format(DateTimeFormatter.BASIC_ISO_DATE)
 
-                    activityLauncher.launch("neostumbler_export_${fromFormatted}_$toFormatted.zip")
+                    "neostumbler_export_${fromFormatted}_$toFormatted.zip"
+                }
+
+                if (fileName != null) {
+                    activityLauncher.launch(fileName)
                 } else {
-                    dialogOpen.value = false
+                    dialogOpen = false
                 }
             },
         )
     }
 
-    Button(enabled = true, onClick = { dialogOpen.value = true }) {
+    Button(enabled = true, onClick = { dialogOpen = true }) {
         Text(text = stringResource(id = R.string.export_csv))
     }
 }

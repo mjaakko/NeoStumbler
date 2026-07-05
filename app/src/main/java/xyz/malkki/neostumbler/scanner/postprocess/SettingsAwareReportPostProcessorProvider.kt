@@ -24,7 +24,7 @@ class SettingsAwareReportPostProcessorProvider(private val settings: Settings) :
 
         return buildList {
             add(HiddenWifiFilterer())
-            add(SsidBasedWifiFilterer(wifiFilterList ?: emptySet()))
+            add(SsidBasedWifiFilterer(wifiFilterList.orEmpty()))
 
             if (filterMovingDevices != false) {
                 add(AutoDetectingMovingWifiBluetoothFilterer(deterministic = false))

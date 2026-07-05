@@ -64,25 +64,27 @@ fun MapSettingsButton(modifier: Modifier, settings: Settings = koinInject()) {
         settings.selectedMapTileSourceAndStyleUrl().collectAsStateWithLifecycle(initialValue = null)
 
     if (dialogOpen) {
-        val selectedMapTileSource = selectedMapTileSourceAndStyleUrl?.first
-        val styleUrl = selectedMapTileSourceAndStyleUrl?.second
+        selectedMapTileSourceAndStyleUrl?.let { (selectedMapTileSource, styleUrl) ->
+            MapSettingsDialog(
+                currentSettings = selectedMapTileSource to styleUrl,
+                onCloseDialog = { newSettings ->
+                    if (newSettings != null) {
+                        coroutineScope.launch {
+                            settings.edit {
+                                setEnum(PreferenceKeys.MAP_TILE_SOURCE, newSettings.first)
 
-        MapSettingsDialog(
-            currentSettings = selectedMapTileSource!! to styleUrl!!,
-            onCloseDialog = { newSettings ->
-                if (newSettings != null) {
-                    coroutineScope.launch {
-                        settings.edit {
-                            setEnum(PreferenceKeys.MAP_TILE_SOURCE, newSettings.first)
-
-                            setString(PreferenceKeys.MAP_TILE_SOURCE_CUSTOM_URL, newSettings.second)
+                                setString(
+                                    PreferenceKeys.MAP_TILE_SOURCE_CUSTOM_URL,
+                                    newSettings.second,
+                                )
+                            }
                         }
                     }
-                }
 
-                dialogOpen = false
-            },
-        )
+                    dialogOpen = false
+                },
+            )
+        }
     }
 
     FilledTonalIconButton(
@@ -109,7 +111,10 @@ private fun MapSettingsDialog(
 
     Dialog(
         title = stringResource(id = R.string.map_tile_source),
-        onDismissRequest = { onCloseDialog(selectedTileSource.value to selectedStyleUrl.value!!) },
+        onDismissRequest = {
+            @Suppress("UnsafeCallOnNullableType") // ParamField forces the type to be nullable
+            onCloseDialog(selectedTileSource.value to selectedStyleUrl.value!!)
+        },
     ) {
         Column {
             Column(
@@ -143,7 +148,7 @@ private fun MapSettingsDialog(
                                 if (mapTileSource == MapTileSource.CUSTOM) {
                                     stringResource(R.string.map_tile_source_custom_title)
                                 } else {
-                                    mapTileSource.title!!
+                                    mapTileSource.title.orEmpty()
                                 },
                             style = MaterialTheme.typography.bodyMedium,
                         )

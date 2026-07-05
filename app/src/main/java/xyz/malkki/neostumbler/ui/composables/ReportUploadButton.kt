@@ -41,7 +41,7 @@ fun ReportUploadButton(
 
     val enqueuedUploadWork = rememberSaveable { mutableStateOf<UUID?>(null) }
 
-    ToastOnReportUpload(workId = enqueuedUploadWork)
+    ToastOnReportUpload(workIdState = enqueuedUploadWork)
 
     FilledIconButton(
         modifier = modifier,

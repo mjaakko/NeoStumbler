@@ -35,18 +35,16 @@ fun DbPruneSettings(settings: Settings = koinInject()) {
             )
             .collectAsStateWithLifecycle(initialValue = null)
 
-    if (dbPruneMaxAgeDays != null) {
+    dbPruneMaxAgeDays?.let {
         MultiChoiceSettings(
             title = stringResource(id = R.string.db_prune_title),
             options = TITLES.keys,
-            selectedOption = dbPruneMaxAgeDays!!,
+            selectedOption = it,
             titleProvider = { value ->
-                if (value in TITLES) {
-                    stringResource(TITLES[value]!!)
-                } else {
+                TITLES[value]?.let { resourceId -> stringResource(resourceId) }
+                    ?:
                     // Fallback for unsupported values
                     pluralStringResource(R.plurals.db_prune_custom_days, value, value)
-                }
             },
             onValueSelected = { value ->
                 settings.edit { setInt(PreferenceKeys.DB_PRUNE_DATA_MAX_AGE_DAYS, value) }
