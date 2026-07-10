@@ -1,0 +1,4 @@
+* Mise à jour du SDK visé à la version 37 (Android 17)
+* Correction de la fréquence de mesure qui était inversée
+* Refonte mineure
+* Mise à jour des dépendances
