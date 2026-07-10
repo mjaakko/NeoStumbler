@@ -10,6 +10,8 @@ dependencies {
     implementation(libs.plugins.ktfmt.asLibraryDependency)
 
     implementation(libs.plugins.detekt.asLibraryDependency)
+
+    implementation(libs.bundletool)
 }
 
 private val Provider<PluginDependency>.asLibraryDependency: Provider<String>

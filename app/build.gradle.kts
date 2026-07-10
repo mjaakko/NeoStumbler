@@ -1,21 +1,16 @@
+import com.android.SdkConstants
+import com.android.build.api.variant.AndroidComponentsExtension
+import com.android.repository.Revision
+import com.android.sdklib.BuildToolInfo
 import com.mikepenz.aboutlibraries.plugin.DuplicateMode
 import com.mikepenz.aboutlibraries.plugin.DuplicateRule
+import tasks.BuildApks
 
 plugins {
     id("convention.android-app")
     alias(libs.plugins.kotlinCompose)
     alias(libs.plugins.kotlinSerialization)
-    alias(libs.plugins.bundletool)
     alias(libs.plugins.aboutLibraries)
-}
-
-bundletool {
-    signingConfig {
-        storeFile.set(rootProject.layout.projectDirectory.file("keystore.jks"))
-        storePassword.set(providers.environmentVariable("SIGNING_STORE_PASSWORD"))
-        keyAlias.set(providers.environmentVariable("SIGNING_KEY_ALIAS"))
-        keyPassword.set(providers.environmentVariable("SIGNING_KEY_PASSWORD"))
-    }
 }
 
 android {
@@ -203,6 +198,45 @@ android {
 tasks.register<Copy>("copyPrivacyPolicy") {
     from(rootProject.layout.projectDirectory.file("docs/privacy_policy.md"))
     into(project.layout.buildDirectory.dir("privacypolicy"))
+}
+
+val aapt2ExecutableProvider =
+    project.extensions
+        .getByType(AndroidComponentsExtension::class.java)
+        .sdkComponents
+        .sdkDirectory
+        .map { sdkDir ->
+            val buildToolsDir =
+                sdkDir.asFile
+                    .toPath()
+                    .resolve(SdkConstants.FD_BUILD_TOOLS)
+                    .resolve(SdkConstants.CURRENT_BUILD_TOOLS_VERSION)
+
+            file(
+                BuildToolInfo.fromStandardDirectoryLayout(
+                        Revision.parseRevision(SdkConstants.CURRENT_BUILD_TOOLS_VERSION),
+                        buildToolsDir,
+                    )
+                    .getPath(BuildToolInfo.PathId.AAPT2)
+            )
+        }
+
+tasks.register<BuildApks>("buildAccrescentApks") {
+    // Add bundle task as a dependency because it doesn't define its outputs correctly
+    dependsOn(tasks.named("bundleFullDefaultRelease"))
+
+    aapt2Executable = aapt2ExecutableProvider
+
+    aabFile.set(
+        layout.buildDirectory.file("outputs/bundle/fullDefaultRelease/app-full-default-release.aab")
+    )
+
+    keyStoreFile.set(rootProject.layout.projectDirectory.file("keystore.jks"))
+    keyStorePassword.set(providers.environmentVariable("SIGNING_STORE_PASSWORD"))
+    keyAlias.set(providers.environmentVariable("SIGNING_KEY_ALIAS"))
+    keyPassword.set(providers.environmentVariable("SIGNING_KEY_PASSWORD"))
+
+    apksFile.set(layout.buildDirectory.file("neostumbler-fullDefault.apks"))
 }
 
 androidComponents {

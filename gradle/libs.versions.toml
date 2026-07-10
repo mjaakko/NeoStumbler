@@ -131,6 +131,8 @@ aboutLibrariesCompose = { module = "com.mikepenz:aboutlibraries-compose-m3", ver
 
 androidBeaconLibrary = { module = "org.altbeacon:android-beacon-library", version = "2.21.2" }
 
+bundletool = { module = "com.android.tools.build:bundletool", version = "1.18.3" }
+
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 androidLibrary = { id = "com.android.library", version.ref = "androidGradlePlugin" }
@@ -143,8 +145,6 @@ kotlinCompose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kot
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
 ksp = { id = "com.google.devtools.ksp", version = "2.3.9" }
-
-bundletool = { id = "app.accrescent.tools.bundletool", version = "0.2.4" }
 
 ktfmt = { id = "com.ncorti.ktfmt.gradle", version = "0.26.0" }
 
