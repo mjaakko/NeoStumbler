@@ -5,4 +5,6 @@ dependencies {
     implementation(libs.androidx.collection)
 
     testImplementation(libs.junit)
+    testImplementation(platform(libs.kotlinx.coroutinesBom))
+    testImplementation(libs.kotlinx.coroutinesTest)
 }

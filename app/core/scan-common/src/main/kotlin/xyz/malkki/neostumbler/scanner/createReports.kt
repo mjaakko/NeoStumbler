@@ -17,7 +17,7 @@ import xyz.malkki.neostumbler.report.postprocessor.ReportPostProcessor
 // signal and there's a gap between two locations
 private val OBSERVED_DEVICE_MAX_AGE = 30.seconds
 
-fun createReports(
+suspend fun createReports(
     positions: List<PositionObservation>,
     cellTowers: List<EmitterObservation<CellTower, String>>,
     wifiAccessPoints: List<EmitterObservation<WifiAccessPoint, MacAddress>>,
@@ -65,7 +65,9 @@ private fun <E : Emitter<K>, K> Map<PositionObservation, List<EmitterObservation
         }
         .filterValues { it.isNotEmpty() }
 
-private fun ReportData.postProcess(postProcessors: Collection<ReportPostProcessor>): ReportData? {
+private suspend fun ReportData.postProcess(
+    postProcessors: Collection<ReportPostProcessor>
+): ReportData? {
     return postProcessors.fold<ReportPostProcessor, ReportData?>(this) { reportToProcess, processor
         ->
         reportToProcess?.let { processor.postProcessReport(it) }

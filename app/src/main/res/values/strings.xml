@@ -141,10 +141,28 @@
     <string name="wifi_filter_settings_hint">
         Wi-Fi networks with any of these keywords in their SSID are not collected
     </string>
+
+    <string name="restricted_areas_settings_title">Restricted areas</string>
+    <plurals name="restricted_areas_settings_description">
+        <item quantity="one">%d restricted area</item>
+        <item quantity="other">%d restricted areas</item>
+    </plurals>
+    <string name="restricted_areas_explanation">
+        Restricted areas can be used to avoid creating reports in sensitive locations, such as your home.
+        Scanning will continue in these areas, but any reports created inside them will be automatically discarded.
+
+        \n\nBe aware that the gap in the data may inadvertently reveal the location of your restricted areas!
+    </string>
+    <string name="restricted_areas_delete">Delete restricted areas</string>
+    <string name="restricted_areas_delete_confirmation">Are you sure you want to delete the selected areas?</string>
+    <string name="restricted_areas_add">Add restricted area</string>
+
     <string name="reduced_metadata_title">Send reports with less metadata</string>
     <string name="reduced_metadata_description">
         Reports are sent in a randomized order with timestamps and other metadata truncated
     </string>
+
+
     <string name="pause_scanning_on_low_battery_title">Pause on low battery</string>
     <string name="pause_scanning_on_low_battery_description">When battery level less than %d%%</string>
     <string name="pause_scanning_when_overheating">Pause when device is overheating</string>

@@ -42,6 +42,7 @@ import xyz.malkki.neostumbler.di.geocoderModule
 import xyz.malkki.neostumbler.di.locationModule
 import xyz.malkki.neostumbler.di.movementDetectorModule
 import xyz.malkki.neostumbler.di.reportDatabaseModule
+import xyz.malkki.neostumbler.di.restrictedAreasModule
 import xyz.malkki.neostumbler.di.reviewModule
 import xyz.malkki.neostumbler.di.scanDataSources
 import xyz.malkki.neostumbler.di.thermalStatusModule
@@ -128,6 +129,7 @@ class StumblerApplication : Application() {
                 scanDataSources,
                 movementDetectorModule,
                 activeScanModule,
+                restrictedAreasModule,
             )
 
             modules(

@@ -17,6 +17,7 @@ private const val NO_FILTER_PROBABILITY_COUNT = 100
  *   enough data to learn that the device is moving
  */
 class AutoDetectingMovingWifiBluetoothFilterer(
+    private val enabled: suspend () -> Boolean,
     private val maxDistanceFromExisting: Double = MAX_DISTANCE_FROM_EXISTING,
     private val deterministic: Boolean = true,
 ) : ReportPostProcessor {
@@ -26,7 +27,11 @@ class AutoDetectingMovingWifiBluetoothFilterer(
     private val movingWifis = mutableLongSetOf()
     private val movingBluetooths = mutableLongSetOf()
 
-    override fun postProcessReport(reportData: ReportData): ReportData? {
+    override suspend fun postProcessReport(reportData: ReportData): ReportData {
+        if (!enabled()) {
+            return reportData
+        }
+
         movingWifis +=
             reportData.wifiAccessPoints
                 .filter { wifi ->

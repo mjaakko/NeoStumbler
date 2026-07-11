@@ -117,6 +117,22 @@
     <string name="wifi_filter_settings_hint">
         Wi-Fi -verkkoja, joiden nimessä on jokin näistä avainsanoista, ei kerätä
     </string>
+
+    <string name="restricted_areas_settings_title">Aluerajoitukset</string>
+    <plurals name="restricted_areas_settings_description">
+        <item quantity="one">%d aluerajoitus</item>
+        <item quantity="other">%d aluerajoitusta</item>
+    </plurals>
+    <string name="restricted_areas_explanation">
+        Aluerajoituksilla voit estää raporttien luomisen arkaluonteisilla alueilla, kuten kotonasi.
+        Skannausta ei keskeytetä näillä alueilla, mutta alueilla luodut raportit hylätään automaattisesti.
+
+        \n\nHuomaa, että dataan syntyvä aukko voi vahingossa paljastaa aluerajoitustesi sijainnin!
+    </string>
+    <string name="restricted_areas_delete">Poista aluerajoitukset</string>
+    <string name="restricted_areas_delete_confirmation">Oletko varma, että haluat poistaa valitut aluerajoitukset?</string>
+    <string name="restricted_areas_add">Lisää aluerajoitus</string>
+
     <string name="reduced_metadata_title">Vähennä raporttien metatietoja</string>
     <string name="reduced_metadata_description">
         Raportit lähetetään satunnaisessa järjestyksessä aikaleimat ja muu metatieto pyöristettynä

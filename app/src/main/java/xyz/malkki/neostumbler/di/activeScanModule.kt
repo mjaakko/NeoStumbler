@@ -8,6 +8,7 @@ import xyz.malkki.neostumbler.activescan.AndroidActiveScanManager
 import xyz.malkki.neostumbler.activescan.SettingsAwareActiveReportCreator
 import xyz.malkki.neostumbler.activescan.adapter.ScanNotificationAdapter
 import xyz.malkki.neostumbler.activescan.adapter.ScannerQSTileAdapter
+import xyz.malkki.neostumbler.report.postprocessor.ReportPostProcessor
 import xyz.malkki.neostumbler.scanner.notify.ScanNotificationCreator
 import xyz.malkki.neostumbler.scanner.quicksettings.ScannerQSTileUpdater
 
@@ -16,7 +17,7 @@ val activeScanModule = module {
 
     single<ActiveScanManager> { AndroidActiveScanManager(get()) }
 
-    single<ActiveScanner> {
+    factory<ActiveScanner> {
         ActiveScanner(
             locationSourceProvider = get(),
             airPressureSource = get(),
@@ -26,7 +27,7 @@ val activeScanModule = module {
             movementDetectorProvider = get(),
             batteryLevelMonitor = get(),
             thermalStatusProvider = get(),
-            postProcessorProvider = get(),
+            postProcessors = getAll<ReportPostProcessor>(),
         )
     }
 

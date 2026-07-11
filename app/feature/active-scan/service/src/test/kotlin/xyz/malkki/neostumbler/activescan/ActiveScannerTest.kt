@@ -75,7 +75,7 @@ class ActiveScannerTest {
                 movementDetectorProvider = movementDetectorProvider,
                 batteryLevelMonitor = { flowOf(1.0f) },
                 thermalStatusProvider = { flowOf(false) },
-                postProcessorProvider = { emptyList() },
+                postProcessors = emptyList(),
             )
 
         val reportsFlow =
@@ -143,7 +143,7 @@ class ActiveScannerTest {
                 movementDetectorProvider = movementDetectorProvider,
                 batteryLevelMonitor = { flowOf(1.0f) },
                 thermalStatusProvider = { flowOf(false) },
-                postProcessorProvider = { emptyList() },
+                postProcessors = emptyList(),
             )
 
         val reportsFlow =
@@ -223,7 +223,7 @@ class ActiveScannerTest {
                 movementDetectorProvider = movementDetectorProvider,
                 batteryLevelMonitor = { flowOf(1.0f) },
                 thermalStatusProvider = { flowOf(false) },
-                postProcessorProvider = { listOf(HiddenWifiFilterer()) },
+                postProcessors = listOf(HiddenWifiFilterer()),
             )
 
         val reportsFlow =
@@ -310,7 +310,7 @@ class ActiveScannerTest {
                 movementDetectorProvider = movementDetectorProvider,
                 batteryLevelMonitor = { flowOf(1.0f) },
                 thermalStatusProvider = { flowOf(false) },
-                postProcessorProvider = { listOf(HiddenWifiFilterer()) },
+                postProcessors = listOf(HiddenWifiFilterer()),
             )
 
         val reportsFlow =
@@ -392,7 +392,7 @@ class ActiveScannerTest {
                 movementDetectorProvider = movementDetectorProvider,
                 batteryLevelMonitor = { flowOf(1.0f) },
                 thermalStatusProvider = { flowOf(true) },
-                postProcessorProvider = { listOf(HiddenWifiFilterer()) },
+                postProcessors = listOf(HiddenWifiFilterer()),
             )
 
         val reportsFlow =

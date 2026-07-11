@@ -34,9 +34,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.NavMetadataKey
 import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.get
+import androidx.navigation3.runtime.metadata
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.scene.Scene
@@ -48,9 +52,11 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.serialization.Serializable
 import org.koin.android.ext.android.inject
+import xyz.malkki.neostumbler.MainNavigationSceneDecoratorStrategy.Companion.DrawNavigationMetadataKey
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.data.settings.getBooleanFlow
+import xyz.malkki.neostumbler.ui.composables.restrictedareas.RestrictedAreasScreen
 import xyz.malkki.neostumbler.ui.screens.MapScreen
 import xyz.malkki.neostumbler.ui.screens.ReportsScreen
 import xyz.malkki.neostumbler.ui.screens.SettingsScreen
@@ -95,28 +101,15 @@ class MainActivity : AppCompatActivity() {
                                 listOf(
                                     rememberMainNavigationSceneDecorator(
                                         navigationItems = {
-                                            MAIN_NAVIGATION_TABS.forEach { (icon, navKey) ->
-                                                NavigationSuiteItem(
+                                            MAIN_NAVIGATION_TABS.forEach { tab ->
+                                                NavigationItem(
                                                     modifier =
                                                         Modifier.sharedElement(
-                                                            rememberSharedContentState(navKey),
+                                                            rememberSharedContentState(tab.navKey),
                                                             LocalNavAnimatedContentScope.current,
                                                         ),
-                                                    icon = {
-                                                        Icon(
-                                                            painter = painterResource(icon),
-                                                            contentDescription =
-                                                                stringResource(navKey.title),
-                                                        )
-                                                    },
-                                                    label = {
-                                                        Text(text = stringResource(navKey.title))
-                                                    },
-                                                    selected = navigationBackstack.last() == navKey,
-                                                    onClick = {
-                                                        navigationBackstack[
-                                                            navigationBackstack.lastIndex] = navKey
-                                                    },
+                                                    tab = tab,
+                                                    navigationBackstack = navigationBackstack,
                                                 )
                                             }
                                         },
@@ -143,7 +136,20 @@ class MainActivity : AppCompatActivity() {
                                     entry<MapNavKey> { MapScreen() }
                                     entry<ReportsNavKey> { ReportsScreen() }
                                     entry<StatisticsNavKey> { StatisticsScreen() }
-                                    entry<SettingsNavKey> { SettingsScreen() }
+                                    entry<SettingsNavKey> {
+                                        SettingsScreen(
+                                            openRestrictedAreas = {
+                                                navigationBackstack.add(RestrictedAreasNavKey)
+                                            }
+                                        )
+                                    }
+
+                                    entry<RestrictedAreasNavKey>(
+                                        metadata =
+                                            metadata { put(DrawNavigationMetadataKey, false) }
+                                    ) {
+                                        RestrictedAreasScreen()
+                                    }
                                 },
                         )
                     }
@@ -162,6 +168,26 @@ private val MAIN_NAVIGATION_TABS =
     )
 
 private data class Tab(@get:DrawableRes val icon: Int, val navKey: MainNavKey)
+
+@Composable
+private fun NavigationItem(
+    modifier: Modifier,
+    tab: Tab,
+    navigationBackstack: NavBackStack<NavKey>,
+) {
+    NavigationSuiteItem(
+        modifier = modifier,
+        icon = {
+            Icon(
+                painter = painterResource(tab.icon),
+                contentDescription = stringResource(tab.navKey.title),
+            )
+        },
+        label = { Text(text = stringResource(tab.navKey.title)) },
+        selected = navigationBackstack.last() == tab.navKey,
+        onClick = { navigationBackstack[navigationBackstack.lastIndex] = tab.navKey },
+    )
+}
 
 private sealed interface MainNavKey : NavKey {
     @get:StringRes val title: Int
@@ -196,10 +222,17 @@ private object SettingsNavKey : MainNavKey {
     override val appBar = true
 }
 
+@Serializable private object RestrictedAreasNavKey : NavKey
+
 private class MainNavigationSceneDecoratorStrategy<T : Any>(
     private val navigationItems: @Composable () -> Unit,
     private val topBar: @Composable () -> Unit,
 ) : SceneDecoratorStrategy<T> {
+    companion object {
+        /** Whether to draw the navigation bar? Defaults to true */
+        object DrawNavigationMetadataKey : NavMetadataKey<Boolean>
+    }
+
     override fun SceneDecoratorStrategyScope<T>.decorateScene(scene: Scene<T>): Scene<T> {
         return MainNavigationScene(
             navigationItems = navigationItems,
@@ -243,26 +276,30 @@ private class MainNavigationScene<T : Any>(
 
     override val content: @Composable (() -> Unit)
         get() = {
-            NavigationSuiteScaffold(
-                navigationItemVerticalArrangement = Arrangement.Center,
-                navigationItems = { navigationItems() },
-            ) {
-                Scaffold(
-                    topBar = { topBar() },
-                    contentWindowInsets =
-                        ScaffoldDefaults.contentWindowInsets
-                            .exclude(WindowInsets.systemBars)
-                            .exclude(WindowInsets.displayCutout),
-                    content = { paddingValues ->
-                        Column(
-                            modifier =
-                                Modifier.fillMaxSize().padding(paddingValues = paddingValues),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                        ) {
-                            scene.content()
-                        }
-                    },
-                )
+            if (scene.metadata[DrawNavigationMetadataKey] == false) {
+                scene.content()
+            } else {
+                NavigationSuiteScaffold(
+                    navigationItemVerticalArrangement = Arrangement.Center,
+                    navigationItems = { navigationItems() },
+                ) {
+                    Scaffold(
+                        topBar = { topBar() },
+                        contentWindowInsets =
+                            ScaffoldDefaults.contentWindowInsets
+                                .exclude(WindowInsets.systemBars)
+                                .exclude(WindowInsets.displayCutout),
+                        content = { paddingValues ->
+                            Column(
+                                modifier =
+                                    Modifier.fillMaxSize().padding(paddingValues = paddingValues),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                            ) {
+                                scene.content()
+                            }
+                        },
+                    )
+                }
             }
         }
 }

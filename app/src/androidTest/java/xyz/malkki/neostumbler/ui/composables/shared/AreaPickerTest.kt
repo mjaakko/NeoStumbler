@@ -43,7 +43,7 @@ import xyz.malkki.neostumbler.data.location.LocationSource
 import xyz.malkki.neostumbler.data.location.LocationSourceProvider
 import xyz.malkki.neostumbler.data.settings.DataStoreSettings
 import xyz.malkki.neostumbler.data.settings.Settings
-import xyz.malkki.neostumbler.geography.LatLng
+import xyz.malkki.neostumbler.geography.Circle
 import xyz.malkki.neostumbler.network.HttpCallFactoryProvider
 
 class AreaPickerTest {
@@ -139,7 +139,7 @@ class AreaPickerTest {
             )
         }
 
-        var selectedCircle: Pair<LatLng, Double>? = null
+        var selectedCircle: Circle? = null
 
         composeTestRule.setContent {
             KoinIsolatedContext(koin) {
@@ -156,8 +156,8 @@ class AreaPickerTest {
         composeTestRule.onNodeWithText("select").performClick()
 
         assertNotNull(selectedCircle)
-        assertEquals(40.689100, selectedCircle!!.first.latitude, 0.0001)
-        assertEquals(-74.044300, selectedCircle!!.first.longitude, 0.0001)
-        assertTrue(selectedCircle!!.second > 0)
+        assertEquals(40.689100, selectedCircle!!.center.latitude, 0.0001)
+        assertEquals(-74.044300, selectedCircle!!.center.longitude, 0.0001)
+        assertTrue(selectedCircle!!.radius > 0)
     }
 }

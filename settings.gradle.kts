@@ -64,6 +64,10 @@ include(":app:data:reports:api")
 
 include(":app:data:reports:room")
 
+include(":app:data:restricted-areas:api")
+
+include(":app:data:restricted-areas:android-datastore")
+
 include(":app:data:movement:api")
 
 include(":app:data:movement:android")

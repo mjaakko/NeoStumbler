@@ -56,6 +56,7 @@ import xyz.malkki.neostumbler.ui.composables.settings.SettingsGroup
 import xyz.malkki.neostumbler.ui.composables.settings.SettingsToggle
 import xyz.malkki.neostumbler.ui.composables.settings.SliderSetting
 import xyz.malkki.neostumbler.ui.composables.settings.geosubmit.GeosubmitEndpointSettings
+import xyz.malkki.neostumbler.ui.composables.settings.privacy.RestrictedAreaSettings
 import xyz.malkki.neostumbler.ui.composables.settings.privacy.WifiFilterSettings
 import xyz.malkki.neostumbler.ui.composables.troubleshooting.TroubleshootingSettingsItem
 import xyz.malkki.neostumbler.ui.modifiers.handleDisplayCutouts
@@ -131,7 +132,7 @@ private fun ScanningSettings() {
 }
 
 @Composable
-private fun PrivacySettings() {
+private fun PrivacySettings(openRestrictedAreas: () -> Unit) {
     SettingsGroup(title = stringResource(id = R.string.settings_group_privacy)) {
         WifiFilterSettings()
 
@@ -141,6 +142,8 @@ private fun PrivacySettings() {
             preferenceKey = PreferenceKeys.REDUCED_METADATA,
             default = false,
         )
+
+        RestrictedAreaSettings(openRestrictedAreas = openRestrictedAreas)
     }
 }
 
@@ -175,7 +178,7 @@ private enum class SettingsGroupType(@StringRes val title: Int) {
 }
 
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(openRestrictedAreas: () -> Unit) {
     BoxWithConstraints {
         if (maxWidth >= 600.dp) {
             var selectedSettingsGroup by rememberSaveable {
@@ -236,7 +239,8 @@ fun SettingsScreen() {
                     when (selectedSettingsGroup) {
                         SettingsGroupType.REPORTS -> ReportSettings()
                         SettingsGroupType.SCANNING -> ScanningSettings()
-                        SettingsGroupType.PRIVACY -> PrivacySettings()
+                        SettingsGroupType.PRIVACY ->
+                            PrivacySettings(openRestrictedAreas = openRestrictedAreas)
                         SettingsGroupType.OTHER -> OtherSettings()
                     }
                 }
@@ -255,7 +259,7 @@ fun SettingsScreen() {
 
                     ScanningSettings()
 
-                    PrivacySettings()
+                    PrivacySettings(openRestrictedAreas = openRestrictedAreas)
 
                     OtherSettings()
                 }
