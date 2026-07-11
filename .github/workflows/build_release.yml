@@ -64,12 +64,12 @@ jobs:
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
-        run: ./gradlew :app:buildApksFullDefaultRelease
+        run: ./gradlew :app:buildAccrescentApks
       - name: Upload release APK set as build artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: app-fullDefaultRelease.apks
-          path: app/build/outputs/apkset/fullDefaultRelease/app-fullDefaultRelease.apks
+          path: app/build/outputs/neostumbler-fullDefault.apks
           archive: false
           retention-days: 7
       # Build app bundle for Google Play
