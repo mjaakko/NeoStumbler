@@ -1,0 +1,11 @@
+* Nuo šiol galima pristabdyti nuskaitymą, kai įrenginys perkaista
+* Kai aktyvusis skeneris nerenka duomenų, nuskaitymo būsena rodoma kaip „pristabdyta“
+* Pristabdžius skenavimą, įrenginiui nebedraudžiama užmigti – taip eikvojama mažiau energijos
+* Pasyvusis duomenų rinkimas nuo šiol vyksta ir tada, kai aktyvusis skeneris pristabdytas
+* Šiek tiek padidintas žemėlapio aprėpties šešiakampių skaidrumas tamsiojoje veiksenoje
+* Į strigčių žurnalus įtraukiamos laiko žymos
+* Suderinamumo su „Android 17“ tikslu migruota į tinklo saugumo konfigūraciją
+* Nežymios optimizacijos
+* Pašalinta problema, dėl kurios programėlė galėjo strigti, vietovės nustatymo atsakyme gavusi netinkamus duomenis
+* Atnaujintos priklausomybės
+* Atnaujinti vertimai

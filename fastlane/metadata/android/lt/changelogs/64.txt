@@ -1,0 +1,4 @@
+* Tikslinis SDK pakeltas iki 37 versijos („Android 17“)
+* Pašalinta skenavimo intervalų invertavimo problema
+* Nedidelis pertvarkymas
+* Atnaujintos priklausomybės

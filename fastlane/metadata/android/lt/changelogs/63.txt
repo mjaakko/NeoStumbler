@@ -1,0 +1,4 @@
+* Išspręsta ataskaitų išsiuntimo naudojantis senesniais „Android“ telefonais problema
+* Optimizuota pasyviojo „Bluetooth“ skenavimo rezultatų talpykla
+* Atnaujintos priklausomybės
+* Atnaujinti vertimai
