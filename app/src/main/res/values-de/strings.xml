@@ -214,4 +214,13 @@
     </plurals>
     <string name="scanning_status_paused">Scannen <annotation style="status">angehalten</annotation></string>
     <string name="pause_scanning_when_overheating">Bei Überhitzung des Geräts pausieren</string>
+    <string name="restricted_areas_settings_title">Sperrbereiche</string>
+    <plurals name="restricted_areas_settings_description">
+        <item quantity="one">%d Sperrbereich</item>
+        <item quantity="other">%d Sperrbereiche</item>
+    </plurals>
+    <string name="restricted_areas_explanation">Mit Sperrbereichen kannst du vermeiden, dass an sensiblen Orten – wie zum Beispiel bei dir zu Hause – Berichte erstellt werden. Der Scanvorgang läuft in diesen Bereichen zwar weiter, aber alle darin erstellten Berichte werden automatisch verworfen. \n\nBeachte bitte, dass die Lücke in den Daten versehentlich den Standort deiner Sperrbereiche preisgeben könnte!</string>
+    <string name="restricted_areas_delete">Sperrbereiche löschen</string>
+    <string name="restricted_areas_delete_confirmation">Bist du sicher, dass du die ausgewählten Bereiche löschen möchtest?</string>
+    <string name="restricted_areas_add">Sperrbereich hinzufügen</string>
 </resources>
