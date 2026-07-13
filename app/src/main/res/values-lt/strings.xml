@@ -191,7 +191,7 @@
     <string name="passive_scanning_title">Pasyvusis duomenų rinkimas</string>
     <string name="passive_scanning_description">Pasyviojo duomenų rinkimo veiksenoje ataskaitos kuriamos foninėje veiksenoje su minimalia įtaka akumuliatoriaus įkrovai, naudojantis kitoms programoms pateiktais duomenimis.\n\nPasyviojo duomenų rinkimo efektyvumas priklausys nuo jūsų įrenginio tipo, kitų naudojamų programų ir to, ar yra prieinama jungtinė vietovės tarnyba.\n\nAr norite įgalinti pasyvųjį duomenų rinkimą?</string>
     <string name="disabled">Išjungta</string>
-    <string name="pause_scanning_on_low_battery_title">Pristabdyti skenavimą, nukritus akumuliatoriaus įkrovai</string>
+    <string name="pause_scanning_on_low_battery_title">Pristabdyti nusėdus akumuliatoriui</string>
     <string name="pause_scanning_on_low_battery_description">Įkrovai nukritus žemiau %d%%</string>
     <string name="permission_rationale_background_location_passive_scan">Pasyviajam duomenų rinkimui ir ataskaitų formavimui reikia leidimo pasiekti vietovę kai programa veikia fone</string>
     <string name="delete_all">Šalinti visas</string>
@@ -213,4 +213,23 @@
     <string name="beacon_type_ibeacon">„iBeacon“</string>
     <string name="beacon_type_altbeacon">„AltBeacon“</string>
     <string name="map_data_sources">Žemėlapio duomenų šaltiniai</string>
+    <string name="scanning_status_paused">Skenavimas <annotation style="status">pristabdytas</annotation></string>
+    <string name="restricted_areas_settings_title">Apribotos zonos</string>
+    <plurals name="restricted_areas_settings_description">
+        <item quantity="one">%d apribota zona</item>
+        <item quantity="few">%d apribotos zonos</item>
+        <item quantity="many">%d apribotų zonų</item>
+        <item quantity="other">%d apribotų zonų</item>
+    </plurals>
+    <string name="restricted_areas_explanation">Apribotos zonos gali būti naudojamos siekiant išvengti ataskaitų kūrimo norimose vietovėse, pavyzdžiui, jūsų namuose. Skenavimas jose vis tiek bus vykdomas, tačiau bet kokios jose sudarytos ataskaitos bus automatiškai sunaikinamos.\n\nTurėkite omenyje, jog „skylės“ duomenyse taip pat gali atskleisti jūsų apribotų zonų vietą!</string>
+    <string name="restricted_areas_delete">Šalinti apribotas zonas</string>
+    <string name="restricted_areas_delete_confirmation">Ar tikrai norite pašalinti pažymėtas zonas?</string>
+    <string name="restricted_areas_add">Pridėti apribotą zoną</string>
+    <string name="pause_scanning_when_overheating">Pristabdyti perkaitus įrenginiui</string>
+    <plurals name="db_prune_custom_days">
+        <item quantity="one">Po %d dienos</item>
+        <item quantity="few">Po %d dienų</item>
+        <item quantity="many">Po %d dienų</item>
+        <item quantity="other">Po %d dienų</item>
+    </plurals>
 </resources>
