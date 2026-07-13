@@ -1,0 +1,4 @@
+* Es wurde ein Fehler behoben, durch den auf älteren Android-Versionen keine Reports gesendet werden konnten
+* Der Speicherplatzbedarf für passive Bluetooth®-Scan-Ergebnisse wurde optimiert
+* Abhängigkeiten wurden aktualisiert
+* Übersetzungen wurden aktualisiert
