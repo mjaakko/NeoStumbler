@@ -25,6 +25,7 @@ import xyz.malkki.neostumbler.core.observation.EmitterObservation
 import xyz.malkki.neostumbler.core.observation.PositionObservation
 import xyz.malkki.neostumbler.core.values.Distance
 import xyz.malkki.neostumbler.core.values.SignalStrength
+import xyz.malkki.neostumbler.data.emitter.ActiveWifiAccessPointSource
 import xyz.malkki.neostumbler.data.location.LocationSource
 import xyz.malkki.neostumbler.data.movement.MovementDetector
 import xyz.malkki.neostumbler.report.postprocessor.HiddenWifiFilterer
@@ -36,6 +37,7 @@ private val settings =
         ignoreWifiScanThrottling = true,
         lowBatteryThreshold = null,
         pauseWhenOverheating = false,
+        wifiRttRangingMode = ActiveWifiAccessPointSource.RangingMode.NEVER,
     )
 
 private val movementDetectorProvider = {
@@ -71,7 +73,7 @@ class ActiveScannerTest {
                 },
                 airPressureSource = { emptyFlow() },
                 cellInfoSource = { emptyFlow() },
-                wifiAccessPointSource = { _, _ -> emptyFlow() },
+                wifiAccessPointSource = { _, _, _ -> emptyFlow() },
                 bluetoothBeaconSource = { emptyFlow() },
                 movementDetectorProvider = movementDetectorProvider,
                 batteryLevelMonitor = { flowOf(1.0f) },
@@ -122,7 +124,7 @@ class ActiveScannerTest {
                 },
                 airPressureSource = { emptyFlow() },
                 cellInfoSource = { emptyFlow() },
-                wifiAccessPointSource = { _, _ -> emptyFlow() },
+                wifiAccessPointSource = { _, _, _ -> emptyFlow() },
                 bluetoothBeaconSource = {
                     flowOf(
                         listOf(
@@ -190,7 +192,7 @@ class ActiveScannerTest {
                 },
                 airPressureSource = { emptyFlow() },
                 cellInfoSource = { emptyFlow() },
-                wifiAccessPointSource = { _, _ ->
+                wifiAccessPointSource = { _, _, _ ->
                     flowOf(
                         listOf(
                             EmitterObservation(
@@ -272,7 +274,7 @@ class ActiveScannerTest {
                     flowOf(AirPressureObservation(airPressure = 1013.25f, timestamp = 0L))
                 },
                 cellInfoSource = { emptyFlow() },
-                wifiAccessPointSource = { _, _ ->
+                wifiAccessPointSource = { _, _, _ ->
                     flowOf(
                         listOf(
                             EmitterObservation(
@@ -371,7 +373,7 @@ class ActiveScannerTest {
                     flowOf(AirPressureObservation(airPressure = 1013.25f, timestamp = 0L))
                 },
                 cellInfoSource = { emptyFlow() },
-                wifiAccessPointSource = { _, _ ->
+                wifiAccessPointSource = { _, _, _ ->
                     flowOf(
                         listOf(
                             EmitterObservation(

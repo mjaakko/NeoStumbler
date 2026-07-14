@@ -15,5 +15,15 @@ fun interface ActiveWifiAccessPointSource {
     fun getWifiAccessPointFlow(
         scanThrottled: Boolean,
         scanInterval: Flow<Duration>,
+        rangingMode: RangingMode,
     ): Flow<List<EmitterObservation<WifiAccessPoint, MacAddress>>>
+
+    enum class RangingMode {
+        /** Never do RTT ranging to estimate distance to the access points */
+        NEVER,
+        /** Always try to use RTT ranging even if the access point does not support it */
+        ALWAYS,
+        /** Only do RTT ranging for access points supporting two-sided ranging */
+        TWOSIDED,
+    }
 }

@@ -30,6 +30,12 @@ Extra fields that are not present in the Geosubmit format
 | `id2`        | String  | Second identifier of the beacon                                                         |
 | `id3`        | String  | Third identifier of the beacon                                                          |
 
+### Wi-Fi access points
+
+| Field               | Type                                      | Optional | Description                                            |
+|---------------------|-------------------------------------------|----------|--------------------------------------------------------|
+| `estimatedDistance` | [Estimated distance](#estimated-distance) | Yes      | Distance measured to the access point using Wi-Fi RTT. |
+
 ## Extra values
 
 Extra values that are not present in the Geosubmit format
@@ -45,3 +51,20 @@ Extra values that are not present in the Geosubmit format
 | Field       | Extra values                    |
 |-------------|---------------------------------|
 | `radioType` | `802.11ax` for Wi-Fi 6 networks |
+
+## Extra types
+
+### Estimated distance
+
+This type is used for estimated distances to the radio emitters. The distance can be estimated with a technology such
+as [Wi-Fi RTT](https://en.wikipedia.org/wiki/IEEE_802.11mc).
+
+| Field      | Type   | Optional | Description                                                     |
+|------------|--------|----------|-----------------------------------------------------------------|
+| `distance` | Number | No       | Estimated distance to the radio emitter in meters.              |
+| `accuracy` | Number | Yes      | Accuracy of the estimated distance in meters.                   |
+| `type`     | String | Yes      | Type of distance estimation. Either `ONE_SIDED` or `TWO_SIDED`. |
+
+Note that for one-sided distance measurements, the reported distance can be incorrect by multiple orders of magnitude.
+In such cases, the estimated distance should only be used with another one-sided
+measurement to the same radio emitter to calculate the relative distance.

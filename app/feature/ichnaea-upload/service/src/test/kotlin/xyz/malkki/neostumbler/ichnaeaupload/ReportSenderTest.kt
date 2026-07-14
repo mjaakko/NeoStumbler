@@ -6,7 +6,7 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
@@ -164,19 +164,19 @@ class ReportSenderTest {
 
             val sentReports = firstValue
 
-            Assert.assertEquals(1, sentReports.size)
+            assertEquals(1, sentReports.size)
 
-            Assert.assertEquals(
+            assertEquals(
                 "01:01:01:01:01:01",
                 sentReports.first().wifiAccessPoints?.firstOrNull()?.macAddress,
             )
 
-            Assert.assertEquals(56.414156, sentReports.first().position.latitude, 0.0001)
-            Assert.assertEquals(18.724728, sentReports.first().position.longitude, 0.0001)
+            assertEquals(56.414156, sentReports.first().position.latitude, 0.0001)
+            assertEquals(18.724728, sentReports.first().position.longitude, 0.0001)
 
-            Assert.assertEquals(5.6378, sentReports.first().position.speed!!, 0.0001)
+            assertEquals(5.6378, sentReports.first().position.speed!!, 0.0001)
 
-            Assert.assertEquals(reportTimestamp.toEpochMilli(), sentReports.first().timestamp)
+            assertEquals(reportTimestamp.toEpochMilli(), sentReports.first().timestamp)
         }
     }
 
@@ -191,20 +191,20 @@ class ReportSenderTest {
 
             val sentReports = firstValue
 
-            Assert.assertEquals(1, sentReports.size)
+            assertEquals(1, sentReports.size)
 
-            Assert.assertEquals(
+            assertEquals(
                 "01:01:01:01:01:01",
                 sentReports.first().wifiAccessPoints?.firstOrNull()?.macAddress,
             )
 
-            Assert.assertEquals(56.414156, sentReports.first().position.latitude, 0.0001)
-            Assert.assertEquals(18.724728, sentReports.first().position.longitude, 0.0001)
+            assertEquals(56.414156, sentReports.first().position.latitude, 0.0001)
+            assertEquals(18.724728, sentReports.first().position.longitude, 0.0001)
 
-            Assert.assertEquals(6.0, sentReports.first().position.speed!!, 0.0001)
-            Assert.assertEquals(0.0, sentReports.first().position.heading!!, 0.0001)
+            assertEquals(6.0, sentReports.first().position.speed!!, 0.0001)
+            assertEquals(0.0, sentReports.first().position.heading!!, 0.0001)
 
-            Assert.assertEquals(
+            assertEquals(
                 reportTimestamp.truncatedTo(ChronoUnit.DAYS).toEpochMilli(),
                 sentReports.first().timestamp,
             )

@@ -10,7 +10,7 @@ import xyz.malkki.neostumbler.db.entities.BluetoothBeaconEntity
 import xyz.malkki.neostumbler.db.entities.CellTowerEntity
 import xyz.malkki.neostumbler.db.entities.PositionEntity
 import xyz.malkki.neostumbler.db.entities.Report
-import xyz.malkki.neostumbler.db.entities.WifiAccessPointEntity
+import xyz.malkki.neostumbler.db.entities.WifiAccessPointEntity.Companion.toEntity
 
 class RoomReportSaver(private val reportDatabaseManager: ReportDatabaseManager) : ReportSaver {
     override suspend fun createReport(reportData: ReportData) {
@@ -37,11 +37,7 @@ class RoomReportSaver(private val reportDatabaseManager: ReportDatabaseManager) 
 
             val wifiAccessPointEntities =
                 reportData.wifiAccessPoints.map {
-                    WifiAccessPointEntity.fromWifiAccessPoint(
-                        emitterObservation = it,
-                        reportTimestamp = reportTimestamp,
-                        reportId = reportId,
-                    )
+                    it.toEntity(reportTimestamp = reportTimestamp, reportId = reportId)
                 }
             reportDatabase.wifiAccessPointDao().insertAll(*wifiAccessPointEntities.toTypedArray())
 

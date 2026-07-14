@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.ui.composables.settings
+package xyz.malkki.neostumbler.ui.composables.settings.scanning
 
 import android.Manifest
 import android.annotation.SuppressLint

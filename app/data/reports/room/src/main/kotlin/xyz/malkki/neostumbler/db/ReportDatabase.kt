@@ -22,7 +22,7 @@ import xyz.malkki.neostumbler.db.migrations.RenameTablesToEntities
 import xyz.malkki.neostumbler.roomconverters.InstantConverters
 import xyz.malkki.neostumbler.roomconverters.LocalDateConverters
 
-internal const val REPORT_DB_VERSION = 10
+internal const val REPORT_DB_VERSION = 11
 
 @Database(
     exportSchema = true,
@@ -46,6 +46,7 @@ internal const val REPORT_DB_VERSION = 10
             AutoMigration(from = 7, to = 8, spec = RenamePositionToPositionEntity::class),
             AutoMigration(from = 8, to = 9),
             AutoMigration(from = 9, to = 10, spec = DropUnusedColumns::class),
+            AutoMigration(from = 10, to = 11),
         ],
 )
 @TypeConverters(InstantConverters::class, LocalDateConverters::class)

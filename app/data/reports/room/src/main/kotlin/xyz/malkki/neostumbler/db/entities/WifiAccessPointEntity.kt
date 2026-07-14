@@ -1,6 +1,7 @@
 package xyz.malkki.neostumbler.db.entities
 
 import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -8,6 +9,7 @@ import xyz.malkki.neostumbler.core.MacAddress
 import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
 import xyz.malkki.neostumbler.core.observation.EmitterObservation
 import xyz.malkki.neostumbler.core.values.SignalStrength
+import xyz.malkki.neostumbler.db.entities.embeddables.EstimatedDistanceEmbeddable
 
 @Entity(
     foreignKeys =
@@ -29,17 +31,17 @@ internal data class WifiAccessPointEntity(
     val frequency: Int?,
     val signalStrength: Int?,
     val ssid: String?,
+    @Embedded("distance_") val estimatedDistanceEmbeddable: EstimatedDistanceEmbeddable?,
     @ColumnInfo(index = true) val reportId: Long?,
 ) {
     companion object {
-        fun fromWifiAccessPoint(
-            emitterObservation: EmitterObservation<WifiAccessPoint, MacAddress>,
+        fun EmitterObservation<WifiAccessPoint, MacAddress>.toEntity(
             reportTimestamp: Long,
             reportId: Long,
         ): WifiAccessPointEntity {
-            val wifiAccessPoint = emitterObservation.emitter
+            val wifiAccessPoint = emitter
 
-            val age = reportTimestamp - emitterObservation.timestamp
+            val age = reportTimestamp - timestamp
 
             return WifiAccessPointEntity(
                 id = null,
@@ -50,6 +52,14 @@ internal data class WifiAccessPointEntity(
                 frequency = wifiAccessPoint.frequency,
                 signalStrength = wifiAccessPoint.signalStrength?.dbm,
                 ssid = wifiAccessPoint.ssid,
+                estimatedDistanceEmbeddable =
+                    estimatedDistance?.let {
+                        EstimatedDistanceEmbeddable(
+                            meters = it.distance.meters,
+                            accuracy = it.accuracy?.meters,
+                            rangingType = it.rangingType,
+                        )
+                    },
                 reportId = reportId,
             )
         }

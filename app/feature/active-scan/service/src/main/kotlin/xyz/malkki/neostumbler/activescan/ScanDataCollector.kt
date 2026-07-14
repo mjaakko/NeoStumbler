@@ -47,6 +47,7 @@ internal class ScanDataCollector(
                             scanThrottled = !scanSettings.ignoreWifiScanThrottling,
                             scanInterval =
                                 speedFlow.map { speed -> scanSettings.wifiScanDistance / speed },
+                            rangingMode = scanSettings.wifiRttRangingMode,
                         )
                     } else {
                         emptyFlow()

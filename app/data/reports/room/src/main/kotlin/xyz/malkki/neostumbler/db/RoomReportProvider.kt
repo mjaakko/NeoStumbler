@@ -16,6 +16,7 @@ import xyz.malkki.neostumbler.core.report.ReportWithStats
 import xyz.malkki.neostumbler.data.reports.ReportProvider
 import xyz.malkki.neostumbler.db.dao.getReportsInsideBoundingBox
 import xyz.malkki.neostumbler.db.entities.ReportWithData
+import xyz.malkki.neostumbler.db.entities.embeddables.toDomain
 import xyz.malkki.neostumbler.db.entities.toBluetoothBeacon
 import xyz.malkki.neostumbler.db.entities.toCellTower
 import xyz.malkki.neostumbler.db.entities.toReportPosition
@@ -124,6 +125,7 @@ private fun ReportWithData.toReport(): Report {
                     id = it.id!!,
                     emitter = it.toWifiAccessPoint(),
                     age = it.age.milliseconds,
+                    estimatedDistance = it.estimatedDistanceEmbeddable?.toDomain(),
                 )
             },
         cellTowers =

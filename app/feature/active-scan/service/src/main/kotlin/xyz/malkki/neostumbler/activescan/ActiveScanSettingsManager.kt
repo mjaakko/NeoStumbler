@@ -3,8 +3,10 @@ package xyz.malkki.neostumbler.activescan
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import xyz.malkki.neostumbler.core.values.Distance
+import xyz.malkki.neostumbler.data.emitter.ActiveWifiAccessPointSource
 import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.data.settings.SettingsSnapshot
+import xyz.malkki.neostumbler.data.settings.getEnum
 
 // By default, try to scan Wi-Fis every 50 meters
 private const val DEFAULT_WIFI_SCAN_DISTANCE = 50.0
@@ -58,5 +60,8 @@ internal fun SettingsSnapshot.toActiveScanSettings(): ActiveScanSettings {
         ignoreWifiScanThrottling =
             getBoolean(ActiveScanPreferenceKeys.IGNORE_SCAN_THROTTLING) == true,
         pauseWhenOverheating = getBoolean(ActiveScanPreferenceKeys.PAUSE_WHEN_OVERHEATING) == true,
+        wifiRttRangingMode =
+            getEnum(ActiveScanPreferenceKeys.WIFI_RTT_RANGING_MODE)
+                ?: ActiveWifiAccessPointSource.RangingMode.NEVER,
     )
 }

@@ -166,9 +166,23 @@
     <string name="pause_scanning_on_low_battery_title">Pause on low battery</string>
     <string name="pause_scanning_on_low_battery_description">When battery level less than %d%%</string>
     <string name="pause_scanning_when_overheating">Pause when device is overheating</string>
+
     <string name="wifi_scan_frequency">Wi-Fi scan frequency</string>
     <string name="cell_tower_scan_frequency">Cell tower scan frequency</string>
+
     <string name="every_x_meters">Every %d meters</string>
+
+    <string name="wifi_rtt_ranging">Wi-Fi ranging</string>
+    <string name="wifi_rtt_ranging_mode_never_title">Never</string>
+    <string name="wifi_rtt_ranging_mode_always_title">Always</string>
+    <string name="wifi_rtt_ranging_mode_always_description">
+        Fallback to one-sided ranging if the access point does not support Wi-Fi RTT ranging
+    </string>
+    <string name="wifi_rtt_ranging_mode_twosided_title">Two-sided only</string>
+    <string name="wifi_rtt_ranging_mode_twosided_description">
+        Only do Wi-Fi RTT ranging when the access point supports two-sided ranging
+    </string>
+
     <string name="moving_device_filter_title">Filter moving devices</string>
     <string name="moving_device_filter_description">
         Moving Wi-Fi networks and Bluetooth beacons are automatically detected and filtered from reports
@@ -234,6 +248,11 @@
     <string name="permission_rationale_location_map">
         Showing your location on the map needs permission for location
     </string>
+
+    <string name="permission_rationale_wifi_rtt">
+        Wi-Fi RTT ranging needs permission for nearby Wi-Fi devices
+    </string>
+
     <string name="troubleshooting_title">Troubleshooting</string>
     <string name="troubleshooting_description">Fix common issues in scanning</string>
     <string name="troubleshooting_permissions_granted">Permissions granted</string>
