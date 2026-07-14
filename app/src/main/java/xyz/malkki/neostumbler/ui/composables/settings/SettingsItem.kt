@@ -15,7 +15,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun SettingsItem(title: String, description: String? = null, onClick: () -> Unit) {
+fun SettingsItem(
+    title: String,
+    description: String? = null,
+    maxTitleLines: Int = 2,
+    onClick: () -> Unit,
+) {
     Column(
         modifier =
             Modifier.fillMaxWidth()
@@ -24,7 +29,7 @@ fun SettingsItem(title: String, description: String? = null, onClick: () -> Unit
                 .clickable { onClick.invoke() },
         verticalArrangement = Arrangement.Center,
     ) {
-        Text(text = title, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        Text(text = title, maxLines = maxTitleLines, overflow = TextOverflow.Ellipsis)
         if (description != null) {
             Text(
                 fontSize = 12.sp,

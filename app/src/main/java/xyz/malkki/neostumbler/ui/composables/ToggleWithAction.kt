@@ -41,6 +41,7 @@ fun ToggleWithAction(
     warningWhenDisabled: String? = null,
     enabled: Boolean,
     checked: Boolean,
+    maxTitleLines: Int = 2,
     action: suspend (Boolean) -> Unit,
 ) {
     val changingState = remember { mutableStateOf(false) }
@@ -75,7 +76,7 @@ fun ToggleWithAction(
             Text(
                 modifier = Modifier.alpha(alpha),
                 text = title,
-                maxLines = 1,
+                maxLines = maxTitleLines,
                 overflow = TextOverflow.Ellipsis,
             )
 
