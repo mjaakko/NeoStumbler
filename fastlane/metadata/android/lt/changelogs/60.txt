@@ -1,0 +1,5 @@
+* Pašalinta dar viena problema, dėl kurios programėlė strigdavo, įjungiant pasyvųjį „Bluetooth“ duomenų rinkimą
+* Nedidelės optimizacijos
+* Atnaujintos priklausomybės
+  * Atskirai pažymėtina, jog „MapLibre“ biblioteka atnaujinta iki 13.0.2 versijos, tad žemėlapio atvaizdavimui nuo šiol naudojamas „Vulkan“
+* Atnaujinti vertimai

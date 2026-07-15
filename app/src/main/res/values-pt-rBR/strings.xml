@@ -222,4 +222,14 @@
     </plurals>
     <string name="scanning_status_paused">Coleta <annotation style="status">em pausa</annotation></string>
     <string name="pause_scanning_when_overheating">Pausar ao superaquecer</string>
+    <string name="restricted_areas_settings_title">Áreas restritas</string>
+    <plurals name="restricted_areas_settings_description">
+        <item quantity="one">%d área restrita</item>
+        <item quantity="many">%d de áreas restritas</item>
+        <item quantity="other">%d áreas restritas</item>
+    </plurals>
+    <string name="restricted_areas_explanation">As áreas restritas podem ser usadas para evitar criar relatórios em localizações sensíveis, como sua casa. O escaneamento continuará nessas áreas, mas quaisquer relatórios criados dentro delas serão descartados automaticamente.\n\nFique ciente que o espaço sem dados pode dar atenção e REVELAR a localização dessas áreas restritas!</string>
+    <string name="restricted_areas_delete">Apagar áreas restritas</string>
+    <string name="restricted_areas_delete_confirmation">Tem certeza que quer apagar as áreas selecionadas?</string>
+    <string name="restricted_areas_add">Adicionar área restrita</string>
 </resources>

@@ -1,0 +1,3 @@
+* Pašalinta problema, dėl kurios pasyvusis duomenų rinkimas sukeldavo programos strigtį, esant išjungtam „Bluetooth“ ryšiui
+* Atnaujintos priklausomybės
+* Atnaujinti vertimai

@@ -1,0 +1,4 @@
+* Ziel-SDK auf 37 (Android 17) aktualisiert
+* Das Problem, dass die Scan-Intervalle vertauscht waren, wurde behoben
+* Kleinere Umstrukturierungen
+* Abhängigkeiten aktualisiert
