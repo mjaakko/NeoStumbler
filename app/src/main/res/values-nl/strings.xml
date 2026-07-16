@@ -214,4 +214,13 @@
     </plurals>
     <string name="pause_scanning_when_overheating">Pauzeren wanneer het apparaat oververhit raakt</string>
     <string name="scanning_status_paused">Scannen <annotation style="status">onderbroken</annotation></string>
+    <string name="restricted_areas_settings_title">Beperkte zones</string>
+    <string name="restricted_areas_explanation">Beperkte zones kunnen worden gebruikt om te voor­komen dat er rapporten worden aan­gemaakt op gevoelige locaties, zoals bij u thuis. Het scannen gaat in deze zones gewoon door, maar rapporten die daar­binnen worden aangemaakt, worden automatisch verwijderd.\n\nHoud er rekening mee dat de leemte in de gegevens onbedoeld de locatie van uw beperkte zones kan onthullen!</string>
+    <plurals name="restricted_areas_settings_description">
+        <item quantity="one">%d beperkte zone</item>
+        <item quantity="other">%d beperkte zones</item>
+    </plurals>
+    <string name="restricted_areas_delete">Beperkte zones verwijderen</string>
+    <string name="restricted_areas_delete_confirmation">Weet u zeker dat u de geselecteerde zones wilt verwijderen?</string>
+    <string name="restricted_areas_add">Beperkt gebied toe­voegen</string>
 </resources>
