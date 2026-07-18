@@ -234,4 +234,8 @@
         <item quantity="many">Après %d jours</item>
         <item quantity="other">Après %d jours</item>
     </plurals>
+    <string name="restricted_areas_settings_title">Zones restreintes</string>
+    <string name="restricted_areas_delete">Supprimer les zones restreintes</string>
+    <string name="restricted_areas_delete_confirmation">Êtes-vous sûr de vouloir supprimer les zones restreintes ?</string>
+    <string name="restricted_areas_add">Ajouter une zone restreinte</string>
 </resources>
