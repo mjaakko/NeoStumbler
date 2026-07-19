@@ -2,6 +2,7 @@ package xyz.malkki.neostumbler.ichnaeaupload
 
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
@@ -59,7 +60,7 @@ class ReportSenderTest {
                                     speed = Speed(5.6378),
                                     source = Position.Source.GPS,
                                 ),
-                            age = 1000,
+                            age = 1000.milliseconds,
                         ),
                     wifiAccessPoints =
                         listOf(
@@ -74,7 +75,7 @@ class ReportSenderTest {
                                         signalStrength = null,
                                         ssid = "test_network",
                                     ),
-                                age = 1500,
+                                age = 1500.milliseconds,
                             )
                         ),
                     cellTowers = emptyList(),

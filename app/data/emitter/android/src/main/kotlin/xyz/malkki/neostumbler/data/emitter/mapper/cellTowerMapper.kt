@@ -10,6 +10,7 @@ import android.telephony.CellInfoWcdma
 import android.telephony.CellSignalStrengthNr
 import xyz.malkki.neostumbler.core.emitter.CellTower
 import xyz.malkki.neostumbler.core.observation.EmitterObservation
+import xyz.malkki.neostumbler.core.values.SignalStrength
 
 internal fun CellInfo.toCellTower(): EmitterObservation<CellTower, String>? {
     val cellTower =
@@ -54,7 +55,8 @@ private fun fromCellInfoNr(cellInfoNr: CellInfoNr): CellTower {
         serving = cellInfoNr.serving(),
         timingAdvance = null,
         arfcn = cellIdentity.nrarfcn.takeIf { it != CellInfo.UNAVAILABLE },
-        signalStrength = cellSignalStrength.dbm.takeIf { it != CellInfo.UNAVAILABLE },
+        signalStrength =
+            cellSignalStrength.dbm.takeIf { it != CellInfo.UNAVAILABLE }?.let { SignalStrength(it) },
     )
 }
 
@@ -73,7 +75,10 @@ private fun fromCellInfoLte(cellInfoLte: CellInfoLte): CellTower {
         serving = cellInfoLte.serving(),
         timingAdvance = cellSignalStrength.timingAdvance.takeIf { it != CellInfo.UNAVAILABLE },
         arfcn = cellIdentity.earfcn.takeIf { it != CellInfo.UNAVAILABLE },
-        signalStrength = cellSignalStrength.rssi.takeIf { it != CellInfo.UNAVAILABLE },
+        signalStrength =
+            cellSignalStrength.rssi
+                .takeIf { it != CellInfo.UNAVAILABLE }
+                ?.let { SignalStrength(it) },
     )
 }
 
@@ -94,7 +99,9 @@ private fun fromCellInfoGsm(cellInfoGsm: CellInfoGsm): CellTower {
         arfcn = cellIdentity.arfcn.takeIf { it != CellInfo.UNAVAILABLE },
         signalStrength =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                cellSignalStrength.rssi.takeIf { it != CellInfo.UNAVAILABLE }
+                cellSignalStrength.rssi
+                    .takeIf { it != CellInfo.UNAVAILABLE }
+                    ?.let { SignalStrength(it) }
             } else {
                 null
             },
@@ -116,7 +123,8 @@ private fun fromCellInfoWcdma(cellInfoWcdma: CellInfoWcdma): CellTower {
         serving = cellInfoWcdma.serving(),
         timingAdvance = null,
         arfcn = cellIdentity.uarfcn.takeIf { it != CellInfo.UNAVAILABLE },
-        signalStrength = cellSignalStrength.dbm.takeIf { it != CellInfo.UNAVAILABLE },
+        signalStrength =
+            cellSignalStrength.dbm.takeIf { it != CellInfo.UNAVAILABLE }?.let { SignalStrength(it) },
     )
 }
 

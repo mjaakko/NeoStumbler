@@ -15,6 +15,7 @@ import java.time.Instant
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
 import kotlin.reflect.KClass
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.runTest
@@ -163,7 +164,7 @@ class ReportMapTest {
                                             speed = null,
                                             source = Position.Source.GPS,
                                         ),
-                                    age = 1000,
+                                    age = 1000.milliseconds,
                                 ),
                             wifiAccessPoints = emptyList(),
                             cellTowers =
@@ -184,7 +185,7 @@ class ReportMapTest {
                                                 timingAdvance = null,
                                                 arfcn = null,
                                             ),
-                                        age = 1000,
+                                        age = 1000.milliseconds,
                                     )
                                 ),
                             bluetoothBeacons = emptyList(),

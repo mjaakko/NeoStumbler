@@ -11,6 +11,7 @@ import timber.log.Timber
 import xyz.malkki.neostumbler.core.MacAddress
 import xyz.malkki.neostumbler.core.emitter.BluetoothBeacon
 import xyz.malkki.neostumbler.core.observation.EmitterObservation
+import xyz.malkki.neostumbler.core.values.SignalStrength
 import xyz.malkki.neostumbler.data.emitter.internal.bluetooth.PassiveBluetoothScanReceiver
 import xyz.malkki.neostumbler.data.emitter.internal.bluetooth.PassiveBluetoothScanResultStore
 
@@ -75,7 +76,7 @@ class BLEScannerPassiveBluetoothBeaconSource(context: Context) : PassiveBluetoot
                         id1 = mappedIdentifiers.getOrNull(0)?.toString(),
                         id2 = mappedIdentifiers.getOrNull(1)?.toString(),
                         id3 = mappedIdentifiers.getOrNull(2)?.toString(),
-                        signalStrength = scanResult.signalStrength,
+                        signalStrength = SignalStrength(scanResult.signalStrength),
                     ),
                 timestamp = scanResult.timestamp,
             )

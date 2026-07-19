@@ -6,6 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import xyz.malkki.neostumbler.core.emitter.CellTower
 import xyz.malkki.neostumbler.core.observation.EmitterObservation
+import xyz.malkki.neostumbler.core.values.SignalStrength
 
 @Entity(
     foreignKeys =
@@ -55,7 +56,7 @@ internal data class CellTowerEntity(
                 asu = cellTower.asu,
                 primaryScramblingCode = cellTower.primaryScramblingCode,
                 serving = cellTower.serving,
-                signalStrength = cellTower.signalStrength,
+                signalStrength = cellTower.signalStrength?.dbm,
                 timingAdvance = cellTower.timingAdvance,
                 arfcn = cellTower.arfcn,
                 age = age,
@@ -77,6 +78,6 @@ internal fun CellTowerEntity.toCellTower(): CellTower {
         serving = serving,
         timingAdvance = timingAdvance,
         arfcn = arfcn,
-        signalStrength = signalStrength,
+        signalStrength = signalStrength?.let { SignalStrength(it) },
     )
 }

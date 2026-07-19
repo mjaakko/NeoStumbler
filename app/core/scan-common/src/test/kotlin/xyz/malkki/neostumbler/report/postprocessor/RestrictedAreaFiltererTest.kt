@@ -10,6 +10,7 @@ import xyz.malkki.neostumbler.core.emitter.BluetoothBeacon
 import xyz.malkki.neostumbler.core.observation.EmitterObservation
 import xyz.malkki.neostumbler.core.observation.PositionObservation
 import xyz.malkki.neostumbler.core.report.ReportData
+import xyz.malkki.neostumbler.core.values.SignalStrength
 import xyz.malkki.neostumbler.geography.Circle
 import xyz.malkki.neostumbler.geography.LatLng
 
@@ -34,7 +35,7 @@ class RestrictedAreaFiltererTest {
                         emitter =
                             BluetoothBeacon(
                                 macAddress = MacAddress("ff:ff:ff:ff:ff:ff"),
-                                signalStrength = -80,
+                                signalStrength = SignalStrength(-80),
                             ),
                         timestamp = 0,
                     )

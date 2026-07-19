@@ -11,6 +11,7 @@ import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
 import xyz.malkki.neostumbler.core.observation.EmitterObservation
 import xyz.malkki.neostumbler.core.observation.PositionObservation
 import xyz.malkki.neostumbler.core.report.ReportData
+import xyz.malkki.neostumbler.core.values.SignalStrength
 
 class AutoDetectingMovingWifiBluetoothFiltererTest {
     @Test
@@ -51,7 +52,7 @@ class AutoDetectingMovingWifiBluetoothFiltererTest {
                         EmitterObservation(
                             BluetoothBeacon(
                                 macAddress = MacAddress("04:04:04:04:04:04"),
-                                signalStrength = -80,
+                                signalStrength = SignalStrength(-80),
                             ),
                             timestamp = 0,
                         )

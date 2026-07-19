@@ -1,6 +1,7 @@
 package xyz.malkki.neostumbler.core.emitter
 
 import xyz.malkki.neostumbler.core.MacAddress
+import xyz.malkki.neostumbler.core.values.SignalStrength
 
 data class WifiAccessPoint(
     val macAddress: MacAddress,
@@ -8,7 +9,7 @@ data class WifiAccessPoint(
     val channel: Int? = null,
     val frequency: Int? = null,
     val ssid: String? = null,
-    override val signalStrength: Int? = null,
+    override val signalStrength: SignalStrength? = null,
 ) : Emitter<MacAddress> {
     override val uniqueKey: MacAddress
         get() = macAddress

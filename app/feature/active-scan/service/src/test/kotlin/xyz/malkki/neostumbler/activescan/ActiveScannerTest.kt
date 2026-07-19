@@ -24,6 +24,7 @@ import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
 import xyz.malkki.neostumbler.core.observation.EmitterObservation
 import xyz.malkki.neostumbler.core.observation.PositionObservation
 import xyz.malkki.neostumbler.core.values.Distance
+import xyz.malkki.neostumbler.core.values.SignalStrength
 import xyz.malkki.neostumbler.data.location.LocationSource
 import xyz.malkki.neostumbler.data.movement.MovementDetector
 import xyz.malkki.neostumbler.report.postprocessor.HiddenWifiFilterer
@@ -129,7 +130,7 @@ class ActiveScannerTest {
                                 emitter =
                                     BluetoothBeacon(
                                         macAddress = MacAddress("01:01:01:01:01"),
-                                        signalStrength = -68,
+                                        signalStrength = SignalStrength(-68),
                                         beaconType = null,
                                         id1 = null,
                                         id2 = null,
@@ -300,7 +301,7 @@ class ActiveScannerTest {
                                         id1 = null,
                                         id2 = null,
                                         id3 = null,
-                                        signalStrength = -75,
+                                        signalStrength = SignalStrength(-75),
                                     ),
                                 timestamp = 0,
                             )

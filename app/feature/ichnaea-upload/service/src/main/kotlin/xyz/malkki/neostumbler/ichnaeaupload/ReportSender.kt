@@ -162,8 +162,8 @@ private fun ReportEmitter<BluetoothBeacon, MacAddress>.toDto(): BluetoothBeaconD
         id1 = emitter.id1,
         id2 = emitter.id2,
         id3 = emitter.id3,
-        signalStrength = emitter.signalStrength,
-        age = age,
+        signalStrength = emitter.signalStrength.dbm,
+        age = age.inWholeMilliseconds,
     )
 }
 
@@ -179,10 +179,10 @@ private fun ReportEmitter<CellTower, String>.toDto(): CellTowerDto {
         asu = emitter.asu,
         primaryScramblingCode = emitter.primaryScramblingCode,
         serving = emitter.serving,
-        signalStrength = emitter.signalStrength,
+        signalStrength = emitter.signalStrength?.dbm,
         timingAdvance = emitter.timingAdvance,
         arfcn = emitter.arfcn,
-        age = age,
+        age = age.inWholeMilliseconds,
     )
 }
 
@@ -193,9 +193,9 @@ private fun ReportEmitter<WifiAccessPoint, MacAddress>.toDto(): WifiAccessPointD
         ssid = emitter.ssid,
         channel = emitter.channel,
         frequency = emitter.frequency,
-        signalStrength = emitter.signalStrength,
+        signalStrength = emitter.signalStrength?.dbm,
         signalToNoiseRatio = null,
-        age = age,
+        age = age.inWholeMilliseconds,
     )
 }
 
@@ -204,7 +204,7 @@ private fun ReportPosition.toDto(): PositionDto {
         latitude = position.latitude,
         longitude = position.longitude,
         accuracy = position.accuracy?.takeUnless { it.isNaN() },
-        age = age,
+        age = age.inWholeMilliseconds,
         altitude = position.altitude?.takeUnless { it.isNaN() },
         altitudeAccuracy = position.altitudeAccuracy?.takeUnless { it.isNaN() },
         heading = position.heading?.takeUnless { it.isNaN() },

@@ -5,6 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import java.time.Instant
 import java.time.LocalDate
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -119,15 +120,23 @@ private fun ReportWithData.toReport(): Report {
         position = positionEntity.toReportPosition(),
         wifiAccessPoints =
             wifiAccessPointEntities.map {
-                ReportEmitter(id = it.id!!, emitter = it.toWifiAccessPoint(), age = it.age)
+                ReportEmitter(
+                    id = it.id!!,
+                    emitter = it.toWifiAccessPoint(),
+                    age = it.age.milliseconds,
+                )
             },
         cellTowers =
             cellTowerEntities.map {
-                ReportEmitter(id = it.id, emitter = it.toCellTower(), age = it.age)
+                ReportEmitter(id = it.id, emitter = it.toCellTower(), age = it.age.milliseconds)
             },
         bluetoothBeacons =
             bluetoothBeaconEntities.map {
-                ReportEmitter(id = it.id, emitter = it.toBluetoothBeacon(), age = it.age)
+                ReportEmitter(
+                    id = it.id,
+                    emitter = it.toBluetoothBeacon(),
+                    age = it.age.milliseconds,
+                )
             },
     )
 }
