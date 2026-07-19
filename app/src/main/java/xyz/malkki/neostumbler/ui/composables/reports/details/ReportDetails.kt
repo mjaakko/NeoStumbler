@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialogDefaults
-import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -24,7 +23,6 @@ import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -39,7 +37,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import java.text.DecimalFormat
-import org.koin.compose.koinInject
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.core.MacAddress
 import xyz.malkki.neostumbler.core.emitter.BluetoothBeacon
@@ -47,10 +46,10 @@ import xyz.malkki.neostumbler.core.emitter.CellTower
 import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
 import xyz.malkki.neostumbler.core.report.Report
 import xyz.malkki.neostumbler.core.report.ReportEmitter
-import xyz.malkki.neostumbler.data.reports.ReportProvider
 import xyz.malkki.neostumbler.extensions.roundToString
 import xyz.malkki.neostumbler.geography.LatLng
 import xyz.malkki.neostumbler.ui.composables.shared.formattedDate
+import xyz.malkki.neostumbler.ui.viewmodel.ReportDetailsViewModel
 
 private const val WIFIS = 0
 private const val CELLS = 1
@@ -59,20 +58,17 @@ private const val BLUETOOTHS = 2
 private val DATA_TYPES = listOf(WIFIS, CELLS, BLUETOOTHS)
 
 @Composable
-fun ReportDetailsDialog(reportId: Long, onDismiss: () -> Unit) {
-    BasicAlertDialog(onDismissRequest = onDismiss) {
-        Surface(
-            modifier = Modifier.sizeIn(maxWidth = 400.dp).fillMaxWidth().wrapContentHeight(),
-            shape = AlertDialogDefaults.shape,
-            tonalElevation = AlertDialogDefaults.TonalElevation,
-        ) {
-            Column(modifier = Modifier.padding(all = 24.dp)) {
-                ReportDetails(reportId = reportId)
-
-                TextButton(modifier = Modifier.align(Alignment.End), onClick = onDismiss) {
-                    Text(text = stringResource(R.string.cancel))
-                }
-            }
+fun ReportDetailsDialog(
+    reportId: Long,
+    reportDetailsViewModel: ReportDetailsViewModel = koinViewModel { parametersOf(reportId) },
+) {
+    Surface(
+        modifier = Modifier.sizeIn(maxWidth = 400.dp).fillMaxWidth().wrapContentHeight(),
+        shape = AlertDialogDefaults.shape,
+        tonalElevation = AlertDialogDefaults.TonalElevation,
+    ) {
+        Column(modifier = Modifier.padding(all = 24.dp)) {
+            ReportDetails(reportDetailsViewModel = reportDetailsViewModel)
         }
     }
 }
@@ -94,9 +90,10 @@ private fun Coordinates(latLng: LatLng) {
 }
 
 @Composable
-private fun ReportDetails(reportId: Long, reportProvider: ReportProvider = koinInject()) {
-    val report by
-        reportProvider.getReport(reportId).collectAsStateWithLifecycle(initialValue = null)
+private fun ReportDetails(reportDetailsViewModel: ReportDetailsViewModel) {
+    val report by reportDetailsViewModel.report.collectAsStateWithLifecycle()
+    val estimatedLocation by
+        reportDetailsViewModel.estimatedReportLocation.collectAsStateWithLifecycle()
 
     if (report == null) {
         Box(
@@ -106,10 +103,13 @@ private fun ReportDetails(reportId: Long, reportProvider: ReportProvider = koinI
             CircularProgressIndicator()
         }
     } else {
-
         Text(text = formattedDate(report!!.timestamp), style = MaterialTheme.typography.titleLarge)
 
-        ReportMap(modifier = Modifier.padding(top = 8.dp), report = report!!)
+        ReportMap(
+            modifier = Modifier.padding(top = 8.dp),
+            report = report!!,
+            estimatedLocation = estimatedLocation,
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 

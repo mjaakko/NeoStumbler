@@ -34,6 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
@@ -43,9 +44,11 @@ import androidx.navigation3.runtime.get
 import androidx.navigation3.runtime.metadata
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.scene.Scene
 import androidx.navigation3.scene.SceneDecoratorStrategy
 import androidx.navigation3.scene.SceneDecoratorStrategyScope
+import androidx.navigation3.scene.SinglePaneSceneStrategy
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import androidx.navigation3.ui.NavDisplay
 import kotlinx.coroutines.flow.SharingStarted
@@ -56,6 +59,7 @@ import xyz.malkki.neostumbler.MainNavigationSceneDecoratorStrategy.Companion.Dra
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.data.settings.getBooleanFlow
+import xyz.malkki.neostumbler.ui.composables.reports.details.ReportDetailsDialog
 import xyz.malkki.neostumbler.ui.composables.restrictedareas.RestrictedAreasScreen
 import xyz.malkki.neostumbler.ui.screens.MapScreen
 import xyz.malkki.neostumbler.ui.screens.ReportsScreen
@@ -115,7 +119,16 @@ class MainActivity : AppCompatActivity() {
                                         },
                                         topBar = {
                                             val navEntry = navigationBackstack.last()
-                                            if (navEntry is MainNavKey && navEntry.appBar) {
+                                            val topBarText =
+                                                if (navEntry is MainNavKey && !navEntry.appBar) {
+                                                    null
+                                                } else {
+                                                    navigationBackstack
+                                                        .filterIsInstance<MainNavKey>()
+                                                        .findLast { it.appBar }
+                                                        ?.title
+                                                }
+                                            topBarText?.let {
                                                 CenterAlignedTopAppBar(
                                                     modifier =
                                                         Modifier.sharedElement(
@@ -123,18 +136,19 @@ class MainActivity : AppCompatActivity() {
                                                             LocalNavAnimatedContentScope.current,
                                                         ),
                                                     title = {
-                                                        Text(text = stringResource(navEntry.title))
+                                                        Text(text = stringResource(it))
                                                     },
                                                 )
                                             }
                                         },
                                     )
                                 ),
+                            sceneStrategies =
+                                listOf(DialogSceneStrategy(), SinglePaneSceneStrategy()),
                             backStack = navigationBackstack,
                             entryProvider =
                                 entryProvider {
                                     entry<MapNavKey> { MapScreen() }
-                                    entry<ReportsNavKey> { ReportsScreen() }
                                     entry<StatisticsNavKey> { StatisticsScreen() }
                                     entry<SettingsNavKey> {
                                         SettingsScreen(
@@ -150,12 +164,29 @@ class MainActivity : AppCompatActivity() {
                                     ) {
                                         RestrictedAreasScreen()
                                     }
+
+                                    reportEntryProvider(backStack = navigationBackstack)
                                 },
                         )
                     }
                 }
             }
         }
+    }
+}
+
+// FIXME: use DI to inject entry providers after modularizing the UI
+private fun EntryProviderScope<NavKey>.reportEntryProvider(backStack: NavBackStack<NavKey>) {
+    entry<ReportsNavKey> {
+        ReportsScreen(
+            openReportDetails = { reportId ->
+                backStack.add(ReportDetailsNavKey(reportId))
+            }
+        )
+    }
+
+    entry<ReportDetailsNavKey>(metadata = DialogSceneStrategy.dialog()) {
+        ReportDetailsDialog(reportId = it.reportId)
     }
 }
 
@@ -223,6 +254,8 @@ private object SettingsNavKey : MainNavKey {
 }
 
 @Serializable private object RestrictedAreasNavKey : NavKey
+
+@JvmInline @Serializable private value class ReportDetailsNavKey(val reportId: Long) : NavKey
 
 private class MainNavigationSceneDecoratorStrategy<T : Any>(
     private val navigationItems: @Composable () -> Unit,

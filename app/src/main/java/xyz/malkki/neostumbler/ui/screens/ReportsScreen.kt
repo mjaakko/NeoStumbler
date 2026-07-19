@@ -83,7 +83,6 @@ import xyz.malkki.neostumbler.ui.composables.MLSWarningDialog
 import xyz.malkki.neostumbler.ui.composables.ReportUploadButton
 import xyz.malkki.neostumbler.ui.composables.reports.ForegroundScanningButton
 import xyz.malkki.neostumbler.ui.composables.reports.GpsStatus
-import xyz.malkki.neostumbler.ui.composables.reports.details.ReportDetailsDialog
 import xyz.malkki.neostumbler.ui.composables.shared.CenteredCircularProgressIndicator
 import xyz.malkki.neostumbler.ui.composables.shared.ConfirmationDialog
 import xyz.malkki.neostumbler.ui.composables.shared.Shimmer
@@ -97,7 +96,10 @@ import xyz.malkki.neostumbler.utils.geocoder.StubGeocoder
 import xyz.malkki.neostumbler.utils.review.ReviewRequester
 
 @Composable
-fun ReportsScreen(viewModel: ReportsViewModel = koinViewModel()) {
+fun ReportsScreen(
+    viewModel: ReportsViewModel = koinViewModel(),
+    openReportDetails: (Long) -> Unit,
+) {
     val density = LocalDensity.current
 
     var cardHeight by remember { mutableStateOf(0.dp) }
@@ -118,6 +120,7 @@ fun ReportsScreen(viewModel: ReportsViewModel = koinViewModel()) {
                 modifier = Modifier.padding(horizontal = 16.dp).weight(1.0f).handleDisplayCutouts(),
                 listBottomPadding = cardHeight,
                 reportsViewModel = viewModel,
+                openReportDetails = openReportDetails,
             )
         }
 
@@ -252,6 +255,7 @@ private fun Reports(
     modifier: Modifier = Modifier,
     reportsViewModel: ReportsViewModel,
     listBottomPadding: Dp,
+    openReportDetails: (Long) -> Unit,
     geocoder: Geocoder = koinInject(),
     settings: Settings = koinInject(),
 ) {
@@ -278,11 +282,7 @@ private fun Reports(
     val listAtTop by remember { derivedStateOf { listState.firstVisibleItemIndex == 0 } }
     var listWasAtTop by remember { mutableStateOf(listAtTop) }
 
-    var reportToShow by rememberSaveable { mutableStateOf<Long?>(null) }
-
     var reportToDelete by rememberSaveable { mutableStateOf<Long?>(null) }
-
-    reportToShow?.let { ReportDetailsDialog(reportId = it, onDismiss = { reportToShow = null }) }
 
     reportToDelete?.let {
         ConfirmationDialog(
@@ -338,7 +338,7 @@ private fun Reports(
                         if (report != null) {
                             Report(
                                 report = report,
-                                onShowReportDetails = { reportId -> reportToShow = reportId },
+                                onShowReportDetails = openReportDetails,
                                 onDeleteReport = { reportId -> reportToDelete = reportId },
                                 geocoder = cachedGeocoder,
                             )
