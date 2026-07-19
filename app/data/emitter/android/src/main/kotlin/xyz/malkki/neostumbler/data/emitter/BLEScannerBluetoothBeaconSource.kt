@@ -32,6 +32,7 @@ import timber.log.Timber
 import xyz.malkki.neostumbler.core.MacAddress
 import xyz.malkki.neostumbler.core.emitter.BluetoothBeacon
 import xyz.malkki.neostumbler.core.observation.EmitterObservation
+import xyz.malkki.neostumbler.core.values.SignalStrength
 import xyz.malkki.neostumbler.data.emitter.internal.bluetooth.BluetoothBeaconConstants.BEACON_LAYOUTS
 import xyz.malkki.neostumbler.data.emitter.internal.bluetooth.BluetoothBeaconConstants.BEACON_PARSERS
 import xyz.malkki.neostumbler.data.emitter.internal.bluetooth.BluetoothBeaconConstants.KNOWN_BEACON_MANUFACTURERS
@@ -114,7 +115,7 @@ class BLEScannerBluetoothBeaconSource(context: Context) : ActiveBluetoothBeaconS
                                     } else {
                                         null
                                     },
-                                signalStrength = scanResult.rssi,
+                                signalStrength = SignalStrength(scanResult.rssi),
                             ),
                         timestamp = scanResult.timestampMillis,
                     )

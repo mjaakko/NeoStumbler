@@ -4,6 +4,7 @@ import org.junit.Assert
 import org.junit.Test
 import xyz.malkki.neostumbler.core.emitter.CellTower.Companion.fillMissingData
 import xyz.malkki.neostumbler.core.observation.EmitterObservation
+import xyz.malkki.neostumbler.core.values.SignalStrength
 
 class CellTowerTest {
     @Test
@@ -19,7 +20,7 @@ class CellTowerTest {
                     asu = null,
                     primaryScramblingCode = null,
                     serving = null,
-                    signalStrength = -60,
+                    signalStrength = SignalStrength(-60),
                     timingAdvance = null,
                     arfcn = null,
                 ),
@@ -32,7 +33,7 @@ class CellTowerTest {
                     asu = null,
                     primaryScramblingCode = null,
                     serving = null,
-                    signalStrength = -60,
+                    signalStrength = SignalStrength(-60),
                     timingAdvance = null,
                     arfcn = null,
                 ),
@@ -60,7 +61,7 @@ class CellTowerTest {
                     asu = null,
                     primaryScramblingCode = null,
                     serving = null,
-                    signalStrength = -60,
+                    signalStrength = SignalStrength(-60),
                     timingAdvance = null,
                     arfcn = null,
                 )

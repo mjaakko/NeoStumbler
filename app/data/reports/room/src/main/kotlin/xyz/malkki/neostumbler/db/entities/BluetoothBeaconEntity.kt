@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 import xyz.malkki.neostumbler.core.MacAddress
 import xyz.malkki.neostumbler.core.emitter.BluetoothBeacon
 import xyz.malkki.neostumbler.core.observation.EmitterObservation
+import xyz.malkki.neostumbler.core.values.SignalStrength
 
 @Entity(
     foreignKeys =
@@ -44,7 +45,7 @@ internal data class BluetoothBeaconEntity(
                 id = 0,
                 macAddress = beacon.macAddress.value,
                 age = age,
-                signalStrength = beacon.signalStrength,
+                signalStrength = beacon.signalStrength.dbm,
                 beaconType = beacon.beaconType,
                 id1 = beacon.id1,
                 id2 = beacon.id2,
@@ -62,6 +63,6 @@ internal fun BluetoothBeaconEntity.toBluetoothBeacon(): BluetoothBeacon {
         id1 = id1,
         id2 = id2,
         id3 = id3,
-        signalStrength = signalStrength!!,
+        signalStrength = SignalStrength(signalStrength!!),
     )
 }

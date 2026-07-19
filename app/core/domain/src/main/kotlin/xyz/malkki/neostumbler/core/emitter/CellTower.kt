@@ -1,6 +1,7 @@
 package xyz.malkki.neostumbler.core.emitter
 
 import xyz.malkki.neostumbler.core.observation.EmitterObservation
+import xyz.malkki.neostumbler.core.values.SignalStrength
 
 data class CellTower(
     val radioType: RadioType,
@@ -13,7 +14,7 @@ data class CellTower(
     val serving: Int?,
     val timingAdvance: Int?,
     val arfcn: Int?,
-    override val signalStrength: Int? = null,
+    override val signalStrength: SignalStrength? = null,
 ) : Emitter<String> {
     override val uniqueKey: String
         get() =

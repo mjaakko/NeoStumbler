@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 import xyz.malkki.neostumbler.core.MacAddress
 import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
 import xyz.malkki.neostumbler.core.observation.EmitterObservation
+import xyz.malkki.neostumbler.core.values.SignalStrength
 
 @Entity(
     foreignKeys =
@@ -47,7 +48,7 @@ internal data class WifiAccessPointEntity(
                 age = age,
                 channel = wifiAccessPoint.channel,
                 frequency = wifiAccessPoint.frequency,
-                signalStrength = wifiAccessPoint.signalStrength,
+                signalStrength = wifiAccessPoint.signalStrength?.dbm,
                 ssid = wifiAccessPoint.ssid,
                 reportId = reportId,
             )
@@ -62,6 +63,6 @@ internal fun WifiAccessPointEntity.toWifiAccessPoint(): WifiAccessPoint {
         channel = channel,
         frequency = frequency,
         ssid = ssid,
-        signalStrength = signalStrength,
+        signalStrength = signalStrength?.let { SignalStrength(it) },
     )
 }

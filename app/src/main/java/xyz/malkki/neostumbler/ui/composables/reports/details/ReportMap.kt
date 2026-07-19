@@ -313,14 +313,14 @@ private fun getEstimatedReportLocation(
                                 report.bluetoothBeacons.map {
                                     BluetoothBeaconDto(
                                         macAddress = it.emitter.macAddress.value,
-                                        signalStrength = it.emitter.signalStrength,
+                                        signalStrength = it.emitter.signalStrength.dbm,
                                     )
                                 },
                             wifiAccessPoints =
                                 report.wifiAccessPoints.map {
                                     WifiAccessPointDto(
                                         macAddress = it.emitter.macAddress.value,
-                                        signalStrength = it.emitter.signalStrength,
+                                        signalStrength = it.emitter.signalStrength?.dbm,
                                     )
                                 },
                             cellTowers =
@@ -339,7 +339,7 @@ private fun getEstimatedReportLocation(
                                                 it.emitter.mobileNetworkCode?.toIntOrNull(),
                                             locationAreaCode = it.emitter.locationAreaCode,
                                             cellId = it.emitter.cellId,
-                                            signalStrength = it.emitter.signalStrength,
+                                            signalStrength = it.emitter.signalStrength?.dbm,
                                             psc = it.emitter.primaryScramblingCode,
                                             timingAdvance = it.emitter.timingAdvance,
                                         )

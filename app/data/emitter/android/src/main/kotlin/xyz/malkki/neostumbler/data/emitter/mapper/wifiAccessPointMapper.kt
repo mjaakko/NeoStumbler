@@ -5,6 +5,7 @@ import android.os.Build
 import xyz.malkki.neostumbler.core.MacAddress
 import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
 import xyz.malkki.neostumbler.core.observation.EmitterObservation
+import xyz.malkki.neostumbler.core.values.SignalStrength
 
 internal fun ScanResult.toWifiAccessPoint(): EmitterObservation<WifiAccessPoint, MacAddress> {
     val radioType =
@@ -43,7 +44,7 @@ internal fun ScanResult.toWifiAccessPoint(): EmitterObservation<WifiAccessPoint,
                 radioType = radioType,
                 channel = channelNumber,
                 frequency = frequency,
-                signalStrength = level,
+                signalStrength = SignalStrength(level),
                 ssid = ssidString,
             ),
         timestamp = timestampMillis,

@@ -208,7 +208,7 @@ private fun NoData() {
 private fun ReportWifisList(wifiAccessPoints: List<ReportEmitter<WifiAccessPoint, MacAddress>>) {
     val sortedWifiAccessPoints =
         remember(wifiAccessPoints) {
-            wifiAccessPoints.sortedByDescending { it.emitter.signalStrength }
+            wifiAccessPoints.sortedByDescending { it.emitter.signalStrength?.dbm }
         }
 
     LazyColumn(modifier = listSize, verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -247,7 +247,7 @@ private fun ReportCellsList(cellTowers: List<ReportEmitter<CellTower, String>>) 
     val sortedCellTowers =
         remember(cellTowers) {
             cellTowers
-                .sortedByDescending { it.emitter.signalStrength }
+                .sortedByDescending { it.emitter.signalStrength?.dbm }
                 .sortedBy {
                     if (it.emitter.cellId == null) {
                         0
@@ -328,7 +328,7 @@ private fun ReportBluetoothBeaconsList(
 ) {
     val sortedBluetoothBeaconSource =
         remember(bluetoothBeacons) {
-            bluetoothBeacons.sortedByDescending { it.emitter.signalStrength }
+            bluetoothBeacons.sortedByDescending { it.emitter.signalStrength.dbm }
         }
 
     LazyColumn(modifier = listSize, verticalArrangement = Arrangement.spacedBy(8.dp)) {

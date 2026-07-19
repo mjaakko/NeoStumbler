@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import kotlin.time.Duration.Companion.milliseconds
 import xyz.malkki.neostumbler.core.Position
 import xyz.malkki.neostumbler.core.observation.PositionObservation
 import xyz.malkki.neostumbler.core.report.ReportPosition
@@ -76,6 +77,6 @@ internal fun PositionEntity.toReportPosition(): ReportPosition {
                 pressure = pressure,
                 source = Position.Source.valueOf(source.uppercase()),
             ),
-        age = age,
+        age = age.milliseconds,
     )
 }
