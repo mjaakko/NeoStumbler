@@ -19,7 +19,7 @@
     <string name="statistics_tab_title">Статистика</string>
     <string name="settings_tab_title">Налаштування</string>
     <string name="send_reports">Надіслати звіти</string>
-    <string name="reports">Звіти:</string>
+    <string name="reports">Звіти</string>
     <string name="reports_total">Загальна кількість звітів: %d</string>
     <string name="reports_not_uploaded">Звіти не завантажено: %d</string>
     <string name="reports_last_uploaded">Останнє завантаження звітів: %s</string>

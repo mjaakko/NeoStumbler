@@ -28,7 +28,7 @@
     <string name="statistics_tab_title">統計</string>
     <string name="settings_tab_title">設定</string>
     <string name="send_reports">レポートを送信</string>
-    <string name="reports">レポート:</string>
+    <string name="reports">レポート</string>
     <string name="reports_total">総レポート: %d</string>
     <string name="reports_not_uploaded">未送信のレポート: %d</string>
     <string name="reports_last_uploaded">レポートの最終送信日: %s</string>

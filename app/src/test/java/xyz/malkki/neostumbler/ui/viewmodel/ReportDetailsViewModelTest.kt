@@ -127,9 +127,7 @@ class ReportDetailsViewModelTest {
             ReportDetailsViewModel(
                 reportId = 1,
                 reportProvider =
-                    mock<ReportProvider> {
-                        on { getReport(any()) } doReturn flowOf(REPORT)
-                    },
+                    mock<ReportProvider> { on { getReport(any()) } doReturn flowOf(REPORT) },
                 ichnaeaClientProvider = ichnaeaClientProvider,
             )
 

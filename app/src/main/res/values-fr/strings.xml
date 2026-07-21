@@ -25,7 +25,7 @@
     <string name="statistics_tab_title">Statistiques</string>
     <string name="settings_tab_title">Paramètres</string>
     <string name="send_reports">Envoyer les rapports</string>
-    <string name="reports">Rapports :</string>
+    <string name="reports">Rapports </string>
     <string name="reports_total">Total des rapports : %d</string>
     <string name="reports_not_uploaded">Rapports non-envoyés : %d</string>
     <string name="reports_last_uploaded">Dernier rapport envoyé : %s</string>

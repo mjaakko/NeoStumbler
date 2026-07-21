@@ -30,7 +30,7 @@
     <string name="statistics_tab_title">Statystygyon</string>
     <string name="settings_tab_title">Settyansow</string>
     <string name="send_reports">Danvon derivasow</string>
-    <string name="reports">Derivasow:</string>
+    <string name="reports">Derivasow</string>
     <string name="reports_total">Derivasow gowal: %d</string>
     <string name="reports_not_uploaded">Derivasow anughkargys: %d</string>
     <string name="reports_last_uploaded">Derivasow ughkargys diwettha: %s</string>

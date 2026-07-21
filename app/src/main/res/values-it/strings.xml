@@ -22,7 +22,7 @@
     <string name="statistics_tab_title">Statistiche</string>
     <string name="settings_tab_title">Impostazioni</string>
     <string name="send_reports">Invia rilevamenti</string>
-    <string name="reports">Rilevamenti:</string>
+    <string name="reports">Rilevamenti</string>
     <string name="stop_scanning">Ferma scansione</string>
     <string name="reports_total">Totale rilevamenti: %d</string>
     <string name="reports_not_uploaded">Rilevamenti non inviati: %d</string>

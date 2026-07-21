@@ -118,28 +118,14 @@ class MainActivity : AppCompatActivity() {
                                             }
                                         },
                                         topBar = {
-                                            val navEntry = navigationBackstack.last()
-                                            val topBarText =
-                                                if (navEntry is MainNavKey && !navEntry.appBar) {
-                                                    null
-                                                } else {
-                                                    navigationBackstack
-                                                        .filterIsInstance<MainNavKey>()
-                                                        .findLast { it.appBar }
-                                                        ?.title
-                                                }
-                                            topBarText?.let {
-                                                CenterAlignedTopAppBar(
-                                                    modifier =
-                                                        Modifier.sharedElement(
-                                                            rememberSharedContentState("app-bar"),
-                                                            LocalNavAnimatedContentScope.current,
-                                                        ),
-                                                    title = {
-                                                        Text(text = stringResource(it))
-                                                    },
-                                                )
-                                            }
+                                            TopBar(
+                                                modifier =
+                                                    Modifier.sharedElement(
+                                                        rememberSharedContentState("app-bar"),
+                                                        LocalNavAnimatedContentScope.current,
+                                                    ),
+                                                backStack = navigationBackstack,
+                                            )
                                         },
                                     )
                                 ),
@@ -148,7 +134,15 @@ class MainActivity : AppCompatActivity() {
                             backStack = navigationBackstack,
                             entryProvider =
                                 entryProvider {
-                                    entry<MapNavKey> { MapScreen() }
+                                    entry<MapNavKey> {
+                                        MapScreen(
+                                            openReportDetails = { reportId ->
+                                                navigationBackstack.add(
+                                                    ReportDetailsNavKey(reportId)
+                                                )
+                                            }
+                                        )
+                                    }
                                     entry<StatisticsNavKey> { StatisticsScreen() }
                                     entry<SettingsNavKey> {
                                         SettingsScreen(
@@ -175,13 +169,25 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
+@Composable
+private fun TopBar(modifier: Modifier, backStack: List<NavKey>) {
+    val navEntry = backStack.last()
+    val topBarText =
+        if (navEntry is MainNavKey && !navEntry.appBar) {
+            null
+        } else {
+            backStack.filterIsInstance<MainNavKey>().findLast { it.appBar }?.title
+        }
+    topBarText?.let {
+        CenterAlignedTopAppBar(modifier = modifier, title = { Text(text = stringResource(it)) })
+    }
+}
+
 // FIXME: use DI to inject entry providers after modularizing the UI
 private fun EntryProviderScope<NavKey>.reportEntryProvider(backStack: NavBackStack<NavKey>) {
     entry<ReportsNavKey> {
         ReportsScreen(
-            openReportDetails = { reportId ->
-                backStack.add(ReportDetailsNavKey(reportId))
-            }
+            openReportDetails = { reportId -> backStack.add(ReportDetailsNavKey(reportId)) }
         )
     }
 

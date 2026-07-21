@@ -51,6 +51,7 @@ import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.domain.asDomainLatLng
 import xyz.malkki.neostumbler.domain.asMapLibreLatLng
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
+import xyz.malkki.neostumbler.ui.composables.SelectReport
 import xyz.malkki.neostumbler.ui.composables.map.MapSettingsButton
 import xyz.malkki.neostumbler.ui.composables.shared.ComposableMap
 import xyz.malkki.neostumbler.ui.composables.shared.KeepScreenOn
@@ -84,11 +85,25 @@ private const val HEATMAP_LAYER_ID = "neostumbler-heat-map"
 // FIXME: try to break this into smaller pieces and then remove these suppressions
 @Suppress("LongMethod")
 @Composable
-fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
+fun MapScreen(
+    mapViewModel: MapViewModel = koinViewModel<MapViewModel>(),
+    openReportDetails: (Long) -> Unit,
+) {
     val context = LocalContext.current
 
     val coroutineScope = rememberCoroutineScope()
     val lifecycleOwner = rememberLifecycleOwner()
+
+    val selectableReports by mapViewModel.showReportDetailOptions.collectAsStateWithLifecycle()
+    if (selectableReports.isNotEmpty()) {
+        SelectReport(
+            selectableReports = selectableReports,
+            showReport = { reportId ->
+                reportId?.let { openReportDetails(it) }
+                mapViewModel.closeReportSelectDialog()
+            },
+        )
+    }
 
     var showPermissionDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -142,6 +157,19 @@ fun MapScreen(mapViewModel: MapViewModel = koinViewModel<MapViewModel>()) {
                         minLongitude = map.projection.visibleRegion.latLngBounds.longitudeWest,
                         maxLongitude = map.projection.visibleRegion.latLngBounds.longitudeEast,
                     )
+                }
+
+                map.addOnMapLongClickListener { coords ->
+                    map.queryRenderedFeatures(
+                            map.projection.toScreenLocation(coords),
+                            HEATMAP_LAYER_ID,
+                        )
+                        .firstOrNull()
+                        ?.let { feature ->
+                            feature.id()?.let { mapViewModel.onHeatmapTileClicked(it) }
+                        }
+
+                    true
                 }
 
                 map.setMinZoomPreference(MIN_ZOOM)

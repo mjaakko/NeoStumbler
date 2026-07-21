@@ -31,7 +31,7 @@
     <string name="statistics_tab_title">Statistike</string>
     <string name="settings_tab_title">Podešavanja</string>
     <string name="send_reports">Pošalji izveštaje</string>
-    <string name="reports">Izveštaji:</string>
+    <string name="reports">Izveštaji</string>
     <string name="reports_total">Ukupno izveštaja: %d</string>
     <string name="cell_tower_scan_frequency">Učestalost skeniranja tornjeva za mobilnu telefoniju</string>
     <string name="permission_rationale_read_phone_state">Pristup stanju telefona je potreban za skeniranje tornjeva za mrežnu telefoniju</string>

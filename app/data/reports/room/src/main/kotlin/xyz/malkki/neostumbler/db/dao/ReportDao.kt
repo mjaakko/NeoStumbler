@@ -97,6 +97,7 @@ internal interface ReportDao {
         """
         SELECT
             r.id,
+            r.timestamp,
             p.latitude,
             p.longitude
         FROM Report r
@@ -110,6 +111,7 @@ internal interface ReportDao {
         """
             SELECT
                 r.id AS id,
+                r.timestamp AS timestamp,
                 p.latitude AS latitude,
                 p.longitude AS longitude
             FROM PositionEntity p
@@ -128,7 +130,7 @@ internal interface ReportDao {
     @Query(
         """
         SELECT
-            r.id, p.latitude, p.longitude
+            r.id, r.timestamp, p.latitude, p.longitude
         FROM Report r
         JOIN PositionEntity p ON r.id = p.reportId
         WHERE p.latitude >= :minLatitude

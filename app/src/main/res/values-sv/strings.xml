@@ -47,7 +47,7 @@
     <string name="statistics_tab_title">Statistik</string>
     <string name="settings_tab_title">Inställningar</string>
     <string name="send_reports">Skicka rapporter</string>
-    <string name="reports">Rapporter:</string>
+    <string name="reports">Rapporter</string>
     <string name="reports_total">Rapporter totalt: %d</string>
     <string name="reports_not_uploaded">Rapporter, ej uppladdade: %d</string>
     <string name="reports_last_uploaded">Rapporter, senast uppladdade: %s</string>

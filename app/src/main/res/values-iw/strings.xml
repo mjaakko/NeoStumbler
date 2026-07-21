@@ -27,7 +27,7 @@
     <string name="statistics_tab_title">סטטיסטיקות</string>
     <string name="settings_tab_title">הגדרות</string>
     <string name="send_reports">שליחת דיווחים</string>
-    <string name="reports">דיווחים:</string>
+    <string name="reports">דיווחים</string>
     <string name="reports_total">דיווחים בסה\"כ:%d</string>
     <string name="reports_not_uploaded">דיווחים שלא הועלו:%d</string>
     <string name="reports_last_uploaded">פעם אחרונה שהועלו דיווחים:%s</string>

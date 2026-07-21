@@ -15,7 +15,7 @@
     <string name="statistics_tab_title">Statistiky</string>
     <string name="settings_tab_title">Nastavení</string>
     <string name="send_reports">Odeslat reporty</string>
-    <string name="reports">Reporty:</string>
+    <string name="reports">Reporty</string>
     <string name="reports_total">Celkem reportů: %d</string>
     <string name="reports_not_uploaded">Neodeslané reporty: %d</string>
     <string name="reports_last_uploaded">Reporty naposled odeslány: %s</string>

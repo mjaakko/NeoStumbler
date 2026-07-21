@@ -2,14 +2,20 @@ package xyz.malkki.neostumbler.ui.viewmodel
 
 import android.Manifest
 import android.app.Application
-import androidx.collection.MutableLongIntMap
-import androidx.collection.MutableObjectIntMap
+import androidx.collection.LongSet
+import androidx.collection.MutableLongObjectMap
+import androidx.collection.MutableLongSet
 import androidx.collection.MutableObjectList
+import androidx.collection.MutableScatterMap
 import androidx.collection.ObjectList
+import androidx.collection.emptyLongSet
+import androidx.collection.emptyObjectList
+import androidx.collection.mutableLongSetOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonObject
 import java.io.IOException
+import java.time.Instant
 import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.time.Duration.Companion.seconds
@@ -120,7 +126,7 @@ class MapViewModel(
 
     private val mapBounds = Channel<Pair<LatLng, LatLng>>(capacity = Channel.CONFLATED)
 
-    val heatMapPolygons =
+    private val reportsInsideMapBounds =
         mapBounds
             .receiveAsFlow()
             .debounce(0.2.seconds)
@@ -135,16 +141,26 @@ class MapViewModel(
                     maxLongitude = maxLon,
                 )
             }
-            .combine(
-                flow =
-                    mapViewport
-                        .map { (_, zoom) -> mapZoomToGeohexResolution(zoom) }
-                        .distinctUntilChanged(),
-                transform = { a, b -> a to b },
-            )
-            .mapLatest { (reportsWithLocation, resolution) ->
-                val hexagons = reportsWithLocation.calculateHeatMapTiles(resolution)
+            .stateIn(viewModelScope, started = SharingStarted.Lazily, initialValue = emptyList())
 
+    private val heatMapTiles =
+        reportsInsideMapBounds
+            .combine(
+                mapViewport
+                    .map { (_, zoom) -> mapZoomToGeohexResolution(zoom) }
+                    .distinctUntilChanged()
+            ) { reportsWithLocation, resolution ->
+                reportsWithLocation.calculateHeatMapTiles(resolution)
+            }
+            .stateIn(
+                viewModelScope,
+                started = SharingStarted.Lazily,
+                initialValue = emptyObjectList(),
+            )
+
+    val heatMapPolygons =
+        heatMapTiles
+            .mapLatest { hexagons ->
                 Array<Feature>(hexagons.size) { index ->
                     val heatMapTile = hexagons[index]
 
@@ -184,6 +200,9 @@ class MapViewModel(
                     ),
                 replay = 1,
             )
+
+    private val _showReportDetailOptions = MutableStateFlow(emptyList<ReportWithTimestamp>())
+    val showReportDetailOptions = _showReportDetailOptions.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -232,17 +251,31 @@ class MapViewModel(
         mapBounds.trySendBlocking(bounds)
     }
 
-    @Suppress("MagicNumber")
-    private fun mapZoomToGeohexResolution(mapZoom: Double): Int {
-        // Convert map zoom level to a suitable geohex resolution
-        return floor(mapZoom * 0.5 + 3)
-            .toInt()
-            .coerceIn(MIN_GEOHEX_RESOLUTION, MAX_GEOHEX_RESOLUTION)
+    fun closeReportSelectDialog() {
+        _showReportDetailOptions.value = emptyList()
+    }
+
+    fun onHeatmapTileClicked(id: String) {
+        val reportIds = heatMapTiles.value.firstOrNull { it.id == id }?.reportIds ?: emptyLongSet()
+
+        _showReportDetailOptions.value =
+            reportsInsideMapBounds.value
+                .filter { it.id in reportIds }
+                .map { ReportWithTimestamp(reportId = it.id, timestamp = it.timestamp) }
     }
 }
 
-/** @property heatPct From 0.0 to 1.0 */
-private data class HeatMapTile(val id: String, val outline: List<LatLng>, val heatPct: Float)
+private data class HeatMapTile(
+    /** GeoHex id */
+    val id: String,
+    val outline: List<LatLng>,
+    /** From 0.0 to 1.0 */
+    val heatPct: Float,
+    /** Reports inside this heat map tile */
+    val reportIds: LongSet,
+)
+
+data class ReportWithTimestamp(val reportId: Long, val timestamp: Instant)
 
 private const val COORDINATE_PRECISION = 0.0001f
 
@@ -250,7 +283,7 @@ private const val COORDINATE_PRECISION = 0.0001f
 private suspend fun List<ReportWithLocation>.calculateHeatMapTiles(
     resolution: Int
 ): ObjectList<HeatMapTile> {
-    val truncatedCoords = MutableLongIntMap(size)
+    val truncatedCoords = MutableLongObjectMap<MutableLongSet>(size)
 
     forEach {
         currentCoroutineContext().ensureActive()
@@ -267,12 +300,15 @@ private suspend fun List<ReportWithLocation>.calculateHeatMapTiles(
             (truncatedLat.toRawBits().toLong() shl 32) or
                 (truncatedLng.toRawBits().toLong() and 0xFFFFFFFF)
 
-        truncatedCoords.put(packedCoords, truncatedCoords.getOrDefault(packedCoords, 0) + 1)
+        truncatedCoords.put(
+            packedCoords,
+            truncatedCoords.getOrDefault(packedCoords, mutableLongSetOf()).apply { add(it.id) },
+        )
     }
 
-    val countByHexagon = MutableObjectIntMap<String>()
+    val reportsByHexagon = MutableScatterMap<String, MutableLongSet>()
 
-    truncatedCoords.forEach { packedCoord, count ->
+    truncatedCoords.forEach { packedCoord, reportIds ->
         currentCoroutineContext().ensureActive()
 
         val lat = Float.fromBits((packedCoord shr 32).toInt()).toDouble()
@@ -280,12 +316,15 @@ private suspend fun List<ReportWithLocation>.calculateHeatMapTiles(
 
         val hexKey = GeoHex.encode(lat, lng, resolution)!!
 
-        countByHexagon.put(hexKey, countByHexagon.getOrDefault(hexKey, 0) + count)
+        reportsByHexagon.put(
+            hexKey,
+            reportsByHexagon.getOrDefault(hexKey, mutableLongSetOf()).apply { addAll(reportIds) },
+        )
     }
 
-    val heatMapTiles = MutableObjectList<HeatMapTile>(countByHexagon.size)
+    val heatMapTiles = MutableObjectList<HeatMapTile>(reportsByHexagon.size)
 
-    countByHexagon.forEach { hexKey, count ->
+    reportsByHexagon.forEach { hexKey, reportIds ->
         currentCoroutineContext().ensureActive()
 
         val zone = GeoHex.getZoneByCode(hexKey)
@@ -294,10 +333,18 @@ private suspend fun List<ReportWithLocation>.calculateHeatMapTiles(
             HeatMapTile(
                 id = hexKey,
                 outline = zone.hexCoords.map { coord -> LatLng(coord.lat, coord.lon) },
-                heatPct = ((count * REPORT_SIZE) / zone.hexSize).coerceAtMost(1.0).toFloat(),
+                heatPct =
+                    ((reportIds.size * REPORT_SIZE) / zone.hexSize).coerceAtMost(1.0).toFloat(),
+                reportIds = reportIds,
             )
         )
     }
 
     return heatMapTiles
+}
+
+@Suppress("MagicNumber")
+private fun mapZoomToGeohexResolution(mapZoom: Double): Int {
+    // Convert map zoom level to a suitable geohex resolution
+    return floor(mapZoom * 0.5 + 3).toInt().coerceIn(MIN_GEOHEX_RESOLUTION, MAX_GEOHEX_RESOLUTION)
 }
