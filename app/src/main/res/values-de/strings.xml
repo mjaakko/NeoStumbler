@@ -19,7 +19,7 @@
     <string name="statistics_tab_title">Statistiken</string>
     <string name="settings_tab_title">Einstellungen</string>
     <string name="send_reports">Berichte hochladen</string>
-    <string name="reports">Berichte:</string>
+    <string name="reports">Berichte</string>
     <string name="reports_total">Berichte insgesamt: %d</string>
     <string name="reports_not_uploaded">Nicht hochgeladene Berichte: %d</string>
     <string name="reports_last_uploaded">Berichte zuletzt hochgeladen: %s</string>

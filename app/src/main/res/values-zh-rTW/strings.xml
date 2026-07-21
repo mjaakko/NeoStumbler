@@ -26,7 +26,7 @@
     <string name="statistics_tab_title">統計數據</string>
     <string name="settings_tab_title">設定</string>
     <string name="send_reports">上傳報告</string>
-    <string name="reports">報告：</string>
+    <string name="reports">報告</string>
     <string name="reports_total">報告總數：%d</string>
     <string name="reports_not_uploaded">尚未上傳的報告：%d</string>
     <string name="reports_last_uploaded_never">從不</string>

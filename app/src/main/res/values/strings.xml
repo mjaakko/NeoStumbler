@@ -34,7 +34,7 @@
     <string name="statistics_tab_title">Statistics</string>
     <string name="settings_tab_title">Settings</string>
     <string name="send_reports">Send reports</string>
-    <string name="reports">Reports:</string>
+    <string name="reports">Reports</string>
     <string name="reports_total">Reports total: %d</string>
     <string name="reports_not_uploaded">Reports not uploaded: %d</string>
     <string name="reports_last_uploaded">Reports last uploaded: %s</string>

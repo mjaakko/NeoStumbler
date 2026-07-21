@@ -100,7 +100,7 @@
     <string name="delete">Törlés</string>
     <string name="failed_to_open_selected_file">A kiválasztott fájl megnyitása sikertelen</string>
     <string name="send_reports">Eredmények elküldése</string>
-    <string name="reports">Eredmények:</string>
+    <string name="reports">Eredmények</string>
     <string name="reports_total">Összes eredmény: %d</string>
     <string name="ok">OK</string>
     <string name="no">Nem</string>

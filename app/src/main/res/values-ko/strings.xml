@@ -30,7 +30,7 @@
     <string name="reports_tab_title">보고</string>
     <string name="statistics_tab_title">통계</string>
     <string name="send_reports">보고서 전송</string>
-    <string name="reports">보고:</string>
+    <string name="reports">보고</string>
     <string name="reports_total">총 보고량: %d</string>
     <string name="reports_not_uploaded">미전송 보고량: %d</string>
     <string name="reports_last_uploaded">마지막 전송 보고량: %s</string>

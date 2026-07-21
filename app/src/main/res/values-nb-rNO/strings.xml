@@ -13,7 +13,7 @@
     <string name="export_notification_channel_name">Dataeksport</string>
     <string name="stop">Stopp</string>
     <string name="wifi_icon_description">Wi-Fi-ikon</string>
-    <string name="reports">Rapporter:</string>
+    <string name="reports">Rapporter</string>
     <string name="reports_total">Totalt antall rapporter: %d</string>
     <string name="export_started">Eksporterer data fra %1$s til %2$s</string>
     <string name="wifis">Trådløsnett</string>

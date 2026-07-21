@@ -120,7 +120,7 @@
     <string name="reports_tab_title">Informes</string>
     <string name="statistics_tab_title">Estadísticas</string>
     <string name="coverage_layer">Mapa de cobertura</string>
-    <string name="reports">Informes:</string>
+    <string name="reports">Informes</string>
     <string name="send_reports">Enviar informes</string>
     <string name="delete_report_confirmation">¿Estás seguro de querer borrar el informe?</string>
     <string name="no_endpoint_configured">Sin destino configurado</string>

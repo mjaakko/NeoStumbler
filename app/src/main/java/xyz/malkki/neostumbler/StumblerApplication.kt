@@ -52,6 +52,7 @@ import xyz.malkki.neostumbler.network.networkModule
 import xyz.malkki.neostumbler.scanner.passive.passiveScanningModule
 import xyz.malkki.neostumbler.scanner.postprocess.postProcessorsModule
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
+import xyz.malkki.neostumbler.ui.viewmodel.ReportDetailsViewModel
 import xyz.malkki.neostumbler.ui.viewmodel.ReportsViewModel
 import xyz.malkki.neostumbler.ui.viewmodel.StatisticsViewModel
 import xyz.malkki.neostumbler.utils.FileLoggingUncaughtExceptionHandler
@@ -155,6 +156,14 @@ class StumblerApplication : Application() {
                     viewModel { StatisticsViewModel(get()) }
 
                     viewModel { ReportsViewModel(get(), get(), get()) }
+
+                    viewModel {
+                        ReportDetailsViewModel(
+                            reportId = get(),
+                            reportProvider = get(),
+                            ichnaeaClientProvider = get(),
+                        )
+                    }
                 }
             )
         }

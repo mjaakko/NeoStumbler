@@ -7,10 +7,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -20,16 +18,8 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.gson.JsonObject
-import java.io.IOException
 import kotlin.math.roundToInt
-import kotlin.time.Duration.Companion.seconds
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.retryWhen
-import kotlinx.serialization.SerializationException
-import org.koin.compose.koinInject
 import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.camera.CameraUpdateFactory
 import org.maplibre.android.geometry.LatLngBounds
@@ -44,17 +34,12 @@ import org.maplibre.geojson.Feature
 import org.maplibre.geojson.FeatureCollection
 import org.maplibre.geojson.LineString
 import org.maplibre.geojson.Point
-import timber.log.Timber
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.core.report.Report
 import xyz.malkki.neostumbler.domain.asMapLibreLatLng
 import xyz.malkki.neostumbler.geography.LatLng
-import xyz.malkki.neostumbler.ichnaea.dto.BluetoothBeaconDto
-import xyz.malkki.neostumbler.ichnaea.dto.GeolocateRequestDto
 import xyz.malkki.neostumbler.ichnaea.dto.GeolocateResponseDto
-import xyz.malkki.neostumbler.ichnaea.dto.WifiAccessPointDto
 import xyz.malkki.neostumbler.ichnaea.dto.latLng
-import xyz.malkki.neostumbler.ichnaeaupload.IchnaeaClientProvider
 import xyz.malkki.neostumbler.ui.composables.shared.ComposableMap
 import xyz.malkki.neostumbler.utils.maplibre.needsRecreation
 
@@ -77,9 +62,11 @@ private const val LINE_SOURCE_ID = "report-details-line"
 private const val CIRCLE_SOURCE_ID = "report-details-locations"
 
 @Composable
-fun ReportMap(report: Report, modifier: Modifier = Modifier) {
-    val estimatedLocation by getEstimatedReportLocation(report)
-
+fun ReportMap(
+    modifier: Modifier = Modifier,
+    report: Report,
+    estimatedLocation: GeolocateResponseDto?,
+) {
     var lineGeoJsonSource by remember { mutableStateOf(GeoJsonSource(LINE_SOURCE_ID)) }
 
     var circleGeoJsonSource by remember { mutableStateOf(GeoJsonSource(CIRCLE_SOURCE_ID)) }
@@ -290,84 +277,4 @@ private fun getBoundingBoxLatLngs(center: LatLng, radius: Double): List<LatLng> 
         center.destination(radius, DIRECTION_WEST).destination(radius, DIRECTION_SOUTH),
         center.destination(radius, DIRECTION_NORTH).destination(radius, DIRECTION_EAST),
     )
-}
-
-private val GEOLOCATE_RETRY_DELAY = 20.seconds
-
-@Composable
-private fun getEstimatedReportLocation(
-    report: Report,
-    ichnaeaClientProvider: IchnaeaClientProvider = koinInject(),
-): State<GeolocateResponseDto?> {
-    val geolocate =
-        ichnaeaClientProvider.ichnaeaClient.collectAsStateWithLifecycle(initialValue = null)
-
-    return produceState(null, report, geolocate.value) {
-        val flow = flow {
-            val locateResponse =
-                try {
-                    geolocate.value?.getLocation(
-                        GeolocateRequestDto(
-                            considerIp = false,
-                            bluetoothBeacons =
-                                report.bluetoothBeacons.map {
-                                    BluetoothBeaconDto(
-                                        macAddress = it.emitter.macAddress.value,
-                                        signalStrength = it.emitter.signalStrength.dbm,
-                                    )
-                                },
-                            wifiAccessPoints =
-                                report.wifiAccessPoints.map {
-                                    WifiAccessPointDto(
-                                        macAddress = it.emitter.macAddress.value,
-                                        signalStrength = it.emitter.signalStrength?.dbm,
-                                    )
-                                },
-                            cellTowers =
-                                report.cellTowers
-                                    .filter {
-                                        it.emitter.cellId != null &&
-                                            it.emitter.mobileCountryCode != null &&
-                                            it.emitter.mobileNetworkCode != null
-                                    }
-                                    .map {
-                                        GeolocateRequestDto.CellTowerDto(
-                                            radioType = it.emitter.radioType.name.lowercase(),
-                                            mobileCountryCode =
-                                                it.emitter.mobileCountryCode?.toIntOrNull(),
-                                            mobileNetworkCode =
-                                                it.emitter.mobileNetworkCode?.toIntOrNull(),
-                                            locationAreaCode = it.emitter.locationAreaCode,
-                                            cellId = it.emitter.cellId,
-                                            signalStrength = it.emitter.signalStrength?.dbm,
-                                            psc = it.emitter.primaryScramblingCode,
-                                            timingAdvance = it.emitter.timingAdvance,
-                                        )
-                                    },
-                        )
-                    )
-                } catch (se: SerializationException) {
-                    // The server can return an invalid response -> catch SerializationException
-                    Timber.w(se, "Failed to parse geolocation response")
-
-                    null
-                }
-
-            emit(locateResponse)
-        }
-
-        flow
-            .retryWhen { ex, _ ->
-                if (ex is IOException) {
-                    Timber.w(ex, "Failed to find a location for the report")
-
-                    delay(GEOLOCATE_RETRY_DELAY)
-                } else {
-                    throw ex
-                }
-
-                true
-            }
-            .collect { value = it }
-    }
 }

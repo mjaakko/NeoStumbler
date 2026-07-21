@@ -32,7 +32,7 @@
     <string name="statistics_tab_title">Tilastot</string>
     <string name="settings_tab_title">Asetukset</string>
     <string name="send_reports">Lähetä raportit</string>
-    <string name="reports">Raportit:</string>
+    <string name="reports">Raportit</string>
     <string name="reports_total">Raportteja yhteensä: %d</string>
     <string name="reports_not_uploaded">Raportteja lähettämättä: %d</string>
     <string name="reports_last_uploaded">Raportit lähetetty viimeksi: %s</string>
