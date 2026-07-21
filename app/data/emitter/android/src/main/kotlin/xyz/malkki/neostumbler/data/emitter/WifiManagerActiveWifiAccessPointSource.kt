@@ -4,12 +4,16 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.net.wifi.ScanResult
 import android.net.wifi.WifiManager
+import android.net.wifi.rtt.RangingResult
+import android.net.wifi.rtt.WifiRttManager
 import android.os.Build
 import android.os.SystemClock
 import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
+import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
@@ -33,6 +37,7 @@ import xyz.malkki.neostumbler.core.observation.EmitterObservation
 import xyz.malkki.neostumbler.data.emitter.internal.util.RateLimiter
 import xyz.malkki.neostumbler.data.emitter.internal.util.delayWithMinDuration
 import xyz.malkki.neostumbler.data.emitter.mapper.toWifiAccessPoint
+import xyz.malkki.neostumbler.data.emitter.ranging.rangeDistances
 import xyz.malkki.neostumbler.executors.ImmediateExecutor
 
 // https://developer.android.com/develop/connectivity/wifi/wifi-scan#wifi-scan-throttling
@@ -63,6 +68,7 @@ class WifiManagerActiveWifiAccessPointSource(
 ) : ActiveWifiAccessPointSource {
     private val appContext = context.applicationContext
     private val wifiManager = appContext.getSystemService<WifiManager>()!!
+    private val wifiRttManager: WifiRttManager? = appContext.getSystemService<WifiRttManager>()
 
     @RequiresPermission(
         allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_WIFI_STATE]
@@ -70,6 +76,7 @@ class WifiManagerActiveWifiAccessPointSource(
     override fun getWifiAccessPointFlow(
         scanThrottled: Boolean,
         scanInterval: Flow<Duration>,
+        rangingMode: ActiveWifiAccessPointSource.RangingMode,
     ): Flow<List<EmitterObservation<WifiAccessPoint, MacAddress>>> = channelFlow {
         val rateLimiter =
             if (scanThrottled) {
@@ -123,34 +130,84 @@ class WifiManagerActiveWifiAccessPointSource(
             }
 
         scanResultFlow
-            .map { scanResults -> scanResults.map { scanResult -> scanResult.toWifiAccessPoint() } }
+            .map { scanResults ->
+                val rangingResultsByMacAddress = scanResults.getRangingResults(rangingMode)
+
+                scanResults.map { scanResult ->
+                    scanResult.toWifiAccessPoint(
+                        rangingResult =
+                            rangingResultsByMacAddress[
+                                android.net.MacAddress.fromString(scanResult.BSSID)]
+                    )
+                }
+            }
             .collect(::send)
     }
 
-    @RequiresApi(Build.VERSION_CODES.R)
-    @RequiresPermission(Manifest.permission.ACCESS_WIFI_STATE)
-    private fun getWifiScanFlowR(wifiManager: WifiManager): Flow<List<ScanResult>> = callbackFlow {
-        val callback =
-            object : WifiManager.ScanResultsCallback() {
-                @SuppressLint("MissingPermission")
-                override fun onScanResultsAvailable() {
-                    if (isActive) {
-                        trySendBlocking(wifiManager.scanResults)
-                    }
+    private suspend fun List<ScanResult>.getRangingResults(
+        rangingMode: ActiveWifiAccessPointSource.RangingMode
+    ): Map<android.net.MacAddress, RangingResult> {
+        if (rangingMode == ActiveWifiAccessPointSource.RangingMode.NEVER) {
+            return emptyMap()
+        }
+
+        if (wifiRttManager?.isAvailable != true) {
+            Timber.d("Wi-Fi RTT ranging currently unavailable")
+            return emptyMap()
+        }
+
+        if (
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                ContextCompat.checkSelfPermission(
+                    appContext,
+                    Manifest.permission.NEARBY_WIFI_DEVICES,
+                ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            Timber.d("No permission for Wi-Fi RTT ranging")
+            return emptyMap()
+        }
+
+        @SuppressLint("MissingPermission")
+        return wifiRttManager
+            .rangeDistances(this, rangingMode)
+            .asSequence()
+            .filter { it.status == RangingResult.STATUS_SUCCESS }
+            .distinctBy {
+                /**
+                 * Filter ranging results which have duplicate distances. The ranging API seems to
+                 * return bad data in some cases even though the status is successful. In these
+                 * cases, multiple results will have a fixed value.
+                 */
+                it.distanceMm
+            }
+            .filter { it.macAddress != null }
+            .associateBy { it.macAddress!! }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.R)
+@RequiresPermission(Manifest.permission.ACCESS_WIFI_STATE)
+private fun getWifiScanFlowR(wifiManager: WifiManager): Flow<List<ScanResult>> = callbackFlow {
+    val callback =
+        object : WifiManager.ScanResultsCallback() {
+            @SuppressLint("MissingPermission")
+            override fun onScanResultsAvailable() {
+                if (isActive) {
+                    trySendBlocking(wifiManager.scanResults)
                 }
             }
+        }
 
-        wifiManager.registerScanResultsCallback(ImmediateExecutor, callback)
+    wifiManager.registerScanResultsCallback(ImmediateExecutor, callback)
 
-        awaitClose { wifiManager.unregisterScanResultsCallback(callback) }
-    }
+    awaitClose { wifiManager.unregisterScanResultsCallback(callback) }
+}
 
-    private fun getWifiScanFlowLegacy(
-        appContext: Context,
-        wifiManager: WifiManager,
-    ): Flow<List<ScanResult>> {
-        return appContext
-            .broadcastReceiverFlow(IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION))
-            .map { @SuppressLint("MissingPermission") wifiManager.scanResults }
-    }
+private fun getWifiScanFlowLegacy(
+    appContext: Context,
+    wifiManager: WifiManager,
+): Flow<List<ScanResult>> {
+    return appContext
+        .broadcastReceiverFlow(IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION))
+        .map { @SuppressLint("MissingPermission") wifiManager.scanResults }
 }

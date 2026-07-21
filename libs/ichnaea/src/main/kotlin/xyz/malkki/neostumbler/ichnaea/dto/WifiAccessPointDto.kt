@@ -12,4 +12,5 @@ data class WifiAccessPointDto(
     val signalStrength: Int? = null,
     val signalToNoiseRatio: Int? = null,
     val ssid: String? = null,
+    val estimatedDistance: EstimatedDistanceDto? = null,
 )

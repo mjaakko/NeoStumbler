@@ -1,4 +1,4 @@
-package xyz.malkki.neostumbler.ui.composables.settings
+package xyz.malkki.neostumbler.ui.composables.settings.scanning
 
 import android.content.Context
 import android.hardware.Sensor
@@ -17,6 +17,7 @@ import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.data.settings.getEnumFlow
 import xyz.malkki.neostumbler.data.settings.setEnum
 import xyz.malkki.neostumbler.scanner.movement.MovementDetectorType
+import xyz.malkki.neostumbler.ui.composables.settings.MultiChoiceSettings
 
 private val TITLES =
     mapOf(

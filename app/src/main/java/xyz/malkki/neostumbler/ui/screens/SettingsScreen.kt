@@ -34,30 +34,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.activescan.ActiveScanDefaults
-import xyz.malkki.neostumbler.activescan.ActiveScanPreferenceKeys
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.ui.composables.AboutNeoStumbler
 import xyz.malkki.neostumbler.ui.composables.ReportReuploadButton
-import xyz.malkki.neostumbler.ui.composables.settings.AutoScanToggle
 import xyz.malkki.neostumbler.ui.composables.settings.AutoUploadToggle
 import xyz.malkki.neostumbler.ui.composables.settings.CoverageLayerSettings
 import xyz.malkki.neostumbler.ui.composables.settings.CrashLogSettingsItem
 import xyz.malkki.neostumbler.ui.composables.settings.DbPruneSettings
-import xyz.malkki.neostumbler.ui.composables.settings.FusedLocationToggle
 import xyz.malkki.neostumbler.ui.composables.settings.GeocoderSettings
-import xyz.malkki.neostumbler.ui.composables.settings.IgnoreScanThrottlingToggle
 import xyz.malkki.neostumbler.ui.composables.settings.LanguageSwitcher
 import xyz.malkki.neostumbler.ui.composables.settings.ManageStorageSettingsItem
-import xyz.malkki.neostumbler.ui.composables.settings.MovementDetectorSettings
-import xyz.malkki.neostumbler.ui.composables.settings.PassiveScanToggle
 import xyz.malkki.neostumbler.ui.composables.settings.ScannerNotificationStyleSettings
 import xyz.malkki.neostumbler.ui.composables.settings.SettingsGroup
 import xyz.malkki.neostumbler.ui.composables.settings.SettingsToggle
-import xyz.malkki.neostumbler.ui.composables.settings.SliderSetting
 import xyz.malkki.neostumbler.ui.composables.settings.geosubmit.GeosubmitEndpointSettings
 import xyz.malkki.neostumbler.ui.composables.settings.privacy.RestrictedAreaSettings
 import xyz.malkki.neostumbler.ui.composables.settings.privacy.WifiFilterSettings
+import xyz.malkki.neostumbler.ui.composables.settings.scanning.ScanningSettings
 import xyz.malkki.neostumbler.ui.composables.troubleshooting.TroubleshootingSettingsItem
 import xyz.malkki.neostumbler.ui.modifiers.handleDisplayCutouts
 
@@ -68,66 +61,6 @@ private fun ReportSettings() {
         CoverageLayerSettings()
         AutoUploadToggle()
         DbPruneSettings()
-    }
-}
-
-@Composable
-private fun ScanningSettings() {
-    SettingsGroup(title = stringResource(id = R.string.settings_group_scanning)) {
-        MovementDetectorSettings()
-        FusedLocationToggle()
-        IgnoreScanThrottlingToggle()
-
-        SliderSetting(
-            title = stringResource(R.string.pause_scanning_on_low_battery_title),
-            preferenceKey = ActiveScanPreferenceKeys.PAUSE_ON_BATTERY_LEVEL_THRESHOLD,
-            range = 0..50,
-            step = 5,
-            valueFormatter = {
-                if (it == 0) {
-                    stringResource(R.string.disabled)
-                } else {
-                    stringResource(R.string.pause_scanning_on_low_battery_description, it)
-                }
-            },
-            default = 0,
-        )
-
-        SettingsToggle(
-            title = stringResource(id = R.string.pause_scanning_when_overheating),
-            preferenceKey = ActiveScanPreferenceKeys.PAUSE_WHEN_OVERHEATING,
-            default = false,
-        )
-
-        SliderSetting(
-            title = stringResource(R.string.wifi_scan_frequency),
-            preferenceKey = ActiveScanPreferenceKeys.WIFI_SCAN_DISTANCE,
-            // Some translations assume this will always be a multiple of ten
-            range = 10..250,
-            step = 10,
-            valueFormatter = { stringResource(R.string.every_x_meters, it) },
-            default = ActiveScanDefaults.WIFI_SCAN_DISTANCE,
-        )
-
-        SliderSetting(
-            title = stringResource(R.string.cell_tower_scan_frequency),
-            preferenceKey = ActiveScanPreferenceKeys.CELL_SCAN_DISTANCE,
-            // Some translations assume this will always be a multiple of ten
-            range = 20..500,
-            step = 20,
-            valueFormatter = { stringResource(R.string.every_x_meters, it) },
-            default = ActiveScanDefaults.CELL_SCAN_DISTANCE,
-        )
-
-        SettingsToggle(
-            title = stringResource(id = R.string.moving_device_filter_title),
-            description = stringResource(id = R.string.moving_device_filter_description),
-            preferenceKey = PreferenceKeys.FILTER_MOVING_DEVICES,
-            default = true,
-        )
-
-        PassiveScanToggle()
-        AutoScanToggle()
     }
 }
 

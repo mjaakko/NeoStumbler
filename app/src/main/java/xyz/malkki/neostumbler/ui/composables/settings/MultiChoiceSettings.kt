@@ -22,9 +22,11 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -46,9 +48,9 @@ fun <O> MultiChoiceSettings(
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    val dialogOpen = rememberSaveable { mutableStateOf(false) }
+    var dialogOpen by rememberSaveable { mutableStateOf(false) }
 
-    if (dialogOpen.value) {
+    if (dialogOpen) {
         MultiChoiceSettingsDialog(
             title = title,
             options = options,
@@ -60,7 +62,7 @@ fun <O> MultiChoiceSettings(
                 coroutineScope.launch {
                     onValueSelected(it)
 
-                    dialogOpen.value = false
+                    dialogOpen = false
                 }
             },
         )
@@ -69,7 +71,7 @@ fun <O> MultiChoiceSettings(
     SettingsItem(
         title = title,
         description = titleProvider.invoke(selectedOption),
-        onClick = { dialogOpen.value = true },
+        onClick = { dialogOpen = true },
     )
 }
 

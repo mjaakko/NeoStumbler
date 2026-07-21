@@ -11,4 +11,6 @@ object ActiveScanPreferenceKeys {
     const val SCANNER_NOTIFICATION_STYLE = "scanner_notification_style"
 
     const val PAUSE_WHEN_OVERHEATING = "pause_when_overheating"
+
+    const val WIFI_RTT_RANGING_MODE = "wifi_rtt_ranging_mode"
 }

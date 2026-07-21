@@ -9,6 +9,7 @@ import xyz.malkki.neostumbler.core.Position
 import xyz.malkki.neostumbler.core.emitter.BluetoothBeacon
 import xyz.malkki.neostumbler.core.emitter.CellTower
 import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
+import xyz.malkki.neostumbler.core.ranging.EstimatedDistance
 import xyz.malkki.neostumbler.core.report.Report
 import xyz.malkki.neostumbler.core.report.ReportEmitter
 import xyz.malkki.neostumbler.core.report.ReportPosition
@@ -19,6 +20,8 @@ import xyz.malkki.neostumbler.data.settings.getBooleanFlow
 import xyz.malkki.neostumbler.ichnaea.Geosubmit
 import xyz.malkki.neostumbler.ichnaea.dto.BluetoothBeaconDto
 import xyz.malkki.neostumbler.ichnaea.dto.CellTowerDto
+import xyz.malkki.neostumbler.ichnaea.dto.EstimatedDistanceDto
+import xyz.malkki.neostumbler.ichnaea.dto.EstimatedDistanceDto.Type
 import xyz.malkki.neostumbler.ichnaea.dto.ReportDto
 import xyz.malkki.neostumbler.ichnaea.dto.ReportDto.PositionDto
 import xyz.malkki.neostumbler.ichnaea.dto.WifiAccessPointDto
@@ -196,6 +199,19 @@ private fun ReportEmitter<WifiAccessPoint, MacAddress>.toDto(): WifiAccessPointD
         signalStrength = emitter.signalStrength?.dbm,
         signalToNoiseRatio = null,
         age = age.inWholeMilliseconds,
+        estimatedDistance =
+            estimatedDistance?.let {
+                EstimatedDistanceDto(
+                    distance = it.distance.meters,
+                    accuracy = it.accuracy?.meters,
+                    type =
+                        when (it.rangingType) {
+                            EstimatedDistance.RangingType.ONE_SIDED -> Type.ONE_SIDED
+                            EstimatedDistance.RangingType.TWO_SIDED -> Type.TWO_SIDED
+                            null -> null
+                        },
+                )
+            },
     )
 }
 

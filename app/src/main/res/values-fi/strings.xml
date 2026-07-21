@@ -162,6 +162,18 @@
     <string name="wifi_scan_frequency">Wi-Fi -skannausten tiheys</string>
     <string name="cell_tower_scan_frequency">Puhelinmastojen skannausten tiheys</string>
     <string name="every_x_meters">Joka %d. metri</string>
+
+    <string name="wifi_rtt_ranging">Wi-Fi -etäisyysmittaus</string>
+    <string name="wifi_rtt_ranging_mode_never_title">Ei ikinä</string>
+    <string name="wifi_rtt_ranging_mode_always_title">Aina</string>
+    <string name="wifi_rtt_ranging_mode_always_description">
+        Käytä yksipuoleista mittausta, jos tukiasema ei tue Wi-Fi RTT -etäisyysmittausta
+    </string>
+    <string name="wifi_rtt_ranging_mode_twosided_title">Vain kaksipuoleinen</string>
+    <string name="wifi_rtt_ranging_mode_twosided_description">
+        Tee Wi-Fi RTT -etäisyysmittauksia vain, jos tukiasema tukee kaksipuoleista mittausta
+    </string>
+
     <string name="moving_device_filter_title">Suodata liikkuvat laitteet</string>
     <string name="moving_device_filter_description">
         Liikkuvat Wi-Fi -verkot ja Bluetooth-majakat tunnistetaan automaattisesti ja jätetään pois raporteista
@@ -235,6 +247,11 @@
     <string name="permission_rationale_location_map">
         Käyttölupa laitteen sijaintiin tarvitaan oman sijainnin näyttämiseksi kartalla
     </string>
+
+    <string name="permission_rationale_wifi_rtt">
+        Wi-Fi RTT-etäisyysmittaus tarvitsee käyttöluvan Wi-Fi -laitteisiin
+    </string>
+
     <string name="troubleshooting_title">Vianmääritys</string>
     <string name="troubleshooting_description">Korjaa skannauksen yleisiä ongelmia</string>
     <string name="troubleshooting_permissions_granted">Käyttöluvat annettu</string>

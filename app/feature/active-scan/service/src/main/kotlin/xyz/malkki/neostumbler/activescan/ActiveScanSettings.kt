@@ -1,6 +1,7 @@
 package xyz.malkki.neostumbler.activescan
 
 import xyz.malkki.neostumbler.core.values.Distance
+import xyz.malkki.neostumbler.data.emitter.ActiveWifiAccessPointSource
 
 data class ActiveScanSettings(
     /** Wi-Fi scan interval (meters) */
@@ -17,4 +18,5 @@ data class ActiveScanSettings(
     val lowBatteryThreshold: Int?,
     /** Whether to pause scanning when the device is overheating */
     val pauseWhenOverheating: Boolean,
+    val wifiRttRangingMode: ActiveWifiAccessPointSource.RangingMode,
 )
