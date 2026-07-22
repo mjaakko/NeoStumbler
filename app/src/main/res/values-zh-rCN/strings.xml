@@ -208,4 +208,6 @@
     </plurals>
     <string name="pause_scanning_when_overheating">设备温度过高时暂停</string>
     <string name="scanning_status_paused">扫描<annotation style="status">已暂停</annotation></string>
+    <string name="restricted_areas_settings_title">受限区域</string>
+    <string name="wifi_rtt_ranging_mode_never_title">从不</string>
 </resources>
