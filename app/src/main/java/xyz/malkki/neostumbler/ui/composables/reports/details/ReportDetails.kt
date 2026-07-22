@@ -231,7 +231,7 @@ private fun ReportWifisList(wifiAccessPoints: List<ReportEmitter<WifiAccessPoint
                     )
                 }
 
-                wifiAccessPoint.emitter.signalStrength?.let { signalStrength ->
+                wifiAccessPoint.emitter.signalStrength?.dbm?.let { signalStrength ->
                     Text(
                         text = stringResource(R.string.signal_strength_dbm, signalStrength),
                         style = MaterialTheme.typography.bodySmall,
@@ -299,6 +299,7 @@ private fun ReportCellsList(cellTowers: List<ReportEmitter<CellTower, String>>) 
                 Text(
                     text =
                         cellTower.emitter.signalStrength
+                            ?.dbm
                             ?.let { stringResource(R.string.signal_strength_dbm, it) }
                             .orEmpty(),
                     style = MaterialTheme.typography.bodySmall,
@@ -366,7 +367,7 @@ private fun ReportBluetoothBeaconsList(
 
                 Text(
                     text =
-                        bluetoothBeacon.emitter.signalStrength.let {
+                        bluetoothBeacon.emitter.signalStrength.dbm.let {
                             stringResource(R.string.signal_strength_dbm, it)
                         },
                     style = MaterialTheme.typography.bodySmall,
