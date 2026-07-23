@@ -223,4 +223,5 @@
     <string name="restricted_areas_delete">Sperrbereiche löschen</string>
     <string name="restricted_areas_delete_confirmation">Bist du sicher, dass du die ausgewählten Bereiche löschen möchtest?</string>
     <string name="restricted_areas_add">Sperrbereich hinzufügen</string>
+    <string name="wifi_rtt_ranging_mode_always_title">Immer</string>
 </resources>
