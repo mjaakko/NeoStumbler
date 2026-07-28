@@ -38,16 +38,15 @@ class LocationBasedMovementDetector(
             .runningFold<Position, Pair<Position?, Boolean>>(null to true) {
                 (oldLocation, _),
                 newLocation ->
-                if (
+                when {
                     oldLocation == null ||
-                        oldLocation.latLng.distanceTo(newLocation.latLng) >=
-                            HORIZONTAL_DIFFERENCE_THRESHOLD ||
-                        abs((oldLocation.altitude ?: 0.0) - (newLocation.altitude ?: 0.0)) >=
-                            VERTICAL_DIFFERENCE_THRESHOLD
-                ) {
-                    newLocation to true
-                } else {
-                    oldLocation to false
+                        oldLocation.horizontalLocationChangedSignificantly(newLocation) ||
+                        oldLocation.verticalLocationChangedSignificantly(newLocation) -> {
+                        newLocation to true
+                    }
+                    else -> {
+                        oldLocation to false
+                    }
                 }
             }
             .map { it.second }
@@ -62,4 +61,18 @@ class LocationBasedMovementDetector(
                 isMoving
             }
     }
+}
+
+private fun Position.horizontalLocationChangedSignificantly(newLocation: Position): Boolean {
+    return latLng.distanceTo(newLocation.latLng) >= HORIZONTAL_DIFFERENCE_THRESHOLD
+}
+
+private fun Position.verticalLocationChangedSignificantly(newLocation: Position): Boolean {
+    val oldAltitude = altitude ?: 0.0
+    val newAltitude =
+        newLocation.altitude
+            // If the new location does not have altitude info, assume it hasn't changed
+            ?: oldAltitude
+
+    return abs(oldAltitude - newAltitude) >= VERTICAL_DIFFERENCE_THRESHOLD
 }
