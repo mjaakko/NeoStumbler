@@ -18,7 +18,7 @@ import xyz.malkki.neostumbler.data.location.LocationSourceProvider
 private const val HORIZONTAL_DIFFERENCE_THRESHOLD = 10.0
 
 // Distance in altitude in metres
-private const val VERTICAL_DIFFERENCE_THRESHOLD = 15.0
+private const val VERTICAL_DIFFERENCE_THRESHOLD = 25.0
 
 private val LOCATION_INTERVAL = 3.seconds
 
