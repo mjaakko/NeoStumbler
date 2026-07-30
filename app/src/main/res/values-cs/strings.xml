@@ -221,4 +221,18 @@
         <item quantity="many">Po %d dnech</item>
         <item quantity="other">Po %d dnech</item>
     </plurals>
+    <string name="restricted_areas_settings_title">Vynechané oblasti</string>
+    <plurals name="restricted_areas_settings_description">
+        <item quantity="one">%d omezená oblast</item>
+        <item quantity="few">%d omezené oblasti</item>
+        <item quantity="many">%d omezené oblasti</item>
+        <item quantity="other">%d omezené oblasti</item>
+    </plurals>
+    <string name="restricted_areas_delete">Smazat omezené oblasti</string>
+    <string name="restricted_areas_delete_confirmation">Jste si jisti že chcete smazat vybrané oblasti?</string>
+    <string name="restricted_areas_add">Přidat omezenou oblast</string>
+    <string name="wifi_rtt_ranging">Měření rozsahu Wi-Fi</string>
+    <string name="wifi_rtt_ranging_mode_never_title">Nikdy</string>
+    <string name="wifi_rtt_ranging_mode_always_title">Vždy</string>
+    <string name="wifi_rtt_ranging_mode_twosided_title">Pouze oboustranné</string>
 </resources>
