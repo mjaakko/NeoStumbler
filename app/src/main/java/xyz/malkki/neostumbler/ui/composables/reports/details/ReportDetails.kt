@@ -289,6 +289,13 @@ private fun ReportCellsList(cellTowers: List<ReportEmitter<CellTower, String>>) 
                         )
                     }
 
+                    cellTower.emitter.primaryScramblingCode?.let { psc ->
+                        Text(
+                            text = stringResource(R.string.psc, psc),
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                    }
+
                     Text(
                         text =
                             stringResource(R.string.radio_type, cellTower.emitter.radioType.name),
