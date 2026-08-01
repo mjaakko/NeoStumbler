@@ -11,6 +11,9 @@ dependencies {
 
     implementation(libs.plugins.detekt.asLibraryDependency)
 
+    // Override Kotlin version from Android Gradle Plugin
+    implementation(libs.kotlin.gradle.plugin)
+
     implementation(libs.bundletool)
 }
 

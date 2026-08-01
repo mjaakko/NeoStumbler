@@ -1,5 +1,6 @@
 import com.android.SdkConstants
 import com.android.build.api.variant.AndroidComponentsExtension
+import com.android.build.api.variant.ResValue
 import com.android.repository.Revision
 import com.android.sdklib.BuildToolInfo
 import com.mikepenz.aboutlibraries.plugin.DuplicateMode
@@ -143,19 +144,10 @@ android {
         }
     }
 
-    applicationVariants.configureEach {
-        if (buildType.isDebuggable) {
-            resValue("string", "app_name", "NS (dev, $flavorName)")
-        }
-
-        if (productFlavors.any { it.name == "gplay" }) {
-            mergeAssetsProvider.configure { dependsOn(tasks.named("copyPrivacyPolicy")) }
-        }
-    }
-
     buildFeatures {
         buildConfig = true
         compose = true
+        resValues = true
     }
 
     packaging {
@@ -195,10 +187,56 @@ android {
     testOptions { unitTests { isReturnDefaultValues = true } }
 }
 
-tasks.register<Copy>("copyPrivacyPolicy") {
-    from(rootProject.layout.projectDirectory.file("docs/privacy_policy.md"))
-    into(project.layout.buildDirectory.dir("privacypolicy"))
+androidComponents {
+    onVariants { variant ->
+        if (variant.debuggable) {
+            variant.resValues.put(
+                variant.makeResValueKey("string", "app_name"),
+                ResValue("NS (dev, $${variant.flavorName})"),
+            )
+        }
+
+        if (variant.productFlavors.any { it.second == "gplay" }) {
+            variant.sources.assets!!.addGeneratedSourceDirectory(copyPrivacyPolicy) { task ->
+                task.outputDirectory
+            }
+        }
+    }
+
+    beforeVariants { variant ->
+        val flavorByDimension = variant.productFlavors.toMap()
+
+        if (
+            flavorByDimension["nonfreeComponents"] == "fdroid" &&
+                flavorByDimension["gplayCompatible"] == "gplay"
+        ) {
+            // fdroid variant does not have to be compliant with Google Play policies, so let's
+            // disable the variant
+            variant.enable = false
+        }
+    }
 }
+
+abstract class CopyPrivacyPolicy @Inject constructor(private val fs: FileSystemOperations) :
+    DefaultTask() {
+    @get:InputFile abstract val privacyPolicy: RegularFileProperty
+
+    @get:OutputDirectory abstract val outputDirectory: DirectoryProperty
+
+    @TaskAction
+    fun copy() {
+        fs.copy {
+            from(privacyPolicy)
+            into(outputDirectory)
+        }
+    }
+}
+
+val copyPrivacyPolicy =
+    tasks.register<CopyPrivacyPolicy>("copyPrivacyPolicy") {
+        privacyPolicy = rootProject.layout.projectDirectory.file("docs/privacy_policy.md")
+        outputDirectory = project.layout.buildDirectory.dir("privacypolicy")
+    }
 
 val aapt2ExecutableProvider =
     project.extensions
@@ -237,21 +275,6 @@ tasks.register<BuildApks>("buildAccrescentApks") {
     keyPassword.set(providers.environmentVariable("SIGNING_KEY_PASSWORD"))
 
     apksFile.set(layout.buildDirectory.file("neostumbler-fullDefault.apks"))
-}
-
-androidComponents {
-    beforeVariants { variant ->
-        val flavorByDimension = variant.productFlavors.toMap()
-
-        if (
-            flavorByDimension["nonfreeComponents"] == "fdroid" &&
-                flavorByDimension["gplayCompatible"] == "gplay"
-        ) {
-            // fdroid variant does not have to be compliant with Google Play policies, so let's
-            // disable the variant
-            variant.enable = false
-        }
-    }
 }
 
 tasks.register("printVersionName") {
@@ -405,6 +428,8 @@ dependencies {
     "gplayImplementation"(libs.play.reviewKtx)
 
     "fullImplementation"(libs.playservices.cronet)
+    "fullRuntimeOnly"(libs.cronet.api)
+    "fullRuntimeOnly"(libs.cronet.shared)
     "fullImplementation"(libs.cronetOkhttp)
 
     testImplementation(libs.mockitoKotlin)

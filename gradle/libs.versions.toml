@@ -6,7 +6,7 @@ kotlin = "2.4.0"
 kotlinxCoroutines = "1.11.0"
 kotlinxSerialization = "1.11.0"
 
-androidGradlePlugin = "8.13.2"
+androidGradlePlugin = "9.3.1"
 
 androidxLifecycle = "2.10.0"
 androidxPaging = "3.5.0"
@@ -24,6 +24,8 @@ aboutLibraries = "14.2.1"
 multiplatformMarkdownRenderer = "0.43.0"
 
 playReview = "2.0.2"
+
+cronet = "143.7445.0"
 
 [libraries]
 koinBom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
@@ -94,7 +96,10 @@ kotlinx-coroutinesPlayServices = { module = "org.jetbrains.kotlinx:kotlinx-corou
 kotlinx-coroutinesTest = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test" }
 
 playservices-location = { module = "com.google.android.gms:play-services-location", version = "21.4.0" }
+
 playservices-cronet = { module = "com.google.android.gms:play-services-cronet", version = "18.1.1" }
+cronet-api = { module = "org.chromium.net:cronet-api", version.ref = "cronet" }
+cronet-shared = { module = "org.chromium.net:cronet-shared", version.ref = "cronet" }
 
 play-review = { module = "com.google.android.play:review", version.ref = "playReview" }
 play-reviewKtx = { module = "com.google.android.play:review-ktx", version.ref = "playReview" }
@@ -136,6 +141,8 @@ aboutLibrariesCompose = { module = "com.mikepenz:aboutlibraries-compose-m3", ver
 androidBeaconLibrary = { module = "org.altbeacon:android-beacon-library", version = "2.21.2" }
 
 bundletool = { module = "com.android.tools.build:bundletool", version = "1.18.3" }
+
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "androidGradlePlugin" }
