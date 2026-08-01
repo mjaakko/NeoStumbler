@@ -46,7 +46,7 @@ jobs:
           VERSION_CODE="$(./gradlew -q printVersionCode)"
           echo "CHANGELOG_PATH=fastlane/metadata/android/en-US/changelogs/${VERSION_CODE}.txt" >> $GITHUB_OUTPUT
       - name: Upload APKs as assets to the GitHub release
-        uses: softprops/action-gh-release@718ea10b132b3b2eba29c1007bb80653f286566b # v2
+        uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228 # v2
         with:
           name: ${{ steps.get-version.outputs.VERSION_NAME }}
           body: ""
