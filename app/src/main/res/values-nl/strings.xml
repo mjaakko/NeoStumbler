@@ -223,4 +223,11 @@
     <string name="restricted_areas_delete">Beperkte zones verwijderen</string>
     <string name="restricted_areas_delete_confirmation">Weet u zeker dat u de geselecteerde zones wilt verwijderen?</string>
     <string name="restricted_areas_add">Beperkt gebied toe­voegen</string>
+    <string name="wifi_rtt_ranging_mode_never_title">Nooit</string>
+    <string name="wifi_rtt_ranging_mode_always_title">Altijd</string>
+    <string name="wifi_rtt_ranging_mode_always_description">Schakel over op eenzijdige afstands­meting als het toegangs­punt geen afstands­meting via Wi-Fi-RTT ondersteunt</string>
+    <string name="wifi_rtt_ranging_mode_twosided_title">Alleen twee­zijdig</string>
+    <string name="wifi_rtt_ranging_mode_twosided_description">Voer alleen afstands­meting via Wi-Fi-RTT uit als het toegangs­punt twee­zijdige afstands­meting ondersteunt</string>
+    <string name="wifi_rtt_ranging">Wi-Fi-afstands­meting</string>
+    <string name="permission_rationale_wifi_rtt">Voor afstands­meting via Wi-Fi RTT zijn rechten vereist voor nabij­gelegen Wi-Fi-apparaten</string>
 </resources>
