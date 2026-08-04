@@ -56,7 +56,9 @@ private fun fromCellInfoNr(cellInfoNr: CellInfoNr): CellTower {
         timingAdvance = null,
         arfcn = cellIdentity.nrarfcn.takeIf { it != CellInfo.UNAVAILABLE },
         signalStrength =
-            cellSignalStrength.dbm.takeIf { it != CellInfo.UNAVAILABLE }?.let { SignalStrength(it) },
+            cellSignalStrength.dbm
+                .takeIf { it != CellInfo.UNAVAILABLE }
+                ?.let { SignalStrength(it) },
     )
 }
 
@@ -124,7 +126,9 @@ private fun fromCellInfoWcdma(cellInfoWcdma: CellInfoWcdma): CellTower {
         timingAdvance = null,
         arfcn = cellIdentity.uarfcn.takeIf { it != CellInfo.UNAVAILABLE },
         signalStrength =
-            cellSignalStrength.dbm.takeIf { it != CellInfo.UNAVAILABLE }?.let { SignalStrength(it) },
+            cellSignalStrength.dbm
+                .takeIf { it != CellInfo.UNAVAILABLE }
+                ?.let { SignalStrength(it) },
     )
 }
 

@@ -56,14 +56,12 @@ private fun <E : Emitter<K>, K> List<EmitterObservation<E, K>>.groupByMinTimesta
 }
 
 private fun <E : Emitter<K>, K> Map<PositionObservation, List<EmitterObservation<E, K>>>
-    .filterOldData() =
-    mapValues { (position, devices) ->
-            devices.filter { observation ->
-                abs(observation.timestamp - position.timestamp).milliseconds <=
-                    OBSERVED_DEVICE_MAX_AGE
-            }
-        }
-        .filterValues { it.isNotEmpty() }
+    .filterOldData() = mapValues { (position, devices) ->
+    devices.filter { observation ->
+        abs(observation.timestamp - position.timestamp).milliseconds <= OBSERVED_DEVICE_MAX_AGE
+    }
+}
+    .filterValues { it.isNotEmpty() }
 
 private suspend fun ReportData.postProcess(
     postProcessors: Collection<ReportPostProcessor>

@@ -132,7 +132,8 @@ fun MLSWarningDialog(
                     Text(stringResource(id = R.string.no))
                 }
             },
-            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false),
+            properties =
+                DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false),
         )
     }
 }

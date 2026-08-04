@@ -35,21 +35,20 @@ import xyz.malkki.neostumbler.ui.composables.shared.AddQSTileDialog
 import xyz.malkki.neostumbler.ui.composables.shared.PermissionsDialog
 import xyz.malkki.neostumbler.utils.OneTimeActionHelper
 
-private val requiredPermissions =
-    buildList {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                add(Manifest.permission.POST_NOTIFICATIONS)
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                add(Manifest.permission.BLUETOOTH_SCAN)
-            } else {
-                add(Manifest.permission.BLUETOOTH)
-                add(Manifest.permission.BLUETOOTH_ADMIN)
-            }
-            add(Manifest.permission.ACCESS_FINE_LOCATION)
-            add(Manifest.permission.READ_PHONE_STATE)
-        }
-        .toTypedArray()
+private val requiredPermissions = buildList {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        add(Manifest.permission.POST_NOTIFICATIONS)
+    }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        add(Manifest.permission.BLUETOOTH_SCAN)
+    } else {
+        add(Manifest.permission.BLUETOOTH)
+        add(Manifest.permission.BLUETOOTH_ADMIN)
+    }
+    add(Manifest.permission.ACCESS_FINE_LOCATION)
+    add(Manifest.permission.READ_PHONE_STATE)
+}
+    .toTypedArray()
 
 @Composable
 fun ForegroundScanningButton(

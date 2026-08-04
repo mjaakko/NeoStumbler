@@ -46,73 +46,70 @@ class TelephonyManagerActiveCellInfoSource(
     )
     override fun getCellInfoFlow(
         interval: Flow<Duration>
-    ): Flow<List<EmitterObservation<CellTower, String>>> =
-        callbackFlow {
-                val initialServiceState = telephonyManager.serviceState
+    ): Flow<List<EmitterObservation<CellTower, String>>> = callbackFlow {
+        val initialServiceState = telephonyManager.serviceState
 
-                /**
-                 * On some devices, cells don't include mobile network code
-                 * (https://github.com/mjaakko/NeoStumbler/issues/360#issuecomment-2563861008)
-                 *
-                 * We can try to fix this by extracting the MNC from service state
-                 */
-                val serviceState =
-                    telephonyManager
-                        .getServiceStateFlow()
-                        .stateIn(
-                            this,
-                            started = SharingStarted.Eagerly,
-                            initialValue = initialServiceState,
-                        )
+        /**
+         * On some devices, cells don't include mobile network code
+         * (https://github.com/mjaakko/NeoStumbler/issues/360#issuecomment-2563861008)
+         *
+         * We can try to fix this by extracting the MNC from service state
+         */
+        val serviceState =
+            telephonyManager
+                .getServiceStateFlow()
+                .stateIn(
+                    this,
+                    started = SharingStarted.Eagerly,
+                    initialValue = initialServiceState,
+                )
 
-                val scanInterval =
-                    interval
-                        .map {
-                            it.coerceIn(minimumValue = MIN_INTERVAL, maximumValue = MAX_INTERVAL)
-                        }
-                        .stateIn(
-                            this,
-                            started = SharingStarted.Eagerly,
-                            initialValue = MAX_INTERVAL,
-                        )
+        val scanInterval =
+            interval
+                .map { it.coerceIn(minimumValue = MIN_INTERVAL, maximumValue = MAX_INTERVAL) }
+                .stateIn(
+                    this,
+                    started = SharingStarted.Eagerly,
+                    initialValue = MAX_INTERVAL,
+                )
 
-                val rendezvousQueue = Channel<Unit>(capacity = Channel.RENDEZVOUS)
+        val rendezvousQueue = Channel<Unit>(capacity = Channel.RENDEZVOUS)
 
-                val cellInfoCallback =
-                    object : TelephonyManager.CellInfoCallback() {
-                        override fun onCellInfo(cellInfo: MutableList<CellInfo>) {
-                            val cellTowers =
-                                cellInfo
-                                    .mapNotNull { it.toCellTower() }
-                                    .fillMissingData(serviceState.value?.operatorNumeric)
-                                    // Filter cell infos which don't have enough useful data to be
-                                    // collected
-                                    .filter { it.emitter.hasEnoughData() }
+        val cellInfoCallback =
+            object : TelephonyManager.CellInfoCallback() {
+                override fun onCellInfo(cellInfo: MutableList<CellInfo>) {
+                    val cellTowers =
+                        cellInfo
+                            .mapNotNull { it.toCellTower() }
+                            .fillMissingData(serviceState.value?.operatorNumeric)
+                            // Filter cell infos which don't have enough useful data to be
+                            // collected
+                            .filter { it.emitter.hasEnoughData() }
 
-                            trySendBlocking(cellTowers)
-                            rendezvousQueue.trySendBlocking(Unit)
-                        }
-
-                        override fun onError(errorCode: Int, detail: Throwable?) {
-                            Timber.w(detail, "Cell info update failed, error code: $errorCode")
-
-                            rendezvousQueue.trySendBlocking(Unit)
-                        }
-                    }
-
-                while (isActive) {
-                    telephonyManager.requestCellInfoUpdate(ImmediateExecutor, cellInfoCallback)
-                    val scannedAt = timeSource.invoke()
-
-                    rendezvousQueue.receive()
-
-                    delayWithMinDuration(scannedAt, timeSource, scanInterval)
+                    trySendBlocking(cellTowers)
+                    rendezvousQueue.trySendBlocking(Unit)
                 }
 
-                awaitClose { rendezvousQueue.close() }
+                override fun onError(errorCode: Int, detail: Throwable?) {
+                    Timber.w(detail, "Cell info update failed, error code: $errorCode")
+
+                    rendezvousQueue.trySendBlocking(Unit)
+                }
             }
-            .distinctUntilChangedBy { cellTowers ->
-                // Check the timestamp to make sure that we have received new data
-                cellTowers.maxOfOrNull { cellTower -> cellTower.timestamp }
-            }
+
+        while (isActive) {
+            telephonyManager.requestCellInfoUpdate(ImmediateExecutor, cellInfoCallback)
+            val scannedAt = timeSource.invoke()
+
+            rendezvousQueue.receive()
+
+            delayWithMinDuration(scannedAt, timeSource, scanInterval)
+        }
+
+        awaitClose { rendezvousQueue.close() }
+    }
+        .distinctUntilChangedBy { cellTowers ->
+            // Check the timestamp to make sure that we have received new data
+            cellTowers.maxOfOrNull { cellTower -> cellTower.timestamp }
+        }
 }

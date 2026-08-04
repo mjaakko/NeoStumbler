@@ -54,24 +54,23 @@ private fun Context.checkGoogleApiAvailability(): Pair<Boolean, Boolean> {
     return isGoogleApiAvailable to isGoogleApiAvailabilityUserResolvable
 }
 
-private val REQUIRED_PERMISSIONS: Array<String> =
-    buildList {
-            add(Manifest.permission.ACCESS_FINE_LOCATION)
-            add(Manifest.permission.ACTIVITY_RECOGNITION)
-            add(Manifest.permission.READ_PHONE_STATE)
+private val REQUIRED_PERMISSIONS: Array<String> = buildList {
+    add(Manifest.permission.ACCESS_FINE_LOCATION)
+    add(Manifest.permission.ACTIVITY_RECOGNITION)
+    add(Manifest.permission.READ_PHONE_STATE)
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                add(Manifest.permission.POST_NOTIFICATIONS)
-            }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        add(Manifest.permission.POST_NOTIFICATIONS)
+    }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                add(Manifest.permission.BLUETOOTH_SCAN)
-            } else {
-                add(Manifest.permission.BLUETOOTH)
-                add(Manifest.permission.BLUETOOTH_ADMIN)
-            }
-        }
-        .toTypedArray()
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        add(Manifest.permission.BLUETOOTH_SCAN)
+    } else {
+        add(Manifest.permission.BLUETOOTH)
+        add(Manifest.permission.BLUETOOTH_ADMIN)
+    }
+}
+    .toTypedArray()
 
 @SuppressLint("MissingPermission")
 @Composable

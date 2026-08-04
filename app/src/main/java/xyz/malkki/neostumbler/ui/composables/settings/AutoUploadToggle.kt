@@ -14,7 +14,8 @@ private val AUTO_UPLOAD_LABELS: Map<AutoUploadMode, Int> =
     mapOf(
         AutoUploadMode.NEVER to R.string.send_reports_automatically_never,
         AutoUploadMode.ANY_NETWORK to R.string.send_reports_automatically_on_any_network,
-        AutoUploadMode.UNMETERED_NETWORK to R.string.send_reports_automatically_on_unmetered_network,
+        AutoUploadMode.UNMETERED_NETWORK to
+            R.string.send_reports_automatically_on_unmetered_network,
     )
 
 @Composable
