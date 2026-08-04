@@ -1,7 +1,6 @@
 package xyz.malkki.neostumbler.ui.composables
 
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -10,7 +9,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import com.mikepenz.aboutlibraries.ui.compose.LibraryDefaults
 import com.mikepenz.aboutlibraries.ui.compose.android.produceLibraries
 import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
 import xyz.malkki.neostumbler.R
@@ -34,14 +32,9 @@ private fun LicensesDialog(onClose: () -> Unit) {
                 } else {
                     library.website?.let { context.startActivity(openUrl(it)) }
                 }
+
+                true
             },
-            textStyles =
-                LibraryDefaults.libraryTextStyles(
-                    nameTextStyle = MaterialTheme.typography.titleMedium,
-                    authorTextStyle = MaterialTheme.typography.bodySmall,
-                    versionTextStyle = MaterialTheme.typography.labelSmall,
-                    licensesTextStyle = MaterialTheme.typography.labelSmall,
-                ),
         )
     }
 }
