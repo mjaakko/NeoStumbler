@@ -120,12 +120,11 @@ class ReportSender(
 
         val now = Instant.now()
 
-        val updatedReports =
-            filter {
-                    // Do not update upload timestamp for reports which were reuploaded
-                    !it.uploaded
-                }
-                .map { it.id }
+        val updatedReports = filter {
+            // Do not update upload timestamp for reports which were reuploaded
+            !it.uploaded
+        }
+            .map { it.id }
 
         reportSaver.markAsUploaded(uploadTimestamp = now, *updatedReports.toLongArray())
     }

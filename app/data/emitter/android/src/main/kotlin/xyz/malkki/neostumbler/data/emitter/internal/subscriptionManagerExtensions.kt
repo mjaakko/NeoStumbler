@@ -15,47 +15,44 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import xyz.malkki.neostumbler.executors.ImmediateExecutor
 
 @RequiresPermission(Manifest.permission.READ_PHONE_STATE)
-internal fun SubscriptionManager.getActiveSubscriptionIds(): Flow<List<Int>> =
-    callbackFlow {
-            var listener: OnSubscriptionsChangedListener? = null
+internal fun SubscriptionManager.getActiveSubscriptionIds(): Flow<List<Int>> = callbackFlow {
+    var listener: OnSubscriptionsChangedListener? = null
 
-            val handlerThread =
-                object : HandlerThread("ActiveSubscriptionHandler") {
-                        override fun onLooperPrepared() {
-                            listener =
-                                object : OnSubscriptionsChangedListener() {
-                                    @SuppressLint("MissingPermission")
-                                    override fun onSubscriptionsChanged() {
-                                        val subscriptions =
-                                            this@getActiveSubscriptionIds.activeSubscriptionInfoList
-                                                ?: emptyList()
+    val handlerThread =
+        object : HandlerThread("ActiveSubscriptionHandler") {
+                override fun onLooperPrepared() {
+                    listener =
+                        object : OnSubscriptionsChangedListener() {
+                            @SuppressLint("MissingPermission")
+                            override fun onSubscriptionsChanged() {
+                                val subscriptions =
+                                    this@getActiveSubscriptionIds.activeSubscriptionInfoList
+                                        ?: emptyList()
 
-                                        trySendBlocking(subscriptions.map { it.subscriptionId })
-                                    }
-                                }
-
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                                this@getActiveSubscriptionIds.addOnSubscriptionsChangedListener(
-                                    ImmediateExecutor,
-                                    listener,
-                                )
-                            } else {
-                                @Suppress("DEPRECATION")
-                                this@getActiveSubscriptionIds.addOnSubscriptionsChangedListener(
-                                    listener
-                                )
+                                trySendBlocking(subscriptions.map { it.subscriptionId })
                             }
                         }
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        this@getActiveSubscriptionIds.addOnSubscriptionsChangedListener(
+                            ImmediateExecutor,
+                            listener,
+                        )
+                    } else {
+                        @Suppress("DEPRECATION")
+                        this@getActiveSubscriptionIds.addOnSubscriptionsChangedListener(listener)
                     }
-                    .apply { start() }
-
-            awaitClose {
-                this@getActiveSubscriptionIds.removeOnSubscriptionsChangedListener(listener)
-
-                handlerThread.quit()
+                }
             }
-        }
-        .distinctUntilChanged { old, new ->
-            // Only emit new values if the IDs have changed
-            HashSet(old) == HashSet(new)
-        }
+            .apply { start() }
+
+    awaitClose {
+        this@getActiveSubscriptionIds.removeOnSubscriptionsChangedListener(listener)
+
+        handlerThread.quit()
+    }
+}
+    .distinctUntilChanged { old, new ->
+        // Only emit new values if the IDs have changed
+        HashSet(old) == HashSet(new)
+    }

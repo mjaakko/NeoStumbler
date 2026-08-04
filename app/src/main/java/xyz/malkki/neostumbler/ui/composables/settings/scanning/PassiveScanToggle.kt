@@ -27,19 +27,18 @@ import xyz.malkki.neostumbler.ui.composables.ToggleWithAction
 import xyz.malkki.neostumbler.ui.composables.shared.ConfirmationDialog
 import xyz.malkki.neostumbler.ui.composables.shared.PermissionsDialog
 
-private val passiveScanPermissions =
-    buildList {
-            add(Manifest.permission.ACCESS_FINE_LOCATION)
-            add(Manifest.permission.READ_PHONE_STATE)
+private val passiveScanPermissions = buildList {
+    add(Manifest.permission.ACCESS_FINE_LOCATION)
+    add(Manifest.permission.READ_PHONE_STATE)
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                add(Manifest.permission.BLUETOOTH_SCAN)
-            } else {
-                add(Manifest.permission.BLUETOOTH)
-                add(Manifest.permission.BLUETOOTH_ADMIN)
-            }
-        }
-        .toTypedArray()
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        add(Manifest.permission.BLUETOOTH_SCAN)
+    } else {
+        add(Manifest.permission.BLUETOOTH)
+        add(Manifest.permission.BLUETOOTH_ADMIN)
+    }
+}
+    .toTypedArray()
 
 @Composable
 fun PassiveScanToggle(

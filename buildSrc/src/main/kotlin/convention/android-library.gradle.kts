@@ -2,7 +2,6 @@ package convention
 
 plugins {
     id("convention.kotlin")
-    id("org.jetbrains.kotlin.android")
     id("com.android.library")
 }
 

@@ -77,7 +77,8 @@ class DataStoreRestrictedAreaManagerTest {
                         idToKeep to RestrictedAreaSettings.RestrictedAreaGeometry(0.0, 0.0, 10.0),
                         idToDelete1 to
                             RestrictedAreaSettings.RestrictedAreaGeometry(1.0, 1.0, 10.0),
-                        idToDelete2 to RestrictedAreaSettings.RestrictedAreaGeometry(2.0, 2.0, 10.0),
+                        idToDelete2 to
+                            RestrictedAreaSettings.RestrictedAreaGeometry(2.0, 2.0, 10.0),
                     )
             )
         }

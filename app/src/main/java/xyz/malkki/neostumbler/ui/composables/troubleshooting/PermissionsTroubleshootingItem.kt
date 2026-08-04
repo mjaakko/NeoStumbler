@@ -13,19 +13,18 @@ import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 
 // All permissions needed for optimal scanning results
-private val SCAN_PERMISSIONS =
-    buildList {
-            add(Manifest.permission.ACCESS_FINE_LOCATION)
-            add(Manifest.permission.READ_PHONE_STATE)
+private val SCAN_PERMISSIONS = buildList {
+    add(Manifest.permission.ACCESS_FINE_LOCATION)
+    add(Manifest.permission.READ_PHONE_STATE)
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                add(Manifest.permission.BLUETOOTH_SCAN)
-            } else {
-                add(Manifest.permission.BLUETOOTH)
-                add(Manifest.permission.BLUETOOTH_ADMIN)
-            }
-        }
-        .toTypedArray()
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        add(Manifest.permission.BLUETOOTH_SCAN)
+    } else {
+        add(Manifest.permission.BLUETOOTH)
+        add(Manifest.permission.BLUETOOTH_ADMIN)
+    }
+}
+    .toTypedArray()
 
 private fun Context.allPermissionsGranted(): Boolean {
     return checkMissingPermissions(*SCAN_PERMISSIONS).isEmpty()
