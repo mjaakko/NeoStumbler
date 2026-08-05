@@ -1,3 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="fused_location_no_gps_warning">อุปกรณ์ไม่มีภาครับสัญญาณ GPS</string>
+    <string name="autoscan_when_moving">สแกนอัตโนมัติขณะเคลื่อนที่</string>
+    <string name="autoscan_failed_to_enable_title">ไม่สามารถเปิดใช้การสแกนอัตโนมัติ</string>
 </resources>
