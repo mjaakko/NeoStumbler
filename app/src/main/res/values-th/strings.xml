@@ -177,4 +177,23 @@
     <string name="crash_log_title">บันทึกการหยุดทำงาน</string>
     <string name="crash_log_entry_title">การหยุดทำงาน %s</string>
     <string name="beacon_id">ID%1$d: %2$s</string>
+    <string name="ignore_battery_optimizations_title">เพิกเฉยการปรับประสิทธิภาพแบตเตอรี่</string>
+    <string name="battery_optimizations_not_disabled_warning">ยังไม่ได้ปิดการปรับประสิทธิภาพแบตเตอรี่</string>
+    <string name="mls_warning_text">Mozilla Location Service ได้ปิดตัวลงและไม่รับข้อมูลใหม่เข้าระบบแล้ว คุณสามารถส่งข้อมูลไปยัง beaconDB ซึ่งเป็นทางเลือกของ MLS และให้บริการที่เข้ากันได้กับ MLS\n\nโปรดทราบว่า beaconDB ยังอยู่ระหว่างการพัฒนา และอาจกระทบกับวิธีการจัดการข้อมูลส่วนบุคคลของคุณ คุณสามารถอ่าน <annotation link="privacy_policy">นโยบายความเป็นส่วนตัว</annotation> สำหรับข้อมูลเพิ่มเติม\n\nคุณต้องการตั้ง beaconDB เป็นปลายทางหรือไม่ ซึ่งสามารถปรับเปลี่ยนได้ภายหลังในการตั้งค่า</string>
+    <string name="settings_ignore_wifi_scan_throttling_title">เพิกเฉยการควบคุมการสแกนหา Wi-Fi</string>
+    <string name="wifi_scan_throttling">การควบคุมการสแกนหา Wi-Fi</string>
+    <string name="wifi_scan_throttling_explanation">ต้องปิดการควบคุมการสแกนหา Wi-Fi ในการตั้งค่าอุปกรณ์เพื่อเปิดใช้งานคุณสมบัตินี้ โดยปกติแล้วจะสามารถปิดได้ใน \"ทางเลือกผู้พัฒนา\"</string>
+    <string name="troubleshooting_permissions_granted">ให้การเข้าถึงสิทธิ์แล้ว</string>
+    <string name="troubleshooting_battery_optimizations_disabled">ปิดใช้การปรับประสิทธิภาพแบตเตอรี่แล้ว</string>
+    <string name="permission_rationale_post_notifications">จำเป็นต้องให้สิทธิ์การแจ้งเตือนเพื่อแสดงการแจ้งเตือนสถานะ</string>
+    <string name="permission_rationale_bluetooth">จำเป็นต้องให้สิทธิ์ Bluetooth เพื่อสแกนหาบีคอน Bluetooth</string>
+    <string name="permission_rationale_read_phone_state">จำเป็นต้องเข้าถึงสถานะโทรศัพท์เพื่อสแกนหาเสาสัญญาณมือถือ</string>
+    <string name="permission_rationale_fine_location">จำเป็นต้องให้สิทธิ์ตำแหน่งแม่นยำเพื่อสร้างรายงานที่มีข้อมูลตำแหน่งที่ใช้ประโยชน์ได้</string>
+    <string name="movement_detection_significant_motion_description">หยุดพักการสแกนและ GPS เมื่อไม่มีการตรวจจับการเคลื่อนไหวอย่างชัดเจน ซึ่งประหยัดแบตเตอรี่ แต่อาจไม่ทำงานอย่างถูกต้องบนบางอุปกรณ์</string>
+    <string name="settings_ignore_wifi_scan_throttling_description">หากการควบคุมการสแกนเปิดอยู่ ระบบจะทำการสแกนได้เพียง 4 ครั้ง ในระยะเวลา 2 นาที</string>
+    <string name="permissions_not_granted">ยังไม่ได้ให้การเข้าถึงสิทธิ์ที่จำเป็นต้องใช้</string>
+    <string name="scanning_status_active">การสแกน<annotation style="status">กำลังทำงาน</annotation></string>
+    <string name="scanning_status_paused">การสแกน<annotation style="status">หยุดชั่วคราว</annotation></string>
+    <string name="scanning_status_not_active">การสแกน<annotation style="status">ไม่ได้ทำงาน</annotation></string>
+    <string name="use_dynamic_color_ui">ใช้สีไดนามิกใน UI</string>
 </resources>
