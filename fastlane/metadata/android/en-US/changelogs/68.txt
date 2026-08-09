@@ -1,0 +1,13 @@
+New features
+* Wi-Fi RTT ranging for estimating distances to Wi-Fi access points
+* Restricted areas for avoiding data collection in sensitive areas
+
+Improvements
+* Cell tower PSC is shown in the report details
+* Location updates on the map are paused when the screen is off
+* Report details can be opened by long-pressing hexagons on the map
+* Setting titles can contain longer titles
+
+Other
+* Updated dependencies
+* Updated translations
