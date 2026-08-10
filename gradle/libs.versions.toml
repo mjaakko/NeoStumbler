@@ -142,6 +142,8 @@ androidBeaconLibrary = { module = "org.altbeacon:android-beacon-library", versio
 
 bundletool = { module = "com.android.tools.build:bundletool", version = "1.18.3" }
 
+protobuf-java = { module = "com.google.protobuf:protobuf-java", version = "4.35.1" }
+
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 
 [plugins]
