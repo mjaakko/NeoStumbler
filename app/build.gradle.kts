@@ -6,6 +6,7 @@ import com.android.sdklib.BuildToolInfo
 import com.mikepenz.aboutlibraries.plugin.DuplicateMode
 import com.mikepenz.aboutlibraries.plugin.DuplicateRule
 import tasks.BuildApks
+import tasks.PatchAabNoSparseEncoding
 
 plugins {
     id("convention.android-app")
@@ -259,15 +260,32 @@ val aapt2ExecutableProvider =
             )
         }
 
-tasks.register<BuildApks>("buildAccrescentApks") {
-    // Add bundle task as a dependency because it doesn't define its outputs correctly
-    dependsOn(tasks.named("bundleFullDefaultRelease"))
+val patchAab =
+    /**
+     * AGP enables sparse encoding by default. This causes the APK set to contain APKs where target
+     * SDK is lower than the one required by Accrescent. The workaround for this is to patch
+     * BuildConfig in the .aab file so that the APK set won't use sparse encoding.
+     */
+    tasks.register<PatchAabNoSparseEncoding>("patchAab") {
+        // Add bundle task as a dependency because it doesn't define its outputs correctly
+        dependsOn(tasks.named("bundleFullDefaultRelease"))
 
+        aabFile.set(
+            layout.buildDirectory.file(
+                "outputs/bundle/fullDefaultRelease/app-full-default-release.aab"
+            )
+        )
+        patchedAabFile.set(
+            layout.buildDirectory.file(
+                "outputs/bundle/fullDefaultRelease/app-full-default-release-patch.aab"
+            )
+        )
+    }
+
+tasks.register<BuildApks>("buildAccrescentApks") {
     aapt2Executable = aapt2ExecutableProvider
 
-    aabFile.set(
-        layout.buildDirectory.file("outputs/bundle/fullDefaultRelease/app-full-default-release.aab")
-    )
+    aabFile = patchAab.map { it.outputs.files.singleFile }
 
     keyStoreFile.set(rootProject.layout.projectDirectory.file("keystore.jks"))
     keyStorePassword.set(providers.environmentVariable("SIGNING_STORE_PASSWORD"))

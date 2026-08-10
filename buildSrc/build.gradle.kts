@@ -15,6 +15,7 @@ dependencies {
     implementation(libs.kotlin.gradle.plugin)
 
     implementation(libs.bundletool)
+    implementation(libs.protobuf.java)
 }
 
 private val Provider<PluginDependency>.asLibraryDependency: Provider<String>
