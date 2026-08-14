@@ -3,4 +3,6 @@
     <string name="fused_location_no_gps_warning">อุปกรณ์ไม่มีภาครับสัญญาณ GPS</string>
     <string name="autoscan_when_moving">สแกนอัตโนมัติขณะเคลื่อนที่</string>
     <string name="autoscan_failed_to_enable_title">ไม่สามารถเปิดใช้การสแกนอัตโนมัติ</string>
+    <string name="prefer_fused_location_title">ใช้ผู้ให้บริการตำแหน่งแบบรวมเป็นหลัก</string>
+    <string name="prefer_fused_location_description">ผู้ให้บริการตำแหน่งแบบรวมจะรวมข้อมูลจากแหล่งอื่น ๆ นอกจาก GPS เพื่อคำนวณตำแหน่งที่ตั้งได้</string>
 </resources>
