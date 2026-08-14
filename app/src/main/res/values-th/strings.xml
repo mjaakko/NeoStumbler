@@ -196,4 +196,7 @@
     <string name="scanning_status_paused">การสแกน<annotation style="status">หยุดชั่วคราว</annotation></string>
     <string name="scanning_status_not_active">การสแกน<annotation style="status">ไม่ได้ทำงาน</annotation></string>
     <string name="use_dynamic_color_ui">ใช้สีไดนามิกใน UI</string>
+    <string name="delete_report_confirmation">คุณต้องการลบรายงานหรือไม่</string>
+    <string name="restricted_areas_delete_confirmation">คุณต้องการลบพื้นที่ที่เลือกหรือไม่</string>
+    <string name="delete_all_reports_confirmation">คุณต้องการลบรายงานทั้งหมดหรือไม่</string>
 </resources>
