@@ -3,7 +3,7 @@ package xyz.malkki.neostumbler.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
-import com.patrykandpatrick.vico.compose.cartesian.data.lineSeries
+import com.patrykandpatrick.vico.compose.cartesian.data.lineModel
 import com.patrykandpatrick.vico.compose.common.data.ExtraStore
 import java.time.LocalDate
 import java.util.SortedMap
@@ -75,7 +75,7 @@ class StatisticsViewModel(reportStatisticsProvider: ReportStatisticsProvider) : 
                             val x = chartData.map { it.first }
                             val y = chartData.map { it.second }
 
-                            lineSeries {
+                            lineModel {
                                 series(x = x, y = y)
 
                                 extras { it[MAX_Y_VALUE_KEY] = y.max() }
