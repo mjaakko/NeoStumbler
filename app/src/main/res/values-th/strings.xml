@@ -196,4 +196,32 @@
     <string name="scanning_status_paused">การสแกน<annotation style="status">หยุดชั่วคราว</annotation></string>
     <string name="scanning_status_not_active">การสแกน<annotation style="status">ไม่ได้ทำงาน</annotation></string>
     <string name="use_dynamic_color_ui">ใช้สีไดนามิกใน UI</string>
+    <string name="delete_report_confirmation">คุณต้องการลบรายงานหรือไม่</string>
+    <string name="restricted_areas_delete_confirmation">คุณต้องการลบพื้นที่ที่เลือกหรือไม่</string>
+    <string name="delete_all_reports_confirmation">คุณต้องการลบรายงานทั้งหมดหรือไม่</string>
+    <string name="ignore_battery_optimizations_description">เพื่อผลลัพธ์ที่ดีที่สุด ควรปิดการปรับประสิทธิภาพแบตเตอรี่ การสแกนไร้สายและเข้าถึงตำแหน่งที่ตั้งจะถูกจำกัดอย่างมากเมื่อเปิดการปรับประสิทธิภาพแบตเตอรี่และปิดหน้าจอไว้</string>
+    <string name="wifi_filter_settings_hint">เครือข่าย Wi-Fi ที่มีคำใด ๆ เหล่านี้ในชื่อ SSID จะไม่ถูกเก็บรวบรวม</string>
+    <string name="passive_scanning_title">การเก็บข้อมูลแบบพาสซีฟ</string>
+    <string name="passive_scanning_description">การเก็บข้อมูลแบบพาสซีฟจะใช้ข้อมูลที่แอปพลิเคชันอื่น ๆ ร้องขอ เพื่อสร้างรายงานในเบื้องหลังโดยใช้แบตเตอรี่น้อย\n\nประสิทธิภาพของการเก็บข้อมูลแบบพาสซีฟจะขึ้นอยู่กับประเภทของอุปกรณ์, แอปอื่น ๆ ที่คุณใช้งานอยู่ และหากผู้ให้บริการตำแหน่งแบบรวมมีให้ใช้งาน\n\nคุณต้องการเปิดใช้การเก็บข้อมูลแบบพาสซีฟหรือไม่</string>
+    <string name="map_show_coverage_layer">แสดงชั้นพื้นที่ครอบคลุม</string>
+    <string name="permission_rationale_background_location_passive_scan">การเก็บข้อมูลแบบพาสซีฟต้องการสิทธิ์เข้าถึงตำแหน่งที่ตั้งในเบื้องหลังเพื่อสร้างรายงานขณะที่แอปไม่ได้ทำงานอยู่</string>
+    <string name="permission_rationale_location_map">การแสดงตำแหน่งบนแผนที่ต้องการสิทธิ์เข้าถึงตำแหน่งที่ตั้ง</string>
+    <string name="coverage_layer">ชั้นแผนที่ความครอบคลุม</string>
+    <string name="coverage_layer_tile_json_url">URL TileJSON สำหรับชั้นแผนที่ความครอบคลุม</string>
+    <string name="coverage_layer_no_configured">ไม่ได้กำหนดค่าชั้นแผนที่ความครอบคลุม</string>
+    <string name="submission_path">พาธสำหรับการส่งข้อมูล</string>
+    <string name="locate_path">พาธสำหรับการระบุตำแหน่ง</string>
+    <string name="reduced_metadata_title">ส่งรายงานแบบลดข้อมูลเมตาดาต้า</string>
+    <string name="reduced_metadata_description">รายงานจะถูกส่งแบบสุ่มลำดับและลบข้อมูลเวลาและเมตาดาต้าอื่น ๆ ออก</string>
+    <string name="app_variant">รุ่นย่อย: %s</string>
+    <string name="add_quick_settings_tile">เพิ่มปุ่มการตั้งค่าด่วนเพื่อเริ่มสแกนได้ง่ายขึ้นหรือไม่</string>
+    <string name="wifi_rtt_ranging">คำนวณระยะ Wi-Fi</string>
+    <string name="wifi_rtt_ranging_mode_twosided_title">สองทางเท่านั้น</string>
+    <string name="permission_rationale_wifi_rtt">การคำนวณระยะ Wi-Fi ต้องการเข้าถึงสิทธิ์อุปกรณ์ Wi-Fi ใกล้เคียง</string>
+    <string name="wifi_rtt_ranging_mode_always_description">กลับไปใช้การคำนวณระยะแบบทางเดียว ถ้าแอคเซสพอยท์ไม่รองรับการคำนวณระยะ Wi-Fi RTT</string>
+    <string name="wifi_rtt_ranging_mode_twosided_description">ทำการคำนวณระยะ Wi-Fi RTT เฉพาะหากแอคเซสพอยท์รองรับการคำนวณระยะสองทางเท่านั้น</string>
+    <string name="permission_rationale_background_location_quick_settings">การเริ่มสแกนจากแผงการตั้งค่าด่วนจำเป็นต้องเข้าถึงตำแหน่งในเบื้องหลัง\n\nโปรดทราบว่าข้อจำกัดนี้เป็นข้อจำกัดของระบบปฏิบัติการ Android โดยแอปจะไม่เข้าถึงตำแหน่งในพื้นหลังหากคุณไม่ได้เปิดการสแกนแบบพาสซีฟหรือแบบอัตโนมัติ</string>
+    <string name="restricted_areas_explanation">สามารถใช้พื้นที่จำกัดเพื่อหลีกเลี่ยงการสร้างรายงานในบริเวณที่ละเอียดอ่อน เช่น บ้านของคุณได้ การสแกนจะยังทำงานในพื้นที่เหล่านี้ แต่รายงานที่สร้างขึ้นในพื้นที่นั้นจะถูกละทิ้งโดยอัตโนมัติ \n\nโปรดระวังว่าช่องว่างของข้อมูลอาจเปิดเผยตำแหน่งของพื้นที่จำกัดของคุณโดยไม่ตั้งใจได้</string>
+    <string name="db_schema_version">เวอร์ชัน Schema ฐานข้อมูล: %d</string>
+    <string name="geocoder_settings_title">ตัวแปลงตำแหน่งเป็นที่อยู่</string>
 </resources>

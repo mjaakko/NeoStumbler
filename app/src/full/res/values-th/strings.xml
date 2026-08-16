@@ -3,4 +3,9 @@
     <string name="fused_location_no_gps_warning">อุปกรณ์ไม่มีภาครับสัญญาณ GPS</string>
     <string name="autoscan_when_moving">สแกนอัตโนมัติขณะเคลื่อนที่</string>
     <string name="autoscan_failed_to_enable_title">ไม่สามารถเปิดใช้การสแกนอัตโนมัติ</string>
+    <string name="prefer_fused_location_title">ใช้ผู้ให้บริการตำแหน่งแบบรวมเป็นหลัก</string>
+    <string name="prefer_fused_location_description">ผู้ให้บริการตำแหน่งแบบรวมจะรวมข้อมูลจากแหล่งอื่น ๆ นอกจาก GPS เพื่อคำนวณตำแหน่งที่ตั้งได้</string>
+    <string name="autoscan_failed_to_enable_description">การสแกนอัตโนมัติใช้การตรวจจับกิจกรรมที่อยู่ในบริการของ Google Play ซึ่งอาจไม่มีให้ใช้บนอุปกรณ์ของคุณ</string>
+    <string name="permission_rationale_activity_recognition">การเริ่มสแกนอัตโนมัติต้องเข้าถึงกิจกรรมปัจจุบัน</string>
+    <string name="permission_rationale_background_location_autoscan">การเริ่มสแกนอัตโนมัติเมื่อแอปไม่ได้ทำงานอยู่ต้องการสิทธิ์เข้าถึงตำแหน่งที่ตั้งในเบื้องหลัง</string>
 </resources>
