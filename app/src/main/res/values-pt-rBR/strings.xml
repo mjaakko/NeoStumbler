@@ -232,4 +232,12 @@
     <string name="restricted_areas_delete">Apagar áreas restritas</string>
     <string name="restricted_areas_delete_confirmation">Tem certeza que quer apagar as áreas selecionadas?</string>
     <string name="restricted_areas_add">Adicionar área restrita</string>
+    <string name="psc">PSC: %s</string>
+    <string name="wifi_rtt_ranging">Medição de distância do Wi-Fi</string>
+    <string name="wifi_rtt_ranging_mode_never_title">Nunca</string>
+    <string name="wifi_rtt_ranging_mode_always_title">Sempre</string>
+    <string name="wifi_rtt_ranging_mode_always_description">Retornar ao alcance de um só lado caso o ponto de acesso não suportar a medição do Wi-Fi RTT</string>
+    <string name="wifi_rtt_ranging_mode_twosided_title">Apenas com os dois lados</string>
+    <string name="wifi_rtt_ranging_mode_twosided_description">Apenas fazer a medição do Wi-Fi RTT caso o ponto de acesso suportar medição de dois lados</string>
+    <string name="permission_rationale_wifi_rtt">A medição do Wi-Fi RTT requer a permissão de dispositivos Wi-Fi próximos</string>
 </resources>
