@@ -1,5 +1,7 @@
 package convention
 
+import constants.JvmVersion
+
 plugins {
     id("convention.kotlin")
     id("com.android.library")
@@ -9,8 +11,8 @@ android {
     compileSdk = 37
 
     compileOptions {
-        sourceCompatibility = JavaVersion.toVersion(project.extra["jvmTarget"]!!)
-        targetCompatibility = JavaVersion.toVersion(project.extra["jvmTarget"]!!)
+        sourceCompatibility = JavaVersion.toVersion(JvmVersion.JVM_TARGET_VERSION)
+        targetCompatibility = JavaVersion.toVersion(JvmVersion.JVM_TARGET_VERSION)
     }
 
     defaultConfig {

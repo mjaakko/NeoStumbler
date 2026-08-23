@@ -1,5 +1,6 @@
 package convention
 
+import constants.JvmVersion
 import dev.detekt.gradle.Detekt
 import kotlin.math.roundToInt
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
@@ -11,22 +12,14 @@ plugins {
     id("dev.detekt")
 }
 
-/**
- * Configurations common for all Kotlin projects. Note that Kotlin plugin needs to be applied
- * separately to use the correct version ("jvm" or "android")
- */
-val jvmTargetVersion = "17"
-
-project.extra["jvmTarget"] = jvmTargetVersion
-
 tasks.withType<JavaCompile>().configureEach {
-    sourceCompatibility = jvmTargetVersion
-    targetCompatibility = jvmTargetVersion
+    sourceCompatibility = JvmVersion.JVM_TARGET_VERSION.toString()
+    targetCompatibility = JvmVersion.JVM_TARGET_VERSION.toString()
 }
 
 tasks.withType<KotlinJvmCompile>().configureEach {
     compilerOptions {
-        jvmTarget = JvmTarget.fromTarget(jvmTargetVersion)
+        jvmTarget = JvmTarget.fromTarget(JvmVersion.JVM_TARGET_VERSION.toString())
 
         freeCompilerArgs.add("-opt-in=kotlin.io.path.ExperimentalPathApi")
         freeCompilerArgs.add("-opt-in=kotlin.time.ExperimentalTime")
@@ -58,13 +51,13 @@ configurations.configureEach {
 }
 
 detekt {
-    config.setFrom(rootProject.layout.projectDirectory.file("config/detekt/detekt.yml"))
+    config.setFrom(isolated.rootProject.projectDirectory.file("config/detekt/detekt.yml"))
 
     ignoredBuildTypes.add("release")
 }
 
 tasks.withType<Detekt>().configureEach {
-    jvmTarget = jvmTargetVersion
+    jvmTarget = JvmVersion.JVM_TARGET_VERSION.toString()
 
     reports {
         checkstyle.required.set(false)

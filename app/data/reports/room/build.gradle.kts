@@ -4,12 +4,10 @@ plugins {
     alias(libs.plugins.androidxRoom)
 }
 
-private val DB_SCHEMAS_DIR = "$projectDir/schemas"
-
 android {
     namespace = "xyz.malkki.neostumbler.reports.room"
 
-    room { schemaDirectory(DB_SCHEMAS_DIR) }
+    room { schemaDirectory(layout.projectDirectory.dir("schemas")) }
 }
 
 dependencies {
