@@ -140,8 +140,7 @@ android {
     sourceSets {
         getByName("gplay") {
             assets {
-                directories +=
-                    project.layout.buildDirectory.dir("privacypolicy").get().asFile.absolutePath
+                directories += layout.buildDirectory.dir("privacypolicy").get().asFile.absolutePath
             }
         }
     }
@@ -236,8 +235,8 @@ abstract class CopyPrivacyPolicy @Inject constructor(private val fs: FileSystemO
 
 val copyPrivacyPolicy =
     tasks.register<CopyPrivacyPolicy>("copyPrivacyPolicy") {
-        privacyPolicy = rootProject.layout.projectDirectory.file("docs/privacy_policy.md")
-        outputDirectory = project.layout.buildDirectory.dir("privacypolicy")
+        privacyPolicy = isolated.rootProject.projectDirectory.file("docs/privacy_policy.md")
+        outputDirectory = layout.buildDirectory.dir("privacypolicy")
     }
 
 val aapt2ExecutableProvider =
@@ -288,7 +287,7 @@ tasks.register<BuildApks>("buildAccrescentApks") {
 
     aabFile = patchAab.map { it.outputs.files.singleFile }
 
-    keyStoreFile.set(rootProject.layout.projectDirectory.file("keystore.jks"))
+    keyStoreFile.set(isolated.rootProject.projectDirectory.file("keystore.jks"))
     keyStorePassword.set(providers.environmentVariable("SIGNING_STORE_PASSWORD"))
     keyAlias.set(providers.environmentVariable("SIGNING_KEY_ALIAS"))
     keyPassword.set(providers.environmentVariable("SIGNING_KEY_PASSWORD"))
@@ -297,13 +296,13 @@ tasks.register<BuildApks>("buildAccrescentApks") {
 }
 
 tasks.register("printVersionName") {
-    val versionName = project.android.defaultConfig.versionName
+    val versionName = android.defaultConfig.versionName
 
     doLast { println(versionName) }
 }
 
 tasks.register("printVersionCode") {
-    val versionCode = project.android.defaultConfig.versionCode
+    val versionCode = android.defaultConfig.versionCode
 
     doLast { println(versionCode) }
 }

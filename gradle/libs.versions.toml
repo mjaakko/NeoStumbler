@@ -157,7 +157,7 @@ kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlinCompose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
-ksp = { id = "com.google.devtools.ksp", version = "2.3.10" }
+ksp = { id = "com.google.devtools.ksp", version = "2.3.11" }
 
 ktfmt = { id = "com.ncorti.ktfmt.gradle", version = "0.27.0" }
 
