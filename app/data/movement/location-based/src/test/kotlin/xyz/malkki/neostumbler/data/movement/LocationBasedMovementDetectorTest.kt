@@ -102,6 +102,12 @@ class LocationBasedMovementDetectorTest {
                         altitude = null,
                         source = Position.Source.GPS,
                     ),
+                    Position(
+                        latitude = 15.1455,
+                        longitude = 24.5166,
+                        altitude = 25.0,
+                        source = Position.Source.GPS,
+                    ),
                 )
                 .map { PositionObservation(it, 0) }
 

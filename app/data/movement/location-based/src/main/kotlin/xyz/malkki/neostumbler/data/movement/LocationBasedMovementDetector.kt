@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.runningFold
-import xyz.malkki.neostumbler.core.Position
 import xyz.malkki.neostumbler.data.location.LocationSourceProvider
+import xyz.malkki.neostumbler.geography.LatLng
 
 // Distance between coordinates in metres
 private const val HORIZONTAL_DIFFERENCE_THRESHOLD = 10.0
@@ -34,20 +34,34 @@ class LocationBasedMovementDetector(
     override fun getIsMovingFlow(): Flow<Boolean> {
         return flow { emit(locationSourceProvider.getLocationSource()) }
             .flatMapLatest { it.getLocations(LOCATION_INTERVAL, usePassiveProvider = false) }
-            .map { it.position }
-            .runningFold<Position, Pair<Position?, Boolean>>(null to true) {
+            .map { LatLngAlt(latLng = it.position.latLng, altitude = it.position.altitude) }
+            .runningFold<LatLngAlt, Pair<LatLngAlt?, Boolean>>(null to true) {
                 (oldLocation, _),
                 newLocation ->
-                when {
-                    oldLocation == null ||
-                        oldLocation.horizontalLocationChangedSignificantly(newLocation) ||
-                        oldLocation.verticalLocationChangedSignificantly(newLocation) -> {
-                        newLocation to true
+                val isMoving =
+                    when {
+                        oldLocation == null ||
+                            oldLocation.horizontalLocationChangedSignificantly(newLocation) ||
+                            oldLocation.verticalLocationChangedSignificantly(newLocation) -> {
+                            true
+                        }
+                        else -> {
+                            false
+                        }
                     }
-                    else -> {
-                        oldLocation to false
+
+                val location =
+                    if (isMoving) {
+                        if (newLocation.altitude == null) {
+                            newLocation.copy(altitude = oldLocation?.altitude)
+                        } else {
+                            newLocation
+                        }
+                    } else {
+                        oldLocation
                     }
-                }
+
+                location to isMoving
             }
             .map { it.second }
             .distinctUntilChanged()
@@ -63,11 +77,13 @@ class LocationBasedMovementDetector(
     }
 }
 
-private fun Position.horizontalLocationChangedSignificantly(newLocation: Position): Boolean {
+private data class LatLngAlt(val latLng: LatLng, val altitude: Double?)
+
+private fun LatLngAlt.horizontalLocationChangedSignificantly(newLocation: LatLngAlt): Boolean {
     return latLng.distanceTo(newLocation.latLng) >= HORIZONTAL_DIFFERENCE_THRESHOLD
 }
 
-private fun Position.verticalLocationChangedSignificantly(newLocation: Position): Boolean {
+private fun LatLngAlt.verticalLocationChangedSignificantly(newLocation: LatLngAlt): Boolean {
     val oldAltitude = altitude ?: 0.0
     val newAltitude =
         newLocation.altitude
