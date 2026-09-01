@@ -12,7 +12,7 @@ androidxLifecycle = "2.11.0"
 androidxPaging = "3.5.0"
 androidxRoom = "2.8.4"
 androidxWork = "2.11.2"
-androidxNavigation = "1.1.5"
+androidxNavigation = "1.1.7"
 androidxDataStore = "1.2.1"
 
 androidxComposeBom = "2026.06.01"
