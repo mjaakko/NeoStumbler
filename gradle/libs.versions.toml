@@ -25,7 +25,7 @@ multiplatformMarkdownRenderer = "0.43.0"
 
 playReview = "2.0.2"
 
-cronet = "143.7445.0"
+cronet = "500.0.2"
 
 [libraries]
 koinBom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
