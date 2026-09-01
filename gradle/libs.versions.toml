@@ -161,7 +161,7 @@ ksp = { id = "com.google.devtools.ksp", version = "2.3.11" }
 
 ktfmt = { id = "com.ncorti.ktfmt.gradle", version = "0.27.0" }
 
-detekt = { id = "dev.detekt", version = "2.0.0-alpha.5" }
+detekt = { id = "dev.detekt", version = "2.0.0-alpha.6" }
 
 aboutLibraries = { id = "com.mikepenz.aboutlibraries.plugin.android", version.ref = "aboutLibraries" }
 
