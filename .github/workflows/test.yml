@@ -69,7 +69,7 @@ jobs:
           key: avd-${{ matrix.api-level }}-${{ matrix.target }}-${{ matrix.arch }}
       - name: Create AVD image
         if: steps.avd-cache.outputs.cache-hit != 'true'
-        uses: reactivecircus/android-emulator-runner@e89f39f1abbbd05b1113a29cf4db69e7540cae5a # v2
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2
         with:
           api-level: ${{ matrix.api-level }}
           arch: ${{ matrix.arch }}
@@ -81,7 +81,7 @@ jobs:
           disable-animations: false
           script: echo "AVD snapshot generated"
       - name: Run intrumented tests
-        uses: reactivecircus/android-emulator-runner@e89f39f1abbbd05b1113a29cf4db69e7540cae5a # v2
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2
         timeout-minutes: 15
         with:
           api-level: ${{ matrix.api-level }}
