@@ -1,0 +1,4 @@
+* Location-based movement detector is now slightly less sensitive to vertical movements
+* Added Thai translation
+* Updated translations
+* Updated dependencies
