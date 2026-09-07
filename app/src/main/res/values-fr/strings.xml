@@ -92,7 +92,7 @@
     <string name="suggested_service_website">Site web</string>
     <string name="notification_style_detailed_title">Détaillé</string>
     <string name="suggested_services_title">Services suggérés</string>
-    <string name="movement_detection_location_title">Basé sur la position</string>
+    <string name="movement_detection_location_title">Basée sur la position</string>
     <string name="db_prune_title">Supprimer les rapports envoyés</string>
     <string name="db_prune_one_month">Après un mois</string>
     <string name="movement_detection_none_description">Continuer le scan même sans mouvement</string>
@@ -102,7 +102,7 @@
     <string name="troubleshooting_description">Corriger les problèmes courants avec le scan</string>
     <string name="warning_icon_description">Icône d’avertissement</string>
     <string name="settings_group_scanning">Scan</string>
-    <string name="movement_detection">Détection du mouvement</string>
+    <string name="movement_detection">Détection de mouvement</string>
     <string name="movement_detection_location_description">Met en pause le scan lorsque la localisation ne change pas. Garde le GPS actif</string>
     <string name="movement_detection_significant_motion_title">Capteur de mouvements</string>
     <string name="unencrypted_endpoint_warning">Point de terminaison non chiffré</string>
