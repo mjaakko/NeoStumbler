@@ -230,4 +230,5 @@
     <string name="wifi_rtt_ranging_mode_twosided_description">Voer alleen afstands­meting via Wi-Fi-RTT uit als het toegangs­punt twee­zijdige afstands­meting ondersteunt</string>
     <string name="wifi_rtt_ranging">Wi-Fi-afstands­meting</string>
     <string name="permission_rationale_wifi_rtt">Voor afstands­meting via Wi-Fi RTT zijn rechten vereist voor nabij­gelegen Wi-Fi-apparaten</string>
+    <string name="psc">PSC: %s</string>
 </resources>
