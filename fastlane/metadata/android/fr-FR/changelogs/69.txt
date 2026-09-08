@@ -1,0 +1,4 @@
+* La détection de mouvement basée sur la localisation est désormais légèrement moins sensible aux mouvements verticaux
+* Ajout de la traduction thaï
+* Mise à jour des traductions
+* Mise à jour des dépendances

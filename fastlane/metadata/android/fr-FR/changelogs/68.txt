@@ -1,0 +1,13 @@
+Nouvelles fonctionnalités
+* Wi-Fi RTT pour estimer la distance aux réseaux Wi-Fi
+* Zones restreintes pour éviter la collecte de données en zones sensibles
+
+Améliorations
+* Le "PSC" des antennes téléphoniques est visible dans les détails du rapport
+* Mise en pause des mises à jour de la localisation sur la carte si l'écran est éteint
+* Possibilité d'ouvrir les détails des rapports en appuyant longtemps sur les hexagones de la carte
+* Les titres des paramètres peuvent être plus longs
+
+Autres
+* Mise à jour des dépendances
+* Mise à jour des traductions

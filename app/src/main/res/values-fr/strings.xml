@@ -92,7 +92,7 @@
     <string name="suggested_service_website">Site web</string>
     <string name="notification_style_detailed_title">Détaillé</string>
     <string name="suggested_services_title">Services suggérés</string>
-    <string name="movement_detection_location_title">Basé sur la position</string>
+    <string name="movement_detection_location_title">Basée sur la position</string>
     <string name="db_prune_title">Supprimer les rapports envoyés</string>
     <string name="db_prune_one_month">Après un mois</string>
     <string name="movement_detection_none_description">Continuer le scan même sans mouvement</string>
@@ -102,7 +102,7 @@
     <string name="troubleshooting_description">Corriger les problèmes courants avec le scan</string>
     <string name="warning_icon_description">Icône d’avertissement</string>
     <string name="settings_group_scanning">Scan</string>
-    <string name="movement_detection">Détection du mouvement</string>
+    <string name="movement_detection">Détection de mouvement</string>
     <string name="movement_detection_location_description">Met en pause le scan lorsque la localisation ne change pas. Garde le GPS actif</string>
     <string name="movement_detection_significant_motion_title">Capteur de mouvements</string>
     <string name="unencrypted_endpoint_warning">Point de terminaison non chiffré</string>
@@ -238,4 +238,18 @@
     <string name="restricted_areas_delete">Supprimer les zones restreintes</string>
     <string name="restricted_areas_delete_confirmation">Êtes-vous sûr de vouloir supprimer les zones restreintes ?</string>
     <string name="restricted_areas_add">Ajouter une zone restreinte</string>
+    <string name="psc">PSC : %s</string>
+    <plurals name="restricted_areas_settings_description">
+        <item quantity="one">%d zone restreinte</item>
+        <item quantity="many">%d zones restreintes</item>
+        <item quantity="other">%d zones restreintes</item>
+    </plurals>
+    <string name="restricted_areas_explanation">Les zones restreintes peuvent être utilisées pour éviter de créer des rapports dans des zones sensibles, comme votre maison. Les mesures vont rester actives dans ces zones, mais les rapports créés dans ces zones seront automatiquement effacés.\n\nNotez que l\'absence de données peut par inadvertance révéler la localisation de vos zones restreintes !</string>
+    <string name="wifi_rtt_ranging">Mesure de distance Wi-Fi RTT</string>
+    <string name="wifi_rtt_ranging_mode_never_title">Jamais</string>
+    <string name="wifi_rtt_ranging_mode_always_title">Toujours</string>
+    <string name="wifi_rtt_ranging_mode_always_description">Utiliser une mesure unidirectionnelle moins précise si le point d\'accès ne supporte pas les mesures de distance Wi-Fi RTT</string>
+    <string name="wifi_rtt_ranging_mode_twosided_title">Bidirectionnelle uniquement</string>
+    <string name="wifi_rtt_ranging_mode_twosided_description">N\'utiliser les mesures Wi-Fi RTT que lorsque le point d\'accès prend en charge la mesure bidirectionnelle</string>
+    <string name="permission_rationale_wifi_rtt">La mesure de distance Wi-Fi RTT nécessite une permission pour accéder aux appareils Wi-Fi aux proximité</string>
 </resources>
