@@ -94,7 +94,8 @@ private fun Report.toGeolocateRequestDto(): GeolocateRequestDto {
                 .filter {
                     it.emitter.cellId != null &&
                         it.emitter.mobileCountryCode != null &&
-                        it.emitter.mobileNetworkCode != null
+                        it.emitter.mobileNetworkCode != null &&
+                        it.emitter.locationAreaCode != null
                 }
                 .map {
                     GeolocateRequestDto.CellTowerDto(
