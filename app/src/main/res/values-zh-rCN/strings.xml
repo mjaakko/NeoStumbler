@@ -59,7 +59,7 @@
     <string name="wifi_scan_throttling_explanation">你需要在你设备的设置中禁用 Wi-Fi 扫描限制才能启用此功能。通常可在开发者设置中找到</string>
     <string name="settings_group_other">其他</string>
     <string name="movement_detection">移动检测</string>
-    <string name="movement_detection_none_description">保持扫描，即使没有移动</string>
+    <string name="movement_detection_none_description">持续扫描，即使位置没有移动</string>
     <string name="movement_detection_location_title">基于位置</string>
     <string name="movement_detection_significant_motion_title">运动传感器</string>
     <string name="notification_style">通知样式</string>
@@ -109,7 +109,7 @@
     <string name="db_prune_six_months">6 个月后</string>
     <string name="about_app">关于 NeoStumbler</string>
     <string name="app_version">版本：%s</string>
-    <string name="bug_report_button">反馈 Bug</string>
+    <string name="bug_report_button">反馈问题</string>
     <string name="troubleshooting_title">故障排除</string>
     <string name="troubleshooting_battery_optimizations_disabled">电池优化已禁用</string>
     <string name="troubleshooting_accurate_location_available">精确位置可用</string>
@@ -136,7 +136,7 @@
     <string name="settings_ignore_wifi_scan_throttling_description">扫描受限时，每两分钟之内只能执行四次扫描</string>
     <string name="wifi_scan_frequency">Wi-Fi 扫描频率</string>
     <string name="cell_tower_scan_frequency">信号塔扫描频率</string>
-    <string name="every_x_meters">每过 %d 米</string>
+    <string name="every_x_meters">每隔 %d 米</string>
     <string name="map_tile_source">地图图块来源</string>
     <string name="toast_reports_upload_failed_no_endpoint">报告上传失败，原因：端点未配置</string>
     <string name="reports_last_uploaded_never">还未上传过</string>
@@ -144,7 +144,7 @@
     <string name="no_endpoint_configured">未配置端点</string>
     <string name="invalid_url">URL 无效</string>
     <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">OK</string>
-    <string name="troubleshooting_not_ok" tools:ignore="Typos">不OK</string>
+    <string name="troubleshooting_not_ok" tools:ignore="Typos">不 OK</string>
     <string name="mls_warning_text">Mozilla位置服务（MLS）已经关闭，不再接受数据提交。作为替代，您可将数据上传至beaconDB，其服务和MLS兼容\n\n请注意beaconDB仍在开发中，并会影响您提交的数据之处理方式。更多信息请参阅其<annotation link="privacy_policy">隐私政策</annotation>\n\n您是否希望将beaconDB设置为上传端点？稍后也可在设置中更改</string>
     <string name="coverage_layer_no_configured">未配置覆盖率地图</string>
     <string name="waiting_for_location">等待位置</string>
@@ -166,9 +166,9 @@
     <string name="altitude_metres">海拔：%s m</string>
     <string name="signal_strength_dbm">信号强度：%d dBm</string>
     <string name="unknown_cell_id">未知信号塔 ID</string>
-    <string name="mcc">MCC：%s</string>
-    <string name="mnc">MNC：%s</string>
-    <string name="lac">LAC：%s</string>
+    <string name="mcc">MCC: %s</string>
+    <string name="mnc">MNC: %s</string>
+    <string name="lac">LAC: %s</string>
     <string name="radio_type">类型：%s</string>
     <string name="beacon_type">信标类型：%s</string>
     <string name="beacon_id">ID%1$d: %2$s</string>
@@ -209,5 +209,19 @@
     <string name="pause_scanning_when_overheating">设备温度过高时暂停</string>
     <string name="scanning_status_paused">扫描<annotation style="status">已暂停</annotation></string>
     <string name="restricted_areas_settings_title">受限区域</string>
-    <string name="wifi_rtt_ranging_mode_never_title">从不</string>
+    <string name="wifi_rtt_ranging_mode_never_title">禁用</string>
+    <string name="wifi_rtt_ranging_mode_twosided_title">仅限双向测距</string>
+    <string name="wifi_rtt_ranging_mode_always_title">总是启用</string>
+    <string name="wifi_rtt_ranging">Wi-Fi 测距</string>
+    <string name="wifi_rtt_ranging_mode_always_description">如果接入点不支持 Wi-Fi RTT 双向测距，就使用单向测距</string>
+    <string name="wifi_rtt_ranging_mode_twosided_description">只在接入点支持双向测距时，进行 Wi-Fi RTT 测距</string>
+    <string name="permission_rationale_wifi_rtt">Wi-Fi RTT 测距需要获取附近 Wi-Fi 设备的权限</string>
+    <string name="psc">PSC: %s</string>
+    <plurals name="restricted_areas_settings_description">
+        <item quantity="other">%d 个受限区域</item>
+    </plurals>
+    <string name="restricted_areas_explanation">受限区域可用于避免在敏感地点（例如您的住所）生成报告。在这些区域之内，扫描仍会继续进行，但生成的任何报告都会被自动丢弃。 \n\n请注意，数据中的空白可能会无意间暴露受限区域的位置！</string>
+    <string name="restricted_areas_delete">删除受限区域</string>
+    <string name="restricted_areas_delete_confirmation">您确定要删除选中的区域吗？</string>
+    <string name="restricted_areas_add">添加受限区域</string>
 </resources>
