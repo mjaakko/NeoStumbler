@@ -17,7 +17,6 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import java.nio.file.Path
 import java.time.Duration
-import kotlin.io.path.createDirectories
 import kotlin.io.path.deleteIfExists
 import kotlin.io.path.deleteRecursively
 import kotlin.io.path.exists
@@ -100,8 +99,7 @@ class StumblerApplication : Application() {
 
         ThreadUtils.init(this)
 
-        val crashLogDirectory = filesDir.toPath().resolve("crash_log").createDirectories()
-
+        val crashLogDirectory = filesDir.toPath().resolve("crash_log")
         setupCrashMonitoring(crashLogDirectory)
 
         startKoin {

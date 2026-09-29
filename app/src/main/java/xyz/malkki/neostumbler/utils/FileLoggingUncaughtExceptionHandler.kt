@@ -4,6 +4,7 @@ import java.io.PrintWriter
 import java.nio.file.Path
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
+import kotlin.io.path.createDirectories
 import kotlin.io.path.outputStream
 
 /**
@@ -22,7 +23,7 @@ class FileLoggingUncaughtExceptionHandler(
 
     override fun uncaughtException(t: Thread, e: Throwable) {
         try {
-            val file = directory.resolve(getFileName())
+            val file = directory.also { it.createDirectories() }.resolve(getFileName())
 
             PrintWriter(file.outputStream()).use { e.printStackTrace(it) }
         } finally {
