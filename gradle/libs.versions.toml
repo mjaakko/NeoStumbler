@@ -15,7 +15,7 @@ androidxWork = "2.11.2"
 androidxNavigation = "1.1.7"
 androidxDataStore = "1.2.1"
 
-androidxComposeBom = "2026.08.00"
+androidxComposeBom = "2026.09.00"
 
 vico = "3.3.1"
 
