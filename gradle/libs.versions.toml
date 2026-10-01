@@ -11,7 +11,7 @@ androidGradlePlugin = "9.4.0"
 androidxLifecycle = "2.11.0"
 androidxPaging = "3.5.1"
 androidxRoom = "2.8.4"
-androidxWork = "2.11.2"
+androidxWork = "2.12.0"
 androidxNavigation = "1.1.7"
 androidxDataStore = "1.2.1"
 
