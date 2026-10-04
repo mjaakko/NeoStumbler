@@ -1,5 +1,7 @@
 package convention
 
+import constants.AndroidSdkVersions.COMPILE_SDK
+import constants.AndroidSdkVersions.MIN_SDK
 import constants.JvmVersion
 
 plugins {
@@ -8,7 +10,9 @@ plugins {
 }
 
 android {
-    compileSdk = 37
+    compileSdk {
+        version = COMPILE_SDK
+    }
 
     compileOptions {
         sourceCompatibility = JavaVersion.toVersion(JvmVersion.JVM_TARGET_VERSION)
@@ -16,7 +20,10 @@ android {
     }
 
     defaultConfig {
-        minSdk = 29
+        minSdk {
+            version = MIN_SDK
+        }
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 }

@@ -1,5 +1,8 @@
 package convention
 
+import constants.AndroidSdkVersions.COMPILE_SDK
+import constants.AndroidSdkVersions.MIN_SDK
+import constants.AndroidSdkVersions.TARGET_SDK
 import constants.JvmVersion
 
 plugins {
@@ -8,8 +11,20 @@ plugins {
 }
 
 android {
+    compileSdk {
+        version = COMPILE_SDK
+    }
+
     defaultConfig {
+        minSdk {
+            version = MIN_SDK
+        }
+        targetSdk {
+            version = TARGET_SDK
+        }
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
         vectorDrawables { useSupportLibrary = true }
     }
 
@@ -23,11 +38,6 @@ android {
         // See https://android.izzysoft.de/articles/named/iod-scan-apkchecks#blobs
         includeInApk = project.hasProperty("includeDependenciesInfo")
         includeInBundle = project.hasProperty("includeDependenciesInfo")
-    }
-
-    defaultConfig {
-        minSdk = 29
-        targetSdk = 37
     }
 }
 

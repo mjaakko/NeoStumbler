@@ -17,7 +17,6 @@ plugins {
 
 android {
     namespace = "xyz.malkki.neostumbler"
-    compileSdk = 37
 
     signingConfigs {
         create("release") {
