@@ -16,6 +16,14 @@ enum class MapTileSource(
         sourceUrl = "https://tiles.versatiles.org/assets/styles/colorful/style.json",
         sourceUrlDark = "https://tiles.versatiles.org/assets/styles/eclipse/style.json",
     ),
+    GOOGLE_MAPS(
+        title = "Google Maps",
+        sourceUrl = "asset://google_maps_raster_style.json",
+    ),
+    GOOGLE_MAPS_SATELLITE(
+        title = "Google Maps (Satellite)",
+        sourceUrl = "asset://google_maps_satellite_raster_style.json",
+    ),
     CUSTOM(title = null, sourceUrl = null);
 
     companion object {
