@@ -1,0 +1,27 @@
+{
+  "version": 8,
+  "name": "Google Maps Satellite",
+  "sources": {
+    "google-maps-satellite": {
+      "type": "raster",
+      "tiles": [
+        "https://mt0.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}",
+        "https://mt1.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}",
+        "https://mt2.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}",
+        "https://mt3.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}"
+      ],
+      "tileSize": 256,
+      "maxzoom": 20,
+      "attribution": "© Google Maps"
+    }
+  },
+  "layers": [
+    {
+      "id": "google-maps-satellite-layer",
+      "type": "raster",
+      "source": "google-maps-satellite",
+      "minzoom": 0,
+      "maxzoom": 20
+    }
+  ]
+}
