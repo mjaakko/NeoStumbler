@@ -25,72 +25,36 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
-import xyz.malkki.neostumbler.data.settings.Settings
-import xyz.malkki.neostumbler.data.settings.getEnum
-import xyz.malkki.neostumbler.data.settings.setEnum
 import xyz.malkki.neostumbler.ui.composables.settings.SettingsToggle
 import xyz.malkki.neostumbler.ui.composables.settings.UrlField
 import xyz.malkki.neostumbler.ui.composables.shared.Dialog
+import xyz.malkki.neostumbler.ui.composables.shared.FilePicker
+import xyz.malkki.neostumbler.ui.map.CustomMapTileSource
+import xyz.malkki.neostumbler.ui.map.MapSettingsManager
 import xyz.malkki.neostumbler.ui.map.MapTileSource
-
-private typealias TileSourceAndStyleUrl = Pair<MapTileSource, String>
-
-private fun Settings.selectedMapTileSourceAndStyleUrl(): Flow<TileSourceAndStyleUrl> =
-    getSnapshotFlow().map { prefs ->
-        val tileSource = prefs.getEnum(PreferenceKeys.MAP_TILE_SOURCE) ?: MapTileSource.DEFAULT
-        val styleUrl = prefs.getString(PreferenceKeys.MAP_TILE_SOURCE_CUSTOM_URL) ?: ""
-
-        tileSource to styleUrl
-    }
+import xyz.malkki.neostumbler.ui.map.PredefinedMapTileSource
 
 @Composable
-fun MapSettingsButton(modifier: Modifier, settings: Settings = koinInject()) {
-    val coroutineScope = rememberCoroutineScope()
-
+fun MapSettingsButton(modifier: Modifier) {
     var dialogOpen by rememberSaveable { mutableStateOf(false) }
 
-    val selectedMapTileSourceAndStyleUrl by
-        settings.selectedMapTileSourceAndStyleUrl().collectAsStateWithLifecycle(initialValue = null)
-
     if (dialogOpen) {
-        selectedMapTileSourceAndStyleUrl?.let { (selectedMapTileSource, styleUrl) ->
-            MapSettingsDialog(
-                currentSettings = selectedMapTileSource to styleUrl,
-                onCloseDialog = { newSettings ->
-                    if (newSettings != null) {
-                        coroutineScope.launch {
-                            settings.edit {
-                                setEnum(PreferenceKeys.MAP_TILE_SOURCE, newSettings.first)
-
-                                setString(
-                                    PreferenceKeys.MAP_TILE_SOURCE_CUSTOM_URL,
-                                    newSettings.second,
-                                )
-                            }
-                        }
-                    }
-
-                    dialogOpen = false
-                },
-            )
-        }
+        MapSettingsDialog(onCloseDialog = { dialogOpen = false })
     }
 
     FilledTonalIconButton(
         modifier = modifier,
         onClick = { dialogOpen = true },
-        enabled = selectedMapTileSourceAndStyleUrl != null,
         colors = IconButtonDefaults.filledTonalIconButtonColors(),
     ) {
         Icon(
@@ -103,32 +67,35 @@ fun MapSettingsButton(modifier: Modifier, settings: Settings = koinInject()) {
 
 @Composable
 private fun MapSettingsDialog(
-    currentSettings: TileSourceAndStyleUrl,
-    onCloseDialog: (TileSourceAndStyleUrl?) -> Unit,
+    mapSettingsManager: MapSettingsManager = koinInject(),
+    onCloseDialog: () -> Unit,
 ) {
-    val selectedTileSource = rememberSaveable { mutableStateOf(currentSettings.first) }
-    val selectedStyleUrl = rememberSaveable { mutableStateOf<String?>(currentSettings.second) }
+    val coroutineScope = rememberCoroutineScope()
+
+    val selectedMapTileSource by
+        mapSettingsManager.selectedMapStyle.collectAsStateWithLifecycle(initialValue = null)
 
     Dialog(
         title = stringResource(id = R.string.map_tile_source),
-        onDismissRequest = {
-            @Suppress("UnsafeCallOnNullableType") // ParamField forces the type to be nullable
-            onCloseDialog(selectedTileSource.value to selectedStyleUrl.value!!)
-        },
+        onDismissRequest = onCloseDialog,
     ) {
         Column {
             Column(
                 modifier = Modifier.selectableGroup().padding(bottom = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                MapTileSource.entries.forEach { mapTileSource ->
+                MapTileSource.options.forEach { mapTileSource ->
                     Row(
                         Modifier.fillMaxWidth()
                             .wrapContentHeight()
                             .defaultMinSize(minHeight = 36.dp)
                             .selectable(
-                                selected = mapTileSource == selectedTileSource.value,
-                                onClick = { selectedTileSource.value = mapTileSource },
+                                selected = mapTileSource == selectedMapTileSource,
+                                onClick = {
+                                    coroutineScope.launch {
+                                        mapSettingsManager.setMapTileSource(mapTileSource)
+                                    }
+                                },
                                 role = Role.RadioButton,
                             )
                             .padding(horizontal = 16.dp, vertical = 4.dp),
@@ -137,7 +104,7 @@ private fun MapSettingsDialog(
                         RadioButton(
                             modifier =
                                 Modifier.align(Alignment.CenterVertically).padding(top = 4.dp),
-                            selected = mapTileSource == selectedTileSource.value,
+                            selected = mapTileSource == selectedMapTileSource,
                             onClick = null,
                         )
 
@@ -145,23 +112,29 @@ private fun MapSettingsDialog(
                             modifier =
                                 Modifier.align(Alignment.CenterVertically).padding(start = 16.dp),
                             text =
-                                if (mapTileSource == MapTileSource.CUSTOM) {
-                                    stringResource(R.string.map_tile_source_custom_title)
-                                } else {
-                                    mapTileSource.title.orEmpty()
+                                when (mapTileSource) {
+                                    is CustomMapTileSource ->
+                                        stringResource(mapTileSource.titleResourceId)
+                                    is PredefinedMapTileSource -> mapTileSource.title
                                 },
                             style = MaterialTheme.typography.bodyMedium,
                         )
                     }
-                }
-            }
 
-            if (selectedTileSource.value == MapTileSource.CUSTOM) {
-                UrlField(
-                    modifier = Modifier.padding(bottom = 12.dp),
-                    label = stringResource(R.string.map_tile_source_custom_style_url),
-                    state = selectedStyleUrl,
-                )
+                    if (mapTileSource == selectedMapTileSource) {
+                        when (selectedMapTileSource) {
+                            CustomMapTileSource.CUSTOM_URL -> {
+                                CustomMapStyleUrl(mapSettingsManager)
+                            }
+
+                            CustomMapTileSource.CUSTOM_FILE -> {
+                                CustomMapStyleFile(mapSettingsManager)
+                            }
+
+                            else -> {}
+                        }
+                    }
+                }
             }
 
             HorizontalDivider()
@@ -175,4 +148,42 @@ private fun MapSettingsDialog(
             }
         }
     }
+}
+
+@Composable
+private fun CustomMapStyleUrl(mapSettingsManager: MapSettingsManager) {
+    val coroutineScope = rememberCoroutineScope()
+
+    val selectedMapTileSourceUrl by
+        mapSettingsManager.selectedMapStyleUrl.collectAsStateWithLifecycle(initialValue = null)
+
+    UrlField(
+        modifier = Modifier.padding(bottom = 12.dp),
+        label = stringResource(R.string.map_tile_source_custom_url_description),
+        value = selectedMapTileSourceUrl?.styleUrl.orEmpty(),
+        onValueChange = {
+            coroutineScope.launch { mapSettingsManager.setCustomUrlMapTileSource(it) }
+        },
+    )
+}
+
+@Composable
+private fun CustomMapStyleFile(mapSettingsManager: MapSettingsManager) {
+    val coroutineScope = rememberCoroutineScope()
+
+    val mapStyleFile by
+        mapSettingsManager.mapStyleFile.collectAsStateWithLifecycle(initialValue = null)
+
+    FilePicker(
+        modifier = Modifier.padding(horizontal = 8.dp),
+        directory = LocalContext.current.dataDir.resolve("map_settings"),
+        defaultFileName = "style.json",
+        selectedFile = mapStyleFile?.toFile(),
+        onFileSelected = { file ->
+            coroutineScope.launch { mapSettingsManager.setCustomFileMapTileSource(file.toPath()) }
+        },
+        onFileDeleted = {
+            coroutineScope.launch { mapSettingsManager.setCustomFileMapTileSource(null) }
+        },
+    )
 }

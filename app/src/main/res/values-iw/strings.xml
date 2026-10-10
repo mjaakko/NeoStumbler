@@ -202,8 +202,8 @@
     <string name="text_copied_to_clipboard">הטקסט הועתק ללוח!</string>
     <string name="crash_log_title">יומן קריסה</string>
     <string name="distance_to_estimated_location">מרחק מהמקום המשוערך: %d מ׳</string>
-    <string name="map_tile_source_custom_title">מותאם אישית</string>
-    <string name="map_tile_source_custom_style_url">כתובת סגנון מפה מותאם אישית</string>
+    <string name="map_tile_source_custom_url_title">מותאם אישית</string>
+    <string name="map_tile_source_custom_url_description">כתובת סגנון מפה מותאם אישית</string>
     <string name="map_show_coverage_layer">הצגת שכבת כיסוי</string>
     <string name="geocoder_default_title">ברירת מחדל</string>
     <string name="geocoder_disabled_title">מושבת</string>

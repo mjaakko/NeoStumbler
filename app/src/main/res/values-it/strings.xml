@@ -195,8 +195,8 @@
     <string name="moving_device_filter_description">Reti Wi-Fi e beacon Bluetooth mobili vengono rilevati e filtrati automaticamente dai report</string>
     <string name="passive_scanning_title">Raccolta dati passiva</string>
     <string name="passive_scanning_description">La raccolta dati passiva crea report in background con un impatto minimo sulla batteria utilizzando i dati richiesti da altre applicazioni.\n\nL\'efficacia della raccolta dati passiva dipenderà dal tipo di dispositivo, dalle altre app che stai utilizzando e se hai disponibile un provider di posizione fuso.\n\nVuoi abilitare la raccolta dati passiva?</string>
-    <string name="map_tile_source_custom_title">Personalizzato</string>
-    <string name="map_tile_source_custom_style_url">URL stile mappa personalizzato</string>
+    <string name="map_tile_source_custom_url_title">Personalizzato</string>
+    <string name="map_tile_source_custom_url_description">URL stile mappa personalizzato</string>
     <string name="crash_log_title">Registro errori</string>
     <string name="crash_log_entry_title">Errore %s</string>
     <string name="delete_all">Cancella tutto</string>

@@ -197,8 +197,8 @@
     <string name="signal_strength_dbm">Jelerősség: %d dBm</string>
     <string name="passive_scanning_description">A passzív adatgyűjtés más alkalmazások által kért adatok felhasználásával a háttérben, minimális akkumulátorhasználattal rögzít eredményeket.\n\nA passzív adatgyűjtés hatékonysága függ az eszköz típusától, a használt egyéb alkalmazásoktól, valamint az elérhető helyfúziós szolgáltatásoktól.\n\nEngedélyezed a passzív adatgyűjtést?</string>
     <string name="distance_to_estimated_location">Távolság a becsült pozíciótól: %d m</string>
-    <string name="map_tile_source_custom_title">Egyéni</string>
-    <string name="map_tile_source_custom_style_url">Egyéni térképstílus URL</string>
+    <string name="map_tile_source_custom_url_title">Egyéni</string>
+    <string name="map_tile_source_custom_url_description">Egyéni térképstílus URL</string>
     <string name="map_show_coverage_layer">Lefedettségi réteg mutatása</string>
     <string name="geocoder_settings_title">Geokódoló</string>
     <string name="geocoder_default_title">Alapértelmezett</string>

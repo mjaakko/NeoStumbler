@@ -207,8 +207,8 @@
     <string name="moving_device_filter_description">Двигающиеся сети Wi-Fi и маячки Bluetooth автоматически удаляются и фильтруются из отчётов</string>
     <string name="moving_device_filter_title">Фильтровать двигающиеся устройства</string>
     <string name="distance_to_estimated_location">Расстояние до предпологаемого местоположения: %d м</string>
-    <string name="map_tile_source_custom_title">Пользовательский</string>
-    <string name="map_tile_source_custom_style_url">URL пользовательского стиля карты</string>
+    <string name="map_tile_source_custom_url_title">Пользовательский</string>
+    <string name="map_tile_source_custom_url_description">URL пользовательского стиля карты</string>
     <string name="map_show_coverage_layer">Показывать слой покрытия</string>
     <string name="third_party_licenses">Сторонние лицензии</string>
     <string name="beacon_type_ibeacon">iBeacon</string>

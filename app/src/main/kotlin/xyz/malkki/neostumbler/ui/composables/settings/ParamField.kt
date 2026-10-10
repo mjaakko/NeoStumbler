@@ -24,10 +24,29 @@ fun ParamField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     modifier: Modifier = Modifier.fillMaxWidth(),
 ) {
+    ParamField(
+        label = label,
+        value = state.value.orEmpty(),
+        onValueChange = { state.value = it },
+        onDone = onDone,
+        keyboardOptions = keyboardOptions,
+        modifier,
+    )
+}
+
+@Composable
+fun ParamField(
+    label: String,
+    value: String,
+    onValueChange: (String) -> Unit,
+    onDone: (() -> Unit)? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    modifier: Modifier = Modifier.fillMaxWidth(),
+) {
     TextField(
         modifier = modifier,
-        value = state.value.orEmpty(),
-        onValueChange = { newValue -> state.value = newValue },
+        value = value,
+        onValueChange = onValueChange,
         keyboardActions = onDone?.let { KeyboardActions { onDone() } } ?: KeyboardActions.Default,
         keyboardOptions =
             if (onDone != null) {
@@ -59,6 +78,32 @@ fun UrlField(
         if (!state.value.isValidUrl) {
             Warning(warningText = R.string.invalid_url)
         } else if (state.value.isUnencryptedUrl) {
+            Warning(warningText = R.string.unencrypted_endpoint_warning)
+        }
+    }
+}
+
+@Composable
+fun UrlField(
+    label: String,
+    value: String,
+    onValueChange: (String) -> Unit,
+    onDone: (() -> Unit)? = null,
+    modifier: Modifier = Modifier.fillMaxWidth(),
+) {
+    Column(modifier = Modifier.width(IntrinsicSize.Max)) {
+        ParamField(
+            label = label,
+            value = value,
+            onValueChange = onValueChange,
+            onDone = onDone,
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Uri),
+            modifier = modifier,
+        )
+
+        if (!value.isValidUrl) {
+            Warning(warningText = R.string.invalid_url)
+        } else if (value.isUnencryptedUrl) {
             Warning(warningText = R.string.unencrypted_endpoint_warning)
         }
     }

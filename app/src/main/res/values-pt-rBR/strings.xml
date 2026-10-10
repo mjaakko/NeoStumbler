@@ -204,8 +204,8 @@
     <string name="moving_device_filter_title">Filtrar dispositivos móveis</string>
     <string name="moving_device_filter_description">Redes Wi-Fi e sinalizadores Bluetooth que se movem são detectados automaticamente e filtrados dos relatórios</string>
     <string name="distance_to_estimated_location">Distância até a estimativa de localização: %d m</string>
-    <string name="map_tile_source_custom_title">Personalizado</string>
-    <string name="map_tile_source_custom_style_url">URL do estilo do mapa personalizado</string>
+    <string name="map_tile_source_custom_url_title">Personalizado</string>
+    <string name="map_tile_source_custom_url_description">URL do estilo do mapa personalizado</string>
     <string name="map_show_coverage_layer">Mostrar a camada de cobertura</string>
     <string name="third_party_licenses">Licenças de terceiros</string>
     <string name="geocoder_settings_title">Tradutor de endereços</string>

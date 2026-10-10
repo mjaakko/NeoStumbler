@@ -224,8 +224,8 @@
     <string name="passive_scanning_title">パッシブデータ収集</string>
     <string name="passive_scanning_description">パッシブデータ収集は、他のアプリケーションから要求されたデータを利用して、バッテリーへの影響を最小限に抑えながらバックグラウンドでレポートを作成します。\n\nパッシブデータ収集の効果は、デバイスの種類、使用している他のアプリ、および統合位置情報プロバイダーが利用可能かどうかによって異なります。\n\nパッシブデータ収集を有効にしますか？</string>
     <string name="map_data_sources">マップのデータソース</string>
-    <string name="map_tile_source_custom_title">カスタム</string>
-    <string name="map_tile_source_custom_style_url">カスタムマップのURL</string>
+    <string name="map_tile_source_custom_url_title">カスタム</string>
+    <string name="map_tile_source_custom_url_description">カスタムマップのURL</string>
     <string name="map_show_coverage_layer">カバレッジレイヤーを表示</string>
     <string name="permission_rationale_background_location_passive_scan">パッシブデータ収集では、アプリがアクティブでないときにレポートを作成するために、バックグラウンドで位置情報へのアクセスが必要です</string>
     <string name="geocoder_settings_title">ジオコーダー</string>
