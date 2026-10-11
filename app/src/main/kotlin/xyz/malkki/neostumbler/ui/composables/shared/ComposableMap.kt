@@ -43,6 +43,7 @@ import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.network.HttpCallFactoryProvider
 import xyz.malkki.neostumbler.ui.map.LifecycleAwareMapView
 import xyz.malkki.neostumbler.ui.map.MapSettingsManager
+import xyz.malkki.neostumbler.ui.map.OverrideMapTheme
 
 @Composable
 private fun HttpCallFactoryProvider.getCallFactoryAsState() =
@@ -74,8 +75,16 @@ fun ComposableMap(
     val mapStyleUrl by
         mapSettingsManager.selectedMapStyleUrl.collectAsStateWithLifecycle(initialValue = null)
 
+    val mapThemeOverride by
+        mapSettingsManager.mapThemeOverride.collectAsStateWithLifecycle(
+            initialValue = OverrideMapTheme.SYSTEM
+        )
+
     val mapTileSourceUrl =
-        mapStyleUrl?.styleUrlDark?.takeIf { isSystemInDarkTheme() } ?: mapStyleUrl?.styleUrl
+        mapStyleUrl?.styleUrlDark?.takeIf {
+            mapThemeOverride == OverrideMapTheme.DARK ||
+                (isSystemInDarkTheme() && mapThemeOverride == OverrideMapTheme.SYSTEM)
+        } ?: mapStyleUrl?.styleUrl
 
     if (attributionDialogOpen) {
         AttributionDialog(

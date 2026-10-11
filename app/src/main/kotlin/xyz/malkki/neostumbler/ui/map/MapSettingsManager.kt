@@ -10,6 +10,7 @@ import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.data.settings.getEnum
+import xyz.malkki.neostumbler.data.settings.getEnumFlow
 import xyz.malkki.neostumbler.data.settings.setEnum
 
 class MapSettingsManager(private val settings: Settings) {
@@ -58,6 +59,9 @@ class MapSettingsManager(private val settings: Settings) {
             snapshot.getString(PreferenceKeys.MAP_TILE_SOURCE_CUSTOM_FILE)?.let { Path(it) }
         }
 
+    val mapThemeOverride =
+        settings.getEnumFlow(PreferenceKeys.MAP_THEME_OVERRIDE, OverrideMapTheme.SYSTEM)
+
     suspend fun setMapTileSource(mapTileSource: MapTileSource) {
         settings.edit {
             when (mapTileSource) {
@@ -83,6 +87,10 @@ class MapSettingsManager(private val settings: Settings) {
                 removeString(PreferenceKeys.MAP_TILE_SOURCE_CUSTOM_FILE)
             }
         }
+    }
+
+    suspend fun setMapThemeOverride(mapTheme: OverrideMapTheme) {
+        settings.edit { setEnum(PreferenceKeys.MAP_THEME_OVERRIDE, mapTheme) }
     }
 }
 
@@ -121,4 +129,13 @@ enum class PredefinedMapTileSource(
 enum class CustomMapTileSource(@StringRes val titleResourceId: Int) : MapTileSource {
     CUSTOM_URL(titleResourceId = R.string.map_tile_source_custom_url_title),
     CUSTOM_FILE(titleResourceId = R.string.map_tile_source_custom_file_title),
+}
+
+enum class OverrideMapTheme {
+    /** Show map in system theme */
+    SYSTEM,
+    /** Show map in light theme */
+    LIGHT,
+    /** Show map in dark theme */
+    DARK,
 }

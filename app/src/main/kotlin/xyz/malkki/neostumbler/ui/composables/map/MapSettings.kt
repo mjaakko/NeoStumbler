@@ -35,6 +35,7 @@ import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.ui.composables.ToggleWithAction
 import xyz.malkki.neostumbler.ui.composables.settings.SettingsToggle
 import xyz.malkki.neostumbler.ui.composables.settings.UrlField
 import xyz.malkki.neostumbler.ui.composables.shared.Dialog
@@ -42,6 +43,7 @@ import xyz.malkki.neostumbler.ui.composables.shared.FilePicker
 import xyz.malkki.neostumbler.ui.map.CustomMapTileSource
 import xyz.malkki.neostumbler.ui.map.MapSettingsManager
 import xyz.malkki.neostumbler.ui.map.MapTileSource
+import xyz.malkki.neostumbler.ui.map.OverrideMapTheme
 import xyz.malkki.neostumbler.ui.map.PredefinedMapTileSource
 
 @Composable
@@ -140,6 +142,25 @@ private fun MapSettingsDialog(
             HorizontalDivider()
 
             Column(modifier = Modifier.padding(all = 8.dp)) {
+                val mapThemeOverride by
+                    mapSettingsManager.mapThemeOverride.collectAsStateWithLifecycle(
+                        initialValue = OverrideMapTheme.SYSTEM
+                    )
+
+                ToggleWithAction(
+                    title = stringResource(R.string.map_always_in_light_mode),
+                    checked = mapThemeOverride == OverrideMapTheme.LIGHT,
+                    action = { checked ->
+                        mapSettingsManager.setMapThemeOverride(
+                            if (checked) {
+                                OverrideMapTheme.LIGHT
+                            } else {
+                                OverrideMapTheme.SYSTEM
+                            }
+                        )
+                    },
+                )
+
                 SettingsToggle(
                     title = stringResource(R.string.map_show_coverage_layer),
                     preferenceKey = PreferenceKeys.COVERAGE_LAYER_ENABLED,

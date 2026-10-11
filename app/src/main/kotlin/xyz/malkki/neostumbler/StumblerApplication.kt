@@ -152,7 +152,7 @@ class StumblerApplication : Application() {
 
             modules(
                 module {
-                    viewModel { MapViewModel(get(), get(), get(), get(), get()) }
+                    viewModel { MapViewModel(get(), get(), get(), get(), get(), get()) }
 
                     viewModel { StatisticsViewModel(get()) }
 
