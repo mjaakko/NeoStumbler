@@ -1,10 +1,12 @@
 package xyz.malkki.neostumbler.activescan
 
 import android.annotation.SuppressLint
+import android.app.ForegroundServiceStartNotAllowedException
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
+import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import androidx.core.app.ServiceCompat
@@ -22,9 +24,11 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 import xyz.malkki.neostumbler.activescan.adapter.NotificationParams
 import xyz.malkki.neostumbler.activescan.adapter.NotificationStyle
 import xyz.malkki.neostumbler.activescan.adapter.ScanNotificationAdapter
+import xyz.malkki.neostumbler.activescan.adapter.ScanStartErrorHandler
 import xyz.malkki.neostumbler.activescan.adapter.ScannerQSTileAdapter
 import xyz.malkki.neostumbler.activescan.internal.WakeLockHelper
 import xyz.malkki.neostumbler.coroutineservice.CoroutineService
@@ -74,6 +78,8 @@ class ActiveScanService : CoroutineService() {
     private val scanNotificationAdapter: ScanNotificationAdapter by inject()
 
     private val scannerQSTileAdapter: ScannerQSTileAdapter by inject()
+
+    private val scanStartErrorHandler: ScanStartErrorHandler by inject()
 
     private lateinit var notificationManager: NotificationManager
 
@@ -167,24 +173,40 @@ class ActiveScanService : CoroutineService() {
 
         scannerQSTileAdapter.updateQuickSettingsTile()
 
-        ServiceCompat.startForeground(
-            this,
-            NOTIFICATION_ID,
-            scanNotificationAdapter.createNotification(
-                context = this,
-                params =
-                    NotificationParams(
-                        notificationStyle = notificationStyle.value,
-                        startedAt = startedAt,
-                        state = ScanState.Active,
-                        autostarted = serviceAutostarted,
-                        reportsCreated = reportsCreated.value,
-                        gpsStatus = gpsStatus.value,
-                        stopIntent = stopIntent(this@ActiveScanService),
-                    ),
-            ),
-            ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION,
-        )
+        try {
+            ServiceCompat.startForeground(
+                this,
+                NOTIFICATION_ID,
+                scanNotificationAdapter.createNotification(
+                    context = this,
+                    params =
+                        NotificationParams(
+                            notificationStyle = notificationStyle.value,
+                            startedAt = startedAt,
+                            state = ScanState.Active,
+                            autostarted = serviceAutostarted,
+                            reportsCreated = reportsCreated.value,
+                            gpsStatus = gpsStatus.value,
+                            stopIntent = stopIntent(this@ActiveScanService),
+                        ),
+                ),
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION,
+            )
+        } catch (
+            /* Can't catch the specific exception as it's only available on Android 12+ */
+            @Suppress("TooGenericExceptionCaught") ex: Exception) {
+            if (
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                    ex is ForegroundServiceStartNotAllowedException || ex is SecurityException
+            ) {
+                Timber.e(ex, "Failed to start scanner service")
+                scanStartErrorHandler.handleScanStartFailed(ex)
+                stopSelf()
+                return START_NOT_STICKY
+            } else {
+                throw ex
+            }
+        }
 
         serviceScope.launch {
             settingsAwareActiveReportCreator.scanAndCreateReports(

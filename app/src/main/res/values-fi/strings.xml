@@ -39,6 +39,7 @@
     <string name="reports_empty">Ei raportteja vielä</string>
     <string name="start_scanning">Aloita skannaus</string>
     <string name="stop_scanning">Lopeta skannaus</string>
+    <string name="scanning_start_error_not_in_foreground">Skannauksen aloittaminen ei onnistunut. Avaa sovellus ja yritä uudelleen.</string>
     <string name="scanning_status_active">Skannaus <annotation style="status">päällä</annotation></string>
     <string name="scanning_status_paused">Skannaus <annotation style="status">keskeytetty</annotation></string>
     <string name="scanning_status_not_active">Skannaus <annotation style="status">ei päällä</annotation></string>
