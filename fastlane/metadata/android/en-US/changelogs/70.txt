@@ -1,0 +1,6 @@
+* Custom map styles can now be imported from a file
+* Map can now be forced to use light mode
+* Fixed a crash when toggling fused location provider without suitable permissions
+* Fixed a crash when trying to start scanning from background
+* Updated translations
+* Updated dependencies
