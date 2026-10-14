@@ -197,8 +197,8 @@
     <string name="moving_device_filter_title">Bewegende apparaten wegfilteren</string>
     <string name="moving_device_filter_description">Bewegende wifi-netwerken en Bluetooth-bakens worden automatisch gedetecteerd en uit rapporten gefilterd</string>
     <string name="distance_to_estimated_location">Afstand tot de geschatte locatie: %d m</string>
-    <string name="map_tile_source_custom_title">Aangepast</string>
-    <string name="map_tile_source_custom_style_url">Url voor aangepaste kaartstĳl</string>
+    <string name="map_tile_source_custom_url_title">Aangepast</string>
+    <string name="map_tile_source_custom_url_description">Url voor aangepaste kaartstĳl</string>
     <string name="map_show_coverage_layer">Dekkings­laag weergeven</string>
     <string name="third_party_licenses">Licenties van derden</string>
     <string name="geocoder_settings_title">Geocoder</string>

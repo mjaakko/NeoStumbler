@@ -40,13 +40,10 @@ import org.maplibre.android.maps.Style
 import org.maplibre.android.module.http.HttpRequestUtil
 import org.maplibre.android.style.sources.Source
 import xyz.malkki.neostumbler.R
-import xyz.malkki.neostumbler.constants.PreferenceKeys
-import xyz.malkki.neostumbler.data.settings.Settings
-import xyz.malkki.neostumbler.data.settings.getEnumFlow
-import xyz.malkki.neostumbler.data.settings.getStringFlow
 import xyz.malkki.neostumbler.network.HttpCallFactoryProvider
 import xyz.malkki.neostumbler.ui.map.LifecycleAwareMapView
-import xyz.malkki.neostumbler.ui.map.MapTileSource
+import xyz.malkki.neostumbler.ui.map.MapSettingsManager
+import xyz.malkki.neostumbler.ui.map.OverrideMapTheme
 
 @Composable
 private fun HttpCallFactoryProvider.getCallFactoryAsState() =
@@ -61,7 +58,7 @@ fun ComposableMap(
     onStyleUpdated: @DisallowComposableCalls (Style) -> Unit,
     updateMap: @Composable (MapLibreMap) -> Unit,
     httpClientProvider: HttpCallFactoryProvider = koinInject(),
-    settings: Settings = koinInject(),
+    mapSettingsManager: MapSettingsManager = koinInject(),
 ) {
     val lifecycle = LocalLifecycleOwner.current.lifecycle
 
@@ -75,22 +72,19 @@ fun ComposableMap(
 
     val httpClient by httpClientProvider.getCallFactoryAsState()
 
-    val mapTileSource by
-        settings
-            .getEnumFlow(PreferenceKeys.MAP_TILE_SOURCE, MapTileSource.DEFAULT)
-            .collectAsStateWithLifecycle(initialValue = MapTileSource.DEFAULT)
+    val mapStyleUrl by
+        mapSettingsManager.selectedMapStyleUrl.collectAsStateWithLifecycle(initialValue = null)
 
-    val customMapStyleUrl by
-        settings
-            .getStringFlow(PreferenceKeys.MAP_TILE_SOURCE_CUSTOM_URL, "")
-            .collectAsStateWithLifecycle(initialValue = "")
+    val mapThemeOverride by
+        mapSettingsManager.mapThemeOverride.collectAsStateWithLifecycle(
+            initialValue = OverrideMapTheme.SYSTEM
+        )
 
     val mapTileSourceUrl =
-        if (mapTileSource == MapTileSource.CUSTOM) {
-            customMapStyleUrl
-        } else {
-            mapTileSource.sourceUrlDark?.takeIf { isSystemInDarkTheme() } ?: mapTileSource.sourceUrl
-        }
+        mapStyleUrl?.styleUrlDark?.takeIf {
+            mapThemeOverride == OverrideMapTheme.DARK ||
+                (isSystemInDarkTheme() && mapThemeOverride == OverrideMapTheme.SYSTEM)
+        } ?: mapStyleUrl?.styleUrl
 
     if (attributionDialogOpen) {
         AttributionDialog(

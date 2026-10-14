@@ -50,6 +50,7 @@ import xyz.malkki.neostumbler.extensions.getTextCompat
 import xyz.malkki.neostumbler.network.networkModule
 import xyz.malkki.neostumbler.scanner.passive.passiveScanningModule
 import xyz.malkki.neostumbler.scanner.postprocess.postProcessorsModule
+import xyz.malkki.neostumbler.ui.map.MapSettingsManager
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
 import xyz.malkki.neostumbler.ui.viewmodel.ReportDetailsViewModel
 import xyz.malkki.neostumbler.ui.viewmodel.ReportsViewModel
@@ -141,6 +142,8 @@ class StumblerApplication : Application() {
                         DataStoreSettings(get(PREFERENCES))
                     }
 
+                    single { MapSettingsManager(get()) }
+
                     single { OneTimeActionHelper(oneTimeActionsStore) }
                 }
             )
@@ -149,7 +152,7 @@ class StumblerApplication : Application() {
 
             modules(
                 module {
-                    viewModel { MapViewModel(get(), get(), get(), get(), get()) }
+                    viewModel { MapViewModel(get(), get(), get(), get(), get(), get()) }
 
                     viewModel { StatisticsViewModel(get()) }
 

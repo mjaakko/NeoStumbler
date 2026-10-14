@@ -200,8 +200,8 @@
     <string name="beacon_type_ibeacon">ஐதீப்பந்தம்</string>
     <string name="beacon_type_altbeacon">மாற்றுதீப்பந்தம்</string>
     <string name="map_data_sources">வரைபட தரவு ஆதாரங்கள்</string>
-    <string name="map_tile_source_custom_title">தனிப்பயன்</string>
-    <string name="map_tile_source_custom_style_url">தனிப்பயன் வரைபட நடை முகவரி</string>
+    <string name="map_tile_source_custom_url_title">தனிப்பயன்</string>
+    <string name="map_tile_source_custom_url_description">தனிப்பயன் வரைபட நடை முகவரி</string>
     <string name="map_show_coverage_layer">கவரேச் லேயரைக் காட்டு</string>
     <string name="geocoder_settings_title">புவிசார் குறியீடு</string>
     <string name="geocoder_default_title">இயல்புநிலை</string>

@@ -15,9 +15,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -39,13 +41,14 @@ fun ToggleWithAction(
     title: String,
     description: String? = null,
     warningWhenDisabled: String? = null,
-    enabled: Boolean,
+    enabled: Boolean = true,
     checked: Boolean,
     maxTitleLines: Int = 2,
     action: suspend (Boolean) -> Unit,
 ) {
-    val changingState = remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
+
+    var changingState by remember { mutableStateOf(false) }
 
     val alpha =
         if (!enabled) {
@@ -59,12 +62,12 @@ fun ToggleWithAction(
             Modifier.fillMaxWidth()
                 .wrapContentHeight()
                 .clickable(
-                    enabled = enabled && !changingState.value,
+                    enabled = enabled && !changingState,
                     onClick = {
                         coroutineScope.launch {
-                            changingState.value = true
+                            changingState = true
                             action(!checked)
-                            changingState.value = false
+                            changingState = false
                         }
                     },
                 )
@@ -123,7 +126,7 @@ fun ToggleWithAction(
 
         Switch(
             modifier = Modifier.wrapContentSize().padding(start = 8.dp),
-            enabled = enabled && !changingState.value,
+            enabled = enabled && !changingState,
             checked = checked,
             onCheckedChange = null,
         )

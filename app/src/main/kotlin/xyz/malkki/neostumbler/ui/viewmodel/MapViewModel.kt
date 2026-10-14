@@ -57,6 +57,8 @@ import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 import xyz.malkki.neostumbler.geography.LatLng
 import xyz.malkki.neostumbler.network.HttpCallFactoryProvider
+import xyz.malkki.neostumbler.ui.map.MapSettingsManager
+import xyz.malkki.neostumbler.ui.map.OverrideMapTheme
 import xyz.malkki.neostumbler.utils.getTileJsonLayerIds
 
 // The "size" of one report relative to the geohex size. The idea is that hexes with lower
@@ -75,10 +77,18 @@ private const val LOCATION_FLOW_TIMEOUT_MILLIS = 1000L
 class MapViewModel(
     application: Application,
     settings: Settings,
+    mapSettingsManager: MapSettingsManager,
     private val httpClientProvider: HttpCallFactoryProvider,
     private val reportProvider: ReportProvider,
     private val locationSourceProvider: LocationSourceProvider,
 ) : AndroidViewModel(application) {
+    val mapThemeOverride =
+        mapSettingsManager.mapThemeOverride.stateIn(
+            viewModelScope,
+            started = SharingStarted.Lazily,
+            initialValue = OverrideMapTheme.SYSTEM,
+        )
+
     val coverageTileJsonUrl: StateFlow<String?> =
         settings
             .getSnapshotFlow()

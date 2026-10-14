@@ -197,8 +197,8 @@
     <string name="crash_log_entry_title">Absturz %s</string>
     <string name="passive_scanning_description">Bei der passiven Datenerfassung werden Berichte im Hintergrund mit minimalen Auswirkungen auf den Akku erstellt, indem von anderen Anwendungen angeforderte Daten verwendet werden.\n\nDie Effektivität der passiven Datenerfassung hängt von deinem Gerätetyp, den anderen Anwendungen, die du verwendest, und davon ab, ob du einen Anbieter für einen kombinierten Standort zur Verfügung hast.\n\nMöchtest du die passive Datenerfassung aktivieren?</string>
     <string name="distance_to_estimated_location">Entfernung zum geschätzten Standort: %d m</string>
-    <string name="map_tile_source_custom_title">Benutzerdefiniert</string>
-    <string name="map_tile_source_custom_style_url">Benutzerdefinierte URL für Kartenstil</string>
+    <string name="map_tile_source_custom_url_title">Benutzerdefiniert</string>
+    <string name="map_tile_source_custom_url_description">Benutzerdefinierte URL für Kartenstil</string>
     <string name="map_show_coverage_layer">Abdeckungsebene anzeigen</string>
     <string name="geocoder_default_title">Standard</string>
     <string name="geocoder_settings_title">Geocoder</string>

@@ -102,8 +102,8 @@
     <string name="system_default_language">ภาษาค่าเริ่มต้นของระบบ</string>
     <string name="map_data_sources">แหล่งข้อมูลแผนที่</string>
     <string name="map_tile_source">แหล่งภาพแผนที่</string>
-    <string name="map_tile_source_custom_title">กำหนดเอง</string>
-    <string name="map_tile_source_custom_style_url">กำหนด URL รูปแบบแผนที่เอง</string>
+    <string name="map_tile_source_custom_url_title">กำหนดเอง</string>
+    <string name="map_tile_source_custom_url_description">กำหนด URL รูปแบบแผนที่เอง</string>
     <string name="show_my_location">แสดงตำแหน่งของฉัน</string>
     <string name="troubleshooting_title">การแก้ไขปัญหา</string>
     <string name="troubleshooting_description">แก้ปัญหาที่พบบ่อยขณะสแกน</string>

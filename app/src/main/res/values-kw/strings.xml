@@ -171,8 +171,8 @@
     <string name="system_default_language">Yeth dhefowt system</string>
     <string name="map_data_sources">Devedhyansow data mappa</string>
     <string name="map_tile_source">Devedhyans prileghen mappa</string>
-    <string name="map_tile_source_custom_title">A-vusur</string>
-    <string name="map_tile_source_custom_style_url">Gorgevren gis mappa a-vusur</string>
+    <string name="map_tile_source_custom_url_title">A-vusur</string>
+    <string name="map_tile_source_custom_url_description">Gorgevren gis mappa a-vusur</string>
     <string name="map_show_coverage_layer">Diskwedhes gwiskas efander</string>
     <string name="show_my_location">Diskwedhes ow thyller</string>
     <string name="permission_rationale_fine_location">Rag gwruthyl derivasow gans data tyller dhe les, res yw dhywgh ri kummyas rag tyller kewar</string>

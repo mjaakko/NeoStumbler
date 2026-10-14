@@ -11,6 +11,8 @@
     <string name="stop">Lopeta</string>
     <string name="delete">Poista</string>
     <string name="delete_all">Poista kaikki</string>
+    <string name="no_file_selected">Ei valittua tiedostoa</string>
+    <string name="select_file">Valitse tiedosto</string>
     <string name="no_data">Ei tietoja</string>
     <string name="copy">Kopioi</string>
     <string name="text_copied_to_clipboard">Teksti kopioitu leikepöydälle!</string>
@@ -223,8 +225,10 @@
     <string name="system_default_language">Käyttöjärjestelmän oletuskieli</string>
     <string name="map_data_sources">Kartan tietolähteet</string>
     <string name="map_tile_source">Karttatiilien lähde</string>
-    <string name="map_tile_source_custom_title">Vapaavalintainen</string>
-    <string name="map_tile_source_custom_style_url">Karttatiilien URL</string>
+    <string name="map_tile_source_custom_url_title">Vapaavalintainen URL</string>
+    <string name="map_tile_source_custom_url_description">Karttatiilien URL</string>
+    <string name="map_tile_source_custom_file_title">Vapaavalintainen tiedosto</string>
+    <string name="map_always_in_light_mode">Näytä kartta aina vaalealla teemalla</string>
     <string name="map_show_coverage_layer">Näytä kattavuustaso</string>
     <string name="show_my_location">Näytä oma sijainti</string>
     <string name="permission_rationale_fine_location">

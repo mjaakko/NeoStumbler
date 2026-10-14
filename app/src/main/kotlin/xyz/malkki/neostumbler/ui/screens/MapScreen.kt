@@ -56,6 +56,7 @@ import xyz.malkki.neostumbler.ui.composables.map.MapSettingsButton
 import xyz.malkki.neostumbler.ui.composables.shared.ComposableMap
 import xyz.malkki.neostumbler.ui.composables.shared.KeepScreenOn
 import xyz.malkki.neostumbler.ui.composables.shared.PermissionsDialog
+import xyz.malkki.neostumbler.ui.map.OverrideMapTheme
 import xyz.malkki.neostumbler.ui.map.isCloseToOrigin
 import xyz.malkki.neostumbler.ui.viewmodel.MapViewModel
 import xyz.malkki.neostumbler.utils.maplibre.FlowLocationEngine
@@ -114,7 +115,8 @@ fun MapScreen(
     val coverageTileJsonLayerIds by
         mapViewModel.coverageTileJsonLayerIds.collectAsStateWithLifecycle()
 
-    val darkMode = isSystemInDarkTheme()
+    val mapThemeOverride by mapViewModel.mapThemeOverride.collectAsStateWithLifecycle()
+    val darkMode = isMapInDarkMode(mapThemeOverride)
 
     var geoJsonSource by remember { mutableStateOf(GeoJsonSource(HEATMAP_SOURCE_ID)) }
 
@@ -262,6 +264,12 @@ fun MapScreen(
             )
         }
     }
+}
+
+@Composable
+private fun isMapInDarkMode(mapThemeOverride: OverrideMapTheme): Boolean {
+    return mapThemeOverride == OverrideMapTheme.DARK ||
+        (mapThemeOverride == OverrideMapTheme.SYSTEM && isSystemInDarkTheme())
 }
 
 @Composable

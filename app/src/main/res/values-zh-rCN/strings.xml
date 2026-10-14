@@ -187,8 +187,8 @@
     <string name="pause_scanning_on_low_battery_description">当电量低于 %d%% 时暂停扫描</string>
     <string name="moving_device_filter_title">排除移动的设备</string>
     <string name="moving_device_filter_description">自动检测并排除移动的 Wi-Fi 网络和蓝牙信标</string>
-    <string name="map_tile_source_custom_title">自定义</string>
-    <string name="map_tile_source_custom_style_url">自定义地图样式 URL</string>
+    <string name="map_tile_source_custom_url_title">自定义</string>
+    <string name="map_tile_source_custom_url_description">自定义地图样式 URL</string>
     <string name="map_show_coverage_layer">显示覆盖率地图</string>
     <string name="passive_scanning_title">被动数据收集</string>
     <string name="passive_scanning_description">被动数据收集会在其他应用请求相关数据时，在后台利用这些数据生成报告，耗电量极小。\n\n被动数据收集的效果取决于您的设备类型、您常用的其他应用，以及您是否启用了融合定位服务。\n\n您想要启用被动数据收集吗？</string>

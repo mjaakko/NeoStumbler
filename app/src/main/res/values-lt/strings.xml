@@ -202,8 +202,8 @@
     <string name="moving_device_filter_title">Neįtraukti mobiliųjų įrenginių</string>
     <string name="text_copied_to_clipboard">Tekstas nukopijuotas į iškarpinę!</string>
     <string name="distance_to_estimated_location">Atstumas iki numanomo tikslo: %d m</string>
-    <string name="map_tile_source_custom_title">Tinkintas</string>
-    <string name="map_tile_source_custom_style_url">Tinkintas žemėlapio stiliaus URL</string>
+    <string name="map_tile_source_custom_url_title">Tinkintas</string>
+    <string name="map_tile_source_custom_url_description">Tinkintas žemėlapio stiliaus URL</string>
     <string name="map_show_coverage_layer">Rodyti aprėpties sluoksnį</string>
     <string name="geocoder_settings_title">„Geocoder“</string>
     <string name="geocoder_default_title">Numatytoji reikšmė</string>

@@ -18,6 +18,9 @@ object PreferenceKeys {
     // Map tiles
     const val MAP_TILE_SOURCE = "map_tile_source"
     const val MAP_TILE_SOURCE_CUSTOM_URL = "custom_map_tile_source_url"
+    const val MAP_TILE_SOURCE_CUSTOM_FILE = "custom_map_tile_source_file"
+
+    const val MAP_THEME_OVERRIDE = "map_theme_override"
 
     // Privacy options
     const val WIFI_FILTER_LIST = "wifi_filter_list"

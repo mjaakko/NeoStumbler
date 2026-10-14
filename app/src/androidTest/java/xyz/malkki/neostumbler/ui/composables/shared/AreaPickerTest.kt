@@ -45,6 +45,7 @@ import xyz.malkki.neostumbler.data.settings.DataStoreSettings
 import xyz.malkki.neostumbler.data.settings.Settings
 import xyz.malkki.neostumbler.geography.Circle
 import xyz.malkki.neostumbler.network.HttpCallFactoryProvider
+import xyz.malkki.neostumbler.ui.map.MapSettingsManager
 
 class AreaPickerTest {
     @get:Rule
@@ -135,6 +136,8 @@ class AreaPickerTest {
                     single<LocationSourceProvider> {
                         LocationSourceProvider { LocationSource { _, _ -> flowOf(fakeLocation) } }
                     }
+
+                    single<MapSettingsManager> { MapSettingsManager(get()) }
                 }
             )
         }
