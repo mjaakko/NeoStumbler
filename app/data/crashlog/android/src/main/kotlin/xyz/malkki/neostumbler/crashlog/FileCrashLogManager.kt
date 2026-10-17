@@ -2,6 +2,7 @@ package xyz.malkki.neostumbler.crashlog
 
 import java.nio.file.Path
 import kotlin.io.path.bufferedReader
+import kotlin.io.path.createDirectories
 import kotlin.io.path.deleteIfExists
 import kotlin.io.path.getLastModifiedTime
 import kotlin.io.path.listDirectoryEntries
@@ -18,8 +19,12 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.withContext
 import xyz.malkki.neostumbler.crashlog.internal.watchDirectory
 
-/** @property crashLogDirectory Directory which contains the log files */
-class FileCrashLogManager(private val crashLogDirectory: Path) : CrashLogManager {
+class FileCrashLogManager(
+    /** Directory which contains the log files */
+    crashLogDirectoryPath: Path
+) : CrashLogManager {
+    private val crashLogDirectory by lazy { crashLogDirectoryPath.apply { createDirectories() } }
+
     override suspend fun clearEntries() =
         withContext(Dispatchers.IO) {
             crashLogDirectory.listDirectoryEntries().forEach { it.deleteIfExists() }
