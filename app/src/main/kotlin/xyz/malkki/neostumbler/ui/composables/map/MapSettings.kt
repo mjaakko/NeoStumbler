@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -18,11 +20,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -31,6 +35,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
@@ -173,18 +181,32 @@ private fun MapSettingsDialog(
 
 @Composable
 private fun CustomMapStyleUrl(mapSettingsManager: MapSettingsManager) {
-    val coroutineScope = rememberCoroutineScope()
+    val mapStyleUrl = rememberTextFieldState()
 
-    val selectedMapTileSourceUrl by
-        mapSettingsManager.selectedMapStyleUrl.collectAsStateWithLifecycle(initialValue = null)
+    LaunchedEffect(Unit) {
+        mapSettingsManager.selectedMapStyle
+            .flatMapLatest {
+                if (it == CustomMapTileSource.CUSTOM_URL) {
+                    mapSettingsManager.selectedMapStyleUrl
+                } else {
+                    emptyFlow()
+                }
+            }
+            .collectLatest { mapStyleUrl.setTextAndPlaceCursorAtEnd(it.styleUrl) }
+    }
+
+    LaunchedEffect(Unit) {
+        snapshotFlow { mapStyleUrl.text }
+            .drop(1)
+            .collectLatest { mapStyleUrl ->
+                mapSettingsManager.setCustomUrlMapTileSource(mapStyleUrl.toString())
+            }
+    }
 
     UrlField(
-        modifier = Modifier.padding(bottom = 12.dp),
+        modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
         label = stringResource(R.string.map_tile_source_custom_url_description),
-        value = selectedMapTileSourceUrl?.styleUrl.orEmpty(),
-        onValueChange = {
-            coroutineScope.launch { mapSettingsManager.setCustomUrlMapTileSource(it) }
-        },
+        state = mapStyleUrl,
     )
 }
 

@@ -3,10 +3,13 @@ package xyz.malkki.neostumbler.ui.composables.settings
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
@@ -16,9 +19,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -76,18 +81,18 @@ private fun CoverageLayerDialog(
     currentTileJsonUrl: String?,
     onDialogClose: (String?, Boolean) -> Unit,
 ) {
-    val tileJsonUrl = rememberSaveable { mutableStateOf(currentTileJsonUrl) }
+    val tileJsonUrl = rememberTextFieldState(currentTileJsonUrl.orEmpty())
 
-    val showSuggestedServicesDialog = rememberSaveable { mutableStateOf(false) }
+    var showSuggestedServicesDialog by rememberSaveable { mutableStateOf(false) }
 
-    if (showSuggestedServicesDialog.value) {
+    if (showSuggestedServicesDialog) {
         SuggestedServicesDialog(
             onServiceSelected = { service ->
                 if (service != null) {
-                    tileJsonUrl.value = service.coverageTileJsonUrl
+                    tileJsonUrl.setTextAndPlaceCursorAtEnd(service.coverageTileJsonUrl)
                 }
 
-                showSuggestedServicesDialog.value = false
+                showSuggestedServicesDialog = false
             }
         )
     }
@@ -107,6 +112,7 @@ private fun CoverageLayerDialog(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 UrlField(
+                    modifier = Modifier.fillMaxWidth(),
                     label = stringResource(id = R.string.coverage_layer_tile_json_url),
                     state = tileJsonUrl,
                 )
@@ -115,7 +121,7 @@ private fun CoverageLayerDialog(
 
                 Button(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
-                    onClick = { showSuggestedServicesDialog.value = true },
+                    onClick = { showSuggestedServicesDialog = true },
                 ) {
                     Text(text = stringResource(id = R.string.suggested_services_title))
                 }
@@ -123,7 +129,14 @@ private fun CoverageLayerDialog(
                 Row {
                     Spacer(modifier = Modifier.weight(1.0f))
 
-                    TextButton(onClick = { onDialogClose(tileJsonUrl.value, true) }) {
+                    TextButton(
+                        onClick = {
+                            onDialogClose(
+                                tileJsonUrl.text.toString().takeIf { it.isNotBlank() },
+                                true,
+                            )
+                        }
+                    ) {
                         Text(text = stringResource(id = R.string.save))
                     }
                 }
