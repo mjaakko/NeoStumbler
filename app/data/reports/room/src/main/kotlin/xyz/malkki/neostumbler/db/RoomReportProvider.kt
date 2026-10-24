@@ -84,14 +84,19 @@ class RoomReportProvider(private val reportDatabaseManager: ReportDatabaseManage
             .map { it.toReport() }
     }
 
-    override suspend fun getReportsForTimerange(
+    override suspend fun getReportIdsForTimerange(
         fromTimestamp: Instant,
         toTimestamp: Instant,
-    ): List<Report> {
+    ): List<Long> {
         return reportDatabaseManager.reportDb.value
             .reportDao()
-            .getAllReportsForTimerange(fromTimestamp, toTimestamp)
-            .map { it.toReport() }
+            .getReportIdsForTimerange(fromTimestamp, toTimestamp)
+    }
+
+    override suspend fun getReportsByIds(ids: List<Long>): List<Report> {
+        return reportDatabaseManager.reportDb.value.reportDao().getReports(ids).map {
+            it.toReport()
+        }
     }
 
     override suspend fun getReportsNewerThan(timestamp: Instant): List<ReportWithLocation> {

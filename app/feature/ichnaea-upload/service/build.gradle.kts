@@ -13,4 +13,6 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutinesTest)
     testImplementation(libs.mockitoKotlin)
+    testImplementation(testFixtures(project(":app:core:domain")))
+    testImplementation(testFixtures(project(":app:data:settings:api")))
 }

@@ -89,6 +89,9 @@ internal interface ReportDao {
     @Query("SELECT * FROM Report WHERE id = :reportId")
     fun getReport(reportId: Long): Flow<ReportWithData>
 
+    @Query("SELECT id FROM Report WHERE timestamp >= :from AND timestamp <= :to")
+    suspend fun getReportIdsForTimerange(from: Instant, to: Instant): List<Long>
+
     @Transaction
     @Query("SELECT * FROM Report WHERE timestamp >= :from AND timestamp <= :to")
     suspend fun getAllReportsForTimerange(from: Instant, to: Instant): List<ReportWithData>
