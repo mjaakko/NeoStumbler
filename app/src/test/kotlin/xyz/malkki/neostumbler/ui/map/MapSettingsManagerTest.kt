@@ -1,85 +1,22 @@
 package xyz.malkki.neostumbler.ui.map
 
 import kotlin.io.path.Path
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import xyz.malkki.neostumbler.constants.PreferenceKeys
-import xyz.malkki.neostumbler.data.settings.Settings
-import xyz.malkki.neostumbler.data.settings.SettingsEditor
-import xyz.malkki.neostumbler.data.settings.SettingsSnapshot
+import xyz.malkki.neostumbler.data.settings.FakeSettings
 import xyz.malkki.neostumbler.data.settings.setEnum
 
 class MapSettingsManagerTest {
-
-    private class StubSettings : Settings {
-        private val settingsMap = mutableMapOf<String, Any?>()
-        private val _snapshotFlow = MutableStateFlow(StubSettingsSnapshot(settingsMap))
-
-        override fun getSnapshotFlow(): kotlinx.coroutines.flow.Flow<SettingsSnapshot> =
-            _snapshotFlow
-
-        override suspend fun edit(editSettings: SettingsEditor.() -> Unit) {
-            val editor = StubSettingsEditor(settingsMap)
-            editor.editSettings()
-            _snapshotFlow.value = StubSettingsSnapshot(settingsMap)
-        }
-
-        private class StubSettingsSnapshot(private val data: Map<String, Any?>) : SettingsSnapshot {
-            override fun getString(key: String): String? = data[key] as? String
-
-            override fun getStringSet(key: String): Set<String>? = data[key] as? Set<String>
-
-            override fun getBoolean(key: String): Boolean? = data[key] as? Boolean
-
-            override fun getInt(key: String): Int? = data[key] as? Int
-        }
-
-        private class StubSettingsEditor(private val data: MutableMap<String, Any?>) :
-            SettingsEditor {
-            override fun setString(key: String, value: String) {
-                data[key] = value
-            }
-
-            override fun setStringSet(key: String, value: Set<String>) {
-                data[key] = value
-            }
-
-            override fun setBoolean(key: String, value: Boolean) {
-                data[key] = value
-            }
-
-            override fun setInt(key: String, value: Int) {
-                data[key] = value
-            }
-
-            override fun removeString(key: String) {
-                data.remove(key)
-            }
-
-            override fun removeStringSet(key: String) {
-                data.remove(key)
-            }
-
-            override fun removeBoolean(key: String) {
-                data.remove(key)
-            }
-
-            override fun removeInt(key: String) {
-                data.remove(key)
-            }
-        }
-    }
-
-    private lateinit var settings: StubSettings
+    private lateinit var settings: FakeSettings
     private lateinit var manager: MapSettingsManager
 
     @Before
     fun setup() {
-        settings = StubSettings()
+        settings = FakeSettings()
         manager = MapSettingsManager(settings)
     }
 

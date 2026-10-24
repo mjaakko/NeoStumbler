@@ -2,31 +2,24 @@ package xyz.malkki.neostumbler.ichnaeaupload
 
 import java.time.Instant
 import java.time.temporal.ChronoUnit
-import kotlin.time.Duration.Companion.milliseconds
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturnConsecutively
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
-import xyz.malkki.neostumbler.core.MacAddress
-import xyz.malkki.neostumbler.core.Position
-import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
-import xyz.malkki.neostumbler.core.report.Report
-import xyz.malkki.neostumbler.core.report.ReportEmitter
-import xyz.malkki.neostumbler.core.report.ReportPosition
-import xyz.malkki.neostumbler.core.values.Speed
+import xyz.malkki.neostumbler.core.someReport
+import xyz.malkki.neostumbler.core.someWifiAccessPoint
 import xyz.malkki.neostumbler.data.reports.ReportProvider
 import xyz.malkki.neostumbler.data.reports.ReportSaver
+import xyz.malkki.neostumbler.data.settings.FakeSettings
 import xyz.malkki.neostumbler.data.settings.Settings
-import xyz.malkki.neostumbler.data.settings.SettingsEditor
-import xyz.malkki.neostumbler.data.settings.SettingsSnapshot
 import xyz.malkki.neostumbler.ichnaea.Geosubmit
 
 class ReportSenderTest {
@@ -39,49 +32,17 @@ class ReportSenderTest {
 
     @Before
     fun setup() {
-        val reports =
-            listOf(
-                Report(
-                    id = 1,
-                    timestamp = reportTimestamp,
-                    uploaded = false,
-                    uploadTimestamp = null,
-                    position =
-                        ReportPosition(
-                            position =
-                                Position(
-                                    latitude = 56.414156,
-                                    longitude = 18.724728,
-                                    accuracy = 15.4,
-                                    altitude = null,
-                                    altitudeAccuracy = null,
-                                    heading = 14.516,
-                                    pressure = null,
-                                    speed = Speed(5.6378),
-                                    source = Position.Source.GPS,
-                                ),
-                            age = 1000.milliseconds,
-                        ),
-                    wifiAccessPoints =
-                        listOf(
-                            ReportEmitter(
-                                id = 1,
-                                emitter =
-                                    WifiAccessPoint(
-                                        macAddress = MacAddress("01:01:01:01:01:01"),
-                                        radioType = null,
-                                        channel = null,
-                                        frequency = null,
-                                        signalStrength = null,
-                                        ssid = "test_network",
-                                    ),
-                                age = 1500.milliseconds,
-                            )
-                        ),
-                    cellTowers = emptyList(),
-                    bluetoothBeacons = emptyList(),
+        val reports = buildList {
+            repeat(5) { id ->
+                add(
+                    someReport(
+                        id = id.toLong(),
+                        timestamp = reportTimestamp.plus(id.toLong(), ChronoUnit.DAYS),
+                        wifiAccessPoints = listOf(someWifiAccessPoint()),
+                    )
                 )
-            )
+            }
+        }
 
         val reportProvider =
             mock<ReportProvider> {
@@ -89,60 +50,22 @@ class ReportSenderTest {
                     listOf(reports, emptyList())
 
                 on { getRandomNotUploadedReports(any()) } doReturnConsecutively
-                    listOf(reports, emptyList())
+                    listOf(reports.shuffled(), emptyList())
+
+                on { getReportIdsForTimerange(any(), any()) } doReturnConsecutively
+                    listOf(reports.map { it.id }, emptyList())
+
+                on { getReportsByIds(any()) } doAnswer
+                    {
+                        val ids = it.arguments[0] as List<Long>
+
+                        reports.filter { report -> report.id in ids }
+                    }
             }
 
         geosubmit = mock<Geosubmit>()
 
-        settings =
-            object : Settings {
-                private val settingsFlow = MutableStateFlow(FakeSettings(emptyMap()))
-
-                override fun getSnapshotFlow(): Flow<SettingsSnapshot> {
-                    return settingsFlow
-                }
-
-                override suspend fun edit(editSettings: SettingsEditor.() -> Unit) {
-                    val updated = settingsFlow.value.values.toMutableMap()
-
-                    object : SettingsEditor {
-                            override fun setString(key: String, value: String) {
-                                updated[key] = value
-                            }
-
-                            override fun setStringSet(key: String, value: Set<String>) {
-                                updated[key] = value
-                            }
-
-                            override fun setBoolean(key: String, value: Boolean) {
-                                updated[key] = value
-                            }
-
-                            override fun setInt(key: String, value: Int) {
-                                updated[key] = value
-                            }
-
-                            override fun removeString(key: String) {
-                                updated.remove(key)
-                            }
-
-                            override fun removeStringSet(key: String) {
-                                updated.remove(key)
-                            }
-
-                            override fun removeBoolean(key: String) {
-                                updated.remove(key)
-                            }
-
-                            override fun removeInt(key: String) {
-                                updated.remove(key)
-                            }
-                        }
-                        .editSettings()
-
-                    settingsFlow.value = FakeSettings(updated)
-                }
-            }
+        settings = FakeSettings()
 
         reportSender =
             ReportSender(
@@ -164,7 +87,7 @@ class ReportSenderTest {
 
             val sentReports = firstValue
 
-            assertEquals(1, sentReports.size)
+            assertEquals(5, sentReports.size)
 
             assertEquals(
                 "01:01:01:01:01:01",
@@ -191,7 +114,9 @@ class ReportSenderTest {
 
             val sentReports = firstValue
 
-            assertEquals(1, sentReports.size)
+            assertEquals(5, sentReports.size)
+
+            assertFalse(sentReports.map { it.timestamp }.isSorted())
 
             assertEquals(
                 "01:01:01:01:01:01",
@@ -203,29 +128,68 @@ class ReportSenderTest {
 
             assertEquals(6.0, sentReports.first().position.speed!!, 0.0001)
             assertEquals(0.0, sentReports.first().position.heading!!, 0.0001)
-
-            assertEquals(
-                reportTimestamp.truncatedTo(ChronoUnit.DAYS).toEpochMilli(),
-                sentReports.first().timestamp,
-            )
         }
     }
 
-    class FakeSettings(val values: Map<String, Any>) : SettingsSnapshot {
-        override fun getString(key: String): String? {
-            return values[key] as String?
-        }
+    @Test
+    fun `Test reuploading reports`() = runTest {
+        settings.edit { setBoolean(IchnaeaPreferenceKeys.REDUCED_METADATA, false) }
 
-        override fun getStringSet(key: String): Set<String>? {
-            return values[key] as Set<String>?
-        }
+        val from = Instant.now()!!.minusSeconds(3600)
+        val to = Instant.now()
 
-        override fun getBoolean(key: String): Boolean? {
-            return values[key] as Boolean?
-        }
+        reportSender.reuploadReports(from, to)
 
-        override fun getInt(key: String): Int? {
-            return values[key] as Int?
+        argumentCaptor {
+            verify(geosubmit, times(1)).sendReports(capture())
+
+            val sentReports = firstValue
+
+            assertEquals(5, sentReports.size)
+
+            assertEquals(
+                "01:01:01:01:01:01",
+                sentReports.first().wifiAccessPoints?.firstOrNull()?.macAddress,
+            )
+
+            assertEquals(56.414156, sentReports.first().position.latitude, 0.0001)
+            assertEquals(18.724728, sentReports.first().position.longitude, 0.0001)
+
+            assertEquals(5.6378, sentReports.first().position.speed!!, 0.0001)
+            assertEquals(14.516, sentReports.first().position.heading!!, 0.0001)
+
+            assertEquals(reportTimestamp.toEpochMilli(), sentReports.first().timestamp)
+        }
+    }
+
+    @Test
+    fun `Test reuploading reports with reduced metadata`() = runTest {
+        settings.edit { setBoolean(IchnaeaPreferenceKeys.REDUCED_METADATA, true) }
+
+        val from = Instant.now()!!.minusSeconds(3600)
+        val to = Instant.now()
+
+        reportSender.reuploadReports(from, to)
+
+        argumentCaptor {
+            verify(geosubmit, times(1)).sendReports(capture())
+
+            val sentReports = firstValue
+
+            assertEquals(5, sentReports.size)
+
+            assertFalse(sentReports.map { it.timestamp }.isSorted())
+
+            assertEquals(
+                "01:01:01:01:01:01",
+                sentReports.first().wifiAccessPoints?.firstOrNull()?.macAddress,
+            )
+
+            assertEquals(56.414156, sentReports.first().position.latitude, 0.0001)
+            assertEquals(18.724728, sentReports.first().position.longitude, 0.0001)
+
+            assertEquals(6.0, sentReports.first().position.speed!!, 0.0001)
+            assertEquals(0.0, sentReports.first().position.heading!!, 0.0001)
         }
     }
 }

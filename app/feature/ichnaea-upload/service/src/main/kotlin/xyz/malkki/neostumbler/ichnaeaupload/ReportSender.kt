@@ -58,24 +58,28 @@ class ReportSender(
         val reducedMetadata =
             settings.getBooleanFlow(IchnaeaPreferenceKeys.REDUCED_METADATA, false).first()
 
-        val reportBatches =
-            reportProvider
-                .getReportsForTimerange(fromTimestamp = from, toTimestamp = to)
-                .let {
-                    if (reducedMetadata) {
-                        it.shuffled()
-                    } else {
-                        it
-                    }
+        val reportIds =
+            reportProvider.getReportIdsForTimerange(fromTimestamp = from, toTimestamp = to).let {
+                if (reducedMetadata) {
+                    it.shuffled()
+                } else {
+                    it
                 }
-                .chunked(MAX_REPORTS_PER_BATCH)
+            }
+
+        val reportIdBatches = reportIds.chunked(MAX_REPORTS_PER_BATCH)
 
         var sent = 0
 
-        reportBatches.forEach {
-            it.sendBatch(reduceMetadata = reducedMetadata)
+        reportIdBatches.forEach { batchReportIds ->
+            val reports =
+                reportProvider.getReportsByIds(batchReportIds).sortedBy {
+                    batchReportIds.indexOf(it.id)
+                }
 
-            sent += it.size
+            reports.sendBatch(reduceMetadata = reducedMetadata)
+
+            sent += reports.size
 
             progressListener?.invoke(sent)
         }

@@ -450,6 +450,7 @@ dependencies {
     "fullImplementation"(libs.cronetOkhttp)
 
     testImplementation(libs.mockitoKotlin)
+    testImplementation(testFixtures(project(":app:data:settings:api")))
 
     androidTestImplementation(libs.awaitilityKotlin)
 }

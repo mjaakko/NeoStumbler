@@ -28,7 +28,9 @@ interface ReportProvider {
 
     suspend fun getRandomNotUploadedReports(count: Int): List<Report>
 
-    suspend fun getReportsForTimerange(fromTimestamp: Instant, toTimestamp: Instant): List<Report>
+    suspend fun getReportIdsForTimerange(fromTimestamp: Instant, toTimestamp: Instant): List<Long>
+
+    suspend fun getReportsByIds(ids: List<Long>): List<Report>
 
     suspend fun getReportsNewerThan(timestamp: Instant): List<ReportWithLocation>
 
