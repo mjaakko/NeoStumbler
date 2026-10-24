@@ -1,16 +1,12 @@
 package xyz.malkki.neostumbler.ui.composables.settings
 
 import android.util.Patterns
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -18,99 +14,59 @@ import xyz.malkki.neostumbler.R
 
 @Composable
 fun ParamField(
+    modifier: Modifier,
     label: String,
-    state: MutableState<String?>,
+    state: TextFieldState,
     onDone: (() -> Unit)? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    modifier: Modifier = Modifier.fillMaxWidth(),
-) {
-    ParamField(
-        label = label,
-        value = state.value.orEmpty(),
-        onValueChange = { state.value = it },
-        onDone = onDone,
-        keyboardOptions = keyboardOptions,
-        modifier,
-    )
-}
-
-@Composable
-fun ParamField(
-    label: String,
-    value: String,
-    onValueChange: (String) -> Unit,
-    onDone: (() -> Unit)? = null,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    modifier: Modifier = Modifier.fillMaxWidth(),
+    supportingText: (@Composable () -> Unit)? = null,
 ) {
     TextField(
         modifier = modifier,
-        value = value,
-        onValueChange = onValueChange,
-        keyboardActions = onDone?.let { KeyboardActions { onDone() } } ?: KeyboardActions.Default,
+        state = state,
         keyboardOptions =
             if (onDone != null) {
                 keyboardOptions.copy(imeAction = ImeAction.Done)
             } else {
                 keyboardOptions
             },
+        onKeyboardAction = { defaultAction ->
+            val action = onDone ?: defaultAction
+
+            action()
+        },
         label = { Text(text = label) },
-        singleLine = true,
+        lineLimits = TextFieldLineLimits.SingleLine,
+        supportingText = supportingText,
     )
 }
 
 @Composable
 fun UrlField(
+    modifier: Modifier,
     label: String,
-    state: MutableState<String?>,
+    state: TextFieldState,
     onDone: (() -> Unit)? = null,
-    modifier: Modifier = Modifier.fillMaxWidth(),
 ) {
-    Column(modifier = Modifier.width(IntrinsicSize.Max)) {
-        ParamField(
-            label = label,
-            state = state,
-            onDone = onDone,
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Uri),
-            modifier = modifier,
-        )
-
-        if (!state.value.isValidUrl) {
-            Warning(warningText = R.string.invalid_url)
-        } else if (state.value.isUnencryptedUrl) {
-            Warning(warningText = R.string.unencrypted_endpoint_warning)
-        }
-    }
+    ParamField(
+        modifier = modifier,
+        label = label,
+        state = state,
+        onDone = onDone,
+        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Uri),
+        supportingText =
+            if (!state.text.isValidUrl) {
+                { Warning(warningText = R.string.invalid_url) }
+            } else if (state.text.isUnencryptedUrl) {
+                { Warning(warningText = R.string.unencrypted_endpoint_warning) }
+            } else {
+                null
+            },
+    )
 }
 
-@Composable
-fun UrlField(
-    label: String,
-    value: String,
-    onValueChange: (String) -> Unit,
-    onDone: (() -> Unit)? = null,
-    modifier: Modifier = Modifier.fillMaxWidth(),
-) {
-    Column(modifier = Modifier.width(IntrinsicSize.Max)) {
-        ParamField(
-            label = label,
-            value = value,
-            onValueChange = onValueChange,
-            onDone = onDone,
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Uri),
-            modifier = modifier,
-        )
+private val CharSequence.isValidUrl: Boolean
+    get() = Patterns.WEB_URL.matcher(this).matches()
 
-        if (!value.isValidUrl) {
-            Warning(warningText = R.string.invalid_url)
-        } else if (value.isUnencryptedUrl) {
-            Warning(warningText = R.string.unencrypted_endpoint_warning)
-        }
-    }
-}
-
-private val String?.isValidUrl: Boolean
-    get() = Patterns.WEB_URL.matcher(this.orEmpty()).matches()
-
-private val String?.isUnencryptedUrl: Boolean
-    get() = this?.startsWith("http:") == true
+private val CharSequence.isUnencryptedUrl: Boolean
+    get() = this.startsWith("http:")

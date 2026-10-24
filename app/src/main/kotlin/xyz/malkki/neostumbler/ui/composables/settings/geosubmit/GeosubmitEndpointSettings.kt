@@ -2,9 +2,12 @@ package xyz.malkki.neostumbler.ui.composables.settings.geosubmit
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
@@ -70,32 +73,30 @@ private fun GeosubmitEndpointDialog(
     currentParams: IchnaeaParams?,
     onDialogClose: (IchnaeaParams?) -> Unit,
 ) {
-    val endpoint = rememberSaveable { mutableStateOf(currentParams?.baseUrl) }
-
-    val geosubmitPath = rememberSaveable {
-        mutableStateOf<String?>(
+    val endpoint = rememberTextFieldState(currentParams?.baseUrl.orEmpty())
+    val geosubmitPath =
+        rememberTextFieldState(
             currentParams?.submissionPath ?: IchnaeaParams.DEFAULT_SUBMISSION_PATH
         )
-    }
-    val geolocatePath = rememberSaveable {
-        mutableStateOf<String?>(currentParams?.locatePath ?: IchnaeaParams.DEFAULT_LOCATE_PATH)
-    }
+    val geolocatePath =
+        rememberTextFieldState(currentParams?.locatePath ?: IchnaeaParams.DEFAULT_LOCATE_PATH)
+    val apiKey = rememberTextFieldState(currentParams?.apiKey.orEmpty())
 
-    val apiKey = rememberSaveable { mutableStateOf(currentParams?.apiKey) }
+    var showSuggestedServicesDialog by rememberSaveable { mutableStateOf(false) }
 
-    val showSuggestedServicesDialog = rememberSaveable { mutableStateOf(false) }
-
-    if (showSuggestedServicesDialog.value) {
+    if (showSuggestedServicesDialog) {
         SuggestedServicesDialog(
             onServiceSelected = { service ->
                 if (service != null) {
-                    endpoint.value = service.endpoint.baseUrl
-                    geosubmitPath.value = service.endpoint.geosubmitPath
-                    geolocatePath.value = service.endpoint.geolocatePath
-                    apiKey.value = service.endpoint.apiKey
+                    endpoint.setTextAndPlaceCursorAtEnd(service.endpoint.baseUrl)
+                    geosubmitPath.setTextAndPlaceCursorAtEnd(service.endpoint.geosubmitPath)
+                    geolocatePath.setTextAndPlaceCursorAtEnd(
+                        service.endpoint.geolocatePath.orEmpty()
+                    )
+                    apiKey.setTextAndPlaceCursorAtEnd(service.endpoint.apiKey.orEmpty())
                 }
 
-                showSuggestedServicesDialog.value = false
+                showSuggestedServicesDialog = false
             }
         )
     }
@@ -116,21 +117,34 @@ private fun GeosubmitEndpointDialog(
                     modifier = Modifier.padding(top = 16.dp, bottom = 24.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    UrlField(label = stringResource(R.string.endpoint), state = endpoint)
+                    UrlField(
+                        modifier = Modifier.fillMaxWidth(),
+                        label = stringResource(R.string.endpoint),
+                        state = endpoint,
+                    )
 
                     ParamField(
+                        modifier = Modifier.fillMaxWidth(),
                         label = stringResource(R.string.submission_path),
                         state = geosubmitPath,
                     )
 
-                    ParamField(label = stringResource(R.string.locate_path), state = geolocatePath)
+                    ParamField(
+                        modifier = Modifier.fillMaxWidth(),
+                        label = stringResource(R.string.locate_path),
+                        state = geolocatePath,
+                    )
 
-                    ParamField(label = stringResource(R.string.api_key), state = apiKey)
+                    ParamField(
+                        modifier = Modifier.fillMaxWidth(),
+                        label = stringResource(R.string.api_key),
+                        state = apiKey,
+                    )
                 }
 
                 Button(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
-                    onClick = { showSuggestedServicesDialog.value = true },
+                    onClick = { showSuggestedServicesDialog = true },
                 ) {
                     Text(text = stringResource(id = R.string.suggested_services_title))
                 }
@@ -139,18 +153,16 @@ private fun GeosubmitEndpointDialog(
                     modifier = Modifier.align(Alignment.End),
                     onClick = {
                         onDialogClose(
-                            // button is only enabled when all values are available
-                            @Suppress("UnsafeCallOnNullableType")
                             IchnaeaParams(
-                                baseUrl = endpoint.value!!,
-                                submissionPath = geosubmitPath.value!!,
-                                locatePath = geolocatePath.value,
-                                apiKey = apiKey.value,
+                                baseUrl = endpoint.text.toString(),
+                                submissionPath = geosubmitPath.text.toString(),
+                                locatePath =
+                                    geolocatePath.text.toString().takeIf { it.isNotBlank() },
+                                apiKey = apiKey.text.toString().takeIf { it.isNotBlank() },
                             )
                         )
                     },
-                    enabled =
-                        !endpoint.value.isNullOrBlank() && !geosubmitPath.value.isNullOrBlank(),
+                    enabled = endpoint.text.isNotBlank() && geosubmitPath.text.isNotBlank(),
                 ) {
                     Text(text = stringResource(id = R.string.save))
                 }
