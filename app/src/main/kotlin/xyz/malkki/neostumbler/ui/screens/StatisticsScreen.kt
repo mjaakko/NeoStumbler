@@ -1,6 +1,7 @@
 package xyz.malkki.neostumbler.ui.screens
 
 import android.text.format.DateFormat
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -14,7 +15,7 @@ import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.Scroll
 import com.patrykandpatrick.vico.compose.cartesian.Zoom
@@ -51,6 +53,7 @@ import kotlin.math.pow
 import org.koin.androidx.compose.koinViewModel
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.extensions.defaultLocale
+import xyz.malkki.neostumbler.ui.animation.fadeInFadeOut
 import xyz.malkki.neostumbler.ui.modifiers.handleDisplayCutouts
 import xyz.malkki.neostumbler.ui.viewmodel.StatisticsViewModel
 
@@ -131,19 +134,15 @@ private fun StationsByDayChart(entryModel: CartesianChartModelProducer) {
 
 @Composable
 fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = koinViewModel()) {
-    val selectedDataType =
-        statisticsViewModel.selectedDataType.collectAsState(
-            initial = StatisticsViewModel.DataType.WIFIS
-        )
+    val selectedDataType by statisticsViewModel.selectedDataType.collectAsStateWithLifecycle()
 
-    val loading =
-        statisticsViewModel.loading.collectAsState(initial = StatisticsViewModel.State.LOADING)
+    val loading by statisticsViewModel.loading.collectAsStateWithLifecycle()
 
     Column {
-        PrimaryTabRow(selectedTabIndex = selectedDataType.value.ordinal) {
+        PrimaryTabRow(selectedTabIndex = selectedDataType.ordinal) {
             StatisticsViewModel.DataType.entries.forEach { dataType ->
                 Tab(
-                    selected = selectedDataType.value == dataType,
+                    selected = selectedDataType == dataType,
                     onClick = { statisticsViewModel.setDataType(dataType) },
                     text = {
                         Text(
@@ -165,8 +164,11 @@ fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = koinViewModel())
             }
         }
 
-        ProvideVicoTheme(rememberM3VicoTheme()) {
-            when (loading.value) {
+        AnimatedContent(
+            targetState = loading,
+            transitionSpec = { fadeInFadeOut },
+        ) { state ->
+            when (state) {
                 StatisticsViewModel.State.LOADING -> {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         CircularProgressIndicator()
@@ -174,7 +176,9 @@ fun StatisticsScreen(statisticsViewModel: StatisticsViewModel = koinViewModel())
                 }
 
                 StatisticsViewModel.State.LOADED -> {
-                    StationsByDayChart(entryModel = statisticsViewModel.chartModelProducer)
+                    ProvideVicoTheme(rememberM3VicoTheme()) {
+                        StationsByDayChart(entryModel = statisticsViewModel.chartModelProducer)
+                    }
                 }
 
                 StatisticsViewModel.State.NO_DATA -> {
