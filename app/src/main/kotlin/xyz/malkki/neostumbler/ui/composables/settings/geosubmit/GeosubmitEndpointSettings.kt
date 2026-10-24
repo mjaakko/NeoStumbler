@@ -20,7 +20,6 @@ import androidx.compose.runtime.produceState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -31,9 +30,6 @@ import java.net.URI
 import java.net.URISyntaxException
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
@@ -241,21 +237,17 @@ private fun GeosubmitEndpointForm(
 
 @Composable
 private fun isEndpointLocalNetwork(textFieldState: TextFieldState): State<Boolean> =
-    produceState(false) {
-        snapshotFlow { textFieldState.text }
-            .map {
-                try {
-                    URI(it.toString()).host
-                } catch (_: URISyntaxException) {
-                    null
-                }
+    produceState(false, textFieldState.text) {
+        val host =
+            try {
+                URI(textFieldState.text.toString()).host
+            } catch (_: URISyntaxException) {
+                null
             }
-            .transformLatest {
-                emit(false)
 
-                delay(250.milliseconds)
+        value = false
 
-                emit(it?.isLocalNetwork() == true)
-            }
-            .collectLatest { this.value = it }
+        delay(250.milliseconds)
+
+        value = host?.isLocalNetwork() == true
     }
