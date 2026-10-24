@@ -4,28 +4,33 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
-import androidx.compose.material3.AlertDialogDefaults
-import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import java.net.URI
+import java.net.URISyntaxException
+import kotlin.time.Duration.Companion.milliseconds
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
@@ -34,6 +39,9 @@ import xyz.malkki.neostumbler.ichnaeaupload.IchnaeaClientProvider
 import xyz.malkki.neostumbler.ui.composables.settings.ParamField
 import xyz.malkki.neostumbler.ui.composables.settings.SettingsItem
 import xyz.malkki.neostumbler.ui.composables.settings.UrlField
+import xyz.malkki.neostumbler.ui.composables.settings.Warning
+import xyz.malkki.neostumbler.ui.composables.shared.Dialog
+import xyz.malkki.neostumbler.utils.isLocalNetwork
 
 @Composable
 fun GeosubmitEndpointSettings(ichnaeaClientProvider: IchnaeaClientProvider = koinInject()) {
@@ -101,72 +109,92 @@ private fun GeosubmitEndpointDialog(
         )
     }
 
-    BasicAlertDialog(onDismissRequest = { onDialogClose(null) }) {
-        Surface(
-            modifier = Modifier.wrapContentWidth().wrapContentHeight(),
-            shape = MaterialTheme.shapes.large,
-            tonalElevation = AlertDialogDefaults.TonalElevation,
-        ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(
-                    style = MaterialTheme.typography.titleLarge,
-                    text = stringResource(id = R.string.endpoint),
+    val localNetworkEndpoint by isEndpointLocalNetwork(endpoint)
+
+    Dialog(
+        onDismissRequest = { onDialogClose(null) },
+        title = stringResource(id = R.string.endpoint),
+        primaryActions = {
+            TextButton(
+                onClick = {
+                    onDialogClose(
+                        IchnaeaParams(
+                            baseUrl = endpoint.text.toString(),
+                            submissionPath = geosubmitPath.text.toString(),
+                            locatePath = geolocatePath.text.toString().takeIf { it.isNotBlank() },
+                            apiKey = apiKey.text.toString().takeIf { it.isNotBlank() },
+                        )
+                    )
+                },
+                enabled = endpoint.text.isNotBlank() && geosubmitPath.text.isNotBlank(),
+            ) {
+                Text(text = stringResource(id = R.string.save))
+            }
+        },
+    ) {
+        Column {
+            Column(
+                modifier = Modifier.padding(bottom = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                UrlField(
+                    modifier = Modifier.fillMaxWidth(),
+                    label = stringResource(R.string.endpoint),
+                    state = endpoint,
+                    supportingText =
+                        if (localNetworkEndpoint) {
+                            { Warning(R.string.local_endpoint_warning) }
+                        } else {
+                            null
+                        },
                 )
 
-                Column(
-                    modifier = Modifier.padding(top = 16.dp, bottom = 24.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    UrlField(
-                        modifier = Modifier.fillMaxWidth(),
-                        label = stringResource(R.string.endpoint),
-                        state = endpoint,
-                    )
+                ParamField(
+                    modifier = Modifier.fillMaxWidth(),
+                    label = stringResource(R.string.submission_path),
+                    state = geosubmitPath,
+                )
 
-                    ParamField(
-                        modifier = Modifier.fillMaxWidth(),
-                        label = stringResource(R.string.submission_path),
-                        state = geosubmitPath,
-                    )
+                ParamField(
+                    modifier = Modifier.fillMaxWidth(),
+                    label = stringResource(R.string.locate_path),
+                    state = geolocatePath,
+                )
 
-                    ParamField(
-                        modifier = Modifier.fillMaxWidth(),
-                        label = stringResource(R.string.locate_path),
-                        state = geolocatePath,
-                    )
+                ParamField(
+                    modifier = Modifier.fillMaxWidth(),
+                    label = stringResource(R.string.api_key),
+                    state = apiKey,
+                )
+            }
 
-                    ParamField(
-                        modifier = Modifier.fillMaxWidth(),
-                        label = stringResource(R.string.api_key),
-                        state = apiKey,
-                    )
-                }
-
-                Button(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    onClick = { showSuggestedServicesDialog = true },
-                ) {
-                    Text(text = stringResource(id = R.string.suggested_services_title))
-                }
-
-                TextButton(
-                    modifier = Modifier.align(Alignment.End),
-                    onClick = {
-                        onDialogClose(
-                            IchnaeaParams(
-                                baseUrl = endpoint.text.toString(),
-                                submissionPath = geosubmitPath.text.toString(),
-                                locatePath =
-                                    geolocatePath.text.toString().takeIf { it.isNotBlank() },
-                                apiKey = apiKey.text.toString().takeIf { it.isNotBlank() },
-                            )
-                        )
-                    },
-                    enabled = endpoint.text.isNotBlank() && geosubmitPath.text.isNotBlank(),
-                ) {
-                    Text(text = stringResource(id = R.string.save))
-                }
+            Button(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                onClick = { showSuggestedServicesDialog = true },
+            ) {
+                Text(text = stringResource(id = R.string.suggested_services_title))
             }
         }
     }
 }
+
+@Composable
+private fun isEndpointLocalNetwork(textFieldState: TextFieldState): State<Boolean> =
+    produceState(false) {
+        snapshotFlow { textFieldState.text }
+            .map {
+                try {
+                    URI(it.toString()).host
+                } catch (_: URISyntaxException) {
+                    null
+                }
+            }
+            .transformLatest {
+                emit(false)
+
+                delay(250.milliseconds)
+
+                emit(it?.isLocalNetwork() == true)
+            }
+            .collectLatest { this.value = it }
+    }

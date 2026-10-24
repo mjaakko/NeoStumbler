@@ -192,9 +192,7 @@ private fun CustomMapStyleUrl(mapSettingsManager: MapSettingsManager) {
                     emptyFlow()
                 }
             }
-            .collectLatest {
-                mapStyleUrl.setTextAndPlaceCursorAtEnd(it.styleUrl)
-            }
+            .collectLatest { mapStyleUrl.setTextAndPlaceCursorAtEnd(it.styleUrl) }
     }
 
     LaunchedEffect(Unit) {

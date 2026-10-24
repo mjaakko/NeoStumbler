@@ -149,6 +149,7 @@
     <string name="coverage_layer_no_configured">Kartan kattavuustasoa ei määritelty</string>
     <string name="invalid_url">Virheellinen URL-osoite</string>
     <string name="unencrypted_endpoint_warning">Salaamaton palvelin</string>
+    <string name="local_endpoint_warning">Lähiverkon palvelin</string>
     <string name="suggested_services_title">Ehdotetut palvelut</string>
     <string name="suggested_service_hosted_by">Ylläpitäjä:</string>
     <string name="suggested_service_website">Verkkosivu</string>

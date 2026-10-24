@@ -47,6 +47,11 @@ fun UrlField(
     label: String,
     state: TextFieldState,
     onDone: (() -> Unit)? = null,
+    /**
+     * Supporting text to show under the field. Note that setting this param will hide the default
+     * warnings
+     */
+    supportingText: (@Composable () -> Unit)? = null,
 ) {
     ParamField(
         modifier = modifier,
@@ -55,7 +60,9 @@ fun UrlField(
         onDone = onDone,
         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Uri),
         supportingText =
-            if (!state.text.isValidUrl) {
+            if (supportingText != null) {
+                { supportingText() }
+            } else if (!state.text.isValidUrl) {
                 { Warning(warningText = R.string.invalid_url) }
             } else if (state.text.isUnencryptedUrl) {
                 { Warning(warningText = R.string.unencrypted_endpoint_warning) }

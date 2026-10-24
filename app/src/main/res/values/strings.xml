@@ -123,6 +123,7 @@
     <string name="coverage_layer_no_configured">No map coverage layer configured</string>
     <string name="invalid_url">Invalid URL</string>
     <string name="unencrypted_endpoint_warning">Unencrypted endpoint</string>
+    <string name="local_endpoint_warning">Local network endpoint</string>
     <string name="suggested_services_title">Suggested services</string>
     <string name="suggested_service_hosted_by">Hosted by:</string>
     <string name="suggested_service_website">Website</string>

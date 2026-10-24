@@ -2,6 +2,7 @@ package xyz.malkki.neostumbler.ui.composables.shared
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -30,7 +31,7 @@ fun Dialog(
     title: String,
     primaryActions: @Composable (RowScope.() -> Unit)? = null,
     secondaryActions: @Composable (RowScope.() -> Unit)? = null,
-    content: @Composable (() -> Unit),
+    content: @Composable (BoxScope.() -> Unit),
 ) {
     BasicAlertDialog(onDismissRequest = onDismissRequest, properties = dialogProperties) {
         Surface(
