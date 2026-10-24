@@ -1,0 +1,4 @@
+* Problema în care nu se puteau trimite rapoarte pe versiuni mai vechi de Android a fost rezolvată
+* Optimizat spațiul de stocare pentru rezultatele scanărilor Bluetooth pasive
+* Dependențe actualizate
+* Traduceri actualizate

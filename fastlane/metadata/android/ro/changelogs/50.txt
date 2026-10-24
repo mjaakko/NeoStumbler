@@ -1,0 +1,19 @@
+UI / UX
+
+- Migrare UI la stilul Material 3
+- Schimbarea icon-urilor la Material Symbols
+- Îmbunătățirea UI pt. ecrane mari
+- Adăugarea suportului pt. hartă întunecată
+- Remedierea dialogului de atribuire a hărții care nu folosea tema selectată
+- Starea GPS nu mai este afișată dacă dispozitivul nu are receptor GPS
+
+Colectarea pasivă a datelor
+- Turnurile celulare duplicate invalide sunt filtrate din rapoartele create pasiv când se folosesc mai multe SIM-uri
+- Colectarea pasivă a datelor creează mai multe rapoarte verificând dacă raportul anterior conține același tip de date
+
+Tehnic
+- Broadcast-urile sunt acum gestionate asincron pentru performanță mai bună
+- Adăugat handler de corupție la stocarea stării scanării pasive
+
+Altele
+- Traduceri actualizate

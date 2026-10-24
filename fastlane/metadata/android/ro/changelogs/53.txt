@@ -1,0 +1,3 @@
+- S-a reparat problema în care conținutul era afișat sub barele de sistem în setări pe ecrane mai mari
+- S-au reparat etichetele hărții care nu se încărcau cu VersaTiles
+- Traduceri actualizate

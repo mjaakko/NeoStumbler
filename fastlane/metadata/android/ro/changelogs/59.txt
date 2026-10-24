@@ -1,0 +1,3 @@
+* Reparată colectarea pasivă a datelor cauzând un crash când Bluetooth este oprit
+* Actualizate dependențele
+* Actualizate traducerile
