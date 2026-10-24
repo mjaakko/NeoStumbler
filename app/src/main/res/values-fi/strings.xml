@@ -258,6 +258,10 @@
         Wi-Fi RTT-etäisyysmittaus tarvitsee käyttöluvan Wi-Fi -laitteisiin
     </string>
 
+    <string name="permission_rationale_local_network">
+        Lähiverkon palvelimen käyttäminen tarvitsee käyttöluvan lähiverkon laitteisiin
+    </string>
+
     <string name="troubleshooting_title">Vianmääritys</string>
     <string name="troubleshooting_description">Korjaa skannauksen yleisiä ongelmia</string>
     <string name="troubleshooting_permissions_granted">Käyttöluvat annettu</string>

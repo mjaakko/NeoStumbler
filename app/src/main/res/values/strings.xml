@@ -260,6 +260,10 @@
         Wi-Fi RTT ranging needs permission for nearby Wi-Fi devices
     </string>
 
+    <string name="permission_rationale_local_network">
+        Using an endpoint in the local network requires permission for nearby devices
+    </string>
+
     <string name="troubleshooting_title">Troubleshooting</string>
     <string name="troubleshooting_description">Fix common issues in scanning</string>
     <string name="troubleshooting_permissions_granted">Permissions granted</string>

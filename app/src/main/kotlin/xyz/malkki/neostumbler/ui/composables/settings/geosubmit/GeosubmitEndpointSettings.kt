@@ -1,5 +1,7 @@
 package xyz.malkki.neostumbler.ui.composables.settings.geosubmit
 
+import android.Manifest
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -41,6 +44,8 @@ import xyz.malkki.neostumbler.ui.composables.settings.SettingsItem
 import xyz.malkki.neostumbler.ui.composables.settings.UrlField
 import xyz.malkki.neostumbler.ui.composables.settings.Warning
 import xyz.malkki.neostumbler.ui.composables.shared.Dialog
+import xyz.malkki.neostumbler.ui.composables.shared.PermissionsDialog
+import xyz.malkki.neostumbler.utils.hasLocalNetworkPermission
 import xyz.malkki.neostumbler.utils.isLocalNetwork
 
 @Composable
@@ -81,6 +86,8 @@ private fun GeosubmitEndpointDialog(
     currentParams: IchnaeaParams?,
     onDialogClose: (IchnaeaParams?) -> Unit,
 ) {
+    val context = LocalContext.current
+
     val endpoint = rememberTextFieldState(currentParams?.baseUrl.orEmpty())
     val geosubmitPath =
         rememberTextFieldState(
@@ -91,7 +98,6 @@ private fun GeosubmitEndpointDialog(
     val apiKey = rememberTextFieldState(currentParams?.apiKey.orEmpty())
 
     var showSuggestedServicesDialog by rememberSaveable { mutableStateOf(false) }
-
     if (showSuggestedServicesDialog) {
         SuggestedServicesDialog(
             onServiceSelected = { service ->
@@ -111,20 +117,42 @@ private fun GeosubmitEndpointDialog(
 
     val localNetworkEndpoint by isEndpointLocalNetwork(endpoint)
 
+    var showPermissionDialog by rememberSaveable { mutableStateOf(false) }
+    if (showPermissionDialog) {
+        LocalNetworkPermissionDialog(
+            onDialogClosed = {
+                // Save settings regardless of whether the permission was granted
+                onDialogClose(
+                    IchnaeaParams(
+                        baseUrl = endpoint.text.toString(),
+                        submissionPath = geosubmitPath.text.toString(),
+                        locatePath = geolocatePath.text.toString().takeIf { it.isNotBlank() },
+                        apiKey = apiKey.text.toString().takeIf { it.isNotBlank() },
+                    )
+                )
+            }
+        )
+    }
+
     Dialog(
         onDismissRequest = { onDialogClose(null) },
         title = stringResource(id = R.string.endpoint),
         primaryActions = {
             TextButton(
                 onClick = {
-                    onDialogClose(
-                        IchnaeaParams(
-                            baseUrl = endpoint.text.toString(),
-                            submissionPath = geosubmitPath.text.toString(),
-                            locatePath = geolocatePath.text.toString().takeIf { it.isNotBlank() },
-                            apiKey = apiKey.text.toString().takeIf { it.isNotBlank() },
+                    if (localNetworkEndpoint && !context.hasLocalNetworkPermission) {
+                        showPermissionDialog = true
+                    } else {
+                        onDialogClose(
+                            IchnaeaParams(
+                                baseUrl = endpoint.text.toString(),
+                                submissionPath = geosubmitPath.text.toString(),
+                                locatePath =
+                                    geolocatePath.text.toString().takeIf { it.isNotBlank() },
+                                apiKey = apiKey.text.toString().takeIf { it.isNotBlank() },
+                            )
                         )
-                    )
+                    }
                 },
                 enabled = endpoint.text.isNotBlank() && geosubmitPath.text.isNotBlank(),
             ) {
@@ -133,40 +161,14 @@ private fun GeosubmitEndpointDialog(
         },
     ) {
         Column {
-            Column(
+            GeosubmitEndpointForm(
                 modifier = Modifier.padding(bottom = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                UrlField(
-                    modifier = Modifier.fillMaxWidth(),
-                    label = stringResource(R.string.endpoint),
-                    state = endpoint,
-                    supportingText =
-                        if (localNetworkEndpoint) {
-                            { Warning(R.string.local_endpoint_warning) }
-                        } else {
-                            null
-                        },
-                )
-
-                ParamField(
-                    modifier = Modifier.fillMaxWidth(),
-                    label = stringResource(R.string.submission_path),
-                    state = geosubmitPath,
-                )
-
-                ParamField(
-                    modifier = Modifier.fillMaxWidth(),
-                    label = stringResource(R.string.locate_path),
-                    state = geolocatePath,
-                )
-
-                ParamField(
-                    modifier = Modifier.fillMaxWidth(),
-                    label = stringResource(R.string.api_key),
-                    state = apiKey,
-                )
-            }
+                endpoint = endpoint,
+                geosubmitPath = geosubmitPath,
+                geolocatePath = geolocatePath,
+                apiKey = apiKey,
+                showLocalEndpointWarning = localNetworkEndpoint,
+            )
 
             Button(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -175,6 +177,65 @@ private fun GeosubmitEndpointDialog(
                 Text(text = stringResource(id = R.string.suggested_services_title))
             }
         }
+    }
+}
+
+@Composable
+private fun LocalNetworkPermissionDialog(onDialogClosed: () -> Unit) {
+    @SuppressLint("InlinedApi")
+    PermissionsDialog(
+        missingPermissions = listOf(Manifest.permission.ACCESS_LOCAL_NETWORK),
+        permissionRationales =
+            mapOf(
+                Manifest.permission.ACCESS_LOCAL_NETWORK to
+                    stringResource(R.string.permission_rationale_local_network)
+            ),
+        onPermissionsGranted = { onDialogClosed() },
+    )
+}
+
+@Composable
+private fun GeosubmitEndpointForm(
+    modifier: Modifier,
+    endpoint: TextFieldState,
+    geosubmitPath: TextFieldState,
+    geolocatePath: TextFieldState,
+    apiKey: TextFieldState,
+    showLocalEndpointWarning: Boolean,
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        UrlField(
+            modifier = Modifier.fillMaxWidth(),
+            label = stringResource(R.string.endpoint),
+            state = endpoint,
+            supportingText =
+                if (showLocalEndpointWarning) {
+                    { Warning(R.string.local_endpoint_warning) }
+                } else {
+                    null
+                },
+        )
+
+        ParamField(
+            modifier = Modifier.fillMaxWidth(),
+            label = stringResource(R.string.submission_path),
+            state = geosubmitPath,
+        )
+
+        ParamField(
+            modifier = Modifier.fillMaxWidth(),
+            label = stringResource(R.string.locate_path),
+            state = geolocatePath,
+        )
+
+        ParamField(
+            modifier = Modifier.fillMaxWidth(),
+            label = stringResource(R.string.api_key),
+            state = apiKey,
+        )
     }
 }
 
