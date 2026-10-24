@@ -1,0 +1,11 @@
+* Scanarea poate fi acum pusă pe pauză când dispozitivul se supraîncălzește
+* Starea de scanare este afișată ca „pauză” când scanerul activ nu colectează date
+* Wake-Lockurile sunt eliberate când scanarea este pusă pe pauză pentru a reduce consumul de baterie
+* Modul pasiv colectează acum date atunci când scanerul activ este pus pe pauză
+* Transparența hexagoanelor de acoperire a hărții în modul întunecat a fost ușor crescută
+* Au fost adăugate marcaje de timp în jurnalul de crash
+* Migrat la configurația de securitate a rețelei pentru compatibilitate cu Android 17
+* Optimizări minore
+* Fixat un crash când endpoint-ul de geolocalizare returna date invalide
+* Dependențe actualizate
+* Traduceri actualizate

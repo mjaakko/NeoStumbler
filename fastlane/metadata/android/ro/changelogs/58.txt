@@ -1,0 +1,6 @@
+* Modul pasiv poate acum să colecteze date despre beacon-urile Bluetooth
+* Varianta G-Play poate acum să ceară lăsarea unei recenzii în Play Store după oprirea scanării
+* Îmbunătățiri minore de performanță
+* Rezolvat un crash în lista de rapoarte
+* Traduceri actualizate
+* Dependențe actualizate

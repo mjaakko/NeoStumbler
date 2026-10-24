@@ -1,0 +1,5 @@
+* Altă eroare reparată care apărea la activarea colectării pasive a datelor Bluetooth
+* Optimizări minore
+* Dependințe actualizate
+* Notabil, MapLibre a fost actualizat la 13.0.2 și harta folosește acum Vulkan pentru redare
+* Traduceri actualizate

@@ -1,0 +1,4 @@
+* SDK-ul țintă actualizat la 37 (Android 17)
+* Reparate intervalele de scanare fiind inversate
+* Rescriere a codului minoră
+* Dependențe actualizate

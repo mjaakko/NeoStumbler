@@ -1,0 +1,6 @@
+Interfață
+- Culori ajustate pentru un contrast mai bun
+- Remediat ca conținutul să fie afișat sub barele de navigare ale sistemului pe ecrane mari
+
+Altele
+- Traduceri actualizate

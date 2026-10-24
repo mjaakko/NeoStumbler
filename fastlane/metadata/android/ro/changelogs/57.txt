@@ -1,0 +1,5 @@
+* Scanarea beacon-urilor BLE schimbată pentru a folosi o implementare personalizată a parser-ului de beacon
+* Codul principal de scrambling / ID-ul celulei fizice pentru interogările de geolocalizare a fost adăugat
+* Dependențe actualizate
+* Traduceri actualizate
+* Traducere în limba Corneză adaugată
