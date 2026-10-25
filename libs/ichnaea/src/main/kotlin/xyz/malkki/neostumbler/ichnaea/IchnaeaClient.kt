@@ -1,7 +1,6 @@
 package xyz.malkki.neostumbler.ichnaea
 
 import java.io.IOException
-import java.util.zip.GZIPOutputStream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
@@ -16,12 +15,11 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.coroutines.executeAsync
 import okio.BufferedSink
+import okio.buffer
+import okio.gzip
 import xyz.malkki.neostumbler.ichnaea.dto.GeolocateRequestDto
 import xyz.malkki.neostumbler.ichnaea.dto.GeolocateResponseDto
 import xyz.malkki.neostumbler.ichnaea.dto.ReportDto
-import xyz.malkki.neostumbler.utils.io.closeShielded
-
-private const val BUFFER_SIZE = 8 * 1024
 
 private val HTTP_STATUS_CODE_SUCCESS = 200..299
 
@@ -54,7 +52,7 @@ class IchnaeaClient(
         val request =
             Request.Builder()
                 .url(url)
-                .post(createGeosubmitRequestBody(reports))
+                .post(reports.toRequestBody())
                 .addHeader("Content-Encoding", "gzip")
                 .build()
 
@@ -87,13 +85,13 @@ class IchnaeaClient(
         }
     }
 
-    private fun createGeosubmitRequestBody(reports: List<ReportDto>): RequestBody {
+    private fun List<ReportDto>.toRequestBody(): RequestBody {
         return object : RequestBody() {
             override fun contentType(): MediaType = JSON_MEDIA_TYPE
 
             override fun writeTo(sink: BufferedSink) {
-                GZIPOutputStream(sink.outputStream().closeShielded(), BUFFER_SIZE).buffered().use {
-                    JSON_ENCODER.encodeToStream(ReportItems(reports), it)
+                sink.gzip().buffer().outputStream().use {
+                    JSON_ENCODER.encodeToStream(ReportItems(this@toRequestBody), it)
                 }
             }
         }

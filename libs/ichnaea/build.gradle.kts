@@ -14,6 +14,4 @@ dependencies {
     implementation(platform(libs.kotlinx.coroutinesBom))
     implementation(libs.kotlinx.coroutinesCore)
     testImplementation(libs.kotlinx.coroutinesTest)
-
-    implementation(project(":libs:utils"))
 }
