@@ -7,7 +7,6 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -221,10 +220,9 @@ private fun ReportStats(modifier: Modifier = Modifier, reportsViewModel: Reports
                 modifier = Modifier.fillMaxWidth().padding(16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                FlowRow(
+                Column(
                     modifier = Modifier.weight(1.0f),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    maxItemsInEachRow = 2,
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
                 ) {
                     Text(
                         text = stringResource(R.string.reports_total, reportsTotal),
