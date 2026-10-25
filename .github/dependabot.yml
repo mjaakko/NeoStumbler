@@ -35,6 +35,10 @@ updates:
     open-pull-requests-limit: 5
     cooldown:
       default-days: 7
+    groups:
+      codeql-actions:
+        patterns:
+          - "github/codeql-action*"
   - package-ecosystem: "npm"
     directory: "website/"
     schedule:
