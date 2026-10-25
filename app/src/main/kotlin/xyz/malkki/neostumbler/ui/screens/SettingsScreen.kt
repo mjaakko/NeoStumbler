@@ -2,6 +2,7 @@ package xyz.malkki.neostumbler.ui.screens
 
 import android.os.Build
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.ui.animation.fadeInFadeOut
 import xyz.malkki.neostumbler.ui.composables.AboutNeoStumbler
 import xyz.malkki.neostumbler.ui.composables.ReportReuploadButton
 import xyz.malkki.neostumbler.ui.composables.settings.AutoUploadToggle
@@ -178,12 +180,18 @@ private fun SettingsScreenDualPane(openRestrictedAreas: () -> Unit) {
         VerticalDivider(modifier = Modifier.fillMaxHeight())
 
         Column(modifier = Modifier.weight(1f).verticalScroll(rememberScrollState())) {
-            when (selectedSettingsGroup) {
-                SettingsGroupType.REPORTS -> ReportSettings()
-                SettingsGroupType.SCANNING -> ScanningSettings()
-                SettingsGroupType.PRIVACY ->
-                    PrivacySettings(openRestrictedAreas = openRestrictedAreas)
-                SettingsGroupType.OTHER -> OtherSettings()
+            AnimatedContent(
+                targetState = selectedSettingsGroup,
+                transitionSpec = { fadeInFadeOut },
+            ) { state ->
+                when (state) {
+                    SettingsGroupType.REPORTS -> ReportSettings()
+                    SettingsGroupType.SCANNING -> ScanningSettings()
+                    SettingsGroupType.PRIVACY ->
+                        PrivacySettings(openRestrictedAreas = openRestrictedAreas)
+
+                    SettingsGroupType.OTHER -> OtherSettings()
+                }
             }
         }
     }
