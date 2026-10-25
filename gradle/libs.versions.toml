@@ -33,7 +33,7 @@ koinAndroid = { module = "io.insert-koin:koin-android" }
 koinAndroidxCompose = { module = "io.insert-koin:koin-androidx-compose" }
 koinCore = { module = "io.insert-koin:koin-core" }
 
-androidx-collection = { module = "androidx.collection:collection", version = "1.6.0" }
+androidx-collection = { module = "androidx.collection:collection", version = "1.7.0" }
 
 androidx-browser = { module = "androidx.browser:browser", version = "1.10.0" }
 
