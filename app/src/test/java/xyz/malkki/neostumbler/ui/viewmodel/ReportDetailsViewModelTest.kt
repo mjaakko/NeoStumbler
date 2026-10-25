@@ -4,7 +4,6 @@ import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.preferences.core.PreferencesFileSerializer
 import java.nio.charset.StandardCharsets
 import java.time.Instant
-import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
@@ -27,61 +26,32 @@ import org.junit.rules.TemporaryFolder
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
-import xyz.malkki.neostumbler.core.Position
-import xyz.malkki.neostumbler.core.emitter.CellTower
-import xyz.malkki.neostumbler.core.report.Report
-import xyz.malkki.neostumbler.core.report.ReportEmitter
-import xyz.malkki.neostumbler.core.report.ReportPosition
+import xyz.malkki.neostumbler.core.emitter.someCellTower
+import xyz.malkki.neostumbler.core.somePosition
+import xyz.malkki.neostumbler.core.someReport
 import xyz.malkki.neostumbler.data.reports.ReportProvider
 import xyz.malkki.neostumbler.data.settings.DataStoreSettings
 import xyz.malkki.neostumbler.ichnaea.IchnaeaParams
 import xyz.malkki.neostumbler.ichnaeaupload.IchnaeaClientProvider
 
 private val REPORT =
-    Report(
+    someReport(
         id = 1,
         timestamp = Instant.now(),
-        uploaded = false,
-        uploadTimestamp = null,
         position =
-            ReportPosition(
-                position =
-                    Position(
-                        latitude = 53.3677,
-                        longitude = 42.141656,
-                        accuracy = 10.0,
-                        altitude = null,
-                        altitudeAccuracy = null,
-                        heading = null,
-                        pressure = null,
-                        speed = null,
-                        source = Position.Source.GPS,
-                    ),
-                age = 1000.milliseconds,
+            somePosition(
+                latitude = 53.3677,
+                longitude = 42.141656,
             ),
-        wifiAccessPoints = emptyList(),
         cellTowers =
             listOf(
-                ReportEmitter(
-                    id = 1,
-                    emitter =
-                        CellTower(
-                            radioType = CellTower.RadioType.LTE,
-                            mobileCountryCode = "1",
-                            mobileNetworkCode = "1",
-                            cellId = 321,
-                            locationAreaCode = 555,
-                            asu = null,
-                            primaryScramblingCode = null,
-                            serving = null,
-                            signalStrength = null,
-                            timingAdvance = null,
-                            arfcn = null,
-                        ),
-                    age = 1000.milliseconds,
+                someCellTower(
+                    mobileCountryCode = "1",
+                    mobileNetworkCode = "1",
+                    cellId = 321,
+                    locationAreaCode = 555,
                 )
             ),
-        bluetoothBeacons = emptyList(),
     )
 
 class ReportDetailsViewModelTest {

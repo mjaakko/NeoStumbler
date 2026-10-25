@@ -16,13 +16,13 @@ import org.junit.Test
 import org.mockito.kotlin.spy
 import org.mockito.kotlin.verifyNoInteractions
 import xyz.malkki.neostumbler.core.MacAddress
-import xyz.malkki.neostumbler.core.Position
-import xyz.malkki.neostumbler.core.Position.Source
 import xyz.malkki.neostumbler.core.airpressure.AirPressureObservation
-import xyz.malkki.neostumbler.core.emitter.BluetoothBeacon
 import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
-import xyz.malkki.neostumbler.core.observation.EmitterObservation
-import xyz.malkki.neostumbler.core.observation.PositionObservation
+import xyz.malkki.neostumbler.core.emitter.someBluetoothBeacon
+import xyz.malkki.neostumbler.core.observation.someEmitterObservation
+import xyz.malkki.neostumbler.core.somePosition
+import xyz.malkki.neostumbler.core.somePositionObservation
+import xyz.malkki.neostumbler.core.someWifiAccessPoint
 import xyz.malkki.neostumbler.core.values.Distance
 import xyz.malkki.neostumbler.core.values.SignalStrength
 import xyz.malkki.neostumbler.data.emitter.ActiveWifiAccessPointSource
@@ -58,15 +58,13 @@ class ActiveScannerTest {
                 locationSourceProvider = {
                     LocationSource { _, _ ->
                         flowOf(
-                            PositionObservation(
+                            somePositionObservation(
                                 position =
-                                    Position(
+                                    somePosition(
                                         latitude = 50.0,
                                         longitude = 10.0,
                                         accuracy = 15.0,
-                                        source = Source.GPS,
-                                    ),
-                                timestamp = 0,
+                                    )
                             )
                         )
                     }
@@ -109,13 +107,12 @@ class ActiveScannerTest {
                 locationSourceProvider = {
                     LocationSource { _, _ ->
                         flowOf(
-                            PositionObservation(
+                            somePositionObservation(
                                 position =
-                                    Position(
+                                    somePosition(
                                         latitude = 50.0,
                                         longitude = 10.0,
                                         accuracy = 15.0,
-                                        source = Source.GPS,
                                     ),
                                 timestamp = 60000,
                             )
@@ -128,15 +125,11 @@ class ActiveScannerTest {
                 bluetoothBeaconSource = {
                     flowOf(
                         listOf(
-                            EmitterObservation(
+                            someEmitterObservation(
                                 emitter =
-                                    BluetoothBeacon(
+                                    someBluetoothBeacon(
                                         macAddress = MacAddress("01:01:01:01:01"),
                                         signalStrength = SignalStrength(-68),
-                                        beaconType = null,
-                                        id1 = null,
-                                        id2 = null,
-                                        id3 = null,
                                     ),
                                 timestamp = 25000,
                             )
@@ -177,15 +170,13 @@ class ActiveScannerTest {
                 locationSourceProvider = {
                     LocationSource { _, _ ->
                         flowOf(
-                            PositionObservation(
+                            somePositionObservation(
                                 position =
-                                    Position(
+                                    somePosition(
                                         latitude = 50.0,
                                         longitude = 10.0,
                                         accuracy = 15.0,
-                                        source = Source.GPS,
-                                    ),
-                                timestamp = 0,
+                                    )
                             )
                         )
                     }
@@ -195,28 +186,26 @@ class ActiveScannerTest {
                 wifiAccessPointSource = { _, _, _ ->
                     flowOf(
                         listOf(
-                            EmitterObservation(
+                            someEmitterObservation(
                                 emitter =
-                                    WifiAccessPoint(
-                                        macAddress = MacAddress("01:01:01:01:01:01"),
-                                        radioType = WifiAccessPoint.RadioType.AC,
-                                        channel = null,
-                                        frequency = null,
-                                        signalStrength = null,
-                                        ssid = "test_nomap",
-                                    ),
+                                    someWifiAccessPoint(
+                                            macAddress = MacAddress("01:01:01:01:01:01")
+                                        )
+                                        .copy(
+                                            radioType = WifiAccessPoint.RadioType.AC,
+                                            ssid = "test_nomap",
+                                        ),
                                 timestamp = 0,
                             ),
-                            EmitterObservation(
+                            someEmitterObservation(
                                 emitter =
-                                    WifiAccessPoint(
-                                        macAddress = MacAddress("02:02:02:02:02:02"),
-                                        radioType = WifiAccessPoint.RadioType.AC,
-                                        channel = null,
-                                        frequency = null,
-                                        signalStrength = null,
-                                        ssid = "",
-                                    ),
+                                    someWifiAccessPoint(
+                                            macAddress = MacAddress("02:02:02:02:02:02")
+                                        )
+                                        .copy(
+                                            radioType = WifiAccessPoint.RadioType.AC,
+                                            ssid = "",
+                                        ),
                                 timestamp = 0,
                             ),
                         )
@@ -257,15 +246,13 @@ class ActiveScannerTest {
                 locationSourceProvider = {
                     LocationSource { _, _ ->
                         flowOf(
-                            PositionObservation(
+                            somePositionObservation(
                                 position =
-                                    Position(
+                                    somePosition(
                                         latitude = 50.0,
                                         longitude = 10.0,
                                         accuracy = 15.0,
-                                        source = Source.GPS,
-                                    ),
-                                timestamp = 0,
+                                    )
                             )
                         )
                     }
@@ -277,16 +264,15 @@ class ActiveScannerTest {
                 wifiAccessPointSource = { _, _, _ ->
                     flowOf(
                         listOf(
-                            EmitterObservation(
+                            someEmitterObservation(
                                 emitter =
-                                    WifiAccessPoint(
-                                        macAddress = MacAddress("02:02:02:02:02:02"),
-                                        radioType = WifiAccessPoint.RadioType.AC,
-                                        channel = null,
-                                        frequency = null,
-                                        signalStrength = null,
-                                        ssid = "",
-                                    ),
+                                    someWifiAccessPoint(
+                                            macAddress = MacAddress("02:02:02:02:02:02")
+                                        )
+                                        .copy(
+                                            radioType = WifiAccessPoint.RadioType.AC,
+                                            ssid = "",
+                                        ),
                                 timestamp = 0,
                             )
                         )
@@ -295,14 +281,10 @@ class ActiveScannerTest {
                 bluetoothBeaconSource = {
                     flowOf(
                         listOf(
-                            EmitterObservation(
+                            someEmitterObservation(
                                 emitter =
-                                    BluetoothBeacon(
+                                    someBluetoothBeacon(
                                         macAddress = MacAddress("01:01:01:01:01:01"),
-                                        beaconType = null,
-                                        id1 = null,
-                                        id2 = null,
-                                        id3 = null,
                                         signalStrength = SignalStrength(-75),
                                     ),
                                 timestamp = 0,
@@ -352,15 +334,13 @@ class ActiveScannerTest {
             spy(
                 LocationSource { _, _ ->
                     flowOf(
-                        PositionObservation(
+                        somePositionObservation(
                             position =
-                                Position(
+                                somePosition(
                                     latitude = 50.0,
                                     longitude = 10.0,
                                     accuracy = 15.0,
-                                    source = Source.GPS,
-                                ),
-                            timestamp = 0,
+                                )
                         )
                     )
                 }
@@ -376,16 +356,15 @@ class ActiveScannerTest {
                 wifiAccessPointSource = { _, _, _ ->
                     flowOf(
                         listOf(
-                            EmitterObservation(
+                            someEmitterObservation(
                                 emitter =
-                                    WifiAccessPoint(
-                                        macAddress = MacAddress("02:02:02:02:02:02"),
-                                        radioType = WifiAccessPoint.RadioType.AC,
-                                        channel = null,
-                                        frequency = null,
-                                        signalStrength = null,
-                                        ssid = "",
-                                    ),
+                                    someWifiAccessPoint(
+                                            macAddress = MacAddress("02:02:02:02:02:02")
+                                        )
+                                        .copy(
+                                            radioType = WifiAccessPoint.RadioType.AC,
+                                            ssid = "",
+                                        ),
                                 timestamp = 0,
                             )
                         )

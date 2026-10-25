@@ -4,12 +4,11 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import xyz.malkki.neostumbler.core.MacAddress
-import xyz.malkki.neostumbler.core.Position
-import xyz.malkki.neostumbler.core.Position.Source
-import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
-import xyz.malkki.neostumbler.core.observation.EmitterObservation
-import xyz.malkki.neostumbler.core.observation.PositionObservation
-import xyz.malkki.neostumbler.core.report.ReportData
+import xyz.malkki.neostumbler.core.observation.someEmitterObservation
+import xyz.malkki.neostumbler.core.report.someReportData
+import xyz.malkki.neostumbler.core.somePosition
+import xyz.malkki.neostumbler.core.somePositionObservation
+import xyz.malkki.neostumbler.core.someWifiAccessPoint
 
 class HiddenWifiFiltererTest {
     @Test
@@ -17,50 +16,38 @@ class HiddenWifiFiltererTest {
         val hiddenWifiFilterer = HiddenWifiFilterer()
 
         val report =
-            ReportData(
+            someReportData(
                 position =
-                    PositionObservation(
+                    somePositionObservation(
                         position =
-                            Position(
+                            somePosition(
                                 latitude = 45.51156,
                                 longitude = 12.213415,
-                                source = Source.GPS,
-                            ),
-                        timestamp = 0,
+                            )
                     ),
-                cellTowers = emptyList(),
                 wifiAccessPoints =
                     listOf(
-                        EmitterObservation(
-                            WifiAccessPoint(
-                                macAddress = MacAddress("01:01:01:01:01:01"),
-                                ssid = "my_network_nomap",
-                            ),
-                            timestamp = 0,
+                        someEmitterObservation(
+                            emitter =
+                                someWifiAccessPoint(macAddress = MacAddress("01:01:01:01:01:01"))
+                                    .copy(ssid = "my_network_nomap")
                         ),
-                        EmitterObservation(
-                            WifiAccessPoint(
-                                macAddress = MacAddress("02:02:02:02:02:02"),
-                                ssid = "",
-                            ),
-                            timestamp = 0,
+                        someEmitterObservation(
+                            emitter =
+                                someWifiAccessPoint(macAddress = MacAddress("02:02:02:02:02:02"))
+                                    .copy(ssid = "")
                         ),
-                        EmitterObservation(
-                            WifiAccessPoint(
-                                macAddress = MacAddress("03:03:03:03:03:03"),
-                                ssid = "\u0000\u0000\u0000\u0000\u0000",
-                            ),
-                            timestamp = 0,
+                        someEmitterObservation(
+                            emitter =
+                                someWifiAccessPoint(macAddress = MacAddress("03:03:03:03:03:03"))
+                                    .copy(ssid = "\u0000\u0000\u0000\u0000\u0000")
                         ),
-                        EmitterObservation(
-                            WifiAccessPoint(
-                                macAddress = MacAddress("04:04:04:04:04:04"),
-                                ssid = "free wifi",
-                            ),
-                            timestamp = 0,
+                        someEmitterObservation(
+                            emitter =
+                                someWifiAccessPoint(macAddress = MacAddress("04:04:04:04:04:04"))
+                                    .copy(ssid = "free wifi")
                         ),
                     ),
-                bluetoothBeacons = emptyList(),
             )
 
         val filteredReport = hiddenWifiFilterer.postProcessReport(report)

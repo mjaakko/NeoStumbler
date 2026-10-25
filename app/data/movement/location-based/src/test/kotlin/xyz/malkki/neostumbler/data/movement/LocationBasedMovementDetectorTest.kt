@@ -8,8 +8,8 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import xyz.malkki.neostumbler.core.Position
-import xyz.malkki.neostumbler.core.observation.PositionObservation
+import xyz.malkki.neostumbler.core.somePosition
+import xyz.malkki.neostumbler.core.somePositionObservation
 import xyz.malkki.neostumbler.data.location.LocationSource
 
 class LocationBasedMovementDetectorTest {
@@ -17,10 +17,10 @@ class LocationBasedMovementDetectorTest {
     fun `No movement is detected when the location does not change`() = runTest {
         val locationFlow =
             flowOf(
-                    Position(latitude = 0.0, longitude = 0.0, source = Position.Source.GPS),
-                    Position(latitude = 0.0, longitude = 0.0, source = Position.Source.GPS),
+                    somePosition(latitude = 0.0, longitude = 0.0),
+                    somePosition(latitude = 0.0, longitude = 0.0),
                 )
-                .map { PositionObservation(it, 0) }
+                .map { somePositionObservation(position = it) }
 
         val movementDetector =
             LocationBasedMovementDetector(
@@ -38,10 +38,10 @@ class LocationBasedMovementDetectorTest {
     fun `Movement is detected when the location changes`() = runTest {
         val locationFlow =
             flowOf(
-                    Position(latitude = 0.0, longitude = 0.0, source = Position.Source.GPS),
-                    Position(latitude = 10.0, longitude = 10.0, source = Position.Source.GPS),
+                    somePosition(latitude = 0.0, longitude = 0.0),
+                    somePosition(latitude = 10.0, longitude = 10.0),
                 )
-                .map { PositionObservation(it, 0) }
+                .map { somePositionObservation(position = it) }
 
         val movementDetector =
             LocationBasedMovementDetector(
@@ -59,20 +59,10 @@ class LocationBasedMovementDetectorTest {
     fun `Movement is detected when only altitude changes`() = runTest {
         val locationFlow =
             flowOf(
-                    Position(
-                        latitude = 0.0,
-                        longitude = 0.0,
-                        altitude = 25.0,
-                        source = Position.Source.GPS,
-                    ),
-                    Position(
-                        latitude = 0.0,
-                        longitude = 0.0,
-                        altitude = 54.314,
-                        source = Position.Source.GPS,
-                    ),
+                    somePosition(latitude = 0.0, longitude = 0.0, altitude = 25.0),
+                    somePosition(latitude = 0.0, longitude = 0.0, altitude = 54.314),
                 )
-                .map { PositionObservation(it, 0) }
+                .map { somePositionObservation(position = it) }
 
         val movementDetector =
             LocationBasedMovementDetector(
@@ -90,26 +80,11 @@ class LocationBasedMovementDetectorTest {
     fun `No movement is detected when new location doesn't contain altitude`() = runTest {
         val locationFlow =
             flowOf(
-                    Position(
-                        latitude = 15.1455,
-                        longitude = 24.5166,
-                        altitude = 25.0,
-                        source = Position.Source.GPS,
-                    ),
-                    Position(
-                        latitude = 15.1455,
-                        longitude = 24.5166,
-                        altitude = null,
-                        source = Position.Source.GPS,
-                    ),
-                    Position(
-                        latitude = 15.1455,
-                        longitude = 24.5166,
-                        altitude = 25.0,
-                        source = Position.Source.GPS,
-                    ),
+                    somePosition(latitude = 15.1455, longitude = 24.5166, altitude = 25.0),
+                    somePosition(latitude = 15.1455, longitude = 24.5166, altitude = null),
+                    somePosition(latitude = 15.1455, longitude = 24.5166, altitude = 25.0),
                 )
-                .map { PositionObservation(it, 0) }
+                .map { somePositionObservation(position = it) }
 
         val movementDetector =
             LocationBasedMovementDetector(

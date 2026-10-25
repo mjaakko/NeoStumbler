@@ -8,5 +8,6 @@ dependencies {
         testImplementation(libs.junit)
         testImplementation(platform(libs.kotlinx.coroutinesBom))
         testImplementation(libs.kotlinx.coroutinesTest)
+        testImplementation(testFixtures(project(":app:core:domain")))
     }
 }

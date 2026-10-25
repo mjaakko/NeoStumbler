@@ -5,39 +5,34 @@ import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Test
 import xyz.malkki.neostumbler.core.MacAddress
-import xyz.malkki.neostumbler.core.Position
-import xyz.malkki.neostumbler.core.emitter.BluetoothBeacon
-import xyz.malkki.neostumbler.core.observation.EmitterObservation
-import xyz.malkki.neostumbler.core.observation.PositionObservation
-import xyz.malkki.neostumbler.core.report.ReportData
+import xyz.malkki.neostumbler.core.emitter.someBluetoothBeacon
+import xyz.malkki.neostumbler.core.observation.someEmitterObservation
+import xyz.malkki.neostumbler.core.report.someReportData
+import xyz.malkki.neostumbler.core.somePosition
+import xyz.malkki.neostumbler.core.somePositionObservation
 import xyz.malkki.neostumbler.core.values.SignalStrength
 import xyz.malkki.neostumbler.geography.Circle
 import xyz.malkki.neostumbler.geography.LatLng
 
 class RestrictedAreaFiltererTest {
     private val report =
-        ReportData(
+        someReportData(
             position =
-                PositionObservation(
+                somePositionObservation(
                     position =
-                        Position(
+                        somePosition(
                             latitude = 60.171047,
                             longitude = 24.941471,
-                            source = Position.Source.GPS,
-                        ),
-                    timestamp = 0,
+                        )
                 ),
-            cellTowers = emptyList(),
-            wifiAccessPoints = emptyList(),
             bluetoothBeacons =
                 listOf(
-                    EmitterObservation(
+                    someEmitterObservation(
                         emitter =
-                            BluetoothBeacon(
+                            someBluetoothBeacon(
                                 macAddress = MacAddress("ff:ff:ff:ff:ff:ff"),
                                 signalStrength = SignalStrength(-80),
-                            ),
-                        timestamp = 0,
+                            )
                     )
                 ),
         )
