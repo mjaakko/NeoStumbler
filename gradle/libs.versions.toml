@@ -25,8 +25,6 @@ multiplatformMarkdownRenderer = "0.45.0"
 
 playReview = "2.0.2"
 
-cronet = "143.7445.0"
-
 [libraries]
 koinBom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
 koinAndroid = { module = "io.insert-koin:koin-android" }
@@ -98,8 +96,6 @@ kotlinx-coroutinesTest = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-te
 playservices-location = { module = "com.google.android.gms:play-services-location", version = "21.4.0" }
 
 playservices-cronet = { module = "com.google.android.gms:play-services-cronet", version = "18.1.1" }
-cronet-api = { module = "org.chromium.net:cronet-api", version.ref = "cronet" }
-cronet-shared = { module = "org.chromium.net:cronet-shared", version.ref = "cronet" }
 
 play-review = { module = "com.google.android.play:review", version.ref = "playReview" }
 play-reviewKtx = { module = "com.google.android.play:review-ktx", version.ref = "playReview" }
@@ -113,7 +109,7 @@ okhttpCoroutines = { module = "com.squareup.okhttp3:okhttp-coroutines" }
 okhttpLoggingInterceptor = { module = "com.squareup.okhttp3:logging-interceptor" }
 okhttpMockWebServer = { module = "com.squareup.okhttp3:mockwebserver" }
 
-cronetOkhttp = { module = "com.google.net.cronet:cronet-okhttp", version = "0.1.1" }
+cronetOkhttp = { module = "com.google.net.cronet:cronet-okhttp", version = "0.1.2" }
 
 kotlinx-serializationCore = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinxSerialization" }
 kotlinx-serializationJson = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
