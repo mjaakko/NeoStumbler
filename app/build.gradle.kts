@@ -445,8 +445,6 @@ dependencies {
     "gplayImplementation"(libs.play.reviewKtx)
 
     "fullImplementation"(libs.playservices.cronet)
-    "fullRuntimeOnly"(libs.cronet.api)
-    "fullRuntimeOnly"(libs.cronet.shared)
     "fullImplementation"(libs.cronetOkhttp)
 
     testImplementation(libs.mockitoKotlin)
