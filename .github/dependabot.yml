@@ -39,6 +39,9 @@ updates:
       codeql-actions:
         patterns:
           - "github/codeql-action*"
+      gradle-actions:
+        patterns:
+          - "gradle/actions*"
   - package-ecosystem: "npm"
     directory: "website/"
     schedule:
