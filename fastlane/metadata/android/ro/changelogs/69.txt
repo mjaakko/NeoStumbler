@@ -1,0 +1,4 @@
+* Detectorul de mișcare bazat pe locație este acum puțin mai puțin sensibil la mișcările verticale
+* Traducere în thailandeză adăugată
+* Traduceri actualizate
+* Dependențe actualizate
