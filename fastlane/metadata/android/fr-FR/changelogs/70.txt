@@ -1,0 +1,6 @@
+* Les styles de carte personnalisés peuvent désormais être importés depuis un fichier
+* Il est désormais possible de forcer l’affichage de la carte en mode clair
+* Correction d’un plantage lors de l’activation ou de la désactivation du fournisseur de localisation lors de fusion sans autorisations adéquates
+* Correction d’un plantage lors du lancement d’une recherche depuis l’arrière-plan
+* Traductions mises à jour
+* Dépendances mises à jour
