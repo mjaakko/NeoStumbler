@@ -12,8 +12,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LargeFloatingActionButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -300,7 +301,11 @@ private fun TrackMyLocationButton(
     trackMyLocation: Boolean,
     onClick: () -> Unit,
 ) {
-    FilledIconButton(modifier = modifier, onClick = onClick) {
+    LargeFloatingActionButton(
+        modifier = modifier,
+        containerColor = MaterialTheme.colorScheme.primary,
+        onClick = onClick,
+    ) {
         Icon(
             painter =
                 if (trackMyLocation) {

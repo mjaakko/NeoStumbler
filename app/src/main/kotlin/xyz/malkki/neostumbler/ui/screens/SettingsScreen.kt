@@ -2,10 +2,10 @@ package xyz.malkki.neostumbler.ui.screens
 
 import android.os.Build
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,6 +24,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.constants.PreferenceKeys
+import xyz.malkki.neostumbler.ui.animation.fadeInFadeOut
 import xyz.malkki.neostumbler.ui.composables.AboutNeoStumbler
 import xyz.malkki.neostumbler.ui.composables.ReportReuploadButton
 import xyz.malkki.neostumbler.ui.composables.settings.AutoUploadToggle
@@ -110,103 +112,119 @@ private enum class SettingsGroupType(@StringRes val title: Int) {
     OTHER(R.string.settings_group_other),
 }
 
+private const val DUAL_PANE_MIN_WIDTH_DP = 900
+
 @Composable
 fun SettingsScreen(openRestrictedAreas: () -> Unit) {
-    BoxWithConstraints {
-        if (maxWidth >= 600.dp) {
-            var selectedSettingsGroup by rememberSaveable {
-                mutableStateOf(SettingsGroupType.REPORTS)
-            }
+    val windowSizeClass = currentWindowAdaptiveInfoV2().windowSizeClass
 
-            Row(
-                modifier =
-                    Modifier.padding(horizontal = 24.dp, vertical = 16.dp)
-                        .windowInsetsPadding(WindowInsets.safeContent),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                Column(modifier = Modifier.width(250.dp).fillMaxHeight()) {
-                    Column(
-                        modifier =
-                            Modifier.fillMaxWidth()
-                                .weight(1f)
-                                .verticalScroll(rememberScrollState())
-                                .selectableGroup()
-                    ) {
-                        SettingsGroupType.entries.forEach {
-                            Box(
-                                modifier =
-                                    Modifier.height(48.dp)
-                                        .fillMaxWidth()
-                                        .selectable(
-                                            selected = selectedSettingsGroup == it,
-                                            onClick = { selectedSettingsGroup = it },
-                                        )
-                                        .background(
-                                            color =
-                                                if (selectedSettingsGroup == it) {
-                                                    MaterialTheme.colorScheme.primaryContainer
-                                                } else {
-                                                    MaterialTheme.colorScheme.surface
-                                                }
-                                        )
-                                        .padding(8.dp)
-                            ) {
-                                Text(
-                                    modifier = Modifier.align(Alignment.CenterStart),
-                                    text = stringResource(it.title),
-                                )
-                            }
-                        }
-                    }
+    if (windowSizeClass.isWidthAtLeastBreakpoint(DUAL_PANE_MIN_WIDTH_DP)) {
+        SettingsScreenDualPane(openRestrictedAreas = openRestrictedAreas)
+    } else {
+        SettingsScreenSinglePane(openRestrictedAreas = openRestrictedAreas)
+    }
+}
 
-                    ReportReuploadButton()
+@Composable
+private fun SettingsScreenDualPane(openRestrictedAreas: () -> Unit) {
+    var selectedSettingsGroup by rememberSaveable { mutableStateOf(SettingsGroupType.REPORTS) }
 
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    AboutNeoStumbler()
-                }
-
-                VerticalDivider(modifier = Modifier.fillMaxHeight())
-
-                Column(modifier = Modifier.weight(1f).verticalScroll(rememberScrollState())) {
-                    when (selectedSettingsGroup) {
-                        SettingsGroupType.REPORTS -> ReportSettings()
-                        SettingsGroupType.SCANNING -> ScanningSettings()
-                        SettingsGroupType.PRIVACY ->
-                            PrivacySettings(openRestrictedAreas = openRestrictedAreas)
-                        SettingsGroupType.OTHER -> OtherSettings()
-                    }
-                }
-            }
-        } else {
+    Row(
+        modifier =
+            Modifier.padding(horizontal = 24.dp, vertical = 16.dp)
+                .windowInsetsPadding(WindowInsets.safeContent),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        Column(modifier = Modifier.width(250.dp).fillMaxHeight()) {
             Column(
                 modifier =
-                    Modifier.padding(horizontal = 16.dp)
+                    Modifier.fillMaxWidth()
+                        .weight(1f)
                         .verticalScroll(rememberScrollState())
-                        .handleDisplayCutouts()
+                        .selectableGroup()
             ) {
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    ReportSettings()
-
-                    ScanningSettings()
-
-                    PrivacySettings(openRestrictedAreas = openRestrictedAreas)
-
-                    OtherSettings()
+                SettingsGroupType.entries.forEach {
+                    Box(
+                        modifier =
+                            Modifier.height(48.dp)
+                                .fillMaxWidth()
+                                .selectable(
+                                    selected = selectedSettingsGroup == it,
+                                    onClick = { selectedSettingsGroup = it },
+                                )
+                                .background(
+                                    color =
+                                        if (selectedSettingsGroup == it) {
+                                            MaterialTheme.colorScheme.primaryContainer
+                                        } else {
+                                            MaterialTheme.colorScheme.surface
+                                        }
+                                )
+                                .padding(8.dp)
+                    ) {
+                        Text(
+                            modifier = Modifier.align(Alignment.CenterStart),
+                            text = stringResource(it.title),
+                        )
+                    }
                 }
+            }
 
-                Spacer(modifier = Modifier.height(8.dp))
+            ReportReuploadButton()
 
-                ReportReuploadButton()
+            Spacer(modifier = Modifier.height(8.dp))
 
-                Spacer(modifier = Modifier.height(8.dp))
+            AboutNeoStumbler()
+        }
 
-                AboutNeoStumbler()
+        VerticalDivider(modifier = Modifier.fillMaxHeight())
 
-                Spacer(modifier = Modifier.height(16.dp))
+        Column(modifier = Modifier.weight(1f).verticalScroll(rememberScrollState())) {
+            AnimatedContent(
+                targetState = selectedSettingsGroup,
+                transitionSpec = { fadeInFadeOut },
+            ) { state ->
+                when (state) {
+                    SettingsGroupType.REPORTS -> ReportSettings()
+                    SettingsGroupType.SCANNING -> ScanningSettings()
+                    SettingsGroupType.PRIVACY ->
+                        PrivacySettings(openRestrictedAreas = openRestrictedAreas)
+
+                    SettingsGroupType.OTHER -> OtherSettings()
+                }
             }
         }
+    }
+}
+
+@Composable
+private fun SettingsScreenSinglePane(openRestrictedAreas: () -> Unit) {
+    Column(
+        modifier =
+            Modifier.padding(horizontal = 16.dp)
+                .verticalScroll(rememberScrollState())
+                .handleDisplayCutouts()
+    ) {
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            ReportSettings()
+
+            ScanningSettings()
+
+            PrivacySettings(openRestrictedAreas = openRestrictedAreas)
+
+            OtherSettings()
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        ReportReuploadButton()
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        AboutNeoStumbler()
+
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }

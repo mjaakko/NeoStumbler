@@ -1,12 +1,12 @@
 package xyz.malkki.neostumbler.ui.screens
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -69,16 +69,14 @@ import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.activescan.ActiveScanManager
 import xyz.malkki.neostumbler.activescan.ScanState
-import xyz.malkki.neostumbler.constants.PreferenceKeys
 import xyz.malkki.neostumbler.core.report.ReportWithStats
 import xyz.malkki.neostumbler.data.geocoder.Geocoder
 import xyz.malkki.neostumbler.data.location.GpsStatusSource
-import xyz.malkki.neostumbler.data.settings.Settings
-import xyz.malkki.neostumbler.data.settings.getEnumFlow
 import xyz.malkki.neostumbler.extensions.defaultLocale
 import xyz.malkki.neostumbler.extensions.getActivity
 import xyz.malkki.neostumbler.extensions.getQuantityString
 import xyz.malkki.neostumbler.geography.LatLng
+import xyz.malkki.neostumbler.ui.animation.fadeInFadeOut
 import xyz.malkki.neostumbler.ui.composables.MLSWarningDialog
 import xyz.malkki.neostumbler.ui.composables.ReportUploadButton
 import xyz.malkki.neostumbler.ui.composables.reports.ForegroundScanningButton
@@ -88,11 +86,9 @@ import xyz.malkki.neostumbler.ui.composables.shared.ConfirmationDialog
 import xyz.malkki.neostumbler.ui.composables.shared.Shimmer
 import xyz.malkki.neostumbler.ui.composables.shared.formattedDate
 import xyz.malkki.neostumbler.ui.composables.shared.getAddress
+import xyz.malkki.neostumbler.ui.composables.shared.rememberGeocoder
 import xyz.malkki.neostumbler.ui.modifiers.handleDisplayCutouts
 import xyz.malkki.neostumbler.ui.viewmodel.ReportsViewModel
-import xyz.malkki.neostumbler.utils.geocoder.CachedGeocoder
-import xyz.malkki.neostumbler.utils.geocoder.GeocoderType
-import xyz.malkki.neostumbler.utils.geocoder.StubGeocoder
 import xyz.malkki.neostumbler.utils.review.ReviewRequester
 
 @Composable
@@ -224,10 +220,9 @@ private fun ReportStats(modifier: Modifier = Modifier, reportsViewModel: Reports
                 modifier = Modifier.fillMaxWidth().padding(16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                FlowRow(
+                Column(
                     modifier = Modifier.weight(1.0f),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    maxItemsInEachRow = 2,
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
                 ) {
                     Text(
                         text = stringResource(R.string.reports_total, reportsTotal),
@@ -250,30 +245,20 @@ private fun ReportStats(modifier: Modifier = Modifier, reportsViewModel: Reports
     }
 }
 
+private enum class LoadingState {
+    LOADING,
+    REPORTS_LOADED,
+    NO_DATA,
+}
+
 @Composable
 private fun Reports(
     modifier: Modifier = Modifier,
     reportsViewModel: ReportsViewModel,
     listBottomPadding: Dp,
     openReportDetails: (Long) -> Unit,
-    geocoder: Geocoder = koinInject(),
-    settings: Settings = koinInject(),
 ) {
-    val coroutineScope = rememberCoroutineScope()
-
-    val geocoderType by
-        settings
-            .getEnumFlow(PreferenceKeys.GEOCODER_TYPE, GeocoderType.DEFAULT)
-            .collectAsStateWithLifecycle(initialValue = null)
-
-    val cachedGeocoder =
-        remember(geocoderType, geocoder, coroutineScope) {
-            if (geocoderType == GeocoderType.DEFAULT) {
-                CachedGeocoder(coroutineScope, geocoder)
-            } else {
-                StubGeocoder
-            }
-        }
+    val geocoder = rememberGeocoder()
 
     val reports = reportsViewModel.reports.collectAsLazyPagingItems()
 
@@ -311,48 +296,69 @@ private fun Reports(
     Column(modifier = modifier) {
         Text(text = stringResource(R.string.reports), style = MaterialTheme.typography.titleMedium)
 
-        if (reports.itemCount == 0) {
-            if (reports.loadState.isIdle) {
-                Box(
-                    modifier = Modifier.fillMaxSize().padding(bottom = listBottomPadding),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(stringResource(R.string.reports_empty))
+        AnimatedContent(
+            targetState =
+                if (reports.itemCount == 0) {
+                    if (reports.loadState.isIdle) {
+                        LoadingState.NO_DATA
+                    } else {
+                        LoadingState.LOADING
+                    }
+                } else {
+                    LoadingState.REPORTS_LOADED
+                },
+            transitionSpec = { fadeInFadeOut },
+        ) { state ->
+            when (state) {
+                LoadingState.LOADING -> {
+                    CenteredCircularProgressIndicator()
                 }
-            } else {
-                CenteredCircularProgressIndicator()
-            }
-        } else {
-            LazyColumn(
-                state = listState,
-                contentPadding = PaddingValues(bottom = listBottomPadding),
-            ) {
-                items(
-                    reports.itemCount,
-                    key = reports.itemKey { it.reportId },
-                    contentType = reports.itemContentType { "report" },
-                ) { index ->
-                    val report = reports[index]
+                LoadingState.NO_DATA -> {
+                    NoReports(modifier = Modifier.fillMaxSize().padding(bottom = listBottomPadding))
+                }
+                LoadingState.REPORTS_LOADED -> {
+                    LazyColumn(
+                        state = listState,
+                        contentPadding = PaddingValues(bottom = listBottomPadding),
+                    ) {
+                        items(
+                            reports.itemCount,
+                            key = reports.itemKey { it.reportId },
+                            contentType = reports.itemContentType { "report" },
+                        ) { index ->
+                            val report = reports[index]
 
-                    Column(modifier = Modifier.wrapContentSize().animateItem()) {
-                        if (report != null) {
-                            Report(
-                                report = report,
-                                onShowReportDetails = openReportDetails,
-                                onDeleteReport = { reportId -> reportToDelete = reportId },
-                                geocoder = cachedGeocoder,
-                            )
-                        } else {
-                            ReportPlaceholder()
-                        }
+                            Column(modifier = Modifier.wrapContentSize().animateItem()) {
+                                if (report != null) {
+                                    Report(
+                                        report = report,
+                                        onShowReportDetails = openReportDetails,
+                                        onDeleteReport = { reportId -> reportToDelete = reportId },
+                                        geocoder = geocoder,
+                                    )
+                                } else {
+                                    ReportPlaceholder()
+                                }
 
-                        if (index < reports.itemCount - 1) {
-                            HorizontalDivider()
+                                if (index < reports.itemCount - 1) {
+                                    HorizontalDivider()
+                                }
+                            }
                         }
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun NoReports(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(stringResource(R.string.reports_empty))
     }
 }
 
