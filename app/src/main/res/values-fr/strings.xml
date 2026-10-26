@@ -162,14 +162,14 @@
     <string name="every_x_meters">Tous les %d mètres</string>
     <string name="reports_last_uploaded_never">jamais</string>
     <string name="reports_empty">Pas encore de rapports</string>
-    <string name="mls_warning_text">Les services de localisation Mozilla (MLS) ont été fermés et n’acceptent plus de soumissions de données. En alternative à MLS, vous pouvez envoyer les données à beaconDB, qui fournit à un service compatible avec MLS.\n\nVeuillez noter que beaconDB est toujours en développement ce qui affecte la manière dont vos données sont traitées. Vous pouvez lire la <annotation link="privacy_policy">politique de confidentialité</annotation> pour plus d\'informations.\n\nVoulez-vous utiliser beaconDB en service de destination ? Vous pouvez changer cela à tout moment depuis les paramètres</string>
+    <string name="mls_warning_text">Les services de localisation Mozilla (MLS) ont été fermés et n’acceptent plus de soumissions de données. En alternative à MLS, vous pouvez envoyer les données à beaconDB, qui fournit à un service compatible avec MLS.\n\nVeuillez noter que beaconDB est toujours en développement ce qui affecte la manière dont vos données sont traitées. Vous pouvez lire la <annotation link="privacy_policy">politique de confidentialité</annotation> pour plus d\'informations.\n\nVoulez-vous utiliser beaconDB comme service de destination ? Vous pouvez changer cela à tout moment depuis les paramètres</string>
     <string name="troubleshooting_not_ok" tools:ignore="Typos">Problème détecté</string>
     <string name="troubleshooting_ok" tools:ignore="ButtonCase,Typos">Ok</string>
     <string name="coverage_layer_no_configured">Aucune couche de couverture cartographique configurée</string>
     <string name="invalid_url">URL invalide</string>
     <string name="coverage_layer">Couche de couverture cartographique</string>
     <string name="toast_reports_upload_failed_no_endpoint">Échec de l\'envoi des rapport, car aucun service n\'a été configuré</string>
-    <string name="no_endpoint_configured">Aucun service configuré</string>
+    <string name="no_endpoint_configured">Aucune destination configurée</string>
     <string name="coverage_layer_tile_json_url">URL TileJSON pour la couche de couverture cartographique</string>
     <string name="system_default_language">Langue du système</string>
     <string name="waiting_for_location">En attente de localisation</string>
@@ -252,4 +252,11 @@
     <string name="wifi_rtt_ranging_mode_twosided_title">Bidirectionnelle uniquement</string>
     <string name="wifi_rtt_ranging_mode_twosided_description">N\'utiliser les mesures Wi-Fi RTT que lorsque le point d\'accès prend en charge la mesure bidirectionnelle</string>
     <string name="permission_rationale_wifi_rtt">La mesure de distance Wi-Fi RTT nécessite une permission pour accéder aux appareils Wi-Fi aux proximité</string>
+    <string name="no_file_selected">Aucun fichier sélectionné</string>
+    <string name="select_file">Sélectionner un fichier</string>
+    <string name="scanning_start_error_not_in_foreground">Échec du lancement du scan.\nOuvrez d’application et réessayez.</string>
+    <string name="local_endpoint_warning">Point de terminaison du réseau local</string>
+    <string name="map_tile_source_custom_file_title">Fichier de personnalisation</string>
+    <string name="map_always_in_light_mode">Toujours afficher la carte en mode clair</string>
+    <string name="permission_rationale_local_network">Utiliser un point de terminaison d’un réseau local nécessite l’autorisation per les appareils à proximité</string>
 </resources>
