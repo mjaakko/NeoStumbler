@@ -1,0 +1,6 @@
+* Benutzerdefinierte Kartenstile können nun aus einer Datei importiert werden
+* Die Karte kann nun zwangsweise in den hellen Modus versetzt werden
+* Ein Absturz beim Umschalten des Anbieters eines kombinierten Standorts ohne entsprechende Berechtigungen wurde behoben
+* Ein Absturz beim Versuch, den Scanvorgang im Hintergrund zu starten, wurde behoben
+* Übersetzungen aktualisiert
+* Abhängigkeiten aktualisiert

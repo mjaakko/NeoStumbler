@@ -1,3 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="ok">Ok</string>
+    <string name="no_thanks">Nu, mulțumesc</string>
+    <string name="yes">Da</string>
+    <string name="no">Nu</string>
+    <string name="reset">Resetează</string>
+    <string name="save">Salvează</string>
+    <string name="cancel">Anulează</string>
+    <string name="use">Folosește</string>
+    <string name="stop">Oprește</string>
+    <string name="delete">Șterge</string>
+    <string name="delete_all">Șterge tot</string>
+    <string name="no_file_selected">Niciun fișier selectat</string>
+    <string name="select_file">Selectează un fișier</string>
+    <string name="no_data">Fără date</string>
+    <string name="copy">Copiază</string>
+    <string name="text_copied_to_clipboard">Text copiat în clipboard!</string>
+    <string name="disabled">Dezactivat</string>
+    <string name="waiting_for_location">Se așteaptă locația</string>
+    <string name="failed_to_open_selected_file">Nu s-a putut deschide fișierul selectat</string>
+    <string name="permissions_needed">Permisiune necesară</string>
+    <string name="permissions_not_granted">Permisiunile necesare nu au fost aprobate</string>
+    <string name="wifi_icon_description">iconiță Wi-Fi</string>
+    <string name="cell_tower_icon_description">iconiță Turn Celular</string>
+    <string name="bluetooth_icon_description">iconiță Bluetooth</string>
+    <string name="warning_icon_description">iconiță de avertizare</string>
+    <string name="scanner_status_notification_channel_name">Statut scanare</string>
+    <string name="wireless_scanning">Scanare wireless</string>
+    <string name="map_tab_title">Hartă</string>
+    <string name="reports_tab_title">Rapoarte</string>
+    <string name="statistics_tab_title">Statistici</string>
+    <string name="settings_tab_title">Setări</string>
+    <string name="send_reports">Trimite rapoartele</string>
+    <string name="reports">Rapoarte</string>
+    <string name="reports_total">Rapoarte totale: %d</string>
+    <string name="reports_not_uploaded">Rapoarte netrimise: %d</string>
+    <string name="reports_last_uploaded">Rapoarte ultima dată trimise: %s</string>
+    <string name="reports_last_uploaded_never">Niciodată</string>
+    <string name="reports_empty">Niciun raport încă</string>
+    <string name="start_scanning">Pornește scanarea</string>
+    <string name="stop_scanning">Oprește scanarea</string>
+    <string name="scanning_start_error_not_in_foreground">Nu s-a putut începe scanarea.\nDeschide aplicația și încearcă din nou.</string>
+    <string name="scanning_status_active">Scanarea <annotation style="status">activ</annotation></string>
+    <string name="scanning_status_paused">Scanarea <annotation style="status">pe pauză</annotation></string>
+    <string name="scanning_status_not_active">Scanarea <annotation style="status">inactivă</annotation></string>
+    <string name="delete_report">Șterge raportul</string>
+    <string name="delete_report_confirmation">Sigur ștergeți raportul?</string>
+    <plurals name="toast_reports_uploaded">
+        <item quantity="one">S-a trimis un raport</item>
+        <item quantity="few">S-au trimis %d rapoarte</item>
+        <item quantity="other">S-au trimis %d de rapoarte</item>
+    </plurals>
+    <string name="toast_reports_upload_failed">Nu s-au putut trimite rapoartele</string>
+    <string name="toast_reports_upload_failed_no_endpoint">Nu s-au putut trimite rapoartele pentru că nu este niciun serviciu (endpoint) configurat</string>
+    <string name="distance_to_estimated_location">Distanța până la distanța estimată: %d m</string>
+    <string name="speed_metres_per_second">Viteza: %s m/s</string>
+    <string name="altitude_metres">Altitudinea: %s m</string>
+    <string name="signal_strength_dbm">Puterea semnalului: %d dBm</string>
+    <string name="unknown_cell_id">ID Celulă necunoscut</string>
+    <string name="mcc">MCC: %s</string>
+    <string name="mnc">MNC: %s</string>
+    <string name="lac">LAC: %s</string>
+    <string name="psc">PSC: %s</string>
+    <string name="radio_type">Tipul: %s</string>
+    <string name="beacon_type">Tipul emițătorului: %s</string>
+    <string name="beacon_id">ID%1$d: %2$s</string>
+    <string name="beacon_type_ibeacon">iBeacon</string>
+    <string name="beacon_type_altbeacon">AltBeacon</string>
+    <string name="notification_sending_reports">Se trimit rapoartele</string>
+    <plurals name="reports_created">
+        <item quantity="one">Un raport creat</item>
+        <item quantity="few">%d rapoarte create</item>
+        <item quantity="other">%d de Rapoarte create</item>
+    </plurals>
+    <string name="satellites_in_use">%1$d⁄%2$d Sateliți folosiți</string>
+    <string name="ignore_battery_optimizations_title">Ignoră Optimizările de baterie</string>
+    <string name="ignore_battery_optimizations_description">Pentru cele mai bune rezultate, optimizările bateriei ar trebui să fie dezactivate. Scanarea wireless și accesul la locație sunt semnificativ reduse când optimizarea bateriei este activă și ecranul este oprit</string>
+    <string name="battery_optimizations_not_disabled_warning">Optimizările bateriei nu au fost dezactivate</string>
+    <string name="send_reports_automatically_title">Trimite automat rapoarte</string>
+    <string name="send_reports_automatically_never">Niciodată</string>
+    <string name="send_reports_automatically_on_any_network">Pe orice rețea</string>
+    <string name="send_reports_automatically_on_unmetered_network">Pe rețele necontorizate</string>
+    <string name="export_notification_channel_name">Exportă datele</string>
+    <string name="notification_exporting_data">Se exportă datele…</string>
+    <string name="export_data">Exportă date</string>
+    <string name="export_no_file_chosen">Nu se pot exporta datele deoarece nu s-au creat fișiere</string>
+    <string name="export_started">Se exportă datele din %1$s în %2$s</string>
+    <string name="export_csv">Exportă ca CSV</string>
+    <string name="export_raw_database">Exportă baza de date brută</string>
+    <string name="export_raw_database_compress">Compresează fișierul cu baza de date</string>
+    <string name="import_data">Importă datele</string>
+    <string name="import_raw_database">Importă baza de date brută</string>
+    <string name="import_raw_database_description">importând o bază de date brută, vei rescrie baza de date existentă</string>
 </resources>

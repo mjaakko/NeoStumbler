@@ -1,0 +1,6 @@
+* Stilurile personalizate de hartă pot fi acum importate dintr-un fișier
+* Harta poate fi acum forțată să folosească modul luminos
+* S-a rezolvat o problemă care provoca blocarea aplicației atunci când se comuta furnizorul de locație combinat fără permisiuni adecvate
+* S-a rezolvat o problemă care provoca blocarea aplicației atunci când se încerca pornirea scanării din fundal
+* Traduceri actualizate
+* Dependențe actualizate

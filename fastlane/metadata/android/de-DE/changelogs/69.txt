@@ -1,0 +1,4 @@
+* Der standortbasierte Bewegungsmelder reagiert nun etwas weniger empfindlich auf vertikale Bewegungen
+* Thailändische Übersetzung hinzugefügt
+* Übersetzungen aktualisiert
+* Abhängigkeiten aktualisiert

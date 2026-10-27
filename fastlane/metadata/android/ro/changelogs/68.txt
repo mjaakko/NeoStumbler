@@ -1,0 +1,13 @@
+Funcții noi
+* Măsurarea distanțelor Wi-Fi RTT pentru estimarea distanțelor către AP-uri Wi-Fi
+* Zone restricționate pt. evitarea colectării datelor în zone sensibile
+
+Îmbunătățiri
+* PSC-ul turnului celular este afișat în detaliile raportului
+* Actualizările locației pe hartă sunt oprite când nu-i pornit
+* Detaliile raportului pot fi deschise prin apăsarea lungă a hexagoanelor de pe hartă
+* Titlurile din setări pot conține titluri mai lungi
+
+Altele
+* Dependențe actualizate
+* Traduceri actualizate

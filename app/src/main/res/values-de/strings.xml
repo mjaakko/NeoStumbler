@@ -64,7 +64,7 @@
     <string name="permission_rationale_read_phone_state">Zugriff auf das Telefon wird benötigt, um Mobilfunkmasten zu scannen</string>
     <string name="permission_rationale_bluetooth">Das Scannen von Bluetooth-Beacons benötigt die Bluetooth-Berechtigung</string>
     <string name="permission_rationale_post_notifications">Das Anzeigen der Status-Benachrichtigung benötigt die Benachrichtigungsberechtigung</string>
-    <string name="permission_rationale_background_location_quick_settings">Für den Start des Scans über die Schnelleinstellungen ist im Hintergrund Zugriff auf den Standort erforderlich.\n\nBeachten Sie, dass dies eine Einschränkung des Android-Betriebssystems ist. Ihr Standort wird im Hintergrund nicht abgerufen, wenn Sie weder passives noch automatisches Scannen aktivieren.</string>
+    <string name="permission_rationale_background_location_quick_settings">Für den Start des Scans über die Schnelleinstellungen ist im Hintergrund Zugriff auf den Standort erforderlich.\n\nBeachte, dass dies eine Einschränkung des Android-Betriebssystems ist. Dein Standort wird im Hintergrund nicht abgerufen, wenn du weder passives noch automatisches Scannen aktivierst</string>
     <string name="permission_rationale_location_map">Die Anzeige deines Standorts auf der Karte erfordert eine Berechtigung für den Standort</string>
     <string name="movement_detection_location_description">Pausiert Scannen, wenn Standort sich nicht ändert. Hält GPS aktiv</string>
     <string name="notification_style_minimal_description">Zeigt Benachrichtigung ohne Details</string>
@@ -224,4 +224,18 @@
     <string name="restricted_areas_delete_confirmation">Bist du sicher, dass du die ausgewählten Bereiche löschen möchtest?</string>
     <string name="restricted_areas_add">Sperrbereich hinzufügen</string>
     <string name="wifi_rtt_ranging_mode_always_title">Immer</string>
+    <string name="wifi_rtt_ranging_mode_twosided_title">Nur beidseitig</string>
+    <string name="permission_rationale_local_network">Die Nutzung eines Endpunkts im lokalen Netzwerk erfordert die Berechtigung für Geräte in der Nähe</string>
+    <string name="no_file_selected">Keine Datei ausgewählt</string>
+    <string name="select_file">Datei auswählen</string>
+    <string name="scanning_start_error_not_in_foreground">Der Scanvorgang konnte nicht gestartet werden.\nÖffne die App und versuche es erneut.</string>
+    <string name="psc">PSC: %s</string>
+    <string name="local_endpoint_warning">Endpunkt im lokalen Netzwerk</string>
+    <string name="wifi_rtt_ranging">WLAN-Entfernungsmessung</string>
+    <string name="wifi_rtt_ranging_mode_never_title">Nie</string>
+    <string name="wifi_rtt_ranging_mode_always_description">Wechsel zur einseitigen Entfernungsmessung, falls der Zugangspunkt die WLAN-RTT-Entfernungsmessung nicht unterstützt</string>
+    <string name="wifi_rtt_ranging_mode_twosided_description">Die WLAN-RTT-Entfernungsmessung nur durchführen, wenn der Zugangspunkt eine beidseitige Entfernungsmessung unterstützt</string>
+    <string name="map_tile_source_custom_file_title">Benutzerdefinierte Datei</string>
+    <string name="map_always_in_light_mode">Karte immer im hellen Modus anzeigen</string>
+    <string name="permission_rationale_wifi_rtt">Für die WLAN-RTT-Entfernungsmessung ist die Berechtigung für WLAN-Geräte in der Nähe erforderlich</string>
 </resources>

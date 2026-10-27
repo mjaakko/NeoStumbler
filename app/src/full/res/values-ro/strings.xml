@@ -1,3 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="fused_location_no_gps_warning">Dispozitivul nu are un modul GPS</string>
+    <string name="autoscan_when_moving">Scanare automată în timpul mișcării</string>
+    <string name="autoscan_failed_to_enable_title">Nu s-a putut activa scanarea automată</string>
+    <string name="autoscan_failed_to_enable_description">Scanarea automată folosește recunoașterea activității din Google Play Services, care s-ar putea să nu fie disponibilă pe dispozitivul tău</string>
+    <string name="permission_rationale_background_location_autoscan">Pornirea automată a scanării când aplicația nu este activă necesită permisiunea pentru locație în fundal</string>
+    <string name="permission_rationale_activity_recognition">Pornirea automată a scanării necesită acces la activitatea curentă</string>
 </resources>

@@ -1,0 +1,13 @@
+Neue Funktionen
+* WLAN-RTT-Entfernungsmessung zur Schätzung der Entfernungen zu WLAN-Zugangspunkten
+* Sperrbereiche zur Vermeidung der Datenerfassung in sensiblen Bereichen
+
+Verbesserungen
+* Der PSC-Wert des Mobilfunkmasts wird in den Berichtsdetails angezeigt
+* Standortaktualisierungen auf der Karte werden angehalten, wenn der Bildschirm ausgeschaltet ist
+* Die Berichtsdetails lassen sich durch langes Drücken auf die Sechsecke auf der Karte öffnen
+* Die Titel der Einstellungen können nun längere Bezeichnungen enthalten
+
+Sonstiges
+* Abhängigkeiten aktualisiert
+* Übersetzungen aktualisiert
