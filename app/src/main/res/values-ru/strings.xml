@@ -226,4 +226,22 @@
         <item quantity="many">После %d дней</item>
         <item quantity="other">После %d дней</item>
     </plurals>
+    <string name="no_file_selected">Файл не выбран</string>
+    <string name="select_file">Выбрать файл</string>
+    <string name="scanning_start_error_not_in_foreground">Не удалось запустить сканирование.\nОткройте приложение и попробуйте ещё раз.</string>
+    <string name="local_endpoint_warning">Адрес в локальной сети</string>
+    <string name="restricted_areas_settings_title">Зоны приватности</string>
+    <string name="restricted_areas_delete">Удалить зоны приватности</string>
+    <string name="restricted_areas_delete_confirmation">Вы уверены, что хотите удалить выбранные зоны приватности?</string>
+    <string name="restricted_areas_add">Добавить зону приватности</string>
+    <string name="wifi_rtt_ranging">Измерение расстояния до точек доступа Wi‑Fi</string>
+    <string name="wifi_rtt_ranging_mode_never_title">Никогда</string>
+    <string name="wifi_rtt_ranging_mode_always_title">Всегда</string>
+    <string name="wifi_rtt_ranging_mode_always_description">Если точка доступа не поддерживает двустороннее измерение расстояния, использовать односторонний метод измерения</string>
+    <string name="wifi_rtt_ranging_mode_twosided_title">Только двустороннее измерение</string>
+    <string name="wifi_rtt_ranging_mode_twosided_description">Измерять расстояние по Wi-Fi RTT только до точек доступа, поддерживающих двустороннее измерение</string>
+    <string name="map_tile_source_custom_file_title">Свой файл</string>
+    <string name="map_always_in_light_mode">Всегда отображать карту в светлой теме</string>
+    <string name="permission_rationale_wifi_rtt">Для измерения расстояния по Wi-Fi RTT требуется разрешение на доступ к устройствам Wi-Fi поблизости</string>
+    <string name="permission_rationale_local_network">Для использования адреса в локальной сети требуется разрешение на доступ к устройствам поблизости</string>
 </resources>
