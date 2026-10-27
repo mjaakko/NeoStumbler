@@ -11,5 +11,18 @@
       "geolocatePath": "/v1/geolocate"
     },
     "coverageTileJsonUrl": "https://cdn.beacondb.net/tiles/beacondb.json"
+  },
+  {
+    "id": "corvus",
+    "name": "Corvus Instinct",
+    "website": "https://instinct.corvusintell.com/",
+    "termsOfUse": "https://corvusintell.com/privacy/",
+    "hostedBy": "Corvus Intelligence LLC",
+    "endpoint": {
+      "baseUrl": "https://instinct.corvusintell.com",
+      "geosubmitPath": "/v2/geosubmit",
+      "geolocatePath": "/v1/geolocate"
+    },
+    "coverageTileJsonUrl": "https://instinct.corvusintell.com/coverage/tiles.json"
   }
 ]
