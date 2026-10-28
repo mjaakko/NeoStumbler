@@ -240,4 +240,11 @@
     <string name="wifi_rtt_ranging_mode_twosided_title">Apenas com os dois lados</string>
     <string name="wifi_rtt_ranging_mode_twosided_description">Apenas fazer a medição do Wi-Fi RTT caso o ponto de acesso suportar medição de dois lados</string>
     <string name="permission_rationale_wifi_rtt">A medição do Wi-Fi RTT requer a permissão de dispositivos Wi-Fi próximos</string>
+    <string name="no_file_selected">Nenhum arquivo selecionado</string>
+    <string name="select_file">Escolher arquivo</string>
+    <string name="scanning_start_error_not_in_foreground">Falha ao iniciar a busca.\nAbra o app e tente novamente.</string>
+    <string name="local_endpoint_warning">Ponto de entrega na rede local</string>
+    <string name="map_tile_source_custom_file_title">Arquivo personalizado</string>
+    <string name="map_always_in_light_mode">Mostrar mapa sempre no modo claro</string>
+    <string name="permission_rationale_local_network">Usar um ponto de entrega na rede local requer a permissão de dispositivos por perto</string>
 </resources>
