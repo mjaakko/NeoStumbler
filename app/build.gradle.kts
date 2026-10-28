@@ -29,8 +29,8 @@ android {
 
     defaultConfig {
         applicationId = "xyz.malkki.neostumbler"
-        versionCode = 71
-        versionName = "2.4.3-rc1"
+        versionCode = 72
+        versionName = "2.4.3"
 
         androidResources {
             // Configure supported languages here to avoid including incomplete translations in the

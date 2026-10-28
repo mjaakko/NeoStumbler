@@ -1,0 +1,6 @@
+* Using an endpoint in the local network now requests local network permission on Android 17+
+* Optimized report reupload by only loading one batch of reports into memory at once
+* Minor UI polishment
+* Fixed a crash when opening settings for the first time
+* Updated dependencies
+* Updated translations
