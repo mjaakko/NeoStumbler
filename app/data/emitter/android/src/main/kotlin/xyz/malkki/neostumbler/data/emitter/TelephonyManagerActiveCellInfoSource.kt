@@ -25,7 +25,7 @@ import xyz.malkki.neostumbler.core.emitter.CellTower.Companion.fillMissingData
 import xyz.malkki.neostumbler.core.observation.EmitterObservation
 import xyz.malkki.neostumbler.data.emitter.internal.getServiceStateFlow
 import xyz.malkki.neostumbler.data.emitter.internal.util.delayWithMinDuration
-import xyz.malkki.neostumbler.data.emitter.mapper.toCellTower
+import xyz.malkki.neostumbler.data.emitter.mapper.toCellTowers
 import xyz.malkki.neostumbler.executors.ImmediateExecutor
 
 /**
@@ -80,7 +80,7 @@ class TelephonyManagerActiveCellInfoSource(
                 override fun onCellInfo(cellInfo: MutableList<CellInfo>) {
                     val cellTowers =
                         cellInfo
-                            .mapNotNull { it.toCellTower() }
+                            .flatMap { it.toCellTowers() }
                             .fillMissingData(serviceState.value?.operatorNumeric)
                             // Filter cell infos which don't have enough useful data to be
                             // collected
