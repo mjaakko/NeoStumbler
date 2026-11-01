@@ -8,7 +8,7 @@ import androidx.core.content.getSystemService
 import xyz.malkki.neostumbler.core.emitter.CellTower
 import xyz.malkki.neostumbler.core.emitter.CellTower.Companion.fillMissingData
 import xyz.malkki.neostumbler.core.observation.EmitterObservation
-import xyz.malkki.neostumbler.data.emitter.mapper.toCellTower
+import xyz.malkki.neostumbler.data.emitter.mapper.toCellTowers
 
 class TelephonyManagerPassiveCellInfoSource(private val telephonyManager: TelephonyManager) :
     PassiveCellTowerSource {
@@ -26,7 +26,7 @@ class TelephonyManagerPassiveCellInfoSource(private val telephonyManager: Teleph
         val serviceState = telephonyManager.serviceState
 
         return telephonyManager.allCellInfo
-            .mapNotNull { cellInfo -> cellInfo.toCellTower() }
+            .flatMap { cellInfo -> cellInfo.toCellTowers() }
             .fillMissingData(serviceState?.operatorNumeric)
             // Filter cell infos which don't have enough useful data to be collected
             .filter { it.emitter.hasEnoughData() }
