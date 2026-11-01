@@ -39,24 +39,42 @@ android {
         includeInApk = project.hasProperty("includeDependenciesInfo")
         includeInBundle = project.hasProperty("includeDependenciesInfo")
     }
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
 }
 
-tasks.register("lintAll") {
-    dependsOn(
-        tasks.named { it.startsWith("lint") && !it.startsWith("lintFix") && it.endsWith("Debug") }
-    )
-}
+val unitTest = tasks.register("unitTest")
 
-tasks.register("assembleAll") {
-    dependsOn(
-        tasks.named("assembleDebug"),
-        tasks.named("assembleAndroidTest"),
-        tasks.named { it.startsWith("assemble") && it.endsWith("DebugUnitTest") },
-    )
-}
+val assembleAll =
+    tasks.register("assembleAll") {
+        dependsOn(
+            tasks.named("assembleDebug"),
+            tasks.named("assembleAndroidTest"),
+        )
+    }
 
-tasks.register("unitTest") {
-    dependsOn(tasks.named { it.startsWith("test") && it.endsWith("DebugUnitTest") })
+val lintAll = tasks.register("lintAll")
+
+androidComponents {
+    onVariants(selector().withBuildType("debug")) { variant ->
+        val variantName = variant.flavorName?.replaceFirstChar { it.uppercaseChar() }
+
+        unitTest.configure {
+            dependsOn("test${variantName}DebugUnitTest")
+        }
+
+        assembleAll.configure {
+            dependsOn(tasks.named("compile${variantName}DebugUnitTestSources"))
+        }
+
+        lintAll.configure {
+            dependsOn(tasks.named("lint${variantName}Debug"))
+        }
+    }
 }
 
 tasks.register("androidTest") { dependsOn(tasks.named("connectedAndroidTest")) }
