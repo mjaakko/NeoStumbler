@@ -455,7 +455,7 @@ dependencies {
 
 // These dependencies cause issues when using Gradle 9.3.0+ for some reason
 // -> let's force a version that works
-configurations.all {
+configurations.configureEach {
     resolutionStrategy {
         force("androidx.concurrent:concurrent-futures:1.3.0")
         force("androidx.concurrent:concurrent-futures-ktx:1.3.0")
