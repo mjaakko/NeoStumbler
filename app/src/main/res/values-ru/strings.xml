@@ -228,7 +228,7 @@
     </plurals>
     <string name="no_file_selected">Файл не выбран</string>
     <string name="select_file">Выбрать файл</string>
-    <string name="scanning_start_error_not_in_foreground">Не удалось запустить сканирование.\nОткройте приложение и попробуйте ещё раз.</string>
+    <string name="scanning_start_error_not_in_foreground">Не удалось начать сканирование.\nОткройте приложение и попробуйте снова.</string>
     <string name="local_endpoint_warning">Адрес в локальной сети</string>
     <string name="restricted_areas_settings_title">Зоны приватности</string>
     <string name="restricted_areas_delete">Удалить зоны приватности</string>
@@ -244,4 +244,12 @@
     <string name="map_always_in_light_mode">Всегда отображать карту в светлой теме</string>
     <string name="permission_rationale_wifi_rtt">Для измерения расстояния по Wi-Fi RTT требуется разрешение на доступ к устройствам Wi-Fi поблизости</string>
     <string name="permission_rationale_local_network">Для использования адреса в локальной сети требуется разрешение на доступ к устройствам поблизости</string>
+    <plurals name="restricted_areas_settings_description">
+        <item quantity="one">Один: %d зона без сбора данных</item>
+        <item quantity="few">Несколько: %d зоны без сбора данных</item>
+        <item quantity="many">%d зон без сбора данных</item>
+        <item quantity="other">%d зон без сбора данных</item>
+    </plurals>
+    <string name="restricted_areas_explanation">Запретные зоны позволяют не создавать отчёты в чувствительных местах, например у вас дома. Сканирование в этих зонах продолжится, но все созданные там отчёты будут автоматически удаляться.\n\nИмейте в виду: пробелы в данных могут невольно раскрыть расположение запретных зон!</string>
+    <string name="psc">PSC: %s</string>
 </resources>

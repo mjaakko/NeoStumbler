@@ -21,4 +21,6 @@
     <string name="permissions_not_granted">Hindi binigay ang mga pahintulot na kinakailangan</string>
     <string name="wifi_icon_description">Icon ng Wi-Fi</string>
     <string name="cell_tower_icon_description">Icon ng cell tower</string>
+    <string name="no_file_selected">Walang napiling file</string>
+    <string name="select_file">Pumili ng file</string>
 </resources>
