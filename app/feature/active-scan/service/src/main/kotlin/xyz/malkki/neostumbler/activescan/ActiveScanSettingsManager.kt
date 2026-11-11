@@ -14,6 +14,9 @@ private const val DEFAULT_WIFI_SCAN_DISTANCE = 50.0
 // By default, try to scan cells every 120 meters
 private const val DEFAULT_CELL_SCAN_DISTANCE = 120.0
 
+// By default, try to scan BLE beacons every 50 meters
+private const val DEFAULT_BLE_SCAN_DISTANCE = 50.0
+
 class ActiveScanSettingsManager(private val settings: Settings) {
     val activeScanSettings: Flow<ActiveScanSettings> =
         settings.getSnapshotFlow().map { settingsSnapshot ->
@@ -28,6 +31,11 @@ class ActiveScanSettingsManager(private val settings: Settings) {
     /** @param cellScanDistance In meters */
     suspend fun setCellScanDistance(cellScanDistance: Int) {
         settings.edit { setInt(ActiveScanPreferenceKeys.CELL_SCAN_DISTANCE, cellScanDistance) }
+    }
+
+    /** @param bleScanDistance In meters */
+    suspend fun setBleScanDistance(bleScanDistance: Int) {
+        settings.edit { setInt(ActiveScanPreferenceKeys.BLE_SCAN_DISTANCE, bleScanDistance) }
     }
 
     suspend fun setLowBatteryThreshold(lowBatteryThreshold: Int?) {
@@ -55,6 +63,11 @@ internal fun SettingsSnapshot.toActiveScanSettings(): ActiveScanSettings {
             Distance(
                 getInt(ActiveScanPreferenceKeys.CELL_SCAN_DISTANCE)?.toDouble()
                     ?: DEFAULT_CELL_SCAN_DISTANCE
+            ),
+        bleScanDistance =
+            Distance(
+                getInt(ActiveScanPreferenceKeys.BLE_SCAN_DISTANCE)?.toDouble()
+                    ?: DEFAULT_BLE_SCAN_DISTANCE
             ),
         lowBatteryThreshold = getInt(ActiveScanPreferenceKeys.PAUSE_ON_BATTERY_LEVEL_THRESHOLD),
         ignoreWifiScanThrottling =

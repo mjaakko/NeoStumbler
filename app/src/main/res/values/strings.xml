@@ -174,6 +174,7 @@
 
     <string name="wifi_scan_frequency">Wi-Fi scan frequency</string>
     <string name="cell_tower_scan_frequency">Cell tower scan frequency</string>
+    <string name="beacon_scan_frequency">Bluetooth beacon scan frequency</string>
 
     <string name="every_x_meters">Every %d meters</string>
 
