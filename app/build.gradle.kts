@@ -136,14 +136,6 @@ android {
         }
     }
 
-    sourceSets {
-        getByName("gplay") {
-            assets {
-                directories += layout.buildDirectory.dir("privacypolicy").get().asFile.absolutePath
-            }
-        }
-    }
-
     buildFeatures {
         buildConfig = true
         compose = true
