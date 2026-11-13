@@ -21,4 +21,5 @@ dependencies {
     testImplementation(libs.junit)
 
     testImplementation(libs.mockitoKotlin)
+    testImplementation(testFixtures(project(":app:core:domain")))
 }

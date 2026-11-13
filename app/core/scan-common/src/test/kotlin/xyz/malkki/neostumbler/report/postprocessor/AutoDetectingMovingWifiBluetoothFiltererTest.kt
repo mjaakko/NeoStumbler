@@ -5,12 +5,12 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import xyz.malkki.neostumbler.core.MacAddress
-import xyz.malkki.neostumbler.core.Position
-import xyz.malkki.neostumbler.core.emitter.BluetoothBeacon
-import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
-import xyz.malkki.neostumbler.core.observation.EmitterObservation
-import xyz.malkki.neostumbler.core.observation.PositionObservation
-import xyz.malkki.neostumbler.core.report.ReportData
+import xyz.malkki.neostumbler.core.emitter.someBluetoothBeacon
+import xyz.malkki.neostumbler.core.observation.someEmitterObservation
+import xyz.malkki.neostumbler.core.report.someReportData
+import xyz.malkki.neostumbler.core.somePosition
+import xyz.malkki.neostumbler.core.somePositionObservation
+import xyz.malkki.neostumbler.core.someWifiAccessPoint
 import xyz.malkki.neostumbler.core.values.SignalStrength
 
 class AutoDetectingMovingWifiBluetoothFiltererTest {
@@ -23,38 +23,36 @@ class AutoDetectingMovingWifiBluetoothFiltererTest {
             )
 
         val position1 =
-            PositionObservation(
-                Position(
-                    latitude = 40.689100,
-                    longitude = -74.044300,
-                    source = Position.Source.GPS,
-                ),
-                timestamp = 0,
+            somePositionObservation(
+                position =
+                    somePosition(
+                        latitude = 40.689100,
+                        longitude = -74.044300,
+                    )
             )
 
         val report1 =
-            ReportData(
+            someReportData(
                 position = position1,
-                cellTowers = emptyList(),
                 wifiAccessPoints =
                     listOf(
-                        EmitterObservation(
-                            WifiAccessPoint(macAddress = MacAddress("01:01:01:01:01:01")),
-                            timestamp = 0,
+                        someEmitterObservation(
+                            emitter =
+                                someWifiAccessPoint(macAddress = MacAddress("01:01:01:01:01:01"))
                         ),
-                        EmitterObservation(
-                            WifiAccessPoint(macAddress = MacAddress("02:02:02:02:02:02")),
-                            timestamp = 0,
+                        someEmitterObservation(
+                            emitter =
+                                someWifiAccessPoint(macAddress = MacAddress("02:02:02:02:02:02"))
                         ),
                     ),
                 bluetoothBeacons =
                     listOf(
-                        EmitterObservation(
-                            BluetoothBeacon(
-                                macAddress = MacAddress("04:04:04:04:04:04"),
-                                signalStrength = SignalStrength(-80),
-                            ),
-                            timestamp = 0,
+                        someEmitterObservation(
+                            emitter =
+                                someBluetoothBeacon(
+                                    macAddress = MacAddress("04:04:04:04:04:04"),
+                                    signalStrength = SignalStrength(-80),
+                                )
                         )
                     ),
             )
@@ -64,14 +62,12 @@ class AutoDetectingMovingWifiBluetoothFiltererTest {
         val afterMoving = position1.position.latLng.destination(700.0, 43.15)
 
         val position2 =
-            PositionObservation(
+            somePositionObservation(
                 position =
-                    Position(
+                    somePosition(
                         latitude = afterMoving.latitude,
                         longitude = afterMoving.longitude,
-                        source = Position.Source.GPS,
-                    ),
-                timestamp = 0,
+                    )
             )
 
         val report2 = report1.copy(position = position2)
@@ -97,32 +93,28 @@ class AutoDetectingMovingWifiBluetoothFiltererTest {
             )
 
         val position1 =
-            PositionObservation(
+            somePositionObservation(
                 position =
-                    Position(
+                    somePosition(
                         latitude = 40.689100,
                         longitude = -74.044300,
-                        source = Position.Source.GPS,
-                    ),
-                timestamp = 0,
+                    )
             )
 
         val report1 =
-            ReportData(
+            someReportData(
                 position = position1,
-                cellTowers = emptyList(),
                 wifiAccessPoints =
                     listOf(
-                        EmitterObservation(
-                            WifiAccessPoint(macAddress = MacAddress("01:01:01:01:01:01")),
-                            timestamp = 0,
+                        someEmitterObservation(
+                            emitter =
+                                someWifiAccessPoint(macAddress = MacAddress("01:01:01:01:01:01"))
                         ),
-                        EmitterObservation(
-                            WifiAccessPoint(macAddress = MacAddress("02:02:02:02:02:02")),
-                            timestamp = 0,
+                        someEmitterObservation(
+                            emitter =
+                                someWifiAccessPoint(macAddress = MacAddress("02:02:02:02:02:02"))
                         ),
                     ),
-                bluetoothBeacons = emptyList(),
             )
 
         filterer.postProcessReport(report1)
@@ -130,30 +122,26 @@ class AutoDetectingMovingWifiBluetoothFiltererTest {
         val afterMoving = position1.position.latLng.destination(700.0, 43.15)
 
         val position2 =
-            PositionObservation(
+            somePositionObservation(
                 position =
-                    Position(
+                    somePosition(
                         latitude = afterMoving.latitude,
                         longitude = afterMoving.longitude,
-                        source = Position.Source.GPS,
-                    ),
-                timestamp = 0,
+                    )
             )
 
         val report2 =
-            ReportData(
+            someReportData(
                 position = position2,
-                cellTowers = emptyList(),
-                bluetoothBeacons = emptyList(),
                 wifiAccessPoints =
                     listOf(
-                        EmitterObservation(
-                            WifiAccessPoint(macAddress = MacAddress("03:03:03:03:03:03")),
-                            timestamp = 0,
+                        someEmitterObservation(
+                            emitter =
+                                someWifiAccessPoint(macAddress = MacAddress("03:03:03:03:03:03"))
                         ),
-                        EmitterObservation(
-                            WifiAccessPoint(macAddress = MacAddress("04:04:04:04:04:04")),
-                            timestamp = 0,
+                        someEmitterObservation(
+                            emitter =
+                                someWifiAccessPoint(macAddress = MacAddress("04:04:04:04:04:04"))
                         ),
                     ),
             )
@@ -178,27 +166,24 @@ class AutoDetectingMovingWifiBluetoothFiltererTest {
             )
 
         val position1 =
-            PositionObservation(
-                Position(
-                    latitude = 40.689100,
-                    longitude = -74.044300,
-                    source = Position.Source.GPS,
-                ),
-                timestamp = 0,
+            somePositionObservation(
+                position =
+                    somePosition(
+                        latitude = 40.689100,
+                        longitude = -74.044300,
+                    )
             )
 
         val report1 =
-            ReportData(
+            someReportData(
                 position = position1,
-                cellTowers = emptyList(),
                 wifiAccessPoints =
                     listOf(
-                        EmitterObservation(
-                            WifiAccessPoint(macAddress = MacAddress("01:01:01:01:01:01")),
-                            timestamp = 0,
+                        someEmitterObservation(
+                            emitter =
+                                someWifiAccessPoint(macAddress = MacAddress("01:01:01:01:01:01"))
                         )
                     ),
-                bluetoothBeacons = emptyList(),
             )
 
         filterer.postProcessReport(report1)
@@ -206,14 +191,12 @@ class AutoDetectingMovingWifiBluetoothFiltererTest {
         val afterMoving = position1.position.latLng.destination(700.0, 43.15)
 
         val position2 =
-            PositionObservation(
+            somePositionObservation(
                 position =
-                    Position(
+                    somePosition(
                         latitude = afterMoving.latitude,
                         longitude = afterMoving.longitude,
-                        source = Position.Source.GPS,
-                    ),
-                timestamp = 0,
+                    )
             )
 
         val report2 = report1.copy(position = position2)

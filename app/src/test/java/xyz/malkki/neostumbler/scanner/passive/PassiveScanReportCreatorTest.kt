@@ -18,11 +18,11 @@ import org.mockito.kotlin.whenever
 import xyz.malkki.neostumbler.activescan.ActiveScanManager
 import xyz.malkki.neostumbler.activescan.ScanState
 import xyz.malkki.neostumbler.core.MacAddress
-import xyz.malkki.neostumbler.core.Position
-import xyz.malkki.neostumbler.core.emitter.CellTower
-import xyz.malkki.neostumbler.core.emitter.WifiAccessPoint
-import xyz.malkki.neostumbler.core.observation.EmitterObservation
-import xyz.malkki.neostumbler.core.observation.PositionObservation
+import xyz.malkki.neostumbler.core.emitter.someCellTower
+import xyz.malkki.neostumbler.core.observation.someEmitterObservation
+import xyz.malkki.neostumbler.core.somePosition
+import xyz.malkki.neostumbler.core.somePositionObservation
+import xyz.malkki.neostumbler.core.someWifiAccessPoint
 import xyz.malkki.neostumbler.data.emitter.PassiveBluetoothBeaconSource
 import xyz.malkki.neostumbler.data.emitter.PassiveCellTowerSource
 import xyz.malkki.neostumbler.data.emitter.PassiveWifiAccessPointSource
@@ -89,29 +89,21 @@ class PassiveScanReportCreatorTest {
     fun `No report is created for inaccurate location`() = runTest {
         whenever(passiveWifiAccessPointSource.getWifiAccessPoints()) doReturn
             listOf(
-                EmitterObservation(
-                    WifiAccessPoint(macAddress = MacAddress("01:01:01:01:01:01")),
-                    timestamp = 0,
-                ),
-                EmitterObservation(
-                    WifiAccessPoint(macAddress = MacAddress("ab:ab:ab:ab:ab:ab")),
-                    timestamp = 0,
-                ),
+                someEmitterObservation(someWifiAccessPoint(MacAddress("01:01:01:01:01:01"))),
+                someEmitterObservation(someWifiAccessPoint(MacAddress("ab:ab:ab:ab:ab:ab"))),
             )
 
         whenever(passiveCellTowerSource.getCellTowers()) doReturn emptyList()
 
         passiveScanReportCreator.createPassiveScanReport(
             listOf(
-                PositionObservation(
+                somePositionObservation(
                     position =
-                        Position(
+                        somePosition(
                             latitude = -22.951752,
                             longitude = -43.210653,
-                            accuracy = 300.0,
-                            source = Position.Source.GPS,
-                        ),
-                    timestamp = 0,
+                            accuracy = 367.25,
+                        )
                 )
             )
         )
@@ -122,29 +114,20 @@ class PassiveScanReportCreatorTest {
     fun `Reports are created with passively collected data`() = runTest {
         whenever(passiveWifiAccessPointSource.getWifiAccessPoints()) doReturn
             listOf(
-                EmitterObservation(
-                    WifiAccessPoint(macAddress = MacAddress("01:01:01:01:01:01")),
-                    timestamp = 0,
-                ),
-                EmitterObservation(
-                    WifiAccessPoint(macAddress = MacAddress("ab:ab:ab:ab:ab:ab")),
-                    timestamp = 0,
-                ),
+                someEmitterObservation(someWifiAccessPoint(MacAddress("01:01:01:01:01:01"))),
+                someEmitterObservation(someWifiAccessPoint(MacAddress("ab:ab:ab:ab:ab:ab"))),
             )
 
         whenever(passiveCellTowerSource.getCellTowers()) doReturn emptyList()
 
         passiveScanReportCreator.createPassiveScanReport(
             listOf(
-                PositionObservation(
+                somePositionObservation(
                     position =
-                        Position(
+                        somePosition(
                             latitude = -22.951752,
                             longitude = -43.210653,
-                            accuracy = 5.0,
-                            source = Position.Source.GPS,
-                        ),
-                    timestamp = 0,
+                        )
                 )
             )
         )
@@ -160,14 +143,8 @@ class PassiveScanReportCreatorTest {
     fun `Reports are not created if the location has not changed`() = runTest {
         whenever(passiveWifiAccessPointSource.getWifiAccessPoints()) doReturn
             listOf(
-                EmitterObservation(
-                    WifiAccessPoint(macAddress = MacAddress("01:01:01:01:01:01")),
-                    timestamp = 0,
-                ),
-                EmitterObservation(
-                    WifiAccessPoint(macAddress = MacAddress("ab:ab:ab:ab:ab:ab")),
-                    timestamp = 0,
-                ),
+                someEmitterObservation(someWifiAccessPoint(MacAddress("01:01:01:01:01:01"))),
+                someEmitterObservation(someWifiAccessPoint(MacAddress("ab:ab:ab:ab:ab:ab"))),
             )
 
         whenever(passiveCellTowerSource.getCellTowers()) doReturn emptyList()
@@ -175,15 +152,12 @@ class PassiveScanReportCreatorTest {
         val location = LatLng(latitude = -22.951752, longitude = -43.210653)
         passiveScanReportCreator.createPassiveScanReport(
             listOf(
-                PositionObservation(
+                somePositionObservation(
                     position =
-                        Position(
+                        somePosition(
                             latitude = location.latitude,
                             longitude = location.longitude,
-                            accuracy = 5.0,
-                            source = Position.Source.GPS,
-                        ),
-                    timestamp = 0,
+                        )
                 )
             )
         )
@@ -191,27 +165,24 @@ class PassiveScanReportCreatorTest {
 
         whenever(passiveWifiAccessPointSource.getWifiAccessPoints()) doReturn
             listOf(
-                EmitterObservation(
-                    WifiAccessPoint(macAddress = MacAddress("01:01:01:01:01:01")),
+                someEmitterObservation(
+                    someWifiAccessPoint(MacAddress("01:01:01:01:01:01")),
                     timestamp = 1000,
                 ),
-                EmitterObservation(
-                    WifiAccessPoint(macAddress = MacAddress("ab:ab:ab:ab:ab:ab")),
+                someEmitterObservation(
+                    someWifiAccessPoint(MacAddress("ab:ab:ab:ab:ab:ab")),
                     timestamp = 1000,
                 ),
             )
 
         passiveScanReportCreator.createPassiveScanReport(
             listOf(
-                PositionObservation(
+                somePositionObservation(
                     position =
-                        Position(
+                        somePosition(
                             latitude = location.latitude,
                             longitude = location.longitude,
-                            accuracy = 5.0,
-                            source = Position.Source.GPS,
-                        ),
-                    timestamp = 0,
+                        )
                 )
             )
         )
@@ -222,14 +193,8 @@ class PassiveScanReportCreatorTest {
     fun `Report is created if the location has not changed but there's new data`() = runTest {
         whenever(passiveWifiAccessPointSource.getWifiAccessPoints()) doReturn
             listOf(
-                EmitterObservation(
-                    WifiAccessPoint(macAddress = MacAddress("01:01:01:01:01:01")),
-                    timestamp = 0,
-                ),
-                EmitterObservation(
-                    WifiAccessPoint(macAddress = MacAddress("ab:ab:ab:ab:ab:ab")),
-                    timestamp = 0,
-                ),
+                someEmitterObservation(someWifiAccessPoint(MacAddress("01:01:01:01:01:01"))),
+                someEmitterObservation(someWifiAccessPoint(MacAddress("ab:ab:ab:ab:ab:ab"))),
             )
 
         whenever(passiveCellTowerSource.getCellTowers()) doReturn emptyList()
@@ -237,15 +202,12 @@ class PassiveScanReportCreatorTest {
         val location = LatLng(latitude = -22.951752, longitude = -43.210653)
         passiveScanReportCreator.createPassiveScanReport(
             listOf(
-                PositionObservation(
+                somePositionObservation(
                     position =
-                        Position(
+                        somePosition(
                             latitude = location.latitude,
                             longitude = location.longitude,
-                            accuracy = 5.0,
-                            source = Position.Source.GPS,
-                        ),
-                    timestamp = 0,
+                        )
                 )
             )
         )
@@ -253,46 +215,36 @@ class PassiveScanReportCreatorTest {
 
         whenever(passiveWifiAccessPointSource.getWifiAccessPoints()) doReturn
             listOf(
-                EmitterObservation(
-                    WifiAccessPoint(macAddress = MacAddress("01:01:01:01:01:01")),
+                someEmitterObservation(
+                    someWifiAccessPoint(MacAddress("01:01:01:01:01:01")),
                     timestamp = 1000,
                 ),
-                EmitterObservation(
-                    WifiAccessPoint(macAddress = MacAddress("ab:ab:ab:ab:ab:ab")),
+                someEmitterObservation(
+                    someWifiAccessPoint(MacAddress("ab:ab:ab:ab:ab:ab")),
                     timestamp = 1000,
                 ),
             )
         whenever(passiveCellTowerSource.getCellTowers()) doReturn
             listOf(
-                EmitterObservation(
+                someEmitterObservation(
                     emitter =
-                        CellTower(
-                            radioType = CellTower.RadioType.LTE,
+                        someCellTower(
                             mobileCountryCode = "001",
                             mobileNetworkCode = "01",
                             cellId = 1000,
                             locationAreaCode = 1000,
-                            asu = null,
-                            primaryScramblingCode = null,
-                            serving = null,
-                            timingAdvance = null,
-                            arfcn = null,
-                        ),
-                    timestamp = 0,
+                        )
                 )
             )
 
         passiveScanReportCreator.createPassiveScanReport(
             listOf(
-                PositionObservation(
+                somePositionObservation(
                     position =
-                        Position(
+                        somePosition(
                             latitude = location.latitude,
                             longitude = location.longitude,
-                            accuracy = 5.0,
-                            source = Position.Source.GPS,
-                        ),
-                    timestamp = 0,
+                        )
                 )
             )
         )
