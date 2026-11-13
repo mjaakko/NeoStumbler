@@ -158,10 +158,6 @@ android {
             // OSGI and GraalVM metadata not needed on Android
             excludes += "/META-INF/**/OSGI-INF/*"
             excludes += "/META-INF/native-image/**/*"
-            // We don"t use these codecs for anything
-            excludes += "**/apache/**/codec/**/*"
-            // No need for beacon distance models used by Android Beacon Library
-            excludes += "**/model-distance-calculations.json"
             // https://github.com/Kotlin/kotlinx.coroutines#avoiding-including-the-debug-infrastructure-in-the-resulting-apk
             excludes += "DebugProbesKt.bin"
         }
