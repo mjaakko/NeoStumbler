@@ -192,7 +192,7 @@ androidComponents {
         if (variant.debuggable) {
             variant.resValues.put(
                 variant.makeResValueKey("string", "app_name"),
-                ResValue("NS (dev, $${variant.flavorName})"),
+                ResValue("NS (${variant.flavorName})"),
             )
         }
 
