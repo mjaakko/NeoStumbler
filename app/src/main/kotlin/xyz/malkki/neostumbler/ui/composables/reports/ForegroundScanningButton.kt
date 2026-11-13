@@ -128,7 +128,7 @@ fun ForegroundScanningButton(
 
     if (showBatteryOptimizationsDialog.value) {
         BatteryOptimizationsDialog(
-            onBatteryOptimizationsDisabled = {
+            onCloseDialog = {
                 showBatteryOptimizationsDialog.value = false
 
                 activeScanManager.startScanning()
