@@ -18,7 +18,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -28,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
@@ -40,16 +40,16 @@ import xyz.malkki.neostumbler.ui.composables.settings.geosubmit.SuggestedService
 fun CoverageLayerSettings(settings: Settings = koinInject()) {
     val coroutineScope = rememberCoroutineScope()
 
-    val tileJsonUrl =
+    val tileJsonUrl by
         settings
             .getStringFlow(PreferenceKeys.COVERAGE_TILE_JSON_URL, "")
-            .collectAsState(initial = null)
+            .collectAsStateWithLifecycle(initialValue = null)
 
     val dialogOpen = rememberSaveable { mutableStateOf(false) }
 
     if (dialogOpen.value) {
         CoverageLayerDialog(
-            currentTileJsonUrl = tileJsonUrl.value,
+            currentTileJsonUrl = tileJsonUrl,
             onDialogClose = { newTileJsonUrl, save ->
                 coroutineScope.launch {
                     if (save) {
@@ -70,7 +70,7 @@ fun CoverageLayerSettings(settings: Settings = koinInject()) {
     SettingsItem(
         title = stringResource(R.string.coverage_layer),
         description =
-            tileJsonUrl.value.takeIf { !it.isNullOrBlank() }
+            tileJsonUrl.takeIf { !it.isNullOrBlank() }
                 ?: stringResource(R.string.coverage_layer_no_configured),
         onClick = { dialogOpen.value = true },
     )
