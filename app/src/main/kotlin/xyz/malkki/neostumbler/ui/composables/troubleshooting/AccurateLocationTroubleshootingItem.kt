@@ -9,28 +9,46 @@ import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.getSystemService
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.channels.trySendBlocking
-import kotlinx.coroutines.flow.callbackFlow
 import xyz.malkki.neostumbler.R
 
 @Composable
 fun AccurateLocationTroubleshootingItem() {
+    val accurateLocationAvailableLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
+
+    val accurateLocationAvailable by isAccurateLocationAvailable()
+
+    TroubleshootingItem(
+        title = stringResource(id = R.string.troubleshooting_accurate_location_available),
+        isOk = accurateLocationAvailable,
+        fixAction = {
+            accurateLocationAvailableLauncher.launch(
+                Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+            )
+        },
+    )
+}
+
+@Composable
+private fun isAccurateLocationAvailable(): State<Boolean> {
     val context = LocalContext.current
 
-    val locationManager: LocationManager? = context.getSystemService()
+    val locationManager: LocationManager? = remember(context) { context.getSystemService() }
 
-    val accurateLocationAvailableState = callbackFlow {
+    return produceState(false) {
         val receiver =
             object : BroadcastReceiver() {
                 override fun onReceive(context: Context, intent: Intent) {
-                    trySendBlocking(
-                        locationManager?.isLocationEnabled == true &&
-                            locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-                    )
+                    value =
+                        (locationManager?.isLocationEnabled == true &&
+                            locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
                 }
             }
 
@@ -42,23 +60,10 @@ fun AccurateLocationTroubleshootingItem() {
             },
         )
 
-        send(
-            locationManager?.isLocationEnabled == true &&
-                locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-        )
+        value =
+            (locationManager?.isLocationEnabled == true &&
+                locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
 
-        awaitClose { context.unregisterReceiver(receiver) }
+        awaitDispose { context.unregisterReceiver(receiver) }
     }
-    val accurateLocationAvailableLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
-
-    TroubleshootingItem(
-        title = stringResource(id = R.string.troubleshooting_accurate_location_available),
-        stateFlow = accurateLocationAvailableState,
-        fixAction = {
-            accurateLocationAvailableLauncher.launch(
-                Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-            )
-        },
-    )
 }
