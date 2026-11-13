@@ -4,10 +4,13 @@ import android.os.PowerManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.getSystemService
-import kotlinx.coroutines.flow.MutableStateFlow
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.utils.requestIgnoreBatteryOptimizations
 
@@ -15,20 +18,20 @@ import xyz.malkki.neostumbler.utils.requestIgnoreBatteryOptimizations
 fun BatteryOptimizationTroubleshootingItem() {
     val context = LocalContext.current
 
-    val powerManager: PowerManager? = context.getSystemService()
+    val powerManager: PowerManager? = remember(context) { context.getSystemService() }
 
-    val batteryOptimizationsDisabled =
-        MutableStateFlow(powerManager?.isIgnoringBatteryOptimizations(context.packageName) == true)
+    var batteryOptimizationsDisabled by remember {
+        mutableStateOf(powerManager?.isIgnoringBatteryOptimizations(context.packageName) == true)
+    }
     val batteryOptimizationsLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { _ ->
-            batteryOptimizationsDisabled.tryEmit(
+            batteryOptimizationsDisabled =
                 powerManager?.isIgnoringBatteryOptimizations(context.packageName) == true
-            )
         }
 
     TroubleshootingItem(
         title = stringResource(id = R.string.troubleshooting_battery_optimizations_disabled),
-        stateFlow = batteryOptimizationsDisabled,
+        isOk = batteryOptimizationsDisabled,
         fixAction = {
             batteryOptimizationsLauncher.launch(
                 requestIgnoreBatteryOptimizations(context.packageName)

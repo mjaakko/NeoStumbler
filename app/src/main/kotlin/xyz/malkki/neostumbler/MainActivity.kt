@@ -25,6 +25,7 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteItem
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -88,9 +89,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val dynamicColorState = dynamicColorFlow.collectAsState()
+            val dynamicColorState by dynamicColorFlow.collectAsState()
 
-            NeoStumblerTheme(dynamicColor = dynamicColorState.value == true) {
+            NeoStumblerTheme(dynamicColor = dynamicColorState == true) {
                 val navigationBackstack = rememberNavBackStack(ReportsNavKey)
 
                 Surface(modifier = Modifier.fillMaxSize()) {

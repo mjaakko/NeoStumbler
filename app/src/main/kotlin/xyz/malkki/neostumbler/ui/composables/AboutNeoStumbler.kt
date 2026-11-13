@@ -16,8 +16,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -41,10 +43,10 @@ import xyz.malkki.neostumbler.utils.openUrl
 fun AboutNeoStumbler() {
     val context = LocalContext.current
 
-    val showDialog = rememberSaveable { mutableStateOf(false) }
+    var showDialog by rememberSaveable { mutableStateOf(false) }
 
-    if (showDialog.value) {
-        BasicAlertDialog(onDismissRequest = { showDialog.value = false }) {
+    if (showDialog) {
+        BasicAlertDialog(onDismissRequest = { showDialog = false }) {
             Surface(
                 modifier = Modifier.sizeIn(maxWidth = 400.dp).fillMaxWidth().wrapContentHeight(),
                 shape = AlertDialogDefaults.shape,
@@ -101,8 +103,7 @@ fun AboutNeoStumbler() {
     }
 
     Text(
-        modifier =
-            Modifier.fillMaxWidth().clickable(onClick = { showDialog.value = true }).padding(8.dp),
+        modifier = Modifier.fillMaxWidth().clickable(onClick = { showDialog = true }).padding(8.dp),
         textAlign = TextAlign.Center,
         style = MaterialTheme.typography.labelMedium,
         text = stringResource(R.string.about_app),

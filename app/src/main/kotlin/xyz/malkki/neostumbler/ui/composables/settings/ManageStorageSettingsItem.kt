@@ -14,8 +14,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -25,10 +27,10 @@ import xyz.malkki.neostumbler.ui.composables.managestorage.ManageStorage
 
 @Composable
 fun ManageStorageSettingsItem() {
-    val showDialog = rememberSaveable { mutableStateOf(false) }
+    var showDialog by rememberSaveable { mutableStateOf(false) }
 
-    if (showDialog.value) {
-        BasicAlertDialog(onDismissRequest = { showDialog.value = false }) {
+    if (showDialog) {
+        BasicAlertDialog(onDismissRequest = { showDialog = false }) {
             Surface(
                 modifier = Modifier.sizeIn(maxWidth = 400.dp).fillMaxWidth().wrapContentHeight(),
                 shape = AlertDialogDefaults.shape,
@@ -46,7 +48,7 @@ fun ManageStorageSettingsItem() {
 
                     TextButton(
                         modifier = Modifier.align(Alignment.End),
-                        onClick = { showDialog.value = false },
+                        onClick = { showDialog = false },
                     ) {
                         Text(text = stringResource(R.string.cancel))
                     }
@@ -57,6 +59,6 @@ fun ManageStorageSettingsItem() {
 
     SettingsItem(
         title = stringResource(R.string.manage_storage_title),
-        onClick = { showDialog.value = true },
+        onClick = { showDialog = true },
     )
 }

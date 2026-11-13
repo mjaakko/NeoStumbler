@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -58,11 +59,11 @@ fun ForegroundScanningButton(
     val context = LocalContext.current
     val intent = context.getActivity()?.intent
 
-    val showBatteryOptimizationsDialog = rememberSaveable { mutableStateOf(false) }
+    var showBatteryOptimizationsDialog by rememberSaveable { mutableStateOf(false) }
 
-    val showPermissionDialog = rememberSaveable { mutableStateOf(false) }
+    var showPermissionDialog by rememberSaveable { mutableStateOf(false) }
 
-    val showBackgroundLocationPermissionDialog = rememberSaveable { mutableStateOf(false) }
+    var showBackgroundLocationPermissionDialog by rememberSaveable { mutableStateOf(false) }
 
     val missingPermissions = rememberSaveable {
         context.checkMissingPermissions(*requiredPermissions)
@@ -77,9 +78,9 @@ fun ForegroundScanningButton(
                     .isNotEmpty()
 
         if (backgroundLocationPermissionNeeded) {
-            showBackgroundLocationPermissionDialog.value = true
+            showBackgroundLocationPermissionDialog = true
         } else {
-            showBatteryOptimizationsDialog.value = true
+            showBatteryOptimizationsDialog = true
         }
     }
 
@@ -87,15 +88,15 @@ fun ForegroundScanningButton(
         if (Manifest.permission.ACCESS_FINE_LOCATION !in missingPermissions) {
             requestBackgroundLocationPermissionOrDisableBatteryOptimizations()
         } else {
-            showPermissionDialog.value = true
+            showPermissionDialog = true
         }
     }
 
-    if (showPermissionDialog.value) {
+    if (showPermissionDialog) {
         ScanningPermissionsDialog(
             missingPermissions = missingPermissions,
             onPermissionsGranted = { permissions ->
-                showPermissionDialog.value = false
+                showPermissionDialog = false
 
                 if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true) {
                     requestBackgroundLocationPermissionOrDisableBatteryOptimizations()
@@ -108,7 +109,7 @@ fun ForegroundScanningButton(
         )
     }
 
-    if (showBackgroundLocationPermissionDialog.value) {
+    if (showBackgroundLocationPermissionDialog) {
         PermissionsDialog(
             missingPermissions = listOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION),
             permissionRationales =
@@ -119,17 +120,17 @@ fun ForegroundScanningButton(
                         )
                 ),
             onPermissionsGranted = {
-                showBackgroundLocationPermissionDialog.value = false
+                showBackgroundLocationPermissionDialog = false
 
-                showBatteryOptimizationsDialog.value = true
+                showBatteryOptimizationsDialog = true
             },
         )
     }
 
-    if (showBatteryOptimizationsDialog.value) {
+    if (showBatteryOptimizationsDialog) {
         BatteryOptimizationsDialog(
-            onBatteryOptimizationsDisabled = {
-                showBatteryOptimizationsDialog.value = false
+            onCloseDialog = {
+                showBatteryOptimizationsDialog = false
 
                 activeScanManager.startScanning()
             }
@@ -169,12 +170,12 @@ private fun StartStopScanningButton(
 
     val coroutineScope = rememberCoroutineScope()
 
-    val showQuickSettingsDialog = rememberSaveable { mutableStateOf(false) }
+    var showQuickSettingsDialog by rememberSaveable { mutableStateOf(false) }
 
     val scanState by activeScanManager.state.collectAsStateWithLifecycle()
     val isScanning = scanState !is ScanState.Stopped
 
-    if (showQuickSettingsDialog.value) {
+    if (showQuickSettingsDialog) {
         @SuppressLint("NewApi")
         AddQSTileDialog(
             componentName = ComponentName(context, ScannerTileService::class.java),
@@ -184,7 +185,7 @@ private fun StartStopScanningButton(
                     oneTimeActionHelper.markActionShown(ScannerTileService.ADD_QS_TILE_ACTION_NAME)
                 }
 
-                showQuickSettingsDialog.value = false
+                showQuickSettingsDialog = false
             },
         )
     }
@@ -205,7 +206,7 @@ private fun StartStopScanningButton(
                     if (
                         !qsTileDialogShown && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
                     ) {
-                        showQuickSettingsDialog.value = true
+                        showQuickSettingsDialog = true
                     }
                 }
             } else {

@@ -8,7 +8,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -17,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.DialogProperties
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
@@ -32,10 +32,10 @@ fun IgnoreScanThrottlingToggle(settings: Settings = koinInject()) {
 
     val coroutineScope = rememberCoroutineScope()
 
-    val enabled =
+    val enabled by
         settings
             .getBooleanFlow(ActiveScanPreferenceKeys.IGNORE_SCAN_THROTTLING, false)
-            .collectAsState(initial = false)
+            .collectAsStateWithLifecycle(initialValue = false)
 
     var showExplanationDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -50,7 +50,7 @@ fun IgnoreScanThrottlingToggle(settings: Settings = koinInject()) {
             }
         }
 
-    LaunchedEffect(enabled.value) {
+    LaunchedEffect(enabled) {
         /**
          * If Wi-Fi scan throttling has been re-enabled in the settings, change the settings value
          * so that the toggle will be off. There is no callback for this, so we need to check this
@@ -59,7 +59,7 @@ fun IgnoreScanThrottlingToggle(settings: Settings = koinInject()) {
          * This assumes that the scanner service checks from system settings whether Wi-Fi scanning
          * is throttled before starting scanning
          */
-        if (context.isWifiScanThrottled() == true && enabled.value) {
+        if (context.isWifiScanThrottled() == true && enabled) {
             settings.edit { setBoolean(ActiveScanPreferenceKeys.IGNORE_SCAN_THROTTLING, false) }
         }
     }
@@ -103,7 +103,7 @@ fun IgnoreScanThrottlingToggle(settings: Settings = koinInject()) {
         description =
             stringResource(id = R.string.settings_ignore_wifi_scan_throttling_description),
         enabled = true,
-        checked = enabled.value,
+        checked = enabled,
         action = { checked ->
             if (checked && context.isWifiScanThrottled() != false) {
                 showExplanationDialog = true

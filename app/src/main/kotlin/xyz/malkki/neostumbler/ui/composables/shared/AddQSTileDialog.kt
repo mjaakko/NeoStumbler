@@ -31,16 +31,17 @@ fun AddQSTileDialog(
 ) {
     val context = LocalContext.current
 
-    val packageManager = context.packageManager
-    val statusBarManager: StatusBarManager? = context.getSystemService<StatusBarManager>()
-
-    val serviceInfo = packageManager.getServiceInfo(componentName, 0)
-
     AlertDialog(
         onDismissRequest = onDialogDismissed,
         confirmButton = {
             TextButton(
                 onClick = {
+                    val statusBarManager: StatusBarManager? =
+                        context.getSystemService<StatusBarManager>()
+                    val packageManager = context.packageManager
+
+                    val serviceInfo = packageManager.getServiceInfo(componentName, 0)
+
                     statusBarManager?.requestAddTileService(
                         componentName,
                         serviceInfo.loadLabel(packageManager),

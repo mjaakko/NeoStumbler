@@ -1,6 +1,7 @@
 package xyz.malkki.neostumbler.ui.composables.settings
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.data.settings.Settings
@@ -15,7 +16,7 @@ fun SettingsToggle(
     default: Boolean = false,
     settings: Settings = koinInject<Settings>(),
 ) {
-    val enabled =
+    val enabled by
         settings
             .getBooleanFlow(preferenceKey, default)
             .collectAsStateWithLifecycle(initialValue = default)
@@ -24,7 +25,7 @@ fun SettingsToggle(
         title = title,
         description = description,
         enabled = true,
-        checked = enabled.value,
+        checked = enabled,
         action = { checked -> settings.edit { setBoolean(preferenceKey, checked) } },
     )
 }

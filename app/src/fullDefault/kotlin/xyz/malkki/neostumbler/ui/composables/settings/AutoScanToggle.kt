@@ -10,7 +10,6 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,6 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import kotlin.time.Duration.Companion.seconds
@@ -79,10 +79,10 @@ fun AutoScanToggle(settings: Settings = koinInject()) {
 
     val coroutineScope = rememberCoroutineScope()
 
-    val enabled =
+    val enabled by
         settings
             .getBooleanFlow(PreferenceKeys.AUTOSCAN_ENABLED, false)
-            .collectAsState(initial = false)
+            .collectAsStateWithLifecycle(initialValue = false)
 
     val (isGoogleApiAvailable, isGoogleApiAvailabilityUserResolvable) =
         remember(context) { context.checkGoogleApiAvailability() }
@@ -97,8 +97,8 @@ fun AutoScanToggle(settings: Settings = koinInject()) {
         )
     }
 
-    val showBasicPermissionsDialog = rememberSaveable { mutableStateOf(false) }
-    val showAdditionalPermissionsDialog = rememberSaveable { mutableStateOf(false) }
+    var showBasicPermissionsDialog by rememberSaveable { mutableStateOf(false) }
+    var showAdditionalPermissionsDialog by rememberSaveable { mutableStateOf(false) }
 
     var showErrorDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -140,7 +140,7 @@ fun AutoScanToggle(settings: Settings = koinInject()) {
         )
     }
 
-    if (showBasicPermissionsDialog.value) {
+    if (showBasicPermissionsDialog) {
         PermissionsDialog(
             missingPermissions = missingPermissionsBasic.value,
             permissionRationales =
@@ -182,7 +182,7 @@ fun AutoScanToggle(settings: Settings = koinInject()) {
                     }
                 },
             onPermissionsGranted = { permissions ->
-                showBasicPermissionsDialog.value = false
+                showBasicPermissionsDialog = false
 
                 missingPermissionsBasic.value =
                     missingPermissionsBasic.value.filter {
@@ -197,7 +197,7 @@ fun AutoScanToggle(settings: Settings = koinInject()) {
                     if (missingPermissionsAdditional.value.isEmpty()) {
                         coroutineScope.launch { enableAutoScan() }
                     } else {
-                        showAdditionalPermissionsDialog.value = true
+                        showAdditionalPermissionsDialog = true
                     }
                 } else {
                     context.showToast(
@@ -208,7 +208,7 @@ fun AutoScanToggle(settings: Settings = koinInject()) {
         )
     }
 
-    if (showAdditionalPermissionsDialog.value) {
+    if (showAdditionalPermissionsDialog) {
         PermissionsDialog(
             missingPermissions = missingPermissionsAdditional.value,
             permissionRationales =
@@ -219,7 +219,7 @@ fun AutoScanToggle(settings: Settings = koinInject()) {
                         )
                 ),
             onPermissionsGranted = { permissions ->
-                showAdditionalPermissionsDialog.value = false
+                showAdditionalPermissionsDialog = false
 
                 if (permissions[Manifest.permission.ACCESS_BACKGROUND_LOCATION] == true) {
                     coroutineScope.launch { enableAutoScan() }
@@ -235,7 +235,7 @@ fun AutoScanToggle(settings: Settings = koinInject()) {
     ToggleWithAction(
         title = stringResource(R.string.autoscan_when_moving),
         enabled = (isGoogleApiAvailable || isGoogleApiAvailabilityUserResolvable),
-        checked = enabled.value,
+        checked = enabled,
         action = { checked ->
             // If Google APIs are not available, try to make them available before doing anything
             if (!isGoogleApiAvailable) {
@@ -265,9 +265,9 @@ fun AutoScanToggle(settings: Settings = koinInject()) {
                     enableAutoScan()
                 } else {
                     if (missingPermissionsBasic.value.isNotEmpty()) {
-                        showBasicPermissionsDialog.value = true
+                        showBasicPermissionsDialog = true
                     } else {
-                        showAdditionalPermissionsDialog.value = true
+                        showAdditionalPermissionsDialog = true
                     }
                 }
             } else {

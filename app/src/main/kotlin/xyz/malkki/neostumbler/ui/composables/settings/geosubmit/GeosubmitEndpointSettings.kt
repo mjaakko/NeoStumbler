@@ -48,14 +48,14 @@ import xyz.malkki.neostumbler.utils.isLocalNetwork
 fun GeosubmitEndpointSettings(ichnaeaClientProvider: IchnaeaClientProvider = koinInject()) {
     val coroutineScope = rememberCoroutineScope()
 
-    val params =
+    val params by
         ichnaeaClientProvider.ichnaeaParams.collectAsStateWithLifecycle(initialValue = null)
 
     var dialogOpen by rememberSaveable { mutableStateOf(false) }
 
     if (dialogOpen) {
         GeosubmitEndpointDialog(
-            currentParams = params.value,
+            currentParams = params,
             onDialogClose = { newParams ->
                 if (newParams != null) {
                     coroutineScope.launch {
@@ -72,7 +72,7 @@ fun GeosubmitEndpointSettings(ichnaeaClientProvider: IchnaeaClientProvider = koi
 
     SettingsItem(
         title = stringResource(R.string.endpoint),
-        description = params.value?.baseUrl ?: stringResource(R.string.no_endpoint_configured),
+        description = params?.baseUrl ?: stringResource(R.string.no_endpoint_configured),
         onClick = { dialogOpen = true },
     )
 }

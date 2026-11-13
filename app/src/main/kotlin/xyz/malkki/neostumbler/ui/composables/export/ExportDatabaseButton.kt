@@ -42,13 +42,13 @@ private const val DB_MIME_TYPE = "application/vnd.sqlite3"
 
 @Composable
 fun ExportDatabaseButton() {
-    val dialogOpen = rememberSaveable { mutableStateOf(false) }
+    var dialogOpen by rememberSaveable { mutableStateOf(false) }
 
-    if (dialogOpen.value) {
-        ExportDatabaseDialog(onDialogClose = { dialogOpen.value = false })
+    if (dialogOpen) {
+        ExportDatabaseDialog(onDialogClose = { dialogOpen = false })
     }
 
-    Button(enabled = true, onClick = { dialogOpen.value = true }) {
+    Button(enabled = true, onClick = { dialogOpen = true }) {
         Text(text = stringResource(id = R.string.export_raw_database))
     }
 }

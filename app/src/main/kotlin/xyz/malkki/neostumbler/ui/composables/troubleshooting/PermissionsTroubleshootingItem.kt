@@ -6,9 +6,12 @@ import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import kotlinx.coroutines.flow.MutableStateFlow
 import xyz.malkki.neostumbler.R
 import xyz.malkki.neostumbler.extensions.checkMissingPermissions
 
@@ -34,15 +37,15 @@ private fun Context.allPermissionsGranted(): Boolean {
 fun PermissionsTroubleshootingItem() {
     val context = LocalContext.current
 
-    val permissionsState = MutableStateFlow(context.allPermissionsGranted())
+    var hasAllPermissions by remember { mutableStateOf(context.allPermissionsGranted()) }
     val permissionsLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-            permissionsState.tryEmit(context.allPermissionsGranted())
+            hasAllPermissions = context.allPermissionsGranted()
         }
 
     TroubleshootingItem(
         title = stringResource(id = R.string.troubleshooting_permissions_granted),
-        stateFlow = permissionsState,
+        isOk = hasAllPermissions,
         fixAction = { permissionsLauncher.launch(SCAN_PERMISSIONS) },
     )
 }

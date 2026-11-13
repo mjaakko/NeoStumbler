@@ -3,9 +3,11 @@ package xyz.malkki.neostumbler.ui.composables.managestorage
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import kotlinx.coroutines.launch
@@ -22,14 +24,14 @@ fun DeleteReportsFromArea(reportRemover: ReportRemover = koinInject()) {
 
     val coroutineScope = rememberCoroutineScope()
 
-    val dialogOpen = rememberSaveable { mutableStateOf(false) }
+    var dialogOpen by rememberSaveable { mutableStateOf(false) }
 
-    if (dialogOpen.value) {
+    if (dialogOpen) {
         AreaPickerDialog(
             title = stringResource(R.string.delete_reports_from_area),
             positiveButtonText = stringResource(R.string.delete),
             onAreaSelected = { circle ->
-                dialogOpen.value = false
+                dialogOpen = false
 
                 if (circle != null) {
                     val (center, radius) = circle
@@ -50,7 +52,7 @@ fun DeleteReportsFromArea(reportRemover: ReportRemover = koinInject()) {
         )
     }
 
-    Button(onClick = { dialogOpen.value = true }) {
+    Button(onClick = { dialogOpen = true }) {
         Text(text = stringResource(R.string.delete_reports_from_area))
     }
 }

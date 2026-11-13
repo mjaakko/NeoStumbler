@@ -4,7 +4,6 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -14,6 +13,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import xyz.malkki.neostumbler.R
@@ -49,12 +49,12 @@ fun PassiveScanToggle(
 
     val coroutineScope = rememberCoroutineScope()
 
-    val showConfirmationDialog = rememberSaveable { mutableStateOf(false) }
+    var showConfirmationDialog by rememberSaveable { mutableStateOf(false) }
 
-    val enabled =
+    val enabled by
         settings
             .getBooleanFlow(PreferenceKeys.PASSIVE_SCAN_ENABLED, false)
-            .collectAsState(initial = false)
+            .collectAsStateWithLifecycle(initialValue = false)
 
     var missingPermissionsBasic by remember {
         mutableStateOf(context.checkMissingPermissions(*passiveScanPermissions))
@@ -128,24 +128,24 @@ fun PassiveScanToggle(
         )
     }
 
-    if (showConfirmationDialog.value) {
+    if (showConfirmationDialog) {
         PassiveScanConfirmationDialog(
             onPositiveAction = {
                 enablePassiveScan()
 
-                showConfirmationDialog.value = false
+                showConfirmationDialog = false
             },
-            onNegativeAction = { showConfirmationDialog.value = false },
+            onNegativeAction = { showConfirmationDialog = false },
         )
     }
 
     ToggleWithAction(
         title = stringResource(id = R.string.passive_scanning_title),
         enabled = true,
-        checked = enabled.value,
+        checked = enabled,
         action = { enabled ->
             if (enabled) {
-                showConfirmationDialog.value = true
+                showConfirmationDialog = true
             } else {
                 passiveScanManager.disablePassiveScanning()
 
