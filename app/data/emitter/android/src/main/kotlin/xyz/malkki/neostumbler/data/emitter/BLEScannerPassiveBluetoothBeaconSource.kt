@@ -31,9 +31,9 @@ class BLEScannerPassiveBluetoothBeaconSource(context: Context) : PassiveBluetoot
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_SCAN)
     override fun enable() {
-        val adapter: BluetoothAdapter = bluetoothManager.adapter
+        val adapter: BluetoothAdapter? = bluetoothManager.adapter
 
-        if (!adapter.isEnabled) {
+        if (adapter == null || !adapter.isEnabled) {
             /**
              * Avoid crashing when Bluetooth is not enabled
              * https://github.com/mjaakko/NeoStumbler/issues/1046
