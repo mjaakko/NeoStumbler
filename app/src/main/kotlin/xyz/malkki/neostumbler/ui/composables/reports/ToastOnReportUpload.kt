@@ -3,7 +3,6 @@ package xyz.malkki.neostumbler.ui.composables.reports
 import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import java.util.UUID
@@ -16,13 +15,14 @@ import xyz.malkki.neostumbler.ichnaeaupload.UploadResult
 
 @Composable
 fun ToastOnReportUpload(
-    workIdState: MutableState<UUID?>,
+    workId: UUID?,
+    onToastShown: () -> Unit,
     ichnaeaReportUploadStarter: IchnaeaReportUploadStarter = koinInject(),
 ) {
     val context = LocalContext.current
 
-    LaunchedEffect(workIdState.value) {
-        workIdState.value?.let { workId ->
+    LaunchedEffect(workId) {
+        workId?.let { workId ->
             val result = ichnaeaReportUploadStarter.awaitUntilUploaded(workId)
 
             if (result is UploadResult.Success) {
@@ -62,7 +62,7 @@ fun ToastOnReportUpload(
                 }
             }
 
-            workIdState.value = null
+            onToastShown()
         }
     }
 }

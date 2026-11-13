@@ -5,9 +5,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
@@ -37,7 +39,7 @@ fun ImportDb(
 
     val coroutineContext = rememberCoroutineScope()
 
-    val confirmationDialogOpen = rememberSaveable { mutableStateOf(false) }
+    var confirmationDialogOpen by rememberSaveable { mutableStateOf(false) }
 
     val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
@@ -101,24 +103,24 @@ fun ImportDb(
             }
         }
 
-    if (confirmationDialogOpen.value) {
+    if (confirmationDialogOpen) {
         ConfirmationDialog(
             title = stringResource(R.string.import_raw_database),
             description = stringResource(R.string.import_raw_database_description),
             positiveButtonText = stringResource(R.string.ok),
             negativeButtonText = stringResource(R.string.cancel),
             onPositiveAction = {
-                confirmationDialogOpen.value = false
+                confirmationDialogOpen = false
 
                 // Specifying correct mime type seems to cause DB files to not be selectable in some
                 // cases -> use wildcard
                 launcher.launch("*/*")
             },
-            onNegativeAction = { confirmationDialogOpen.value = false },
+            onNegativeAction = { confirmationDialogOpen = false },
         )
     }
 
-    Button(onClick = { confirmationDialogOpen.value = true }) {
+    Button(onClick = { confirmationDialogOpen = true }) {
         Text(text = stringResource(id = R.string.import_raw_database))
     }
 }

@@ -45,9 +45,9 @@ fun CoverageLayerSettings(settings: Settings = koinInject()) {
             .getStringFlow(PreferenceKeys.COVERAGE_TILE_JSON_URL, "")
             .collectAsStateWithLifecycle(initialValue = null)
 
-    val dialogOpen = rememberSaveable { mutableStateOf(false) }
+    var dialogOpen by rememberSaveable { mutableStateOf(false) }
 
-    if (dialogOpen.value) {
+    if (dialogOpen) {
         CoverageLayerDialog(
             currentTileJsonUrl = tileJsonUrl,
             onDialogClose = { newTileJsonUrl, save ->
@@ -61,7 +61,7 @@ fun CoverageLayerSettings(settings: Settings = koinInject()) {
                             }
                         }
                     }
-                    dialogOpen.value = false
+                    dialogOpen = false
                 }
             },
         )
@@ -72,7 +72,7 @@ fun CoverageLayerSettings(settings: Settings = koinInject()) {
         description =
             tileJsonUrl.takeIf { !it.isNullOrBlank() }
                 ?: stringResource(R.string.coverage_layer_no_configured),
-        onClick = { dialogOpen.value = true },
+        onClick = { dialogOpen = true },
     )
 }
 

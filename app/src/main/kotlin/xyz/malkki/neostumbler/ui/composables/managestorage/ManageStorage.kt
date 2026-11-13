@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -22,9 +23,9 @@ import xyz.malkki.neostumbler.ui.composables.export.ExportDatabaseButton
 fun ManageStorage(reportStorageMetadataProvider: ReportStorageMetadataProvider = koinInject()) {
     val context = LocalContext.current
 
-    val dbSize = reportStorageMetadataProvider.getEstimatedSize().collectAsStateWithLifecycle(null)
+    val dbSize by reportStorageMetadataProvider.getEstimatedSize().collectAsStateWithLifecycle(null)
 
-    val dbSizeFormatted = dbSize.value?.let { Formatter.formatShortFileSize(context, it) } ?: "..."
+    val dbSizeFormatted = dbSize?.let { Formatter.formatShortFileSize(context, it) } ?: "..."
 
     Column {
         Text(

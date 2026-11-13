@@ -3,9 +3,11 @@ package xyz.malkki.neostumbler.ui.composables
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import java.time.ZoneId
@@ -25,21 +27,21 @@ fun ReportReuploadButton(
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    val enqueuedUploadWork = rememberSaveable { mutableStateOf<UUID?>(null) }
+    var enqueuedUploadWork by rememberSaveable { mutableStateOf<UUID?>(null) }
 
-    ToastOnReportUpload(workIdState = enqueuedUploadWork)
+    ToastOnReportUpload(workId = enqueuedUploadWork, onToastShown = { enqueuedUploadWork = null })
 
     val selectableDates = reportProvider.getReportDates().collectAsStateWithLifecycle(null)
 
-    val dialogOpen = rememberSaveable { mutableStateOf(false) }
+    var dialogOpen by rememberSaveable { mutableStateOf(false) }
 
-    if (dialogOpen.value) {
+    if (dialogOpen) {
         DateRangePickerDialog(
             title = stringResource(id = R.string.reupload_data),
             selectButtonText = stringResource(id = R.string.reupload_data),
             selectableDates = selectableDates,
             onDatesSelected = { dateRange ->
-                dialogOpen.value = false
+                dialogOpen = false
 
                 if (dateRange != null) {
                     val localTimeZone = ZoneId.systemDefault()
@@ -54,7 +56,7 @@ fun ReportReuploadButton(
                             .toInstant()
 
                     coroutineScope.launch {
-                        enqueuedUploadWork.value =
+                        enqueuedUploadWork =
                             ichnaeaReportUploadStarter.startReuploadReports(from, to)
                     }
                 }
@@ -62,7 +64,7 @@ fun ReportReuploadButton(
         )
     }
 
-    Button(enabled = true, onClick = { dialogOpen.value = true }) {
+    Button(enabled = true, onClick = { dialogOpen = true }) {
         Text(text = stringResource(id = R.string.reupload_data))
     }
 }

@@ -28,6 +28,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -52,7 +53,7 @@ fun SuggestedServicesDialog(onServiceSelected: (SuggestedService?) -> Unit) {
             value = withContext(Dispatchers.IO) { SuggestedService.getSuggestedServices(context) }
         }
 
-    val expanded = rememberSaveable { mutableStateOf(false) }
+    var expanded by rememberSaveable { mutableStateOf(false) }
 
     val selectedService = rememberSaveable { mutableIntStateOf(0) }
 
@@ -77,17 +78,15 @@ fun SuggestedServicesDialog(onServiceSelected: (SuggestedService?) -> Unit) {
                 suggestedServices?.let {
                     Column(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
                         ExposedDropdownMenuBox(
-                            expanded = expanded.value,
-                            onExpandedChange = { expanded.value = it },
+                            expanded = expanded,
+                            onExpandedChange = { expanded = it },
                         ) {
                             TextField(
                                 value = it[selectedService.intValue].name,
                                 onValueChange = {},
                                 readOnly = true,
                                 trailingIcon = {
-                                    ExposedDropdownMenuDefaults.TrailingIcon(
-                                        expanded = expanded.value
-                                    )
+                                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
                                 },
                                 modifier =
                                     Modifier.menuAnchor(
@@ -96,15 +95,15 @@ fun SuggestedServicesDialog(onServiceSelected: (SuggestedService?) -> Unit) {
                             )
 
                             ExposedDropdownMenu(
-                                expanded = expanded.value,
-                                onDismissRequest = { expanded.value = false },
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false },
                             ) {
                                 it.forEachIndexed { index, suggestedService ->
                                     DropdownMenuItem(
                                         text = { Text(text = suggestedService.name) },
                                         onClick = {
                                             selectedService.intValue = index
-                                            expanded.value = false
+                                            expanded = false
                                         },
                                     )
                                 }

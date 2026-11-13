@@ -49,7 +49,7 @@ fun PassiveScanToggle(
 
     val coroutineScope = rememberCoroutineScope()
 
-    val showConfirmationDialog = rememberSaveable { mutableStateOf(false) }
+    var showConfirmationDialog by rememberSaveable { mutableStateOf(false) }
 
     val enabled by
         settings
@@ -128,14 +128,14 @@ fun PassiveScanToggle(
         )
     }
 
-    if (showConfirmationDialog.value) {
+    if (showConfirmationDialog) {
         PassiveScanConfirmationDialog(
             onPositiveAction = {
                 enablePassiveScan()
 
-                showConfirmationDialog.value = false
+                showConfirmationDialog = false
             },
-            onNegativeAction = { showConfirmationDialog.value = false },
+            onNegativeAction = { showConfirmationDialog = false },
         )
     }
 
@@ -145,7 +145,7 @@ fun PassiveScanToggle(
         checked = enabled,
         action = { enabled ->
             if (enabled) {
-                showConfirmationDialog.value = true
+                showConfirmationDialog = true
             } else {
                 passiveScanManager.disablePassiveScanning()
 

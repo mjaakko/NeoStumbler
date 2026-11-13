@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -35,28 +36,30 @@ fun ReportUploadButton(
             initialValue = true
         )
 
-    val reportsNotUploaded = reportsViewModel.reportsNotUploaded.collectAsStateWithLifecycle(0)
+    val reportsNotUploaded by reportsViewModel.reportsNotUploaded.collectAsStateWithLifecycle(0)
 
-    val enqueuing = remember { mutableStateOf(false) }
+    var enqueuing by remember { mutableStateOf(false) }
 
-    val enqueuedUploadWork = rememberSaveable { mutableStateOf<UUID?>(null) }
+    var enqueuedUploadWork by rememberSaveable { mutableStateOf<UUID?>(null) }
 
-    ToastOnReportUpload(workIdState = enqueuedUploadWork)
+    ToastOnReportUpload(
+        workId = enqueuedUploadWork,
+        onToastShown = { enqueuedUploadWork = null },
+    )
 
     FilledIconButton(
         modifier = modifier,
-        enabled = reportsNotUploaded.value > 0 && !uploadEnqueued && !enqueuing.value,
+        enabled = reportsNotUploaded > 0 && !uploadEnqueued && !enqueuing,
         onClick = {
             coroutineScope.launch {
-                enqueuing.value = true
+                enqueuing = true
 
-                enqueuedUploadWork.value =
-                    ichnaeaReportUploadStarter.startUploadNotUploadedReports()
+                enqueuedUploadWork = ichnaeaReportUploadStarter.startUploadNotUploadedReports()
 
                 // Add small delay to avoid flickering the button
                 delay(0.3.seconds)
 
-                enqueuing.value = false
+                enqueuing = false
             }
         },
     ) {

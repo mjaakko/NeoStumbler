@@ -3,9 +3,11 @@ package xyz.malkki.neostumbler.ui.composables.managestorage
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
@@ -21,16 +23,16 @@ fun DeleteAllReportsButton(reportRemover: ReportRemover = koinInject()) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
-    val showConfirmationDialog = rememberSaveable { mutableStateOf(false) }
+    var showConfirmationDialog by rememberSaveable { mutableStateOf(false) }
 
-    if (showConfirmationDialog.value) {
+    if (showConfirmationDialog) {
         ConfirmationDialog(
             title = stringResource(R.string.delete_all_reports),
             description = stringResource(R.string.delete_all_reports_confirmation),
             positiveButtonText = stringResource(R.string.yes),
             negativeButtonText = stringResource(R.string.no),
             onPositiveAction = {
-                showConfirmationDialog.value = false
+                showConfirmationDialog = false
 
                 coroutineScope.launch {
                     reportRemover.deleteAll()
@@ -40,11 +42,11 @@ fun DeleteAllReportsButton(reportRemover: ReportRemover = koinInject()) {
                     )
                 }
             },
-            onNegativeAction = { showConfirmationDialog.value = false },
+            onNegativeAction = { showConfirmationDialog = false },
         )
     }
 
-    Button(onClick = { showConfirmationDialog.value = true }) {
+    Button(onClick = { showConfirmationDialog = true }) {
         Text(text = stringResource(id = R.string.delete_all_reports))
     }
 }
