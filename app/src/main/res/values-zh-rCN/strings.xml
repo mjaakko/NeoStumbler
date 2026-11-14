@@ -224,4 +224,11 @@
     <string name="restricted_areas_delete">删除受限区域</string>
     <string name="restricted_areas_delete_confirmation">您确定要删除选中的区域吗？</string>
     <string name="restricted_areas_add">添加受限区域</string>
+    <string name="no_file_selected">未选择文件</string>
+    <string name="select_file">选择文件</string>
+    <string name="scanning_start_error_not_in_foreground">扫描启动失败。\n请打开应用并重试。</string>
+    <string name="local_endpoint_warning">本地网络端点</string>
+    <string name="map_tile_source_custom_file_title">自定义文件</string>
+    <string name="map_always_in_light_mode">地图总是使用亮色主题</string>
+    <string name="permission_rationale_local_network">使用本地网络端点需要获取“附近设备”权限</string>
 </resources>
