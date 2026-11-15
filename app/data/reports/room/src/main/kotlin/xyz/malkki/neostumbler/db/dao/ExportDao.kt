@@ -49,7 +49,10 @@ internal interface ExportDao {
             w.macAddress AS macAddress,
             w.age AS wifiScanAge,
             w.signalStrength AS signalStrength,
-            w.ssid AS ssid
+            w.ssid AS ssid,
+            w.distance_meters AS estimatedDistance,
+            w.distance_accuracy AS estimatedDistanceAccuracy,
+            w.distance_rangingType AS estimatedDistanceType
         FROM Report r
         JOIN PositionEntity p ON r.id = p.reportId
         JOIN WifiAccessPointEntity w ON r.id = w.reportId
