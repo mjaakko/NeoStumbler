@@ -66,7 +66,10 @@ internal class ScanDataCollector(
             isMovingFlow
                 .flatMapLatest { isMoving ->
                     if (isMoving) {
-                        bluetoothBeaconSource.getBluetoothBeaconFlow()
+                        bluetoothBeaconSource.getBluetoothBeaconFlow(
+                            scanInterval =
+                                speedFlow.map { speed -> scanSettings.bleScanDistance / speed }
+                        )
                     } else {
                         emptyFlow()
                     }

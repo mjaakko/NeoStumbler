@@ -8,6 +8,8 @@ data class ActiveScanSettings(
     val wifiScanDistance: Distance,
     /** Cell tower scan interval (meters) */
     val cellScanDistance: Distance,
+    /** Bluetooth beacon scan interval (meters) */
+    val bleScanDistance: Distance,
     /** Whether to ignore Android Wi-Fi scan throttling */
     val ignoreWifiScanThrottling: Boolean,
     /**

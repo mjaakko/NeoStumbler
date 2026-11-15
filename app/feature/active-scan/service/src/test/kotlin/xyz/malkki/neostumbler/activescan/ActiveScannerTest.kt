@@ -34,6 +34,7 @@ private val settings =
     ActiveScanSettings(
         wifiScanDistance = Distance(100.0),
         cellScanDistance = Distance(100.0),
+        bleScanDistance = Distance(100.0),
         ignoreWifiScanThrottling = true,
         lowBatteryThreshold = null,
         pauseWhenOverheating = false,

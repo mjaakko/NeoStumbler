@@ -52,6 +52,16 @@ fun ScanningSettings() {
         )
 
         SliderSetting(
+            title = stringResource(R.string.beacon_scan_frequency),
+            preferenceKey = ActiveScanPreferenceKeys.BLE_SCAN_DISTANCE,
+            // Some translations assume this will always be a multiple of ten
+            range = 10..250,
+            step = 10,
+            valueFormatter = { stringResource(R.string.every_x_meters, it) },
+            default = ActiveScanDefaults.BLE_SCAN_DISTANCE,
+        )
+
+        SliderSetting(
             title = stringResource(R.string.cell_tower_scan_frequency),
             preferenceKey = ActiveScanPreferenceKeys.CELL_SCAN_DISTANCE,
             // Some translations assume this will always be a multiple of ten

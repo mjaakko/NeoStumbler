@@ -5,6 +5,7 @@ object ActiveScanPreferenceKeys {
 
     const val WIFI_SCAN_DISTANCE = "wifi_scan_distance"
     const val CELL_SCAN_DISTANCE = "cell_scan_distance"
+    const val BLE_SCAN_DISTANCE = "ble_scan_distance"
 
     const val PAUSE_ON_BATTERY_LEVEL_THRESHOLD = "low_battery_threshold"
 
