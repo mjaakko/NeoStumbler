@@ -3,6 +3,7 @@ package xyz.malkki.neostumbler.export
 import java.time.Instant
 import java.util.zip.ZipFile
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Rule
 import org.junit.Test
@@ -56,10 +57,21 @@ class CsvExporterTest {
 
         val csvExporter = CsvExporter(fakeReportExportProvider)
 
+        val progress = mutableListOf<Pair<Int, Int>>()
+
         val outputZipFile = temporaryFolder.newFile("export.zip")
         outputZipFile.outputStream().buffered().use { outputStream ->
-            csvExporter.exportToOutputStream(outputStream, Instant.MIN, Instant.MAX)
+            csvExporter.exportToOutputStream(
+                outputStream = outputStream,
+                from = Instant.MIN,
+                to = Instant.MAX,
+                onProgress = { written, total -> progress.add(written to total) },
+            )
         }
+
+        assertEquals(1 to 3, progress[0])
+        assertEquals(2 to 3, progress[1])
+        assertEquals(3 to 3, progress[2])
 
         ZipFile(outputZipFile).use { zipFile ->
             assertNotNull(zipFile.getEntry("wifis.csv"))

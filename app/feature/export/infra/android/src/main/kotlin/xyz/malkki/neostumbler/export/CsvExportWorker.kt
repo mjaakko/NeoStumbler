@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.pm.ServiceInfo
 import android.net.Uri
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.work.CoroutineWorker
@@ -13,11 +14,14 @@ import androidx.work.WorkerParameters
 import androidx.work.hasKeyWithValueOfType
 import java.io.IOException
 import java.time.Instant
+import kotlin.math.roundToInt
 import kotlin.time.DurationUnit
 import kotlin.time.measureTime
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import timber.log.Timber
+
+private const val MAX_PROGRESS = 100
 
 class CsvExportWorker(appContext: Context, private val params: WorkerParameters) :
     CoroutineWorker(appContext, params), KoinComponent {
@@ -35,7 +39,9 @@ class CsvExportWorker(appContext: Context, private val params: WorkerParameters)
 
     private val csvExporter: CsvExporter by inject()
 
-    private fun createNotification(): Notification {
+    private val notificationManager by lazy { NotificationManagerCompat.from(applicationContext) }
+
+    private fun createNotification(progress: Int? = null): Notification {
         return NotificationCompat.Builder(
                 applicationContext,
                 params.inputData.getString(INPUT_NOTIFICATION_CHANNEL)!!,
@@ -49,6 +55,7 @@ class CsvExportWorker(appContext: Context, private val params: WorkerParameters)
                     params.inputData.getInt(INPUT_NOTIFICATION_TITLE, 0),
                 )
             )
+            .setProgress(MAX_PROGRESS, progress ?: 0, progress == null)
             .setSmallIcon(params.inputData.getInt(INPUT_NOTIFICATION_DRAWABLE, 0))
             .build()
     }
@@ -82,7 +89,18 @@ class CsvExportWorker(appContext: Context, private val params: WorkerParameters)
         val from = Instant.ofEpochMilli(params.inputData.getLong(INPUT_FROM, 0))
         val to = Instant.ofEpochMilli(params.inputData.getLong(INPUT_TO, 0))
 
-        val time = measureTime { csvExporter.exportToFile(uri, from, to) }
+        val time = measureTime {
+            csvExporter.exportToFile(uri, from, to) { rowsWritten, totalRows ->
+                if (notificationManager.areNotificationsEnabled()) {
+                    notificationManager.notify(
+                        DATA_EXPORT_NOTIFICATION_ID,
+                        createNotification(
+                            ((rowsWritten.toFloat() / totalRows) * MAX_PROGRESS).roundToInt()
+                        ),
+                    )
+                }
+            }
+        }
 
         Timber.i(
             "Exported data for time period [$from, $to] to $uri in ${
@@ -97,7 +115,12 @@ class CsvExportWorker(appContext: Context, private val params: WorkerParameters)
     }
 
     /** Exports data to the specified URI (content://) */
-    private suspend fun CsvExporter.exportToFile(uri: Uri, from: Instant, to: Instant) {
+    private suspend fun CsvExporter.exportToFile(
+        uri: Uri,
+        from: Instant,
+        to: Instant,
+        onProgress: (Int, Int) -> Unit,
+    ) {
         applicationContext.contentResolver.openOutputStream(uri, "wt").use { os ->
             if (os == null) {
                 Timber.w(
@@ -108,7 +131,7 @@ class CsvExportWorker(appContext: Context, private val params: WorkerParameters)
                 throw IOException("OutputStream was null")
             }
 
-            exportToOutputStream(os, from, to)
+            exportToOutputStream(os, from, to, onProgress)
         }
     }
 }
