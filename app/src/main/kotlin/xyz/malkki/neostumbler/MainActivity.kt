@@ -299,7 +299,7 @@ private fun <T : Any> rememberMainNavigationSceneDecorator(
     }
 }
 
-private class MainNavigationScene<T : Any>(
+private data class MainNavigationScene<T : Any>(
     private val scene: Scene<T>,
     private val topBar: @Composable () -> Unit,
     /** List of [NavigationSuiteItem]s */
